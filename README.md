@@ -1,2 +1,2 @@
 # ParallelReverseAutoDiff
-Parallel Reverse Automatic Differentiation in C#
+Parallel Reverse Mode Automatic Differentiation in C#
