@@ -365,7 +365,7 @@ Instantiate each operation based on its type. Then set the Next property of each
 
 Add each operation that is backwards in the computation graph to the BackwardAdjacentOperations property of an operation. BackwardAdjacentOperations is just a list of operations.
 
-Add an instances of the gradients to send the result to, to the GradientDestinations array. If there is no gradient result for a certain input, add null.
+Add instances of the gradients to send the result to, to the GradientDestinations array. If there is no gradient result for a certain input, add null.
 
 Then populate the backward dependency counts by running the following code. It only has to be run once to set up the backward dependency counts.
 ```c#
