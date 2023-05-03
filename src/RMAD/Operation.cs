@@ -21,7 +21,7 @@ namespace ParallelReverseAutoDiff.RMAD
             // Initialize properties
             this.Inputs = new List<string>();
             this.Outputs = new List<string>();
-            this.BackwardAdjacentOperations = new List<IOperation>();
+            this.BackwardAdjacentOperations = new List<IOperation?>();
             this.BackwardDependencyCounts = new List<int>();
             this.AccumulatedGradients = new List<(double[][]?, double[][]?)>();
             this.Tasks = new List<Task>();
@@ -189,7 +189,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public List<string> VisitedFrom { get; set; }
 
         // The operations that are next when traversing the computational graph via the backward pass
-        public List<IOperation> BackwardAdjacentOperations { get; set; }
+        public List<IOperation?> BackwardAdjacentOperations { get; set; }
 
         // The number of operations that take this operation's output as input based on the timestep that you start at when doing the backward pass
         public List<int> BackwardDependencyCounts { get; set; }

@@ -205,6 +205,21 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.SetupInputNameToValueMap();
         }
 
+        /// <inheritdoc/>
+        public string Name
+        {
+            get
+            {
+                return this.lstmName;
+            }
+        }
+
+        /// <summary>
+        /// Load the model from a JSON file.
+        /// </summary>
+        /// <param name="filePath">The file path to load from.</param>
+        /// <param name="lstm">The LSTM to load the parameters to.</param>
+        /// <returns>The loaded LSTM.</returns>
         public static SelfAttentionMultiLayerLSTM LoadModel(string filePath, SelfAttentionMultiLayerLSTM lstm)
         {
             string jsonString = File.ReadAllText(filePath);
@@ -233,7 +248,11 @@ namespace ParallelReverseAutoDiff.LstmExample
             return lstm;
         }
 
-        // Serialize LSTMParameters to a JSON string
+        /// <summary>
+        /// Serialize LSTMParameters to a JSON string.
+        /// </summary>
+        /// <param name="parameters">The parameters to serialize.</param>
+        /// <returns>The serialized parameters.</returns>
         public static string SerializeLSTMParameters(MultiLayerLSTMParameters parameters)
         {
             string jsonString = JsonConvert.SerializeObject(parameters, Newtonsoft.Json.Formatting.Indented);
@@ -250,15 +269,6 @@ namespace ParallelReverseAutoDiff.LstmExample
             MultiLayerLSTMParameters parameters = JsonConvert.DeserializeObject<MultiLayerLSTMParameters>(jsonString) ?? throw new InvalidOperationException("There was a problem deserializing the JSON stirng.");
 
             return parameters;
-        }
-
-        /// <inheritdoc/>
-        public string Name
-        {
-            get
-            {
-                return this.lstmName;
-            }
         }
 
         /// <summary>
@@ -278,25 +288,26 @@ namespace ParallelReverseAutoDiff.LstmExample
 
             // Forward propagate through the MultiLayerLSTM
             MatrixUtils.SetInPlace(this.inputSequence, inputs);
-            var op = this.startOperation;
+            var op = this.startOperation ?? throw new Exception("Start operation should not be null.");
             IOperation? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
-                if (op.SpecificId.StartsWith("output"))
-                {
-
-                }
-                op.OperationType.GetMethod("Forward").Invoke(op, parameters);
+                var forwardMethod = op.OperationType.GetMethod("Forward") ?? throw new Exception($"Forward method should exist on operation of type {op.OperationType.Name}.");
+                forwardMethod.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
                     op.ResultTo(this.NameToValueFunc(op.ResultToName));
                 }
+
                 this.operationsMap[op.SpecificId] = op;
                 currOp = op;
                 if (op.HasNext)
+                {
                     op = op.Next;
-            } while (currOp.Next != null);
+                }
+            }
+            while (currOp.Next != null);
 
             return MatrixUtils.To1DArray(this.output);
         }
@@ -472,6 +483,7 @@ namespace ParallelReverseAutoDiff.LstmExample
                     return id + "_" + op.TimeStepIndex + "_" + op.LayerIndex;
                 }
             }
+
             return id;
         }
 
@@ -491,6 +503,7 @@ namespace ParallelReverseAutoDiff.LstmExample
                     parameters[j] = inputOp;
                     continue;
                 }
+
                 string inputName = split[0];
 
                 if (this.inputNameToValueMap.ContainsKey(inputName))
@@ -512,14 +525,15 @@ namespace ParallelReverseAutoDiff.LstmExample
                     {
                         op.BackwardAdjacentOperations.Add(null);
                     }
+
                     parameters[j] = p;
                 }
                 else
                 {
                     throw new Exception($"Input name {inputName} not found in value map");
                 }
-
             }
+
             op.Parameters = parameters;
         }
 
@@ -538,6 +552,7 @@ namespace ParallelReverseAutoDiff.LstmExample
                     parametersToReturn[j] = parameters[j];
                 }
             }
+
             return parametersToReturn;
         }
 
@@ -568,7 +583,8 @@ namespace ParallelReverseAutoDiff.LstmExample
                 {
                     op = op.Next;
                 }
-            } while (currOp.Next != null);
+            }
+            while (currOp.Next != null);
 
             for (int t = this.numTimeSteps - 1; t >= 0; t--)
             {
@@ -617,7 +633,8 @@ namespace ParallelReverseAutoDiff.LstmExample
                 {
                     op = op.Next;
                 }
-            } while (currOp.Next != null);
+            }
+            while (currOp.Next != null);
 
             await this.AutomaticBackwardPropagate(doNotUpdate);
         }
@@ -635,6 +652,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
+
             Console.WriteLine($"{this.lstmName}: Policy gradient loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
             var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
@@ -778,7 +796,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.vb = MatrixUtils.InitializeZeroMatrix(this.b.Length, this.b[0].Length);
         }
 
-        private void UpdateWeightWithAdam(double[][] W, double[][] mW, double[][] vW, double[][] gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
+        private void UpdateWeightWithAdam(double[][] w, double[][] mW, double[][] vW, double[][] gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
         {
             var lr = newLearningRate.HasValue ? newLearningRate.Value : this.learningRate;
 
@@ -795,12 +813,12 @@ namespace ParallelReverseAutoDiff.LstmExample
             double[][] vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, t)), vW);
 
             // Update weights
-            for (int i = 0; i < W.Length; i++)
+            for (int i = 0; i < w.Length; i++)
             {
-                for (int j = 0; j < W[0].Length; j++)
+                for (int j = 0; j < w[0].Length; j++)
                 {
                     double weightReductionValue = lr * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
-                    W[i][j] -= weightReductionValue;
+                    w[i][j] -= weightReductionValue;
                 }
             }
         }
@@ -816,13 +834,15 @@ namespace ParallelReverseAutoDiff.LstmExample
             string typeName = operation.Type;
             string[] inputs = operation.Inputs;
 
-            System.Type operationType = System.Type.GetType($"{NAMESPACE}.{typeName}");
-            if (operationType == null)
+            System.Type operationType = System.Type.GetType($"{NAMESPACE}.{typeName}") ?? throw new Exception($"Unsupported operation type {typeName}");
+
+            var instantiate = operationType.GetMethod("Instantiate");
+            if (instantiate == null)
             {
-                throw new InvalidOperationException($"Unsupported operation type: {typeName}");
+                throw new Exception($"Instantiate method should exist on operation of type {operationType.Name}");
             }
 
-            IOperation op = (IOperation)operationType.GetMethod("Instantiate").Invoke(null, new object[] { (NeuralNetwork)this });
+            IOperation op = (IOperation)(instantiate.Invoke(null, new object[] { (NeuralNetwork)this }) ?? throw new Exception("Instantiate method should return a non-null operation."));
 
             op.OperationType = operationType;
             op.Inputs = inputs.ToList();
@@ -888,7 +908,6 @@ namespace ParallelReverseAutoDiff.LstmExample
             {
                 foreach (var timeStep in jsonArchitecture.TimeSteps)
                 {
-
                     foreach (var start in timeStep.StartOperations)
                     {
                         this.ProcessAndAddOperation(start, i);
@@ -914,6 +933,5 @@ namespace ParallelReverseAutoDiff.LstmExample
 
             this.priorOperation = null;
         }
-
     }
 }

@@ -58,7 +58,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
         object BackwardInput { get; set; }
 
-        List<IOperation> BackwardAdjacentOperations { get; set; }
+        List<IOperation?> BackwardAdjacentOperations { get; set; }
 
         List<int> BackwardDependencyCounts { get; set; }
 
