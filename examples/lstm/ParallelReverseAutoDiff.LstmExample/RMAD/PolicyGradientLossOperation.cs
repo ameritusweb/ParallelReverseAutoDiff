@@ -142,8 +142,8 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
             // Add the entropy regularization term
             loss -= regularizationCoefficient * entropy;
 
-            this._output = new double[][] { new double[] { -loss } };
-            return this._output;
+            this.output = new double[][] { new double[] { -loss } };
+            return this.output;
         }
     }
 }
