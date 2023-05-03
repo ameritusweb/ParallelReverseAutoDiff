@@ -7,20 +7,36 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
 
+    /// <summary>
+    /// The sigmoid operation utilizing gradient amplification.
+    /// </summary>
     public class AmplifiedSigmoidOperation : Operation
     {
         private double[][] input;
 
-        public AmplifiedSigmoidOperation() : base()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmplifiedSigmoidOperation"/> class.
+        /// </summary>
+        public AmplifiedSigmoidOperation()
+            : base()
         {
-
         }
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new AmplifiedSigmoidOperation();
         }
 
+        /// <summary>
+        /// The forward pass of the operation.
+        /// </summary>
+        /// <param name="input">The input for the operation.</param>
+        /// <returns>The output for the operation.</returns>
         public double[][] Forward(double[][] input)
         {
             this.input = input;
@@ -40,6 +56,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
+        /// <inheritdoc />
         public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
         {
             int numRows = dLdOutput.Length;
@@ -52,7 +69,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < numCols; j++)
                 {
                     double x = this.input[i][j];
-                    double dx = Math.Pow(Math.PI - 2, -x) / Math.Pow(1 + Math.Pow((Math.PI - 2), -x), 2);
+                    double dx = Math.Pow(Math.PI - 2, -x) / Math.Pow(1 + Math.Pow(Math.PI - 2, -x), 2);
                     dLdInput[i][j] = dLdOutput[i][j] * dx;
                 }
             }

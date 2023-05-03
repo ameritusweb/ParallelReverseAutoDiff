@@ -7,6 +7,9 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
 
+    /// <summary>
+    /// Applies dropout to a small portion of the input.
+    /// </summary>
     public class ApplyDropoutOperation : Operation
     {
         private double[][] input;
@@ -14,10 +17,11 @@ namespace ParallelReverseAutoDiff.RMAD
         private double dropoutRate;
         private Random random;
 
-        public ApplyDropoutOperation(double dropoutRate) : base()
+        public ApplyDropoutOperation(double dropoutRate)
+            : base()
         {
             this.dropoutRate = dropoutRate;
-            this.random = new Random();
+            this.random = new Random(Guid.NewGuid().GetHashCode());
         }
 
         public static IOperation Instantiate(NeuralNetwork net)
@@ -25,6 +29,11 @@ namespace ParallelReverseAutoDiff.RMAD
             return new ApplyDropoutOperation(net.GetDropoutRate());
         }
 
+        /// <summary>
+        /// The forward pass of the operation.
+        /// </summary>
+        /// <param name="input">The input for the operation.</param>
+        /// <returns>The output for the operation.</returns>
         public double[][] Forward(double[][] input)
         {
             this.input = input;
@@ -49,6 +58,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
+        /// <inheritdoc />
         public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
         {
             int numRows = dLdOutput.Length;
@@ -63,6 +73,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     dLdInput[i][j] = dLdOutput[i][j] * this.dropoutMask[i][j];
                 }
             }
+
             return (dLdInput, dLdInput);
         }
     }

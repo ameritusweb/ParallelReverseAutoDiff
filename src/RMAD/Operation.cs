@@ -78,7 +78,11 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        // Abstract method to perform backward pass, must be implemented by derived classes
+        /// <summary>
+        /// Abstract method to perform backward pass, must be implemented by derived classes.
+        /// </summary>
+        /// <param name="dOutput">The upstream gradient.</param>
+        /// <returns>The gradients to send to the adjacent backward operations.</returns>
         public abstract (double[][]?, double[][]?) Backward(double[][] dOutput);
 
         // Property to store the gradient destination objects

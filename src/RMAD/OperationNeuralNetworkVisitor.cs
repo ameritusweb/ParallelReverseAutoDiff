@@ -56,7 +56,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.Traverse(this.startNode);
         }
 
-        private async Task Traverse(IOperation node, IOperation fromNode = null)
+        private async Task Traverse(IOperation node, IOperation? fromNode = null)
         {
             if (node == null)
             {
@@ -167,7 +167,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
                 {
-                    IOperation adjacentOperation = node.BackwardAdjacentOperations[i];
+                    IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
                     if (adjacentOperation != null)
                     {
                         adjacentOperation.BackwardInput = dOutput.Item1;

@@ -11,7 +11,8 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private double[][] input;
 
-        public TanhOperation() : base()
+        public TanhOperation()
+            : base()
         {
 
         }

@@ -24,6 +24,8 @@ MatrixMultiplyScalarOperation
 
 MatrixTransposeOperation
 
+ReLUOperation
+
 SigmoidOperation
 
 SoftmaxOperation

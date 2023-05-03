@@ -13,7 +13,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private double[][] input1;
         private double[][] input2;
 
-        public MatrixMultiplyOperation() : base()
+        public MatrixMultiplyOperation()
+            : base()
         {
         }
 
@@ -64,6 +65,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
             // Calculate gradient w.r.t. input1
             double[][] dInput1 = new double[input1Rows][];
+
             // Parallelize the outer loop
             Parallel.For(0, input1Rows, i =>
             {
@@ -98,5 +100,4 @@ namespace ParallelReverseAutoDiff.RMAD
             return (dInput1, dInput2);
         }
     }
-
 }

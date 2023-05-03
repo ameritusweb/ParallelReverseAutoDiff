@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>ParallelReverseAutoDiff</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <authors>Scott Seto</authors>
     <owners>Scott Seto</owners>
     <license type="expression">LGPL-2.1-only</license>
@@ -10,7 +10,7 @@
     <icon>logo.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for parallelized reverse mode automatic differentiation in C#.</description>
-    <releaseNotes>Third release of ParallelReverseAutoDiff.</releaseNotes>
+    <releaseNotes>Add the ReLU operation.</releaseNotes>
     <copyright>Scott Seto, 2023</copyright>
     <tags>autodiff automatic-differentiation parallel reverse-mode differentiation C#</tags>
     <dependencies>
@@ -23,6 +23,6 @@
   <files>
     <file src="bin\Release\netstandard2.1\*.dll" target="lib\netstandard2.1" />
 	<file src="logo.png" target="\" />
-	<file src="README.md" target="\" />
+	<file src="docs\README.md" target="\" />
   </files>
 </package>
