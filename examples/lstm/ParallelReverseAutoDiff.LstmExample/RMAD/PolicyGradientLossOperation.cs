@@ -1,51 +1,77 @@
-﻿namespace ParallelReverseAutoDiff.LstmExample.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="PolicyGradientLossOperation.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.LstmExample.RMAD
 {
     using ParallelReverseAutoDiff.RMAD;
 
+    /// <summary>
+    /// A loss function for policy gradient optimization.
+    /// </summary>
     public class PolicyGradientLossOperation : Operation
     {
-        private List<double[][]> _chosenActions;
-        private int _numTimeSteps;
-        private double _discountFactor;
-        private List<double> _rewards;
+        private List<double[][]> chosenActions;
+        private int numTimeSteps;
+        private double discountFactor;
+        private List<double> rewards;
 
-        public PolicyGradientLossOperation(List<double[][]> chosenActions, List<double> rewards, int numTimeSteps, double discountFactor) : base()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolicyGradientLossOperation"/> class.
+        /// </summary>
+        /// <param name="chosenActions">The chosen actions of the agent.</param>
+        /// <param name="rewards">The positive or negative rewards based on the chosen action.</param>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <param name="discountFactor">The discount factor.</param>
+        public PolicyGradientLossOperation(List<double[][]> chosenActions, List<double> rewards, int numTimeSteps, double discountFactor)
+            : base()
         {
-            _chosenActions = chosenActions;
-            _numTimeSteps = numTimeSteps;
-            _discountFactor = discountFactor;
-            _rewards = rewards;
+            this.chosenActions = chosenActions;
+            this.numTimeSteps = numTimeSteps;
+            this.discountFactor = discountFactor;
+            this.rewards = rewards;
         }
 
+        /// <summary>
+        /// A factory method for creating a policy gradient loss function.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated policy gradient loss operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new PolicyGradientLossOperation(net.GetChosenActions(), net.GetRewards(), net.GetNumTimeSteps(), net.GetDiscountFactor());
         }
 
+        /// <summary>
+        /// The backward pass of the policy gradient loss function.
+        /// </summary>
+        /// <param name="actionProbabilities">The action probabilities.</param>
+        /// <returns>The gradient to pass upstream.</returns>
         public override (double[][]?, double[][]?) Backward(double[][] actionProbabilities)
         {
-            double[][] gradientLossWrtOutput = new double[_numTimeSteps][];
+            double[][] gradientLossWrtOutput = new double[this.numTimeSteps][];
             double beta = 0.01; // Entropy regularization coefficient, adjust as needed
-            for (int t = 0; t < _numTimeSteps; t++)
+            for (int t = 0; t < this.numTimeSteps; t++)
             {
                 gradientLossWrtOutput[t] = new double[1];
                 double actionProb = actionProbabilities[t][0];
 
                 // Calculate the gradient of the log probability with respect to the output
                 double gradLogProbWrtOutput = 0d;
-                for (int i = 0; i < _chosenActions[t].Length; i++)
+                for (int i = 0; i < this.chosenActions[t].Length; i++)
                 {
-                    for (int j = 0; j < _chosenActions[t][i].Length; j++)
+                    for (int j = 0; j < this.chosenActions[t][i].Length; j++)
                     {
-                        if (_chosenActions[t][i][j] > 0.0d)
+                        if (this.chosenActions[t][i][j] > 0.0d)
                         {
-                            gradLogProbWrtOutput += (1.0 / actionProb);
+                            gradLogProbWrtOutput += 1.0 / actionProb;
                         }
                     }
                 }
 
                 // Multiply the gradient of the log probability by the advantage and negate the result
-                double discountedAdvantage = _rewards[t] * Math.Pow(_discountFactor, t);
+                double discountedAdvantage = this.rewards[t] * Math.Pow(this.discountFactor, t);
                 double gradLossWrtOutput_t = gradLogProbWrtOutput * discountedAdvantage * -1d;
 
                 // Add the gradient of the entropy term
@@ -61,6 +87,11 @@
             return (gradientLossWrtOutput, gradientLossWrtOutput);
         }
 
+        /// <summary>
+        /// The forward pass of the policy gradient loss function.
+        /// </summary>
+        /// <param name="outputsOverTime">The outputs over time.</param>
+        /// <returns>The policy gradient loss.</returns>
         public double[][] Forward(double[][][] outputsOverTime)
         {
             double loss = 0.0;
@@ -71,7 +102,7 @@
 
             // Compute the log-probabilities of the chosen actions at each time step
             List<double> logProbs = new List<double>();
-            for (int t = 0; t < _numTimeSteps; t++)
+            for (int t = 0; t < this.numTimeSteps; t++)
             {
                 double[] actionProbs = outputsOverTime[t][0];
                 actionProbabilites.Add(actionProbs);
@@ -82,35 +113,37 @@
                 {
                     timeStepEntropy -= actionProbs[i] * Math.Log(actionProbs[i]);
                 }
+
                 entropy += timeStepEntropy;
 
                 // Iterate over the input and output positions on the chessboard
                 double logProb = 0.0;
-                for (int i = 0; i < _chosenActions[t].Length; i++)
+                for (int i = 0; i < this.chosenActions[t].Length; i++)
                 {
-                    for (int j = 0; j < _chosenActions[t][i].Length; j++)
+                    for (int j = 0; j < this.chosenActions[t][i].Length; j++)
                     {
-                        if (_chosenActions[t][i][j] > 0.0d)
+                        if (this.chosenActions[t][i][j] > 0.0d)
                         {
                             logProb += Math.Log(actionProbs[0]);
                         }
                     }
                 }
+
                 logProbs.Add(logProb);
             }
 
             // Multiply the log-probabilities by the corresponding discounted rewards and sum over all time steps
-            for (int t = 0; t < _numTimeSteps; t++)
+            for (int t = 0; t < this.numTimeSteps; t++)
             {
-                double discount = Math.Pow(_discountFactor, t);
-                loss += logProbs[t] * _rewards[t] * discount;
+                double discount = Math.Pow(this.discountFactor, t);
+                loss += logProbs[t] * this.rewards[t] * discount;
             }
 
             // Add the entropy regularization term
             loss -= regularizationCoefficient * entropy;
 
-            _output = new double[][] { new double[] { -loss } };
-            return _output;
+            this._output = new double[][] { new double[] { -loss } };
+            return this._output;
         }
     }
 }

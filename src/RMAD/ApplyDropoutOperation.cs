@@ -1,18 +1,23 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="ApplyDropoutOperation.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
 
     public class ApplyDropoutOperation : Operation
     {
-        private double[][] _input;
-        private double[][] _dropoutMask;
-        private double _dropoutRate;
-        private Random _random;
+        private double[][] input;
+        private double[][] dropoutMask;
+        private double dropoutRate;
+        private Random random;
 
         public ApplyDropoutOperation(double dropoutRate) : base()
         {
-            _dropoutRate = dropoutRate;
-            _random = new Random();
+            this.dropoutRate = dropoutRate;
+            this.random = new Random();
         }
 
         public static IOperation Instantiate(NeuralNetwork net)
@@ -22,26 +27,26 @@
 
         public double[][] Forward(double[][] input)
         {
-            _input = input;
+            this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            _output = new double[numRows][];
-            _dropoutMask = new double[numRows][];
+            this.output = new double[numRows][];
+            this.dropoutMask = new double[numRows][];
 
             for (int i = 0; i < numRows; i++)
             {
-                _output[i] = new double[numCols];
-                _dropoutMask[i] = new double[numCols];
+                this.output[i] = new double[numCols];
+                this.dropoutMask[i] = new double[numCols];
 
                 for (int j = 0; j < numCols; j++)
                 {
-                    double randomValue = _random.NextDouble();
-                    _dropoutMask[i][j] = randomValue < _dropoutRate ? 0 : 1;
-                    _output[i][j] = _dropoutMask[i][j] * input[i][j];
+                    double randomValue = this.random.NextDouble();
+                    this.dropoutMask[i][j] = randomValue < this.dropoutRate ? 0 : 1;
+                    this.output[i][j] = this.dropoutMask[i][j] * input[i][j];
                 }
             }
-            return _output;
+            return this.output;
         }
 
         public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
@@ -55,7 +60,7 @@
                 dLdInput[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
-                    dLdInput[i][j] = dLdOutput[i][j] * _dropoutMask[i][j];
+                    dLdInput[i][j] = dLdOutput[i][j] * this.dropoutMask[i][j];
                 }
             }
             return (dLdInput, dLdInput);

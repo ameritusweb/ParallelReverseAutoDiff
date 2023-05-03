@@ -1,11 +1,20 @@
-﻿namespace ParallelReverseAutoDiff.LstmExample
+﻿//------------------------------------------------------------------------------
+// <copyright file="SelfAttentionMultiLayerLSTM.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.LstmExample
 {
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.LstmExample.RMAD;
     using ParallelReverseAutoDiff.RMAD;
 
+    /// <summary>
+    /// A multi-layer LSTM with self-attention.
+    /// </summary>
     public class SelfAttentionMultiLayerLSTM : NeuralNetwork, ILSTM
     {
+        private const string NAMESPACE = "ParallelReverseAutoDiff.LstmExample.architecture";
         private double[][][][] h;
         private double[][][][] c; // Memory cell state
         private double[][][][] i;
@@ -122,23 +131,33 @@
 
         private Random rng;
 
-        private double learningRate;
         private double clipValue;
         private int numLayers;
         private int adamT;
 
-        private const string NAMESPACE = "ParallelReverseAutoDiff.LstmExample.architecture";
         private Dictionary<string, IOperation> operationsMap;
-        private IOperation priorOperation;
-        private IOperation startOperation;
+        private IOperation? priorOperation;
+        private IOperation? startOperation;
         private IOperation backwardStartOperation;
-        private Dictionary<string, Func<int, int, object>> _inputNameToValueMap;
+        private Dictionary<string, Func<int, int, object>> inputNameToValueMap;
         private double[][][][][] arrays4D;
         private double[][][][] arrays3D;
         private double[][][] arrays2D;
         private string architecture;
         private string lstmName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelfAttentionMultiLayerLSTM"/> class.
+        /// </summary>
+        /// <param name="inputSize">The input size.</param>
+        /// <param name="hiddenSize">The hidden size.</param>
+        /// <param name="outputSize">The output size.</param>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <param name="learningRate">The learning rate.</param>
+        /// <param name="architecture">The name of the JSON architecture.</param>
+        /// <param name="lstmName">The name of the LSTM.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="clipValue">The clip value.</param>
         public SelfAttentionMultiLayerLSTM(int inputSize, int hiddenSize, int outputSize, int numTimeSteps, double learningRate, string architecture, string lstmName, int numLayers = 2, double clipValue = 4.0d)
         {
             this.inputSize = hiddenSize;
@@ -146,7 +165,7 @@
             inputSize = hiddenSize;
             this.hiddenSize = hiddenSize;
             this.outputSize = outputSize;
-            rng = new Random(DateTime.UtcNow.Millisecond);
+            this.rng = new Random(Guid.NewGuid().GetHashCode());
             this.learningRate = learningRate;
             this.numLayers = numLayers;
             this.clipValue = clipValue;
@@ -155,165 +174,287 @@
             this.lstmName = lstmName;
 
             // Initialize model parameters
-            Wo = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
-            Uo = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
-            bo = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.Wo = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
+            this.Uo = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.bo = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
 
-            Wi = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
-            Ui = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
-            bi = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.Wi = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
+            this.Ui = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.bi = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
 
-            Wf = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
-            Uf = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
-            bf = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, outputSize);
+            this.Wf = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
+            this.Uf = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.bf = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, outputSize);
 
-            Wc = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
-            Uc = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
-            bc = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.Wc = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, inputSize);
+            this.Uc = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.bc = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
 
-            Wq = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
-            Wk = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
-            Wv = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.Wq = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.Wk = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
+            this.Wv = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(numLayers, hiddenSize, hiddenSize);
 
-            We = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(hiddenSize, originalInputSize);
-            be = MatrixUtils.InitializeZeroMatrix(hiddenSize, outputSize);
+            this.We = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(hiddenSize, this.originalInputSize);
+            this.be = MatrixUtils.InitializeZeroMatrix(hiddenSize, outputSize);
 
-            V = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(outputSize, hiddenSize);
-            b = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(outputSize, 1);
+            this.V = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(outputSize, hiddenSize);
+            this.b = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(outputSize, 1);
 
-            InitializeState();
+            this.InitializeState();
 
-            SetupInputNameToValueMap();
+            this.SetupInputNameToValueMap();
         }
 
+        public static SelfAttentionMultiLayerLSTM LoadModel(string filePath, SelfAttentionMultiLayerLSTM lstm)
+        {
+            string jsonString = File.ReadAllText(filePath);
+            var parameters = DeserializeLSTMParameters(jsonString);
+
+            lstm.Wi = parameters.Wi;
+            lstm.Wf = parameters.Wf;
+            lstm.Wc = parameters.Wc;
+            lstm.Wo = parameters.Wo;
+            lstm.Ui = parameters.Ui;
+            lstm.Uf = parameters.Uf;
+            lstm.Uc = parameters.Uc;
+            lstm.Uo = parameters.Uo;
+            lstm.bi = parameters.Bi;
+            lstm.bf = parameters.Bf;
+            lstm.bc = parameters.Bc;
+            lstm.bo = parameters.Bo;
+            lstm.be = parameters.Be;
+            lstm.We = parameters.We;
+            lstm.Wq = parameters.Wq;
+            lstm.Wk = parameters.Wk;
+            lstm.Wv = parameters.Wv;
+            lstm.V = parameters.V;
+            lstm.b = parameters.B;
+
+            return lstm;
+        }
+
+        // Serialize LSTMParameters to a JSON string
+        public static string SerializeLSTMParameters(MultiLayerLSTMParameters parameters)
+        {
+            string jsonString = JsonConvert.SerializeObject(parameters, Newtonsoft.Json.Formatting.Indented);
+            return jsonString;
+        }
+
+        /// <summary>
+        /// Deserialize a JSON string back to LSTMParameters.
+        /// </summary>
+        /// <param name="jsonString">The JSON string to deserialize.</param>
+        /// <returns>The multi-layer LSTM parameters.</returns>
+        public static MultiLayerLSTMParameters DeserializeLSTMParameters(string jsonString)
+        {
+            MultiLayerLSTMParameters parameters = JsonConvert.DeserializeObject<MultiLayerLSTMParameters>(jsonString) ?? throw new InvalidOperationException("There was a problem deserializing the JSON stirng.");
+
+            return parameters;
+        }
+
+        /// <inheritdoc/>
         public string Name
         {
             get
             {
-                return lstmName;
+                return this.lstmName;
             }
         }
 
+        /// <summary>
+        /// Initializes the computation graph of the LSTM.
+        /// </summary>
+        /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            await InitializeComputationGraph();
+            await this.InitializeComputationGraph();
+        }
+
+        /// <inheritdoc/>
+        public double[] GetOutput(double[][][] inputs)
+        {
+            // Initialize memory cell, hidden state, biases, and intermediates
+            this.ClearState();
+
+            // Forward propagate through the MultiLayerLSTM
+            MatrixUtils.SetInPlace(this.inputSequence, inputs);
+            var op = this.startOperation;
+            IOperation? currOp = null;
+            do
+            {
+                var parameters = this.LookupParameters(op);
+                if (op.SpecificId.StartsWith("output"))
+                {
+
+                }
+                op.OperationType.GetMethod("Forward").Invoke(op, parameters);
+                if (op.ResultToName != null)
+                {
+                    op.ResultTo(this.NameToValueFunc(op.ResultToName));
+                }
+                this.operationsMap[op.SpecificId] = op;
+                currOp = op;
+                if (op.HasNext)
+                    op = op.Next;
+            } while (currOp.Next != null);
+
+            return MatrixUtils.To1DArray(this.output);
+        }
+
+        /// <inheritdoc/>
+        public async Task Optimize(double[][][] inputs, List<double[][]> chosenActions, List<double> rewards, int iterationIndex, bool doNotUpdate = false)
+        {
+            this.adamT = iterationIndex + 1;
+
+            await this.AutomaticForwardPropagate(inputs, chosenActions, rewards, doNotUpdate);
+        }
+
+        /// <inheritdoc/>
+        public void SaveModel(string filePath)
+        {
+            MultiLayerLSTMParameters parameters = new MultiLayerLSTMParameters
+            {
+                Wi = this.Wi,
+                Wf = this.Wf,
+                Wc = this.Wc,
+                Wo = this.Wo,
+                Ui = this.Ui,
+                Uf = this.Uf,
+                Uc = this.Uc,
+                Uo = this.Uo,
+                Bi = this.bi,
+                Bf = this.bf,
+                Bc = this.bc,
+                Bo = this.bo,
+                Be = this.be,
+                We = this.We,
+                V = this.V,
+                B = this.b,
+                Wq = this.Wq,
+                Wk = this.Wk,
+                Wv = this.Wv,
+            };
+
+            var serialized = SerializeLSTMParameters(parameters);
+            File.WriteAllText(filePath, serialized);
         }
 
         private void InitializeState()
         {
             // Clear the hidden state and memory cell state
-            h = new double[numTimeSteps][][][];
-            c = new double[numTimeSteps][][][];
-            for (int t = 0; t < numTimeSteps; ++t)
+            this.h = new double[this.numTimeSteps][][][];
+            this.c = new double[this.numTimeSteps][][][];
+            for (int t = 0; t < this.numTimeSteps; ++t)
             {
-                h[t] = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, 1);
-                c[t] = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, 1);
+                this.h[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
+                this.c[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
             }
 
             // Clear gradients and biases
-            dWo = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, inputSize);
-            dUo = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
-            dbo = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.dWo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.inputSize);
+            this.dUo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
+            this.dbo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.outputSize);
 
-            dWi = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, inputSize);
-            dUi = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
-            dbi = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.dWi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.inputSize);
+            this.dUi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
+            this.dbi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.outputSize);
 
-            dWf = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, inputSize);
-            dUf = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
-            dbf = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.dWf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.inputSize);
+            this.dUf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
+            this.dbf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.outputSize);
 
-            dWc = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, inputSize);
-            dUc = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
-            dbc = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, outputSize);
+            this.dWc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.inputSize);
+            this.dUc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
+            this.dbc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.outputSize);
 
-            dWq = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
-            dWk = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
-            dWv = MatrixUtils.InitializeZeroMatrix(numLayers, hiddenSize, hiddenSize);
+            this.dWq = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
+            this.dWk = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
+            this.dWv = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, this.hiddenSize);
 
-            dWe = MatrixUtils.InitializeZeroMatrix(hiddenSize, originalInputSize);
-            dbe = MatrixUtils.InitializeZeroMatrix(hiddenSize, outputSize);
+            this.dWe = MatrixUtils.InitializeZeroMatrix(this.hiddenSize, this.originalInputSize);
+            this.dbe = MatrixUtils.InitializeZeroMatrix(this.hiddenSize, this.outputSize);
 
-            dV = MatrixUtils.InitializeZeroMatrix(outputSize, hiddenSize);
-            db = MatrixUtils.InitializeZeroMatrix(outputSize, 1);
+            this.dV = MatrixUtils.InitializeZeroMatrix(this.outputSize, this.hiddenSize);
+            this.db = MatrixUtils.InitializeZeroMatrix(this.outputSize, 1);
 
             // Clear intermediates
-            f = MatrixUtils.InitializeZeroMatrix(numTimeSteps, numLayers, hiddenSize, outputSize);
-            i = MatrixUtils.InitializeZeroMatrix(numTimeSteps, numLayers, hiddenSize, outputSize);
-            cHat = MatrixUtils.InitializeZeroMatrix(numTimeSteps, numLayers, hiddenSize, outputSize);
-            o = MatrixUtils.InitializeZeroMatrix(numTimeSteps, numLayers, hiddenSize, outputSize);
-            output = MatrixUtils.InitializeZeroMatrix(numTimeSteps, outputSize, 1);
-            inputSequence = MatrixUtils.InitializeZeroMatrix(numTimeSteps, originalInputSize, 1);
+            this.f = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
+            this.i = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
+            this.cHat = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
+            this.o = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
+            this.output = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.outputSize, 1);
+            this.inputSequence = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.originalInputSize, 1);
 
-            arrays4D = new double[][][][][] { h, c, f, i, cHat, o };
-            arrays3D = new double[][][][] { dWo, dUo, dbo, dWi, dUi, dbi, dWf, dUf, dbf, dWc, dUc, dbc, dWq, dWk, dWv, output, inputSequence };
-            arrays2D = new double[][][] { dWe, dbe, dV, db };
+            this.arrays4D = new double[][][][][] { this.h, this.c, this.f, this.i, this.cHat, this.o };
+            this.arrays3D = new double[][][][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
+            this.arrays2D = new double[][][] { this.dWe, this.dbe, this.dV, this.db };
         }
 
         private void ClearState()
         {
-            MatrixUtils.ClearArrays4D(arrays4D);
-            MatrixUtils.ClearArrays3D(arrays3D);
-            MatrixUtils.ClearArrays2D(arrays2D);
+            MatrixUtils.ClearArrays4D(this.arrays4D);
+            MatrixUtils.ClearArrays3D(this.arrays3D);
+            MatrixUtils.ClearArrays2D(this.arrays2D);
         }
 
         private void SetupInputNameToValueMap()
         {
-            var zeroMatrixHiddenSize = MatrixUtils.InitializeZeroMatrix(hiddenSize, 1);
-            _inputNameToValueMap = new Dictionary<string, Func<int, int, object>>
+            var zeroMatrixHiddenSize = MatrixUtils.InitializeZeroMatrix(this.hiddenSize, 1);
+            this.inputNameToValueMap = new Dictionary<string, Func<int, int, object>>
             {
-                { "inputSequence", (t, l) => inputSequence[t] },
-                { "output", (t, l) => output[t] },
-                { "Wf", (t, l) => Wf[l] },
-                { "Wi", (t, l) => Wi[l] },
-                { "Wc", (t, l) => Wc[l] },
-                { "Wo", (t, l) => Wo[l] },
-                { "Uf", (t, l) => Uf[l] },
-                { "Ui", (t, l) => Ui[l] },
-                { "Uc", (t, l) => Uc[l] },
-                { "Uo", (t, l) => Uo[l] },
-                { "bf", (t, l) => bf[l] },
-                { "bi", (t, l) => bi[l] },
-                { "bc", (t, l) => bc[l] },
-                { "bo", (t, l) => bo[l] },
-                { "dWf", (t, l) => dWf[l] },
-                { "dWi", (t, l) => dWi[l] },
-                { "dWc", (t, l) => dWc[l] },
-                { "dWo", (t, l) => dWo[l] },
-                { "dUf", (t, l) => dUf[l] },
-                { "dUi", (t, l) => dUi[l] },
-                { "dUc", (t, l) => dUc[l] },
-                { "dUo", (t, l) => dUo[l] },
-                { "dbf", (t, l) => dbf[l] },
-                { "dbi", (t, l) => dbi[l] },
-                { "dbc", (t, l) => dbc[l] },
-                { "dbo", (t, l) => dbo[l] },
-                { "f", (t, l) => operationsMap["f_" + t + "_" + l] },
-                { "i", (t, l) => operationsMap["i_" + t + "_" + l] },
-                { "cHat", (t, l) => operationsMap["cHat_" + t + "_" + l] },
-                { "h", (t, l) => h[t][l] },
-                { "c", (t, l) => c[t][l] },
-                { "o", (t, l) => operationsMap["o_" + t + "_" + l] },
-                { "We", (t, l) => We },
-                { "be", (t, l) => be },
-                { "Wq", (t, l) => Wq[l] },
-                { "Wk", (t, l) => Wk[l] },
-                { "Wv", (t, l) => Wv[l] },
-                { "V", (t, l) => V },
-                { "b", (t, l) => b },
-                { "dWe", (t, l) => dWe },
-                { "dbe", (t, l) => dbe },
-                { "dWq", (t, l) => dWq[l] },
-                { "dWk", (t, l) => dWk[l] },
-                { "dWv", (t, l) => dWv[l] },
-                { "dV", (t, l) => dV },
-                { "db", (t, l) => db },
-                { "scaledDotProductScalar", (t, l) => 1.0d / Math.Sqrt(hiddenSize) },
-                { "embeddedInput", (t, l) => operationsMap["embeddedInput_" + t] },
-                { "hFromCurrentTimeStepAndLastLayer", (t, l) => operationsMap["h_" + t + "_" + (numLayers - 1)] },
-                { "currentInput", (t, l) => l == 0 ? operationsMap["embeddedInput_" + t] : operationsMap["h_" + t + "_" + (l - 1)] },
-                { "previousHiddenState", (t, l) => t == 0 ? zeroMatrixHiddenSize : operationsMap["h_" + (t - 1) + "_" + l] },
-                { "previousMemoryCellState", (t, l) => t == 0 ? zeroMatrixHiddenSize : operationsMap["c_" + (t - 1) + "_" + l] },
+                { "inputSequence", (t, l) => this.inputSequence[t] },
+                { "output", (t, l) => this.output[t] },
+                { "Wf", (t, l) => this.Wf[l] },
+                { "Wi", (t, l) => this.Wi[l] },
+                { "Wc", (t, l) => this.Wc[l] },
+                { "Wo", (t, l) => this.Wo[l] },
+                { "Uf", (t, l) => this.Uf[l] },
+                { "Ui", (t, l) => this.Ui[l] },
+                { "Uc", (t, l) => this.Uc[l] },
+                { "Uo", (t, l) => this.Uo[l] },
+                { "bf", (t, l) => this.bf[l] },
+                { "bi", (t, l) => this.bi[l] },
+                { "bc", (t, l) => this.bc[l] },
+                { "bo", (t, l) => this.bo[l] },
+                { "dWf", (t, l) => this.dWf[l] },
+                { "dWi", (t, l) => this.dWi[l] },
+                { "dWc", (t, l) => this.dWc[l] },
+                { "dWo", (t, l) => this.dWo[l] },
+                { "dUf", (t, l) => this.dUf[l] },
+                { "dUi", (t, l) => this.dUi[l] },
+                { "dUc", (t, l) => this.dUc[l] },
+                { "dUo", (t, l) => this.dUo[l] },
+                { "dbf", (t, l) => this.dbf[l] },
+                { "dbi", (t, l) => this.dbi[l] },
+                { "dbc", (t, l) => this.dbc[l] },
+                { "dbo", (t, l) => this.dbo[l] },
+                { "f", (t, l) => this.operationsMap["f_" + t + "_" + l] },
+                { "i", (t, l) => this.operationsMap["i_" + t + "_" + l] },
+                { "cHat", (t, l) => this.operationsMap["cHat_" + t + "_" + l] },
+                { "h", (t, l) => this.h[t][l] },
+                { "c", (t, l) => this.c[t][l] },
+                { "o", (t, l) => this.operationsMap["o_" + t + "_" + l] },
+                { "We", (t, l) => this.We },
+                { "be", (t, l) => this.be },
+                { "Wq", (t, l) => this.Wq[l] },
+                { "Wk", (t, l) => this.Wk[l] },
+                { "Wv", (t, l) => this.Wv[l] },
+                { "V", (t, l) => this.V },
+                { "b", (t, l) => this.b },
+                { "dWe", (t, l) => this.dWe },
+                { "dbe", (t, l) => this.dbe },
+                { "dWq", (t, l) => this.dWq[l] },
+                { "dWk", (t, l) => this.dWk[l] },
+                { "dWv", (t, l) => this.dWv[l] },
+                { "dV", (t, l) => this.dV },
+                { "db", (t, l) => this.db },
+                { "scaledDotProductScalar", (t, l) => 1.0d / Math.Sqrt(this.hiddenSize) },
+                { "embeddedInput", (t, l) => this.operationsMap["embeddedInput_" + t] },
+                { "hFromCurrentTimeStepAndLastLayer", (t, l) => this.operationsMap["h_" + t + "_" + (this.numLayers - 1)] },
+                { "currentInput", (t, l) => l == 0 ? this.operationsMap["embeddedInput_" + t] : this.operationsMap["h_" + t + "_" + (l - 1)] },
+                { "previousHiddenState", (t, l) => t == 0 ? zeroMatrixHiddenSize : this.operationsMap["h_" + (t - 1) + "_" + l] },
+                { "previousMemoryCellState", (t, l) => t == 0 ? zeroMatrixHiddenSize : this.operationsMap["c_" + (t - 1) + "_" + l] },
+
                 // Add other input names and their corresponding getters here
             };
         }
@@ -325,7 +466,8 @@
                 if (op.LayerIndex == -1)
                 {
                     return id + "_" + op.TimeStepIndex;
-                } else
+                }
+                else
                 {
                     return id + "_" + op.TimeStepIndex + "_" + op.LayerIndex;
                 }
@@ -340,10 +482,10 @@
             {
                 var input = op.Inputs[j];
                 var split = input.Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                var specificId = ConvertIdToTimeAndLayer(input, split, op);
-                if (operationsMap.ContainsKey(specificId))
+                var specificId = this.ConvertIdToTimeAndLayer(input, split, op);
+                if (this.operationsMap.ContainsKey(specificId))
                 {
-                    var inputOp = operationsMap[specificId];
+                    var inputOp = this.operationsMap[specificId];
                     inputOp.Outputs.Add(op.SpecificId);
                     op.BackwardAdjacentOperations.Add(inputOp);
                     parameters[j] = inputOp;
@@ -351,16 +493,16 @@
                 }
                 string inputName = split[0];
 
-                if (_inputNameToValueMap.ContainsKey(inputName))
+                if (this.inputNameToValueMap.ContainsKey(inputName))
                 {
                     int timeStepIndex = op.TimeStepIndex;
                     int layerIndex = op.LayerIndex;
 
                     // Get the corresponding value from the dictionary using the input name
-                    var p = _inputNameToValueMap[inputName](timeStepIndex, layerIndex);
+                    var p = this.inputNameToValueMap[inputName](timeStepIndex, layerIndex);
                     if (p is IOperation)
                     {
-                        var inputOp = (IOperation) p;
+                        var inputOp = (IOperation)p;
                         inputOp.Outputs.Add(op.SpecificId);
                         op.BackwardAdjacentOperations.Add(inputOp);
                         parameters[j] = inputOp;
@@ -402,89 +544,108 @@
         private Func<int, int, object> NameToValueFunc(string name)
         {
             string[] split = name.Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-            return _inputNameToValueMap[split[0]];
+            return this.inputNameToValueMap[split[0]];
         }
 
         private async Task InitializeComputationGraph()
         {
-            string json = EmbeddedResource.ReadAllJson(architecture);
-            CreateOperationsFromJson(json);
+            string json = EmbeddedResource.ReadAllJson(this.architecture);
+            this.CreateOperationsFromJson(json);
 
-            var op = startOperation;
-            IOperation currOp = null;
+            var op = this.startOperation;
+            if (op == null)
+            {
+                throw new Exception("Start operation should not be null.");
+            }
+
+            IOperation? currOp = null;
             do
             {
-                SetupDependencies(op);
-                operationsMap[op.SpecificId] = op;
+                this.SetupDependencies(op);
+                this.operationsMap[op.SpecificId] = op;
                 currOp = op;
                 if (op.HasNext)
+                {
                     op = op.Next;
+                }
             } while (currOp.Next != null);
 
-            for (int t = numTimeSteps - 1; t >= 0; t--)
+            for (int t = this.numTimeSteps - 1; t >= 0; t--)
             {
-                backwardStartOperation = operationsMap[$"output_t_{t}"];
-                OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
+                this.backwardStartOperation = this.operationsMap[$"output_t_{t}"];
+                OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), this.backwardStartOperation, t);
                 await opVisitor.TraverseAsync();
-                await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
+                await opVisitor.ResetVisitedCountsAsync(this.backwardStartOperation);
             }
+
             Console.Clear();
         }
 
         private async Task AutomaticForwardPropagate(double[][][] inputSequence, List<double[][]> chosenActions, List<double> rewards, bool doNotUpdate = false)
         {
             // Initialize memory cell, hidden state, gradients, biases, and intermediates
-            ClearState();
+            this.ClearState();
 
             MatrixUtils.SetInPlace(this.inputSequence, inputSequence);
             this.chosenActions = chosenActions;
             this.rewards = rewards;
-            var op = startOperation;
-            IOperation currOp = null;
+            var op = this.startOperation;
+            if (op == null)
+            {
+                throw new Exception("Start operation should not be null.");
+            }
+
+            IOperation? currOp = null;
             do
             {
-                var parameters = LookupParameters(op);
-                if (op.SpecificId.StartsWith("output"))
+                var parameters = this.LookupParameters(op);
+                var forward = op.OperationType.GetMethod("Forward");
+                if (forward == null)
                 {
-
+                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
-                op.OperationType.GetMethod("Forward").Invoke(op, parameters);
+
+                forward.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
-                    op.ResultTo(NameToValueFunc(op.ResultToName));
+                    op.ResultTo(this.NameToValueFunc(op.ResultToName));
                 }
-                operationsMap[op.SpecificId] = op;
+
+                this.operationsMap[op.SpecificId] = op;
                 currOp = op;
                 if (op.HasNext)
+                {
                     op = op.Next;
+                }
             } while (currOp.Next != null);
 
-            await AutomaticBackwardPropagate(doNotUpdate);
+            await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
         private async Task AutomaticBackwardPropagate(bool doNotUpdate = false)
         {
             var lossFunction = PolicyGradientLossOperation.Instantiate(this);
             var policyGradientLossOperation = (PolicyGradientLossOperation)lossFunction;
-            var loss = policyGradientLossOperation.Forward(output);
+            var loss = policyGradientLossOperation.Forward(this.output);
             if (loss[0][0] >= 0.0d)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-            } else
+            }
+            else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
-            Console.WriteLine($"{lstmName}: Policy gradient loss: {loss[0][0]}");
+            Console.WriteLine($"{this.lstmName}: Policy gradient loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(output)).Item1;
+            var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
-            for (int t = numTimeSteps - 1; t >= 0; t--)
+            for (int t = this.numTimeSteps - 1; t >= 0; t--)
             {
-                backwardStartOperation = operationsMap[$"output_t_{t}"];
+                this.backwardStartOperation = this.operationsMap[$"output_t_{t}"];
                 if (gradientOfLossWrtOutput[t][0] != 0.0d)
                 {
-                    backwardStartOperation.BackwardInput = new double[][] { gradientOfLossWrtOutput[t] };
-                    OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
+                    this.backwardStartOperation.BackwardInput = new double[][] { gradientOfLossWrtOutput[t] };
+                    OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), this.backwardStartOperation, t);
                     await opVisitor.TraverseAsync();
                     opVisitor.Reset();
                     traverseCount++;
@@ -497,65 +658,28 @@
             }
 
             // Clip gradients and biases to prevent exploding gradients
-            dWi = MatrixUtils.ClipGradients(dWi, clipValue);
-            dWf = MatrixUtils.ClipGradients(dWf, clipValue);
-            dWo = MatrixUtils.ClipGradients(dWo, clipValue);
-            dWc = MatrixUtils.ClipGradients(dWc, clipValue);
-            dUi = MatrixUtils.ClipGradients(dUi, clipValue);
-            dUf = MatrixUtils.ClipGradients(dUf, clipValue);
-            dUo = MatrixUtils.ClipGradients(dUo, clipValue);
-            dUc = MatrixUtils.ClipGradients(dUc, clipValue);
-            dbi = MatrixUtils.ClipGradients(dbi, clipValue);
-            dbf = MatrixUtils.ClipGradients(dbf, clipValue);
-            dbo = MatrixUtils.ClipGradients(dbo, clipValue);
-            dbc = MatrixUtils.ClipGradients(dbc, clipValue);
-            dV = MatrixUtils.ClipGradients(dV, clipValue);
-            db = MatrixUtils.ClipGradients(db, clipValue);
-            dWe = MatrixUtils.ClipGradients(dWe, clipValue);
-            dbe = MatrixUtils.ClipGradients(dbe, clipValue);
-            dWq = MatrixUtils.ClipGradients(dWq, clipValue);
-            dWk = MatrixUtils.ClipGradients(dWk, clipValue);
-            dWv = MatrixUtils.ClipGradients(dWv, clipValue);
+            this.dWi = MatrixUtils.ClipGradients(this.dWi, this.clipValue);
+            this.dWf = MatrixUtils.ClipGradients(this.dWf, this.clipValue);
+            this.dWo = MatrixUtils.ClipGradients(this.dWo, this.clipValue);
+            this.dWc = MatrixUtils.ClipGradients(this.dWc, this.clipValue);
+            this.dUi = MatrixUtils.ClipGradients(this.dUi, this.clipValue);
+            this.dUf = MatrixUtils.ClipGradients(this.dUf, this.clipValue);
+            this.dUo = MatrixUtils.ClipGradients(this.dUo, this.clipValue);
+            this.dUc = MatrixUtils.ClipGradients(this.dUc, this.clipValue);
+            this.dbi = MatrixUtils.ClipGradients(this.dbi, this.clipValue);
+            this.dbf = MatrixUtils.ClipGradients(this.dbf, this.clipValue);
+            this.dbo = MatrixUtils.ClipGradients(this.dbo, this.clipValue);
+            this.dbc = MatrixUtils.ClipGradients(this.dbc, this.clipValue);
+            this.dV = MatrixUtils.ClipGradients(this.dV, this.clipValue);
+            this.db = MatrixUtils.ClipGradients(this.db, this.clipValue);
+            this.dWe = MatrixUtils.ClipGradients(this.dWe, this.clipValue);
+            this.dbe = MatrixUtils.ClipGradients(this.dbe, this.clipValue);
+            this.dWq = MatrixUtils.ClipGradients(this.dWq, this.clipValue);
+            this.dWk = MatrixUtils.ClipGradients(this.dWk, this.clipValue);
+            this.dWv = MatrixUtils.ClipGradients(this.dWv, this.clipValue);
 
             // Update model parameters using gradient descent
-            UpdateParametersWithAdam(dWi, dWf, dWo, dWc, dUi, dUf, dUo, dUc, dbi, dbf, dbo, dbc, dV, db, dWq, dWk, dWv, dWe, dbe);
-        }
-
-        public double[] GetOutput(double[][][] inputs)
-        {
-            // Initialize memory cell, hidden state, biases, and intermediates
-            ClearState();
-
-            // Forward propagate through the MultiLayerLSTM
-            MatrixUtils.SetInPlace(this.inputSequence, inputs);
-            var op = startOperation;
-            IOperation currOp = null;
-            do
-            {
-                var parameters = LookupParameters(op);
-                if (op.SpecificId.StartsWith("output"))
-                {
-
-                }
-                op.OperationType.GetMethod("Forward").Invoke(op, parameters);
-                if (op.ResultToName != null)
-                {
-                    op.ResultTo(NameToValueFunc(op.ResultToName));
-                }
-                operationsMap[op.SpecificId] = op;
-                currOp = op;
-                if (op.HasNext)
-                    op = op.Next;
-            } while (currOp.Next != null);
-
-            return MatrixUtils.To1DArray(output);
-        }
-
-        public async Task Optimize(double[][][] inputs, List<double[][]> chosenActions, List<double> rewards, int iterationIndex, bool doNotUpdate = false)
-        {
-            adamT = iterationIndex + 1;
-
-            await AutomaticForwardPropagate(inputs, chosenActions, rewards, doNotUpdate);
+            this.UpdateParametersWithAdam(this.dWi, this.dWf, this.dWo, this.dWc, this.dUi, this.dUf, this.dUo, this.dUc, this.dbi, this.dbf, this.dbo, this.dbc, this.dV, this.db, this.dWq, this.dWk, this.dWv, this.dWe, this.dbe);
         }
 
         private void UpdateParametersWithAdam(double[][][] dWi, double[][][] dWf, double[][][] dWo, double[][][] dWc, double[][][] dUi, double[][][] dUf, double[][][] dUo, double[][][] dUc, double[][][] dbi, double[][][] dbf, double[][][] dbo, double[][][] dbc, double[][] dV, double[][] db, double[][][] dWq, double[][][] dWk, double[][][] dWv, double[][] dWe, double[][] dbe)
@@ -565,93 +689,98 @@
             double epsilon = 1e-8;
 
             // Initialize moments
-            if (mWi == null)
+            if (this.mWi == null)
             {
-                InitializeMoments();
+                this.InitializeMoments();
+            }
+
+            if (this.mWi == null)
+            {
+                throw new Exception("Moments are not initialized");
             }
 
             // Use Parallel.For to parallelize the loop
-            Parallel.For(0, numLayers, layerIndex =>
+            Parallel.For(0, this.numLayers, layerIndex =>
             {
                 // Update moments and apply Adam updates
-                UpdateWeightWithAdam(Wi[layerIndex], mWi[layerIndex], vWi[layerIndex], dWi[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Wf[layerIndex], mWf[layerIndex], vWf[layerIndex], dWf[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Wc[layerIndex], mWc[layerIndex], vWc[layerIndex], dWc[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Wo[layerIndex], mWo[layerIndex], vWo[layerIndex], dWo[layerIndex], beta1, beta2, epsilon, adamT);
+                this.UpdateWeightWithAdam(this.Wi[layerIndex], this.mWi[layerIndex], this.vWi[layerIndex], dWi[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Wf[layerIndex], this.mWf[layerIndex], this.vWf[layerIndex], dWf[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Wc[layerIndex], this.mWc[layerIndex], this.vWc[layerIndex], dWc[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Wo[layerIndex], this.mWo[layerIndex], this.vWo[layerIndex], dWo[layerIndex], beta1, beta2, epsilon, this.adamT);
 
-                UpdateWeightWithAdam(Ui[layerIndex], mUi[layerIndex], vUi[layerIndex], dUi[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Uf[layerIndex], mUf[layerIndex], vUf[layerIndex], dUf[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Uc[layerIndex], mUc[layerIndex], vUc[layerIndex], dUc[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Uo[layerIndex], mUo[layerIndex], vUo[layerIndex], dUo[layerIndex], beta1, beta2, epsilon, adamT);
+                this.UpdateWeightWithAdam(this.Ui[layerIndex], this.mUi[layerIndex], this.vUi[layerIndex], dUi[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Uf[layerIndex], this.mUf[layerIndex], this.vUf[layerIndex], dUf[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Uc[layerIndex], this.mUc[layerIndex], this.vUc[layerIndex], dUc[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Uo[layerIndex], this.mUo[layerIndex], this.vUo[layerIndex], dUo[layerIndex], beta1, beta2, epsilon, this.adamT);
 
-                UpdateWeightWithAdam(bi[layerIndex], mbi[layerIndex], vbi[layerIndex], dbi[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(bf[layerIndex], mbf[layerIndex], vbf[layerIndex], dbf[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(bc[layerIndex], mbc[layerIndex], vbc[layerIndex], dbc[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(bo[layerIndex], mbo[layerIndex], vbo[layerIndex], dbo[layerIndex], beta1, beta2, epsilon, adamT);
+                this.UpdateWeightWithAdam(this.bi[layerIndex], this.mbi[layerIndex], this.vbi[layerIndex], dbi[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.bf[layerIndex], this.mbf[layerIndex], this.vbf[layerIndex], dbf[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.bc[layerIndex], this.mbc[layerIndex], this.vbc[layerIndex], dbc[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.bo[layerIndex], this.mbo[layerIndex], this.vbo[layerIndex], dbo[layerIndex], beta1, beta2, epsilon, this.adamT);
 
-                UpdateWeightWithAdam(Wq[layerIndex], mWq[layerIndex], vWq[layerIndex], dWq[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Wk[layerIndex], mWk[layerIndex], vWk[layerIndex], dWk[layerIndex], beta1, beta2, epsilon, adamT);
-                UpdateWeightWithAdam(Wv[layerIndex], mWv[layerIndex], vWv[layerIndex], dWv[layerIndex], beta1, beta2, epsilon, adamT);
+                this.UpdateWeightWithAdam(this.Wq[layerIndex], this.mWq[layerIndex], this.vWq[layerIndex], dWq[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Wk[layerIndex], this.mWk[layerIndex], this.vWk[layerIndex], dWk[layerIndex], beta1, beta2, epsilon, this.adamT);
+                this.UpdateWeightWithAdam(this.Wv[layerIndex], this.mWv[layerIndex], this.vWv[layerIndex], dWv[layerIndex], beta1, beta2, epsilon, this.adamT);
             });
 
-            var frobeniusNorm = MatrixUtils.FrobeniusNorm(V);
+            var frobeniusNorm = MatrixUtils.FrobeniusNorm(this.V);
             var learningRateReductionFactor = MatrixUtils.LearningRateReductionFactor(frobeniusNorm, 1.4d, 0.001d);
-            Console.WriteLine($"{lstmName}: Frobenius norm: {frobeniusNorm}, learning rate reduction factor: {learningRateReductionFactor}");
-            UpdateWeightWithAdam(V, mV, vV, dV, beta1, beta2, epsilon, adamT, learningRate * learningRateReductionFactor);
-            UpdateWeightWithAdam(b, mb, vb, db, beta1, beta2, epsilon, adamT, learningRate * learningRateReductionFactor);
+            Console.WriteLine($"{this.lstmName}: Frobenius norm: {frobeniusNorm}, learning rate reduction factor: {learningRateReductionFactor}");
+            this.UpdateWeightWithAdam(this.V, this.mV, this.vV, dV, beta1, beta2, epsilon, this.adamT, this.learningRate * learningRateReductionFactor);
+            this.UpdateWeightWithAdam(this.b, this.mb, this.vb, db, beta1, beta2, epsilon, this.adamT, this.learningRate * learningRateReductionFactor);
 
-            UpdateWeightWithAdam(We, mWe, vWe, dWe, beta1, beta2, epsilon, adamT);
-            UpdateWeightWithAdam(be, mbe, vbe, dbe, beta1, beta2, epsilon, adamT);
+            this.UpdateWeightWithAdam(this.We, this.mWe, this.vWe, dWe, beta1, beta2, epsilon, this.adamT);
+            this.UpdateWeightWithAdam(this.be, this.mbe, this.vbe, dbe, beta1, beta2, epsilon, this.adamT);
         }
 
         private void InitializeMoments()
         {
-            mWi = MatrixUtils.InitializeZeroMatrix(numLayers, Wi[0].Length, Wi[0][0].Length);
-            vWi = MatrixUtils.InitializeZeroMatrix(numLayers, Wi[0].Length, Wi[0][0].Length);
-            mWf = MatrixUtils.InitializeZeroMatrix(numLayers, Wf[0].Length, Wf[0][0].Length);
-            vWf = MatrixUtils.InitializeZeroMatrix(numLayers, Wf[0].Length, Wf[0][0].Length);
-            mWc = MatrixUtils.InitializeZeroMatrix(numLayers, Wc[0].Length, Wc[0][0].Length);
-            vWc = MatrixUtils.InitializeZeroMatrix(numLayers, Wc[0].Length, Wc[0][0].Length);
-            mWo = MatrixUtils.InitializeZeroMatrix(numLayers, Wo[0].Length, Wo[0][0].Length);
-            vWo = MatrixUtils.InitializeZeroMatrix(numLayers, Wo[0].Length, Wo[0][0].Length);
+            this.mWi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wi[0].Length, this.Wi[0][0].Length);
+            this.vWi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wi[0].Length, this.Wi[0][0].Length);
+            this.mWf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wf[0].Length, this.Wf[0][0].Length);
+            this.vWf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wf[0].Length, this.Wf[0][0].Length);
+            this.mWc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wc[0].Length, this.Wc[0][0].Length);
+            this.vWc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wc[0].Length, this.Wc[0][0].Length);
+            this.mWo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wo[0].Length, this.Wo[0][0].Length);
+            this.vWo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wo[0].Length, this.Wo[0][0].Length);
 
-            mWq = MatrixUtils.InitializeZeroMatrix(numLayers, Wq[0].Length, Wq[0][0].Length);
-            vWq = MatrixUtils.InitializeZeroMatrix(numLayers, Wq[0].Length, Wq[0][0].Length);
-            mWk = MatrixUtils.InitializeZeroMatrix(numLayers, Wk[0].Length, Wk[0][0].Length);
-            vWk = MatrixUtils.InitializeZeroMatrix(numLayers, Wk[0].Length, Wk[0][0].Length);
-            mWv = MatrixUtils.InitializeZeroMatrix(numLayers, Wv[0].Length, Wv[0][0].Length);
-            vWv = MatrixUtils.InitializeZeroMatrix(numLayers, Wv[0].Length, Wv[0][0].Length);
+            this.mWq = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wq[0].Length, this.Wq[0][0].Length);
+            this.vWq = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wq[0].Length, this.Wq[0][0].Length);
+            this.mWk = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wk[0].Length, this.Wk[0][0].Length);
+            this.vWk = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wk[0].Length, this.Wk[0][0].Length);
+            this.mWv = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wv[0].Length, this.Wv[0][0].Length);
+            this.vWv = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wv[0].Length, this.Wv[0][0].Length);
 
-            mUi = MatrixUtils.InitializeZeroMatrix(numLayers, Ui[0].Length, Ui[0][0].Length);
-            vUi = MatrixUtils.InitializeZeroMatrix(numLayers, Ui[0].Length, Ui[0][0].Length);
-            mUf = MatrixUtils.InitializeZeroMatrix(numLayers, Uf[0].Length, Uf[0][0].Length);
-            vUf = MatrixUtils.InitializeZeroMatrix(numLayers, Uf[0].Length, Uf[0][0].Length);
-            mUc = MatrixUtils.InitializeZeroMatrix(numLayers, Uc[0].Length, Uc[0][0].Length);
-            vUc = MatrixUtils.InitializeZeroMatrix(numLayers, Uc[0].Length, Uc[0][0].Length);
-            mUo = MatrixUtils.InitializeZeroMatrix(numLayers, Uo[0].Length, Uo[0][0].Length);
-            vUo = MatrixUtils.InitializeZeroMatrix(numLayers, Uo[0].Length, Uo[0][0].Length);
+            this.mUi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Ui[0].Length, this.Ui[0][0].Length);
+            this.vUi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Ui[0].Length, this.Ui[0][0].Length);
+            this.mUf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Uf[0].Length, this.Uf[0][0].Length);
+            this.vUf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Uf[0].Length, this.Uf[0][0].Length);
+            this.mUc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Uc[0].Length, this.Uc[0][0].Length);
+            this.vUc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Uc[0].Length, this.Uc[0][0].Length);
+            this.mUo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Uo[0].Length, this.Uo[0][0].Length);
+            this.vUo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Uo[0].Length, this.Uo[0][0].Length);
 
-            mbi = MatrixUtils.InitializeZeroMatrix(numLayers, bi[0].Length, bi[0][0].Length);
-            vbi = MatrixUtils.InitializeZeroMatrix(numLayers, bi[0].Length, bi[0][0].Length);
-            mbf = MatrixUtils.InitializeZeroMatrix(numLayers, bf[0].Length, bf[0][0].Length);
-            vbf = MatrixUtils.InitializeZeroMatrix(numLayers, bf[0].Length, bf[0][0].Length);
-            mbc = MatrixUtils.InitializeZeroMatrix(numLayers, bc[0].Length, bc[0][0].Length);
-            vbc = MatrixUtils.InitializeZeroMatrix(numLayers, bc[0].Length, bc[0][0].Length);
-            mbo = MatrixUtils.InitializeZeroMatrix(numLayers, bo[0].Length, bo[0][0].Length);
-            vbo = MatrixUtils.InitializeZeroMatrix(numLayers, bo[0].Length, bo[0][0].Length);
-            mWe = MatrixUtils.InitializeZeroMatrix(We.Length, We[0].Length);
-            vWe = MatrixUtils.InitializeZeroMatrix(We.Length, We[0].Length);
-            mbe = MatrixUtils.InitializeZeroMatrix(be.Length, be[0].Length);
-            vbe = MatrixUtils.InitializeZeroMatrix(be.Length, be[0].Length);
-            mV = MatrixUtils.InitializeZeroMatrix(V.Length, V[0].Length);
-            vV = MatrixUtils.InitializeZeroMatrix(V.Length, V[0].Length);
-            mb = MatrixUtils.InitializeZeroMatrix(b.Length, b[0].Length);
-            vb = MatrixUtils.InitializeZeroMatrix(b.Length, b[0].Length);
+            this.mbi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bi[0].Length, this.bi[0][0].Length);
+            this.vbi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bi[0].Length, this.bi[0][0].Length);
+            this.mbf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bf[0].Length, this.bf[0][0].Length);
+            this.vbf = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bf[0].Length, this.bf[0][0].Length);
+            this.mbc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bc[0].Length, this.bc[0][0].Length);
+            this.vbc = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bc[0].Length, this.bc[0][0].Length);
+            this.mbo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bo[0].Length, this.bo[0][0].Length);
+            this.vbo = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.bo[0].Length, this.bo[0][0].Length);
+            this.mWe = MatrixUtils.InitializeZeroMatrix(this.We.Length, this.We[0].Length);
+            this.vWe = MatrixUtils.InitializeZeroMatrix(this.We.Length, this.We[0].Length);
+            this.mbe = MatrixUtils.InitializeZeroMatrix(this.be.Length, this.be[0].Length);
+            this.vbe = MatrixUtils.InitializeZeroMatrix(this.be.Length, this.be[0].Length);
+            this.mV = MatrixUtils.InitializeZeroMatrix(this.V.Length, this.V[0].Length);
+            this.vV = MatrixUtils.InitializeZeroMatrix(this.V.Length, this.V[0].Length);
+            this.mb = MatrixUtils.InitializeZeroMatrix(this.b.Length, this.b[0].Length);
+            this.vb = MatrixUtils.InitializeZeroMatrix(this.b.Length, this.b[0].Length);
         }
 
         private void UpdateWeightWithAdam(double[][] W, double[][] mW, double[][] vW, double[][] gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
         {
-            var lr = newLearningRate.HasValue ? newLearningRate.Value : learningRate;
+            var lr = newLearningRate.HasValue ? newLearningRate.Value : this.learningRate;
 
             // Update biased first moment estimate
             mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
@@ -711,31 +840,31 @@
                 {
                     if (gradientResultTo[i] != null)
                     {
-                        op.GradientDestinations[i] = NameToValueFunc(gradientResultTo[i])(timeStep, layerIndex);
+                        op.GradientDestinations[i] = this.NameToValueFunc(gradientResultTo[i])(timeStep, layerIndex);
                     }
                 }
             }
 
-            if (priorOperation != null)
+            if (this.priorOperation != null)
             {
-                priorOperation.Next = op;
+                this.priorOperation.Next = op;
             }
 
-            if (startOperation == null)
+            if (this.startOperation == null)
             {
-                startOperation = op;
+                this.startOperation = op;
             }
 
             op.Id = id;
 
-            priorOperation = op;
+            this.priorOperation = op;
 
             return op;
         }
 
         private void ProcessAndAddOperation(OperationInfo operationInfo, int timeStepIndex, int layerIndex = -1)
         {
-            IOperation op = ProcessOperation(operationInfo, timeStepIndex, layerIndex);
+            IOperation op = this.ProcessOperation(operationInfo, timeStepIndex, layerIndex);
             op.TimeStepIndex = timeStepIndex;
             op.SpecificId = op.Id + "_" + timeStepIndex;
 
@@ -745,115 +874,45 @@
                 op.SpecificId += "_" + layerIndex;
             }
 
-            operationsMap[op.SpecificId] = op;
+            this.operationsMap[op.SpecificId] = op;
         }
 
         private void CreateOperationsFromJson(string json)
         {
-            operationsMap = new Dictionary<string, IOperation>();
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json);
-            priorOperation = null;
-            startOperation = null;
+            this.operationsMap = new Dictionary<string, IOperation>();
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.priorOperation = null;
+            this.startOperation = null;
 
-            for (int i = 0; i < numTimeSteps; ++i)
+            for (int i = 0; i < this.numTimeSteps; ++i)
             {
                 foreach (var timeStep in jsonArchitecture.TimeSteps)
                 {
 
                     foreach (var start in timeStep.StartOperations)
                     {
-                        ProcessAndAddOperation(start, i);
+                        this.ProcessAndAddOperation(start, i);
                     }
 
-                    for (int j = 0; j < numLayers; ++j) {
+                    for (int j = 0; j < this.numLayers; ++j)
+                    {
                         foreach (var layer in timeStep.Layers)
                         {
                             foreach (var layerOp in layer.Operations)
                             {
-                                ProcessAndAddOperation(layerOp, i, j);
+                                this.ProcessAndAddOperation(layerOp, i, j);
                             }
                         }
                     }
 
                     foreach (var end in timeStep.EndOperations)
                     {
-                        ProcessAndAddOperation(end, i);
+                        this.ProcessAndAddOperation(end, i);
                     }
                 }
             }
 
-            priorOperation = null;
-        }
-
-        public void SaveModel(string filePath)
-        {
-            MultiLayerLSTMParameters parameters = new MultiLayerLSTMParameters
-            {
-                Wi = Wi,
-                Wf = Wf,
-                Wc = Wc,
-                Wo = Wo,
-                Ui = Ui,
-                Uf = Uf,
-                Uc = Uc,
-                Uo = Uo,
-                bi = bi,
-                bf = bf,
-                bc = bc,
-                bo = bo,
-                be = be,
-                We = We,
-                V = V,
-                b = b,
-                Wq = Wq,
-                Wk = Wk,
-                Wv = Wv
-            };
-
-            var serialized = SerializeLSTMParameters(parameters);
-            File.WriteAllText(filePath, serialized);
-        }
-
-        public static SelfAttentionMultiLayerLSTM LoadModel(string filePath, SelfAttentionMultiLayerLSTM lstm)
-        {
-            string jsonString = File.ReadAllText(filePath);
-            var parameters = DeserializeLSTMParameters(jsonString);
-
-            lstm.Wi = parameters.Wi;
-            lstm.Wf = parameters.Wf;
-            lstm.Wc = parameters.Wc;
-            lstm.Wo = parameters.Wo;
-            lstm.Ui = parameters.Ui;
-            lstm.Uf = parameters.Uf;
-            lstm.Uc = parameters.Uc;
-            lstm.Uo = parameters.Uo;
-            lstm.bi = parameters.bi;
-            lstm.bf = parameters.bf;
-            lstm.bc = parameters.bc;
-            lstm.bo = parameters.bo;
-            lstm.be = parameters.be;
-            lstm.We = parameters.We;
-            lstm.Wq = parameters.Wq;
-            lstm.Wk = parameters.Wk;
-            lstm.Wv = parameters.Wv;
-            lstm.V = parameters.V;
-            lstm.b = parameters.b;
-
-            return lstm;
-        }
-
-        // Serialize LSTMParameters to a JSON string
-        public static string SerializeLSTMParameters(MultiLayerLSTMParameters parameters)
-        {
-            string jsonString = JsonConvert.SerializeObject(parameters, Newtonsoft.Json.Formatting.Indented);
-            return jsonString;
-        }
-
-        // Deserialize a JSON string back to LSTMParameters
-        public static MultiLayerLSTMParameters DeserializeLSTMParameters(string jsonString)
-        {
-            MultiLayerLSTMParameters parameters = JsonConvert.DeserializeObject<MultiLayerLSTMParameters>(jsonString);
-            return parameters;
+            this.priorOperation = null;
         }
 
     }

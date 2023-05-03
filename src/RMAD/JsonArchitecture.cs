@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="JsonArchitecture.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Collections.Generic;
 

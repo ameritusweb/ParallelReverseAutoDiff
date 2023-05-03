@@ -1,13 +1,18 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="LeakyReLUOperation.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     public class LeakyReLUOperation : Operation
     {
-        private double[][] _input;
-        private double _alpha;
+        private double[][] input;
+        private double alpha;
 
         public LeakyReLUOperation(double alpha = 0.01) : base()
         {
-            _alpha = alpha;
+            this.alpha = alpha;
         }
 
         public static IOperation Instantiate(NeuralNetwork net)
@@ -17,22 +22,22 @@
 
         public double[][] Forward(double[][] input)
         {
-            _input = input;
+            this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            _output = new double[rows][];
+            this.output = new double[rows][];
 
             for (int i = 0; i < rows; i++)
             {
-                _output[i] = new double[cols];
+                this.output[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i][j];
-                    _output[i][j] = x > 0 ? x : _alpha * x;
+                    this.output[i][j] = x > 0 ? x : this.alpha * x;
                 }
             }
 
-            return _output;
+            return this.output;
         }
 
         public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
@@ -46,8 +51,8 @@
                 dLdInput[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
-                    double x = _input[i][j];
-                    double gradient = x > 0 ? 1.0 : _alpha;
+                    double x = this.input[i][j];
+                    double gradient = x > 0 ? 1.0 : this.alpha;
                     dLdInput[i][j] = dLdOutput[i][j] * gradient;
                 }
             }

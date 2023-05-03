@@ -28,3 +28,9 @@ bld/
 
 # Visual Studio cache files
 .vs/
+
+# Executable files
+*.exe
+
+# Backup files
+*.bak

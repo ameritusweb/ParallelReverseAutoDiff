@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="OperationGraphVisitor.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
@@ -46,20 +51,20 @@
         {
             get
             {
-                return id;
+                return this.id;
             }
         }
 
         public Task TraverseAsync()
         {
-            return Traverse(startNode);
+            return this.Traverse(this.startNode);
         }
 
         private async Task Traverse(IOperation node)
         {
             if (node == null)
             {
-                return ;
+                return;
             }
 
             Console.WriteLine($"Visitor {this.Id} visiting node {node.SpecificId}");
@@ -68,14 +73,14 @@
             node.VisitedCount++;
 
             node.Lock.EnterWriteLock();
-            if (node.BackwardDependencyCounts.Count <= startingPointIndex)
+            if (node.BackwardDependencyCounts.Count <= this.startingPointIndex)
             {
-                for (int i = node.BackwardDependencyCounts.Count; i <= startingPointIndex; ++i)
+                for (int i = node.BackwardDependencyCounts.Count; i <= this.startingPointIndex; ++i)
                 {
                     node.BackwardDependencyCounts.Add(0);
                 }
             }
-            node.BackwardDependencyCounts[startingPointIndex]++;
+            node.BackwardDependencyCounts[this.startingPointIndex]++;
             node.Lock.ExitWriteLock();
 
             if (node.VisitedCount > 1)
@@ -89,7 +94,7 @@
                 IOperation adjacentOperation = node.BackwardAdjacentOperations[i];
                 if (adjacentOperation != null)
                 {
-                    adjacentTasks.Add(Traverse(adjacentOperation));
+                    adjacentTasks.Add(this.Traverse(adjacentOperation));
                 }
             }
 
@@ -131,7 +136,7 @@
                 IOperation adjacentOperation = node.BackwardAdjacentOperations[i];
                 if (adjacentOperation != null)
                 {
-                    adjacentTasks.Add(ResetVisitedCountsAsync(adjacentOperation));
+                    adjacentTasks.Add(this.ResetVisitedCountsAsync(adjacentOperation));
                 }
             }
 

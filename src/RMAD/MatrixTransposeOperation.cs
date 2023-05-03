@@ -1,8 +1,13 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="MatrixTransposeOperation.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     public class MatrixTransposeOperation : Operation
     {
-        private double[][] _input;
+        private double[][] input;
 
         public MatrixTransposeOperation() : base()
         {
@@ -16,21 +21,21 @@
 
         public double[][] Forward(double[][] input)
         {
-            _input = input;
+            this.input = input;
             int inputRows = input.Length;
             int inputCols = input[0].Length;
 
-            _output = new double[inputCols][];
+            this.output = new double[inputCols][];
             for (int i = 0; i < inputCols; i++)
             {
-                _output[i] = new double[inputRows];
+                this.output[i] = new double[inputRows];
                 for (int j = 0; j < inputRows; j++)
                 {
-                    _output[i][j] = input[j][i];
+                    this.output[i][j] = input[j][i];
                 }
             }
 
-            return _output;
+            return this.output;
         }
 
         public override (double[][]?, double[][]?) Backward(double[][] dOutput)

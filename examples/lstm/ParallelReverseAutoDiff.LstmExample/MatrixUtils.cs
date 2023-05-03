@@ -1,7 +1,21 @@
-﻿namespace ParallelReverseAutoDiff.LstmExample
+﻿//------------------------------------------------------------------------------
+// <copyright file="MatrixUtils.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.LstmExample
 {
+    /// <summary>
+    /// A collection of matrix utilities for neural network development.
+    /// </summary>
     public static class MatrixUtils
     {
+        /// <summary>
+        /// Creates an empty matrix of the given size.
+        /// </summary>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>An empty matrix.</returns>
         public static double[][] InitializeZeroMatrix(int numRows, int numCols)
         {
             double[][] matrix = new double[numRows][];
@@ -9,9 +23,17 @@
             {
                 matrix[i] = new double[numCols];
             }
+
             return matrix;
         }
 
+        /// <summary>
+        /// Creates an empty matrix of the given size.
+        /// </summary>
+        /// <param name="numLayers">The number of lauers.</param>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>An empty matrix.</returns>
         public static double[][][] InitializeZeroMatrix(int numLayers, int numRows, int numCols)
         {
             double[][][] matrix = new double[numLayers][][];
@@ -23,9 +45,18 @@
                     matrix[layerIndex][i] = new double[numCols];
                 }
             }
+
             return matrix;
         }
 
+        /// <summary>
+        /// Creates an empty matrix of the given size.
+        /// </summary>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>An empty matrix.</returns>
         public static double[][][][] InitializeZeroMatrix(int numTimeSteps, int numLayers, int numRows, int numCols)
         {
             double[][][][] m = new double[numTimeSteps][][][];
@@ -40,11 +71,20 @@
                         matrix[layerIndex][i] = new double[numCols];
                     }
                 }
+
                 m[t] = matrix;
             }
+
             return m;
         }
 
+        /// <summary>
+        /// Clips gradients to within a certain clip value and applies a minimum threshold value.
+        /// </summary>
+        /// <param name="gradients">The gradients to clip.</param>
+        /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+        /// <param name="minValue">The minimum threshold value.</param>
+        /// <returns>The clipped gradients.</returns>
         public static double[][] ClipGradients(double[][] gradients, double clipValue, double minValue = 1E-6)
         {
             var standardizedMatrix = StandardizedMatrix(gradients);
@@ -55,6 +95,7 @@
                 for (int j = 0; j < numCols; j++)
                 {
                     var value = Math.Min(clipValue, 1 + Math.Abs(standardizedMatrix[i][j]));
+
                     // Clip the gradient values
                     if (gradients[i][j] > value)
                     {
@@ -80,6 +121,13 @@
             return gradients;
         }
 
+        /// <summary>
+        /// Clips gradients to within a certain clip value and applies a minimum threshold value.
+        /// </summary>
+        /// <param name="gradients">The gradients to clip.</param>
+        /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+        /// <param name="minValue">The minimum threshold value.</param>
+        /// <returns>The clipped gradients.</returns>
         public static double[][][] ClipGradients(double[][][] gradients, double clipValue, double minValue = 1E-6)
         {
             int numMatrices = gradients.Length;
@@ -95,6 +143,7 @@
                     for (int j = 0; j < numCols; j++)
                     {
                         var value = Math.Min(clipValue, 1 + Math.Abs(standardizedMatrix[i][j]));
+
                         // Clip the gradient values
                         if (gradients[k][i][j] > value)
                         {
@@ -121,6 +170,11 @@
             return gradients;
         }
 
+        /// <summary>
+        /// Creates a standardized matrix using the mean and standard deviation.
+        /// </summary>
+        /// <param name="matrix">The matrix to process.</param>
+        /// <returns>The standardized matrix.</returns>
         public static double[][] StandardizedMatrix(double[][] matrix)
         {
             // Calculate the mean
@@ -134,6 +188,7 @@
                     count++;
                 }
             }
+
             double mean = sum / count;
 
             // Calculate the standard deviation
@@ -145,6 +200,7 @@
                     varianceSum += Math.Pow(value - mean, 2);
                 }
             }
+
             double stdDev = Math.Sqrt(varianceSum / count);
 
             // Calculate the standardized matrix
@@ -161,6 +217,11 @@
             return standardizedMatrix;
         }
 
+        /// <summary>
+        /// Creates a 2-D array from the specified matrices.
+        /// </summary>
+        /// <param name="matrices">The matrices.</param>
+        /// <returns>The 2-D array.</returns>
         public static double[][] To2DArray(double[][][] matrices)
         {
             int numMatrices = matrices.Length;
@@ -169,9 +230,15 @@
             {
                 matrix[i] = matrices[i][0];
             }
+
             return matrix;
         }
 
+        /// <summary>
+        /// Creates a 1-D array from the specified matrices.
+        /// </summary>
+        /// <param name="matrices">The matrices.</param>
+        /// <returns>The 1-D array.</returns>
         public static double[] To1DArray(double[][][] matrices)
         {
             int numMatrices = matrices.Length;
@@ -180,9 +247,15 @@
             {
                 array[i] = matrices[i][0][0];
             }
+
             return array;
         }
 
+        /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(double[][][] matrices, double[][][] value)
         {
             int numMatrices = matrices.Length;
@@ -200,11 +273,16 @@
             }
         }
 
+        /// <summary>
+        /// Clears the following 4-D matrices.
+        /// </summary>
+        /// <param name="matrices">The 4-D matrices to clear.</param>
         public static void ClearArrays4D(double[][][][][] matrices)
         {
             int numMatrices = matrices.Length;
             int numTimesteps = matrices[0].Length;
             int numLayers = matrices[0][0].Length;
+
             // Parallelize the outer loop
             Parallel.For(0, numMatrices, i =>
             {
@@ -223,10 +301,15 @@
             });
         }
 
+        /// <summary>
+        /// Clears the following 3-D matrices.
+        /// </summary>
+        /// <param name="matrices">The 3-D matrices to clear.</param>
         public static void ClearArrays3D(double[][][][] matrices)
         {
             int numMatrices = matrices.Length;
             int numLayers = matrices[0].Length;
+
             // Parallelize the outer loop
             Parallel.For(0, numMatrices, i =>
             {
@@ -242,9 +325,14 @@
             });
         }
 
+        /// <summary>
+        /// Clears the following 2-D matrices.
+        /// </summary>
+        /// <param name="matrices">The 2-D matrices to clear.</param>
         public static void ClearArrays2D(double[][][] matrices)
         {
             int numMatrices = matrices.Length;
+
             // Parallelize the outer loop
             Parallel.For(0, numMatrices, i =>
             {
@@ -257,6 +345,11 @@
             });
         }
 
+        /// <summary>
+        /// The Frobenius norm of a matrix: the square root of the sum of the absolute squares of its elements.
+        /// </summary>
+        /// <param name="weightMatrix">The weight matrix to calculate.</param>
+        /// <returns>The frobenius norm.</returns>
         public static double FrobeniusNorm(double[][] weightMatrix)
         {
             double sum = 0.0;
@@ -272,6 +365,13 @@
             return Math.Sqrt(sum);
         }
 
+        /// <summary>
+        /// Calculates the reduction factor for the learning rate.
+        /// </summary>
+        /// <param name="frobeniusNorm">The frobenius norm of a matrix.</param>
+        /// <param name="maxNorm">The max norm.</param>
+        /// <param name="minFactor">The minimum learning rate reduction factor.</param>
+        /// <returns>The learning rate reduction factor.</returns>
         public static double LearningRateReductionFactor(double frobeniusNorm, double maxNorm, double minFactor)
         {
             if (frobeniusNorm <= maxNorm)
@@ -285,22 +385,12 @@
             }
         }
 
-        public static double[][] MatrixAdd(double[][] a, double[][] b, double[][] c)
-        {
-            int numRows = a.Length;
-            int numCols = a[0].Length;
-            double[][] result = new double[numRows][];
-            for (int i = 0; i < numRows; i++)
-            {
-                result[i] = new double[numCols];
-                for (int j = 0; j < numCols; j++)
-                {
-                    result[i][j] = a[i][j] + b[i][j] + c[i][j];
-                }
-            }
-            return result;
-        }
-
+        /// <summary>
+        /// The element-wise Hadamard product of two matrices.
+        /// </summary>
+        /// <param name="matrixA">The first matrix.</param>
+        /// <param name="matrixB">The second matrix.</param>
+        /// <returns>The resultant matrix.</returns>
         public static double[][] HadamardProduct(double[][] matrixA, double[][] matrixB)
         {
             // Check if the dimensions of the matrices match
@@ -325,22 +415,12 @@
             return result;
         }
 
-        public static double[][] MatrixAdd(double[][] a, double[][] b, double[][] c, double[][] d)
-        {
-            int numRows = a.Length;
-            int numCols = a[0].Length;
-            double[][] result = new double[numRows][];
-            for (int i = 0; i < numRows; i++)
-            {
-                result[i] = new double[numCols];
-                for (int j = 0; j < numCols; j++)
-                {
-                    result[i][j] = a[i][j] + b[i][j] + c[i][j] + d[i][j];
-                }
-            }
-            return result;
-        }
-
+        /// <summary>
+        /// Add two matrices together.
+        /// </summary>
+        /// <param name="a">Matrix A.</param>
+        /// <param name="b">Matrix B.</param>
+        /// <returns>The resultant matrix.</returns>
         public static double[][] MatrixAdd(double[][] a, double[][] b)
         {
             int numRows = a.Length;
@@ -354,27 +434,16 @@
                     result[i][j] = a[i][j] + b[i][j];
                 }
             }
-            return result;
-        }
-
-        public static double[][] MatrixAdd(double[][] matrix, double[] vector)
-        {
-            int numRows = matrix.Length;
-            int numCols = matrix[0].Length;
-            double[][] result = new double[numRows][];
-
-            for (int i = 0; i < numRows; i++)
-            {
-                result[i] = new double[numCols];
-                for (int j = 0; j < numCols; j++)
-                {
-                    result[i][j] = matrix[i][j] + vector[j];
-                }
-            }
 
             return result;
         }
 
+        /// <summary>
+        /// Multiply a matrix by a scalar.
+        /// </summary>
+        /// <param name="scalar">The scalar to multiply.</param>
+        /// <param name="matrix">The matrix.</param>
+        /// <returns>The resultant matrix.</returns>
         public static double[][] ScalarMultiply(double scalar, double[][] matrix)
         {
             int numRows = matrix.Length;
@@ -393,44 +462,45 @@
             return result;
         }
 
-        public static double[][] MatrixAdd(double[][] a, double[][] b, double[] c)
-        {
-            int numRows = a.Length;
-            int numCols = a[0].Length;
-            double[][] result = new double[numRows][];
-            for (int i = 0; i < numRows; i++)
-            {
-                result[i] = new double[numCols];
-                for (int j = 0; j < numCols; j++)
-                {
-                    result[i][j] = a[i][j] + b[i][j] + c[j];
-                }
-            }
-            return result;
-        }
-
+        /// <summary>
+        /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
+        /// </summary>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>The initialized random matrix.</returns>
         public static double[][] InitializeRandomMatrixWithXavierInitialization(int numRows, int numCols)
         {
             double[][] matrix = new double[numRows][];
-            var localRandom = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+            var randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
+            var localRandom = new ThreadLocal<Random>(randomFunc);
+            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
 
             Parallel.For(0, numRows, i =>
             {
                 matrix[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
-                    matrix[i][j] = (localRandom.Value.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                    matrix[i][j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                 }
             });
 
             return matrix;
         }
 
+        /// <summary>
+        /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
+        /// </summary>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>The initialized random matrix.</returns>
         public static double[][][] InitializeRandomMatrixWithXavierInitialization(int numLayers, int numRows, int numCols)
         {
             double[][][] matrix = new double[numLayers][][];
 
-            var localRandom = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+            var randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
+            var localRandom = new ThreadLocal<Random>(randomFunc);
+            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
 
             Parallel.For(0, numLayers, layerIndex =>
             {
@@ -440,7 +510,7 @@
                     matrix[layerIndex][i] = new double[numCols];
                     for (int j = 0; j < numCols; j++)
                     {
-                        matrix[layerIndex][i][j] = (localRandom.Value.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                        matrix[layerIndex][i][j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                     }
                 }
             });

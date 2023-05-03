@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="Operation.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
@@ -14,26 +19,25 @@
         public Operation()
         {
             // Initialize properties
-            Inputs = new List<string>();
-            Outputs = new List<string>();
-            BackwardAdjacentOperations = new List<IOperation>();
-            BackwardDependencyCounts = new List<int>();
-            AccumulatedGradients = new List<(double[][]?, double[][]?)>();
-            Tasks = new List<Task>();
-            BackwardDependencies = new List<List<string>>();
-            VisitedFrom = new List<string>();
+            this.Inputs = new List<string>();
+            this.Outputs = new List<string>();
+            this.BackwardAdjacentOperations = new List<IOperation>();
+            this.BackwardDependencyCounts = new List<int>();
+            this.AccumulatedGradients = new List<(double[][]?, double[][]?)>();
+            this.Tasks = new List<Task>();
+            this.BackwardDependencies = new List<List<string>>();
+            this.VisitedFrom = new List<string>();
         }
 
         public void Reset()
         {
-            //Debug.WriteLine($"Resetting {SpecificId}");
-            VisitedCount = 0;
-            VisitedFrom?.Clear();
-            AccumulatedGradients.Clear();
-            SyncSemaphore?.Dispose();
-            SyncSemaphore = null;
-            IsComplete = false;
-            Tasks?.Clear();
+            this.VisitedCount = 0;
+            this.VisitedFrom?.Clear();
+            this.AccumulatedGradients.Clear();
+            this.SyncSemaphore?.Dispose();
+            this.SyncSemaphore = null;
+            this.IsComplete = false;
+            this.Tasks?.Clear();
         }
 
         public bool IsComplete { get; set; }
@@ -52,7 +56,7 @@
         {
             get
             {
-                return Next != null;
+                return this.Next != null;
             }
         }
 
@@ -66,12 +70,12 @@
         public string SpecificId { get; set; }
 
         // Private field to store the output of the operation
-        protected double[][] _output;
+        protected double[][] output;
 
         // Returns the output of the operation
         public virtual double[][] GetOutput()
         {
-            return _output;
+            return this.output;
         }
 
         // Abstract method to perform backward pass, must be implemented by derived classes
@@ -84,15 +88,15 @@
         public virtual void AccumulateGradient((double[][]?, double[][]?) dOutput)
         {
             var array3D = MatrixUtils.Reassemble(dOutput).ToList();
-            for (int k = array3D.Count; k < GradientDestinations.Length; ++k)
+            for (int k = array3D.Count; k < this.GradientDestinations.Length; ++k)
             {
                 array3D.Add(dOutput.Item2);
             }
-            if (GradientDestinations != null && GradientDestinations.Length > 0)
+            if (this.GradientDestinations != null && this.GradientDestinations.Length > 0)
             {
-                for (int d = 0; d < GradientDestinations.Length; ++d)
+                for (int d = 0; d < this.GradientDestinations.Length; ++d)
                 {
-                    var gradientResultTo = (double[][])GradientDestinations[d];
+                    var gradientResultTo = (double[][])this.GradientDestinations[d];
                     if (gradientResultTo != null)
                     {
                         var output = array3D[d];
@@ -116,7 +120,7 @@
         // Copies the result of the operation to the specified destination
         public virtual void ResultTo(Func<int, int, object> func)
         {
-            var oo = func(TimeStepIndex, LayerIndex);
+            var oo = func(this.TimeStepIndex, this.LayerIndex);
             double[][] o = null;
             if (oo is Operation)
             {
@@ -126,13 +130,13 @@
             {
                 o = (double[][])oo;
             }
-            int numRows = _output.Length;
-            int numCols = _output[0].Length;
+            int numRows = this.output.Length;
+            int numCols = this.output[0].Length;
             for (int i = 0; i < numRows; ++i)
             {
                 for (int j = 0; j < numCols; ++j)
                 {
-                    o[i][j] = _output[i][j];
+                    o[i][j] = this.output[i][j];
                 }
             }
         }
@@ -140,26 +144,26 @@
         // Initialize the operation with the specified starting point index
         public virtual void Initialize(int startingPointIndex)
         {
-            OutputDependencyCount = BackwardDependencyCounts[startingPointIndex];
-            InitializeLock();
-            InitializeSyncSemaphore();
+            this.OutputDependencyCount = this.BackwardDependencyCounts[startingPointIndex];
+            this.InitializeLock();
+            this.InitializeSyncSemaphore();
         }
 
         // Initialize the lock object
         public virtual void InitializeLock()
         {
-            if (Lock == null)
+            if (this.Lock == null)
             {
-                Lock = new ReaderWriterLockSlim();
+                this.Lock = new ReaderWriterLockSlim();
             }
         }
 
         // Initialize the synchronization semaphore
         public virtual void InitializeSyncSemaphore()
         {
-            if (SyncSemaphore == null)
+            if (this.SyncSemaphore == null)
             {
-                SyncSemaphore = new SemaphoreSlim(0, OutputDependencyCount);
+                this.SyncSemaphore = new SemaphoreSlim(0, this.OutputDependencyCount);
             }
         }
 

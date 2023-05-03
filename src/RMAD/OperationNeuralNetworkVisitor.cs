@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="OperationNeuralNetworkVisitor.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
@@ -42,14 +47,13 @@
         {
             get
             {
-                return id;
+                return this.id;
             }
         }
 
         public Task TraverseAsync()
         {
-            Debug.WriteLine($"Starting traversal {startingPointIndex}");
-            return Traverse(startNode);
+            return this.Traverse(this.startNode);
         }
 
         private async Task Traverse(IOperation node, IOperation fromNode = null)
@@ -71,7 +75,7 @@
             var dOutput = node.Backward((double[][])node.BackwardInput);
 
             bool shouldContinue = false;
-            node.Initialize(startingPointIndex);
+            node.Initialize(this.startingPointIndex);
             node.Lock.EnterWriteLock();
 
             node.VisitedCount++;
@@ -114,7 +118,7 @@
             if (node.OutputDependencyCount > 1)
             {
 
-                Debug.WriteLine($"Released to continue {node.SpecificId} {startingPointIndex} {node.VisitedCount} {node.OutputDependencyCount}");
+                Debug.WriteLine($"Released to continue {node.SpecificId} {this.startingPointIndex} {node.VisitedCount} {node.OutputDependencyCount}");
 
                 if (node.AccumulatedGradients.Count != node.OutputDependencyCount)
                 {
@@ -148,13 +152,13 @@
                     if (adjacentOperation != null)
                     {
                         adjacentOperation.BackwardInput = dOutputs[i];
-                        if (runInParallel)
+                        if (this.runInParallel)
                         {
-                            adjacentTasks.Add(Task.Run(() => Traverse(adjacentOperation, node)));
+                            adjacentTasks.Add(Task.Run(() => this.Traverse(adjacentOperation, node)));
                         }
                         else
                         {
-                            adjacentTasks.Add(Traverse(adjacentOperation, node));
+                            adjacentTasks.Add(this.Traverse(adjacentOperation, node));
                         }
                     }
                 }
@@ -167,7 +171,7 @@
                     if (adjacentOperation != null)
                     {
                         adjacentOperation.BackwardInput = dOutput.Item1;
-                        adjacentTasks.Add(Traverse(adjacentOperation, node));
+                        adjacentTasks.Add(this.Traverse(adjacentOperation, node));
                     }
                 }
             }
@@ -177,7 +181,7 @@
             await Task.WhenAll(adjacentTasks).ConfigureAwait(false);
 
             Debug.WriteLine($"Visitor {this.Id} tasks complete at node {node.SpecificId} {node.OutputDependencyCount} {adjacentTasks.Count}");
-            operations.Add(node);
+            this.operations.Add(node);
 
             node.IsComplete = true;
 
@@ -185,15 +189,14 @@
 
         public void Reset()
         {
-            Parallel.For(0, operations.Count, i =>
+            Parallel.For(0, this.operations.Count, i =>
             {
-                if (operations[i] != null)
+                if (this.operations[i] != null)
                 {
-                    Debug.WriteLine($"Resetting {operations[i].SpecificId} {operations.Count}");
-                    operations[i].Reset();
+                    this.operations[i].Reset();
                 }
             });
-            operations.Clear();
+            this.operations.Clear();
         }
     }
 }

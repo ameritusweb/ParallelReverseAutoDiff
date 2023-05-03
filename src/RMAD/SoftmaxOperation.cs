@@ -1,11 +1,16 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="SoftmaxOperation.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Linq;
 
     public class SoftmaxOperation : Operation
     {
-        private double[][] _input;
+        private double[][] input;
 
         public SoftmaxOperation() : base()
         {
@@ -18,15 +23,15 @@
 
         public double[][] Forward(double[][] input)
         {
-            _input = input;
-            _output = Softmax(input);
-            return _output;
+            this.input = input;
+            this.output = this.Softmax(input);
+            return this.output;
         }
 
         public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
         {
-            int numRows = _output.Length;
-            int numCols = _output[0].Length;
+            int numRows = this.output.Length;
+            int numCols = this.output[0].Length;
 
             double[][] dLdInput = new double[numRows][];
             for (int i = 0; i < numRows; i++)
@@ -38,11 +43,11 @@
                     {
                         if (j == k)
                         {
-                            dLdInput[i][j] += dLdOutput[i][k] * _output[i][j] * (1 - _output[i][j]);
+                            dLdInput[i][j] += dLdOutput[i][k] * this.output[i][j] * (1 - this.output[i][j]);
                         }
                         else
                         {
-                            dLdInput[i][j] -= dLdOutput[i][k] * _output[i][j] * _output[i][k];
+                            dLdInput[i][j] -= dLdOutput[i][k] * this.output[i][j] * this.output[i][k];
                         }
                     }
                 }

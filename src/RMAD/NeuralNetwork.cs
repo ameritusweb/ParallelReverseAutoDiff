@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.RMAD
+﻿//------------------------------------------------------------------------------
+// <copyright file="NeuralNetwork.cs" author="ameritusweb" date="5/2/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
@@ -7,10 +12,12 @@
     {
         protected readonly Func<double, double> sigmoid = (x) => 1 / (1 + Math.Exp(-x));
         protected readonly Func<double, double> tanh = (d) => Math.Sinh(d) / Math.Cosh(d);
-        protected readonly double dropoutRate = 0.01d;
-        protected readonly double discountFactor = 0.99d;
 
-        protected int learningRate;
+        protected double dropoutRate = 0.01d;
+
+        protected double discountFactor = 0.99d;
+
+        protected double learningRate;
 
         protected int numTimeSteps;
 
@@ -22,37 +29,37 @@
 
         public virtual double GetDropoutRate()
         {
-            return dropoutRate;
+            return this.dropoutRate;
         }
 
         public virtual double GetDiscountFactor()
         {
-            return discountFactor;
+            return this.discountFactor;
         }
 
         public virtual int GetNumTimeSteps()
         {
-            return numTimeSteps;
+            return this.numTimeSteps;
         }
 
         public virtual double GetLearningRate()
         {
-            return learningRate;
+            return this.learningRate;
         }
 
         public virtual List<double> GetRewards()
         {
-            return rewards;
+            return this.rewards;
         }
 
         public virtual double[][][] GetInputSequence()
         {
-            return inputSequence;
+            return this.inputSequence;
         }
 
         public virtual List<double[][]> GetChosenActions()
         {
-            return chosenActions;
+            return this.chosenActions;
         }
     }
 }
