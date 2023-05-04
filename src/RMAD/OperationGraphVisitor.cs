@@ -80,6 +80,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     node.BackwardDependencyCounts.Add(0);
                 }
             }
+
             node.BackwardDependencyCounts[this.startingPointIndex]++;
             node.Lock.ExitWriteLock();
 
@@ -91,7 +92,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var adjacentTasks = new List<Task>();
             for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
             {
-                IOperation adjacentOperation = node.BackwardAdjacentOperations[i];
+                IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
                 if (adjacentOperation != null)
                 {
                     adjacentTasks.Add(this.Traverse(adjacentOperation));
@@ -119,13 +120,6 @@ namespace ParallelReverseAutoDiff.RMAD
                     return;
                 }
             }
-            else
-            {
-                if (node.VisitedCount > 0)
-                {
-
-                }
-            }
 
             node.VisitedCount = 0;
             node.Lock.ExitWriteLock();
@@ -133,7 +127,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var adjacentTasks = new List<Task>();
             for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
             {
-                IOperation adjacentOperation = node.BackwardAdjacentOperations[i];
+                IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
                 if (adjacentOperation != null)
                 {
                     adjacentTasks.Add(this.ResetVisitedCountsAsync(adjacentOperation));

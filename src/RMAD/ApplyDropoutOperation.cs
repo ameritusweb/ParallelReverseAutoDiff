@@ -52,6 +52,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.output[i][j] = this.dropoutMask[i][j] * input[i][j];
                 }
             }
+
             return this.output;
         }
 

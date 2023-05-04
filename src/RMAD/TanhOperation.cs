@@ -9,14 +9,6 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class TanhOperation : Operation
     {
-        private Matrix input;
-
-        public TanhOperation()
-            : base()
-        {
-
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new TanhOperation();
@@ -24,7 +16,6 @@ namespace ParallelReverseAutoDiff.RMAD
 
         public Matrix Forward(Matrix input)
         {
-            this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 

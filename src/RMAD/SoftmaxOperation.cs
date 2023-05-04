@@ -12,10 +12,6 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private Matrix input;
 
-        public SoftmaxOperation() : base()
-        {
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new SoftmaxOperation();
@@ -51,6 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     }
                 }
             }
+
             return (dLdInput, dLdInput);
         }
 
@@ -76,6 +73,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     output[i][j] /= sum;
                 }
             }
+
             return output;
         }
     }

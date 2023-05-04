@@ -15,14 +15,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AmplifiedSigmoidOperation"/> class.
-        /// </summary>
-        public AmplifiedSigmoidOperation()
-            : base()
-        {
-        }
-
-        /// <summary>
         /// A common method for instantiating an operation.
         /// </summary>
         /// <param name="net">The neural network.</param>

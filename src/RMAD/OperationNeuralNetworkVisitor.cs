@@ -68,6 +68,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     throw new InvalidOperationException("Node must not be visited twice.");
                 }
+
                 node.VisitedFrom.Add(fromNode.SpecificId);
             }
 
@@ -100,6 +101,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     }
                 }
             }
+
             node.Lock.ExitWriteLock();
 
             if (!shouldContinue)
@@ -175,7 +177,6 @@ namespace ParallelReverseAutoDiff.RMAD
             this.operations.Add(node);
 
             node.IsComplete = true;
-
         }
 
         public void Reset()

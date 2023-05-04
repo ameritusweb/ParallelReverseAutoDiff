@@ -96,6 +96,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 array3D.Add(dOutput.Item2);
             }
+
             if (this.GradientDestinations != null && this.GradientDestinations.Length > 0)
             {
                 for (int d = 0; d < this.GradientDestinations.Length; ++d)
@@ -134,6 +135,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 o = (Matrix)oo;
             }
+
             int numRows = this.output.Length;
             int numCols = this.output[0].Length;
             for (int i = 0; i < numRows; ++i)

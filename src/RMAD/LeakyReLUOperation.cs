@@ -10,7 +10,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input;
         private double alpha;
 
-        public LeakyReLUOperation(double alpha = 0.01) : base()
+        public LeakyReLUOperation(double alpha = 0.01)
+            : base()
         {
             this.alpha = alpha;
         }
@@ -58,5 +59,4 @@ namespace ParallelReverseAutoDiff.RMAD
             return (dLdInput, dLdInput);
         }
     }
-
 }

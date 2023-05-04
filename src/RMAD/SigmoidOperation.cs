@@ -11,11 +11,6 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private Matrix input;
 
-        public SigmoidOperation() : base()
-        {
-
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new SigmoidOperation();

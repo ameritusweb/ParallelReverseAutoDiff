@@ -12,11 +12,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input1;
         private Matrix input2;
 
-        public HadamardProductOperation() : base()
-        {
-
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new HadamardProductOperation();
@@ -50,6 +45,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
             // Calculate gradient w.r.t. input1
             Matrix dInput1 = new Matrix(numRows, numCols);
+
             // Parallelize the outer loop
             Parallel.For(0, numRows, i =>
             {

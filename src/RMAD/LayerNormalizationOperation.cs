@@ -19,11 +19,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private int numRows;
         private int numCols;
 
-        public LayerNormalizationOperation() : base()
-        {
-
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new LayerNormalizationOperation();

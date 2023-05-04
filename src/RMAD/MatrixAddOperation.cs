@@ -10,11 +10,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix inputA;
         private Matrix inputB;
 
-        public MatrixAddOperation() : base()
-        {
-
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new MatrixAddOperation();
@@ -58,5 +53,4 @@ namespace ParallelReverseAutoDiff.RMAD
             return (dInputA, dInputB); // You can return either dInputA or dInputB, as they are identical.
         }
     }
-
 }

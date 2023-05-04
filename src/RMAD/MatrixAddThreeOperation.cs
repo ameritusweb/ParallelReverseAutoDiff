@@ -16,10 +16,6 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixAddThreeOperation();
         }
 
-        private MatrixAddThreeOperation() : base()
-        {
-        }
-
         public Matrix Forward(Matrix inputA, Matrix inputB, Matrix bias)
         {
             this.inputA = inputA;
@@ -59,5 +55,4 @@ namespace ParallelReverseAutoDiff.RMAD
             return (dInputA, dInputB); // You can return either dInputA or dInputB, as they are identical.
         }
     }
-
 }

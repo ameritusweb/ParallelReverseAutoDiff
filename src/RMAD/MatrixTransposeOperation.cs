@@ -9,11 +9,6 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private Matrix input;
 
-        public MatrixTransposeOperation() : base()
-        {
-
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new MatrixTransposeOperation();

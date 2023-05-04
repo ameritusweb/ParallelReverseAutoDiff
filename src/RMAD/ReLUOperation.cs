@@ -13,14 +13,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReLUOperation"/> class.
-        /// </summary>
-        public ReLUOperation()
-            : base()
-        {
-        }
-
-        /// <summary>
         /// A common factory method for instantiating this operation.
         /// </summary>
         /// <param name="net">The neural network.</param>
@@ -43,7 +35,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.output = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
-            {;
+            {
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i][j];

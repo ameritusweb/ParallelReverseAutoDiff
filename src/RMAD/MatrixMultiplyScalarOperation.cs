@@ -12,10 +12,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input;
         private double scalar;
 
-        public MatrixMultiplyScalarOperation() : base()
-        {
-        }
-
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new MatrixMultiplyScalarOperation();
@@ -59,5 +55,4 @@ namespace ParallelReverseAutoDiff.RMAD
             return (dLdInput, dLdInput);
         }
     }
-
 }
