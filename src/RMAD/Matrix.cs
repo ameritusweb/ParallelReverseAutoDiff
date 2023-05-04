@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -110,6 +111,12 @@ namespace ParallelReverseAutoDiff.RMAD
             int numRows1 = m1.Rows;
             int numCols1 = m1.Cols;
             int numRows2 = m2.Rows;
+
+            if (numCols1 != numRows2)
+            {
+                throw new InvalidOperationException("Matrix dimensions must be compatible for multiplication.");
+            }
+
             int numCols2 = m2.Cols;
             Matrix result = new Matrix(numRows1, numCols2);
 

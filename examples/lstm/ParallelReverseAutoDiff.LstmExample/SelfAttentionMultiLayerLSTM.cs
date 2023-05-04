@@ -27,10 +27,6 @@ namespace ParallelReverseAutoDiff.LstmExample
 
         private Matrix[][] h;
         private Matrix[][] c; // Memory cell state
-        private Matrix[][] i;
-        private Matrix[][] f;
-        private Matrix[][] cHat;
-        private Matrix[][] o;
         private Matrix[] output;
 
         private Matrix V;
@@ -138,7 +134,6 @@ namespace ParallelReverseAutoDiff.LstmExample
         private Dictionary<string, IOperation> operationsMap;
         private IOperation? priorOperation;
         private IOperation? startOperation;
-        private IOperation backwardStartOperation;
         private Dictionary<string, Func<int, int, object>> inputNameToValueMap;
         private Matrix[][][] arrays4D;
         private Matrix[][] arrays3D;
@@ -387,14 +382,10 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.db = MatrixUtils.InitializeZeroMatrix(this.outputSize, 1);
 
             // Clear intermediates
-            this.f = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
-            this.i = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
-            this.cHat = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
-            this.o = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.numLayers, this.hiddenSize, this.outputSize);
             this.output = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.outputSize, 1);
             this.inputSequence = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.originalInputSize, 1);
 
-            this.arrays4D = new Matrix[][][] { this.h, this.c, this.f, this.i, this.cHat, this.o };
+            this.arrays4D = new Matrix[][][] { this.h, this.c };
             this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
             this.arrays2D = new Matrix[] { this.dWe, this.dbe, this.dV, this.db };
         }
@@ -584,12 +575,13 @@ namespace ParallelReverseAutoDiff.LstmExample
             }
             while (currOp.Next != null);
 
+            IOperation? backwardStartOperation = null;
             for (int t = this.numTimeSteps - 1; t >= 0; t--)
             {
-                this.backwardStartOperation = this.operationsMap[$"output_t_{t}"];
-                OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), this.backwardStartOperation, t);
+                backwardStartOperation = this.operationsMap[$"output_t_{t}"];
+                OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
                 await opVisitor.TraverseAsync();
-                await opVisitor.ResetVisitedCountsAsync(this.backwardStartOperation);
+                await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
             }
 
             Console.Clear();
@@ -655,22 +647,23 @@ namespace ParallelReverseAutoDiff.LstmExample
             Console.ForegroundColor = ConsoleColor.White;
             var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
+            IOperation? backwardStartOperation = null;
             for (int t = this.numTimeSteps - 1; t >= 0; t--)
             {
-                this.backwardStartOperation = this.operationsMap[$"output_t_{t}"];
+                backwardStartOperation = this.operationsMap[$"output_t_{t}"];
                 if (gradientOfLossWrtOutput[t][0] != 0.0d)
                 {
                     var backwardInput = new Matrix(1, 1);
                     backwardInput[0] = gradientOfLossWrtOutput[t];
-                    this.backwardStartOperation.BackwardInput = backwardInput;
-                    OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), this.backwardStartOperation, t);
+                    backwardStartOperation.BackwardInput = backwardInput;
+                    OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
                     await opVisitor.TraverseAsync();
                     opVisitor.Reset();
                     traverseCount++;
                 }
             }
 
-            if (traverseCount == 0.0d || doNotUpdate)
+            if (traverseCount == 0 || doNotUpdate)
             {
                 return;
             }

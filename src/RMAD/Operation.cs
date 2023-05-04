@@ -16,7 +16,7 @@ namespace ParallelReverseAutoDiff.RMAD
     {
 
         // Constructor
-        public Operation()
+        protected Operation()
         {
             // Initialize properties
             this.Inputs = new List<string>();
@@ -126,10 +126,10 @@ namespace ParallelReverseAutoDiff.RMAD
         public virtual void ResultTo(Func<int, int, object> func)
         {
             var oo = func(this.TimeStepIndex, this.LayerIndex);
-            Matrix o = null;
-            if (oo is Operation)
+            Matrix o;
+            if (oo is Operation op)
             {
-                o = ((Operation)oo).GetOutput();
+                o = op.GetOutput();
             }
             else
             {

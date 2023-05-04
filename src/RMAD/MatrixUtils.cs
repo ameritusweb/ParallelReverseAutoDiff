@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
-    public class MatrixUtils
+    public static class MatrixUtils
     {
         public static Matrix[] Reassemble((Matrix?, Matrix?) dOutput)
         {

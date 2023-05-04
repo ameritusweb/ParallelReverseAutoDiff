@@ -25,7 +25,6 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// <param name="numTimeSteps">The number of time steps.</param>
         /// <param name="discountFactor">The discount factor.</param>
         public PolicyGradientLossOperation(List<Matrix> chosenActions, List<double> rewards, int numTimeSteps, double discountFactor)
-            : base()
         {
             this.chosenActions = chosenActions;
             this.numTimeSteps = numTimeSteps;
@@ -74,7 +73,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
                 double gradLossWrtOutput_t = gradLogProbWrtOutput * discountedAdvantage * -1d;
 
                 // Add the gradient of the entropy term
-                if (gradLossWrtOutput_t != 0.0d)
+                if ((int)gradLossWrtOutput_t != 0)
                 {
                     double gradEntropyWrtOutput = -Math.Log(actionProb) - 1;
                     gradLossWrtOutput_t += beta * gradEntropyWrtOutput;
