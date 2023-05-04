@@ -11,9 +11,9 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class OperationGraphVisitor
     {
-        private string id;
-        private IOperation startNode;
-        private int startingPointIndex;
+        private readonly string id;
+        private readonly IOperation startNode;
+        private readonly int startingPointIndex;
 
         public OperationGraphVisitor(string id)
         {

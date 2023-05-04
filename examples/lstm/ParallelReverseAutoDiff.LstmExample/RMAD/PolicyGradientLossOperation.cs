@@ -12,10 +12,10 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
     /// </summary>
     public class PolicyGradientLossOperation : Operation
     {
-        private List<Matrix> chosenActions;
-        private int numTimeSteps;
-        private double discountFactor;
-        private List<double> rewards;
+        private readonly List<Matrix> chosenActions;
+        private readonly int numTimeSteps;
+        private readonly double discountFactor;
+        private readonly List<double> rewards;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolicyGradientLossOperation"/> class.

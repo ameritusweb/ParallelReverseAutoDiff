@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class Matrix : IEnumerable<double[]>
     {
-        private double[][] matrix;
+        private readonly double[][] matrix;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.

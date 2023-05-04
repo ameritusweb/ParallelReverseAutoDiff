@@ -15,6 +15,16 @@ namespace ParallelReverseAutoDiff.LstmExample
     public class SelfAttentionMultiLayerLSTM : NeuralNetwork, ILSTM
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.LstmExample.architecture";
+        private readonly int hiddenSize;
+        private readonly Random rng;
+        private readonly double clipValue;
+        private readonly string architecture;
+        private readonly int originalInputSize;
+        private readonly int inputSize;
+        private readonly int outputSize;
+        private readonly int numLayers;
+        private readonly string lstmName;
+
         private Matrix[][] h;
         private Matrix[][] c; // Memory cell state
         private Matrix[][] i;
@@ -22,12 +32,6 @@ namespace ParallelReverseAutoDiff.LstmExample
         private Matrix[][] cHat;
         private Matrix[][] o;
         private Matrix[] output;
-
-        private int originalInputSize;
-        private int inputSize;
-        private int hiddenSize;
-
-        private int outputSize;
 
         private Matrix V;
         private Matrix dV;
@@ -129,10 +133,6 @@ namespace ParallelReverseAutoDiff.LstmExample
         private Matrix[] mWv;
         private Matrix[] vWv;
 
-        private Random rng;
-
-        private double clipValue;
-        private int numLayers;
         private int adamT;
 
         private Dictionary<string, IOperation> operationsMap;
@@ -143,8 +143,6 @@ namespace ParallelReverseAutoDiff.LstmExample
         private Matrix[][][] arrays4D;
         private Matrix[][] arrays3D;
         private Matrix[] arrays2D;
-        private string architecture;
-        private string lstmName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfAttentionMultiLayerLSTM"/> class.

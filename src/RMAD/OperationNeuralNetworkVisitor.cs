@@ -12,11 +12,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class OperationNeuralNetworkVisitor
     {
-        private string id;
-        private IOperation startNode;
-        private int startingPointIndex;
-        private bool runInParallel;
-        private List<IOperation> operations;
+        private readonly string id;
+        private readonly IOperation startNode;
+        private readonly int startingPointIndex;
+        private readonly bool runInParallel;
+        private readonly List<IOperation> operations;
 
         public OperationNeuralNetworkVisitor(string id, IOperation startNode, int startingPointIndex, bool runInParallel = false)
         {

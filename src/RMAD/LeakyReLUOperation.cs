@@ -7,8 +7,8 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     public class LeakyReLUOperation : Operation
     {
+        private readonly double alpha;
         private Matrix input;
-        private double alpha;
 
         public LeakyReLUOperation(double alpha = 0.01)
         {

@@ -12,10 +12,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class ApplyDropoutOperation : Operation
     {
+        private readonly double dropoutRate;
+        private readonly Random random;
         private Matrix input;
         private Matrix dropoutMask;
-        private double dropoutRate;
-        private Random random;
 
         public ApplyDropoutOperation(double dropoutRate)
         {
