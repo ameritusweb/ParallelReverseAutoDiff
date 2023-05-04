@@ -18,7 +18,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Random random;
 
         public ApplyDropoutOperation(double dropoutRate)
-            : base()
         {
             this.dropoutRate = dropoutRate;
             this.random = new Random(Guid.NewGuid().GetHashCode());

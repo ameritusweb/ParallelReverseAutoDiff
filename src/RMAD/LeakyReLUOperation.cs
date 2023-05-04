@@ -11,7 +11,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private double alpha;
 
         public LeakyReLUOperation(double alpha = 0.01)
-            : base()
         {
             this.alpha = alpha;
         }
