@@ -10,7 +10,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class SoftmaxOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
 
         public SoftmaxOperation() : base()
         {
@@ -21,22 +21,21 @@ namespace ParallelReverseAutoDiff.RMAD
             return new SoftmaxOperation();
         }
 
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             this.output = this.Softmax(input);
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int numRows = this.output.Length;
             int numCols = this.output[0].Length;
 
-            double[][] dLdInput = new double[numRows][];
+            Matrix dLdInput = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                dLdInput[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     for (int k = 0; k < numCols; k++)
@@ -55,15 +54,14 @@ namespace ParallelReverseAutoDiff.RMAD
             return (dLdInput, dLdInput);
         }
 
-        private double[][] Softmax(double[][] input)
+        private Matrix Softmax(Matrix input)
         {
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            double[][] output = new double[numRows][];
+            Matrix output = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                output[i] = new double[numCols];
                 double max = input[i].Max();
                 double sum = 0;
                 for (int j = 0; j < numCols; j++)

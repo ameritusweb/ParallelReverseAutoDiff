@@ -9,7 +9,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class MatrixMultiplyScalarOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
         private double scalar;
 
         public MatrixMultiplyScalarOperation() : base()
@@ -21,18 +21,17 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixMultiplyScalarOperation();
         }
 
-        public double[][] Forward(double[][] input, double scalar)
+        public Matrix Forward(Matrix input, double scalar)
         {
             this.scalar = scalar;
             this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            this.output = new double[rows][];
+            this.output = new Matrix(rows, cols);
 
             // Parallelize the outer loop
             Parallel.For(0, rows, i =>
             {
-                this.output[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     this.output[i][j] = input[i][j] * this.scalar;
@@ -42,16 +41,15 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int rows = dLdOutput.Length;
             int cols = dLdOutput[0].Length;
-            double[][] dLdInput = new double[rows][];
+            Matrix dLdInput = new Matrix(rows, cols);
 
             // Parallelize the outer loop
             Parallel.For(0, rows, i =>
             {
-                dLdInput[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     dLdInput[i][j] = dLdOutput[i][j] * this.scalar;

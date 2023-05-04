@@ -7,9 +7,9 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     public class MatrixUtils
     {
-        public static double[][][] Reassemble((double[][]?, double[][]?) dOutput)
+        public static Matrix[] Reassemble((Matrix?, Matrix?) dOutput)
         {
-            return new double[][][] { dOutput.Item1, dOutput.Item2 };
+            return new Matrix[] { dOutput.Item1, dOutput.Item2 };
         }
     }
 }

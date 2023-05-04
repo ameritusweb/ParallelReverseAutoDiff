@@ -21,11 +21,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
         protected int numTimeSteps;
 
-        protected double[][][] inputSequence;
+        protected Matrix[] inputSequence;
 
         protected List<double> rewards;
 
-        protected List<double[][]> chosenActions;
+        protected List<Matrix> chosenActions;
 
         public virtual double GetDropoutRate()
         {
@@ -52,12 +52,12 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.rewards;
         }
 
-        public virtual double[][][] GetInputSequence()
+        public virtual Matrix[] GetInputSequence()
         {
             return this.inputSequence;
         }
 
-        public virtual List<double[][]> GetChosenActions()
+        public virtual List<Matrix> GetChosenActions()
         {
             return this.chosenActions;
         }

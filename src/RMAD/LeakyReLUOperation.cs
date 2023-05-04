@@ -7,7 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     public class LeakyReLUOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
         private double alpha;
 
         public LeakyReLUOperation(double alpha = 0.01) : base()
@@ -20,16 +20,15 @@ namespace ParallelReverseAutoDiff.RMAD
             return new LeakyReLUOperation();
         }
 
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            this.output = new double[rows][];
+            this.output = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
             {
-                this.output[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i][j];
@@ -40,15 +39,14 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int rows = dLdOutput.Length;
             int cols = dLdOutput[0].Length;
-            double[][] dLdInput = new double[rows][];
+            Matrix dLdInput = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
             {
-                dLdInput[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     double x = this.input[i][j];

@@ -23,7 +23,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.Outputs = new List<string>();
             this.BackwardAdjacentOperations = new List<IOperation?>();
             this.BackwardDependencyCounts = new List<int>();
-            this.AccumulatedGradients = new List<(double[][]?, double[][]?)>();
+            this.AccumulatedGradients = new List<(Matrix?, Matrix?)>();
             this.Tasks = new List<Task>();
             this.BackwardDependencies = new List<List<string>>();
             this.VisitedFrom = new List<string>();
@@ -70,10 +70,10 @@ namespace ParallelReverseAutoDiff.RMAD
         public string SpecificId { get; set; }
 
         // Private field to store the output of the operation
-        protected double[][] output;
+        protected Matrix output;
 
         // Returns the output of the operation
-        public virtual double[][] GetOutput()
+        public virtual Matrix GetOutput()
         {
             return this.output;
         }
@@ -83,13 +83,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="dOutput">The upstream gradient.</param>
         /// <returns>The gradients to send to the adjacent backward operations.</returns>
-        public abstract (double[][]?, double[][]?) Backward(double[][] dOutput);
+        public abstract (Matrix?, Matrix?) Backward(Matrix dOutput);
 
         // Property to store the gradient destination objects
         public object[] GradientDestinations { get; set; }
 
         // Send the calculated gradient to the appropriate destination object
-        public virtual void AccumulateGradient((double[][]?, double[][]?) dOutput)
+        public virtual void AccumulateGradient((Matrix?, Matrix?) dOutput)
         {
             var array3D = MatrixUtils.Reassemble(dOutput).ToList();
             for (int k = array3D.Count; k < this.GradientDestinations.Length; ++k)
@@ -100,7 +100,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int d = 0; d < this.GradientDestinations.Length; ++d)
                 {
-                    var gradientResultTo = (double[][])this.GradientDestinations[d];
+                    var gradientResultTo = (Matrix)this.GradientDestinations[d];
                     if (gradientResultTo != null)
                     {
                         var output = array3D[d];
@@ -125,14 +125,14 @@ namespace ParallelReverseAutoDiff.RMAD
         public virtual void ResultTo(Func<int, int, object> func)
         {
             var oo = func(this.TimeStepIndex, this.LayerIndex);
-            double[][] o = null;
+            Matrix o = null;
             if (oo is Operation)
             {
                 o = ((Operation)oo).GetOutput();
             }
             else
             {
-                o = (double[][])oo;
+                o = (Matrix)oo;
             }
             int numRows = this.output.Length;
             int numCols = this.output[0].Length;
@@ -199,10 +199,10 @@ namespace ParallelReverseAutoDiff.RMAD
         public List<int> BackwardDependencyCounts { get; set; }
 
         // The accumulated gradients from all output dependent operations
-        public List<(double[][]?, double[][]?)> AccumulatedGradients { get; set; }
+        public List<(Matrix?, Matrix?)> AccumulatedGradients { get; set; }
 
         // The accumulated gradients from all backward passes through this operation node
-        public (double[][]?, double[][]?) CalculatedGradient { get; set; }
+        public (Matrix?, Matrix?) CalculatedGradient { get; set; }
 
         // For the current backward pass, the number of operations that take this operation's output as input
         public int OutputDependencyCount { get; set; }

@@ -10,7 +10,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public static class GradientUtils
     {
-        public static double[][]? AccumulateGradients(List<double[][]> gradients)
+        public static Matrix? AccumulateGradients(List<Matrix> gradients)
         {
             if (gradients == null || gradients.Count == 0)
             {
@@ -20,10 +20,9 @@ namespace ParallelReverseAutoDiff.RMAD
             int numRows = gradients[0].Length;
             int numCols = gradients[0][0].Length;
 
-            double[][] accumulatedGradients = new double[numRows][];
+            Matrix accumulatedGradients = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                accumulatedGradients[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     accumulatedGradients[i][j] = gradients.Sum(g => g[i][j]);
@@ -33,18 +32,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return accumulatedGradients;
         }
 
-        public static (double[][]?, double[][]?) AccumulateBackwardGradients(List<(double[][]?, double[][]?)> gradientsList)
+        public static (Matrix?, Matrix?) AccumulateBackwardGradients(List<(Matrix?, Matrix?)> gradientsList)
         {
             if (gradientsList == null || gradientsList.Count == 0)
             {
                 return (null, null);
             }
 
-            List<double[][]> firstGradients = gradientsList.Where(g => g.Item1 != null).Select(g => g.Item1).OfType<double[][]>().ToList();
-            List<double[][]> secondGradients = gradientsList.Where(g => g.Item2 != null).Select(g => g.Item2).OfType<double[][]>().ToList();
+            List<Matrix> firstGradients = gradientsList.Where(g => g.Item1 != null).Select(g => g.Item1).OfType<Matrix>().ToList();
+            List<Matrix> secondGradients = gradientsList.Where(g => g.Item2 != null).Select(g => g.Item2).OfType<Matrix>().ToList();
 
-            double[][]? firstAccumulatedGradients = firstGradients.Count > 0 ? AccumulateGradients(firstGradients) : null;
-            double[][]? secondAccumulatedGradients = secondGradients.Count > 0 ? AccumulateGradients(secondGradients) : null;
+            Matrix? firstAccumulatedGradients = firstGradients.Count > 0 ? AccumulateGradients(firstGradients) : null;
+            Matrix? secondAccumulatedGradients = secondGradients.Count > 0 ? AccumulateGradients(secondGradients) : null;
 
             return (firstAccumulatedGradients, secondAccumulatedGradients);
         }

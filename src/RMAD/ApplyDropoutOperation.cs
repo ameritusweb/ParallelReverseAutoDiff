@@ -12,8 +12,8 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class ApplyDropoutOperation : Operation
     {
-        private double[][] input;
-        private double[][] dropoutMask;
+        private Matrix input;
+        private Matrix dropoutMask;
         private double dropoutRate;
         private Random random;
 
@@ -34,20 +34,17 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="input">The input for the operation.</param>
         /// <returns>The output for the operation.</returns>
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            this.output = new double[numRows][];
-            this.dropoutMask = new double[numRows][];
+            this.output = new Matrix(numRows, numCols);
+            this.dropoutMask = new Matrix(numRows, numCols);
 
             for (int i = 0; i < numRows; i++)
             {
-                this.output[i] = new double[numCols];
-                this.dropoutMask[i] = new double[numCols];
-
                 for (int j = 0; j < numCols; j++)
                 {
                     double randomValue = this.random.NextDouble();
@@ -59,15 +56,14 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int numRows = dLdOutput.Length;
             int numCols = dLdOutput[0].Length;
 
-            double[][] dLdInput = new double[numRows][];
+            Matrix dLdInput = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                dLdInput[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     dLdInput[i][j] = dLdOutput[i][j] * this.dropoutMask[i][j];

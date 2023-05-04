@@ -7,7 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     public class MatrixTransposeOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
 
         public MatrixTransposeOperation() : base()
         {
@@ -19,16 +19,15 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixTransposeOperation();
         }
 
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             int inputRows = input.Length;
             int inputCols = input[0].Length;
 
-            this.output = new double[inputCols][];
+            this.output = new Matrix(inputCols, inputRows);
             for (int i = 0; i < inputCols; i++)
             {
-                this.output[i] = new double[inputRows];
                 for (int j = 0; j < inputRows; j++)
                 {
                     this.output[i][j] = input[j][i];
@@ -38,15 +37,14 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int dOutputRows = dOutput.Length;
             int dOutputCols = dOutput[0].Length;
 
-            double[][] dInput = new double[dOutputCols][];
+            Matrix dInput = new Matrix(dOutputCols, dOutputRows);
             for (int i = 0; i < dOutputCols; i++)
             {
-                dInput[i] = new double[dOutputRows];
                 for (int j = 0; j < dOutputRows; j++)
                 {
                     dInput[i][j] = dOutput[j][i];

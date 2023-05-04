@@ -10,8 +10,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class MatrixMultiplyOperation : Operation
     {
-        private double[][] input1;
-        private double[][] input2;
+        private Matrix input1;
+        private Matrix input2;
 
         public MatrixMultiplyOperation()
             : base()
@@ -23,7 +23,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixMultiplyOperation();
         }
 
-        public double[][] Forward(double[][] input1, double[][] input2)
+        public Matrix Forward(Matrix input1, Matrix input2)
         {
             this.input1 = input1;
             this.input2 = input2;
@@ -34,15 +34,14 @@ namespace ParallelReverseAutoDiff.RMAD
 
             if (input1Cols != input2Rows)
             {
-                throw new Exception("Input 1 columns do not match Input 2 rows");
+                throw new InvalidOperationException("Input 1 columns do not match Input 2 rows");
             }
 
-            this.output = new double[input1Rows][];
+            this.output = new Matrix(input1Rows, input2Cols);
 
             // Parallelize the outer loop
             Parallel.For(0, input1Rows, i =>
             {
-                this.output[i] = new double[input2Cols];
                 for (int j = 0; j < input2Cols; j++)
                 {
                     this.output[i][j] = 0;
@@ -56,7 +55,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int input1Rows = this.input1.Length;
             int input1Cols = this.input1[0].Length;
@@ -64,12 +63,11 @@ namespace ParallelReverseAutoDiff.RMAD
             int input2Cols = this.input2[0].Length;
 
             // Calculate gradient w.r.t. input1
-            double[][] dInput1 = new double[input1Rows][];
+            Matrix dInput1 = new Matrix(input1Rows, input1Cols);
 
             // Parallelize the outer loop
             Parallel.For(0, input1Rows, i =>
             {
-                dInput1[i] = new double[input1Cols];
                 for (int j = 0; j < input1Cols; j++)
                 {
                     dInput1[i][j] = 0;
@@ -81,12 +79,11 @@ namespace ParallelReverseAutoDiff.RMAD
             });
 
             // Calculate gradient w.r.t. input2
-            double[][] dInput2 = new double[input2Rows][];
+            Matrix dInput2 = new Matrix(input2Rows, input2Cols);
 
             // Parallelize the outer loop
             Parallel.For(0, input2Rows, i =>
             {
-                dInput2[i] = new double[input2Cols];
                 for (int j = 0; j < input2Cols; j++)
                 {
                     dInput2[i][j] = 0;

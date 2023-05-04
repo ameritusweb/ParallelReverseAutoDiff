@@ -9,7 +9,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class SigmoidOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
 
         public SigmoidOperation() : base()
         {
@@ -21,16 +21,15 @@ namespace ParallelReverseAutoDiff.RMAD
             return new SigmoidOperation();
         }
 
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            this.output = new double[numRows][];
+            this.output = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                this.output[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     this.output[i][j] = 1.0 / (1.0 + Math.Exp(-input[i][j]));
@@ -40,15 +39,14 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int numRows = this.input.Length;
             int numCols = this.input[0].Length;
 
-            double[][] dInput = new double[numRows][];
+            Matrix dInput = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                dInput[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     double sigmoidDerivative = this.output[i][j] * (1 - this.output[i][j]);

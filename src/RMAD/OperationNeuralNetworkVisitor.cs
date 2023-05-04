@@ -7,7 +7,6 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -67,12 +66,12 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 if (node.VisitedFrom.Contains(fromNode.SpecificId))
                 {
-                    throw new Exception("Node must not be visited twice.");
+                    throw new InvalidOperationException("Node must not be visited twice.");
                 }
                 node.VisitedFrom.Add(fromNode.SpecificId);
             }
 
-            var dOutput = node.Backward((double[][])node.BackwardInput);
+            var dOutput = node.Backward((Matrix)node.BackwardInput);
 
             bool shouldContinue = false;
             node.Initialize(this.startingPointIndex);
@@ -93,9 +92,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     try
                     {
-                        Debug.WriteLine($"Visitor {this.Id} releasing semaphore at node {node.SpecificId} with visited count {node.VisitedCount} {node.OutputDependencyCount}");
                         node.SyncSemaphore.Release(node.OutputDependencyCount - 1);
-                        Debug.WriteLine($"Visitor {this.Id} released semaphore at node {node.SpecificId} with visited count {node.VisitedCount} {node.OutputDependencyCount}");
                     }
                     catch (SemaphoreFullException)
                     {
@@ -107,9 +104,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
             if (!shouldContinue)
             {
-                Debug.WriteLine($"Visitor {this.Id} waiting for semaphore at node {node.SpecificId} with visited count {node.VisitedCount} {node.OutputDependencyCount}");
                 await node.SyncSemaphore.WaitAsync();
-                Debug.WriteLine($"Visitor {this.Id} released from semaphore at node {node.SpecificId} with visited count {node.VisitedCount} {node.OutputDependencyCount}");
 
                 return;
             }
@@ -117,12 +112,9 @@ namespace ParallelReverseAutoDiff.RMAD
             // Perform gradient accumulation here
             if (node.OutputDependencyCount > 1)
             {
-
-                Debug.WriteLine($"Released to continue {node.SpecificId} {this.startingPointIndex} {node.VisitedCount} {node.OutputDependencyCount}");
-
                 if (node.AccumulatedGradients.Count != node.OutputDependencyCount)
                 {
-                    throw new Exception("Accumulated gradients count must equal the output dependency count.");
+                    throw new InvalidOperationException("Accumulated gradients count must equal the output dependency count.");
                 }
 
                 // Accumulate gradients in AccumulatedGradients list
@@ -145,10 +137,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 ||
                 node.OperationType == typeof(MatrixAddThreeOperation))
             {
-                double[][][] dOutputs = MatrixUtils.Reassemble(dOutput);
+                Matrix[] dOutputs = MatrixUtils.Reassemble(dOutput);
                 for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
                 {
-                    IOperation adjacentOperation = node.BackwardAdjacentOperations[i];
+                    IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
                     if (adjacentOperation != null)
                     {
                         adjacentOperation.BackwardInput = dOutputs[i];
@@ -180,7 +172,6 @@ namespace ParallelReverseAutoDiff.RMAD
 
             await Task.WhenAll(adjacentTasks).ConfigureAwait(false);
 
-            Debug.WriteLine($"Visitor {this.Id} tasks complete at node {node.SpecificId} {node.OutputDependencyCount} {adjacentTasks.Count}");
             this.operations.Add(node);
 
             node.IsComplete = true;

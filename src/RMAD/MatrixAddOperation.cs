@@ -7,8 +7,8 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     public class MatrixAddOperation : Operation
     {
-        private double[][] inputA;
-        private double[][] inputB;
+        private Matrix inputA;
+        private Matrix inputB;
 
         public MatrixAddOperation() : base()
         {
@@ -20,17 +20,16 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixAddOperation();
         }
 
-        public double[][] Forward(double[][] inputA, double[][] inputB)
+        public Matrix Forward(Matrix inputA, Matrix inputB)
         {
             this.inputA = inputA;
             this.inputB = inputB;
             int numRows = inputA.Length;
             int numCols = inputA[0].Length;
-            this.output = new double[numRows][];
+            this.output = new Matrix(numRows, numCols);
 
             for (int i = 0; i < numRows; i++)
             {
-                this.output[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     this.output[i][j] = inputA[i][j] + inputB[i][j];
@@ -40,17 +39,15 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int numRows = dOutput.Length;
             int numCols = dOutput[0].Length;
-            double[][] dInputA = new double[numRows][];
-            double[][] dInputB = new double[numRows][];
+            Matrix dInputA = new Matrix(numRows, numCols);
+            Matrix dInputB = new Matrix(numRows, numCols);
 
             for (int i = 0; i < numRows; i++)
             {
-                dInputA[i] = new double[numCols];
-                dInputB[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     dInputA[i][j] = dOutput[i][j];

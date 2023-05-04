@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.RMAD
     {
 
         private const double epsilon = 1E-6;
-        private double[][] input;
+        private Matrix input;
         private double[] mean;
         private double[] stdDev;
         private int numRows;
@@ -29,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return new LayerNormalizationOperation();
         }
 
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             this.numRows = input.Length;
@@ -46,12 +46,11 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             // Normalize the input
-            this.output = new double[this.numRows][];
+            this.output = new Matrix(this.numRows, this.numCols);
 
             // Parallelize the outer loop
             Parallel.For(0, this.numRows, i =>
             {
-                this.output[i] = new double[this.numCols];
                 for (int j = 0; j < this.numCols; j++)
                 {
                     this.output[i][j] = (input[i][j] - this.mean[i]) / (this.stdDev[i] + epsilon);
@@ -61,14 +60,13 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] gradOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix gradOutput)
         {
-            double[][] gradient = new double[this.numRows][];
+            Matrix gradient = new Matrix(this.numRows, this.numCols);
 
             // Parallelize the outer loop
             Parallel.For(0, this.numRows, i =>
             {
-                gradient[i] = new double[this.numCols];
                 double invStdDev = 1 / (this.stdDev[i] + epsilon);
                 double exp1 = (1 - (1.0 / this.numCols)) * invStdDev;
 
@@ -76,6 +74,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     var exp2 = Math.Sqrt(Math.Pow(this.input[i][j] - this.mean[i], 2)) / (this.numCols * Math.Pow(this.stdDev[i] + epsilon, 2));
                     var exp3 = exp1 - exp2;
+
                     // Multiply the computed gradient by the upstream gradient
                     gradient[i][j] = gradOutput[i][j] * exp3;
                 }

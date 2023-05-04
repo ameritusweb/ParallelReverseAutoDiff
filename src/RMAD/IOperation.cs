@@ -28,15 +28,15 @@ namespace ParallelReverseAutoDiff.RMAD
 
         string SpecificId { get; set; }
 
-        double[][] GetOutput();
+        Matrix GetOutput();
 
         void Reset();
 
-        (double[][]?, double[][]?) Backward(double[][] dOutput);
+        (Matrix?, Matrix?) Backward(Matrix dOutput);
 
         object[] GradientDestinations { get; set; }
 
-        void AccumulateGradient((double[][]?, double[][]?) dOutput);
+        void AccumulateGradient((Matrix?, Matrix?) dOutput);
 
         string ResultToName { get; set; }
 
@@ -66,9 +66,9 @@ namespace ParallelReverseAutoDiff.RMAD
 
         List<string> VisitedFrom { get; set; }
 
-        List<(double[][]?, double[][]?)> AccumulatedGradients { get; set; }
+        List<(Matrix?, Matrix?)> AccumulatedGradients { get; set; }
 
-        (double[][]?, double[][]?) CalculatedGradient { get; set; }
+        (Matrix?, Matrix?) CalculatedGradient { get; set; }
 
         int OutputDependencyCount { get; set; }
 

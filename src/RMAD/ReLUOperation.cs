@@ -10,7 +10,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class ReLUOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReLUOperation"/> class.
@@ -35,16 +35,15 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="input">The input to the ReLU operation.</param>
         /// <returns>The output of the ReLU operation.</returns>
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            this.output = new double[rows][];
+            this.output = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
-            {
-                this.output[i] = new double[cols];
+            {;
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i][j];
@@ -56,15 +55,14 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int rows = dLdOutput.Length;
             int cols = dLdOutput[0].Length;
-            double[][] dLdInput = new double[rows][];
+            Matrix dLdInput = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
             {
-                dLdInput[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     double x = this.input[i][j];

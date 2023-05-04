@@ -9,7 +9,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
     public class StretchedSigmoidOperation : Operation
     {
-        private double[][] input;
+        private Matrix input;
 
         public StretchedSigmoidOperation() : base()
         {
@@ -21,16 +21,15 @@ namespace ParallelReverseAutoDiff.RMAD
             return new StretchedSigmoidOperation();
         }
 
-        public double[][] Forward(double[][] input)
+        public Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            this.output = new double[numRows][];
+            this.output = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                this.output[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     this.output[i][j] = 1.0 / (1.0 + Math.Pow(Math.PI - 2, -input[i][j]));
@@ -40,15 +39,14 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.output;
         }
 
-        public override (double[][]?, double[][]?) Backward(double[][] dLdOutput)
+        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int numRows = dLdOutput.Length;
             int numCols = dLdOutput[0].Length;
-            double[][] dLdInput = new double[numRows][];
+            Matrix dLdInput = new Matrix(numRows, numCols);
 
             for (int i = 0; i < numRows; i++)
             {
-                dLdInput[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     double x = this.input[i][j];
