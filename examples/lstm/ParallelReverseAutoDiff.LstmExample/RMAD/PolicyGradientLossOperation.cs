@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
     /// </summary>
     public class PolicyGradientLossOperation : Operation
     {
-        private List<double[][]> chosenActions;
+        private List<Matrix> chosenActions;
         private int numTimeSteps;
         private double discountFactor;
         private List<double> rewards;
@@ -24,7 +24,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// <param name="rewards">The positive or negative rewards based on the chosen action.</param>
         /// <param name="numTimeSteps">The number of time steps.</param>
         /// <param name="discountFactor">The discount factor.</param>
-        public PolicyGradientLossOperation(List<double[][]> chosenActions, List<double> rewards, int numTimeSteps, double discountFactor)
+        public PolicyGradientLossOperation(List<Matrix> chosenActions, List<double> rewards, int numTimeSteps, double discountFactor)
             : base()
         {
             this.chosenActions = chosenActions;
@@ -48,13 +48,12 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// </summary>
         /// <param name="actionProbabilities">The action probabilities.</param>
         /// <returns>The gradient to pass upstream.</returns>
-        public override (double[][]?, double[][]?) Backward(double[][] actionProbabilities)
+        public override (Matrix?, Matrix?) Backward(Matrix actionProbabilities)
         {
-            double[][] gradientLossWrtOutput = new double[this.numTimeSteps][];
+            Matrix gradientLossWrtOutput = new Matrix(this.numTimeSteps, 1);
             double beta = 0.01; // Entropy regularization coefficient, adjust as needed
             for (int t = 0; t < this.numTimeSteps; t++)
             {
-                gradientLossWrtOutput[t] = new double[1];
                 double actionProb = actionProbabilities[t][0];
 
                 // Calculate the gradient of the log probability with respect to the output
@@ -92,7 +91,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// </summary>
         /// <param name="outputsOverTime">The outputs over time.</param>
         /// <returns>The policy gradient loss.</returns>
-        public double[][] Forward(double[][][] outputsOverTime)
+        public Matrix Forward(Matrix[] outputsOverTime)
         {
             double loss = 0.0;
             double entropy = 0.0;
@@ -142,7 +141,8 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
             // Add the entropy regularization term
             loss -= regularizationCoefficient * entropy;
 
-            this.output = new double[][] { new double[] { -loss } };
+            this.output = new Matrix(1, 1);
+            this.output[0, 0] = -loss;
             return this.output;
         }
     }

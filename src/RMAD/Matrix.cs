@@ -5,12 +5,14 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
     /// A matrix class used for matrix operations.
     /// </summary>
-    public class Matrix
+    public class Matrix : IEnumerable<double[]>
     {
         private double[][] matrix;
 
@@ -67,7 +69,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the row at the specified index.
         /// </summary>
-        /// <param name="row">The row index</param>
+        /// <param name="row">The row index.</param>
         /// <returns>The row.</returns>
         public double[] this[int row]
         {
@@ -126,6 +128,27 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
             return result;
+        }
+
+        /// <summary>
+        /// Gets the enumerator for the matrix.
+        /// </summary>
+        /// <returns>The enumerator for the matrix.</returns>
+        public IEnumerator<double[]> GetEnumerator()
+        {
+            for (int i = 0; i < this.Rows; i++)
+            {
+                yield return this.matrix[i];
+            }
+        }
+
+        /// <summary>
+        /// Gets the enumerator for the matrix.
+        /// </summary>
+        /// <returns>The enumerator for the matrix.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

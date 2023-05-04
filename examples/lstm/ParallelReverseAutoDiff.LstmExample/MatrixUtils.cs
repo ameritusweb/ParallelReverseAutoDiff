@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.LstmExample
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// A collection of matrix utilities for neural network development.
     /// </summary>
@@ -16,15 +18,9 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>An empty matrix.</returns>
-        public static double[][] InitializeZeroMatrix(int numRows, int numCols)
+        public static Matrix InitializeZeroMatrix(int numRows, int numCols)
         {
-            double[][] matrix = new double[numRows][];
-            for (int i = 0; i < numRows; i++)
-            {
-                matrix[i] = new double[numCols];
-            }
-
-            return matrix;
+            return new Matrix(numRows, numCols);
         }
 
         /// <summary>
@@ -34,16 +30,12 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>An empty matrix.</returns>
-        public static double[][][] InitializeZeroMatrix(int numLayers, int numRows, int numCols)
+        public static Matrix[] InitializeZeroMatrix(int numLayers, int numRows, int numCols)
         {
-            double[][][] matrix = new double[numLayers][][];
+            Matrix[] matrix = new Matrix[numLayers];
             for (int layerIndex = 0; layerIndex < numLayers; layerIndex++)
             {
-                matrix[layerIndex] = new double[numRows][];
-                for (int i = 0; i < numRows; i++)
-                {
-                    matrix[layerIndex][i] = new double[numCols];
-                }
+                matrix[layerIndex] = new Matrix(numRows, numCols);
             }
 
             return matrix;
@@ -57,19 +49,15 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>An empty matrix.</returns>
-        public static double[][][][] InitializeZeroMatrix(int numTimeSteps, int numLayers, int numRows, int numCols)
+        public static Matrix[][] InitializeZeroMatrix(int numTimeSteps, int numLayers, int numRows, int numCols)
         {
-            double[][][][] m = new double[numTimeSteps][][][];
+            Matrix[][] m = new Matrix[numTimeSteps][];
             for (int t = 0; t < numTimeSteps; ++t)
             {
-                double[][][] matrix = new double[numLayers][][];
+                Matrix[] matrix = new Matrix[numLayers];
                 for (int layerIndex = 0; layerIndex < numLayers; layerIndex++)
                 {
-                    matrix[layerIndex] = new double[numRows][];
-                    for (int i = 0; i < numRows; i++)
-                    {
-                        matrix[layerIndex][i] = new double[numCols];
-                    }
+                    matrix[layerIndex] = new Matrix(numRows, numCols);
                 }
 
                 m[t] = matrix;
@@ -85,7 +73,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
         /// <param name="minValue">The minimum threshold value.</param>
         /// <returns>The clipped gradients.</returns>
-        public static double[][] ClipGradients(double[][] gradients, double clipValue, double minValue = 1E-6)
+        public static Matrix ClipGradients(Matrix gradients, double clipValue, double minValue = 1E-6)
         {
             var standardizedMatrix = StandardizedMatrix(gradients);
             int numRows = gradients.Length;
@@ -128,7 +116,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
         /// <param name="minValue">The minimum threshold value.</param>
         /// <returns>The clipped gradients.</returns>
-        public static double[][][] ClipGradients(double[][][] gradients, double clipValue, double minValue = 1E-6)
+        public static Matrix[] ClipGradients(Matrix[] gradients, double clipValue, double minValue = 1E-6)
         {
             int numMatrices = gradients.Length;
 
@@ -175,7 +163,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// </summary>
         /// <param name="matrix">The matrix to process.</param>
         /// <returns>The standardized matrix.</returns>
-        public static double[][] StandardizedMatrix(double[][] matrix)
+        public static Matrix StandardizedMatrix(Matrix matrix)
         {
             // Calculate the mean
             double sum = 0;
@@ -204,10 +192,11 @@ namespace ParallelReverseAutoDiff.LstmExample
             double stdDev = Math.Sqrt(varianceSum / count);
 
             // Calculate the standardized matrix
-            double[][] standardizedMatrix = new double[matrix.Length][];
+            int rows = matrix.Rows;
+            int cols = matrix.Cols;
+            Matrix standardizedMatrix = new Matrix(rows, cols);
             for (int i = 0; i < matrix.Length; i++)
             {
-                standardizedMatrix[i] = new double[matrix[i].Length];
                 for (int j = 0; j < matrix[i].Length; j++)
                 {
                     standardizedMatrix[i][j] = (matrix[i][j] - mean) / stdDev;
@@ -222,10 +211,10 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// </summary>
         /// <param name="matrices">The matrices.</param>
         /// <returns>The 2-D array.</returns>
-        public static double[][] To2DArray(double[][][] matrices)
+        public static Matrix To2DArray(Matrix[] matrices)
         {
             int numMatrices = matrices.Length;
-            double[][] matrix = new double[numMatrices][];
+            Matrix matrix = new Matrix(numMatrices, 1);
             for (int i = 0; i < numMatrices; ++i)
             {
                 matrix[i] = matrices[i][0];
@@ -239,7 +228,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// </summary>
         /// <param name="matrices">The matrices.</param>
         /// <returns>The 1-D array.</returns>
-        public static double[] To1DArray(double[][][] matrices)
+        public static double[] To1DArray(Matrix[] matrices)
         {
             int numMatrices = matrices.Length;
             double[] array = new double[numMatrices];
@@ -256,7 +245,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// </summary>
         /// <param name="matrices">The matrices to replace.</param>
         /// <param name="value">The values to replace the matrix values with.</param>
-        public static void SetInPlace(double[][][] matrices, double[][][] value)
+        public static void SetInPlace(Matrix[] matrices, Matrix[] value)
         {
             int numMatrices = matrices.Length;
             int numRows = matrices[0].Length;
@@ -277,7 +266,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// Clears the following 4-D matrices.
         /// </summary>
         /// <param name="matrices">The 4-D matrices to clear.</param>
-        public static void ClearArrays4D(double[][][][][] matrices)
+        public static void ClearArrays4D(Matrix[][][] matrices)
         {
             int numMatrices = matrices.Length;
             int numTimesteps = matrices[0].Length;
@@ -305,7 +294,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// Clears the following 3-D matrices.
         /// </summary>
         /// <param name="matrices">The 3-D matrices to clear.</param>
-        public static void ClearArrays3D(double[][][][] matrices)
+        public static void ClearArrays3D(Matrix[][] matrices)
         {
             int numMatrices = matrices.Length;
             int numLayers = matrices[0].Length;
@@ -329,7 +318,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// Clears the following 2-D matrices.
         /// </summary>
         /// <param name="matrices">The 2-D matrices to clear.</param>
-        public static void ClearArrays2D(double[][][] matrices)
+        public static void ClearArrays2D(Matrix[] matrices)
         {
             int numMatrices = matrices.Length;
 
@@ -350,7 +339,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// </summary>
         /// <param name="weightMatrix">The weight matrix to calculate.</param>
         /// <returns>The frobenius norm.</returns>
-        public static double FrobeniusNorm(double[][] weightMatrix)
+        public static double FrobeniusNorm(Matrix weightMatrix)
         {
             double sum = 0.0;
 
@@ -391,7 +380,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="matrixA">The first matrix.</param>
         /// <param name="matrixB">The second matrix.</param>
         /// <returns>The resultant matrix.</returns>
-        public static double[][] HadamardProduct(double[][] matrixA, double[][] matrixB)
+        public static Matrix HadamardProduct(Matrix matrixA, Matrix matrixB)
         {
             // Check if the dimensions of the matrices match
             int rows = matrixA.Length;
@@ -402,10 +391,9 @@ namespace ParallelReverseAutoDiff.LstmExample
             }
 
             // Perform element-wise multiplication
-            var result = new double[rows][];
+            var result = new Matrix(rows, cols);
             for (int i = 0; i < rows; i++)
             {
-                result[i] = new double[cols];
                 for (int j = 0; j < cols; j++)
                 {
                     result[i][j] = matrixA[i][j] * matrixB[i][j];
@@ -421,14 +409,13 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="a">Matrix A.</param>
         /// <param name="b">Matrix B.</param>
         /// <returns>The resultant matrix.</returns>
-        public static double[][] MatrixAdd(double[][] a, double[][] b)
+        public static Matrix MatrixAdd(Matrix a, Matrix b)
         {
             int numRows = a.Length;
             int numCols = a[0].Length;
-            double[][] result = new double[numRows][];
+            Matrix result = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                result[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     result[i][j] = a[i][j] + b[i][j];
@@ -444,15 +431,14 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="scalar">The scalar to multiply.</param>
         /// <param name="matrix">The matrix.</param>
         /// <returns>The resultant matrix.</returns>
-        public static double[][] ScalarMultiply(double scalar, double[][] matrix)
+        public static Matrix ScalarMultiply(double scalar, Matrix matrix)
         {
             int numRows = matrix.Length;
             int numCols = matrix[0].Length;
 
-            double[][] result = new double[numRows][];
+            Matrix result = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                result[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     result[i][j] = scalar * matrix[i][j];
@@ -468,16 +454,15 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>The initialized random matrix.</returns>
-        public static double[][] InitializeRandomMatrixWithXavierInitialization(int numRows, int numCols)
+        public static Matrix InitializeRandomMatrixWithXavierInitialization(int numRows, int numCols)
         {
-            double[][] matrix = new double[numRows][];
+            Matrix matrix = new Matrix(numRows, numCols);
             var randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
             var localRandom = new ThreadLocal<Random>(randomFunc);
             var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
 
             Parallel.For(0, numRows, i =>
             {
-                matrix[i] = new double[numCols];
                 for (int j = 0; j < numCols; j++)
                 {
                     matrix[i][j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
@@ -494,9 +479,9 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>The initialized random matrix.</returns>
-        public static double[][][] InitializeRandomMatrixWithXavierInitialization(int numLayers, int numRows, int numCols)
+        public static Matrix[] InitializeRandomMatrixWithXavierInitialization(int numLayers, int numRows, int numCols)
         {
-            double[][][] matrix = new double[numLayers][][];
+            Matrix[] matrix = new Matrix[numLayers];
 
             var randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
             var localRandom = new ThreadLocal<Random>(randomFunc);
@@ -504,10 +489,9 @@ namespace ParallelReverseAutoDiff.LstmExample
 
             Parallel.For(0, numLayers, layerIndex =>
             {
-                matrix[layerIndex] = new double[numRows][];
+                matrix[layerIndex] = new Matrix(numRows, numCols);
                 for (int i = 0; i < numRows; i++)
                 {
-                    matrix[layerIndex][i] = new double[numCols];
                     for (int j = 0; j < numCols; j++)
                     {
                         matrix[layerIndex][i][j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));

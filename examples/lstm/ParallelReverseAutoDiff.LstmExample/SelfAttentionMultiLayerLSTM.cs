@@ -15,13 +15,13 @@ namespace ParallelReverseAutoDiff.LstmExample
     public class SelfAttentionMultiLayerLSTM : NeuralNetwork, ILSTM
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.LstmExample.architecture";
-        private double[][][][] h;
-        private double[][][][] c; // Memory cell state
-        private double[][][][] i;
-        private double[][][][] f;
-        private double[][][][] cHat;
-        private double[][][][] o;
-        private double[][][] output;
+        private Matrix[][] h;
+        private Matrix[][] c; // Memory cell state
+        private Matrix[][] i;
+        private Matrix[][] f;
+        private Matrix[][] cHat;
+        private Matrix[][] o;
+        private Matrix[] output;
 
         private int originalInputSize;
         private int inputSize;
@@ -29,105 +29,105 @@ namespace ParallelReverseAutoDiff.LstmExample
 
         private int outputSize;
 
-        private double[][] V;
-        private double[][] dV;
+        private Matrix V;
+        private Matrix dV;
 
-        private double[][] b;
-        private double[][] db;
+        private Matrix b;
+        private Matrix db;
 
-        private double[][][] bi;
-        private double[][][] dbi;
+        private Matrix[] bi;
+        private Matrix[] dbi;
 
-        private double[][][] bf;
-        private double[][][] dbf;
+        private Matrix[] bf;
+        private Matrix[] dbf;
 
-        private double[][][] Wi;
-        private double[][][] dWi;
+        private Matrix[] Wi;
+        private Matrix[] dWi;
 
-        private double[][][] Wf;
-        private double[][][] dWf;
+        private Matrix[] Wf;
+        private Matrix[] dWf;
 
-        private double[][][] Wo;
-        private double[][][] dWo;
+        private Matrix[] Wo;
+        private Matrix[] dWo;
 
-        private double[][][] Uo;
-        private double[][][] dUo;
+        private Matrix[] Uo;
+        private Matrix[] dUo;
 
-        private double[][][] bo;
-        private double[][][] dbo;
+        private Matrix[] bo;
+        private Matrix[] dbo;
 
-        private double[][][] Ui;
-        private double[][][] dUi;
+        private Matrix[] Ui;
+        private Matrix[] dUi;
 
-        private double[][][] Uf;
-        private double[][][] dUf;
+        private Matrix[] Uf;
+        private Matrix[] dUf;
 
-        private double[][][] Wc;
-        private double[][][] dWc;
+        private Matrix[] Wc;
+        private Matrix[] dWc;
 
-        private double[][][] Uc;
-        private double[][][] dUc;
+        private Matrix[] Uc;
+        private Matrix[] dUc;
 
-        private double[][][] bc;
-        private double[][][] dbc;
+        private Matrix[] bc;
+        private Matrix[] dbc;
 
-        private double[][][] Wq;
-        private double[][][] dWq;
+        private Matrix[] Wq;
+        private Matrix[] dWq;
 
-        private double[][][] Wk;
-        private double[][][] dWk;
+        private Matrix[] Wk;
+        private Matrix[] dWk;
 
-        private double[][][] Wv;
-        private double[][][] dWv;
+        private Matrix[] Wv;
+        private Matrix[] dWv;
 
-        private double[][] We;
-        private double[][] be;
+        private Matrix We;
+        private Matrix be;
 
-        private double[][] dWe;
-        private double[][] dbe;
+        private Matrix dWe;
+        private Matrix dbe;
 
-        private double[][] mV;
-        private double[][] vV;
-        private double[][] mb;
-        private double[][] vb;
+        private Matrix mV;
+        private Matrix vV;
+        private Matrix mb;
+        private Matrix vb;
 
-        private double[][][] mWi;
-        private double[][][] vWi;
-        private double[][][] mWf;
-        private double[][][] vWf;
-        private double[][][] mWc;
-        private double[][][] vWc;
-        private double[][][] mWo;
-        private double[][][] vWo;
+        private Matrix[] mWi;
+        private Matrix[] vWi;
+        private Matrix[] mWf;
+        private Matrix[] vWf;
+        private Matrix[] mWc;
+        private Matrix[] vWc;
+        private Matrix[] mWo;
+        private Matrix[] vWo;
 
-        private double[][][] mUi;
-        private double[][][] vUi;
-        private double[][][] mUf;
-        private double[][][] vUf;
-        private double[][][] mUc;
-        private double[][][] vUc;
-        private double[][][] mUo;
-        private double[][][] vUo;
+        private Matrix[] mUi;
+        private Matrix[] vUi;
+        private Matrix[] mUf;
+        private Matrix[] vUf;
+        private Matrix[] mUc;
+        private Matrix[] vUc;
+        private Matrix[] mUo;
+        private Matrix[] vUo;
 
-        private double[][][] mbi;
-        private double[][][] vbi;
-        private double[][][] mbf;
-        private double[][][] vbf;
-        private double[][][] mbc;
-        private double[][][] vbc;
-        private double[][][] mbo;
-        private double[][][] vbo;
-        private double[][] mWe;
-        private double[][] vWe;
-        private double[][] mbe;
-        private double[][] vbe;
+        private Matrix[] mbi;
+        private Matrix[] vbi;
+        private Matrix[] mbf;
+        private Matrix[] vbf;
+        private Matrix[] mbc;
+        private Matrix[] vbc;
+        private Matrix[] mbo;
+        private Matrix[] vbo;
+        private Matrix mWe;
+        private Matrix vWe;
+        private Matrix mbe;
+        private Matrix vbe;
 
-        private double[][][] mWq;
-        private double[][][] vWq;
-        private double[][][] mWk;
-        private double[][][] vWk;
-        private double[][][] mWv;
-        private double[][][] vWv;
+        private Matrix[] mWq;
+        private Matrix[] vWq;
+        private Matrix[] mWk;
+        private Matrix[] vWk;
+        private Matrix[] mWv;
+        private Matrix[] vWv;
 
         private Random rng;
 
@@ -140,9 +140,9 @@ namespace ParallelReverseAutoDiff.LstmExample
         private IOperation? startOperation;
         private IOperation backwardStartOperation;
         private Dictionary<string, Func<int, int, object>> inputNameToValueMap;
-        private double[][][][][] arrays4D;
-        private double[][][][] arrays3D;
-        private double[][][] arrays2D;
+        private Matrix[][][] arrays4D;
+        private Matrix[][] arrays3D;
+        private Matrix[] arrays2D;
         private string architecture;
         private string lstmName;
 
@@ -281,7 +281,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         }
 
         /// <inheritdoc/>
-        public double[] GetOutput(double[][][] inputs)
+        public double[] GetOutput(Matrix[] inputs)
         {
             // Initialize memory cell, hidden state, biases, and intermediates
             this.ClearState();
@@ -313,7 +313,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         }
 
         /// <inheritdoc/>
-        public async Task Optimize(double[][][] inputs, List<double[][]> chosenActions, List<double> rewards, int iterationIndex, bool doNotUpdate = false)
+        public async Task Optimize(Matrix[] inputs, List<Matrix> chosenActions, List<double> rewards, int iterationIndex, bool doNotUpdate = false)
         {
             this.adamT = iterationIndex + 1;
 
@@ -353,8 +353,8 @@ namespace ParallelReverseAutoDiff.LstmExample
         private void InitializeState()
         {
             // Clear the hidden state and memory cell state
-            this.h = new double[this.numTimeSteps][][][];
-            this.c = new double[this.numTimeSteps][][][];
+            this.h = new Matrix[this.numTimeSteps][];
+            this.c = new Matrix[this.numTimeSteps][];
             for (int t = 0; t < this.numTimeSteps; ++t)
             {
                 this.h[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
@@ -396,9 +396,9 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.output = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.outputSize, 1);
             this.inputSequence = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.originalInputSize, 1);
 
-            this.arrays4D = new double[][][][][] { this.h, this.c, this.f, this.i, this.cHat, this.o };
-            this.arrays3D = new double[][][][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
-            this.arrays2D = new double[][][] { this.dWe, this.dbe, this.dV, this.db };
+            this.arrays4D = new Matrix[][][] { this.h, this.c, this.f, this.i, this.cHat, this.o };
+            this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
+            this.arrays2D = new Matrix[] { this.dWe, this.dbe, this.dV, this.db };
         }
 
         private void ClearState()
@@ -597,7 +597,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             Console.Clear();
         }
 
-        private async Task AutomaticForwardPropagate(double[][][] inputSequence, List<double[][]> chosenActions, List<double> rewards, bool doNotUpdate = false)
+        private async Task AutomaticForwardPropagate(Matrix[] inputSequence, List<Matrix> chosenActions, List<double> rewards, bool doNotUpdate = false)
         {
             // Initialize memory cell, hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -662,7 +662,9 @@ namespace ParallelReverseAutoDiff.LstmExample
                 this.backwardStartOperation = this.operationsMap[$"output_t_{t}"];
                 if (gradientOfLossWrtOutput[t][0] != 0.0d)
                 {
-                    this.backwardStartOperation.BackwardInput = new double[][] { gradientOfLossWrtOutput[t] };
+                    var backwardInput = new Matrix(1, 1);
+                    backwardInput[0] = gradientOfLossWrtOutput[t];
+                    this.backwardStartOperation.BackwardInput = backwardInput;
                     OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), this.backwardStartOperation, t);
                     await opVisitor.TraverseAsync();
                     opVisitor.Reset();
@@ -700,7 +702,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.UpdateParametersWithAdam(this.dWi, this.dWf, this.dWo, this.dWc, this.dUi, this.dUf, this.dUo, this.dUc, this.dbi, this.dbf, this.dbo, this.dbc, this.dV, this.db, this.dWq, this.dWk, this.dWv, this.dWe, this.dbe);
         }
 
-        private void UpdateParametersWithAdam(double[][][] dWi, double[][][] dWf, double[][][] dWo, double[][][] dWc, double[][][] dUi, double[][][] dUf, double[][][] dUo, double[][][] dUc, double[][][] dbi, double[][][] dbf, double[][][] dbo, double[][][] dbc, double[][] dV, double[][] db, double[][][] dWq, double[][][] dWk, double[][][] dWv, double[][] dWe, double[][] dbe)
+        private void UpdateParametersWithAdam(Matrix[] dWi, Matrix[] dWf, Matrix[] dWo, Matrix[] dWc, Matrix[] dUi, Matrix[] dUf, Matrix[] dUo, Matrix[] dUc, Matrix[] dbi, Matrix[] dbf, Matrix[] dbo, Matrix[] dbc, Matrix dV, Matrix db, Matrix[] dWq, Matrix[] dWk, Matrix[] dWv, Matrix dWe, Matrix dbe)
         {
             double beta1 = 0.9;
             double beta2 = 0.999;
@@ -796,7 +798,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.vb = MatrixUtils.InitializeZeroMatrix(this.b.Length, this.b[0].Length);
         }
 
-        private void UpdateWeightWithAdam(double[][] w, double[][] mW, double[][] vW, double[][] gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
+        private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
         {
             var lr = newLearningRate.HasValue ? newLearningRate.Value : this.learningRate;
 
@@ -807,10 +809,10 @@ namespace ParallelReverseAutoDiff.LstmExample
             vW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta2, vW), MatrixUtils.ScalarMultiply(1 - beta2, MatrixUtils.HadamardProduct(gradient, gradient)));
 
             // Compute bias-corrected first moment estimate
-            double[][] mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, t)), mW);
+            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, t)), mW);
 
             // Compute bias-corrected second raw moment estimate
-            double[][] vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, t)), vW);
+            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, t)), vW);
 
             // Update weights
             for (int i = 0; i < w.Length; i++)

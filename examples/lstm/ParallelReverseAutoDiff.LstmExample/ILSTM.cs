@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.LstmExample
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// An interface for a Long Short-Term Memory (LSTM) neural network.
     /// </summary>
@@ -20,7 +22,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// </summary>
         /// <param name="inputs">The inputs where the first dimension is the time dimension.</param>
         /// <returns>The output of the LSTM per time step.</returns>
-        double[] GetOutput(double[][][] inputs);
+        double[] GetOutput(Matrix[] inputs);
 
         /// <summary>
         /// Run the forward and backward passes of the LSTM for the given inputs and chosen actions.
@@ -31,7 +33,7 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <param name="iterationIndex">The iteration index used for Adam optimization.</param>
         /// <param name="doNotUpdate">Whether or not to update the network's parameters.</param>
         /// <returns>A task with the result of the async operation.</returns>
-        Task Optimize(double[][][] inputs, List<double[][]> chosenActions, List<double> rewards, int iterationIndex, bool doNotUpdate = false);
+        Task Optimize(Matrix[] inputs, List<Matrix> chosenActions, List<double> rewards, int iterationIndex, bool doNotUpdate = false);
 
         /// <summary>
         /// Saves the parameters of the neural network to the given path.

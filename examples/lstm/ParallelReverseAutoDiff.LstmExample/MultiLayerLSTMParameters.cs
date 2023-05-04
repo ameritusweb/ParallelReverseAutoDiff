@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.LstmExample
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// Multi-layer LSTM parameters.
     /// </summary>
@@ -14,96 +16,96 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <summary>
         /// Gets or sets the weight matrix for the input gate.
         /// </summary>
-        public double[][][] Wi { get; set; }
+        public Matrix[] Wi { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the forget gate.
         /// </summary>
-        public double[][][] Wf { get; set; }
+        public Matrix[] Wf { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the memory cell gate.
         /// </summary>
-        public double[][][] Wc { get; set; }
+        public Matrix[] Wc { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the output gate.
         /// </summary>
-        public double[][][] Wo { get; set; }
+        public Matrix[] Wo { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the input gate.
         /// </summary>
-        public double[][][] Ui { get; set; }
+        public Matrix[] Ui { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the forget gate.
         /// </summary>
-        public double[][][] Uf { get; set; }
+        public Matrix[] Uf { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the memory cell gate.
         /// </summary>
-        public double[][][] Uc { get; set; }
+        public Matrix[] Uc { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the output gate.
         /// </summary>
-        public double[][][] Uo { get; set; }
+        public Matrix[] Uo { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the input gate.
         /// </summary>
-        public double[][][] Bi { get; set; }
+        public Matrix[] Bi { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the forget gate.
         /// </summary>
-        public double[][][] Bf { get; set; }
+        public Matrix[] Bf { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the memory cell gate.
         /// </summary>
-        public double[][][] Bc { get; set; }
+        public Matrix[] Bc { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the output gate.
         /// </summary>
-        public double[][][] Bo { get; set; }
+        public Matrix[] Bo { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the embedding layer.
         /// </summary>
-        public double[][] Be { get; set; }
+        public Matrix Be { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the embedding layer.
         /// </summary>
-        public double[][] We { get; set; }
+        public Matrix We { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the output layer.
         /// </summary>
-        public double[][] V { get; set; }
+        public Matrix V { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the output layer.
         /// </summary>
-        public double[][] B { get; set; }
+        public Matrix B { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the query layer.
         /// </summary>
-        public double[][][] Wq { get; set; }
+        public Matrix[] Wq { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the key layer.
         /// </summary>
-        public double[][][] Wk { get; set; }
+        public Matrix[] Wk { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the value layer.
         /// </summary>
-        public double[][][] Wv { get; set; }
+        public Matrix[] Wv { get; set; }
     }
 }
