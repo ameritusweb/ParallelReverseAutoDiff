@@ -17,29 +17,38 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input;
         private Matrix dropoutMask;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplyDropoutOperation"/> class.
+        /// </summary>
+        /// <param name="dropoutRate">The dropout rate to apply.</param>
         public ApplyDropoutOperation(double dropoutRate)
         {
             this.dropoutRate = dropoutRate;
             this.random = new Random(Guid.NewGuid().GetHashCode());
         }
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new ApplyDropoutOperation(net.GetDropoutRate());
         }
 
         /// <summary>
-        /// The forward pass of the operation.
+        /// The forward pass of the apply dropout operation.
         /// </summary>
-        /// <param name="input">The input for the operation.</param>
-        /// <returns>The output for the operation.</returns>
+        /// <param name="input">The input for the apply dropout operation.</param>
+        /// <returns>The output for the apply dropout operation.</returns>
         public Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            this.output = new Matrix(numRows, numCols);
+            this.Output = new Matrix(numRows, numCols);
             this.dropoutMask = new Matrix(numRows, numCols);
 
             for (int i = 0; i < numRows; i++)
@@ -48,11 +57,11 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     double randomValue = this.random.NextDouble();
                     this.dropoutMask[i][j] = randomValue < this.dropoutRate ? 0 : 1;
-                    this.output[i][j] = this.dropoutMask[i][j] * input[i][j];
+                    this.Output[i][j] = this.dropoutMask[i][j] * input[i][j];
                 }
             }
 
-            return this.output;
+            return this.Output;
         }
 
         /// <inheritdoc />

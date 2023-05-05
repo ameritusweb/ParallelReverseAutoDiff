@@ -8,58 +8,107 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// The base class for a neural network.
+    /// </summary>
     public abstract class NeuralNetwork
     {
-        protected readonly Func<double, double> sigmoid = (x) => 1 / (1 + Math.Exp(-x));
-        protected readonly Func<double, double> tanh = (d) => Math.Sinh(d) / Math.Cosh(d);
+        /// <summary>
+        /// Gets or sets the dropout rate for the apply dropout operation.
+        /// </summary>
+        protected double DropoutRate { get; set; } = 0.01d;
 
-        protected double dropoutRate = 0.01d;
+        /// <summary>
+        /// Gets or sets the discount factor.
+        /// </summary>
+        protected double DiscountFactor { get; set; } = 0.99d;
 
-        protected double discountFactor = 0.99d;
+        /// <summary>
+        /// Gets or sets the learning rate.
+        /// </summary>
+        protected double LearningRate { get; set; }
 
-        protected double learningRate;
+        /// <summary>
+        /// Gets or sets the number of time steps.
+        /// </summary>
+        protected int NumTimeSteps { get; set; }
 
-        protected int numTimeSteps;
+        /// <summary>
+        /// Gets or sets the input sequence.
+        /// </summary>
+        protected Matrix[] InputSequence { get; set; }
 
-        protected Matrix[] inputSequence;
+        /// <summary>
+        /// Gets or sets the rewards for policy gradient optimization.
+        /// </summary>
+        protected List<double> Rewards { get; set; }
 
-        protected List<double> rewards;
+        /// <summary>
+        /// Gets or sets the chosen actions for policy gradient optimization.
+        /// </summary>
+        protected List<Matrix> ChosenActions { get; set; }
 
-        protected List<Matrix> chosenActions;
-
+        /// <summary>
+        /// Gets the dropout rate for the apply dropout operation.
+        /// </summary>
+        /// <returns>The dropout rate.</returns>
         public virtual double GetDropoutRate()
         {
-            return this.dropoutRate;
+            return this.DropoutRate;
         }
 
+        /// <summary>
+        /// Gets the discount factor.
+        /// </summary>
+        /// <returns>The discount factor.</returns>
         public virtual double GetDiscountFactor()
         {
-            return this.discountFactor;
+            return this.DiscountFactor;
         }
 
+        /// <summary>
+        /// Gets the number of time steps.
+        /// </summary>
+        /// <returns>The number of tine steps.</returns>
         public virtual int GetNumTimeSteps()
         {
-            return this.numTimeSteps;
+            return this.NumTimeSteps;
         }
 
+        /// <summary>
+        /// Gets the learning rate.
+        /// </summary>
+        /// <returns>The learning rate.</returns>
         public virtual double GetLearningRate()
         {
-            return this.learningRate;
+            return this.LearningRate;
         }
 
+        /// <summary>
+        /// Gets the rewards for policy gradient optimization.
+        /// </summary>
+        /// <returns>The rewards.</returns>
         public virtual List<double> GetRewards()
         {
-            return this.rewards;
+            return this.Rewards;
         }
 
+        /// <summary>
+        /// Gets the input sequence.
+        /// </summary>
+        /// <returns>The input sequence.</returns>
         public virtual Matrix[] GetInputSequence()
         {
-            return this.inputSequence;
+            return this.InputSequence;
         }
 
+        /// <summary>
+        /// Gets the chosen actions for policy gradient optimization.
+        /// </summary>
+        /// <returns>The chosen actions.</returns>
         public virtual List<Matrix> GetChosenActions()
         {
-            return this.chosenActions;
+            return this.ChosenActions;
         }
     }
 }

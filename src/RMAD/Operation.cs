@@ -11,11 +11,12 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading;
     using System.Threading.Tasks;
 
-    // Define the abstract base class for all operations.
+    /// <inheritdoc />
     public abstract class Operation : IOperation
     {
-
-        // Constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Operation"/> class.
+        /// </summary>
         protected Operation()
         {
             // Initialize properties
@@ -29,6 +30,93 @@ namespace ParallelReverseAutoDiff.RMAD
             this.VisitedFrom = new List<string>();
         }
 
+        /// <inheritdoc />
+        public bool IsComplete { get; set; }
+
+        /// <inheritdoc />
+        public int TimeStepIndex { get; set; } = -1;
+
+        /// <inheritdoc />
+        public int LayerIndex { get; set; } = -1;
+
+        /// <inheritdoc />
+        public Type OperationType { get; set; }
+
+        /// <inheritdoc />
+        public bool HasNext
+        {
+            get
+            {
+                return this.Next != null;
+            }
+        }
+
+        /// <inheritdoc />
+        public IOperation Next { get; set; }
+
+        /// <inheritdoc />
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        public string SpecificId { get; set; }
+
+        /// <inheritdoc />
+        public object[] GradientDestinations { get; set; }
+
+        /// <inheritdoc />
+        public string ResultToName { get; set; }
+
+        /// <inheritdoc />
+        public object[] Parameters { get; set; }
+
+        /// <inheritdoc />
+        public List<Task> Tasks { get; set; }
+
+        /// <inheritdoc />
+        public List<string> Inputs { get; set; }
+
+        /// <inheritdoc />
+        public List<string> Outputs { get; set; }
+
+        /// <inheritdoc />
+        public object BackwardInput { get; set; }
+
+        /// <inheritdoc />
+        public List<List<string>> BackwardDependencies { get; set; }
+
+        /// <inheritdoc />
+        public List<string> VisitedFrom { get; set; }
+
+        /// <inheritdoc />
+        public List<IOperation?> BackwardAdjacentOperations { get; set; }
+
+        /// <inheritdoc />
+        public List<int> BackwardDependencyCounts { get; set; }
+
+        /// <inheritdoc />
+        public List<(Matrix?, Matrix?)> AccumulatedGradients { get; set; }
+
+        /// <inheritdoc />
+        public (Matrix?, Matrix?) CalculatedGradient { get; set; }
+
+        /// <inheritdoc />
+        public int OutputDependencyCount { get; set; }
+
+        /// <inheritdoc />
+        public int VisitedCount { get; set; }
+
+        /// <inheritdoc />
+        public ReaderWriterLockSlim Lock { get; set; }
+
+        /// <inheritdoc />
+        public SemaphoreSlim? SyncSemaphore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property to store the output of the operation.
+        /// </summary>
+        protected Matrix Output { get; set; }
+
+        /// <inheritdoc />
         public void Reset()
         {
             this.VisitedCount = 0;
@@ -40,55 +128,16 @@ namespace ParallelReverseAutoDiff.RMAD
             this.Tasks?.Clear();
         }
 
-        public bool IsComplete { get; set; }
-
-        // The time step of the current operation
-        public int TimeStepIndex { get; set; } = -1;
-
-        // The layer index of the current operation
-        public int LayerIndex { get; set; } = -1;
-
-        // The type of operation (e.g. MatrixMultiplyOperation, MatrixAddOperation)
-        public Type OperationType { get; set; }
-
-        // Returns true if there's a next operation in the sequence
-        public bool HasNext
-        {
-            get
-            {
-                return this.Next != null;
-            }
-        }
-
-        // Reference to the next operation in the sequence
-        public IOperation Next { get; set; }
-
-        // Operation ID
-        public string Id { get; set; }
-
-        // Specific ID of the operation
-        public string SpecificId { get; set; }
-
-        // Private field to store the output of the operation
-        protected Matrix output;
-
-        // Returns the output of the operation
+        /// <inheritdoc />
         public virtual Matrix GetOutput()
         {
-            return this.output;
+            return this.Output;
         }
 
-        /// <summary>
-        /// Abstract method to perform backward pass, must be implemented by derived classes.
-        /// </summary>
-        /// <param name="dOutput">The upstream gradient.</param>
-        /// <returns>The gradients to send to the adjacent backward operations.</returns>
+        /// <inheritdoc />
         public abstract (Matrix?, Matrix?) Backward(Matrix dOutput);
 
-        // Property to store the gradient destination objects
-        public object[] GradientDestinations { get; set; }
-
-        // Send the calculated gradient to the appropriate destination object
+        /// <inheritdoc />
         public virtual void AccumulateGradient((Matrix?, Matrix?) dOutput)
         {
             var array3D = MatrixUtils.Reassemble(dOutput).ToList();
@@ -105,6 +154,11 @@ namespace ParallelReverseAutoDiff.RMAD
                     if (gradientResultTo != null)
                     {
                         var output = array3D[d];
+                        if (output == null)
+                        {
+                            throw new InvalidOperationException("The output gradient must be non-null.");
+                        }
+
                         int numRows = gradientResultTo.Length;
                         int numCols = gradientResultTo[0].Length;
                         for (int i = 0; i < numRows; ++i)
@@ -119,10 +173,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        // Property to store the name of the result variable
-        public string ResultToName { get; set; }
-
-        // Copies the result of the operation to the specified destination
+        /// <inheritdoc />
         public virtual void ResultTo(Func<int, int, object> func)
         {
             var oo = func(this.TimeStepIndex, this.LayerIndex);
@@ -136,18 +187,18 @@ namespace ParallelReverseAutoDiff.RMAD
                 o = (Matrix)oo;
             }
 
-            int numRows = this.output.Length;
-            int numCols = this.output[0].Length;
+            int numRows = this.Output.Length;
+            int numCols = this.Output[0].Length;
             for (int i = 0; i < numRows; ++i)
             {
                 for (int j = 0; j < numCols; ++j)
                 {
-                    o[i][j] = this.output[i][j];
+                    o[i][j] = this.Output[i][j];
                 }
             }
         }
 
-        // Initialize the operation with the specified starting point index
+        /// <inheritdoc />
         public virtual void Initialize(int startingPointIndex)
         {
             this.OutputDependencyCount = this.BackwardDependencyCounts[startingPointIndex];
@@ -155,7 +206,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.InitializeSyncSemaphore();
         }
 
-        // Initialize the lock object
+        /// <inheritdoc />
         public virtual void InitializeLock()
         {
             if (this.Lock == null)
@@ -164,7 +215,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        // Initialize the synchronization semaphore
+        /// <inheritdoc />
         public virtual void InitializeSyncSemaphore()
         {
             if (this.SyncSemaphore == null)
@@ -172,50 +223,5 @@ namespace ParallelReverseAutoDiff.RMAD
                 this.SyncSemaphore = new SemaphoreSlim(0, this.OutputDependencyCount);
             }
         }
-
-        // The parameters to the Forward function for this operation
-        public object[] Parameters { get; set; }
-
-        // The backward tasks running for this operation
-        public List<Task> Tasks { get; set; }
-
-        // The specific ID of the operations whose outputs are the inputs to the Forward function for this operation
-        public List<string> Inputs { get; set; }
-
-        // The specific ID of the operations who take in this operation's output as input
-        public List<string> Outputs { get; set; }
-
-        // The input to the Backward function for this operation
-        public object BackwardInput { get; set; }
-
-        // The backward dependencies for this operation
-        public List<List<string>> BackwardDependencies { get; set; }
-
-        // Which node this node was visited from
-        public List<string> VisitedFrom { get; set; }
-
-        // The operations that are next when traversing the computational graph via the backward pass
-        public List<IOperation?> BackwardAdjacentOperations { get; set; }
-
-        // The number of operations that take this operation's output as input based on the timestep that you start at when doing the backward pass
-        public List<int> BackwardDependencyCounts { get; set; }
-
-        // The accumulated gradients from all output dependent operations
-        public List<(Matrix?, Matrix?)> AccumulatedGradients { get; set; }
-
-        // The accumulated gradients from all backward passes through this operation node
-        public (Matrix?, Matrix?) CalculatedGradient { get; set; }
-
-        // For the current backward pass, the number of operations that take this operation's output as input
-        public int OutputDependencyCount { get; set; }
-
-        // The number of times this operation node has been visited during a specific pass
-        public int VisitedCount { get; set; }
-
-        // A lock to handle issues that arise from concurrent access to shared resources
-        public ReaderWriterLockSlim Lock { get; set; }
-
-        // A semaphore to synchronize visitor instances to make sure nodes aren't passed through multiple times during a pass through the computational graph
-        public SemaphoreSlim SyncSemaphore { get; set; }
     }
 }

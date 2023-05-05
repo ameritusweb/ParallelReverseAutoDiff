@@ -10,6 +10,9 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// The operation neural network visitor. Implements the visitor pattern for the backward pass.
+    /// </summary>
     public class OperationNeuralNetworkVisitor
     {
         private readonly string id;
@@ -18,6 +21,13 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly bool runInParallel;
         private readonly List<IOperation> operations;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationNeuralNetworkVisitor"/> class.
+        /// </summary>
+        /// <param name="id">An ID to uniquely identify the visitor.</param>
+        /// <param name="startNode">The start node for the traveral.</param>
+        /// <param name="startingPointIndex">The starting point index.</param>
+        /// <param name="runInParallel">Run in parallel rather than sequentially.</param>
         public OperationNeuralNetworkVisitor(string id, IOperation startNode, int startingPointIndex, bool runInParallel = false)
         {
             if (string.IsNullOrEmpty(id))
@@ -42,6 +52,9 @@ namespace ParallelReverseAutoDiff.RMAD
             this.runInParallel = runInParallel;
         }
 
+        /// <summary>
+        /// Gets the ID of the visitor.
+        /// </summary>
         public string Id
         {
             get
@@ -50,9 +63,28 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
+        /// <summary>
+        /// Start the traversal of the backward pass.
+        /// </summary>
+        /// <returns>The task.</returns>
         public Task TraverseAsync()
         {
             return this.Traverse(this.startNode);
+        }
+
+        /// <summary>
+        /// Reset the state of the operations.
+        /// </summary>
+        public void Reset()
+        {
+            Parallel.For(0, this.operations.Count, i =>
+            {
+                if (this.operations[i] != null)
+                {
+                    this.operations[i].Reset();
+                }
+            });
+            this.operations.Clear();
         }
 
         private async Task Traverse(IOperation node, IOperation? fromNode = null)
@@ -76,6 +108,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
             bool shouldContinue = false;
             node.Initialize(this.startingPointIndex);
+            if (node.SyncSemaphore == null)
+            {
+                throw new InvalidOperationException("SyncSemaphore must not be null.");
+            }
+
             node.Lock.EnterWriteLock();
 
             node.VisitedCount++;
@@ -139,13 +176,13 @@ namespace ParallelReverseAutoDiff.RMAD
                 ||
                 node.OperationType == typeof(MatrixAddThreeOperation))
             {
-                Matrix[] dOutputs = MatrixUtils.Reassemble(dOutput);
+                Matrix?[] dOutputs = MatrixUtils.Reassemble(dOutput);
                 for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
                 {
                     IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
                     if (adjacentOperation != null)
                     {
-                        adjacentOperation.BackwardInput = dOutputs[i];
+                        adjacentOperation.BackwardInput = dOutputs[i] ?? throw new InvalidOperationException("The upstream gradient must not be null.");
                         if (this.runInParallel)
                         {
                             adjacentTasks.Add(Task.Run(() => this.Traverse(adjacentOperation, node)));
@@ -164,7 +201,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
                     if (adjacentOperation != null)
                     {
-                        adjacentOperation.BackwardInput = dOutput.Item1;
+                        adjacentOperation.BackwardInput = dOutput.Item1 ?? throw new InvalidOperationException("The upstream gradient must not be null.");
                         adjacentTasks.Add(this.Traverse(adjacentOperation, node));
                     }
                 }
@@ -177,18 +214,6 @@ namespace ParallelReverseAutoDiff.RMAD
             this.operations.Add(node);
 
             node.IsComplete = true;
-        }
-
-        public void Reset()
-        {
-            Parallel.For(0, this.operations.Count, i =>
-            {
-                if (this.operations[i] != null)
-                {
-                    this.operations[i].Reset();
-                }
-            });
-            this.operations.Clear();
         }
     }
 }

@@ -1,0 +1,976 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParallelReverseAutoDiff</name>
+    </assembly>
+    <members>
+        <member name="T:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation">
+            <summary>
+            The sigmoid operation utilizing gradient amplification.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the operation.
+            </summary>
+            <param name="input">The input for the operation.</param>
+            <returns>The output for the operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation">
+            <summary>
+            Applies dropout to a small portion of the input.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation"/> class.
+            </summary>
+            <param name="dropoutRate">The dropout rate to apply.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the apply dropout operation.
+            </summary>
+            <param name="input">The input for the apply dropout operation.</param>
+            <returns>The output for the apply dropout operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.GradientUtils">
+            <summary>
+            Gradient utilities for reverse mode automatic differentiation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.GradientUtils.AccumulateGradients(System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Accumulates the gradients for multiple matrices.
+            </summary>
+            <param name="gradients">The gradients to accumulate.</param>
+            <returns>A matrix with the accumulated gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.GradientUtils.AccumulateBackwardGradients(System.Collections.Generic.List{System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix}})">
+            <summary>
+            Accumulate the backward gradients.
+            </summary>
+            <param name="gradientsList">The list of gradients to accumulate.</param>
+            <returns>The accumulated gradients.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.HadamardProductOperation">
+            <summary>
+            Element-wise multiplication operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.HadamardProductOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.HadamardProductOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the Hadamard product function.
+            </summary>
+            <param name="input1">The first input to the Hadamard product operation.</param>
+            <param name="input2">The second input to the Hadamard product operation.</param>
+            <returns>The output of the Hadamard product operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.HadamardProductOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.IOperation">
+            <summary>
+            Define the abstract base class for all operations.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.TimeStepIndex">
+            <summary>
+            Gets or sets the time step of the current operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.LayerIndex">
+            <summary>
+            Gets or sets the layer index of the current operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.OperationType">
+            <summary>
+            Gets or sets the type of operation (e.g. MatrixMultiplyOperation, MatrixAddOperation).
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.HasNext">
+            <summary>
+            Gets a value indicating whether there's a next operation in the sequence.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Next">
+            <summary>
+            Gets or sets the reference to the next operation in the sequence.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.IsComplete">
+            <summary>
+            Gets or sets a value indicating whether the operation is complete.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Id">
+            <summary>
+            Gets or sets the operation ID.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.SpecificId">
+            <summary>
+            Gets or sets the specific ID of the operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Parameters">
+            <summary>
+            Gets or sets the parameters to the Forward function for this operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Tasks">
+            <summary>
+            Gets or sets the backward tasks running for this operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Inputs">
+            <summary>
+            Gets or sets the specific ID of the operations whose outputs are the inputs to the Forward function for this operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Outputs">
+            <summary>
+            Gets or sets the specific ID of the operations who take in this operation's output as input.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.BackwardInput">
+            <summary>
+            Gets or sets the input to the Backward function for this operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.BackwardAdjacentOperations">
+            <summary>
+            Gets or sets the operations that are next when traversing the computational graph via the backward pass.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.BackwardDependencyCounts">
+            <summary>
+            Gets or sets the number of operations that take this operation's output as input based on the timestep that you start at when doing the backward pass.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.BackwardDependencies">
+            <summary>
+            Gets or sets the backward dependencies for this operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.VisitedFrom">
+            <summary>
+            Gets or sets which node this node was visited from.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.AccumulatedGradients">
+            <summary>
+            Gets or sets the accumulated gradients from all output dependent operations.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.CalculatedGradient">
+            <summary>
+            Gets or sets the accumulated gradients from all backward passes through this operation node.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.OutputDependencyCount">
+            <summary>
+            Gets or sets, for the current backward pass, the number of operations that take this operation's output as input.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.VisitedCount">
+            <summary>
+            Gets or sets the number of times this operation node has been visited during a specific pass.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Lock">
+            <summary>
+            Gets or sets a lock to handle issues that arise from concurrent access to shared resources.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.SyncSemaphore">
+            <summary>
+            Gets or sets a semaphore to synchronize visitor instances to make sure nodes aren't passed through multiple times during a pass through the computational graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.GradientDestinations">
+            <summary>
+            Gets or sets the property to store the gradient destination objects.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.ResultToName">
+            <summary>
+            Gets or sets the property to store the name of the result variable.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.GetOutput">
+            <summary>
+            Gets or sets the output of the operation.
+            </summary>
+            <returns>The output of the operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.Reset">
+            <summary>
+            Resets the visitor count, accumulated gradients, among other things.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Abstract method to perform backward pass, must be implemented by derived classes.
+            </summary>
+            <param name="dOutput">The upstream gradient.</param>
+            <returns>The gradients to send to the adjacent backward operations.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.AccumulateGradient(System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Send the calculated gradient to the appropriate destination object.
+            </summary>
+            <param name="dOutput">The calculated gradients to accumulate.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.ResultTo(System.Func{System.Int32,System.Int32,System.Object})">
+            <summary>
+            Copies the result of the operation to the specified destination.
+            </summary>
+            <param name="func">The function to get the object to copy the result to.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.Initialize(System.Int32)">
+            <summary>
+            Initialize the operation with the specified starting point index.
+            </summary>
+            <param name="startingPointIndex">The starting point index.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.InitializeLock">
+            <summary>
+            Initialize the lock object.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.InitializeSyncSemaphore">
+            <summary>
+            Initialize the synchronization semaphore.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.JsonArchitecture">
+            <summary>
+            The JSON architecture for a neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.JsonArchitecture.TimeSteps">
+            <summary>
+            Gets or sets the time steps for a neural network.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.Layer">
+            <summary>
+            Represents a layer of a neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Layer.Operations">
+            <summary>
+            Gets or sets the operations in the layer.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation">
+            <summary>
+            Layer normalization operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the layer normalization operation.
+            </summary>
+            <param name="input">The input for the layer normalization operation.</param>
+            <returns>The output for the layer normalization operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.LeakyReLUOperation">
+            <summary>
+            A leaky ReLU operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LeakyReLUOperation.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.LeakyReLUOperation"/> class.
+            </summary>
+            <param name="alpha">The alpha.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LeakyReLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LeakyReLUOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the leaky ReLU operation.
+            </summary>
+            <param name="input">The input for the leaky ReLU operation.</param>
+            <returns>The output for the leaky ReLU operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LeakyReLUOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.Matrix">
+            <summary>
+            A matrix class used for matrix operations.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.Matrix"/> class.
+            </summary>
+            <param name="rows">The number of rows.</param>
+            <param name="cols">The number of cols.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][])">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.Matrix"/> class.
+            </summary>
+            <param name="matrix">The matrix to initialize with.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Matrix.Rows">
+            <summary>
+            Gets the number of rows.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Matrix.Cols">
+            <summary>
+            Gets the number of columns.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Matrix.Length">
+            <summary>
+            Gets the length of the matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or sets the value at the specified row and column.
+            </summary>
+            <param name="row">The row.</param>
+            <param name="col">The column.</param>
+            <returns>The value at the specified row and column.</returns>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32)">
+            <summary>
+            Gets or sets the row at the specified index.
+            </summary>
+            <param name="row">The row index.</param>
+            <returns>The row.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Adds two matrices together.
+            </summary>
+            <param name="m1">The first matrix.</param>
+            <param name="m2">The second matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.op_Multiply(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Multiplies two matrices together.
+            </summary>
+            <param name="m1">The first matrix.</param>
+            <param name="m2">The second matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.GetEnumerator">
+            <summary>
+            Gets the enumerator for the matrix.
+            </summary>
+            <returns>The enumerator for the matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets the enumerator for the matrix.
+            </summary>
+            <returns>The enumerator for the matrix.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixAddOperation">
+            <summary>
+            Matrix addition operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixAddOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the matrix add function.
+            </summary>
+            <param name="inputA">The first input to the matrix add operation.</param>
+            <param name="inputB">The second input to the matrix add operation.</param>
+            <returns>The output of the matrix add operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixAddOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation">
+            <summary>
+            Matrix addition operation for three matrices or two matrices and a bias.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the matrix add three function.
+            </summary>
+            <param name="inputA">The first input to the matrix add three operation.</param>
+            <param name="inputB">The second input to the matrix add three operation.</param>
+            <param name="bias">The third input to the matrix add three operation.</param>
+            <returns>The output of the matrix add operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation">
+            <summary>
+            Matrix multiplication operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the matrix multiply function.
+            </summary>
+            <param name="input1">The first input to the matrix multiply operation.</param>
+            <param name="input2">The second input to the matrix multiply operation.</param>
+            <returns>The output of the matrix multiply operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation">
+            <summary>
+            A matrix multiply scalar operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
+            <summary>
+            Performs the forward operation for the matrix multiply scalar function.
+            </summary>
+            <param name="input">The first input to the matrix multiply scalar operation.</param>
+            <param name="scalar">The second input to the matrix multiply scalar operation.</param>
+            <returns>The output of the matrix multiply scalar operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation">
+            <summary>
+            A matrix transpose operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the matrix transpose operation.
+            </summary>
+            <param name="input">The input for the matrix transpose operation.</param>
+            <returns>The output for the matrix transpose operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixUtils">
+            <summary>
+            Matrix utilities for reverse mode automatic differentiation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixUtils.Reassemble(System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Converts the tuple to an array of matrices.
+            </summary>
+            <param name="dOutput">The tuple of matrices.</param>
+            <returns>The array of matrices.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.NeuralNetwork">
+            <summary>
+            The base class for a neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.DropoutRate">
+            <summary>
+            Gets or sets the dropout rate for the apply dropout operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.DiscountFactor">
+            <summary>
+            Gets or sets the discount factor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LearningRate">
+            <summary>
+            Gets or sets the learning rate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.NumTimeSteps">
+            <summary>
+            Gets or sets the number of time steps.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.InputSequence">
+            <summary>
+            Gets or sets the input sequence.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.Rewards">
+            <summary>
+            Gets or sets the rewards for policy gradient optimization.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.ChosenActions">
+            <summary>
+            Gets or sets the chosen actions for policy gradient optimization.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetDropoutRate">
+            <summary>
+            Gets the dropout rate for the apply dropout operation.
+            </summary>
+            <returns>The dropout rate.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetDiscountFactor">
+            <summary>
+            Gets the discount factor.
+            </summary>
+            <returns>The discount factor.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetNumTimeSteps">
+            <summary>
+            Gets the number of time steps.
+            </summary>
+            <returns>The number of tine steps.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetLearningRate">
+            <summary>
+            Gets the learning rate.
+            </summary>
+            <returns>The learning rate.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetRewards">
+            <summary>
+            Gets the rewards for policy gradient optimization.
+            </summary>
+            <returns>The rewards.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetInputSequence">
+            <summary>
+            Gets the input sequence.
+            </summary>
+            <returns>The input sequence.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetChosenActions">
+            <summary>
+            Gets the chosen actions for policy gradient optimization.
+            </summary>
+            <returns>The chosen actions.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.Operation">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.Operation"/> class.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.IsComplete">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.TimeStepIndex">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.LayerIndex">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.OperationType">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.HasNext">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Next">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.SpecificId">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.GradientDestinations">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.ResultToName">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Parameters">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Tasks">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Inputs">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Outputs">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.BackwardInput">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.BackwardDependencies">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.VisitedFrom">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.BackwardAdjacentOperations">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.BackwardDependencyCounts">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.AccumulatedGradients">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.CalculatedGradient">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.OutputDependencyCount">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.VisitedCount">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Lock">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.SyncSemaphore">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Output">
+            <summary>
+            Gets or sets the property to store the output of the operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.GetOutput">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.AccumulateGradient(System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.ResultTo(System.Func{System.Int32,System.Int32,System.Object})">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.Initialize(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.InitializeLock">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.InitializeSyncSemaphore">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor">
+            <summary>
+            The operation graph visitor for setting the backward dependency counts of the computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor"/> class.
+            </summary>
+            <param name="id">A unique ID.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor"/> class.
+            </summary>
+            <param name="id">A unique ID.</param>
+            <param name="startNode">The start node of the computation graph.</param>
+            <param name="startingPointIndex">The starting point index.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id">
+            <summary>
+            Gets the ID of the visitor.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync">
+            <summary>
+            Starts the traversal of the computation graph.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperation,System.Boolean)">
+            <summary>
+            Resets the visited counts of the computation graph.
+            </summary>
+            <param name="node">The starting operation.</param>
+            <param name="returnEarly">If it should return early if the visited count is already 0.</param>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.OperationInfo">
+            <summary>
+            Information about an operation of the computation graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationInfo.Id">
+            <summary>
+            Gets or sets the ID of the operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationInfo.Description">
+            <summary>
+            Gets or sets a description of the operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationInfo.Type">
+            <summary>
+            Gets or sets the type of the operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationInfo.Inputs">
+            <summary>
+            Gets or sets the inputs to the operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationInfo.SetResultTo">
+            <summary>
+            Gets or sets where to set the result of the operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationInfo.GradientResultTo">
+            <summary>
+            Gets or sets where to place the gradient result.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor">
+            <summary>
+            The operation neural network visitor. Implements the visitor pattern for the backward pass.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor"/> class.
+            </summary>
+            <param name="id">An ID to uniquely identify the visitor.</param>
+            <param name="startNode">The start node for the traveral.</param>
+            <param name="startingPointIndex">The starting point index.</param>
+            <param name="runInParallel">Run in parallel rather than sequentially.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id">
+            <summary>
+            Gets the ID of the visitor.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TraverseAsync">
+            <summary>
+            Start the traversal of the backward pass.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Reset">
+            <summary>
+            Reset the state of the operations.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.ReLUOperation">
+            <summary>
+            Performs the forward and backward operations for the ReLU activation function.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ReLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common factory method for instantiating this operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ReLUOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the ReLU activation function.
+            </summary>
+            <param name="input">The input to the ReLU operation.</param>
+            <returns>The output of the ReLU operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ReLUOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.SigmoidOperation">
+            <summary>
+            Sigmoid operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the sigmoid activation function.
+            </summary>
+            <param name="input">The input to the sigmoid operation.</param>
+            <returns>The output of the sigmoid operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.SoftmaxOperation">
+            <summary>
+            Softmax operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SoftmaxOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SoftmaxOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the softmax function.
+            </summary>
+            <param name="input">The input to the softmax operation.</param>
+            <returns>The output of the softmax operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SoftmaxOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation">
+            <summary>
+            A stretched sigmoid operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the stretched sigmoid activation function.
+            </summary>
+            <param name="input">The input to the stretched sigmoid operation.</param>
+            <returns>The output of the stretched sigmoid operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.TanhOperation">
+            <summary>
+            The tanh operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.TanhOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.TanhOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the Tanh activation function.
+            </summary>
+            <param name="input">The input to the Tanh operation.</param>
+            <returns>The output of the Tanh operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.TanhOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.TimeStep">
+            <summary>
+            Represents a time step for an operation graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.TimeStep.StartOperations">
+            <summary>
+            Gets or sets the start operations for the time step.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.TimeStep.Layers">
+            <summary>
+            Gets or sets the layers for the time step.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.TimeStep.EndOperations">
+            <summary>
+            Gets or sets the end operations for the time step.
+            </summary>
+        </member>
+    </members>
+</doc>

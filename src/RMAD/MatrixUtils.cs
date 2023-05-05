@@ -5,11 +5,19 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    /// <summary>
+    /// Matrix utilities for reverse mode automatic differentiation.
+    /// </summary>
     public static class MatrixUtils
     {
-        public static Matrix[] Reassemble((Matrix?, Matrix?) dOutput)
+        /// <summary>
+        /// Converts the tuple to an array of matrices.
+        /// </summary>
+        /// <param name="dOutput">The tuple of matrices.</param>
+        /// <returns>The array of matrices.</returns>
+        public static Matrix?[] Reassemble((Matrix?, Matrix?) dOutput)
         {
-            return new Matrix[] { dOutput.Item1, dOutput.Item2 };
+            return new Matrix?[] { dOutput.Item1, dOutput.Item2 };
         }
     }
 }

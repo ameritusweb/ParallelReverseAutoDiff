@@ -8,26 +8,40 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Linq;
 
+    /// <summary>
+    /// Softmax operation.
+    /// </summary>
     public class SoftmaxOperation : Operation
     {
         private Matrix input;
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new SoftmaxOperation();
         }
 
+        /// <summary>
+        /// Performs the forward operation for the softmax function.
+        /// </summary>
+        /// <param name="input">The input to the softmax operation.</param>
+        /// <returns>The output of the softmax operation.</returns>
         public Matrix Forward(Matrix input)
         {
             this.input = input;
-            this.output = this.Softmax(input);
-            return this.output;
+            this.Output = this.Softmax(input);
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
-            int numRows = this.output.Length;
-            int numCols = this.output[0].Length;
+            int numRows = this.Output.Length;
+            int numCols = this.Output[0].Length;
 
             Matrix dLdInput = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
@@ -38,11 +52,11 @@ namespace ParallelReverseAutoDiff.RMAD
                     {
                         if (j == k)
                         {
-                            dLdInput[i][j] += dLdOutput[i][k] * this.output[i][j] * (1 - this.output[i][j]);
+                            dLdInput[i][j] += dLdOutput[i][k] * this.Output[i][j] * (1 - this.Output[i][j]);
                         }
                         else
                         {
-                            dLdInput[i][j] -= dLdOutput[i][k] * this.output[i][j] * this.output[i][k];
+                            dLdInput[i][j] -= dLdOutput[i][k] * this.Output[i][j] * this.Output[i][k];
                         }
                     }
                 }

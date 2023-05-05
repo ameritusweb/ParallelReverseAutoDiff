@@ -7,36 +7,51 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// A matrix multiply scalar operation.
+    /// </summary>
     public class MatrixMultiplyScalarOperation : Operation
     {
         private Matrix input;
         private double scalar;
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new MatrixMultiplyScalarOperation();
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix multiply scalar function.
+        /// </summary>
+        /// <param name="input">The first input to the matrix multiply scalar operation.</param>
+        /// <param name="scalar">The second input to the matrix multiply scalar operation.</param>
+        /// <returns>The output of the matrix multiply scalar operation.</returns>
         public Matrix Forward(Matrix input, double scalar)
         {
             this.scalar = scalar;
             this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            this.output = new Matrix(rows, cols);
+            this.Output = new Matrix(rows, cols);
 
             // Parallelize the outer loop
             Parallel.For(0, rows, i =>
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    this.output[i][j] = input[i][j] * this.scalar;
+                    this.Output[i][j] = input[i][j] * this.scalar;
                 }
             });
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int rows = dLdOutput.Length;

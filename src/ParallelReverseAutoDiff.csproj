@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
+	<TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<DocumentationFile>ParallelReverseAutoDiff.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

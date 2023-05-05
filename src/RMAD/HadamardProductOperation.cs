@@ -7,16 +7,30 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Element-wise multiplication operation.
+    /// </summary>
     public class HadamardProductOperation : Operation
     {
         private Matrix input1;
         private Matrix input2;
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new HadamardProductOperation();
         }
 
+        /// <summary>
+        /// Performs the forward operation for the Hadamard product function.
+        /// </summary>
+        /// <param name="input1">The first input to the Hadamard product operation.</param>
+        /// <param name="input2">The second input to the Hadamard product operation.</param>
+        /// <returns>The output of the Hadamard product operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2)
         {
             this.input1 = input1;
@@ -24,20 +38,21 @@ namespace ParallelReverseAutoDiff.RMAD
             int numRows = input1.Length;
             int numCols = input1[0].Length;
 
-            this.output = new Matrix(numRows, numCols);
+            this.Output = new Matrix(numRows, numCols);
 
             // Parallelize the outer loop
             Parallel.For(0, numRows, i =>
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    this.output[i][j] = input1[i][j] * input2[i][j];
+                    this.Output[i][j] = input1[i][j] * input2[i][j];
                 }
             });
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int numRows = this.input1.Length;

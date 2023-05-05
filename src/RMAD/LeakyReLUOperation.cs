@@ -5,40 +5,58 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    /// <summary>
+    /// A leaky ReLU operation.
+    /// </summary>
     public class LeakyReLUOperation : Operation
     {
         private readonly double alpha;
         private Matrix input;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LeakyReLUOperation"/> class.
+        /// </summary>
+        /// <param name="alpha">The alpha.</param>
         public LeakyReLUOperation(double alpha = 0.01)
         {
             this.alpha = alpha;
         }
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new LeakyReLUOperation();
         }
 
+        /// <summary>
+        /// The forward pass of the leaky ReLU operation.
+        /// </summary>
+        /// <param name="input">The input for the leaky ReLU operation.</param>
+        /// <returns>The output for the leaky ReLU operation.</returns>
         public Matrix Forward(Matrix input)
         {
             this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            this.output = new Matrix(rows, cols);
+            this.Output = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i][j];
-                    this.output[i][j] = x > 0 ? x : this.alpha * x;
+                    this.Output[i][j] = x > 0 ? x : this.alpha * x;
                 }
             }
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int rows = dLdOutput.Length;

@@ -8,16 +8,30 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Matrix multiplication operation.
+    /// </summary>
     public class MatrixMultiplyOperation : Operation
     {
         private Matrix input1;
         private Matrix input2;
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new MatrixMultiplyOperation();
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix multiply function.
+        /// </summary>
+        /// <param name="input1">The first input to the matrix multiply operation.</param>
+        /// <param name="input2">The second input to the matrix multiply operation.</param>
+        /// <returns>The output of the matrix multiply operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2)
         {
             this.input1 = input1;
@@ -32,24 +46,25 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new InvalidOperationException("Input 1 columns do not match Input 2 rows");
             }
 
-            this.output = new Matrix(input1Rows, input2Cols);
+            this.Output = new Matrix(input1Rows, input2Cols);
 
             // Parallelize the outer loop
             Parallel.For(0, input1Rows, i =>
             {
                 for (int j = 0; j < input2Cols; j++)
                 {
-                    this.output[i][j] = 0;
+                    this.Output[i][j] = 0;
                     for (int k = 0; k < input1Cols; k++)
                     {
-                        this.output[i][j] += input1[i][k] * input2[k][j];
+                        this.Output[i][j] += input1[i][k] * input2[k][j];
                     }
                 }
             });
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int input1Rows = this.input1.Length;

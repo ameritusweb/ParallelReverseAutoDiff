@@ -9,21 +9,33 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Linq;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Layer normalization operation.
+    /// </summary>
     public class LayerNormalizationOperation : Operation
     {
-
-        private const double epsilon = 1E-6;
+        private const double EPSILON = 1E-6;
         private Matrix input;
         private double[] mean;
         private double[] stdDev;
         private int numRows;
         private int numCols;
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new LayerNormalizationOperation();
         }
 
+        /// <summary>
+        /// The forward pass of the layer normalization operation.
+        /// </summary>
+        /// <param name="input">The input for the layer normalization operation.</param>
+        /// <returns>The output for the layer normalization operation.</returns>
         public Matrix Forward(Matrix input)
         {
             this.input = input;
@@ -41,20 +53,21 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             // Normalize the input
-            this.output = new Matrix(this.numRows, this.numCols);
+            this.Output = new Matrix(this.numRows, this.numCols);
 
             // Parallelize the outer loop
             Parallel.For(0, this.numRows, i =>
             {
                 for (int j = 0; j < this.numCols; j++)
                 {
-                    this.output[i][j] = (input[i][j] - this.mean[i]) / (this.stdDev[i] + epsilon);
+                    this.Output[i][j] = (input[i][j] - this.mean[i]) / (this.stdDev[i] + EPSILON);
                 }
             });
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix gradOutput)
         {
             Matrix gradient = new Matrix(this.numRows, this.numCols);
@@ -62,12 +75,12 @@ namespace ParallelReverseAutoDiff.RMAD
             // Parallelize the outer loop
             Parallel.For(0, this.numRows, i =>
             {
-                double invStdDev = 1 / (this.stdDev[i] + epsilon);
+                double invStdDev = 1 / (this.stdDev[i] + EPSILON);
                 double exp1 = (1 - (1.0 / this.numCols)) * invStdDev;
 
                 for (int j = 0; j < this.numCols; j++)
                 {
-                    var exp2 = Math.Sqrt(Math.Pow(this.input[i][j] - this.mean[i], 2)) / (this.numCols * Math.Pow(this.stdDev[i] + epsilon, 2));
+                    var exp2 = Math.Sqrt(Math.Pow(this.input[i][j] - this.mean[i], 2)) / (this.numCols * Math.Pow(this.stdDev[i] + EPSILON, 2));
                     var exp3 = exp1 - exp2;
 
                     // Multiply the computed gradient by the upstream gradient

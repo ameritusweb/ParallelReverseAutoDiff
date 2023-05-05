@@ -32,18 +32,18 @@ namespace ParallelReverseAutoDiff.RMAD
             this.input = input;
             int rows = input.Length;
             int cols = input[0].Length;
-            this.output = new Matrix(rows, cols);
+            this.Output = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i][j];
-                    this.output[i][j] = x > 0 ? x : 0;
+                    this.Output[i][j] = x > 0 ? x : 0;
                 }
             }
 
-            return this.output;
+            return this.Output;
         }
 
         /// <inheritdoc />

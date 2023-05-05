@@ -7,30 +7,44 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
 
+    /// <summary>
+    /// The tanh operation.
+    /// </summary>
     public class TanhOperation : Operation
     {
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new TanhOperation();
         }
 
+        /// <summary>
+        /// Performs the forward operation for the Tanh activation function.
+        /// </summary>
+        /// <param name="input">The input to the Tanh operation.</param>
+        /// <returns>The output of the Tanh operation.</returns>
         public Matrix Forward(Matrix input)
         {
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            this.output = new Matrix(numRows, numCols);
+            this.Output = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    this.output[i][j] = Math.Tanh(input[i][j]);
+                    this.Output[i][j] = Math.Tanh(input[i][j]);
                 }
             }
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int numRows = dOutput.Length;
@@ -41,7 +55,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    double derivative = 1 - Math.Pow(this.output[i][j], 2);
+                    double derivative = 1 - Math.Pow(this.Output[i][j], 2);
                     dInput[i][j] = dOutput[i][j] * derivative;
                 }
             }

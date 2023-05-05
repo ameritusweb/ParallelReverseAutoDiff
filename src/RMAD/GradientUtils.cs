@@ -8,8 +8,16 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Gradient utilities for reverse mode automatic differentiation.
+    /// </summary>
     public static class GradientUtils
     {
+        /// <summary>
+        /// Accumulates the gradients for multiple matrices.
+        /// </summary>
+        /// <param name="gradients">The gradients to accumulate.</param>
+        /// <returns>A matrix with the accumulated gradients.</returns>
         public static Matrix? AccumulateGradients(List<Matrix> gradients)
         {
             if (gradients == null || gradients.Count == 0)
@@ -32,6 +40,11 @@ namespace ParallelReverseAutoDiff.RMAD
             return accumulatedGradients;
         }
 
+        /// <summary>
+        /// Accumulate the backward gradients.
+        /// </summary>
+        /// <param name="gradientsList">The list of gradients to accumulate.</param>
+        /// <returns>The accumulated gradients.</returns>
         public static (Matrix?, Matrix?) AccumulateBackwardGradients(List<(Matrix?, Matrix?)> gradientsList)
         {
             if (gradientsList == null || gradientsList.Count == 0)

@@ -9,12 +9,19 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// The operation graph visitor for setting the backward dependency counts of the computation graph.
+    /// </summary>
     public class OperationGraphVisitor
     {
         private readonly string id;
         private readonly IOperation startNode;
         private readonly int startingPointIndex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationGraphVisitor"/> class.
+        /// </summary>
+        /// <param name="id">A unique ID.</param>
         public OperationGraphVisitor(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -25,6 +32,12 @@ namespace ParallelReverseAutoDiff.RMAD
             this.id = id;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationGraphVisitor"/> class.
+        /// </summary>
+        /// <param name="id">A unique ID.</param>
+        /// <param name="startNode">The start node of the computation graph.</param>
+        /// <param name="startingPointIndex">The starting point index.</param>
         public OperationGraphVisitor(string id, IOperation startNode, int startingPointIndex)
         {
             if (string.IsNullOrEmpty(id))
@@ -47,6 +60,9 @@ namespace ParallelReverseAutoDiff.RMAD
             this.startingPointIndex = startingPointIndex;
         }
 
+        /// <summary>
+        /// Gets the ID of the visitor.
+        /// </summary>
         public string Id
         {
             get
@@ -55,9 +71,54 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
+        /// <summary>
+        /// Starts the traversal of the computation graph.
+        /// </summary>
+        /// <returns>The task.</returns>
         public Task TraverseAsync()
         {
             return this.Traverse(this.startNode);
+        }
+
+        /// <summary>
+        /// Resets the visited counts of the computation graph.
+        /// </summary>
+        /// <param name="node">The starting operation.</param>
+        /// <param name="returnEarly">If it should return early if the visited count is already 0.</param>
+        /// <returns>A task.</returns>
+        public async Task ResetVisitedCountsAsync(IOperation node, bool returnEarly = true)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            node.Lock.EnterWriteLock();
+
+            if (returnEarly)
+            {
+                // Return early if VisitedCount is already 0
+                if (node.VisitedCount == 0)
+                {
+                    node.Lock.ExitWriteLock();
+                    return;
+                }
+            }
+
+            node.VisitedCount = 0;
+            node.Lock.ExitWriteLock();
+
+            var adjacentTasks = new List<Task>();
+            for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
+            {
+                IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
+                if (adjacentOperation != null)
+                {
+                    adjacentTasks.Add(this.ResetVisitedCountsAsync(adjacentOperation));
+                }
+            }
+
+            await Task.WhenAll(adjacentTasks);
         }
 
         private async Task Traverse(IOperation node)
@@ -96,41 +157,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 if (adjacentOperation != null)
                 {
                     adjacentTasks.Add(this.Traverse(adjacentOperation));
-                }
-            }
-
-            await Task.WhenAll(adjacentTasks);
-        }
-
-        public async Task ResetVisitedCountsAsync(IOperation node, bool returnEarly = true)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
-            node.Lock.EnterWriteLock();
-
-            if (returnEarly)
-            {
-                // Return early if VisitedCount is already 0
-                if (node.VisitedCount == 0)
-                {
-                    node.Lock.ExitWriteLock();
-                    return;
-                }
-            }
-
-            node.VisitedCount = 0;
-            node.Lock.ExitWriteLock();
-
-            var adjacentTasks = new List<Task>();
-            for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
-            {
-                IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
-                if (adjacentOperation != null)
-                {
-                    adjacentTasks.Add(this.ResetVisitedCountsAsync(adjacentOperation));
                 }
             }
 

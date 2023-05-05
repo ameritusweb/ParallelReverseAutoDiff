@@ -7,33 +7,47 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
 
+    /// <summary>
+    /// A stretched sigmoid operation.
+    /// </summary>
     public class StretchedSigmoidOperation : Operation
     {
         private Matrix input;
 
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new StretchedSigmoidOperation();
         }
 
+        /// <summary>
+        /// Performs the forward operation for the stretched sigmoid activation function.
+        /// </summary>
+        /// <param name="input">The input to the stretched sigmoid operation.</param>
+        /// <returns>The output of the stretched sigmoid operation.</returns>
         public Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;
             int numCols = input[0].Length;
 
-            this.output = new Matrix(numRows, numCols);
+            this.Output = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    this.output[i][j] = 1.0 / (1.0 + Math.Pow(Math.PI - 2, -input[i][j]));
+                    this.Output[i][j] = 1.0 / (1.0 + Math.Pow(Math.PI - 2, -input[i][j]));
                 }
             }
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
         {
             int numRows = dLdOutput.Length;

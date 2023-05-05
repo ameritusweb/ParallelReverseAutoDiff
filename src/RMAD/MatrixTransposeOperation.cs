@@ -5,33 +5,44 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    /// <summary>
+    /// A matrix transpose operation.
+    /// </summary>
     public class MatrixTransposeOperation : Operation
     {
-        private Matrix input;
-
+        /// <summary>
+        /// A common method for instantiating an operation.
+        /// </summary>
+        /// <param name="net">The neural network.</param>
+        /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new MatrixTransposeOperation();
         }
 
+        /// <summary>
+        /// The forward pass of the matrix transpose operation.
+        /// </summary>
+        /// <param name="input">The input for the matrix transpose operation.</param>
+        /// <returns>The output for the matrix transpose operation.</returns>
         public Matrix Forward(Matrix input)
         {
-            this.input = input;
             int inputRows = input.Length;
             int inputCols = input[0].Length;
 
-            this.output = new Matrix(inputCols, inputRows);
+            this.Output = new Matrix(inputCols, inputRows);
             for (int i = 0; i < inputCols; i++)
             {
                 for (int j = 0; j < inputRows; j++)
                 {
-                    this.output[i][j] = input[j][i];
+                    this.Output[i][j] = input[j][i];
                 }
             }
 
-            return this.output;
+            return this.Output;
         }
 
+        /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
             int dOutputRows = dOutput.Length;
