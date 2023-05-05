@@ -1,0 +1,401 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParallelReverseAutoDiff.LstmExample</name>
+    </assembly>
+    <members>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.EmbeddedResource">
+            <summary>
+            Helper class to read embedded resources.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.EmbeddedResource.ReadAllJson(System.String)">
+            <summary>
+            Reads a JSON file from the embedded resources.
+            </summary>
+            <param name="file">The file to read.</param>
+            <returns>The text of the file.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.ILSTM">
+            <summary>
+            An interface for a Long Short-Term Memory (LSTM) neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.ILSTM.Name">
+            <summary>
+            Gets the name of the neural network used for debugging purposes.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.ILSTM.GetOutput(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Get the output of the LSTM for the given inputs.
+            </summary>
+            <param name="inputs">The inputs where the first dimension is the time dimension.</param>
+            <returns>The output of the LSTM per time step.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.ILSTM.Optimize(ParallelReverseAutoDiff.RMAD.Matrix[],System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Matrix},System.Collections.Generic.List{System.Double},System.Int32,System.Boolean)">
+            <summary>
+            Run the forward and backward passes of the LSTM for the given inputs and chosen actions.
+            </summary>
+            <param name="inputs">The input data of the LSTM.</param>
+            <param name="chosenActions">The actions chosen by the agent.</param>
+            <param name="rewards">The positive or negative rewards received for the chosen action.</param>
+            <param name="iterationIndex">The iteration index used for Adam optimization.</param>
+            <param name="doNotUpdate">Whether or not to update the network's parameters.</param>
+            <returns>A task with the result of the async operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.ILSTM.SaveModel(System.String)">
+            <summary>
+            Saves the parameters of the neural network to the given path.
+            </summary>
+            <param name="path">The path to store the parameters of the newral network.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.MatrixUtils">
+            <summary>
+            A collection of matrix utilities for neural network development.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numLayers">The number of lauers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix,System.Double,System.Double)">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix[],System.Double,System.Double)">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.StandardizedMatrix(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Creates a standardized matrix using the mean and standard deviation.
+            </summary>
+            <param name="matrix">The matrix to process.</param>
+            <returns>The standardized matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.To2DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 2-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 2-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.To1DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 1-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 1-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.Matrix[],ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.ClearArrays4D(ParallelReverseAutoDiff.RMAD.Matrix[][][])">
+            <summary>
+            Clears the following 4-D matrices.
+            </summary>
+            <param name="matrices">The 4-D matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.ClearArrays3D(ParallelReverseAutoDiff.RMAD.Matrix[][])">
+            <summary>
+            Clears the following 3-D matrices.
+            </summary>
+            <param name="matrices">The 3-D matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.ClearArrays2D(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Clears the following 2-D matrices.
+            </summary>
+            <param name="matrices">The 2-D matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.FrobeniusNorm(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The Frobenius norm of a matrix: the square root of the sum of the absolute squares of its elements.
+            </summary>
+            <param name="weightMatrix">The weight matrix to calculate.</param>
+            <returns>The frobenius norm.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.LearningRateReductionFactor(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the reduction factor for the learning rate.
+            </summary>
+            <param name="frobeniusNorm">The frobenius norm of a matrix.</param>
+            <param name="maxNorm">The max norm.</param>
+            <param name="minFactor">The minimum learning rate reduction factor.</param>
+            <returns>The learning rate reduction factor.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The element-wise Hadamard product of two matrices.
+            </summary>
+            <param name="matrixA">The first matrix.</param>
+            <param name="matrixB">The second matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add two matrices together.
+            </summary>
+            <param name="a">Matrix A.</param>
+            <param name="b">Matrix B.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Multiply a matrix by a scalar.
+            </summary>
+            <param name="scalar">The scalar to multiply.</param>
+            <param name="matrix">The matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.MatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters">
+            <summary>
+            Multi-layer LSTM parameters.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wi">
+            <summary>
+            Gets or sets the weight matrix for the input gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wf">
+            <summary>
+            Gets or sets the weight matrix for the forget gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wc">
+            <summary>
+            Gets or sets the weight matrix for the memory cell gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wo">
+            <summary>
+            Gets or sets the weight matrix for the output gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Ui">
+            <summary>
+            Gets or sets the weight matrix for the input gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Uf">
+            <summary>
+            Gets or sets the weight matrix for the forget gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Uc">
+            <summary>
+            Gets or sets the weight matrix for the memory cell gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Uo">
+            <summary>
+            Gets or sets the weight matrix for the output gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Bi">
+            <summary>
+            Gets or sets the bias matrix for the input gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Bf">
+            <summary>
+            Gets or sets the bias matrix for the forget gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Bc">
+            <summary>
+            Gets or sets the bias matrix for the memory cell gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Bo">
+            <summary>
+            Gets or sets the bias matrix for the output gate.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Be">
+            <summary>
+            Gets or sets the bias matrix for the embedding layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.We">
+            <summary>
+            Gets or sets the weight matrix for the embedding layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.V">
+            <summary>
+            Gets or sets the weight matrix for the output layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.B">
+            <summary>
+            Gets or sets the bias matrix for the output layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wq">
+            <summary>
+            Gets or sets the weight matrix for the query layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wk">
+            <summary>
+            Gets or sets the weight matrix for the key layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters.Wv">
+            <summary>
+            Gets or sets the weight matrix for the value layer.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.RMAD.PolicyGradientLossOperation">
+            <summary>
+            A loss function for policy gradient optimization.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.RMAD.PolicyGradientLossOperation.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Matrix},System.Collections.Generic.List{System.Double},System.Int32,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.LstmExample.RMAD.PolicyGradientLossOperation"/> class.
+            </summary>
+            <param name="chosenActions">The chosen actions of the agent.</param>
+            <param name="rewards">The positive or negative rewards based on the chosen action.</param>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="discountFactor">The discount factor.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.RMAD.PolicyGradientLossOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A factory method for creating a policy gradient loss function.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated policy gradient loss operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.RMAD.PolicyGradientLossOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The backward pass of the policy gradient loss function.
+            </summary>
+            <param name="actionProbabilities">The action probabilities.</param>
+            <returns>The gradient to pass upstream.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.RMAD.PolicyGradientLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            The forward pass of the policy gradient loss function.
+            </summary>
+            <param name="outputsOverTime">The outputs over time.</param>
+            <returns>The policy gradient loss.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM">
+            <summary>
+            A multi-layer LSTM with self-attention.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.String,System.String,System.Int32,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM"/> class.
+            </summary>
+            <param name="inputSize">The input size.</param>
+            <param name="hiddenSize">The hidden size.</param>
+            <param name="outputSize">The output size.</param>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="architecture">The name of the JSON architecture.</param>
+            <param name="lstmName">The name of the LSTM.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.Name">
+            <inheritdoc/>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.LoadModel(System.String,ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM)">
+            <summary>
+            Load the model from a JSON file.
+            </summary>
+            <param name="filePath">The file path to load from.</param>
+            <param name="lstm">The LSTM to load the parameters to.</param>
+            <returns>The loaded LSTM.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.SerializeLSTMParameters(ParallelReverseAutoDiff.LstmExample.MultiLayerLSTMParameters)">
+            <summary>
+            Serialize LSTMParameters to a JSON string.
+            </summary>
+            <param name="parameters">The parameters to serialize.</param>
+            <returns>The serialized parameters.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.DeserializeLSTMParameters(System.String)">
+            <summary>
+            Deserialize a JSON string back to LSTMParameters.
+            </summary>
+            <param name="jsonString">The JSON string to deserialize.</param>
+            <returns>The multi-layer LSTM parameters.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.Initialize">
+            <summary>
+            Initializes the computation graph of the LSTM.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.GetOutput(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.Optimize(ParallelReverseAutoDiff.RMAD.Matrix[],System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Matrix},System.Collections.Generic.List{System.Double},System.Int32,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.SaveModel(System.String)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

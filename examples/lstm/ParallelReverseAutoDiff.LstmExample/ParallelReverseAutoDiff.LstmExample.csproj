@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<DocumentationFile>ParallelReverseAutoDiff.LstmExample.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
