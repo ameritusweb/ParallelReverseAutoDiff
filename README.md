@@ -409,7 +409,9 @@ for (int t = numTimeSteps - 1; t >= 0; t--)
     backwardStartOperation = operationsMap[$"output_t_{t}"];
     if (gradientOfLossWrtOutput[t][0] != 0.0d)
     {
-        backwardStartOperation.BackwardInput = new double[][] { gradientOfLossWrtOutput[t] };
+        var backwardInput = new Matrix(1, 1);
+        backwardInput[0] = gradientOfLossWrtOutput[t];
+        backwardStartOperation.BackwardInput = backwardInput;
         OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
         await opVisitor.TraverseAsync();
         opVisitor.Reset();
