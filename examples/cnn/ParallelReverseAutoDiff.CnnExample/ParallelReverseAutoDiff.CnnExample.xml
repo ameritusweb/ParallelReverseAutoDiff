@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParallelReverseAutoDiff.CnnExample</name>
+    </assembly>
+    <members>
+        <member name="T:ParallelReverseAutoDiff.CnnExample.MultiLayerCNN">
+            <summary>
+            A multi-layer convolutional neural network.
+            </summary>
+        </member>
+    </members>
+</doc>
