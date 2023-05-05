@@ -702,12 +702,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             // Initialize moments
             if (this.mWi == null)
             {
-                this.InitializeMoments();
-            }
-
-            if (this.mWi == null)
-            {
-                throw new Exception("Moments are not initialized");
+                this.mWi = this.InitializeMoments() ?? throw new Exception("Moments should not be null.");
             }
 
             // Use Parallel.For to parallelize the loop
@@ -744,7 +739,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.UpdateWeightWithAdam(this.be, this.mbe, this.vbe, dbe, beta1, beta2, epsilon, this.adamT);
         }
 
-        private void InitializeMoments()
+        private Matrix[] InitializeMoments()
         {
             this.mWi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wi[0].Length, this.Wi[0][0].Length);
             this.vWi = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.Wi[0].Length, this.Wi[0][0].Length);
@@ -787,6 +782,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.vV = MatrixUtils.InitializeZeroMatrix(this.V.Length, this.V[0].Length);
             this.mb = MatrixUtils.InitializeZeroMatrix(this.b.Length, this.b[0].Length);
             this.vb = MatrixUtils.InitializeZeroMatrix(this.b.Length, this.b[0].Length);
+            return this.mWi;
         }
 
         private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
