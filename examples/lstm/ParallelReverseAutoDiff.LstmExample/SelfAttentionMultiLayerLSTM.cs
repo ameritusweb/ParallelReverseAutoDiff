@@ -387,7 +387,7 @@ namespace ParallelReverseAutoDiff.LstmExample
 
             this.arrays4D = new Matrix[][][] { this.h, this.c };
             this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
-            this.arrays2D = new Matrix[] { this.dWe, this.dbe, this.dV, this.db };
+            this.arrays2D = new[] { this.dWe, this.dbe, this.dV, this.db };
         }
 
         private void ClearState()
@@ -482,7 +482,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             for (int j = 0; j < op.Inputs.Count; ++j)
             {
                 var input = op.Inputs[j];
-                var split = input.Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                var split = input.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
                 var specificId = this.ConvertIdToTimeAndLayer(input, split, op);
                 if (this.operationsMap.ContainsKey(specificId))
                 {
@@ -547,7 +547,7 @@ namespace ParallelReverseAutoDiff.LstmExample
 
         private Func<int, int, object> NameToValueFunc(string name)
         {
-            string[] split = name.Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] split = name.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
             return this.inputNameToValueMap[split[0]];
         }
 

@@ -17,7 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The array of matrices.</returns>
         public static Matrix?[] Reassemble((Matrix?, Matrix?) dOutput)
         {
-            return new Matrix?[] { dOutput.Item1, dOutput.Item2 };
+            return new[] { dOutput.Item1, dOutput.Item2 };
         }
     }
 }
