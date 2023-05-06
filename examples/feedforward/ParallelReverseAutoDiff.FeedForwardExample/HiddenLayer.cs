@@ -98,5 +98,13 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.DW = MatrixUtils.ClipGradients(this.DW, this.feedForwardNeuralNetwork.ClipValue, null);
             this.DB = MatrixUtils.ClipGradients(this.DB, this.feedForwardNeuralNetwork.ClipValue, null);
         }
+
+        /// <summary>
+        /// Clear the state for the hidden layer.
+        /// </summary>
+        public void ClearState()
+        {
+            MatrixUtils.ClearMatrices(new[] { this.DW, this.DB, this.H });
+        }
     }
 }

@@ -5,38 +5,36 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.FeedForwardExample
 {
-    using Newtonsoft.Json;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
-    /// The adam optimization for a feed forward neural network.
+    /// The Adam optimization for a feed forward neural network.
     /// </summary>
     public partial class FeedForwardNeuralNetwork
     {
-        private void UpdateParametersWithAdam(Matrix[] dWi, Matrix[] dWf, Matrix[] dWo, Matrix[] dWc, Matrix[] dUi, Matrix[] dUf, Matrix[] dUo, Matrix[] dUc, Matrix[] dbi, Matrix[] dbf, Matrix[] dbo, Matrix[] dbc, Matrix dV, Matrix db, Matrix[] dWq, Matrix[] dWk, Matrix[] dWv, Matrix dWe, Matrix dbe)
+        private readonly double beta1 = 0.9;
+        private readonly double beta2 = 0.999;
+        private readonly double epsilon = 1e-8;
+
+        private void UpdateEmbeddingLayerParametersWithAdam(EmbeddingLayer embeddingLayer)
         {
-            double beta1 = 0.9;
-            double beta2 = 0.999;
-            double epsilon = 1e-8;
-
-            // Use Parallel.For to parallelize the loop
-            Parallel.For(0, this.NumLayers, layerIndex =>
-            {
-                // Update moments and apply Adam updates
-                this.UpdateWeightWithAdam(this.Wi[layerIndex], this.mWi[layerIndex], this.vWi[layerIndex], dWi[layerIndex], beta1, beta2, epsilon, this.adamT);
-                this.UpdateWeightWithAdam(this.Wf[layerIndex], this.mWf[layerIndex], this.vWf[layerIndex], dWf[layerIndex], beta1, beta2, epsilon, this.adamT);
-                this.UpdateWeightWithAdam(this.Wc[layerIndex], this.mWc[layerIndex], this.vWc[layerIndex], dWc[layerIndex], beta1, beta2, epsilon, this.adamT);
-                this.UpdateWeightWithAdam(this.Wo[layerIndex], this.mWo[layerIndex], this.vWo[layerIndex], dWo[layerIndex], beta1, beta2, epsilon, this.adamT);
-            });
-
-            this.UpdateWeightWithAdam(this.V, this.mV, this.vV, dV, beta1, beta2, epsilon, this.adamT);
-            this.UpdateWeightWithAdam(this.b, this.mb, this.vb, db, beta1, beta2, epsilon, this.adamT);
-
-            this.UpdateWeightWithAdam(this.We, this.mWe, this.vWe, dWe, beta1, beta2, epsilon, this.adamT);
-            this.UpdateWeightWithAdam(this.be, this.mbe, this.vbe, dbe, beta1, beta2, epsilon, this.adamT);
+            this.UpdateWeightWithAdam(embeddingLayer.We, embeddingLayer.MWe, embeddingLayer.VWe, embeddingLayer.DWe, this.beta1, this.beta2, this.epsilon);
+            this.UpdateWeightWithAdam(embeddingLayer.Be, embeddingLayer.MBe, embeddingLayer.VBe, embeddingLayer.DBe, this.beta1, this.beta2, this.epsilon);
         }
 
-        private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, int t)
+        private void UpdateHiddenLayerParametersWithAdam(HiddenLayer hiddenLayer)
+        {
+            this.UpdateWeightWithAdam(hiddenLayer.W, hiddenLayer.MW, hiddenLayer.VW, hiddenLayer.DW, this.beta1, this.beta2, this.epsilon);
+            this.UpdateWeightWithAdam(hiddenLayer.B, hiddenLayer.MB, hiddenLayer.VB, hiddenLayer.DB, this.beta1, this.beta2, this.epsilon);
+        }
+
+        private void UpdateOutputLayerParametersWithAdam(OutputLayer outputLayer)
+        {
+            this.UpdateWeightWithAdam(outputLayer.V, outputLayer.MV, outputLayer.VV, outputLayer.DV, this.beta1, this.beta2, this.epsilon);
+            this.UpdateWeightWithAdam(outputLayer.Bo, outputLayer.MBo, outputLayer.VBo, outputLayer.DBo, this.beta1, this.beta2, this.epsilon);
+        }
+
+        private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon)
         {
             // Update biased first moment estimate
             mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
@@ -45,10 +43,10 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             vW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta2, vW), MatrixUtils.ScalarMultiply(1 - beta2, MatrixUtils.HadamardProduct(gradient, gradient)));
 
             // Compute bias-corrected first moment estimate
-            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, t)), mW);
+            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.AdamIteration)), mW);
 
             // Compute bias-corrected second raw moment estimate
-            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, t)), vW);
+            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.AdamIteration)), vW);
 
             // Update weights
             for (int i = 0; i < w.Length; i++)

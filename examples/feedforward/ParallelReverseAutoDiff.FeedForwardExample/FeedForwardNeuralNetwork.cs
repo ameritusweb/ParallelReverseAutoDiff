@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.FeedForwardExample
 {
+    using Microsoft.Win32;
     using ParallelReverseAutoDiff.FeedForwardExample.RMAD;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -132,12 +133,48 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         internal double ClipValue { get; private set; } = 4d;
 
         /// <summary>
+        /// Gets the Adam iteration for the neural network.
+        /// </summary>
+        internal double AdamIteration { get; private set; }
+
+        /// <summary>
         /// Initializes the computation graph of the feed forward neural network.
         /// </summary>
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
             await this.InitializeComputationGraph();
+        }
+
+        /// <summary>
+        /// Optimize the neural network.
+        /// </summary>
+        /// <param name="input">The input matrix.</param>
+        /// <param name="target">The target matrix.</param>
+        /// <param name="iterationIndex">The iteration index.</param>
+        /// <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
+        /// <returns>A task.</returns>
+        public async Task Optimize(Matrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
+        {
+            this.Target = target;
+            if (doNotUpdate == null)
+            {
+                doNotUpdate = false;
+            }
+
+            this.AdamIteration = iterationIndex + 1;
+
+            await this.AutomaticForwardPropagate(input, doNotUpdate.Value);
+        }
+
+        private void ClearState()
+        {
+            this.EmbeddingLayer.ClearState();
+            Parallel.For(0, this.HiddenLayers.Length, (i) =>
+            {
+                this.HiddenLayers[i].ClearState();
+            });
+            this.OutputLayer.ClearState();
         }
 
         private void SetupInputNameToValueMap()
@@ -192,18 +229,17 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
 
             IOperation? backwardStartOperation = null;
             backwardStartOperation = this.operationsMap[$"Output"];
-            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
+            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private async Task AutomaticForwardPropagate(Matrix input, Matrix target, bool doNotUpdate)
+        private async Task AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
         {
-            // Initialize memory cell, hidden state, gradients, biases, and intermediates
+            // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            MatrixUtils.SetInPlace(this.inputSequence, inputSequence);
-            this.Target = target;
+            MatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
             var op = this.startOperation;
             if (op == null)
             {
@@ -238,13 +274,8 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        private async Task AutomaticBackwardPropagate(bool? doNotUpdate)
+        private async Task AutomaticBackwardPropagate(bool doNotUpdate)
         {
-            if (doNotUpdate == null)
-            {
-                doNotUpdate = false;
-            }
-
             var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
             var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
             var loss = meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
@@ -266,28 +297,33 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             if (gradientOfLossWrtOutput[0][0] != 0.0d)
             {
                 backwardStartOperation.BackwardInput = gradientOfLossWrtOutput;
-                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
+                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
                 traverseCount++;
             }
 
-            if (traverseCount == 0 || doNotUpdate.Value)
+            if (traverseCount == 0 || doNotUpdate)
             {
                 return;
             }
 
             // Clip gradients and biases to prevent exploding gradients
             this.EmbeddingLayer.ClipGradients();
-            foreach (var hiddenLayer in this.HiddenLayers)
+            Parallel.For(0, this.HiddenLayers.Length, (i) =>
             {
-                hiddenLayer.ClipGradients();
-            }
+                this.HiddenLayers[i].ClipGradients();
+            });
 
             this.OutputLayer.ClipGradients();
 
             // Update model parameters using gradient descent
-            this.UpdateParametersWithAdam(this.dWi, this.dWf, this.dWo, this.dWc, this.dUi, this.dUf, this.dUo, this.dUc, this.dbi, this.dbf, this.dbo, this.dbc, this.dV, this.db, this.dWq, this.dWk, this.dWv, this.dWe, this.dbe);
+            this.UpdateEmbeddingLayerParametersWithAdam(this.EmbeddingLayer);
+            Parallel.For(0, this.HiddenLayers.Length, (i) =>
+            {
+                this.UpdateHiddenLayerParametersWithAdam(this.HiddenLayers[i]);
+            });
+            this.UpdateOutputLayerParametersWithAdam(this.OutputLayer);
         }
     }
 }

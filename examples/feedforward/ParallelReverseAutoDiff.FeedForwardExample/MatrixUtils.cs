@@ -275,62 +275,10 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         }
 
         /// <summary>
-        /// Clears the following 4-D matrices.
-        /// </summary>
-        /// <param name="matrices">The 4-D matrices to clear.</param>
-        public static void ClearArrays4D(Matrix[][][] matrices)
-        {
-            int numMatrices = matrices.Length;
-            int numTimesteps = matrices[0].Length;
-            int numLayers = matrices[0][0].Length;
-
-            // Parallelize the outer loop
-            Parallel.For(0, numMatrices, i =>
-            {
-                for (int j = 0; j < numTimesteps; ++j)
-                {
-                    for (int k = 0; k < numLayers; ++k)
-                    {
-                        int numRows = matrices[i][j][k].Length;
-                        int numCols = matrices[i][j][k][0].Length;
-                        for (int l = 0; l < numRows; ++l)
-                        {
-                            matrices[i][j][k][l] = new double[numCols];
-                        }
-                    }
-                }
-            });
-        }
-
-        /// <summary>
-        /// Clears the following 3-D matrices.
-        /// </summary>
-        /// <param name="matrices">The 3-D matrices to clear.</param>
-        public static void ClearArrays3D(Matrix[][] matrices)
-        {
-            int numMatrices = matrices.Length;
-            int numLayers = matrices[0].Length;
-
-            // Parallelize the outer loop
-            Parallel.For(0, numMatrices, i =>
-            {
-                for (int j = 0; j < numLayers; ++j)
-                {
-                    int numRows = matrices[i][j].Length;
-                    int numCols = matrices[i][j][0].Length;
-                    for (int k = 0; k < numRows; ++k)
-                    {
-                        matrices[i][j][k] = new double[numCols];
-                    }
-                }
-            });
-        }
-
-        /// <summary>
         /// Clears the following 2-D matrices.
         /// </summary>
         /// <param name="matrices">The 2-D matrices to clear.</param>
-        public static void ClearArrays2D(Matrix[] matrices)
+        public static void ClearMatrices(Matrix[] matrices)
         {
             int numMatrices = matrices.Length;
 
