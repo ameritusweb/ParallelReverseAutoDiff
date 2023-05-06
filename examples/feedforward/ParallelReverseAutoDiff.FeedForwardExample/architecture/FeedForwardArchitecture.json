@@ -24,7 +24,7 @@
               "id": "w1_currentInput",
               "type": "MatrixMultiplyOperation",
               "inputs": [ "W1[layerIndex]", "currentInput" ],
-              "gradientResultTo": [ "dWf[layerIndex]", null ]
+              "gradientResultTo": [ "dW1[layerIndex]", null ]
             },
             {
               "id": "h_add",
