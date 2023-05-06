@@ -89,5 +89,14 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.DW = new Matrix(this.W.Rows, this.W.Cols);
             this.DB = new Matrix(this.B.Rows, this.B.Cols);
         }
+
+        /// <summary>
+        /// Clip the gradients.
+        /// </summary>
+        public void ClipGradients()
+        {
+            this.DW = MatrixUtils.ClipGradients(this.DW, this.feedForwardNeuralNetwork.ClipValue, null);
+            this.DB = MatrixUtils.ClipGradients(this.DB, this.feedForwardNeuralNetwork.ClipValue, null);
+        }
     }
 }

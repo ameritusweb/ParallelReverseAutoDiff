@@ -166,6 +166,14 @@ namespace ParallelReverseAutoDiff.RMAD
 
         /// <summary>
         /// Copies the result of the operation to the specified destination.
+        /// It uses the layer index to get the object to copy the result to.
+        /// </summary>
+        /// <param name="func">The function to get the object to copy the result to.</param>
+        void ResultTo(Func<int, object> func);
+
+        /// <summary>
+        /// Copies the result of the operation to the specified destination.
+        /// It uses the time step index and layer index to get the object to copy the result to.
         /// </summary>
         /// <param name="func">The function to get the object to copy the result to.</param>
         void ResultTo(Func<int, int, object> func);

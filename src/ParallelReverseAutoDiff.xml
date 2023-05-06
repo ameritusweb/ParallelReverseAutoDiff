@@ -250,9 +250,17 @@
             </summary>
             <param name="dOutput">The calculated gradients to accumulate.</param>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.ResultTo(System.Func{System.Int32,System.Object})">
+            <summary>
+            Copies the result of the operation to the specified destination.
+            It uses the layer index to get the object to copy the result to.
+            </summary>
+            <param name="func">The function to get the object to copy the result to.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.ResultTo(System.Func{System.Int32,System.Int32,System.Object})">
             <summary>
             Copies the result of the operation to the specified destination.
+            It uses the time step index and layer index to get the object to copy the result to.
             </summary>
             <param name="func">The function to get the object to copy the result to.</param>
         </member>
@@ -725,6 +733,9 @@
             <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Operation.AccumulateGradient(System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.ResultTo(System.Func{System.Int32,System.Object})">
             <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Operation.ResultTo(System.Func{System.Int32,System.Int32,System.Object})">

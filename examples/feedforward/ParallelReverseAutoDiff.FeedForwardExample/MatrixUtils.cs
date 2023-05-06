@@ -12,6 +12,8 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
     /// </summary>
     public static class MatrixUtils
     {
+        private static readonly double MinClipValue = 1E-6;
+
         /// <summary>
         /// Creates an empty matrix of the given size.
         /// </summary>
@@ -73,8 +75,13 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
         /// <param name="minValue">The minimum threshold value.</param>
         /// <returns>The clipped gradients.</returns>
-        public static Matrix ClipGradients(Matrix gradients, double clipValue, double minValue = 1E-6)
+        public static Matrix ClipGradients(Matrix gradients, double clipValue, double? minValue)
         {
+            if (minValue == null)
+            {
+                minValue = MinClipValue;
+            }
+
             var standardizedMatrix = StandardizedMatrix(gradients);
             int numRows = gradients.Length;
             int numCols = gradients[0].Length;
@@ -97,11 +104,11 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
                     // Apply the minimum threshold value
                     if (gradients[i][j] > 0 && gradients[i][j] < minValue)
                     {
-                        gradients[i][j] = minValue;
+                        gradients[i][j] = minValue.Value;
                     }
                     else if (gradients[i][j] < 0 && gradients[i][j] > -minValue)
                     {
-                        gradients[i][j] = -minValue;
+                        gradients[i][j] = -minValue.Value;
                     }
                 }
             }
@@ -116,8 +123,13 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
         /// <param name="minValue">The minimum threshold value.</param>
         /// <returns>The clipped gradients.</returns>
-        public static Matrix[] ClipGradients(Matrix[] gradients, double clipValue, double minValue = 1E-6)
+        public static Matrix[] ClipGradients(Matrix[] gradients, double clipValue, double? minValue)
         {
+            if (minValue == null)
+            {
+                minValue = MinClipValue;
+            }
+
             int numMatrices = gradients.Length;
 
             for (int k = 0; k < numMatrices; k++)
@@ -145,11 +157,11 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
                         // Apply the minimum threshold value
                         if (gradients[k][i][j] > 0 && gradients[k][i][j] < minValue)
                         {
-                            gradients[k][i][j] = minValue;
+                            gradients[k][i][j] = minValue.Value;
                         }
                         else if (gradients[k][i][j] < 0 && gradients[k][i][j] > -minValue)
                         {
-                            gradients[k][i][j] = -minValue;
+                            gradients[k][i][j] = -minValue.Value;
                         }
                     }
                 }

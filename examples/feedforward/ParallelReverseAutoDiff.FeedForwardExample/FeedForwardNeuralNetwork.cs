@@ -14,7 +14,6 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
     public partial class FeedForwardNeuralNetwork : NeuralNetwork
     {
         private const string ARCHITECTURE = "FeedForwardArchitecture";
-        private readonly double clipValue = 4.0d;
         private EmbeddingLayer embeddingLayer;
         private OutputLayer outputLayer;
 
@@ -42,7 +41,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.NumLayers = numLayers;
             if (clipValue != null)
             {
-                this.clipValue = clipValue.Value;
+                this.ClipValue = clipValue.Value;
             }
 
             this.HiddenLayers = new HiddenLayer[numLayers];
@@ -126,6 +125,11 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
+
+        /// <summary>
+        /// Gets the clip value for the neural network.
+        /// </summary>
+        internal double ClipValue { get; private set; } = 4d;
 
         /// <summary>
         /// Initializes the computation graph of the feed forward neural network.
@@ -234,11 +238,16 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        private async Task AutomaticBackwardPropagate(bool doNotUpdate = false)
+        private async Task AutomaticBackwardPropagate(bool? doNotUpdate)
         {
+            if (doNotUpdate == null)
+            {
+                doNotUpdate = false;
+            }
+
             var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
-            var policyGradientLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
-            var loss = policyGradientLossOperation.Forward(this.Output);
+            var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
+            var loss = meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
             if (loss[0][0] >= 0.0d)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -263,12 +272,19 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
                 traverseCount++;
             }
 
-            if (traverseCount == 0 || doNotUpdate)
+            if (traverseCount == 0 || doNotUpdate.Value)
             {
                 return;
             }
 
             // Clip gradients and biases to prevent exploding gradients
+            this.EmbeddingLayer.ClipGradients();
+            foreach (var hiddenLayer in this.HiddenLayers)
+            {
+                hiddenLayer.ClipGradients();
+            }
+
+            this.OutputLayer.ClipGradients();
 
             // Update model parameters using gradient descent
             this.UpdateParametersWithAdam(this.dWi, this.dWf, this.dWo, this.dWc, this.dUi, this.dUf, this.dUo, this.dUc, this.dbi, this.dbf, this.dbo, this.dbc, this.dV, this.db, this.dWq, this.dWk, this.dWv, this.dWe, this.dbe);
