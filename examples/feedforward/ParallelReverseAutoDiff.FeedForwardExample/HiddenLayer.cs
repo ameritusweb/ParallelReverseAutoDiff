@@ -12,6 +12,22 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
     /// </summary>
     public class HiddenLayer
     {
+        private readonly FeedForwardNeuralNetwork feedForwardNeuralNetwork;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HiddenLayer"/> class.
+        /// </summary>
+        /// <param name="feedForwardNeuralNetwork">The neural network.</param>
+        public HiddenLayer(FeedForwardNeuralNetwork feedForwardNeuralNetwork)
+        {
+            this.feedForwardNeuralNetwork = feedForwardNeuralNetwork;
+        }
+
+        /// <summary>
+        /// Gets or sets the hidden state.
+        /// </summary>
+        public Matrix H { get; set; }
+
         /// <summary>
         /// Gets or sets the weight matrix for the hidden layer.
         /// </summary>
@@ -51,5 +67,27 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         /// Gets or sets the second moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
         /// </summary>
         public Matrix VB { get; set; }
+
+        /// <summary>
+        /// Initialize the weights and biases and moments.
+        /// </summary>
+        public void Initialize()
+        {
+            this.W = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.feedForwardNeuralNetwork.HiddenSize, this.feedForwardNeuralNetwork.HiddenSize);
+            this.B = MatrixUtils.InitializeZeroMatrix(this.feedForwardNeuralNetwork.HiddenSize, 1);
+            this.MW = new Matrix(this.W.Rows, this.W.Cols);
+            this.VW = new Matrix(this.W.Rows, this.W.Cols);
+            this.MB = new Matrix(this.B.Rows, this.B.Cols);
+            this.VB = new Matrix(this.B.Rows, this.B.Cols);
+        }
+
+        /// <summary>
+        /// Initialize the gradients.
+        /// </summary>
+        public void InitializeGradients()
+        {
+            this.DW = new Matrix(this.W.Rows, this.W.Cols);
+            this.DB = new Matrix(this.B.Rows, this.B.Cols);
+        }
     }
 }
