@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="FeedForwardNeuralNetwork.AdamOptimization.cs" author="ameritusweb" date="5/5/2023">
+// <copyright file="AdamOptimization.cs" author="ameritusweb" date="5/5/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
