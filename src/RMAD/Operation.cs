@@ -174,28 +174,17 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
+        public virtual void ResultTo(Func<int, object> func)
+        {
+            var oo = func(this.LayerIndex);
+            this.CopyResult(oo);
+        }
+
+        /// <inheritdoc />
         public virtual void ResultTo(Func<int, int, object> func)
         {
             var oo = func(this.TimeStepIndex, this.LayerIndex);
-            Matrix o;
-            if (oo is Operation op)
-            {
-                o = op.GetOutput();
-            }
-            else
-            {
-                o = (Matrix)oo;
-            }
-
-            int numRows = this.Output.Length;
-            int numCols = this.Output[0].Length;
-            for (int i = 0; i < numRows; ++i)
-            {
-                for (int j = 0; j < numCols; ++j)
-                {
-                    o[i][j] = this.Output[i][j];
-                }
-            }
+            this.CopyResult(oo);
         }
 
         /// <inheritdoc />
@@ -221,6 +210,29 @@ namespace ParallelReverseAutoDiff.RMAD
             if (this.SyncSemaphore == null)
             {
                 this.SyncSemaphore = new SemaphoreSlim(0, this.OutputDependencyCount);
+            }
+        }
+
+        private void CopyResult(object destination)
+        {
+            Matrix o;
+            if (destination is Operation op)
+            {
+                o = op.GetOutput();
+            }
+            else
+            {
+                o = (Matrix)destination;
+            }
+
+            int numRows = this.Output.Length;
+            int numCols = this.Output[0].Length;
+            for (int i = 0; i < numRows; ++i)
+            {
+                for (int j = 0; j < numCols; ++j)
+                {
+                    o[i][j] = this.Output[i][j];
+                }
             }
         }
     }
