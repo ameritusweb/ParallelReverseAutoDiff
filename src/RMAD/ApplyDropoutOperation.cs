@@ -34,7 +34,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new ApplyDropoutOperation(net.GetDropoutRate());
+            return new ApplyDropoutOperation(net.Parameters.DropoutRate);
         }
 
         /// <summary>

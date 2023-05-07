@@ -17,7 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Initializes a new instance of the <see cref="LeakyReLUOperation"/> class.
         /// </summary>
         /// <param name="alpha">The alpha.</param>
-        public LeakyReLUOperation(double alpha = 0.01)
+        public LeakyReLUOperation(double alpha)
         {
             this.alpha = alpha;
         }
@@ -29,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new LeakyReLUOperation();
+            return new LeakyReLUOperation(net.Parameters.LeakyReLUAlpha);
         }
 
         /// <summary>

@@ -558,82 +558,55 @@
             The base class for a neural network.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.DropoutRate">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.Parameters">
+            <summary>
+            Gets the parameters for the neural network.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters">
+            <summary>
+            The parameters for a neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate">
             <summary>
             Gets or sets the dropout rate for the apply dropout operation.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.DiscountFactor">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DiscountFactor">
             <summary>
             Gets or sets the discount factor.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LearningRate">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.LeakyReLUAlpha">
+            <summary>
+            Gets or sets the alpha value for the LeakyReLU operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.LearningRate">
             <summary>
             Gets or sets the learning rate.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.NumTimeSteps">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NumTimeSteps">
             <summary>
             Gets or sets the number of time steps.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.InputSequence">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.InputSequence">
             <summary>
             Gets or sets the input sequence.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.Rewards">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards">
             <summary>
             Gets or sets the rewards for policy gradient optimization.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.ChosenActions">
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ChosenActions">
             <summary>
             Gets or sets the chosen actions for policy gradient optimization.
             </summary>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetDropoutRate">
-            <summary>
-            Gets the dropout rate for the apply dropout operation.
-            </summary>
-            <returns>The dropout rate.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetDiscountFactor">
-            <summary>
-            Gets the discount factor.
-            </summary>
-            <returns>The discount factor.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetNumTimeSteps">
-            <summary>
-            Gets the number of time steps.
-            </summary>
-            <returns>The number of tine steps.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetLearningRate">
-            <summary>
-            Gets the learning rate.
-            </summary>
-            <returns>The learning rate.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetRewards">
-            <summary>
-            Gets the rewards for policy gradient optimization.
-            </summary>
-            <returns>The rewards.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetInputSequence">
-            <summary>
-            Gets the input sequence.
-            </summary>
-            <returns>The input sequence.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.GetChosenActions">
-            <summary>
-            Gets the chosen actions for policy gradient optimization.
-            </summary>
-            <returns>The chosen actions.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.Operation">
             <inheritdoc />
@@ -828,14 +801,18 @@
             The operation neural network visitor. Implements the visitor pattern for the backward pass.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32,System.Boolean)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor"/> class.
             </summary>
             <param name="id">An ID to uniquely identify the visitor.</param>
             <param name="startNode">The start node for the traveral.</param>
             <param name="startingPointIndex">The starting point index.</param>
-            <param name="runInParallel">Run in parallel rather than sequentially.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.RunSequentially">
+            <summary>
+            Gets or sets a value indicating whether the visitor should run sequentially instead of in parallel.
+            </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id">
             <summary>
