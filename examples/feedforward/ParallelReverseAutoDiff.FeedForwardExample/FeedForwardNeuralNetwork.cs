@@ -38,7 +38,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.OriginalInputSize = inputSize;
             this.HiddenSize = hiddenSize;
             this.OutputSize = outputSize;
-            this.LearningRate = learningRate;
+            this.Parameters.LearningRate = learningRate;
             this.NumLayers = numLayers;
             if (clipValue != null)
             {
@@ -583,7 +583,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             {
                 for (int j = 0; j < w[0].Length; j++)
                 {
-                    double weightReductionValue = this.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
+                    double weightReductionValue = this.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
                     w[i][j] -= weightReductionValue;
                 }
             }
