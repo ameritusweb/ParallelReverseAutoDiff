@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// <returns>The instantiated policy gradient loss operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new PolicyGradientLossOperation(net.GetChosenActions(), net.GetRewards(), net.GetNumTimeSteps(), net.GetDiscountFactor());
+            return new PolicyGradientLossOperation(net.Parameters.ChosenActions, net.Parameters.Rewards, net.Parameters.NumTimeSteps, net.Parameters.DiscountFactor);
         }
 
         /// <summary>
@@ -140,9 +140,9 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
             // Add the entropy regularization term
             loss -= regularizationCoefficient * entropy;
 
-            this.output = new Matrix(1, 1);
-            this.output[0, 0] = -loss;
-            return this.output;
+            this.Output = new Matrix(1, 1);
+            this.Output[0, 0] = -loss;
+            return this.Output;
         }
     }
 }

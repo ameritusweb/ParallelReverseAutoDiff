@@ -159,10 +159,10 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.hiddenSize = hiddenSize;
             this.outputSize = outputSize;
             this.rng = new Random(Guid.NewGuid().GetHashCode());
-            this.learningRate = learningRate;
+            this.Parameters.LearningRate = learningRate;
             this.numLayers = numLayers;
             this.clipValue = clipValue;
-            this.numTimeSteps = numTimeSteps;
+            this.Parameters.NumTimeSteps = numTimeSteps;
             this.architecture = architecture;
             this.lstmName = lstmName;
 
@@ -280,7 +280,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.ClearState();
 
             // Forward propagate through the MultiLayerLSTM
-            MatrixUtils.SetInPlace(this.inputSequence, inputs);
+            MatrixUtils.SetInPlace(this.Parameters.InputSequence, inputs);
             var op = this.startOperation ?? throw new Exception("Start operation should not be null.");
             IOperation? currOp = null;
             do
@@ -346,9 +346,9 @@ namespace ParallelReverseAutoDiff.LstmExample
         private void InitializeState()
         {
             // Clear the hidden state and memory cell state
-            this.h = new Matrix[this.numTimeSteps][];
-            this.c = new Matrix[this.numTimeSteps][];
-            for (int t = 0; t < this.numTimeSteps; ++t)
+            this.h = new Matrix[this.Parameters.NumTimeSteps][];
+            this.c = new Matrix[this.Parameters.NumTimeSteps][];
+            for (int t = 0; t < this.Parameters.NumTimeSteps; ++t)
             {
                 this.h[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
                 this.c[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
@@ -382,11 +382,11 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.db = MatrixUtils.InitializeZeroMatrix(this.outputSize, 1);
 
             // Clear intermediates
-            this.output = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.outputSize, 1);
-            this.inputSequence = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.originalInputSize, 1);
+            this.output = MatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
+            this.Parameters.InputSequence = MatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.originalInputSize, 1);
 
             this.arrays4D = new Matrix[][][] { this.h, this.c };
-            this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
+            this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.Parameters.InputSequence };
             this.arrays2D = new[] { this.dWe, this.dbe, this.dV, this.db };
         }
 
@@ -402,7 +402,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             var zeroMatrixHiddenSize = MatrixUtils.InitializeZeroMatrix(this.hiddenSize, 1);
             this.inputNameToValueMap = new Dictionary<string, Func<int, int, object>>
             {
-                { "inputSequence", (t, _) => this.inputSequence[t] },
+                { "inputSequence", (t, _) => this.Parameters.InputSequence[t] },
                 { "output", (t, _) => this.output[t] },
                 { "Wf", (_, l) => this.Wf[l] },
                 { "Wi", (_, l) => this.Wi[l] },
@@ -576,7 +576,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             while (currOp.Next != null);
 
             IOperation? backwardStartOperation = null;
-            for (int t = this.numTimeSteps - 1; t >= 0; t--)
+            for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
             {
                 backwardStartOperation = this.operationsMap[$"output_t_{t}"];
                 OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
@@ -592,9 +592,9 @@ namespace ParallelReverseAutoDiff.LstmExample
             // Initialize memory cell, hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            MatrixUtils.SetInPlace(this.inputSequence, inputSequence);
-            this.chosenActions = chosenActions;
-            this.rewards = rewards;
+            MatrixUtils.SetInPlace(this.Parameters.InputSequence, inputSequence);
+            this.Parameters.ChosenActions = chosenActions;
+            this.Parameters.Rewards = rewards;
             var op = this.startOperation;
             if (op == null)
             {
@@ -648,7 +648,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
             IOperation? backwardStartOperation = null;
-            for (int t = this.numTimeSteps - 1; t >= 0; t--)
+            for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
             {
                 backwardStartOperation = this.operationsMap[$"output_t_{t}"];
                 if (gradientOfLossWrtOutput[t][0] != 0.0d)
@@ -732,8 +732,8 @@ namespace ParallelReverseAutoDiff.LstmExample
             var frobeniusNorm = MatrixUtils.FrobeniusNorm(this.V);
             var learningRateReductionFactor = MatrixUtils.LearningRateReductionFactor(frobeniusNorm, 1.4d, 0.001d);
             Console.WriteLine($"{this.lstmName}: Frobenius norm: {frobeniusNorm}, learning rate reduction factor: {learningRateReductionFactor}");
-            this.UpdateWeightWithAdam(this.V, this.mV, this.vV, dV, beta1, beta2, epsilon, this.adamT, this.learningRate * learningRateReductionFactor);
-            this.UpdateWeightWithAdam(this.b, this.mb, this.vb, db, beta1, beta2, epsilon, this.adamT, this.learningRate * learningRateReductionFactor);
+            this.UpdateWeightWithAdam(this.V, this.mV, this.vV, dV, beta1, beta2, epsilon, this.adamT, this.Parameters.LearningRate * learningRateReductionFactor);
+            this.UpdateWeightWithAdam(this.b, this.mb, this.vb, db, beta1, beta2, epsilon, this.adamT, this.Parameters.LearningRate * learningRateReductionFactor);
 
             this.UpdateWeightWithAdam(this.We, this.mWe, this.vWe, dWe, beta1, beta2, epsilon, this.adamT);
             this.UpdateWeightWithAdam(this.be, this.mbe, this.vbe, dbe, beta1, beta2, epsilon, this.adamT);
@@ -787,7 +787,7 @@ namespace ParallelReverseAutoDiff.LstmExample
 
         private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
         {
-            var lr = newLearningRate.HasValue ? newLearningRate.Value : this.learningRate;
+            var lr = newLearningRate.HasValue ? newLearningRate.Value : this.Parameters.LearningRate;
 
             // Update biased first moment estimate
             mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
@@ -893,7 +893,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.priorOperation = null;
             this.startOperation = null;
 
-            for (int i = 0; i < this.numTimeSteps; ++i)
+            for (int i = 0; i < this.Parameters.NumTimeSteps; ++i)
             {
                 foreach (var timeStep in jsonArchitecture.TimeSteps)
                 {
