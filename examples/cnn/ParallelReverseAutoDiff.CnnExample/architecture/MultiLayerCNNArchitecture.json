@@ -6,286 +6,52 @@
           "id": "projectedInput",
           "description": "Multiply the input with the weight matrix",
           "type": "MatrixMultiplyOperation",
-          "inputs": [ "We", "inputSequence[t]" ],
-          "gradientResultTo": [ "dWe", null ]
+          "inputs": [ "We", "Input" ],
+          "gradientResultTo": [ "DWe", null ]
         },
         {
           "id": "embeddedInput",
           "description": "Add the bias",
           "type": "MatrixAddOperation",
-          "inputs": [ "projectedInput", "be" ],
-          "gradientResultTo": [ null, "dbe" ]
+          "inputs": [ "projectedInput", "Be" ],
+          "gradientResultTo": [ null, "DBe" ]
         }
       ],
       "layers": [
         {
           "operations": [
             {
-              "id": "wf_currentInput",
+              "id": "w1_currentInput",
               "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wf[layerIndex]", "currentInput" ],
-              "gradientResultTo": [ "dWf[layerIndex]", null ]
+              "inputs": [ "W[layerIndex]", "currentInput" ],
+              "gradientResultTo": [ "DW[layerIndex]", null ]
             },
             {
-              "id": "uf_previousHiddenState",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Uf[layerIndex]", "previousHiddenState" ],
-              "gradientResultTo": [ "dUf[layerIndex]", null ]
-            },
-            {
-              "id": "f_add",
-              "type": "MatrixAddThreeOperation",
-              "inputs": [ "wf_currentInput", "uf_previousHiddenState", "bf[layerIndex]" ],
-              "gradientResultTo": [ null, null, "dbf[layerIndex]" ]
-            },
-            {
-              "id": "intermediate_f_1",
-              "description": "Compute the forget gate",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "f_add" ]
-            },
-            {
-              "id": "intermediate_f_2",
-              "description": "Compute the forget gate",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "intermediate_f_1" ]
-            },
-            {
-              "id": "intermediate_f_3",
-              "description": "Compute the forget gate",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "intermediate_f_2" ]
-            },
-            {
-              "id": "f",
-              "description": "Compute the forget gate",
-              "type": "AmplifiedSigmoidOperation",
-              "inputs": [ "intermediate_f_3" ],
-              "setResultTo": "f[t][layerIndex]"
-            },
-            {
-              "id": "wi_currentInput",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wi[layerIndex]", "currentInput" ],
-              "gradientResultTo": [ "dWi[layerIndex]", null ]
-            },
-            {
-              "id": "ui_previousHiddenState",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Ui[layerIndex]", "previousHiddenState" ],
-              "gradientResultTo": [ "dUi[layerIndex]", null ]
-            },
-            {
-              "id": "i_add",
-              "type": "MatrixAddThreeOperation",
-              "inputs": [ "wi_currentInput", "ui_previousHiddenState", "bi[layerIndex]" ],
-              "gradientResultTo": [ null, null, "dbi[layerIndex]" ]
-            },
-            {
-              "id": "intermediate_i_1",
-              "description": "Compute the input gate",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "i_add" ]
-            },
-            {
-              "id": "intermediate_i_2",
-              "description": "Compute the input gate",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "intermediate_i_1" ]
-            },
-            {
-              "id": "intermediate_i_3",
-              "description": "Compute the input gate",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "intermediate_i_2" ]
-            },
-            {
-              "id": "i",
-              "description": "Compute the input gate",
-              "type": "AmplifiedSigmoidOperation",
-              "inputs": [ "intermediate_i_3" ],
-              "setResultTo": "i[t][layerIndex]"
-            },
-            {
-              "id": "wc_currentInput",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wc[layerIndex]", "currentInput" ],
-              "gradientResultTo": [ "dWc[layerIndex]", null ]
-            },
-            {
-              "id": "uc_previousHiddenState",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Uc[layerIndex]", "previousHiddenState" ],
-              "gradientResultTo": [ "dUc[layerIndex]", null ]
-            },
-            {
-              "id": "cHat_add",
-              "type": "MatrixAddThreeOperation",
-              "inputs": [ "wc_currentInput", "uc_previousHiddenState", "bc[layerIndex]" ],
-              "gradientResultTo": [ null, null, "dbc[layerIndex]" ]
-            },
-            {
-              "id": "intermediate_cHat_1",
-              "description": "Compute the candidate memory cell state",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "cHat_add" ]
-            },
-            {
-              "id": "intermediate_cHat_2",
-              "description": "Compute the candidate memory cell state",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "intermediate_cHat_1" ]
-            },
-            {
-              "id": "intermediate_cHat_3",
-              "description": "Compute the candidate memory cell state",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "intermediate_cHat_2" ]
-            },
-            {
-              "id": "cHat",
-              "description": "Compute the candidate memory cell state",
-              "type": "TanhOperation",
-              "inputs": [ "intermediate_cHat_3" ],
-              "setResultTo": "cHat[t][layerIndex]"
-            },
-            {
-              "id": "f_previousMemoryCellState",
-              "type": "HadamardProductOperation",
-              "inputs": [ "f[t][layerIndex]", "previousMemoryCellState" ]
-            },
-            {
-              "id": "i_cHat",
-              "type": "HadamardProductOperation",
-              "inputs": [ "i[t][layerIndex]", "cHat[t][layerIndex]" ]
-            },
-            {
-              "id": "newC",
-              "description": "Compute the memory cell state",
+              "id": "h_add",
               "type": "MatrixAddOperation",
-              "inputs": [ "f_previousMemoryCellState", "i_cHat" ]
+              "inputs": [ "w1_currentInput", "B[layerIndex]" ],
+              "gradientResultTo": [ null, null, "DB[layerIndex]" ]
             },
             {
-              "id": "newCTransposed",
+              "id": "intermediate_h_1",
               "type": "MatrixTransposeOperation",
-              "inputs": [ "newC" ]
+              "inputs": [ "h_add" ]
             },
             {
-              "id": "newCNormalized",
+              "id": "intermediate_h_2",
               "type": "LayerNormalizationOperation",
-              "inputs": [ "newCTransposed" ]
+              "inputs": [ "intermediate_h_1" ]
             },
             {
-              "id": "c",
+              "id": "intermediate_h_3",
               "type": "MatrixTransposeOperation",
-              "inputs": [ "newCNormalized" ],
-              "setResultTo": "c[t][layerIndex]"
+              "inputs": [ "intermediate_h_2" ]
             },
             {
-              "id": "wo_currentInput",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wo[layerIndex]", "currentInput" ],
-              "gradientResultTo": [ "dWo[layerIndex]", null ]
-            },
-            {
-              "id": "uo_previousHiddenState",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Uo[layerIndex]", "previousHiddenState" ],
-              "gradientResultTo": [ "dUo[layerIndex]", null ]
-            },
-            {
-              "id": "o_add",
-              "type": "MatrixAddThreeOperation",
-              "inputs": [ "wo_currentInput", "uo_previousHiddenState", "bo[layerIndex]" ],
-              "gradientResultTo": [ null, null, "dbo[layerIndex]" ]
-            },
-            {
-              "id": "o",
-              "description": "Compute the output gate",
-              "type": "LeakyReLUOperation",
-              "inputs": [ "o_add" ],
-              "setResultTo": "o[t][layerIndex]"
-            },
-            {
-              "id": "c_tanh",
-              "type": "TanhOperation",
-              "inputs": [ "c" ]
-            },
-            {
-              "id": "newH",
-              "type": "HadamardProductOperation",
-              "inputs": [ "o[t][layerIndex]", "c_tanh" ]
-            },
-            {
-              "id": "keys",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wk[layerIndex]", "embeddedInput" ],
-              "gradientResultTo": [ "dWk[layerIndex]", null ]
-            },
-            {
-              "id": "queries",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wq[layerIndex]", "previousHiddenState" ],
-              "gradientResultTo": [ "dWq[layerIndex]", null ]
-            },
-            {
-              "id": "values",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "Wv[layerIndex]", "embeddedInput" ],
-              "gradientResultTo": [ "dWv[layerIndex]", null ]
-            },
-            {
-              "id": "queriesTranspose",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "queries" ]
-            },
-            {
-              "id": "dotProduct",
-              "description": "Compute the dot product of the queries and keys",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "keys", "queriesTranspose" ]
-            },
-            {
-              "id": "scaledDotProduct",
-              "description": "Scale the dot product",
-              "type": "MatrixMultiplyScalarOperation",
-              "inputs": [ "dotProduct", "scaledDotProductScalar" ]
-            },
-            {
-              "id": "scaledDotProductTranspose",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "scaledDotProduct" ]
-            },
-            {
-              "id": "attentionWeights",
-              "type": "SoftmaxOperation",
-              "inputs": [ "scaledDotProductTranspose" ]
-            },
-            {
-              "id": "attentionOutput",
-              "type": "MatrixMultiplyOperation",
-              "inputs": [ "attentionWeights", "values" ]
-            },
-            {
-              "id": "newHWithAttentionOutput",
-              "type": "MatrixAddOperation",
-              "inputs": [ "newH", "attentionOutput" ]
-            },
-            {
-              "id": "newHWithAttentionOutputTranspose",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "newHWithAttentionOutput" ]
-            },
-            {
-              "id": "normalizedNewH",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "newHWithAttentionOutputTranspose" ]
-            },
-            {
-              "id": "h",
-              "type": "MatrixTransposeOperation",
-              "inputs": [ "normalizedNewH" ],
-              "setResultTo": "h[t][layerIndex]"
+              "id": "h_act",
+              "type": "SigmoidOperation",
+              "inputs": [ "intermediate_h_3" ],
+              "setResultTo": "H[layerIndex]"
             }
           ]
         }
@@ -294,20 +60,20 @@
         {
           "id": "v_h",
           "type": "MatrixMultiplyOperation",
-          "inputs": [ "V", "hFromCurrentTimeStepAndLastLayer" ],
-          "gradientResultTo": [ "dV", null ]
+          "inputs": [ "V", "HFromLastLayer" ],
+          "gradientResultTo": [ "DV", null ]
         },
         {
           "id": "v_h_b",
           "type": "MatrixAddOperation",
-          "inputs": [ "v_h", "b" ],
-          "gradientResultTo": [ null, "db" ]
+          "inputs": [ "v_h", "Bo" ],
+          "gradientResultTo": [ null, "DBo" ]
         },
         {
           "id": "output_t",
-          "type": "AmplifiedSigmoidOperation",
+          "type": "SigmoidOperation",
           "inputs": [ "v_h_b" ],
-          "setResultTo": "output[t]"
+          "setResultTo": "Output"
         }
       ]
     }
