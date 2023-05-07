@@ -852,6 +852,44 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.ReLUOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation">
+            <summary>
+            Scale and shift operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.GradientBeta">
+            <summary>
+            Gets the gradient of beta.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.GradientGamma">
+            <summary>
+            Gets the gradient of gamma.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common factory method for instantiating this operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the scale and shift operation.
+            </summary>
+            <param name="input">The input matrix.</param>
+            <param name="beta">The beta matrix.</param>
+            <param name="gamma">The gamma matrix.</param>
+            <returns>The output matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Calculates the gradient of the scale and shift operation with respect to the input, beta, and gamma matrices.
+            </summary>
+            <param name="gradOutput">The gradient of the output matrix.</param>
+            <returns>A tuple containing the gradients for the input, beta, and gamma matrices.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.SigmoidOperation">
             <summary>
             Sigmoid operation.

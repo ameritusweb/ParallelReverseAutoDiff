@@ -30,6 +30,8 @@ MatrixTransposeOperation
 
 ReLUOperation
 
+ScaleAndShiftOperation
+
 SigmoidOperation
 
 SoftmaxOperation
