@@ -18,8 +18,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly string id;
         private readonly IOperation startNode;
         private readonly int startingPointIndex;
-        private readonly bool runInParallel;
         private readonly List<IOperation> operations;
+        private bool runInParallel = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationNeuralNetworkVisitor"/> class.
@@ -27,8 +27,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="id">An ID to uniquely identify the visitor.</param>
         /// <param name="startNode">The start node for the traveral.</param>
         /// <param name="startingPointIndex">The starting point index.</param>
-        /// <param name="runInParallel">Run in parallel rather than sequentially.</param>
-        public OperationNeuralNetworkVisitor(string id, IOperation startNode, int startingPointIndex, bool runInParallel = false)
+        public OperationNeuralNetworkVisitor(string id, IOperation startNode, int startingPointIndex)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -49,7 +48,22 @@ namespace ParallelReverseAutoDiff.RMAD
             this.startNode = startNode;
             this.startingPointIndex = startingPointIndex;
             this.operations = new List<IOperation>();
-            this.runInParallel = runInParallel;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the visitor should run sequentially instead of in parallel.
+        /// </summary>
+        public bool RunSequentially
+        {
+            get
+            {
+                return !this.runInParallel;
+            }
+
+            set
+            {
+                this.runInParallel = !value;
+            }
         }
 
         /// <summary>
