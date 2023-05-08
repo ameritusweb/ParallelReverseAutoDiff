@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Wrapper for CUBLAS library.
     /// </summary>
-    public class CudaBlas
+    public class CudaBlas : IDisposable
     {
         private static readonly Lazy<CudaBlas> LazyLoadedInstance = new Lazy<CudaBlas>(() => new CudaBlas(), true);
 
@@ -26,9 +26,9 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private CudaDeviceVariable<double> dC;
 
-        private bool isInitialized = false;
+        private bool isInitialized;
 
-        private bool areDeviceVariablesInitialized = false;
+        private bool areDeviceVariablesInitialized;
 
         private CudaBlas()
         {
