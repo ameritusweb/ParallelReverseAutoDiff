@@ -9,8 +9,6 @@
     /// </summary>
     public class CudaBlas
     {
-        private const int DEVICEID = 0;
-
         private static readonly Lazy<CudaBlas> LazyLoadedInstance = new Lazy<CudaBlas>(() => new CudaBlas(), true);
 
         private PrimaryContext primaryContext;
@@ -65,11 +63,16 @@
         }
 
         /// <summary>
+        /// Gets or sets the DeviceId for the GPU to use.
+        /// </summary>
+        public int DeviceId { get; set; } = 0;
+
+        /// <summary>
         /// Initializes the CUBLAS library.
         /// </summary>
         public void Initialize()
         {
-            PrimaryContext ctx = new PrimaryContext(DEVICEID);
+            PrimaryContext ctx = new PrimaryContext(this.DeviceId);
             this.primaryContext = ctx;
             this.blas = new ManagedCuda.CudaBlas.CudaBlas(ManagedCuda.CudaBlas.PointerMode.Host);
             this.isInitialized = true;
