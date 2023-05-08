@@ -88,6 +88,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         public void Dispose()
         {
+            if (this.areDeviceVariablesInitialized)
+            {
+                this.DisposeDeviceVariables();
+            }
+
             this.blas.Dispose();
             this.primaryContext.Dispose();
             this.isInitialized = false;

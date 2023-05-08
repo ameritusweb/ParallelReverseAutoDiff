@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Threading.Tasks;
+    using ParallelReverseAutoDiff.Exceptions;
 
     /// <summary>
     /// CUDA Matrix multiplication operation.
@@ -34,6 +35,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the matrix multiply operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2)
         {
+            if (!CudaBlas.Instance.IsInitialized)
+            {
+                throw new CudaNotInitializedException();
+            }
+
             this.input1 = input1;
             this.input2 = input2;
             int input1Cols = input1[0].Length;
@@ -52,6 +58,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override (Matrix?, Matrix?) Backward(Matrix dOutput)
         {
+            if (!CudaBlas.Instance.IsInitialized)
+            {
+                throw new CudaNotInitializedException();
+            }
+
             // Calculate gradient w.r.t. input1
 
             // Compute dInput1 using MatrixMultiply

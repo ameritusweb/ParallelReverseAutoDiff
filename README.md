@@ -7,6 +7,9 @@ Parallel Reverse Mode Automatic Differentiation in C#
 
 ParallelAutoDiff is a thread-safe C# library for reverse mode automatic differentiation, optimized for parallel computation. It leverages semaphores and locks to coordinate between threads, ensuring accuracy during gradient accumulation. Each operation in the library is implemented as a node with a forward and a backward function, facilitating efficient calculation of derivatives. A unique aspect of this library is its use of the visitor pattern: it includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is responsible for gradient accumulation on nodes shared across multiple threads. This design allows for parallelized computations while maintaining consistency and avoiding race conditions. The result is an efficient, scalable automatic differentiation solution, ideal for machine learning applications and neural network training.
 
+## Prerequisites
+Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
+
 ## Supported Operations
 AmplifiedSigmoidOperation - Used for gradient amplification.
 
@@ -44,7 +47,7 @@ TanhOperation
 
 ## Usage
 
-### Create architecture JSON file
+### Create an architecture JSON file
 
 Here is an example:
 ```json
@@ -423,4 +426,12 @@ for (int t = numTimeSteps - 1; t >= 0; t--)
         traverseCount++;
     }
 }
+```
+
+### Using CUDA operations
+```c#
+Cudablas.Instance.Initialize(); // initialize the CUDA library
+Cudablas.Instance.SetDevice(0); // set the device to use, defaults to 0
+// ... <Run CUDA operations> ...
+Cudablas.Instance.Dispose(); // dispose the CUDA library
 ```
