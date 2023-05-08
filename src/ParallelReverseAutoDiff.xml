@@ -4,6 +4,12 @@
         <name>ParallelReverseAutoDiff</name>
     </assembly>
     <members>
+        <member name="T:ParallelReverseAutoDiff.Exceptions.CudaNotInitializedException">
+            <summary>
+            Thrown when a CUDA operation is attempted before the CUDA runtime has been initialized.
+            Call CudaBlas.Instance.Initialize() to initialize the CUDA runtime.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation">
             <summary>
             The sigmoid operation utilizing gradient amplification.
