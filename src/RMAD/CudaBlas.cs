@@ -65,7 +65,7 @@
         /// <summary>
         /// Gets or sets the DeviceId for the GPU to use.
         /// </summary>
-        public int DeviceId { get; set; } = 0;
+        public int DeviceId { get; set; }
 
         /// <summary>
         /// Initializes the CUBLAS library.
