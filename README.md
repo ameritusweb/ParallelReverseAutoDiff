@@ -8,9 +8,11 @@ Parallel Reverse Mode Automatic Differentiation in C#
 ParallelAutoDiff is a thread-safe C# library for reverse mode automatic differentiation, optimized for parallel computation. It leverages semaphores and locks to coordinate between threads, ensuring accuracy during gradient accumulation. Each operation in the library is implemented as a node with a forward and a backward function, facilitating efficient calculation of derivatives. A unique aspect of this library is its use of the visitor pattern: it includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is responsible for gradient accumulation on nodes shared across multiple threads. This design allows for parallelized computations while maintaining consistency and avoiding race conditions. The result is an efficient, scalable automatic differentiation solution, ideal for machine learning applications and neural network training.
 
 ## Supported Operations
-AmplifiedSigmoidOperation - Used for gradient amplification
+AmplifiedSigmoidOperation - Used for gradient amplification.
 
 ApplyDropoutOperation
+
+CudaMatrixMultiplyOperation - Leverages the GPU for fast computation.
 
 HadamardProductOperation
 
