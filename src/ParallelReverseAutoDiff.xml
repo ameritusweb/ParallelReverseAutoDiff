@@ -54,6 +54,88 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.CudaBlas">
+            <summary>
+            Wrapper for CUBLAS library.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.CudaBlas.Instance">
+            <summary>
+            Gets the singleton instance of the CUBLAS library.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized">
+            <summary>
+            Gets a value indicating whether the CUBLAS library is initialized.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized">
+            <summary>
+            Gets a value indicating whether the device variables are initialized.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId">
+            <summary>
+            Gets or sets the DeviceId for the GPU to use.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize">
+            <summary>
+            Initializes the CUBLAS library.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose">
+            <summary>
+            Disposes the CUBLAS library.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes the device variables.
+            </summary>
+            <param name="rows1">The number of rows in the first matrix.</param>
+            <param name="cols1">The number of columns in the first matrix.</param>
+            <param name="rows2">The number of rows in the second matrix.</param>
+            <param name="cols2">The number of columns in the second matrix.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables">
+            <summary>
+            Disposes the device variables.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)">
+            <summary>
+            Performs a matrix multiplication using the CUBLAS library.
+            </summary>
+            <param name="matrix1">Matric A.</param>
+            <param name="transposeMatrix1">Whether to transpose matrix A before multiplying.</param>
+            <param name="matrix2">Matrix B.</param>
+            <param name="transposeMatrix2">Whether to transpose matrix B before multiplying.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation">
+            <summary>
+            CUDA Matrix multiplication operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the matrix multiply function.
+            </summary>
+            <param name="input1">The first input to the matrix multiply operation.</param>
+            <param name="input2">The second input to the matrix multiply operation.</param>
+            <returns>The output of the matrix multiply operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.GradientUtils">
             <summary>
             Gradient utilities for reverse mode automatic differentiation.
@@ -552,6 +634,22 @@
             </summary>
             <param name="dOutput">The tuple of matrices.</param>
             <returns>The array of matrices.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixUtils.FlattenMatrix(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Flattens a matrix into a 1D array.
+            </summary>
+            <param name="matrix">The matrix to flatten.</param>
+            <returns>The 1-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.MatrixUtils.ReshapeMatrix(System.Double[],System.Int32,System.Int32)">
+            <summary>
+            Reshape a 1D array into a matrix.
+            </summary>
+            <param name="flat">The 1-D array.</param>
+            <param name="rows">The number of rows.</param>
+            <param name="cols">The number of columns.</param>
+            <returns>A reshaped matrix.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.NeuralNetwork">
             <summary>

@@ -2,20 +2,21 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>ParallelReverseAutoDiff</id>
-    <version>1.0.9</version>
-    <authors>Scott Seto</authors>
-    <owners>Scott Seto</owners>
+    <version>1.0.10</version>
+    <authors>ameritusweb</authors>
+    <owners>ameritusweb</owners>
     <license type="expression">LGPL-2.1-only</license>
     <projectUrl>https://github.com/ameritusweb/ParallelReverseAutoDiff</projectUrl>
     <icon>logo.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for parallelized reverse mode automatic differentiation in C#.</description>
-    <releaseNotes>Add ScaleAndShiftOperation.</releaseNotes>
-    <copyright>Scott Seto, 2023</copyright>
+    <releaseNotes>Add CUBLAS.</releaseNotes>
+    <copyright>ameritusweb, 2023</copyright>
     <tags>autodiff automatic-differentiation parallel reverse-mode differentiation C#</tags>
     <dependencies>
 		<group targetFramework=".NETStandard2.1">
 			<dependency id="StyleCop.Analyzers" version="1.1.118" />
+			<dependency id="CuBlasNetStandard21.CUDA12" version="1.0.0" />
 		</group>
     </dependencies>
     <readme>README.md</readme>
