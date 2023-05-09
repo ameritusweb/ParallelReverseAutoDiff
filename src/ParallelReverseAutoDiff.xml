@@ -71,6 +71,16 @@
             </summary>
             <param name="neuralNetwork">The neural network.</param>
         </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.ComputationGraph.StartOperation">
+            <summary>
+            Gets the start operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.ComputationGraph.CurrentOperation">
+            <summary>
+            Gets the current operation.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(System.String)">
             <summary>
             Retrieve the operation by the operation identifier.
@@ -542,6 +552,12 @@
             It uses the time step index and layer index to get the object to copy the result to.
             </summary>
             <param name="func">The function to get the object to copy the result to.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.CopyResult(System.Object)">
+            <summary>
+            Copies the result of the operation to the specified destination.
+            </summary>
+            <param name="objToCopy">Either a Matrix or an Operation.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.Initialize(System.Int32)">
             <summary>
@@ -1070,6 +1086,9 @@
             <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Operation.InitializeSyncSemaphore">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.CopyResult(System.Object)">
             <inheritdoc />
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor">

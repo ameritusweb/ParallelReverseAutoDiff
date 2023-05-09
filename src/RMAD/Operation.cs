@@ -245,7 +245,8 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        private void CopyResult(object destination)
+        /// <inheritdoc />
+        public void CopyResult(object destination)
         {
             Matrix o;
             if (destination is Operation op)

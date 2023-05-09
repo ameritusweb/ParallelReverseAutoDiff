@@ -33,6 +33,28 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Gets the start operation.
+        /// </summary>
+        public IOperation? StartOperation
+        {
+            get
+            {
+                return this.startOperation;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current operation.
+        /// </summary>
+        public IOperation? CurrentOperation
+        {
+            get
+            {
+                return this.currentOperation;
+            }
+        }
+
+        /// <summary>
         /// Retrieve the operation by the operation identifier.
         /// </summary>
         /// <param name="operationIdentifier">The operation identifier.</param>

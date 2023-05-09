@@ -193,6 +193,12 @@ namespace ParallelReverseAutoDiff.RMAD
         void ResultTo(Func<int, int, object> func);
 
         /// <summary>
+        /// Copies the result of the operation to the specified destination.
+        /// </summary>
+        /// <param name="objToCopy">Either a Matrix or an Operation.</param>
+        void CopyResult(object objToCopy);
+
+        /// <summary>
         /// Initialize the operation with the specified starting point index.
         /// </summary>
         /// <param name="startingPointIndex">The starting point index.</param>
