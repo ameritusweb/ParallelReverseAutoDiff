@@ -5,10 +5,12 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+
     /// <summary>
     /// Matrix index.
     /// </summary>
-    public struct LayerInfo
+    public struct LayerInfo : IEquatable<LayerInfo>
     {
         /// <summary>
         /// Gets or sets the time step.
@@ -19,6 +21,16 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets or sets the layer index.
         /// </summary>
         public int Layer { get; set; }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current <see cref="LayerInfo"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>Whether they are equal.</returns>
+        public bool Equals(LayerInfo other)
+        {
+            return this.TimeStep == other.TimeStep && this.Layer == other.Layer;
+        }
 
         /// <summary>
         /// To the specific ID string.

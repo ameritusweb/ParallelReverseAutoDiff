@@ -60,6 +60,169 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.ComputationGraph">
+            <summary>
+            A computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.ComputationGraph"/> class.
+            </summary>
+            <param name="neuralNetwork">The neural network.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(System.String)">
+            <summary>
+            Retrieve the operation by the operation identifier.
+            </summary>
+            <param name="operationIdentifier">The operation identifier.</param>
+            <returns>The operation.</returns>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(ParallelReverseAutoDiff.RMAD.MatrixType,System.String,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Retrieve the weight or gradient matrix by type and identifier.
+            </summary>
+            <param name="type">The type of matrix.</param>
+            <param name="identifier">The identifier.</param>
+            <param name="index">The matrix index.</param>
+            <returns>The weight or gradient matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.JsonArchitecture)">
+            <summary>
+            Construct the computation graph from an architecture with no layers.
+            </summary>
+            <param name="architecture">The architecture.</param>
+            <returns>The computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.JsonArchitecture,System.Int32)">
+            <summary>
+            Construct the computation graph from an architecture with layers.
+            </summary>
+            <param name="architecture">The architecture.</param>
+            <param name="numLayers">The number of layers.</param>
+            <returns>The computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.JsonArchitecture,System.Int32,System.Int32)">
+            <summary>
+            Construct the computation graph from an architecture with time steps and layers.
+            </summary>
+            <param name="architecture">The architecture.</param>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <returns>The computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.GetTypeFrom(System.String)">
+            <summary>
+            Gets the type from a string.
+            </summary>
+            <param name="type">The string.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddWeight(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Adds a weight to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="matrix">The weight.</param>
+            <returns>A computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Adds a gradient to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="matrix">The gradient.</param>
+            <returns>A computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationFinder(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.IOperation})">
+            <summary>
+            Adds a operation finder to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="operationFinder">The operation finder.</param>
+            <returns>A computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationByType(System.Type,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Adds an operation to the computation graph by type.
+            </summary>
+            <param name="type">The type of operation.</param>
+            <param name="info">The operation info.</param>
+            <param name="layerInfo">The layer info.</param>
+            <returns>The computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperation(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Adds an operation to the computation graph.
+            </summary>
+            <param name="operation">The operation to add.</param>
+            <param name="info">The operation info.</param>
+            <param name="layerInfo">The layer info.</param>
+            <returns>The computation graph.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.InitializeOperation(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Initialize the computation graph operation.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="info">The operation info.</param>
+            <param name="layerInfo">The layer info.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.TypeRetrieved(System.String)">
+            <summary>
+            Lifecycle function for when a type is retrieved from a string.
+            </summary>
+            <param name="type">A string.</param>
+            <returns>A type.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.WeightAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Lifecycle function for when a weight is added to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="matrix">The weight.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Lifecycle function for when a gradient is added to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="matrix">The gradient.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationFinderAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.IOperation})">
+            <summary>
+            Lifecycle function for when an operation finder is added to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="operationFinder">The gradient.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationAdded(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo)">
+            <summary>
+            Lifecycle function for when an operation is added to the computation graph.
+            </summary>
+            <param name="operation">The operation to add.</param>
+            <param name="info">The operation info.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationInitialized(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle function for when an operation is initialized.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="info">The operation info.</param>
+            <param name="layerInfo">The layer info.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.SetupDependencies(ParallelReverseAutoDiff.RMAD.IOperation)">
+            <summary>
+            Setup dependencies for the operation.
+            </summary>
+            <param name="operation">The operation to setup.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperation)">
+            <summary>
+            Lifecycle method for when the dependencies are setup for an operation.
+            </summary>
+            <param name="operation">The operation.</param>
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.CudaBlas">
             <summary>
             Wrapper for CUBLAS library.
@@ -314,9 +477,22 @@
             Gets or sets the property to store the name of the result variable.
             </summary>
         </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.LayerInfo">
+            <summary>
+            Gets or sets the layer info.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix}},ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Initializes the operation from the given operation info.
+            </summary>
+            <param name="info">The operation info.</param>
+            <param name="gradients">The gradients.</param>
+            <param name="layerInfo" >The layer info.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.GetOutput">
             <summary>
-            Gets or sets the output of the operation.
+            Gets the output of the operation.
             </summary>
             <returns>The output of the operation.</returns>
         </member>
@@ -387,6 +563,34 @@
             <summary>
             Gets or sets the operations in the layer.
             </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.LayerInfo">
+            <summary>
+            Matrix index.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep">
+            <summary>
+            Gets or sets the time step.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.LayerInfo.Layer">
+            <summary>
+            Gets or sets the layer index.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Determines whether the specified object is equal to the current <see cref="T:ParallelReverseAutoDiff.RMAD.LayerInfo"/>.
+            </summary>
+            <param name="other">The other object.</param>
+            <returns>Whether they are equal.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.LayerInfo.ToString">
+            <summary>
+            To the specific ID string.
+            </summary>
+            <returns>The specific ID string.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation">
             <summary>
@@ -629,6 +833,21 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.MatrixType">
+            <summary>
+            Determines the matrix type.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.RMAD.MatrixType.Weight">
+            <summary>
+            A weight.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.RMAD.MatrixType.Gradient">
+            <summary>
+            A gradient.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.MatrixUtils">
             <summary>
             Matrix utilities for reverse mode automatic differentiation.
@@ -795,10 +1014,16 @@
         <member name="P:ParallelReverseAutoDiff.RMAD.Operation.SyncSemaphore">
             <inheritdoc />
         </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.LayerInfo">
+            <inheritdoc />
+        </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Output">
             <summary>
             Gets or sets the property to store the output of the operation.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix}},ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Operation.Reset">
             <inheritdoc />
