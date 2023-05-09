@@ -1,0 +1,524 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParallelReverseAutoDiff.FeedForwardExample</name>
+    </assembly>
+    <members>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.EmbeddedResource">
+            <summary>
+            Helper class to read embedded resources.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.EmbeddedResource.ReadAllJson(System.String,System.String)">
+            <summary>
+            Reads a JSON file from the embedded resources.
+            </summary>
+            <param name="name">The namespace.</param>
+            <param name="file">The file to read.</param>
+            <returns>The text of the file.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer">
+            <summary>
+            An embedding layer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.#ctor(ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer"/> class.
+            </summary>
+            <param name="feedForwardNeuralNetwork">The neural network.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.We">
+            <summary>
+            Gets or sets the weight matrix for the embedding layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.Be">
+            <summary>
+            Gets or sets the bias matrix for the embedding layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.DWe">
+            <summary>
+            Gets or sets the gradient of the weight matrix with respect to the loss function.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.DBe">
+            <summary>
+            Gets or sets the gradient of the bias matrix with respect to the loss function.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.MWe">
+            <summary>
+            Gets or sets the first moment (moving average) of the weight matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.VWe">
+            <summary>
+            Gets or sets the second moment (moving average) of the weight matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.MBe">
+            <summary>
+            Gets or sets the first moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.VBe">
+            <summary>
+            Gets or sets the second moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.Initialize">
+            <summary>
+            Initialize the weights, biases, and moments for the embedding layer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.InitializeGradients">
+            <summary>
+            Initialize the gradients for the embedding layer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.ClipGradients">
+            <summary>
+            Clip the gradients for the embedding layer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.EmbeddingLayer.ClearState">
+            <summary>
+            Clear the state for the embedding layer.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardComputationGraph">
+            <summary>
+            A feed forward computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardComputationGraph.#ctor(ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperation)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork">
+            <summary>
+            A feed forward neural network.
+            </summary>
+            <summary>
+            The Adam optimization for a feed forward neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork"/> class.
+            </summary>
+            <param name="inputSize">The input size.</param>
+            <param name="hiddenSize">The hidden size.</param>
+            <param name="outputSize">The output size.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.EmbeddingLayer">
+            <summary>
+            Gets the embedding layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.HiddenLayers">
+            <summary>
+            Gets or sets the hidden layers.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.OutputLayer">
+            <summary>
+            Gets the output layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.OriginalInputSize">
+            <summary>
+            Gets the original input size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.InputSize">
+            <summary>
+            Gets the input size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.HiddenSize">
+            <summary>
+            Gets the hidden size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.OutputSize">
+            <summary>
+            Gets the output size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.ClipValue">
+            <summary>
+            Gets the clip value for the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.AdamIteration">
+            <summary>
+            Gets the Adam iteration for the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the feed forward neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork.Optimize(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,System.Int32,System.Nullable{System.Boolean})">
+            <summary>
+            Optimize the neural network.
+            </summary>
+            <param name="input">The input matrix.</param>
+            <param name="target">The target matrix.</param>
+            <param name="iterationIndex">The iteration index.</param>
+            <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer">
+            <summary>
+            The hidden layer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.#ctor(ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer"/> class.
+            </summary>
+            <param name="feedForwardNeuralNetwork">The neural network.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.H">
+            <summary>
+            Gets or sets the hidden state.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.W">
+            <summary>
+            Gets or sets the weight matrix for the hidden layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.B">
+            <summary>
+            Gets or sets the bias matrix for the hidden layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.DW">
+            <summary>
+            Gets or sets the gradient of the weight matrix with respect to the loss function.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.DB">
+            <summary>
+            Gets or sets the gradient of the bias matrix with respect to the loss function.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.MW">
+            <summary>
+            Gets or sets the first moment (moving average) of the weight matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.VW">
+            <summary>
+            Gets or sets the second moment (moving average) of the weight matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.MB">
+            <summary>
+            Gets or sets the first moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.VB">
+            <summary>
+            Gets or sets the second moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.Initialize">
+            <summary>
+            Initialize the weights and biases and moments.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.InitializeGradients">
+            <summary>
+            Initialize the gradients.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.ClipGradients">
+            <summary>
+            Clip the gradients.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.HiddenLayer.ClearState">
+            <summary>
+            Clear the state for the hidden layer.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils">
+            <summary>
+            A collection of matrix utilities for neural network development.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numLayers">The number of lauers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix[],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.StandardizedMatrix(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Creates a standardized matrix using the mean and standard deviation.
+            </summary>
+            <param name="matrix">The matrix to process.</param>
+            <returns>The standardized matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.To2DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 2-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 2-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.To1DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 1-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 1-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.Matrix[],ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Clears the following 2-D matrices.
+            </summary>
+            <param name="matrices">The 2-D matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.FrobeniusNorm(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The Frobenius norm of a matrix: the square root of the sum of the absolute squares of its elements.
+            </summary>
+            <param name="weightMatrix">The weight matrix to calculate.</param>
+            <returns>The frobenius norm.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.LearningRateReductionFactor(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the reduction factor for the learning rate.
+            </summary>
+            <param name="frobeniusNorm">The frobenius norm of a matrix.</param>
+            <param name="maxNorm">The max norm.</param>
+            <param name="minFactor">The minimum learning rate reduction factor.</param>
+            <returns>The learning rate reduction factor.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The element-wise Hadamard product of two matrices.
+            </summary>
+            <param name="matrixA">The first matrix.</param>
+            <param name="matrixB">The second matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add two matrices together.
+            </summary>
+            <param name="a">Matrix A.</param>
+            <param name="b">Matrix B.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Multiply a matrix by a scalar.
+            </summary>
+            <param name="scalar">The scalar to multiply.</param>
+            <param name="matrix">The matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.MatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer">
+            <summary>
+            The output layer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.#ctor(ParallelReverseAutoDiff.FeedForwardExample.FeedForwardNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer"/> class.
+            </summary>
+            <param name="feedForwardNeuralNetwork">The neural network.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.V">
+            <summary>
+            Gets or sets the weight matrix for the hidden layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.Bo">
+            <summary>
+            Gets or sets the bias matrix for the hidden layer.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.DV">
+            <summary>
+            Gets or sets the gradient of the weight matrix with respect to the loss function.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.DBo">
+            <summary>
+            Gets or sets the gradient of the bias matrix with respect to the loss function.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.MV">
+            <summary>
+            Gets or sets the first moment (moving average) of the weight matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.VV">
+            <summary>
+            Gets or sets the second moment (moving average) of the weight matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.MBo">
+            <summary>
+            Gets or sets the first moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.VBo">
+            <summary>
+            Gets or sets the second moment (moving average) of the bias matrix's gradients, used in optimization algorithms like Adam.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.Initialize">
+            <summary>
+            Initialize the weights, biases, and moments.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.InitializeGradients">
+            <summary>
+            Initialize the gradients.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.ClipGradients">
+            <summary>
+            Clip the gradients.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.OutputLayer.ClearState">
+            <summary>
+            Clear the state for the output layer.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FeedForwardExample.RMAD.MeanSquaredErrorLossOperation">
+            <summary>
+            The mean squared error loss operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.RMAD.MeanSquaredErrorLossOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A factory method for creating a mean squared error loss function.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated mean squared error operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.RMAD.MeanSquaredErrorLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the mean squared error loss function.
+            </summary>
+            <param name="output">The output matrix.</param>
+            <param name="target">The target matrix.</param>
+            <returns>The loss matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FeedForwardExample.RMAD.MeanSquaredErrorLossOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Calculates the gradient of the loss function with respect to the output of the neural network.
+            </summary>
+            <param name="output">The output matrix.</param>
+            <returns>The gradient.</returns>
+        </member>
+    </members>
+</doc>

@@ -75,6 +75,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         {
             this.W = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.feedForwardNeuralNetwork.HiddenSize, this.feedForwardNeuralNetwork.HiddenSize);
             this.B = MatrixUtils.InitializeZeroMatrix(this.feedForwardNeuralNetwork.HiddenSize, 1);
+            this.H = MatrixUtils.InitializeZeroMatrix(this.feedForwardNeuralNetwork.HiddenSize, 1);
             this.MW = new Matrix(this.W.Rows, this.W.Cols);
             this.VW = new Matrix(this.W.Rows, this.W.Cols);
             this.MB = new Matrix(this.B.Rows, this.B.Cols);
