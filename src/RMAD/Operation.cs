@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -111,10 +112,41 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public SemaphoreSlim? SyncSemaphore { get; set; }
 
+        /// <inheritdoc />
+        public LayerInfo LayerInfo { get; set; }
+
         /// <summary>
         /// Gets or sets the property to store the output of the operation.
         /// </summary>
         protected Matrix Output { get; set; }
+
+        /// <inheritdoc />
+        public void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients, LayerInfo layerInfo)
+        {
+            this.Id = info.Id;
+            this.SpecificId = info.Id + layerInfo.ToString();
+            this.LayerInfo = layerInfo;
+            this.OperationType = this.GetType();
+            this.Inputs = info.Inputs.ToList();
+            string resultTo = info.SetResultTo;
+            if (resultTo != null)
+            {
+                this.ResultToName = resultTo;
+            }
+
+            string[] gradientResultTo = info.GradientResultTo;
+            if (gradientResultTo != null)
+            {
+                this.GradientDestinations = new object[gradientResultTo.Length];
+                for (int i = 0; i < gradientResultTo.Length; ++i)
+                {
+                    if (gradientResultTo[i] != null)
+                    {
+                        this.GradientDestinations[i] = gradients[gradientResultTo[i]](layerInfo);
+                    }
+                }
+            }
+        }
 
         /// <inheritdoc />
         public void Reset()

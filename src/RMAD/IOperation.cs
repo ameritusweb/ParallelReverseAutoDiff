@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -141,7 +142,20 @@ namespace ParallelReverseAutoDiff.RMAD
         string ResultToName { get; set; }
 
         /// <summary>
-        /// Gets or sets the output of the operation.
+        /// Gets or sets the layer info.
+        /// </summary>
+        LayerInfo LayerInfo { get; set; }
+
+        /// <summary>
+        /// Initializes the operation from the given operation info.
+        /// </summary>
+        /// <param name="info">The operation info.</param>
+        /// <param name="gradients">The gradients.</param>
+        /// <param name="layerInfo" >The layer info.</param>
+        void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients, LayerInfo layerInfo);
+
+        /// <summary>
+        /// Gets the output of the operation.
         /// </summary>
         /// <returns>The output of the operation.</returns>
         Matrix GetOutput();
