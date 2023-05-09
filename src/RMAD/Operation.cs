@@ -11,6 +11,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
 
     /// <inheritdoc />
     public abstract class Operation : IOperation
@@ -142,7 +143,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     if (gradientResultTo[i] != null)
                     {
-                        this.GradientDestinations[i] = gradients[gradientResultTo[i]](layerInfo);
+                        string[] split = gradientResultTo[i].Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                        this.GradientDestinations[i] = gradients[split[0]](layerInfo);
                     }
                 }
             }
