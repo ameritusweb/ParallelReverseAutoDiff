@@ -134,6 +134,14 @@
             <param name="matrix">The gradient.</param>
             <returns>A computation graph.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Adds an intermediate to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="matrix">The gradient.</param>
+            <returns>A computation graph.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationFinder(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.IOperation})">
             <summary>
             Adds a operation finder to the computation graph.
@@ -185,6 +193,13 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
             <summary>
             Lifecycle function for when a gradient is added to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="matrix">The gradient.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
+            <summary>
+            Lifecycle function for when an intermediate is added to the computation graph.
             </summary>
             <param name="identifier">An identifier.</param>
             <param name="matrix">The gradient.</param>
@@ -846,6 +861,11 @@
         <member name="F:ParallelReverseAutoDiff.RMAD.MatrixType.Gradient">
             <summary>
             A gradient.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.RMAD.MatrixType.Intermediate">
+            <summary>
+            An intermediate matrix.
             </summary>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.MatrixUtils">

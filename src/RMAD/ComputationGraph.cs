@@ -16,6 +16,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private const string NAMESPACE = "ParallelReverseAutoDiff.RMAD";
         private ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weights = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private ConcurrentDictionary<string, Func<LayerInfo, IOperation>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, IOperation>>();
         private ConcurrentDictionary<string, IOperation> operations = new ConcurrentDictionary<string, IOperation>();
         private IOperation? startOperation;
@@ -59,6 +60,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     MatrixType.Weight => this.weights[identifier](index),
                     MatrixType.Gradient => this.gradients[identifier](index),
+                    MatrixType.Intermediate => this.intermediates[identifier](index),
                     _ => throw new ArgumentException("Invalid matrix type."),
                 };
             }
@@ -206,6 +208,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds an intermediate to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddIntermediate(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.IntermediateAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a operation finder to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -229,7 +243,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var instantiate = type.GetMethod("Instantiate");
             if (instantiate == null)
             {
-                throw new Exception($"Instantiate method should exist on operation of type {type.Name}");
+                throw new InvalidOperationException($"Instantiate method should exist on operation of type {type.Name}");
             }
 
             IOperation operation = (IOperation)(instantiate.Invoke(null, new object[] { this.neuralNetwork }) ?? throw new Exception("Instantiate method should return a non-null operation."));
@@ -292,6 +306,16 @@ namespace ParallelReverseAutoDiff.RMAD
         protected virtual void GradientAdded(string identifier, Func<LayerInfo, Matrix> matrix)
         {
             this.gradients.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when an intermediate is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.intermediates.TryAdd(identifier, matrix);
         }
 
         /// <summary>
@@ -373,6 +397,13 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     // Get the corresponding value from the dictionary using the input name
                     var p = this.weights[inputName](operation.LayerInfo);
+                    operation.BackwardAdjacentOperations.Add(null);
+                    parameters[j] = p;
+                }
+                else if (this.intermediates.ContainsKey(inputName))
+                {
+                    // Get the corresponding value from the dictionary using the input name
+                    var p = this.intermediates[inputName](operation.LayerInfo);
                     operation.BackwardAdjacentOperations.Add(null);
                     parameters[j] = p;
                 }

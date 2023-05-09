@@ -19,5 +19,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// A gradient.
         /// </summary>
         Gradient,
+
+        /// <summary>
+        /// An intermediate matrix.
+        /// </summary>
+        Intermediate,
     }
 }
