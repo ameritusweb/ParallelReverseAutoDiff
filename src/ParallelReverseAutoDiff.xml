@@ -553,6 +553,12 @@
             </summary>
             <param name="func">The function to get the object to copy the result to.</param>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)">
+            <summary>
+            Copies the result of the operation to the destination.
+            </summary>
+            <param name="graph">The computation graph.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.IOperation.CopyResult(System.Object)">
             <summary>
             Copies the result of the operation to the specified destination.
@@ -1077,6 +1083,9 @@
             <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Operation.ResultTo(System.Func{System.Int32,System.Int32,System.Object})">
+            <inheritdoc />
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Operation.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)">
             <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Operation.Initialize(System.Int32)">

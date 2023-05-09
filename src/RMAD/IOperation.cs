@@ -193,6 +193,12 @@ namespace ParallelReverseAutoDiff.RMAD
         void ResultTo(Func<int, int, object> func);
 
         /// <summary>
+        /// Copies the result of the operation to the destination.
+        /// </summary>
+        /// <param name="graph">The computation graph.</param>
+        void ResultTo(ComputationGraph graph);
+
+        /// <summary>
         /// Copies the result of the operation to the specified destination.
         /// </summary>
         /// <param name="objToCopy">Either a Matrix or an Operation.</param>

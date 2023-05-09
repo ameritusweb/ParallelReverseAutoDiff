@@ -222,6 +222,14 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
+        public virtual void ResultTo(ComputationGraph graph)
+        {
+            var split = this.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+            var oo = graph[MatrixType.Intermediate, split[0], this.LayerInfo];
+            this.CopyResult(oo);
+        }
+
+        /// <inheritdoc />
         public virtual void Initialize(int startingPointIndex)
         {
             this.OutputDependencyCount = this.BackwardDependencyCounts[startingPointIndex];

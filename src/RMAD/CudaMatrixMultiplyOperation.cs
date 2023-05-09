@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using ParallelReverseAutoDiff.Exceptions;
 
@@ -50,7 +51,12 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new InvalidOperationException("Input 1 columns do not match Input 2 rows");
             }
 
-            this.Output = CudaBlas.Instance.MatrixMultiply(input1, false, input2, false);
+            var context = SynchronizationContext.Current;
+            context.Send(
+                (_) =>
+            {
+                this.Output = CudaBlas.Instance.MatrixMultiply(input1, false, input2, false);
+            }, null);
 
             return this.Output;
         }
@@ -63,15 +69,24 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new CudaNotInitializedException();
             }
 
-            // Calculate gradient w.r.t. input1
+            Matrix? dInput1 = null;
+            Matrix? dInput2 = null;
 
-            // Compute dInput1 using MatrixMultiply
-            Matrix dInput1 = CudaBlas.Instance.MatrixMultiply(dOutput, false, this.input2, true);
+            // Get the current synchronization context
+            var context = SynchronizationContext.Current;
+            context.Send(
+                (_) =>
+            {
+                // Calculate gradient w.r.t. input1
 
-            // Calculate gradient w.r.t. input2
+                // Compute dInput1 using MatrixMultiply
+                dInput1 = CudaBlas.Instance.MatrixMultiply(dOutput, false, this.input2, true);
 
-            // Compute dInput2 using MatrixMultiply
-            Matrix dInput2 = CudaBlas.Instance.MatrixMultiply(this.input1, true, dOutput, false);
+                // Calculate gradient w.r.t. input2
+
+                // Compute dInput2 using MatrixMultiply
+                dInput2 = CudaBlas.Instance.MatrixMultiply(this.input1, true, dOutput, false);
+            }, null);
 
             return (dInput1, dInput2);
         }
