@@ -103,7 +103,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 this.producerMutex = new Semaphore(0, 1);
                 this.consumerMutex = new Semaphore(1, 1);
                 this.resultMutex = new Semaphore(0, 1);
-                var managedThreadId = Thread.CurrentThread.ManagedThreadId;
                 this.isInitialized = true;
                 this.CudaThreadMethod();
             });
