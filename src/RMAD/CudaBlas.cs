@@ -24,11 +24,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private readonly CircularBuffer circularBuffer;
 
-        private readonly Mutex producerMutex;
-
-        private readonly Mutex consumerMutex;
-
         private readonly ConcurrentDictionary<long, Matrix> resultDictionary;
+
+        private Semaphore producerMutex;
+
+        private Semaphore consumerMutex;
+
+        private Semaphore resultMutex;
 
         private PrimaryContext primaryContext;
 
@@ -47,8 +49,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private CudaBlas()
         {
             this.circularBuffer = new CircularBuffer(1024 * 1024);
-            this.producerMutex = new Mutex(false, "ProducerMutex");
-            this.consumerMutex = new Mutex(false, "ConsumerMutex");
             this.resultDictionary = new ConcurrentDictionary<long, Matrix>();
         }
 
@@ -100,6 +100,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 PrimaryContext ctx = new PrimaryContext(this.DeviceId);
                 this.primaryContext = ctx;
                 this.blas = new ManagedCuda.CudaBlas.CudaBlas(ManagedCuda.CudaBlas.PointerMode.Host);
+                this.producerMutex = new Semaphore(0, 1);
+                this.consumerMutex = new Semaphore(1, 1);
+                this.resultMutex = new Semaphore(0, 1);
+                var managedThreadId = Thread.CurrentThread.ManagedThreadId;
                 this.isInitialized = true;
                 this.CudaThreadMethod();
             });
@@ -272,8 +276,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The resultant matrix.</returns>
         public Matrix WriteMatricesToSharedMemory(Matrix matrixA, bool transposeA, Matrix matrixB, bool transposeB)
         {
-            int bufferSizeA = 1 + (2 * sizeof(int)) + (matrixA.Rows * matrixA.Cols * sizeof(double));
-            int bufferSizeB = 1 + (2 * sizeof(int)) + (matrixB.Rows * matrixB.Cols * sizeof(double));
+            this.consumerMutex.WaitOne();
+
+            int bufferSizeA = 1 + (3 * sizeof(int)) + (matrixA.Rows * matrixA.Cols * sizeof(double));
+            int bufferSizeB = 1 + (3 * sizeof(int)) + (matrixB.Rows * matrixB.Cols * sizeof(double));
             int totalBufferSize = bufferSizeA + bufferSizeB;
 
             // Serialize the matrices into a buffer
@@ -288,7 +294,8 @@ namespace ParallelReverseAutoDiff.RMAD
             // Write the serialized matrices to the circular buffer
             this.circularBuffer.Write(serializedMatrices, 0);
 
-            this.consumerMutex.WaitOne();
+            this.producerMutex.Release();
+            this.resultMutex.WaitOne();
 
             Matrix result;
             this.resultDictionary.TryGetValue(matrixA.UniqueId * matrixB.UniqueId, out result);
@@ -319,25 +326,30 @@ namespace ParallelReverseAutoDiff.RMAD
                 int rowsB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1 + sizeof(int), sizeof(int)).Span);
                 int colsB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1 + (2 * sizeof(int)), sizeof(int)).Span);
 
-                // Calculate the serialized length of the second matrix
-                int matrixBSerializedLength = 1 + (3 * sizeof(int)) + (rowsB * colsB * sizeof(double));
+                if (colsA == rowsB && rowsA > 0 && colsB > 0 && colsA > 0)
+                {
+                    // Calculate the serialized length of the second matrix
+                    int matrixBSerializedLength = 1 + (3 * sizeof(int)) + (rowsB * colsB * sizeof(double));
 
-                // Read the serialized matrices from the circular buffer
-                ReadOnlyMemory<byte> serializedMatrixA = this.circularBuffer.Read(0, matrixASerializedLength);
-                ReadOnlyMemory<byte> serializedMatrixB = this.circularBuffer.Read(matrixASerializedLength, matrixBSerializedLength);
+                    // Read the serialized matrices from the circular buffer
+                    ReadOnlyMemory<byte> serializedMatrixA = this.circularBuffer.Read(0, matrixASerializedLength);
+                    ReadOnlyMemory<byte> serializedMatrixB = this.circularBuffer.Read(matrixASerializedLength, matrixBSerializedLength);
 
-                // Deserialize the flat matrices
-                double[] matrixFlatA = Matrix.DeserializeToFlatArray(serializedMatrixA.Span);
-                double[] matrixFlatB = Matrix.DeserializeToFlatArray(serializedMatrixB.Span);
+                    // Deserialize the flat matrices
+                    double[] matrixFlatA = Matrix.DeserializeToFlatArray(serializedMatrixA.Span);
+                    double[] matrixFlatB = Matrix.DeserializeToFlatArray(serializedMatrixB.Span);
 
-                // Perform the matrix multiplication using CudaBlas
-                Matrix result = this.MatrixMultiply(matrixFlatA, rowsA, colsA, transposeFlagA == 1, matrixFlatB, rowsB, colsB, transposeFlagB == 1);
+                    // Perform the matrix multiplication using CudaBlas
+                    Matrix result = this.MatrixMultiply(matrixFlatA, rowsA, colsA, transposeFlagA == 1, matrixFlatB, rowsB, colsB, transposeFlagB == 1);
 
-                // Store the result in the concurrent dictionary with the unique identifier
-                this.resultDictionary.TryAdd(uniqueIDA * uniqueIDB, result);
+                    // Store the result in the concurrent dictionary with the unique identifier
+                    this.resultDictionary.TryAdd(uniqueIDA * uniqueIDB, result);
+                }
 
                 // Signal the producer that the consumer has finished processing
-                this.consumerMutex.ReleaseMutex();
+                var managedThreadId = Thread.CurrentThread.ManagedThreadId;
+                this.resultMutex.Release();
+                this.consumerMutex.Release();
 
                 if (this.isInitialized == false)
                 {
