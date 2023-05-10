@@ -346,7 +346,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
 
                 // Signal the producer that the consumer has finished processing
-                var managedThreadId = Thread.CurrentThread.ManagedThreadId;
                 this.resultMutex.Release();
                 this.consumerMutex.Release();
 

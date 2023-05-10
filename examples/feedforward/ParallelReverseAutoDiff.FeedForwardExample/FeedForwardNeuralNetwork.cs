@@ -183,7 +183,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         {
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.computationGraph = (FeedForwardComputationGraph)new FeedForwardComputationGraph(this);
+            this.computationGraph = new FeedForwardComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Input", _ => this.Input)
                 .AddIntermediate("Output", _ => this.Output)

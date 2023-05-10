@@ -14,20 +14,20 @@ namespace ParallelReverseAutoDiff.RMAD
     public abstract class ComputationGraph
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.RMAD";
-        private ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weights = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
-        private ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
-        private ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
-        private ConcurrentDictionary<string, Func<LayerInfo, IOperation>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, IOperation>>();
-        private ConcurrentDictionary<string, IOperation> operations = new ConcurrentDictionary<string, IOperation>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weights = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, IOperation>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, IOperation>>();
+        private readonly ConcurrentDictionary<string, IOperation> operations = new ConcurrentDictionary<string, IOperation>();
+        private readonly NeuralNetwork neuralNetwork;
         private IOperation? startOperation;
         private IOperation? currentOperation;
-        private NeuralNetwork neuralNetwork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComputationGraph"/> class.
         /// </summary>
         /// <param name="neuralNetwork">The neural network.</param>
-        public ComputationGraph(NeuralNetwork neuralNetwork)
+        protected ComputationGraph(NeuralNetwork neuralNetwork)
         {
             this.neuralNetwork = neuralNetwork;
         }

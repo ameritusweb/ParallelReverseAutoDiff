@@ -27,7 +27,6 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
         /// <param name="operation">The operation.</param>
         protected override void DependenciesSetup(IOperation operation)
         {
-            var graph = this;
             base.DependenciesSetup(operation);
         }
     }
