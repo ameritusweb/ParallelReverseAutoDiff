@@ -120,7 +120,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The computation graph.</returns>
         public ComputationGraph ConstructFromArchitecture(JsonArchitecture architecture, int numLayers)
         {
-            var layerInfo = default(LayerInfo);
+            var layerInfo = LayerInfo.Empty;
             foreach (var timeStep in architecture.TimeSteps)
             {
                 foreach (var operationInfo in timeStep.StartOperations)

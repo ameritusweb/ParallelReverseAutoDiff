@@ -13,6 +13,11 @@ namespace ParallelReverseAutoDiff.RMAD
     public struct LayerInfo : IEquatable<LayerInfo>
     {
         /// <summary>
+        /// An empty layer info.
+        /// </summary>
+        public static readonly LayerInfo Empty;
+
+        /// <summary>
         /// Gets or sets the time step.
         /// </summary>
         public int TimeStep { get; set; }

@@ -709,6 +709,11 @@
             Matrix index.
             </summary>
         </member>
+        <member name="F:ParallelReverseAutoDiff.RMAD.LayerInfo.Empty">
+            <summary>
+            An empty layer info.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep">
             <summary>
             Gets or sets the time step.
