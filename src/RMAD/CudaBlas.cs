@@ -6,7 +6,13 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Xml;
     using ManagedCuda;
+    using ParallelReverseAutoDiff.Interprocess;
     using Cuda = ManagedCuda.CudaBlas;
 
     /// <summary>
@@ -30,8 +36,20 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private bool areDeviceVariablesInitialized;
 
+        private CircularBuffer circularBuffer;
+
+        private Mutex producerMutex;
+
+        private Mutex consumerMutex;
+
+        private ConcurrentDictionary<long, Matrix> resultDictionary;
+
         private CudaBlas()
         {
+            this.circularBuffer = new CircularBuffer(1024 * 1024);
+            this.producerMutex = new Mutex(false, "ProducerMutex");
+            this.consumerMutex = new Mutex(false, "ConsumerMutex");
+            this.resultDictionary = new ConcurrentDictionary<long, Matrix>();
         }
 
         /// <summary>
@@ -77,10 +95,14 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         public void Initialize()
         {
-            PrimaryContext ctx = new PrimaryContext(this.DeviceId);
-            this.primaryContext = ctx;
-            this.blas = new ManagedCuda.CudaBlas.CudaBlas(ManagedCuda.CudaBlas.PointerMode.Host);
-            this.isInitialized = true;
+            Task.Run(() =>
+            {
+                PrimaryContext ctx = new PrimaryContext(this.DeviceId);
+                this.primaryContext = ctx;
+                this.blas = new ManagedCuda.CudaBlas.CudaBlas(ManagedCuda.CudaBlas.PointerMode.Host);
+                this.isInitialized = true;
+                this.CudaThreadMethod();
+            });
         }
 
         /// <summary>
@@ -192,6 +214,131 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return c;
+        }
+
+        /// <summary>
+        /// Performs a matrix multiplication using the CUBLAS library.
+        /// </summary>
+        /// <param name="matrixFlat1">Matric A.</param>
+        /// <param name="rows1">The number of rows in the first matrix.</param>
+        /// <param name="cols1">The number of columns in the first matrix.</param>
+        /// <param name="transposeMatrix1">Whether to transpose matrix A before multiplying.</param>
+        /// <param name="matrixFlat2">Matrix B.</param>
+        /// <param name="rows2">The number of rows in the second matrix.</param>
+        /// <param name="cols2">The number of columns in the second matrix.</param>
+        /// <param name="transposeMatrix2">Whether to transpose matrix B before multiplying.</param>
+        /// <returns>The resultant matrix.</returns>
+        public Matrix MatrixMultiply(double[] matrixFlat1, int rows1, int cols1, bool transposeMatrix1, double[] matrixFlat2, int rows2, int cols2, bool transposeMatrix2)
+        {
+            int m = rows1;
+            int n = cols1;
+            int p = rows2;
+            int k = cols2;
+
+            this.InitializeDeviceVariables(m, n, p, k);
+
+            this.dA.CopyToDevice(matrixFlat1);
+            this.dB.CopyToDevice(matrixFlat2);
+
+            Matrix? c;
+            try
+            {
+                // Call Gemm to perform the matrix multiplication
+                double alpha = 1.0;
+                double beta = 0.0;
+                this.blas.Gemm(transposeMatrix1 ? Cuda.Operation.Transpose : Cuda.Operation.NonTranspose, transposeMatrix2 ? Cuda.Operation.Transpose : Cuda.Operation.NonTranspose, m, n, k, alpha, this.dA, m, this.dB, k, beta, this.dC, m);
+
+                // Copy the result back to the host and reshape it to a 2D array
+                double[] c_flat = this.dC;
+                c = MatrixUtils.ReshapeMatrix(c_flat, m, k);
+            }
+            catch (Exception)
+            {
+                this.DisposeDeviceVariables();
+                this.Dispose();
+                throw new InvalidOperationException("CUBLAS failure.");
+            }
+
+            return c;
+        }
+
+        /// <summary>
+        /// Writes the matrices to shared memory.
+        /// </summary>
+        /// <param name="matrixA">Matrix A.</param>
+        /// <param name="transposeA">Whether to transpose matrix A before multiplying.</param>
+        /// <param name="matrixB">Matrix B.</param>
+        /// <param name="transposeB">Whether to transpose matrix B before multiplying.</param>
+        /// <returns>The resultant matrix.</returns>
+        public Matrix WriteMatricesToSharedMemory(Matrix matrixA, bool transposeA, Matrix matrixB, bool transposeB)
+        {
+            int bufferSizeA = 1 + (2 * sizeof(int)) + (matrixA.Rows * matrixA.Cols * sizeof(double));
+            int bufferSizeB = 1 + (2 * sizeof(int)) + (matrixB.Rows * matrixB.Cols * sizeof(double));
+            int totalBufferSize = bufferSizeA + bufferSizeB;
+
+            // Serialize the matrices into a buffer
+            byte[] serializedMatrices = new byte[totalBufferSize];
+
+            // Serialize matrixA
+            matrixA.Serialize(serializedMatrices.AsSpan(0, bufferSizeA), transposeA);
+
+            // Serialize matrixB
+            matrixB.Serialize(serializedMatrices.AsSpan(bufferSizeA, bufferSizeB), transposeB);
+
+            // Write the serialized matrices to the circular buffer
+            this.circularBuffer.Write(serializedMatrices, 0);
+
+            this.consumerMutex.WaitOne();
+
+            Matrix result;
+            this.resultDictionary.TryGetValue(matrixA.UniqueId * matrixB.UniqueId, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// A method that runs on a separate thread and performs the matrix multiplication using CudaBlas.
+        /// </summary>
+        public void CudaThreadMethod()
+        {
+            while (true)
+            {
+                // Wait for the producer to signal that data is available
+                this.producerMutex.WaitOne();
+
+                // Read the transpose flags, unique IDs, rows, and columns of the matrices
+                byte transposeFlagA = this.circularBuffer.Read(0, 1).Span[0];
+                int uniqueIDA = BitConverter.ToInt32(this.circularBuffer.Read(1, sizeof(int)).Span);
+                int rowsA = BitConverter.ToInt32(this.circularBuffer.Read(1 + sizeof(int), sizeof(int)).Span);
+                int colsA = BitConverter.ToInt32(this.circularBuffer.Read(1 + (2 * sizeof(int)), sizeof(int)).Span);
+
+                // Calculate the serialized length of the first matrix
+                int matrixASerializedLength = 1 + (3 * sizeof(int)) + (rowsA * colsA * sizeof(double));
+
+                byte transposeFlagB = this.circularBuffer.Read(matrixASerializedLength, 1).Span[0];
+                int uniqueIDB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1, sizeof(int)).Span);
+                int rowsB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1 + sizeof(int), sizeof(int)).Span);
+                int colsB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1 + (2 * sizeof(int)), sizeof(int)).Span);
+
+                // Calculate the serialized length of the second matrix
+                int matrixBSerializedLength = 1 + (3 * sizeof(int)) + (rowsB * colsB * sizeof(double));
+
+                // Read the serialized matrices from the circular buffer
+                ReadOnlyMemory<byte> serializedMatrixA = this.circularBuffer.Read(0, matrixASerializedLength);
+                ReadOnlyMemory<byte> serializedMatrixB = this.circularBuffer.Read(matrixASerializedLength, matrixBSerializedLength);
+
+                // Deserialize the flat matrices
+                double[] matrixFlatA = Matrix.DeserializeToFlatArray(serializedMatrixA.Span);
+                double[] matrixFlatB = Matrix.DeserializeToFlatArray(serializedMatrixB.Span);
+
+                // Perform the matrix multiplication using CudaBlas
+                Matrix result = this.MatrixMultiply(matrixFlatA, rowsA, colsA, transposeFlagA == 1, matrixFlatB, rowsB, colsB, transposeFlagB == 1);
+
+                // Store the result in the concurrent dictionary with the unique identifier
+                this.resultDictionary.TryAdd(uniqueIDA * uniqueIDB, result);
+
+                // Signal the producer that the consumer has finished processing
+                this.consumerMutex.ReleaseMutex();
+            }
         }
     }
 }

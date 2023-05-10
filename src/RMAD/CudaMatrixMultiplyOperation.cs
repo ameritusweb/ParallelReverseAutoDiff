@@ -51,12 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new InvalidOperationException("Input 1 columns do not match Input 2 rows");
             }
 
-            var context = SynchronizationContext.Current;
-            context.Send(
-                (_) =>
-            {
-                this.Output = CudaBlas.Instance.MatrixMultiply(input1, false, input2, false);
-            }, null);
+            this.Output = CudaBlas.Instance.WriteMatricesToSharedMemory(input1, false, input2, false);
 
             return this.Output;
         }
@@ -72,21 +67,15 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix? dInput1 = null;
             Matrix? dInput2 = null;
 
-            // Get the current synchronization context
-            var context = SynchronizationContext.Current;
-            context.Send(
-                (_) =>
-            {
-                // Calculate gradient w.r.t. input1
+            // Calculate gradient w.r.t. input1
 
-                // Compute dInput1 using MatrixMultiply
-                dInput1 = CudaBlas.Instance.MatrixMultiply(dOutput, false, this.input2, true);
+            // Compute dInput1 using MatrixMultiply
+            dInput1 = CudaBlas.Instance.WriteMatricesToSharedMemory(dOutput, false, this.input2, true);
 
-                // Calculate gradient w.r.t. input2
+            // Calculate gradient w.r.t. input2
 
-                // Compute dInput2 using MatrixMultiply
-                dInput2 = CudaBlas.Instance.MatrixMultiply(this.input1, true, dOutput, false);
-            }, null);
+            // Compute dInput2 using MatrixMultiply
+            dInput2 = CudaBlas.Instance.WriteMatricesToSharedMemory(this.input1, true, dOutput, false);
 
             return (dInput1, dInput2);
         }
