@@ -6,6 +6,7 @@
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<DocumentationFile>ParallelReverseAutoDiff.xml</DocumentationFile>
+	<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
