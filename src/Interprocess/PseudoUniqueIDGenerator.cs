@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Interprocess
     public class PseudoUniqueIDGenerator
     {
         private static readonly Lazy<PseudoUniqueIDGenerator> LazyLoadedInstance = new Lazy<PseudoUniqueIDGenerator>(() => new PseudoUniqueIDGenerator(), true);
-        private int currentID = 0;
+        private int currentID;
 
         /// <summary>
         /// Gets an instance of the <see cref="PseudoUniqueIDGenerator"/> class.

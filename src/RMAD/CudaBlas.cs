@@ -22,6 +22,14 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private static readonly Lazy<CudaBlas> LazyLoadedInstance = new Lazy<CudaBlas>(() => new CudaBlas(), true);
 
+        private readonly CircularBuffer circularBuffer;
+
+        private readonly Mutex producerMutex;
+
+        private readonly Mutex consumerMutex;
+
+        private readonly ConcurrentDictionary<long, Matrix> resultDictionary;
+
         private PrimaryContext primaryContext;
 
         private ManagedCuda.CudaBlas.CudaBlas blas;
@@ -35,14 +43,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private bool isInitialized;
 
         private bool areDeviceVariablesInitialized;
-
-        private CircularBuffer circularBuffer;
-
-        private Mutex producerMutex;
-
-        private Mutex consumerMutex;
-
-        private ConcurrentDictionary<long, Matrix> resultDictionary;
 
         private CudaBlas()
         {
@@ -338,6 +338,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 // Signal the producer that the consumer has finished processing
                 this.consumerMutex.ReleaseMutex();
+
+                if (this.isInitialized == false)
+                {
+                    break;
+                }
             }
         }
     }
