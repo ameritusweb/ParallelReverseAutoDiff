@@ -517,6 +517,11 @@
             Gets a value indicating whether there's a next operation in the sequence.
             </summary>
         </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.HasMultipleInputs">
+            <summary>
+            Gets or sets a value indicating whether the operation has multiple inputs.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.IOperation.Next">
             <summary>
             Gets or sets the reference to the next operation in the sequence.
@@ -1158,6 +1163,9 @@
             <inheritdoc />
         </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.Operation.HasNext">
+            <inheritdoc />
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Operation.HasMultipleInputs">
             <inheritdoc />
         </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.Operation.Next">

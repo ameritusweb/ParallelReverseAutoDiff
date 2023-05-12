@@ -37,6 +37,11 @@ namespace ParallelReverseAutoDiff.RMAD
         bool HasNext { get; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the operation has multiple inputs.
+        /// </summary>
+        bool HasMultipleInputs { get; set; }
+
+        /// <summary>
         /// Gets or sets the reference to the next operation in the sequence.
         /// </summary>
         IOperation Next { get; set; }

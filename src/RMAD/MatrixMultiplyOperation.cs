@@ -23,7 +23,9 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new MatrixMultiplyOperation();
+            var op = new MatrixMultiplyOperation();
+            op.HasMultipleInputs = true;
+            return op;
         }
 
         /// <summary>

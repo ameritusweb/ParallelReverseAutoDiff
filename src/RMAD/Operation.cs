@@ -54,6 +54,9 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
+        public bool HasMultipleInputs { get; set; }
+
+        /// <inheritdoc />
         public IOperation Next { get; set; }
 
         /// <inheritdoc />

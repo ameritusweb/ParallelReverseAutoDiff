@@ -184,13 +184,7 @@ namespace ParallelReverseAutoDiff.RMAD
             node.CalculatedGradient = dOutput;
 
             var adjacentTasks = new List<Task>();
-            if (node.OperationType == typeof(HadamardProductOperation)
-                ||
-                node.OperationType == typeof(MatrixMultiplyOperation)
-                ||
-                node.OperationType == typeof(MatrixAddOperation)
-                ||
-                node.OperationType == typeof(MatrixAddThreeOperation))
+            if (node.HasMultipleInputs)
             {
                 Matrix?[] dOutputs = MatrixUtils.Reassemble(dOutput);
                 for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
