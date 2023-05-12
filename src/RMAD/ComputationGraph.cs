@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Concurrent;
+    using ParallelReverseAutoDiff.CustomTypes;
 
     /// <summary>
     /// A computation graph.
@@ -18,7 +19,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
-        private readonly ConcurrentDictionary<string, Func<LayerInfo, IOperation>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, IOperation>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, Union<IOperation, Matrix>>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, Union<IOperation, Matrix>>>();
         private readonly ConcurrentDictionary<string, IOperation> operations = new ConcurrentDictionary<string, IOperation>();
         private readonly NeuralNetwork neuralNetwork;
         private IOperation? startOperation;
@@ -260,7 +261,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="identifier">An identifier.</param>
         /// <param name="operationFinder">The operation finder.</param>
         /// <returns>A computation graph.</returns>
-        public ComputationGraph AddOperationFinder(string identifier, Func<LayerInfo, IOperation> operationFinder)
+        public ComputationGraph AddOperationFinder(string identifier, Func<LayerInfo, Union<IOperation, Matrix>> operationFinder)
         {
             this.OperationFinderAdded(identifier, operationFinder);
             return this;
@@ -368,7 +369,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="identifier">An identifier.</param>
         /// <param name="operationFinder">The gradient.</param>
-        protected virtual void OperationFinderAdded(string identifier, Func<LayerInfo, IOperation> operationFinder)
+        protected virtual void OperationFinderAdded(string identifier, Func<LayerInfo, Union<IOperation, Matrix>> operationFinder)
         {
             this.operationFinders.TryAdd(identifier, operationFinder);
         }
@@ -456,9 +457,17 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     // Get the corresponding value from the dictionary using the input name
                     var op = this.operationFinders[inputName](operation.LayerInfo);
-                    op.Outputs.Add(op.SpecificId);
-                    operation.BackwardAdjacentOperations.Add(op);
-                    parameters[j] = op;
+                    if (op.IsRight)
+                    {
+                        operation.BackwardAdjacentOperations.Add(null);
+                        parameters[j] = op.Right;
+                    }
+                    else
+                    {
+                        op.Left.Outputs.Add(operation.SpecificId);
+                        operation.BackwardAdjacentOperations.Add(op.Left);
+                        parameters[j] = op.Left;
+                    }
                 }
                 else if (this.scalars.ContainsKey(inputName))
                 {
