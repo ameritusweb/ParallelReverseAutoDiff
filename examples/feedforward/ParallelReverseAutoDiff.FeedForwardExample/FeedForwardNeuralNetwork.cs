@@ -5,8 +5,6 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.FeedForwardExample
 {
-    using System.Reflection;
-    using ManagedCuda.BasicTypes;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.FeedForwardExample.RMAD;
     using ParallelReverseAutoDiff.RMAD;
@@ -302,25 +300,6 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
                 this.UpdateHiddenLayerParametersWithAdam(this.HiddenLayers[i]);
             });
             this.UpdateOutputLayerParametersWithAdam(this.OutputLayer);
-        }
-
-        private object[] LookupParameters(IOperation op)
-        {
-            object[] parameters = op.Parameters;
-            object[] parametersToReturn = new object[parameters.Length];
-            for (int j = 0; j < parameters.Length; ++j)
-            {
-                if (parameters[j] is IOperation)
-                {
-                    parametersToReturn[j] = ((IOperation)parameters[j]).GetOutput();
-                }
-                else
-                {
-                    parametersToReturn[j] = parameters[j];
-                }
-            }
-
-            return parametersToReturn;
         }
     }
 
