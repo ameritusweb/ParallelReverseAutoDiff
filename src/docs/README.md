@@ -370,15 +370,51 @@ Here is an example:
 
 ### Instantiate the architecture
 
-Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JSONArchitecure object.
+Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JsonArchitecure object.
 
-### Instantiate and populate the operations
+### Instantiate the computational graph
 
-Instantiate each operation based on its type. Then set the Next property of each operation to be the next operation in the forward pass.
+```c#
+this.computationGraph = new SelfAttentionMultiLayerLSTMComputationGraph(this);
+var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
+this.computationGraph
+    .AddIntermediate("inputSequence", x => this.Parameters.InputSequence[x.TimeStep])
+    .AddIntermediate("output", x => this.output[x.TimeStep])
+    .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
+    .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
+    .AddScalar("scaledDotProductScalar", x => 1.0d / Math.Sqrt(this.hiddenSize))
+    .AddWeight("Wf", x => this.Wf[x.Layer]).AddGradient("dWf", x => this.dWf[x.Layer])
+    .AddWeight("Wi", x => this.Wi[x.Layer]).AddGradient("dWi", x => this.dWi[x.Layer])
+    .AddWeight("Wc", x => this.Wc[x.Layer]).AddGradient("dWc", x => this.dWc[x.Layer])
+    .AddWeight("Wo", x => this.Wo[x.Layer]).AddGradient("dWo", x => this.dWo[x.Layer])
+    .AddWeight("Uf", x => this.Uf[x.Layer]).AddGradient("dUf", x => this.dUf[x.Layer])
+    .AddWeight("Ui", x => this.Ui[x.Layer]).AddGradient("dUi", x => this.dUi[x.Layer])
+    .AddWeight("Uc", x => this.Uc[x.Layer]).AddGradient("dUc", x => this.dUc[x.Layer])
+    .AddWeight("Uo", x => this.Uo[x.Layer]).AddGradient("dUo", x => this.dUo[x.Layer])
+    .AddWeight("bf", x => this.bf[x.Layer]).AddGradient("dbf", x => this.dbf[x.Layer])
+    .AddWeight("bi", x => this.bi[x.Layer]).AddGradient("dbi", x => this.dbi[x.Layer])
+    .AddWeight("bc", x => this.bc[x.Layer]).AddGradient("dbc", x => this.dbc[x.Layer])
+    .AddWeight("bo", x => this.bo[x.Layer]).AddGradient("dbo", x => this.dbo[x.Layer])
+    .AddWeight("Wq", x => this.Wq[x.Layer]).AddGradient("dWq", x => this.dWq[x.Layer])
+    .AddWeight("Wk", x => this.Wk[x.Layer]).AddGradient("dWk", x => this.dWk[x.Layer])
+    .AddWeight("Wv", x => this.Wv[x.Layer]).AddGradient("dWv", x => this.dWv[x.Layer])
+    .AddWeight("We", x => this.We).AddGradient("dWe", x => this.dWe)
+    .AddWeight("be", x => this.be).AddGradient("dbe", x => this.dbe)
+    .AddWeight("V", x => this.V).AddGradient("dV", x => this.dV)
+    .AddWeight("b", x => this.b).AddGradient("db", x => this.db)
+    .AddOperationFinder("i", x => this.computationGraph[$"i_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("f", x => this.computationGraph[$"f_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("cHat", x => this.computationGraph[$"cHat_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("o", x => this.computationGraph[$"o_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("embeddedInput", x => this.computationGraph[$"embeddedInput_{x.TimeStep}_0"])
+    .AddOperationFinder("hFromCurrentTimeStepAndLastLayer", x => this.computationGraph[$"h_{x.TimeStep}_{this.numLayers - 1}"])
+    .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"embeddedInput_{x.TimeStep}_0"] : this.computationGraph[$"h_{x.TimeStep}_{x.Layer - 1}"])
+    .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
+    .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
+    .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.numLayers);
+```
 
-Add each operation that is backwards in the computation graph to the BackwardAdjacentOperations property of an operation. BackwardAdjacentOperations is just a list of operations.
-
-Add instances of the gradients to send the result to, to the GradientDestinations array. If there is no gradient result for a certain input, add null.
+### Populate the backward dependency counts
 
 Then populate the backward dependency counts by running the following code. It only has to be run once to set up the backward dependency counts.
 ```c#
@@ -393,28 +429,42 @@ for (int t = numTimeSteps - 1; t >= 0; t--) // if there are multiple timesteps
 
 ### Run the forward pass
 ```c#
-var op = startOperation; // the start operation
-IOperation currOp = null;
+var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
+IOperation? currOp = null;
 do
 {
-    var parameters = LookupParameters(op); // lookup the parameters
-    op.OperationType.GetMethod("Forward").Invoke(op, parameters); // call the forward function
+    var parameters = this.LookupParameters(op);
+    var forwardMethod = op.OperationType.GetMethod("Forward") ?? throw new Exception($"Forward method should exist on operation of type {op.OperationType.Name}.");
+    forwardMethod.Invoke(op, parameters);
     if (op.ResultToName != null)
     {
-        op.ResultTo(NameToValueFunc(op.ResultToName)); // send the result to the appropriate object
+        var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+        var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+        op.CopyResult(oo);
     }
-    operationsMap[op.SpecificId] = op;
+
     currOp = op;
     if (op.HasNext)
+    {
         op = op.Next;
-} while (currOp.Next != null);
+    }
+}
+while (currOp.Next != null);
 ```
+
+### Create a loss function
+Create a loss function like mean squared error or using policy gradient methods.
+
+Then calculate the gradient of the loss with respect to the output.
+
+Plug the result in as the backward input for the backward start operation.
 
 ### Run the backward pass utilizing inherent parallelization
 ```c#
-for (int t = numTimeSteps - 1; t >= 0; t--)
+IOperation? backwardStartOperation = null;
+for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 {
-    backwardStartOperation = operationsMap[$"output_t_{t}"];
+    backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
     if (gradientOfLossWrtOutput[t][0] != 0.0d)
     {
         var backwardInput = new Matrix(1, 1);
