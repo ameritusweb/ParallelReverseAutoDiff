@@ -438,21 +438,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     continue;
                 }
 
-                if (this.weights.ContainsKey(inputName))
-                {
-                    // Get the corresponding value from the dictionary using the input name
-                    var p = this.weights[inputName](operation.LayerInfo);
-                    operation.BackwardAdjacentOperations.Add(null);
-                    parameters[j] = p;
-                }
-                else if (this.intermediates.ContainsKey(inputName))
-                {
-                    // Get the corresponding value from the dictionary using the input name
-                    var p = this.intermediates[inputName](operation.LayerInfo);
-                    operation.BackwardAdjacentOperations.Add(null);
-                    parameters[j] = p;
-                }
-                else if (this.operationFinders.ContainsKey(inputName))
+                if (this.operationFinders.ContainsKey(inputName))
                 {
                     // Get the corresponding value from the dictionary using the input name
                     var finder = this.operationFinders[inputName](operation.LayerInfo);
@@ -467,6 +453,20 @@ namespace ParallelReverseAutoDiff.RMAD
                         operation.BackwardAdjacentOperations.Add(null);
                         parameters[j] = finder;
                     }
+                }
+                else if (this.weights.ContainsKey(inputName))
+                {
+                    // Get the corresponding value from the dictionary using the input name
+                    var p = this.weights[inputName](operation.LayerInfo);
+                    operation.BackwardAdjacentOperations.Add(null);
+                    parameters[j] = p;
+                }
+                else if (this.intermediates.ContainsKey(inputName))
+                {
+                    // Get the corresponding value from the dictionary using the input name
+                    var p = this.intermediates[inputName](operation.LayerInfo);
+                    operation.BackwardAdjacentOperations.Add(null);
+                    parameters[j] = p;
                 }
                 else if (this.scalars.ContainsKey(inputName))
                 {
