@@ -17,6 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weights = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, IOperation>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, IOperation>>();
         private readonly ConcurrentDictionary<string, IOperation> operations = new ConcurrentDictionary<string, IOperation>();
         private readonly NeuralNetwork neuralNetwork;
@@ -242,6 +243,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds a scalar to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="scalar">The scalar.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddScalar(string identifier, Func<LayerInfo, double> scalar)
+        {
+            this.ScalarAdded(identifier, scalar);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a operation finder to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -341,6 +354,16 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Lifecycle function for when a scalar is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="scalar">The scalar.</param>
+        protected virtual void ScalarAdded(string identifier, Func<LayerInfo, double> scalar)
+        {
+            this.scalars.TryAdd(identifier, scalar);
+        }
+
+        /// <summary>
         /// Lifecycle function for when an operation finder is added to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -436,6 +459,13 @@ namespace ParallelReverseAutoDiff.RMAD
                     op.Outputs.Add(op.SpecificId);
                     operation.BackwardAdjacentOperations.Add(op);
                     parameters[j] = op;
+                }
+                else if (this.scalars.ContainsKey(inputName))
+                {
+                    // Get the corresponding value from the dictionary using the input name
+                    var p = this.scalars[inputName](operation.LayerInfo);
+                    operation.BackwardAdjacentOperations.Add(null);
+                    parameters[j] = p;
                 }
                 else
                 {

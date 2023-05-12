@@ -22,5 +22,29 @@ namespace ParallelReverseAutoDiff.RMAD
                 return this.parameters ??= new NeuralNetworkParameters();
             }
         }
+
+        /// <summary>
+        /// Lookup the parameters for the operation.
+        /// </summary>
+        /// <param name="op">The operation to lookup.</param>
+        /// <returns>The parameters.</returns>
+        protected virtual object[] LookupParameters(IOperation op)
+        {
+            object[] parameters = op.Parameters;
+            object[] parametersToReturn = new object[parameters.Length];
+            for (int j = 0; j < parameters.Length; ++j)
+            {
+                if (parameters[j] is IOperation)
+                {
+                    parametersToReturn[j] = ((IOperation)parameters[j]).GetOutput();
+                }
+                else
+                {
+                    parametersToReturn[j] = parameters[j];
+                }
+            }
+
+            return parametersToReturn;
+        }
     }
 }

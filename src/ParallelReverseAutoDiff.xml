@@ -226,6 +226,14 @@
             <param name="matrix">The gradient.</param>
             <returns>A computation graph.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})">
+            <summary>
+            Adds a scalar to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="scalar">The scalar.</param>
+            <returns>A computation graph.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationFinder(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.IOperation})">
             <summary>
             Adds a operation finder to the computation graph.
@@ -287,6 +295,13 @@
             </summary>
             <param name="identifier">An identifier.</param>
             <param name="matrix">The gradient.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})">
+            <summary>
+            Lifecycle function for when a scalar is added to the computation graph.
+            </summary>
+            <param name="identifier">An identifier.</param>
+            <param name="scalar">The scalar.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationFinderAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.IOperation})">
             <summary>
@@ -1054,6 +1069,13 @@
             <summary>
             Gets the parameters for the neural network.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperation)">
+            <summary>
+            Lookup the parameters for the operation.
+            </summary>
+            <param name="op">The operation to lookup.</param>
+            <returns>The parameters.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters">
             <summary>
