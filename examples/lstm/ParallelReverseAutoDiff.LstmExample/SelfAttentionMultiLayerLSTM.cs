@@ -398,7 +398,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             string json = EmbeddedResource.ReadAllJson(this.architecture);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new SelfAttentionMultiLayerLSTMComputationGraph(this);
-            var zeroMatrixHiddenSize = MatrixUtils.InitializeZeroMatrix(this.hiddenSize, 1);
+            var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
             this.computationGraph
                 .AddIntermediate("inputSequence", x => this.Parameters.InputSequence[x.TimeStep])
                 .AddIntermediate("output", x => this.output[x.TimeStep])
