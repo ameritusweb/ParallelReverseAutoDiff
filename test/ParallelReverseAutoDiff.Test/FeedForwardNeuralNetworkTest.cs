@@ -10,7 +10,6 @@ namespace ParallelReverseAutoDiff.Test
         public async Task GivenFeedForwardNetwork_UsesCudaOperationsSuccessfully()
         {
             CudaBlas.Instance.Initialize();
-            await Task.Delay(5000);
             try
             {
                 FeedForwardNeuralNetwork neuralNetwork = new FeedForwardNeuralNetwork(100, 1000, 1, 3, 0.001d, null);

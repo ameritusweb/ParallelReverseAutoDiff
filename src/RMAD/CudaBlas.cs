@@ -32,6 +32,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private Semaphore resultMutex;
 
+        private Semaphore initializationMutex;
+
         private PrimaryContext primaryContext;
 
         private ManagedCuda.CudaBlas.CudaBlas blas;
@@ -48,6 +50,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private CudaBlas()
         {
+            this.initializationMutex = new Semaphore(0, 1);
             this.circularBuffer = new CircularBuffer(1024 * 1024 * 8);
             this.resultDictionary = new ConcurrentDictionary<long, Matrix>();
         }
@@ -95,7 +98,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         public void Initialize()
         {
-            Task.Run(() =>
+            Task.Delay(1).ContinueWith((t) =>
             {
                 PrimaryContext ctx = new PrimaryContext(this.DeviceId);
                 this.primaryContext = ctx;
@@ -104,8 +107,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 this.consumerMutex = new Semaphore(1, 1);
                 this.resultMutex = new Semaphore(0, 1);
                 this.isInitialized = true;
+                this.initializationMutex.Release();
                 this.CudaThreadMethod();
             });
+            this.initializationMutex.WaitOne();
         }
 
         /// <summary>
@@ -241,15 +246,14 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The resultant matrix.</returns>
         public Matrix MatrixMultiply(double[] matrixFlat1, int rows1, int cols1, bool transposeMatrix1, double[] matrixFlat2, int rows2, int cols2, bool transposeMatrix2)
         {
-            int m = rows1;
-            int n = cols1;
-            int p = rows2;
-            int k = cols2;
+            int m = transposeMatrix1 ? cols1 : rows1;
+            int n = transposeMatrix2 ? rows2 : cols2;
+            int k = transposeMatrix1 ? rows1 : cols1;
 
-            int c1 = transposeMatrix1 ? n : m;
-            int c2 = transposeMatrix2 ? p : k;
+            int c1 = m;
+            int c2 = n;
 
-            this.InitializeDeviceVariables(m, n, p, k, transposeMatrix1, transposeMatrix2);
+            this.InitializeDeviceVariables(rows1, cols1, rows2, cols2, transposeMatrix1, transposeMatrix2);
 
             this.dA.CopyToDevice(matrixFlat1);
             this.dB.CopyToDevice(matrixFlat2);
@@ -260,7 +264,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 // Call Gemm to perform the matrix multiplication
                 double alpha = 1.0;
                 double beta = 0.0;
-                this.blas.Gemm(transposeMatrix1 ? Cuda.Operation.Transpose : Cuda.Operation.NonTranspose, transposeMatrix2 ? Cuda.Operation.Transpose : Cuda.Operation.NonTranspose, m, n, k, alpha, this.dA, m, this.dB, k, beta, this.dC, m);
+                this.blas.Gemm(transposeMatrix1 ? Cuda.Operation.Transpose : Cuda.Operation.NonTranspose, transposeMatrix2 ? Cuda.Operation.Transpose : Cuda.Operation.NonTranspose, m, n, k, alpha, this.dA, rows1, this.dB, rows2, beta, this.dC, c1);
 
                 // Copy the result back to the host and reshape it to a 2D array
                 double[] c_flat = this.dC;

@@ -66,55 +66,15 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new CudaNotInitializedException();
             }
 
-            int input1Rows = this.input1.Length;
-            int input1Cols = this.input1[0].Length;
-            int input2Rows = this.input2.Length;
-            int input2Cols = this.input2[0].Length;
-
-            // Calculate gradient w.r.t. input1
-            Matrix dInput1a = new Matrix(input1Rows, input1Cols);
-
-            // Parallelize the outer loop
-            Parallel.For(0, input1Rows, i =>
-            {
-                for (int j = 0; j < input1Cols; j++)
-                {
-                    dInput1a[i][j] = 0;
-                    for (int k = 0; k < input2Cols; k++)
-                    {
-                        dInput1a[i][j] += dOutput[i][k] * this.input2[j][k];
-                    }
-                }
-            });
-
-            // Calculate gradient w.r.t. input2
-            Matrix dInput2a = new Matrix(input2Rows, input2Cols);
-
-            // Parallelize the outer loop
-            Parallel.For(0, input2Rows, i =>
-            {
-                for (int j = 0; j < input2Cols; j++)
-                {
-                    dInput2a[i][j] = 0;
-                    for (int k = 0; k < input1Rows; k++)
-                    {
-                        dInput2a[i][j] += this.input1[k][i] * dOutput[k][j];
-                    }
-                }
-            });
-
-            Matrix? dInput1 = null;
-            Matrix? dInput2 = null;
-
             // Calculate gradient w.r.t. input1
 
             // Compute dInput1 using MatrixMultiply
-            dInput1 = CudaBlas.Instance.WriteMatricesToSharedMemory(dOutput, false, this.input2, true);
+            Matrix? dInput1 = CudaBlas.Instance.WriteMatricesToSharedMemory(dOutput, false, this.input2, true);
 
             // Calculate gradient w.r.t. input2
 
             // Compute dInput2 using MatrixMultiply
-            dInput2 = CudaBlas.Instance.WriteMatricesToSharedMemory(this.input1, true, dOutput, false);
+            Matrix? dInput2 = CudaBlas.Instance.WriteMatricesToSharedMemory(this.input1, true, dOutput, false);
 
             return (dInput1, dInput2);
         }
