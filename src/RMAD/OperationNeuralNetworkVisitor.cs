@@ -110,6 +110,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
             if (fromNode != null)
             {
+                this.operations.Add(node);
+
                 if (node.VisitedFrom.Contains(fromNode.SpecificId))
                 {
                     throw new InvalidOperationException("Node must not be visited twice.");
@@ -225,7 +227,10 @@ namespace ParallelReverseAutoDiff.RMAD
 
             await Task.WhenAll(adjacentTasks).ConfigureAwait(false);
 
-            this.operations.Add(node);
+            if (!this.operations.Contains(node))
+            {
+                this.operations.Add(node);
+            }
 
             node.IsComplete = true;
         }
