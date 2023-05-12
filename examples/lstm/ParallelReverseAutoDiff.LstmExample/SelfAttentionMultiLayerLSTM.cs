@@ -409,9 +409,9 @@ namespace ParallelReverseAutoDiff.LstmExample
                 .AddWeight("Wi", x => this.Wi[x.Layer]).AddGradient("dWi", x => this.dWi[x.Layer])
                 .AddWeight("Wc", x => this.Wc[x.Layer]).AddGradient("dWc", x => this.dWc[x.Layer])
                 .AddWeight("Wo", x => this.Wo[x.Layer]).AddGradient("dWo", x => this.dWo[x.Layer])
-                .AddWeight("Uf", x => this.Uf[x.Layer]).AddGradient("dUo", x => this.dUf[x.Layer])
-                .AddWeight("Ui", x => this.Ui[x.Layer]).AddGradient("dUo", x => this.dUi[x.Layer])
-                .AddWeight("Uc", x => this.Uc[x.Layer]).AddGradient("dUo", x => this.dUc[x.Layer])
+                .AddWeight("Uf", x => this.Uf[x.Layer]).AddGradient("dUf", x => this.dUf[x.Layer])
+                .AddWeight("Ui", x => this.Ui[x.Layer]).AddGradient("dUi", x => this.dUi[x.Layer])
+                .AddWeight("Uc", x => this.Uc[x.Layer]).AddGradient("dUc", x => this.dUc[x.Layer])
                 .AddWeight("Uo", x => this.Uo[x.Layer]).AddGradient("dUo", x => this.dUo[x.Layer])
                 .AddWeight("bf", x => this.bf[x.Layer]).AddGradient("dbf", x => this.dbf[x.Layer])
                 .AddWeight("bi", x => this.bi[x.Layer]).AddGradient("dbi", x => this.dbi[x.Layer])
@@ -436,10 +436,13 @@ namespace ParallelReverseAutoDiff.LstmExample
                 .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.numLayers);
 
             IOperation? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
-            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-            await opVisitor.TraverseAsync();
-            await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
+            for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
+            {
+                backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
+                OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
+                await opVisitor.TraverseAsync();
+                await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
+            }
         }
 
         private async Task AutomaticForwardPropagate(Matrix[] inputSequence, List<Matrix> chosenActions, List<double> rewards, bool doNotUpdate = false)

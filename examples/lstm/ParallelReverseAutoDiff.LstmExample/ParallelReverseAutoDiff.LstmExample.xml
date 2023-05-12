@@ -397,5 +397,56 @@
         <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM.SaveModel(System.String)">
             <inheritdoc/>
         </member>
+        <member name="T:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTMComputationGraph">
+            <summary>
+            The computation graph for a self-attention multi-layer LSTM.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTMComputationGraph.#ctor(ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTM)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTMComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.LstmExample.SelfAttentionMultiLayerLSTMComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperation)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.Visitor">
+            <summary>
+            The operation neural network visitor. Implements the visitor pattern for the backward pass.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Visitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.Visitor"/> class.
+            </summary>
+            <param name="id">An ID to uniquely identify the visitor.</param>
+            <param name="startNode">The start node for the traveral.</param>
+            <param name="startingPointIndex">The starting point index.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Visitor.RunSequentially">
+            <summary>
+            Gets or sets a value indicating whether the visitor should run sequentially instead of in parallel.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.Visitor.Id">
+            <summary>
+            Gets the ID of the visitor.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Visitor.TraverseAsync">
+            <summary>
+            Start the traversal of the backward pass.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Visitor.Reset">
+            <summary>
+            Reset the state of the operations.
+            </summary>
+        </member>
     </members>
 </doc>
