@@ -48,7 +48,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private CudaBlas()
         {
-            this.circularBuffer = new CircularBuffer(1024 * 1024);
+            this.circularBuffer = new CircularBuffer(1024 * 1024 * 8);
             this.resultDictionary = new ConcurrentDictionary<long, Matrix>();
         }
 
@@ -130,13 +130,18 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="cols1">The number of columns in the first matrix.</param>
         /// <param name="rows2">The number of rows in the second matrix.</param>
         /// <param name="cols2">The number of columns in the second matrix.</param>
-        public void InitializeDeviceVariables(int rows1, int cols1, int rows2, int cols2)
+        /// <param name="transposeMatrix1">Whether to transpose matrix A before multiplying.</param>
+        /// <param name="transposeMatrix2">Whether to transpose matrix B before multiplying.</param>
+        public void InitializeDeviceVariables(int rows1, int cols1, int rows2, int cols2, bool transposeMatrix1, bool transposeMatrix2)
         {
+            int m1 = transposeMatrix1 ? cols1 : rows1;
+            int m2 = transposeMatrix2 ? rows2 : cols2;
+            int c = m1 * m2;
             if (!this.AreDeviceVariablesInitialized)
             {
                 this.dA = new CudaDeviceVariable<double>(rows1 * cols1);
                 this.dB = new CudaDeviceVariable<double>(rows2 * cols2);
-                this.dC = new CudaDeviceVariable<double>(rows1 * cols2);
+                this.dC = new CudaDeviceVariable<double>(c);
             }
             else
             {
@@ -152,10 +157,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.dB = new CudaDeviceVariable<double>(rows2 * cols2);
                 }
 
-                if (this.dC.Size != rows1 * cols2)
+                if (this.dC.Size != c)
                 {
                     this.dC.Dispose();
-                    this.dC = new CudaDeviceVariable<double>(rows1 * cols2);
+                    this.dC = new CudaDeviceVariable<double>(c);
                 }
             }
 
@@ -188,7 +193,10 @@ namespace ParallelReverseAutoDiff.RMAD
             int p = matrix2.Length;
             int k = matrix2[0].Length;
 
-            this.InitializeDeviceVariables(m, n, p, k);
+            int c1 = transposeMatrix1 ? n : m;
+            int c2 = transposeMatrix2 ? p : k;
+
+            this.InitializeDeviceVariables(m, n, p, k, transposeMatrix1, transposeMatrix2);
 
             // Convert input matrices to 1D arrays and create CudaDeviceVariable objects
             double[] a_flat = MatrixUtils.FlattenMatrix(matrix1);
@@ -207,7 +215,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 // Copy the result back to the host and reshape it to a 2D array
                 double[] c_flat = this.dC;
-                c = MatrixUtils.ReshapeMatrix(c_flat, m, k);
+                c = MatrixUtils.ReshapeMatrix(c_flat, c1, c2);
             }
             catch (Exception)
             {
@@ -238,7 +246,10 @@ namespace ParallelReverseAutoDiff.RMAD
             int p = rows2;
             int k = cols2;
 
-            this.InitializeDeviceVariables(m, n, p, k);
+            int c1 = transposeMatrix1 ? n : m;
+            int c2 = transposeMatrix2 ? p : k;
+
+            this.InitializeDeviceVariables(m, n, p, k, transposeMatrix1, transposeMatrix2);
 
             this.dA.CopyToDevice(matrixFlat1);
             this.dB.CopyToDevice(matrixFlat2);
@@ -253,7 +264,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 // Copy the result back to the host and reshape it to a 2D array
                 double[] c_flat = this.dC;
-                c = MatrixUtils.ReshapeMatrix(c_flat, m, k);
+                c = MatrixUtils.ReshapeMatrix(c_flat, c1, c2);
             }
             catch (Exception)
             {
@@ -290,6 +301,11 @@ namespace ParallelReverseAutoDiff.RMAD
             // Serialize matrixB
             matrixB.Serialize(serializedMatrices.AsSpan(bufferSizeA, bufferSizeB), transposeB);
 
+            if (serializedMatrices.Length > this.circularBuffer.Capacity)
+            {
+                this.circularBuffer.Resize(serializedMatrices.Length);
+            }
+
             // Write the serialized matrices to the circular buffer
             this.circularBuffer.Write(serializedMatrices, 0);
 
@@ -325,7 +341,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 int rowsB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1 + sizeof(int), sizeof(int)).Span);
                 int colsB = BitConverter.ToInt32(this.circularBuffer.Read(matrixASerializedLength + 1 + (2 * sizeof(int)), sizeof(int)).Span);
 
-                if (colsA == rowsB && rowsA > 0 && colsB > 0 && colsA > 0)
+                if (rowsA > 0 && rowsB > 0 && colsA > 0 && colsB > 0)
                 {
                     // Calculate the serialized length of the second matrix
                     int matrixBSerializedLength = 1 + (3 * sizeof(int)) + (rowsB * colsB * sizeof(double));

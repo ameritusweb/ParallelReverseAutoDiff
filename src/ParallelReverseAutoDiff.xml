@@ -372,7 +372,7 @@
             Disposes the CUBLAS library.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)">
             <summary>
             Initializes the device variables.
             </summary>
@@ -380,6 +380,8 @@
             <param name="cols1">The number of columns in the first matrix.</param>
             <param name="rows2">The number of rows in the second matrix.</param>
             <param name="cols2">The number of columns in the second matrix.</param>
+            <param name="transposeMatrix1">Whether to transpose matrix A before multiplying.</param>
+            <param name="transposeMatrix2">Whether to transpose matrix B before multiplying.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables">
             <summary>

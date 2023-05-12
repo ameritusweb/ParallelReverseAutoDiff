@@ -15,6 +15,7 @@ for (int i = 0; i < 100; i++)
     Matrix target = new Matrix(1, 1);
     target[0][0] = 0.5d;
     CudaBlas.Instance.Initialize();
+    await Task.Delay(5000);
     try
     {
         await neuralNetwork.Optimize(input, target, i, null);
