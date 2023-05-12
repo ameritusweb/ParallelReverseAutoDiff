@@ -218,5 +218,60 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             return this.GetEnumerator();
         }
+
+        /// <summary>
+        /// Overrides the equals operator.
+        /// </summary>
+        /// <param name="obj">The object to compare.</param>
+        /// <returns>The comparison.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is Matrix other)
+            {
+                if (this.UniqueId == other.UniqueId)
+                {
+                    return true;
+                }
+
+                if (this.Rows != other.Rows || this.Cols != other.Cols)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Cols; j++)
+                    {
+                        if (this[i, j] != other[i, j])
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Overrides the hash code.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode()
+        {
+            int hash = HashCode.Combine(this.UniqueId, this.Rows, this.Cols);
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    hash = HashCode.Combine(hash, this[i, j]);
+                }
+            }
+
+            return hash;
+        }
     }
 }
