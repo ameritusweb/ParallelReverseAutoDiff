@@ -134,6 +134,28 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation">
+            <summary>
+            Batch normalization operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the batch normalization operation.
+            </summary>
+            <param name="input">The input for the batch normalization operation.</param>
+            <returns>The output for the batch normalization operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.ComputationGraph">
             <summary>
             A computation graph.
