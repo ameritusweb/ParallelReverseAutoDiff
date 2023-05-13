@@ -15,6 +15,8 @@ AmplifiedSigmoidOperation - Used for gradient amplification.
 
 ApplyDropoutOperation
 
+BatchNormalizationOperation
+
 CudaMatrixMultiplyOperation - Leverages the GPU for fast computation.
 
 HadamardProductOperation
