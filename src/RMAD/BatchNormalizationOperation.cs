@@ -42,29 +42,56 @@ namespace ParallelReverseAutoDiff.RMAD
             this.numRows = input.Length;
             this.numCols = input[0].Length;
 
-            double mean = 0;
-            double var = 0;
             this.n = this.numRows * this.numCols;
 
-            // Calculate mean
-            for (int i = 0; i < this.numRows; i++)
-            {
-                for (int j = 0; j < this.numCols; j++)
+            double mean = 0;
+            double var = 0;
+            object meanLock = new object();
+            object varLock = new object();
+
+            Parallel.For(
+                0,
+                this.numRows,
+                () => 0.0,
+                (i, state, localTotal) =>
                 {
-                    mean += input[i, j];
-                }
-            }
+                    for (int j = 0; j < this.numCols; j++)
+                    {
+                        localTotal += input[i, j];
+                    }
+
+                    return localTotal;
+                },
+                (localTotal) =>
+                {
+                    lock (meanLock)
+                    {
+                        mean += localTotal;
+                    }
+                });
 
             this.mean = mean / this.n;
 
-            // Calculate variance
-            for (int i = 0; i < this.numRows; i++)
-            {
-                for (int j = 0; j < this.numCols; j++)
+            Parallel.For(
+                0,
+                this.numRows,
+                () => 0.0,
+                (i, state, localTotal) =>
                 {
-                    var += Math.Pow(input[i, j] - mean, 2);
-                }
-            }
+                    for (int j = 0; j < this.numCols; j++)
+                    {
+                        localTotal += Math.Pow(input[i, j] - mean, 2);
+                    }
+
+                    return localTotal;
+                },
+                (localTotal) =>
+                {
+                    lock (varLock)
+                    {
+                        var += localTotal;
+                    }
+                });
 
             this.var = var / this.n;
 
