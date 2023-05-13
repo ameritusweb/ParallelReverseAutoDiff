@@ -26,13 +26,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private readonly ConcurrentDictionary<long, Matrix> resultDictionary;
 
+        private readonly Semaphore initializationMutex;
+
         private Semaphore producerMutex;
 
         private Semaphore consumerMutex;
 
         private Semaphore resultMutex;
-
-        private Semaphore initializationMutex;
 
         private PrimaryContext primaryContext;
 
@@ -98,7 +98,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         public void Initialize()
         {
-            Task.Delay(1).ContinueWith((t) =>
+            Task.Delay(1).ContinueWith((_) =>
             {
                 PrimaryContext ctx = new PrimaryContext(this.DeviceId);
                 this.primaryContext = ctx;

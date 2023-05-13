@@ -35,7 +35,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
                 }
             }
 
-            throw new Exception("Could not read JSON file");
+            throw new InvalidOperationException("Could not read JSON file");
         }
     }
 }
