@@ -1,26 +1,18 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="IOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="DeepOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    /// <summary>
-    /// Define the abstract base class for all operations.
-    /// </summary>
-    public interface IOperation : IOperationBase
+    /// <inheritdoc />
+    public abstract class DeepOperation : OperationBase
     {
         /// <summary>
         /// Abstract method to perform backward pass, must be implemented by derived classes.
         /// </summary>
         /// <param name="dOutput">The upstream gradient.</param>
         /// <returns>The gradients to send to the adjacent backward operations.</returns>
-        (Matrix?, Matrix?) Backward(Matrix dOutput);
+        public abstract (DeepMatrix?, DeepMatrix?) Backward(DeepMatrix dOutput);
     }
 }
