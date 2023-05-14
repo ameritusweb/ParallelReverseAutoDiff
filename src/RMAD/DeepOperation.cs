@@ -6,7 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     /// <inheritdoc />
-    public abstract class DeepOperation : OperationBase
+    public abstract class DeepOperation : OperationBase, IDeepOperation
     {
         /// <summary>
         /// Abstract method to perform backward pass, must be implemented by derived classes.

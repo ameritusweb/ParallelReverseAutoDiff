@@ -10,7 +10,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// The convolution operation.
     /// </summary>
-    public class ConvolutionOperation : DeepOperation, IDeepOperation
+    public class ConvolutionOperation : DeepOperation
     {
         private DeepMatrix input;
         private DeepMatrix paddedInput;
