@@ -101,7 +101,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.GradientBeta = dBeta;
             this.GradientGamma = dGamma;
 
-            return new BackwardResult() { DeepInputGradient = dInput, BetaGradient = dBeta, GammaGradient = dGamma };
+            return new BackwardResult { DeepInputGradient = dInput, BetaGradient = dBeta, GammaGradient = dGamma };
         }
     }
 }

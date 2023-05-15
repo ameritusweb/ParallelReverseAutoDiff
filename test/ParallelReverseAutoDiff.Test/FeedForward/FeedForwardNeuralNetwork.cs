@@ -261,7 +261,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
 
             Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = lossFunction.Backward(this.Output).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = lossFunction.Backward(this.Output).InputGradient ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
             IOperation? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];

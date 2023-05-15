@@ -63,7 +63,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return new BackwardResult() { InputGradientLeft = dInputA, InputGradientRight = dInputB }; // You can return either dInputA or dInputB, as they are identical.
+            return new BackwardResult { InputGradientLeft = dInputA, InputGradientRight = dInputB }; // You can return either dInputA or dInputB, as they are identical.
         }
     }
 }

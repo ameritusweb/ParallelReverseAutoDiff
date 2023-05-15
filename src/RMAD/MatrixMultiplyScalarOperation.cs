@@ -67,7 +67,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return new BackwardResult() { InputGradient = dLdInput };
+            return new BackwardResult { InputGradient = dLdInput };
         }
     }
 }

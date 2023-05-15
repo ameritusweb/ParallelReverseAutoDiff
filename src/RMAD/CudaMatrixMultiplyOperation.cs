@@ -76,7 +76,7 @@ namespace ParallelReverseAutoDiff.RMAD
             // Compute dInput2 using MatrixMultiply
             Matrix? dInput2 = CudaBlas.Instance.WriteMatricesToSharedMemory(this.input1, true, dOutput, false);
 
-            return new BackwardResult() { InputGradientLeft = dInput1, InputGradientRight = dInput2 };
+            return new BackwardResult { InputGradientLeft = dInput1, InputGradientRight = dInput2 };
         }
     }
 }

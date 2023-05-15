@@ -39,6 +39,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.input = input;
             this.filters = filters;
+            this.padding = padding;
             int inputHeight = input.Rows;
             int inputWidth = input.Cols;
             int inputDepth = input.Depth;
@@ -182,7 +183,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return new BackwardResult() { DeepInputGradient = dInput, FiltersGradient = dFilters, BiasGradient = biasGradient };
+            return new BackwardResult { DeepInputGradient = dInput, FiltersGradient = dFilters, BiasGradient = biasGradient };
         }
     }
 }
