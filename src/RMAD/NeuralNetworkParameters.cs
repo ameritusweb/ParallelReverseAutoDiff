@@ -33,6 +33,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public double LearningRate { get; set; } = 0.001d;
 
         /// <summary>
+        /// Gets or sets the pool size for the max pool operation.
+        /// </summary>
+        public int PoolSize { get; set; } = 2;
+
+        /// <summary>
         /// Gets or sets the number of time steps.
         /// </summary>
         public int NumTimeSteps { get; set; }

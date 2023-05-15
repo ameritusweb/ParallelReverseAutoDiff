@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="ConvolutionOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="DeepConvolutionOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// The convolution operation.
     /// </summary>
-    public class ConvolutionOperation : DeepOperation
+    public class DeepConvolutionOperation : DeepOperation
     {
         private DeepMatrix input;
         private DeepMatrix paddedInput;
@@ -24,7 +24,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IDeepOperation Instantiate(NeuralNetwork net)
         {
-            return new ConvolutionOperation();
+            return new DeepConvolutionOperation();
         }
 
         /// <summary>
