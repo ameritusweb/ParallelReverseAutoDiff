@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using ParallelReverseAutoDiff.Interprocess;
 
@@ -171,6 +172,25 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Initializes the matrix with He or Xavier initialization.
+        /// </summary>
+        /// <param name="initializationType">The initialization type.</param>
+        public void Initialize(InitializationType initializationType)
+        {
+            switch (initializationType)
+            {
+                case InitializationType.He:
+                    this.InitializeHe();
+                    break;
+                case InitializationType.Xavier:
+                    this.InitializeXavier();
+                    break;
+                default:
+                    throw new ArgumentException("Invalid initialization type.");
+            }
+        }
+
+        /// <summary>
         /// Serialize to the buffer.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
@@ -272,6 +292,37 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return hash;
+        }
+
+        private void InitializeHe()
+        {
+            Func<Random> randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
+            var localRandom = new ThreadLocal<Random>(randomFunc);
+            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
+            var variance = 2.0 / this.Cols;
+
+            Parallel.For(0, this.Rows, i =>
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    this[i, j] = Math.Sqrt(variance) * rand.NextDouble();
+                }
+            });
+        }
+
+        private void InitializeXavier()
+        {
+            Func<Random> randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
+            var localRandom = new ThreadLocal<Random>(randomFunc);
+            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
+
+            Parallel.For(0, this.Rows, i =>
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    this[i, j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols));
+                }
+            });
         }
     }
 }
