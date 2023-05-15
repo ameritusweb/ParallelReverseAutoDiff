@@ -11,6 +11,8 @@ ParallelAutoDiff is a thread-safe C# library for reverse mode automatic differen
 Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
 
 ## Supported Operations
+
+### Regular Operations
 AmplifiedSigmoidOperation - Used for gradient amplification.
 
 ApplyDropoutOperation
@@ -46,6 +48,24 @@ SoftmaxOperation
 StretchedSigmoidOperation
 
 TanhOperation
+
+### Deep Operations
+These types of operations operate on instances of the DeepMatrix class which is a 3-D matrix.
+The first dimension is the channel size and the second and third dimensions are the row and column sizes respectively.
+
+DeepBatchNormalizationOperation
+
+DeepConvolutionOperation
+
+DeepLeakyReLUOperation
+
+DeepMaxPoolOperation
+
+DeepReLUOperation
+
+DeepScaleAndShiftOperation
+
+FlattenOperation
 
 ## Usage
 
