@@ -68,7 +68,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix gradOutput)
+        public override BackwardResult Backward(Matrix gradOutput)
         {
             Matrix gradient = new Matrix(this.numRows, this.numCols);
 
@@ -88,7 +88,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return (gradient, gradient);
+            return new BackwardResult() { InputGradient = gradient };
         }
     }
 }

@@ -72,7 +72,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="gradOutput">The gradient of the output matrix.</param>
         /// <returns>A tuple containing the gradients for the input, beta, and gamma matrices.</returns>
-        public override (DeepMatrix?, DeepMatrix?) Backward(DeepMatrix gradOutput)
+        public override BackwardResult Backward(DeepMatrix gradOutput)
         {
             int depth = this.input.Depth;
             int numRows = this.input.Rows;
@@ -101,7 +101,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.GradientBeta = dBeta;
             this.GradientGamma = dGamma;
 
-            return (dInput, null);
+            return new BackwardResult() { DeepInputGradient = dInput, BetaGradient = dBeta, GammaGradient = dGamma };
         }
     }
 }

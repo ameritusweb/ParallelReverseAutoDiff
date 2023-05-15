@@ -120,7 +120,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 node.VisitedFrom.Add(fromNode.SpecificId);
             }
 
-            var dOutput = node.Backward((Matrix)node.BackwardInput);
+            var backwardResult = node.Backward((Matrix)node.BackwardInput);
+
+            (Matrix?, Matrix?) dOutput = (backwardResult.InputGradientLeft ?? backwardResult.InputGradient, backwardResult.InputGradientRight ?? backwardResult.InputGradient);
 
             bool shouldContinue = false;
             node.Initialize(this.startingPointIndex);

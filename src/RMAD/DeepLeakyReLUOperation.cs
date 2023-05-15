@@ -63,7 +63,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (DeepMatrix?, DeepMatrix?) Backward(DeepMatrix dLdOutput)
+        public override BackwardResult Backward(DeepMatrix dLdOutput)
         {
             int depth = dLdOutput.Depth;
             int rows = dLdOutput.Rows;
@@ -83,7 +83,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return (dLdInput, dLdInput);
+            return new BackwardResult() { DeepInputGradient = dLdInput };
         }
     }
 }

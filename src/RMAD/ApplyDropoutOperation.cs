@@ -65,7 +65,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
+        public override BackwardResult Backward(Matrix dLdOutput)
         {
             int numRows = dLdOutput.Length;
             int numCols = dLdOutput[0].Length;
@@ -79,7 +79,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return (dLdInput, dLdInput);
+            return new BackwardResult() { InputGradient = dLdInput };
         }
     }
 }

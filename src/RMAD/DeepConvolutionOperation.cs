@@ -35,7 +35,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="biases">The biases for the operation.</param>
         /// <param name="padding">The padding for the operation.</param>
         /// <returns>The output for the operation.</returns>
-        public DeepMatrix Forward(DeepMatrix input, DeepMatrix filters, double[] biases, int padding)
+        public DeepMatrix Forward(DeepMatrix input, DeepMatrix filters, Matrix biases, int padding)
         {
             this.input = input;
             this.filters = filters;
@@ -88,7 +88,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             }
                         }
 
-                        this.DeepOutput[filter, i, j] = sum + biases[filter];
+                        this.DeepOutput[filter, i, j] = sum + biases[filter][0];
                     }
                 }
             }
@@ -97,7 +97,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (DeepMatrix?, DeepMatrix?) Backward(DeepMatrix dOutput)
+        public override BackwardResult Backward(DeepMatrix dOutput)
         {
             int inputHeight = this.input.Rows;
             int inputWidth = this.input.Cols;
@@ -135,14 +135,14 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             // Gradient w.r.t. biases
-            this.BiasGradient = new double[numFilters];
+            Matrix biasGradient = new Matrix(numFilters, 1);
             for (int filter = 0; filter < numFilters; filter++)
             {
                 for (int i = 0; i < outputHeight; i++)
                 {
                     for (int j = 0; j < outputWidth; j++)
                     {
-                        this.BiasGradient[filter] += dOutput[filter, i, j];
+                        biasGradient[filter][0] += dOutput[filter, i, j];
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return (dInput, dFilters);
+            return new BackwardResult() { DeepInputGradient = dInput, FiltersGradient = dFilters, BiasGradient = biasGradient };
         }
     }
 }

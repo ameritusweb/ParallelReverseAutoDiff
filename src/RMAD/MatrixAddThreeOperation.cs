@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
+        public override BackwardResult Backward(Matrix dOutput)
         {
             int numRows = dOutput.Length;
             int numCols = dOutput[0].Length;
@@ -63,7 +63,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return (dInputA, dInputB); // You can return either dInputA or dInputB, as they are identical.
+            return new BackwardResult() { InputGradientLeft = dInputA, InputGradientRight = dInputB }; // You can return either dInputA or dInputB, as they are identical.
         }
     }
 }

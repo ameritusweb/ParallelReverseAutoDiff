@@ -129,11 +129,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         protected DeepMatrix DeepOutput { get; set; }
 
-        /// <summary>
-        /// Gets or sets the property to store the bias gradient of the operation.
-        /// </summary>
-        protected double[] BiasGradient { get; set; }
-
         /// <inheritdoc />
         public void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients, LayerInfo layerInfo)
         {
@@ -185,12 +180,6 @@ namespace ParallelReverseAutoDiff.RMAD
         public virtual DeepMatrix GetDeepOutput()
         {
             return this.DeepOutput;
-        }
-
-        /// <inheritdoc />
-        public virtual double[] GetBiasGradient()
-        {
-            return this.BiasGradient;
         }
 
         /// <inheritdoc />

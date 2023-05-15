@@ -13,6 +13,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="dOutput">The upstream gradient.</param>
         /// <returns>The gradients to send to the adjacent backward operations.</returns>
-        public abstract (Matrix?, Matrix?) Backward(Matrix dOutput);
+        public abstract BackwardResult Backward(Matrix dOutput);
     }
 }

@@ -59,7 +59,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
+        public override BackwardResult Backward(Matrix dOutput)
         {
             if (!CudaBlas.Instance.IsInitialized)
             {
@@ -76,7 +76,7 @@ namespace ParallelReverseAutoDiff.RMAD
             // Compute dInput2 using MatrixMultiply
             Matrix? dInput2 = CudaBlas.Instance.WriteMatricesToSharedMemory(this.input1, true, dOutput, false);
 
-            return (dInput1, dInput2);
+            return new BackwardResult() { InputGradientLeft = dInput1, InputGradientRight = dInput2 };
         }
     }
 }

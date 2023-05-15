@@ -172,12 +172,6 @@ namespace ParallelReverseAutoDiff.RMAD
         DeepMatrix GetDeepOutput();
 
         /// <summary>
-        /// Gets the bias gradient of the operation.
-        /// </summary>
-        /// <returns>The bias gradient of the operation.</returns>
-        double[] GetBiasGradient();
-
-        /// <summary>
         /// Resets the visitor count, accumulated gradients, among other things.
         /// </summary>
         void Reset();
