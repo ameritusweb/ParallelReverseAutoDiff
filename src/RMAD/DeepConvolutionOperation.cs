@@ -18,13 +18,22 @@ namespace ParallelReverseAutoDiff.RMAD
         private int padding;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DeepConvolutionOperation"/> class.
+        /// </summary>
+        /// <param name="padding">The padding to be applied.</param>
+        public DeepConvolutionOperation(int padding)
+        {
+            this.padding = padding;
+        }
+
+        /// <summary>
         /// A common method for instantiating an operation.
         /// </summary>
         /// <param name="net">The neural network.</param>
         /// <returns>The instantiated operation.</returns>
         public static IDeepOperation Instantiate(NeuralNetwork net)
         {
-            return new DeepConvolutionOperation();
+            return new DeepConvolutionOperation(net.Parameters.ConvolutionPadding);
         }
 
         /// <summary>

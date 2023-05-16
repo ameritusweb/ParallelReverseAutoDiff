@@ -38,6 +38,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public int PoolSize { get; set; } = 2;
 
         /// <summary>
+        /// Gets or sets the convolution padding for the convolution operation.
+        /// </summary>
+        public int ConvolutionPadding { get; set; } = 2;
+
+        /// <summary>
         /// Gets or sets the number of time steps.
         /// </summary>
         public int NumTimeSteps { get; set; }
