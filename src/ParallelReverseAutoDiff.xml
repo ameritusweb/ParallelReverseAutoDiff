@@ -139,45 +139,73 @@
             The result of one step through a backward pass.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.InputGradient">
+        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.Results">
             <summary>
-            Gets or sets the input gradient.
+            Gets or sets the backward pass gradients.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.InputGradientLeft">
+        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs">
             <summary>
-            Gets or sets the input gradient for the left input.
+            Gets or sets a value indicating whether the result originated from an operation that has multiple inputs.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.InputGradientRight">
+        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1">
             <summary>
-            Gets or sets the input gradient for the right input.
+            Gets the first item.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.DeepInputGradient">
+        <member name="T:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder">
             <summary>
-            Gets or sets the deep input gradient.
+            The backward result builder.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.BetaGradient">
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
             <summary>
-            Gets or sets the beta gradient.
+            Add input gradient to the backward result.
             </summary>
+            <param name="matrix">The matrix to add.</param>
+            <returns>The backward result builder.</returns>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.GammaGradient">
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
             <summary>
-            Gets or sets the gamma gradient.
+            Add deep input gradient to the backward result.
             </summary>
+            <param name="matrix">The deep matrix to add.</param>
+            <returns>The backward result builder.</returns>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.BiasGradient">
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
             <summary>
-            Gets or sets the bias gradient.
+            Add filters gradient to the backward result.
             </summary>
+            <param name="matrix">The deep matrix to add.</param>
+            <returns>The backward result builder.</returns>
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.BackwardResult.FiltersGradient">
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
             <summary>
-            Gets or sets the filters gradient.
+            Add beta gradient to the backward result.
             </summary>
+            <param name="matrix">The matrix to add.</param>
+            <returns>The backward result builder.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddGammaGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add gamma gradient to the backward result.
+            </summary>
+            <param name="matrix">The matrix to add.</param>
+            <returns>The backward result builder.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBiasGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add bias gradient to the backward result.
+            </summary>
+            <param name="matrix">The matrix to add.</param>
+            <returns>The backward result builder.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.Build">
+            <summary>
+            Builds the backward result.
+            </summary>
+            <returns>The backward result.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation">
             <summary>
@@ -318,7 +346,7 @@
             <param name="layerInfo">The layer info.</param>
             <returns>The computation graph.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperation(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperation(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
             <summary>
             Adds an operation to the computation graph.
             </summary>
@@ -327,7 +355,7 @@
             <param name="layerInfo">The layer info.</param>
             <returns>The computation graph.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.InitializeOperation(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.InitializeOperation(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
             <summary>
             Initialize the computation graph operation.
             </summary>
@@ -377,14 +405,14 @@
             <param name="identifier">An identifier.</param>
             <param name="operationFinder">The gradient.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationAdded(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationAdded(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo)">
             <summary>
             Lifecycle function for when an operation is added to the computation graph.
             </summary>
             <param name="operation">The operation to add.</param>
             <param name="info">The operation info.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationInitialized(ParallelReverseAutoDiff.RMAD.IOperation,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationInitialized(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
             <summary>
             Lifecycle function for when an operation is initialized.
             </summary>
@@ -392,13 +420,13 @@
             <param name="info">The operation info.</param>
             <param name="layerInfo">The layer info.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.SetupDependencies(ParallelReverseAutoDiff.RMAD.IOperation)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.SetupDependencies(ParallelReverseAutoDiff.RMAD.IOperationBase)">
             <summary>
             Setup dependencies for the operation.
             </summary>
             <param name="operation">The operation to setup.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperation)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase)">
             <summary>
             Lifecycle method for when the dependencies are setup for an operation.
             </summary>
@@ -797,7 +825,14 @@
             <param name="gradients">The gradients to accumulate.</param>
             <returns>A matrix with the accumulated gradients.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.GradientUtils.AccumulateBackwardGradients(System.Collections.Generic.List{System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix}})">
+        <member name="M:ParallelReverseAutoDiff.RMAD.GradientUtils.AccumulateGradients(System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.DeepMatrix})">
+            <summary>
+            Accumulates the gradients for multiple deep matrices.
+            </summary>
+            <param name="gradients">The gradients to accumulate.</param>
+            <returns>A deep matrix with the accumulated gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.GradientUtils.AccumulateBackwardGradients(System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.BackwardResult})">
             <summary>
             Accumulate the backward gradients.
             </summary>
@@ -889,11 +924,6 @@
         <member name="P:ParallelReverseAutoDiff.RMAD.IOperationBase.HasNext">
             <summary>
             Gets a value indicating whether there's a next operation in the sequence.
-            </summary>
-        </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.IOperationBase.HasMultipleInputs">
-            <summary>
-            Gets or sets a value indicating whether the operation has multiple inputs.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.IOperationBase.Next">
@@ -1031,7 +1061,7 @@
             Resets the visitor count, accumulated gradients, among other things.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix})">
+        <member name="M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])">
             <summary>
             Send the calculated gradient to the appropriate destination object.
             </summary>
@@ -1469,7 +1499,7 @@
             Gets the parameters for the neural network.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperation)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperationBase)">
             <summary>
             Lookup the parameters for the operation.
             </summary>
@@ -1559,9 +1589,6 @@
         <member name="P:ParallelReverseAutoDiff.RMAD.OperationBase.HasNext">
             <inheritdoc />
         </member>
-        <member name="P:ParallelReverseAutoDiff.RMAD.OperationBase.HasMultipleInputs">
-            <inheritdoc />
-        </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.OperationBase.Next">
             <inheritdoc />
         </member>
@@ -1647,7 +1674,7 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.OperationBase.GetDeepOutput">
             <inheritdoc />
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.OperationBase.AccumulateGradient(System.ValueTuple{ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix})">
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationBase.AccumulateGradient(System.Object[])">
             <inheritdoc />
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.OperationBase.ResultTo(System.Func{System.Int32,System.Object})">
@@ -1682,7 +1709,7 @@
             </summary>
             <param name="id">A unique ID.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor"/> class.
             </summary>
@@ -1701,7 +1728,7 @@
             </summary>
             <returns>The task.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperation,System.Boolean)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase,System.Boolean)">
             <summary>
             Resets the visited counts of the computation graph.
             </summary>
@@ -1749,7 +1776,7 @@
             The operation neural network visitor. Implements the visitor pattern for the backward pass.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperation,System.Int32)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor"/> class.
             </summary>

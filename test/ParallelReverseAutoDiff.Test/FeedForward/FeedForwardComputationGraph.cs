@@ -25,7 +25,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// Lifecycle method to setup the dependencies of the computation graph.
         /// </summary>
         /// <param name="operation">The operation.</param>
-        protected override void DependenciesSetup(IOperation operation)
+        protected override void DependenciesSetup(IOperationBase operation)
         {
             base.DependenciesSetup(operation);
         }

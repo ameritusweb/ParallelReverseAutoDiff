@@ -17,9 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            var op = new MatrixAddThreeOperation();
-            op.HasMultipleInputs = true;
-            return op;
+            return new MatrixAddThreeOperation();
         }
 
         /// <summary>
@@ -63,7 +61,11 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return new BackwardResult { InputGradientLeft = dInputA, InputGradientRight = dInputB }; // You can return either dInputA or dInputB, as they are identical.
+            return new BackwardResultBuilder()
+                .AddInputGradient(dInputA)
+                .AddInputGradient(dInputB)
+                .AddBiasGradient(dInputB)
+                .Build(); // You can return either dInputA or dInputB, as they are identical.
         }
     }
 }

@@ -24,9 +24,9 @@ namespace ParallelReverseAutoDiff.RMAD
             // Initialize properties
             this.Inputs = new List<string>();
             this.Outputs = new List<string>();
-            this.BackwardAdjacentOperations = new List<IOperation?>();
+            this.BackwardAdjacentOperations = new List<IOperationBase?>();
             this.BackwardDependencyCounts = new List<int>();
-            this.AccumulatedGradients = new List<(Matrix?, Matrix?)>();
+            this.AccumulatedGradients = new List<BackwardResult>();
             this.Tasks = new List<Task>();
             this.BackwardDependencies = new List<List<string>>();
             this.VisitedFrom = new List<string>();
@@ -54,10 +54,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public bool HasMultipleInputs { get; set; }
-
-        /// <inheritdoc />
-        public IOperation Next { get; set; }
+        public IOperationBase Next { get; set; }
 
         /// <inheritdoc />
         public string Id { get; set; }
@@ -93,16 +90,16 @@ namespace ParallelReverseAutoDiff.RMAD
         public List<string> VisitedFrom { get; set; }
 
         /// <inheritdoc />
-        public List<IOperation?> BackwardAdjacentOperations { get; set; }
+        public List<IOperationBase?> BackwardAdjacentOperations { get; set; }
 
         /// <inheritdoc />
         public List<int> BackwardDependencyCounts { get; set; }
 
         /// <inheritdoc />
-        public List<(Matrix?, Matrix?)> AccumulatedGradients { get; set; }
+        public List<BackwardResult> AccumulatedGradients { get; set; }
 
         /// <inheritdoc />
-        public (Matrix?, Matrix?) CalculatedGradient { get; set; }
+        public object?[] CalculatedGradient { get; set; }
 
         /// <inheritdoc />
         public int OutputDependencyCount { get; set; }
@@ -183,35 +180,63 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public virtual void AccumulateGradient((Matrix?, Matrix?) dOutput)
+        public virtual void AccumulateGradient(object?[] gradients)
         {
-            var array3D = MatrixUtils.Reassemble(dOutput).ToList();
-            for (int k = array3D.Count; k < this.GradientDestinations.Length; ++k)
-            {
-                array3D.Add(dOutput.Item2);
-            }
-
             if (this.GradientDestinations != null && this.GradientDestinations.Length > 0)
             {
-                for (int d = 0; d < this.GradientDestinations.Length; ++d)
+                for (int dest = 0; dest < this.GradientDestinations.Length; ++dest)
                 {
-                    var gradientResultTo = (Matrix)this.GradientDestinations[d];
+                    var gradientResultTo = this.GradientDestinations[dest];
                     if (gradientResultTo != null)
                     {
-                        var output = array3D[d];
-                        if (output == null)
+                        if (gradientResultTo is Matrix matrixGradientResult)
                         {
-                            throw new InvalidOperationException("The output gradient must be non-null.");
-                        }
-
-                        int numRows = gradientResultTo.Length;
-                        int numCols = gradientResultTo[0].Length;
-                        for (int i = 0; i < numRows; ++i)
-                        {
-                            for (int j = 0; j < numCols; ++j)
+                            if (dest >= gradients.Length)
                             {
-                                gradientResultTo[i][j] += output[i][j];
+                                throw new InvalidOperationException("The output gradient must be non-null.");
                             }
+
+                            var output = (Matrix?)gradients[dest];
+                            if (output == null)
+                            {
+                                throw new InvalidOperationException("The output gradient must be non-null.");
+                            }
+
+                            int numRows = matrixGradientResult.Rows;
+                            int numCols = matrixGradientResult.Cols;
+                            for (int i = 0; i < numRows; ++i)
+                            {
+                                for (int j = 0; j < numCols; ++j)
+                                {
+                                    matrixGradientResult[i][j] += output[i][j];
+                                }
+                            }
+                        }
+                        else if (gradientResultTo is DeepMatrix deepMatrixGradientResult)
+                        {
+                            var output = (DeepMatrix?)gradients[dest];
+                            if (output == null)
+                            {
+                                throw new InvalidOperationException("The output gradient must be non-null.");
+                            }
+
+                            int depth = deepMatrixGradientResult.Depth;
+                            int numRows = deepMatrixGradientResult.Rows;
+                            int numCols = deepMatrixGradientResult.Cols;
+                            for (int d = 0; d < depth; ++d)
+                            {
+                                for (int i = 0; i < numRows; ++i)
+                                {
+                                    for (int j = 0; j < numCols; ++j)
+                                    {
+                                        deepMatrixGradientResult[d][i][j] += output[d][i][j];
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("The output gradient must be a matrix or a deep matrix.");
                         }
                     }
                 }

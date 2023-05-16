@@ -28,15 +28,15 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="op">The operation to lookup.</param>
         /// <returns>The parameters.</returns>
-        protected virtual object[] LookupParameters(IOperation op)
+        protected virtual object[] LookupParameters(IOperationBase op)
         {
             object[] parameters = op.Parameters;
             object[] parametersToReturn = new object[parameters.Length];
             for (int j = 0; j < parameters.Length; ++j)
             {
-                if (parameters[j] is IOperation)
+                if (parameters[j] is IOperationBase)
                 {
-                    parametersToReturn[j] = ((IOperation)parameters[j]).GetOutput();
+                    parametersToReturn[j] = ((IOperationBase)parameters[j]).GetOutput();
                 }
                 else
                 {

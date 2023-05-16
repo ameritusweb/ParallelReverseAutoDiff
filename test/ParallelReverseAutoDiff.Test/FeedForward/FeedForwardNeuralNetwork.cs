@@ -197,7 +197,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
                 .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph["embeddedInput_0_0"] : this.computationGraph[$"h_act_0_{x.Layer - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
-            IOperation? backwardStartOperation = null;
+            IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
@@ -216,7 +216,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
                 throw new Exception("Start operation should not be null.");
             }
 
-            IOperation? currOp = null;
+            IOperationBase? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
@@ -261,9 +261,9 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
 
             Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = lossFunction.Backward(this.Output).InputGradient ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
-            IOperation? backwardStartOperation = null;
+            IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];
             if (gradientOfLossWrtOutput[0][0] != 0.0d)
             {

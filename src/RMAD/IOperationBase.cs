@@ -37,14 +37,9 @@ namespace ParallelReverseAutoDiff.RMAD
         bool HasNext { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the operation has multiple inputs.
-        /// </summary>
-        bool HasMultipleInputs { get; set; }
-
-        /// <summary>
         /// Gets or sets the reference to the next operation in the sequence.
         /// </summary>
-        IOperation Next { get; set; }
+        IOperationBase Next { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the operation is complete.
@@ -89,7 +84,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the operations that are next when traversing the computational graph via the backward pass.
         /// </summary>
-        List<IOperation?> BackwardAdjacentOperations { get; set; }
+        List<IOperationBase?> BackwardAdjacentOperations { get; set; }
 
         /// <summary>
         /// Gets or sets the number of operations that take this operation's output as input based on the timestep that you start at when doing the backward pass.
@@ -109,12 +104,12 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the accumulated gradients from all output dependent operations.
         /// </summary>
-        List<(Matrix?, Matrix?)> AccumulatedGradients { get; set; }
+        List<BackwardResult> AccumulatedGradients { get; set; }
 
         /// <summary>
         /// Gets or sets the accumulated gradients from all backward passes through this operation node.
         /// </summary>
-        (Matrix?, Matrix?) CalculatedGradient { get; set; }
+        object?[] CalculatedGradient { get; set; }
 
         /// <summary>
         /// Gets or sets, for the current backward pass, the number of operations that take this operation's output as input.
@@ -180,7 +175,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Send the calculated gradient to the appropriate destination object.
         /// </summary>
         /// <param name="dOutput">The calculated gradients to accumulate.</param>
-        void AccumulateGradient((Matrix?, Matrix?) dOutput);
+        void AccumulateGradient(object?[] dOutput);
 
         /// <summary>
         /// Copies the result of the operation to the specified destination.

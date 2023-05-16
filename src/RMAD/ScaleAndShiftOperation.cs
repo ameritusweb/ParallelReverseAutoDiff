@@ -93,7 +93,11 @@ namespace ParallelReverseAutoDiff.RMAD
             this.GradientBeta = gradientBeta;
             this.GradientGamma = gradientGamma;
 
-            return new BackwardResult { InputGradient = gradientInput, BetaGradient = gradientBeta, GammaGradient = gradientGamma };
+            return new BackwardResultBuilder()
+                .AddInputGradient(gradientInput)
+                .AddBetaGradient(gradientBeta)
+                .AddGammaGradient(gradientGamma)
+                .Build();
         }
     }
 }

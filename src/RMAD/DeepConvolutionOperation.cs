@@ -183,7 +183,11 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return new BackwardResult { DeepInputGradient = dInput, FiltersGradient = dFilters, BiasGradient = biasGradient };
+            return new BackwardResultBuilder()
+                .AddDeepInputGradient(dInput)
+                .AddFiltersGradient(dFilters)
+                .AddBiasGradient(biasGradient)
+                .Build();
         }
     }
 }

@@ -11,43 +11,24 @@ namespace ParallelReverseAutoDiff.RMAD
     public class BackwardResult
     {
         /// <summary>
-        /// Gets or sets the input gradient.
+        /// Gets or sets the backward pass gradients.
         /// </summary>
-        public Matrix? InputGradient { get; set; }
+        public object?[] Results { get; set; }
 
         /// <summary>
-        /// Gets or sets the input gradient for the left input.
+        /// Gets or sets a value indicating whether the result originated from an operation that has multiple inputs.
         /// </summary>
-        public Matrix? InputGradientLeft { get; set; }
+        public bool HasMultipleInputs { get; set; }
 
         /// <summary>
-        /// Gets or sets the input gradient for the right input.
+        /// Gets the first item.
         /// </summary>
-        public Matrix? InputGradientRight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the deep input gradient.
-        /// </summary>
-        public DeepMatrix? DeepInputGradient { get; set; }
-
-        /// <summary>
-        /// Gets or sets the beta gradient.
-        /// </summary>
-        public Matrix? BetaGradient { get; set; }
-
-        /// <summary>
-        /// Gets or sets the gamma gradient.
-        /// </summary>
-        public Matrix? GammaGradient { get; set; }
-
-        /// <summary>
-        /// Gets or sets the bias gradient.
-        /// </summary>
-        public Matrix? BiasGradient { get; set; }
-
-        /// <summary>
-        /// Gets or sets the filters gradient.
-        /// </summary>
-        public DeepMatrix? FiltersGradient { get; set; }
+        public object? Item1
+        {
+            get
+            {
+                return this.Results[0];
+            }
+        }
     }
 }

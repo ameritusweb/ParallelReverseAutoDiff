@@ -88,7 +88,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return new BackwardResult { InputGradient = gradient };
+            return new BackwardResultBuilder()
+                .AddInputGradient(gradient)
+                .Build();
         }
     }
 }

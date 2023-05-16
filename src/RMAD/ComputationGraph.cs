@@ -19,10 +19,10 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
-        private readonly ConcurrentDictionary<string, IOperation> operations = new ConcurrentDictionary<string, IOperation>();
+        private readonly ConcurrentDictionary<string, IOperationBase> operations = new ConcurrentDictionary<string, IOperationBase>();
         private readonly NeuralNetwork neuralNetwork;
-        private IOperation? startOperation;
-        private IOperation? currentOperation;
+        private IOperationBase? startOperation;
+        private IOperationBase? currentOperation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComputationGraph"/> class.
@@ -36,7 +36,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets the start operation.
         /// </summary>
-        public IOperation? StartOperation
+        public IOperationBase? StartOperation
         {
             get
             {
@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets the current operation.
         /// </summary>
-        public IOperation? CurrentOperation
+        public IOperationBase? CurrentOperation
         {
             get
             {
@@ -60,7 +60,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="operationIdentifier">The operation identifier.</param>
         /// <returns>The operation.</returns>
-        public IOperation this[string operationIdentifier]
+        public IOperationBase this[string operationIdentifier]
         {
             get
             {
@@ -281,7 +281,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new InvalidOperationException($"Instantiate method should exist on operation of type {type.Name}");
             }
 
-            IOperation operation = (IOperation)(instantiate.Invoke(null, new object[] { this.neuralNetwork }) ?? throw new Exception("Instantiate method should return a non-null operation."));
+            IOperationBase operation = (IOperationBase)(instantiate.Invoke(null, new object[] { this.neuralNetwork }) ?? throw new Exception("Instantiate method should return a non-null operation."));
             this.AddOperation(operation, info, layerInfo);
             return this;
         }
@@ -293,7 +293,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="info">The operation info.</param>
         /// <param name="layerInfo">The layer info.</param>
         /// <returns>The computation graph.</returns>
-        public ComputationGraph AddOperation(IOperation operation, OperationInfo info, LayerInfo layerInfo)
+        public ComputationGraph AddOperation(IOperationBase operation, OperationInfo info, LayerInfo layerInfo)
         {
             this.OperationAdded(operation, info);
             this.InitializeOperation(operation, info, layerInfo);
@@ -308,7 +308,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="operation">The operation.</param>
         /// <param name="info">The operation info.</param>
         /// <param name="layerInfo">The layer info.</param>
-        protected void InitializeOperation(IOperation operation, OperationInfo info, LayerInfo layerInfo)
+        protected void InitializeOperation(IOperationBase operation, OperationInfo info, LayerInfo layerInfo)
         {
             this.OperationInitialized(operation, info, layerInfo);
         }
@@ -378,7 +378,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="operation">The operation to add.</param>
         /// <param name="info">The operation info.</param>
-        protected virtual void OperationAdded(IOperation operation, OperationInfo info)
+        protected virtual void OperationAdded(IOperationBase operation, OperationInfo info)
         {
             if (this.startOperation == null)
             {
@@ -402,7 +402,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="operation">The operation.</param>
         /// <param name="info">The operation info.</param>
         /// <param name="layerInfo">The layer info.</param>
-        protected virtual void OperationInitialized(IOperation operation, OperationInfo info, LayerInfo layerInfo)
+        protected virtual void OperationInitialized(IOperationBase operation, OperationInfo info, LayerInfo layerInfo)
         {
             operation.InitializeFrom(info, this.gradients, layerInfo);
         }
@@ -411,7 +411,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Setup dependencies for the operation.
         /// </summary>
         /// <param name="operation">The operation to setup.</param>
-        protected void SetupDependencies(IOperation operation)
+        protected void SetupDependencies(IOperationBase operation)
         {
             this.DependenciesSetup(operation);
         }
@@ -420,7 +420,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Lifecycle method for when the dependencies are setup for an operation.
         /// </summary>
         /// <param name="operation">The operation.</param>
-        protected virtual void DependenciesSetup(IOperation operation)
+        protected virtual void DependenciesSetup(IOperationBase operation)
         {
             object[] parameters = new object[operation.Inputs.Count];
             for (int j = 0; j < operation.Inputs.Count; ++j)
@@ -442,7 +442,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     // Get the corresponding value from the dictionary using the input name
                     var finder = this.operationFinders[inputName](operation.LayerInfo);
-                    if (finder is IOperation op)
+                    if (finder is IOperationBase op)
                     {
                         op.Outputs.Add(operation.SpecificId);
                         operation.BackwardAdjacentOperations.Add(op);

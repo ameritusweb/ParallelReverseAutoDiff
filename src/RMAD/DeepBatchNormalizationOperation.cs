@@ -122,7 +122,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return new BackwardResult { DeepInputGradient = dInput };
+            return new BackwardResultBuilder()
+                .AddDeepInputGradient(dInput)
+                .Build();
         }
     }
 }

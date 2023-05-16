@@ -30,7 +30,7 @@
               "id": "h_add",
               "type": "MatrixAddOperation",
               "inputs": [ "w1_currentInput", "B[layerIndex]" ],
-              "gradientResultTo": [ null, null, "DB[layerIndex]" ]
+              "gradientResultTo": [ null, "DB[layerIndex]" ]
             },
             {
               "id": "intermediate_h_1",
