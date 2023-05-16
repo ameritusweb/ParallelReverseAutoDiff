@@ -12,9 +12,9 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BackwardResultBuilder
     {
-        private List<object> backwardResults = new List<object>();
-        private int inputGradientCount = 0;
-        private int deepInputGradientCount = 0;
+        private readonly List<object> backwardResults = new List<object>();
+        private int inputGradientCount;
+        private int deepInputGradientCount;
 
         /// <summary>
         /// Add input gradient to the backward result.
@@ -90,7 +90,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result.</returns>
         public BackwardResult Build()
         {
-            return new BackwardResult() { Results = this.backwardResults.ToArray(), HasMultipleInputs = this.inputGradientCount > 1 || this.deepInputGradientCount > 1 };
+            return new BackwardResult { Results = this.backwardResults.ToArray(), HasMultipleInputs = this.inputGradientCount > 1 || this.deepInputGradientCount > 1 };
         }
     }
 }
