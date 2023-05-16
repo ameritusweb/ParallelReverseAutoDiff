@@ -16,6 +16,11 @@ namespace ParallelReverseAutoDiff.RMAD
         Weight,
 
         /// <summary>
+        /// A bias.
+        /// </summary>
+        Bias,
+
+        /// <summary>
         /// A gradient.
         /// </summary>
         Gradient,

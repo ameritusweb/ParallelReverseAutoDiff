@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     public abstract class ComputationGraph
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.RMAD";
-        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weights = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weightsAndBiases = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
@@ -81,7 +81,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 return type switch
                 {
-                    MatrixType.Weight => this.weights[identifier](index),
+                    MatrixType.Weight => this.weightsAndBiases[identifier](index),
+                    MatrixType.Bias => this.weightsAndBiases[identifier](index),
                     MatrixType.Gradient => this.gradients[identifier](index),
                     MatrixType.Intermediate => this.intermediates[identifier](index),
                     _ => throw new ArgumentException("Invalid matrix type."),
@@ -153,6 +154,127 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Construct the computation graph from a dual layers architecture with layers.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <returns>The computation graph.</returns>
+        public ComputationGraph ConstructFromArchitecture(DualLayersJsonArchitecture architecture, int numLayers)
+        {
+            var layerInfo = LayerInfo.Empty;
+            foreach (var timeStep in architecture.TimeSteps)
+            {
+                foreach (var operationInfo in timeStep.StartOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+
+                for (int l = 0; l < numLayers; l++)
+                {
+                    layerInfo.Layer = l;
+                    foreach (var layer in timeStep.FirstLayers)
+                    {
+                        foreach (var operationInfo in layer.Operations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+
+                layerInfo.Layer = 0;
+
+                foreach (var operationInfo in timeStep.MiddleOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+
+                for (int l = 0; l < numLayers; l++)
+                {
+                    layerInfo.Layer = l;
+                    foreach (var layer in timeStep.SecondLayers)
+                    {
+                        foreach (var operationInfo in layer.Operations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+
+                layerInfo.Layer = 0;
+
+                foreach (var operationInfo in timeStep.EndOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Construct the computation graph from a dual layers architecture with time steps and layers.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <returns>The computation graph.</returns>
+        public ComputationGraph ConstructFromArchitecture(DualLayersJsonArchitecture architecture, int numTimeSteps, int numLayers)
+        {
+            var layerInfo = LayerInfo.Empty;
+            for (int t = 0; t < numTimeSteps; t++)
+            {
+                layerInfo.TimeStep = t;
+                foreach (var timeStep in architecture.TimeSteps)
+                {
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.FirstLayers)
+                        {
+                            foreach (var operationInfo in layer.Operations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    foreach (var operationInfo in timeStep.MiddleOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.SecondLayers)
+                        {
+                            foreach (var operationInfo in layer.Operations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Construct the computation graph from an architecture with time steps and layers.
         /// </summary>
         /// <param name="architecture">The architecture.</param>
@@ -215,6 +337,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public ComputationGraph AddWeight(string identifier, Func<LayerInfo, Matrix> matrix)
         {
             this.WeightAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a bias to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The bias.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddBias(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.BiasAdded(identifier, matrix);
             return this;
         }
 
@@ -330,7 +464,17 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="matrix">The weight.</param>
         protected virtual void WeightAdded(string identifier, Func<LayerInfo, Matrix> matrix)
         {
-            this.weights.TryAdd(identifier, matrix);
+            this.weightsAndBiases.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when a bias is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The bias.</param>
+        protected virtual void BiasAdded(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.weightsAndBiases.TryAdd(identifier, matrix);
         }
 
         /// <summary>
@@ -454,10 +598,10 @@ namespace ParallelReverseAutoDiff.RMAD
                         parameters[j] = finder;
                     }
                 }
-                else if (this.weights.ContainsKey(inputName))
+                else if (this.weightsAndBiases.ContainsKey(inputName))
                 {
                     // Get the corresponding value from the dictionary using the input name
-                    var p = this.weights[inputName](operation.LayerInfo);
+                    var p = this.weightsAndBiases[inputName](operation.LayerInfo);
                     operation.BackwardAdjacentOperations.Add(null);
                     parameters[j] = p;
                 }
