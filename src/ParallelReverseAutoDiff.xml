@@ -572,6 +572,12 @@
             The convolution operation.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation"/> class.
+            </summary>
+            <param name="padding">The padding to be applied.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
             <summary>
             A common method for instantiating an operation.
@@ -579,14 +585,13 @@
             <param name="net">The neural network.</param>
             <returns>The instantiated operation.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,System.Int32)">
+        <member name="M:ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)">
             <summary>
             The forward pass of the operation.
             </summary>
             <param name="input">The input for the operation.</param>
             <param name="filters">The filters for the operation.</param>
             <param name="biases">The biases for the operation.</param>
-            <param name="padding">The padding for the operation.</param>
             <returns>The output for the operation.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
@@ -1534,6 +1539,11 @@
         <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.PoolSize">
             <summary>
             Gets or sets the pool size for the max pool operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding">
+            <summary>
+            Gets or sets the convolution padding for the convolution operation.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NumTimeSteps">

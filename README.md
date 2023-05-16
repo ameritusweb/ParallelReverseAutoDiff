@@ -440,11 +440,12 @@ this.computationGraph
 
 Then populate the backward dependency counts by running the following code. It only has to be run once to set up the backward dependency counts.
 ```c#
-for (int t = numTimeSteps - 1; t >= 0; t--) // if there are multiple timesteps
+IOperationBase? backwardStartOperation = null;
+for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 {
-    backwardStartOperation = operationsMap[$"output_t_{t}"]; // the backward start operation
+    backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
     OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
-    await opVisitor.TraverseAsync(); // sets the backward dependency counts
+    await opVisitor.TraverseAsync();
     await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
 }
 ```
@@ -452,7 +453,7 @@ for (int t = numTimeSteps - 1; t >= 0; t--) // if there are multiple timesteps
 ### Run the forward pass
 ```c#
 var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
-IOperation? currOp = null;
+IOperationBase? currOp = null;
 do
 {
     var parameters = this.LookupParameters(op);
@@ -483,7 +484,7 @@ Plug the result in as the backward input for the backward start operation.
 
 ### Run the backward pass utilizing inherent parallelization
 ```c#
-IOperation? backwardStartOperation = null;
+IOperationBase? backwardStartOperation = null;
 for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 {
     backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
@@ -502,8 +503,8 @@ for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 
 ### Using CUDA operations
 ```c#
+Cudablas.Instance.DeviceId = 0; // set the GPU to use, defaults to 0
 Cudablas.Instance.Initialize(); // initialize the CUDA library
-Cudablas.Instance.SetDevice(0); // set the device to use, defaults to 0
 // ... <Run CUDA operations> ...
 Cudablas.Instance.Dispose(); // dispose the CUDA library
 ```
