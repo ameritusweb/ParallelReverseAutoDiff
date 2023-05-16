@@ -219,6 +219,19 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Set the column at the specified index to the specified value.
+        /// </summary>
+        /// <param name="columnIndex">The column index.</param>
+        /// <param name="value">The value to set.</param>
+        public void SetColumn(int columnIndex, double value)
+        {
+            for (int i = 0; i < this.Rows; i++)
+            {
+                this[i, columnIndex] = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the enumerator for the matrix.
         /// </summary>
         /// <returns>The enumerator for the matrix.</returns>

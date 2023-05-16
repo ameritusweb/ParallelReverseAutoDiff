@@ -21,6 +21,8 @@ BatchNormalizationOperation
 
 CudaMatrixMultiplyOperation - Leverages the GPU for fast computation.
 
+GELUOperation
+
 HadamardProductOperation
 
 LayerNormalizationOperation
@@ -46,6 +48,10 @@ SigmoidOperation
 SoftmaxOperation
 
 StretchedSigmoidOperation
+
+SwigLUOperation
+
+SwishOperation
 
 TanhOperation
 

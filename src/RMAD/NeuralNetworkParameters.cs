@@ -43,6 +43,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public int ConvolutionPadding { get; set; } = 2;
 
         /// <summary>
+        /// Gets or sets the beta value for the SwigLU operation.
+        /// </summary>
+        public double SwigLUBeta { get; set; } = 1d;
+
+        /// <summary>
         /// Gets or sets the number of time steps.
         /// </summary>
         public int NumTimeSteps { get; set; }
