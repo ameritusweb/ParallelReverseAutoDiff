@@ -91,7 +91,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Construct the computation graph from an architecture with no layers.
+        /// Construct the computation graph from an architecture with no layers and no temporal component.
         /// </summary>
         /// <param name="architecture">The architecture.</param>
         /// <returns>The computation graph.</returns>
@@ -115,7 +115,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Construct the computation graph from an architecture with layers.
+        /// Construct the computation graph from an architecture with layers and no temporal component.
         /// </summary>
         /// <param name="architecture">The architecture.</param>
         /// <param name="numLayers">The number of layers.</param>
@@ -154,7 +154,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Construct the computation graph from a dual layers architecture with layers.
+        /// Construct the computation graph from a dual layers architecture with layers and no temporal component.
         /// </summary>
         /// <param name="architecture">The architecture.</param>
         /// <param name="numLayers">The number of layers.</param>
@@ -192,6 +192,83 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     layerInfo.Layer = l;
                     foreach (var layer in timeStep.SecondLayers)
+                    {
+                        foreach (var operationInfo in layer.Operations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+
+                layerInfo.Layer = 0;
+
+                foreach (var operationInfo in timeStep.EndOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Construct the computation graph from a triple layers architecture with layers and no temporal component.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <returns>The computation graph.</returns>
+        public ComputationGraph ConstructFromArchitecture(TripleLayersJsonArchitecture architecture, int numLayers)
+        {
+            var layerInfo = LayerInfo.Empty;
+            foreach (var timeStep in architecture.TimeSteps)
+            {
+                foreach (var operationInfo in timeStep.StartOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+
+                for (int l = 0; l < numLayers; l++)
+                {
+                    layerInfo.Layer = l;
+                    foreach (var layer in timeStep.FirstLayers)
+                    {
+                        foreach (var operationInfo in layer.Operations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+
+                layerInfo.Layer = 0;
+
+                foreach (var operationInfo in timeStep.PostFirstOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+
+                for (int l = 0; l < numLayers; l++)
+                {
+                    layerInfo.Layer = l;
+                    foreach (var layer in timeStep.SecondLayers)
+                    {
+                        foreach (var operationInfo in layer.Operations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+
+                layerInfo.Layer = 0;
+
+                foreach (var operationInfo in timeStep.PostSecondOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+
+                for (int l = 0; l < numLayers; l++)
+                {
+                    layerInfo.Layer = l;
+                    foreach (var layer in timeStep.ThirdLayers)
                     {
                         foreach (var operationInfo in layer.Operations)
                         {
@@ -254,6 +331,88 @@ namespace ParallelReverseAutoDiff.RMAD
                     {
                         layerInfo.Layer = l;
                         foreach (var layer in timeStep.SecondLayers)
+                        {
+                            foreach (var operationInfo in layer.Operations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Construct the computation graph from a triple layers architecture with time steps and layers.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <returns>The computation graph.</returns>
+        public ComputationGraph ConstructFromArchitecture(TripleLayersJsonArchitecture architecture, int numTimeSteps, int numLayers)
+        {
+            var layerInfo = LayerInfo.Empty;
+            for (int t = 0; t < numTimeSteps; t++)
+            {
+                layerInfo.TimeStep = t;
+                foreach (var timeStep in architecture.TimeSteps)
+                {
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.FirstLayers)
+                        {
+                            foreach (var operationInfo in layer.Operations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    foreach (var operationInfo in timeStep.PostFirstOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.SecondLayers)
+                        {
+                            foreach (var operationInfo in layer.Operations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    foreach (var operationInfo in timeStep.PostSecondOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.ThirdLayers)
                         {
                             foreach (var operationInfo in layer.Operations)
                             {
