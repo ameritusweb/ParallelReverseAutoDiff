@@ -180,6 +180,13 @@
             <param name="matrix">The deep matrix to add.</param>
             <returns>The backward result builder.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddWeightGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add weight gradient to the backward result.
+            </summary>
+            <param name="matrix">The matrix to add.</param>
+            <returns>The backward result builder.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
             <summary>
             Add beta gradient to the backward result.
@@ -818,6 +825,28 @@
         <member name="M:ParallelReverseAutoDiff.RMAD.FlattenOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.GELUOperation">
+            <summary>
+            Performs the forward and backward operations for the GELU activation function.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.GELUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common factory method for instantiating this operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.GELUOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the GELU activation function.
+            </summary>
+            <param name="input">The input to the GELU operation.</param>
+            <returns>The output of the GELU operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.GELUOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.GradientUtils">
             <summary>
             Gradient utilities for reverse mode automatic differentiation.
@@ -1306,6 +1335,13 @@
             <param name="buffer">The buffer.</param>
             <param name="transpose">Whether to transpose the matrix.</param>
         </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.SetColumn(System.Int32,System.Double)">
+            <summary>
+            Set the column at the specified index to the specified value.
+            </summary>
+            <param name="columnIndex">The column index.</param>
+            <param name="value">The value to set.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.Matrix.GetEnumerator">
             <summary>
             Gets the enumerator for the matrix.
@@ -1544,6 +1580,11 @@
         <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding">
             <summary>
             Gets or sets the convolution padding for the convolution operation.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.SwigLUBeta">
+            <summary>
+            Gets or sets the beta value for the SwigLU operation.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NumTimeSteps">
@@ -1939,6 +1980,60 @@
             <returns>The output of the stretched sigmoid operation.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.SwigLUOperation">
+            <summary>
+            SwigLU operation for a Matrix.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwigLUOperation.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.SwigLUOperation"/> class.
+            </summary>
+            <param name="beta">beta.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwigLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common factory method for instantiating this operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwigLUOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the SwigLU operation.
+            </summary>
+            <param name="input">The input matrix.</param>
+            <param name="w">Weight w.</param>
+            <param name="v">Weight v.</param>
+            <param name="b">Bias b.</param>
+            <param name="c">Bias c.</param>
+            <returns>The output matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwigLUOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.SwishOperation">
+            <summary>
+            Performs the forward and backward operations for the Swish activation function.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwishOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common factory method for instantiating this operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the Swish activation function.
+            </summary>
+            <param name="input">The input to the Swish operation.</param>
+            <returns>The output of the Swish operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.SwishOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
             <inheritdoc />
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.TanhOperation">
