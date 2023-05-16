@@ -1,3 +1,166 @@
 ﻿{
-
+  "timeSteps": [
+    {
+      "startOperations": [],
+      "firstLayers": [
+        {
+          "operations": [
+            {
+              "id": "convolvedInput1",
+              "type": "DeepConvolutionOperation",
+              "inputs": [ "currentInput", "Cf1[layerIndex]", "Cb1[layerIndex]" ],
+              "gradientResultTo": [ null, "DCf1[layerIndex]", "DCb1[layerIndex]" ]
+            },
+            {
+              "id": "batchNormalized1",
+              "type": "DeepBatchNormalizationOperation",
+              "inputs": [ "convolvedInput1" ]
+            },
+            {
+              "id": "scaledAndShifted1",
+              "type": "DeepScaleAndShiftOperation",
+              "inputs": [ "batchNormalized1", "Sc1[layerIndex]", "Sh1[layerIndex]" ],
+              "gradientResultTo": [ null, "DSc1[layerIndex]", "DSh1[layerIndex]" ]
+            },
+            {
+              "id": "activated1",
+              "type": "DeepLeakyReLUOperation",
+              "inputs": [ "scaledAndShifted1" ]
+            }
+          ]
+        }
+      ],
+      "middleOperations": [
+        {
+          "id": "maxPooling1",
+          "type": "DeepMaxPoolOperation",
+          "inputs": [ "ActivatedFromLastLayer1" ]
+        }
+      ],
+      "secondLayers": [
+        {
+          "operations": [
+            {
+              "id": "convolvedInput2",
+              "type": "DeepConvolutionOperation",
+              "inputs": [ "currentInputOrMaxPooling", "Cf2[layerIndex]", "Cb2[layerIndex]" ],
+              "gradientResultTo": [ null, "DCf2[layerIndex]", "DCb2[layerIndex]" ]
+            },
+            {
+              "id": "batchNormalized2",
+              "type": "DeepBatchNormalizationOperation",
+              "inputs": [ "convolvedInput2" ]
+            },
+            {
+              "id": "scaledAndShifted2",
+              "type": "DeepScaleAndShiftOperation",
+              "inputs": [ "batchNormalized2", "Sc2[layerIndex]", "Sh2[layerIndex]" ],
+              "gradientResultTo": [ null, "DSc2[layerIndex]", "DSh2[layerIndex]" ]
+            },
+            {
+              "id": "activated2",
+              "type": "DeepLeakyReLUOperation",
+              "inputs": [ "scaledAndShifted2" ]
+            }
+          ]
+        }
+      ],
+      "endOperations": [
+        {
+          "id": "maxPooling2",
+          "type": "DeepMaxPoolOperation",
+          "inputs": [ "ActivatedFromLastLayer2" ]
+        },
+        {
+          "id": "flatten",
+          "type": "FlattenOperation",
+          "inputs": [ "maxPooling2" ]
+        },
+        {
+          "id": "v_flatten",
+          "type": "CudaMatrixMultiplyOperation",
+          "inputs": [ "V1", "flatten" ],
+          "gradientResultTo": [ "DV1", null ]
+        },
+        {
+          "id": "v_h_b",
+          "type": "MatrixAddOperation",
+          "inputs": [ "v_flatten", "Bo1" ],
+          "gradientResultTo": [ null, "DBo1" ]
+        },
+        {
+          "id": "v_h_b_norm",
+          "type": "BatchNormalizationOperation",
+          "inputs": [ "v_h_b" ]
+        },
+        {
+          "id": "v_h_b_scale_shift",
+          "type": "ScaleAndShiftOperation",
+          "inputs": [ "v_h_b_norm", "ScEnd1", "ShEnd1" ],
+          "gradientResultTo": [ null, "DScEnd1", "DShEnd1" ]
+        },
+        {
+          "id": "v_h_b_activate",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "v_h_b_scale_shift" ]
+        },
+        {
+          "id": "v_h_b_mult",
+          "type": "CudaMatrixMultiplyOperation",
+          "inputs": [ "V2", "v_h_b_activate" ],
+          "gradientResultTo": [ "DV2", null ]
+        },
+        {
+          "id": "v_h_b_add",
+          "type": "MatrixAddOperation",
+          "inputs": [ "v_h_b_mult", "Bo2" ],
+          "gradientResultTo": [ null, "DBo2" ]
+        },
+        {
+          "id": "v_h_b_norm2",
+          "type": "BatchNormalizationOperation",
+          "inputs": [ "v_h_b_add" ]
+        },
+        {
+          "id": "v_h_b_scale_shift2",
+          "type": "ScaleAndShiftOperation",
+          "inputs": [ "v_h_b_norm2", "ScEnd2", "ShEnd2" ],
+          "gradientResultTo": [ null, "DScEnd2", "DShEnd2" ]
+        },
+        {
+          "id": "v_h_b_activate2",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "v_h_b_scale_shift2" ]
+        },
+        {
+          "id": "v_h_b_mult_final",
+          "type": "CudaMatrixMultiplyOperation",
+          "inputs": [ "VFinal", "v_h_b_activate2" ],
+          "gradientResultTo": [ "DVFinal", null ]
+        },
+        {
+          "id": "v_h_b_add_final",
+          "type": "MatrixAddOperation",
+          "inputs": [ "v_h_b_mult_final", "BoFinal" ],
+          "gradientResultTo": [ null, "DBoFinal" ]
+        },
+        {
+          "id": "v_h_b_norm_final",
+          "type": "BatchNormalizationOperation",
+          "inputs": [ "v_h_b_add_final" ]
+        },
+        {
+          "id": "v_h_b_scale_shift_final",
+          "type": "ScaleAndShiftOperation",
+          "inputs": [ "v_h_b_norm_final", "ScFinal", "ShFinal" ],
+          "gradientResultTo": [ null, "DScFinal", "DShFinal" ]
+        },
+        {
+          "id": "v_h_b_activate_final",
+          "type": "SoftmaxOperation",
+          "inputs": [ "v_h_b_scale_shift_final" ]
+        }
+      ]
+    }
+  ]
 }
