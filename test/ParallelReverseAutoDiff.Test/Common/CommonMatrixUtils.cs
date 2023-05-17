@@ -96,6 +96,23 @@ namespace ParallelReverseAutoDiff.Test.Common
         /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
         /// <param name="minValue">The minimum threshold value.</param>
         /// <returns>The clipped gradients.</returns>
+        public static DeepMatrix[] ClipGradients(DeepMatrix[] gradients, double clipValue, double? minValue)
+        {
+            int dim = gradients.Length;
+            for (int d = 0; d < dim; ++d)
+            {
+                gradients[d] = ClipGradients(gradients[d], clipValue, minValue);
+            }
+            return gradients;
+        }
+
+        /// <summary>
+        /// Clips gradients to within a certain clip value and applies a minimum threshold value.
+        /// </summary>
+        /// <param name="gradients">The gradients to clip.</param>
+        /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+        /// <param name="minValue">The minimum threshold value.</param>
+        /// <returns>The clipped gradients.</returns>
         public static DeepMatrix ClipGradients(DeepMatrix gradients, double clipValue, double? minValue)
         {
             if (minValue == null)
@@ -644,6 +661,27 @@ namespace ParallelReverseAutoDiff.Test.Common
                     matrix[layerIndex][f] = new DeepMatrix(depth, numRows, numCols);
                     matrix[layerIndex][f].Initialize(InitializationType.Xavier);
                 }
+            }
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
+        /// </summary>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="numFilters">The number of filters.</param>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>The initialized random matrix.</returns>
+        public static DeepMatrix[] InitializeRandomMatrixWithXavierInitialization(int numFilters, int depth, int numRows, int numCols)
+        {
+            DeepMatrix[] matrix = new DeepMatrix[numFilters];
+            for (int f = 0; f < numFilters; ++f)
+            {
+                matrix[f] = new DeepMatrix(depth, numRows, numCols);
+                matrix[f].Initialize(InitializationType.Xavier);
             }
 
             return matrix;
