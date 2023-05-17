@@ -6,22 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParallelReverseAutoDiff.Test.FeedForward
+namespace ParallelReverseAutoDiff.Test.Convolutional
 {
     /// <summary>
     /// The hidden layer.
     /// </summary>
     public class HiddenLayer
     {
-        private readonly FeedForwardNeuralNetwork feedForwardNeuralNetwork;
+        private readonly ConvolutionalNeuralNetwork convolutionalNeuralNetwork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HiddenLayer"/> class.
         /// </summary>
-        /// <param name="feedForwardNeuralNetwork">The neural network.</param>
-        public HiddenLayer(FeedForwardNeuralNetwork feedForwardNeuralNetwork)
+        /// <param name="convolutionalNeuralNetwork">The neural network.</param>
+        public HiddenLayer(ConvolutionalNeuralNetwork convolutionalNeuralNetwork)
         {
-            this.feedForwardNeuralNetwork = feedForwardNeuralNetwork;
+            this.convolutionalNeuralNetwork = convolutionalNeuralNetwork;
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// </summary>
         public void Initialize()
         {
-            this.W = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.feedForwardNeuralNetwork.HiddenSize, this.feedForwardNeuralNetwork.HiddenSize);
-            this.B = CommonMatrixUtils.InitializeZeroMatrix(this.feedForwardNeuralNetwork.HiddenSize, 1);
-            this.H = CommonMatrixUtils.InitializeZeroMatrix(this.feedForwardNeuralNetwork.HiddenSize, 1);
+            this.W = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.HiddenSize, this.convolutionalNeuralNetwork.HiddenSize);
+            this.B = CommonMatrixUtils.InitializeZeroMatrix(this.convolutionalNeuralNetwork.HiddenSize, 1);
+            this.H = CommonMatrixUtils.InitializeZeroMatrix(this.convolutionalNeuralNetwork.HiddenSize, 1);
             this.MW = new Matrix(this.W.Rows, this.W.Cols);
             this.VW = new Matrix(this.W.Rows, this.W.Cols);
             this.MB = new Matrix(this.B.Rows, this.B.Cols);
@@ -97,8 +97,8 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// </summary>
         public void ClipGradients()
         {
-            this.DW = CommonMatrixUtils.ClipGradients(this.DW, this.feedForwardNeuralNetwork.ClipValue, null);
-            this.DB = CommonMatrixUtils.ClipGradients(this.DB, this.feedForwardNeuralNetwork.ClipValue, null);
+            this.DW = CommonMatrixUtils.ClipGradients(this.DW, this.convolutionalNeuralNetwork.ClipValue, null);
+            this.DB = CommonMatrixUtils.ClipGradients(this.DB, this.convolutionalNeuralNetwork.ClipValue, null);
         }
 
         /// <summary>

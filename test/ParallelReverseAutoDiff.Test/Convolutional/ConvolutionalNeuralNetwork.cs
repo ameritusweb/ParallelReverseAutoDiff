@@ -13,10 +13,10 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         private const string ARCHITECTURE = "ConvolutionalArchitecture";
         private OutputLayer outputLayer;
 
-        private FeedForwardComputationGraph computationGraph;
+        private ConvolutionalComputationGraph computationGraph;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FeedForwardNeuralNetwork"/> class.
+        /// Initializes a new instance of the <see cref="ConvolutionalNeuralNetwork"/> class.
         /// </summary>
         /// <param name="inputSize">The input size.</param>
         /// <param name="hiddenSize">The hidden size.</param>
@@ -25,13 +25,16 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public FeedForwardNeuralNetwork(int inputSize, int hiddenSize, int outputSize, int numFilters, int numLayers, double learningRate, double? clipValue)
+        public ConvolutionalNeuralNetwork(Dimension inputDimensions, Dimension filterDimensions, int inputSize, int hiddenSize, int outputSize, int numFilters, int numLayers, double learningRate, double? clipValue)
         {
+            this.InputDimensions = inputDimensions;
+            this.FilterDimensions = filterDimensions;
             this.InputSize = hiddenSize;
             this.OriginalInputSize = inputSize;
             this.HiddenSize = hiddenSize;
             this.OutputSize = outputSize;
             this.Parameters.LearningRate = learningRate;
+            this.NumFilters = numFilters;
             this.NumLayers = numLayers;
             if (clipValue != null)
             {
@@ -85,9 +88,24 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         public Matrix Target { get; private set; }
 
         /// <summary>
+        /// Gets the input dimensions of the neural network.
+        /// </summary>
+        internal Dimension InputDimensions { get; private set; }
+
+        /// <summary>
+        /// Gets the filter dimensions of the neural network.
+        /// </summary>
+        internal Dimension FilterDimensions { get; private set; }
+
+        /// <summary>
         /// Gets the input size of the neural network.
         /// </summary>
         internal int InputSize { get; private set; }
+
+        /// <summary>
+        /// Gets the original input size of the neural network.
+        /// </summary>
+        internal int OriginalInputSize { get; private set; }
 
         /// <summary>
         /// Gets the hidden size of the neural network.

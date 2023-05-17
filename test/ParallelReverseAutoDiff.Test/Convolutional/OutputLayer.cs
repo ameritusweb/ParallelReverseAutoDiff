@@ -6,22 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParallelReverseAutoDiff.Test.FeedForward
+namespace ParallelReverseAutoDiff.Test.Convolutional
 {
     /// <summary>
     /// The output layer.
     /// </summary>
     public class OutputLayer
     {
-        private readonly FeedForwardNeuralNetwork feedForwardNeuralNetwork;
+        private readonly ConvolutionalNeuralNetwork convolutionalNeuralNetwork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputLayer"/> class.
         /// </summary>
-        /// <param name="feedForwardNeuralNetwork">The neural network.</param>
-        public OutputLayer(FeedForwardNeuralNetwork feedForwardNeuralNetwork)
+        /// <param name="convolutionalNeuralNetwork">The neural network.</param>
+        public OutputLayer(ConvolutionalNeuralNetwork convolutionalNeuralNetwork)
         {
-            this.feedForwardNeuralNetwork = feedForwardNeuralNetwork;
+            this.convolutionalNeuralNetwork = convolutionalNeuralNetwork;
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// </summary>
         public void Initialize()
         {
-            this.V = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.feedForwardNeuralNetwork.OutputSize, this.feedForwardNeuralNetwork.HiddenSize);
-            this.Bo = CommonMatrixUtils.InitializeZeroMatrix(this.feedForwardNeuralNetwork.OutputSize, 1);
+            this.V = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.OutputSize, this.convolutionalNeuralNetwork.HiddenSize);
+            this.Bo = CommonMatrixUtils.InitializeZeroMatrix(this.convolutionalNeuralNetwork.OutputSize, 1);
             this.MV = new Matrix(this.V.Rows, this.V.Cols);
             this.VV = new Matrix(this.V.Rows, this.V.Cols);
             this.MBo = new Matrix(this.Bo.Rows, this.Bo.Cols);
@@ -91,8 +91,8 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// </summary>
         public void ClipGradients()
         {
-            this.DV = CommonMatrixUtils.ClipGradients(this.DV, this.feedForwardNeuralNetwork.ClipValue, null);
-            this.DBo = CommonMatrixUtils.ClipGradients(this.DBo, this.feedForwardNeuralNetwork.ClipValue, null);
+            this.DV = CommonMatrixUtils.ClipGradients(this.DV, this.convolutionalNeuralNetwork.ClipValue, null);
+            this.DBo = CommonMatrixUtils.ClipGradients(this.DBo, this.convolutionalNeuralNetwork.ClipValue, null);
         }
 
         /// <summary>

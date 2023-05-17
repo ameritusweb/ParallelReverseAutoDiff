@@ -91,6 +91,58 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Initializes an array of deep matrices.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="width">The width.</param>
+        /// <returns>An array of deep matrices.</returns>
+        public static DeepMatrix[] InitializeArray(int size, int depth, int height, int width)
+        {
+            var instance = new DeepMatrix[size];
+            for (int i = 0; i < size; ++i)
+            {
+                instance[i] = new DeepMatrix(depth, height, width);
+            }
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Initializes a double array of deep matrices.
+        /// </summary>
+        /// <param name="dim1">The first dimension.</param>
+        /// <param name="dim2">The second dimension.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="width">THe width.</param>
+        /// <returns>A double array of deep matrices.</returns>
+        public static DeepMatrix[][] InitializeDoubleArray(int dim1, int dim2, int depth, int height, int width)
+        {
+            var instance = new DeepMatrix[dim1][];
+            for (int i = 0; i < dim1; ++i)
+            {
+                instance[i] = new DeepMatrix[dim2];
+                for (int j = 0; j < dim2; ++j)
+                {
+                    instance[i][j] = new DeepMatrix(depth, height, width);
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Gets the deep matrix as an array of matrices.
+        /// </summary>
+        /// <returns>An array of matrices.</returns>
+        public Matrix[] ToArray()
+        {
+            return this.matrices;
+        }
+
+        /// <summary>
         /// Initializes the matrix with He or Xavier initialization.
         /// </summary>
         /// <param name="initializationType">The initialization type.</param>

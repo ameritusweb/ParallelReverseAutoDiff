@@ -6,22 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParallelReverseAutoDiff.Test.FeedForward
+namespace ParallelReverseAutoDiff.Test.Convolutional
 {
     /// <summary>
     /// An embedding layer.
     /// </summary>
     public class EmbeddingLayer
     {
-        private readonly FeedForwardNeuralNetwork feedForwardNeuralNetwork;
+        private readonly ConvolutionalNeuralNetwork convolutionalNeuralNetwork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddingLayer"/> class.
         /// </summary>
-        /// <param name="feedForwardNeuralNetwork">The neural network.</param>
-        public EmbeddingLayer(FeedForwardNeuralNetwork feedForwardNeuralNetwork)
+        /// <param name="convolutionalNeuralNetwork">The neural network.</param>
+        public EmbeddingLayer(ConvolutionalNeuralNetwork convolutionalNeuralNetwork)
         {
-            this.feedForwardNeuralNetwork = feedForwardNeuralNetwork;
+            this.convolutionalNeuralNetwork = convolutionalNeuralNetwork;
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// </summary>
         public void Initialize()
         {
-            this.We = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.feedForwardNeuralNetwork.HiddenSize, this.feedForwardNeuralNetwork.OriginalInputSize);
-            this.Be = new Matrix(this.feedForwardNeuralNetwork.HiddenSize, 1);
+            this.We = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.HiddenSize, this.convolutionalNeuralNetwork.OriginalInputSize);
+            this.Be = new Matrix(this.convolutionalNeuralNetwork.HiddenSize, 1);
             this.MWe = new Matrix(this.We.Rows, this.We.Cols);
             this.VWe = new Matrix(this.We.Rows, this.We.Cols);
             this.MBe = new Matrix(this.Be.Rows, this.Be.Cols);
@@ -91,8 +91,8 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         /// </summary>
         public void ClipGradients()
         {
-            this.DWe = CommonMatrixUtils.ClipGradients(this.DWe, this.feedForwardNeuralNetwork.ClipValue, null);
-            this.DBe = CommonMatrixUtils.ClipGradients(this.DBe, this.feedForwardNeuralNetwork.ClipValue, null);
+            this.DWe = CommonMatrixUtils.ClipGradients(this.DWe, this.convolutionalNeuralNetwork.ClipValue, null);
+            this.DBe = CommonMatrixUtils.ClipGradients(this.DBe, this.convolutionalNeuralNetwork.ClipValue, null);
         }
 
         /// <summary>

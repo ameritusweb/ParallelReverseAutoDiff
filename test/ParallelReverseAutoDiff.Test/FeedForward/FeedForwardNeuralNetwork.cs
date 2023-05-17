@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ParallelReverseAutoDiff.RMAD;
+using ParallelReverseAutoDiff.Test.Common;
 using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
 
 namespace ParallelReverseAutoDiff.Test.FeedForward
@@ -209,7 +210,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            MatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
+            CommonMatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -330,16 +331,16 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
         private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon)
         {
             // Update biased first moment estimate
-            mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
+            mW = CommonMatrixUtils.MatrixAdd(CommonMatrixUtils.ScalarMultiply(beta1, mW), CommonMatrixUtils.ScalarMultiply(1 - beta1, gradient));
 
             // Update biased second raw moment estimate
-            vW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta2, vW), MatrixUtils.ScalarMultiply(1 - beta2, MatrixUtils.HadamardProduct(gradient, gradient)));
+            vW = CommonMatrixUtils.MatrixAdd(CommonMatrixUtils.ScalarMultiply(beta2, vW), CommonMatrixUtils.ScalarMultiply(1 - beta2, CommonMatrixUtils.HadamardProduct(gradient, gradient)));
 
             // Compute bias-corrected first moment estimate
-            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.AdamIteration)), mW);
+            Matrix mW_hat = CommonMatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.AdamIteration)), mW);
 
             // Compute bias-corrected second raw moment estimate
-            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.AdamIteration)), vW);
+            Matrix vW_hat = CommonMatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.AdamIteration)), vW);
 
             // Update weights
             for (int i = 0; i < w.Length; i++)

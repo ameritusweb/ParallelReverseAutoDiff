@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParallelReverseAutoDiff.Test.FeedForward
+namespace ParallelReverseAutoDiff.Test.Common
 {
     /// <summary>
     /// A collection of matrix utilities for neural network development.
     /// </summary>
-    public static class MatrixUtils
+    public static class CommonMatrixUtils
     {
         private static readonly double MinClipValue = 1E-6;
 
@@ -66,6 +66,79 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
             }
 
             return m;
+        }
+
+        /// <summary>
+        /// Clips gradients to within a certain clip value and applies a minimum threshold value.
+        /// </summary>
+        /// <param name="gradients">The gradients to clip.</param>
+        /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+        /// <param name="minValue">The minimum threshold value.</param>
+        /// <returns>The clipped gradients.</returns>
+        public static DeepMatrix[][] ClipGradients(DeepMatrix[][] gradients, double clipValue, double? minValue)
+        {
+            int dim1 = gradients.Length;
+            int dim2 = gradients[0].Length;
+            for (int i = 0; i < dim1; ++i)
+            {
+                for (int j = 0; j < dim2; ++j)
+                {
+                    gradients[i][j] = ClipGradients(gradients[i][j], clipValue, minValue);
+                }
+            }
+            return gradients;
+        }
+
+        /// <summary>
+        /// Clips gradients to within a certain clip value and applies a minimum threshold value.
+        /// </summary>
+        /// <param name="gradients">The gradients to clip.</param>
+        /// <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+        /// <param name="minValue">The minimum threshold value.</param>
+        /// <returns>The clipped gradients.</returns>
+        public static DeepMatrix ClipGradients(DeepMatrix gradients, double clipValue, double? minValue)
+        {
+            if (minValue == null)
+            {
+                minValue = MinClipValue;
+            }
+
+            var standardizedMatrix = StandardizedMatrix(gradients);
+            int depth = gradients.Depth;
+            int numRows = gradients.Rows;
+            int numCols = gradients.Cols;
+            Parallel.For(0, depth, d =>
+            {
+                for (int i = 0; i < numRows; i++)
+                {
+                    for (int j = 0; j < numCols; j++)
+                    {
+                        var value = Math.Min(clipValue, 1 + Math.Abs(standardizedMatrix[d, i, j]));
+
+                        // Clip the gradient values
+                        if (gradients[d, i, j] > value)
+                        {
+                            gradients[d, i, j] = value;
+                        }
+                        else if (gradients[d, i, j] < -value)
+                        {
+                            gradients[d, i, j] = -value;
+                        }
+
+                        // Apply the minimum threshold value
+                        if (gradients[d, i, j] > 0 && gradients[d, i, j] < minValue)
+                        {
+                            gradients[d, i, j] = minValue.Value;
+                        }
+                        else if (gradients[d, i, j] < 0 && gradients[d, i, j] > -minValue)
+                        {
+                            gradients[d, i, j] = -minValue.Value;
+                        }
+                    }
+                }
+            });
+
+            return gradients;
         }
 
         /// <summary>
@@ -168,6 +241,64 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
             }
 
             return gradients;
+        }
+
+        /// <summary>
+        /// Creates a standardized matrix using the mean and standard deviation.
+        /// </summary>
+        /// <param name="matrix">The matrix to process.</param>
+        /// <returns>The standardized matrix.</returns>
+        public static DeepMatrix StandardizedMatrix(DeepMatrix deepMatrix)
+        {
+            // Calculate the mean
+            double sum = 0;
+            int count = 0;
+            foreach (var matrix in deepMatrix)
+            {
+                foreach (double[] row in matrix)
+                {
+                    foreach (double value in row)
+                    {
+                        sum += value;
+                        count++;
+                    }
+                }
+            }
+
+            double mean = sum / count;
+
+            // Calculate the standard deviation
+            double varianceSum = 0;
+            foreach (var matrix in deepMatrix)
+            {
+                foreach (double[] row in matrix)
+                {
+                    foreach (double value in row)
+                    {
+                        varianceSum += Math.Pow(value - mean, 2);
+                    }
+                }
+            }
+
+            double stdDev = Math.Sqrt(varianceSum / count);
+
+            // Calculate the standardized matrix
+            int depth = deepMatrix.Depth;
+            int rows = deepMatrix.Rows;
+            int cols = deepMatrix.Cols;
+            DeepMatrix standardizedMatrix = new DeepMatrix(depth, rows, cols);
+            Parallel.For(0, depth, d =>
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        standardizedMatrix[d, i, j] = (deepMatrix[d, i, j] - mean) / stdDev;
+                    }
+                }
+            });
+
+            return standardizedMatrix;
         }
 
         /// <summary>
@@ -291,6 +422,36 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
                 {
                     matrices[i][j] = new double[numCols];
                 }
+            });
+        }
+
+        /// <summary>
+        /// Clears the following 5-D deep matrices.
+        /// </summary>
+        /// <param name="matrices">The 5-D deep matrices to clear.</param>
+        public static void ClearMatrices(DeepMatrix[][] matrices)
+        {
+            int numMatrices = matrices.Length;
+
+            // Parallelize the outer loop
+            Parallel.For(0, numMatrices, i =>
+            {
+                ClearMatrices(matrices[i]);
+            });
+        }
+
+        /// <summary>
+        /// Clears the following 4-D deep matrices.
+        /// </summary>
+        /// <param name="matrices">The 4-D deep matrices to clear.</param>
+        public static void ClearMatrices(DeepMatrix[] matrices)
+        {
+            int numMatrices = matrices.Length;
+
+            // Parallelize the outer loop
+            Parallel.For(0, numMatrices, i =>
+            {
+                ClearMatrices(matrices[i].ToArray());
             });
         }
 
@@ -425,7 +586,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    matrix[i][j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                    matrix[i][j] = (rand.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                 }
             });
 
@@ -454,10 +615,36 @@ namespace ParallelReverseAutoDiff.Test.FeedForward
                 {
                     for (int j = 0; j < numCols; j++)
                     {
-                        matrix[layerIndex][i][j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                        matrix[layerIndex][i][j] = (rand.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                     }
                 }
             });
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
+        /// </summary>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="numFilters">The number of filters.</param>
+        /// <param name="numRows">The number of rows.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <returns>The initialized random matrix.</returns>
+        public static DeepMatrix[][] InitializeRandomMatrixWithXavierInitialization(int numLayers, int numFilters, int depth, int numRows, int numCols)
+        {
+            DeepMatrix[][] matrix = new DeepMatrix[numLayers][];
+
+            for (int layerIndex = 0; layerIndex < numLayers; ++layerIndex)
+            { 
+                matrix[layerIndex] = new DeepMatrix[numFilters];
+                for (int f = 0; f < numFilters; ++f)
+                {
+                    matrix[layerIndex][f] = new DeepMatrix(depth, numRows, numCols);
+                    matrix[layerIndex][f].Initialize(InitializationType.Xavier);
+                }
+            }
 
             return matrix;
         }
