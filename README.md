@@ -396,6 +396,28 @@ Here is an example:
 }
 ```
 
+The JSON represents a step in a computational graph used for automatic differentiation. Here's what each field means:
+
+"timeSteps": This is an array that represents the sequence of computational operations. Each element in the array is an object that corresponds to a computational timestep.
+
+"startOperations": This is an array that defines the initial operations for the current timestep. Multiple operations can be started at each timestep.
+
+Each operation object in "startOperations" has several fields:
+
+"id": This is a unique identifier for the operation.
+
+"description": This is a human-readable description of what the operation does.
+
+"type": This specifies the type of the operation.
+
+"inputs": This is an array that lists the inputs for the operation. These are the identifiers of other nodes in the computational graph.
+
+"gradientResultTo": This is an array that specifies where the results of the backward pass (i.e., the computed gradients) should be stored. A null value means that the gradient with respect to the input is not stored.
+
+The JSON defines a step in a machine learning model's forward pass and also specifies how the backward pass (which computes gradients for optimization) should be carried out.
+
+By defining the operations and their connections in a JSON file, the graph can be easily constructed and modified, and the computations can be automatically differentiated and parallelized. This representation makes it possible to define a wide variety of models in a modular way, using the building blocks provided by the library.
+
 ### Instantiate the architecture
 
 Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JsonArchitecure object.
