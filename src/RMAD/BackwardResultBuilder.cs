@@ -45,7 +45,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="matrix">The deep matrix to add.</param>
         /// <returns>The backward result builder.</returns>
-        public BackwardResultBuilder AddFiltersGradient(DeepMatrix matrix)
+        public BackwardResultBuilder AddFiltersGradient(DeepMatrix[] matrix)
         {
             this.backwardResults.Add(matrix);
             return this;

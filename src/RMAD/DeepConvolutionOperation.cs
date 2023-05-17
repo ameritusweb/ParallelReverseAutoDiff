@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private DeepMatrix input;
         private DeepMatrix paddedInput;
-        private DeepMatrix filters;
+        private DeepMatrix[] filters;
         private int padding;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="filters">The filters for the operation.</param>
         /// <param name="biases">The biases for the operation.</param>
         /// <returns>The output for the operation.</returns>
-        public DeepMatrix Forward(DeepMatrix input, DeepMatrix filters, Matrix biases)
+        public DeepMatrix Forward(DeepMatrix input, DeepMatrix[] filters, Matrix biases)
         {
             this.input = input;
             this.filters = filters;
@@ -51,9 +51,9 @@ namespace ParallelReverseAutoDiff.RMAD
             int inputWidth = input.Cols;
             int inputDepth = input.Depth;
 
-            int numFilters = filters.Depth;
-            int filterHeight = filters.Rows;
-            int filterWidth = filters.Cols;
+            int numFilters = filters.Length;
+            int filterHeight = filters[0].Rows;
+            int filterWidth = filters[0].Cols;
 
             // Create a new input with padding
             DeepMatrix paddedInput = new DeepMatrix(inputDepth, inputHeight + (2 * this.padding), inputWidth + (2 * this.padding));
@@ -91,7 +91,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             {
                                 for (int m = 0; m < inputDepth; m++)
                                 {
-                                    sum += paddedInput[m, i + k, j + l] * filters[filter, k, l];
+                                    sum += paddedInput[m, i + k, j + l] * filters[filter][m, k, l];
                                 }
                             }
                         }
@@ -112,17 +112,18 @@ namespace ParallelReverseAutoDiff.RMAD
             int inputDepth = this.input.Depth;
 
             int numFilters = dOutput.Depth;
-            int filterHeight = this.filters.Rows;
-            int filterWidth = this.filters.Cols;
+            int filterHeight = this.filters[0].Rows;
+            int filterWidth = this.filters[0].Cols;
 
             // Calculate the output dimensions with padding
             int outputHeight = inputHeight + (2 * this.padding) - filterHeight + 1;
             int outputWidth = inputWidth + (2 * this.padding) - filterWidth + 1;
 
             // Gradient w.r.t. filters
-            DeepMatrix dFilters = new DeepMatrix(numFilters, filterHeight, filterWidth);
+            DeepMatrix[] dFilters = new DeepMatrix[numFilters];
             for (int filter = 0; filter < numFilters; filter++)
             {
+                dFilters[filter] = new DeepMatrix(inputDepth, filterHeight, filterWidth);
                 for (int i = 0; i < filterHeight; i++)
                 {
                     for (int j = 0; j < filterWidth; j++)
@@ -134,7 +135,7 @@ namespace ParallelReverseAutoDiff.RMAD
                                 for (int m = 0; m < inputDepth; m++)
                                 {
                                     // Use the padded input
-                                    dFilters[filter, i, j] += this.paddedInput[m, k + i, l + j] * dOutput[filter, k, l];
+                                    dFilters[filter][m, i, j] += this.paddedInput[m, k + i, l + j] * dOutput[filter, k, l];
                                 }
                             }
                         }
@@ -169,7 +170,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             {
                                 for (int m = 0; m < inputDepth; m++)
                                 {
-                                    paddedDInput[m, i + k, j + l] += this.filters[filter, k, l] * dOutput[filter, i, j];
+                                    paddedDInput[m, i + k, j + l] += this.filters[filter][m, k, l] * dOutput[filter, i, j];
                                 }
                             }
                         }
