@@ -512,7 +512,7 @@ while (currOp.Next != null);
 ```
 
 ### Create a loss function
-Create a loss function like mean squared error or using policy gradient methods.
+Create a loss function like mean squared error, cross-entropy loss or using policy gradient methods.
 
 Then calculate the gradient of the loss with respect to the output.
 
