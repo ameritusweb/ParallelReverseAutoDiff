@@ -470,6 +470,8 @@ this.computationGraph
     .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.numLayers);
 ```
 
+Operation finders are a key component used to define and locate different operations in a neural network's computational graph. They're essentially functions that link to specific operations at different layers or time steps within the network. This is achieved by mapping string identifiers (IDs) to these operations, which are then used within a JSON architecture to establish the network's structure and sequence of computations. For example, an operation finder could link to a matrix multiplication operation in a specific layer of the network. By using these operation finders, developers can effectively manage complex computational graphs.
+
 ### Populate the backward dependency counts
 
 Then populate the backward dependency counts by running the following code. It only has to be run once to set up the backward dependency counts.
