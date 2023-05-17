@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ParallelReverseAutoDiff.RMAD;
+using ParallelReverseAutoDiff.Test.Common;
 using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
 
 namespace ParallelReverseAutoDiff.Test.Convolutional
@@ -11,6 +12,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.Convolutional.Architecture";
         private const string ARCHITECTURE = "ConvolutionalArchitecture";
+        private EmbeddingLayer embeddingLayer;
         private OutputLayer outputLayer;
 
         private ConvolutionalComputationGraph computationGraph;
@@ -41,8 +43,29 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
                 this.ClipValue = clipValue.Value;
             }
 
-            this.Input = new Matrix(inputSize, 1);
-            this.Output = new Matrix(outputSize, 1);
+            this.Input = new DeepMatrix(inputDimensions);
+
+            this.FirstConvolutionalLayers = new FirstConvolutionalLayer[numLayers];
+            for (int i = 0; i < numLayers; i++)
+            {
+                this.FirstConvolutionalLayers[i] = new FirstConvolutionalLayer(this);
+                var firstConvolutionalLayer = this.FirstConvolutionalLayers[i];
+                firstConvolutionalLayer.Initialize();
+                firstConvolutionalLayer.InitializeGradients();
+            }
+
+            this.SecondConvolutionalLayers = new SecondConvolutionalLayer[numLayers];
+            for (int i = 0; i < numLayers; i++)
+            {
+                this.SecondConvolutionalLayers[i] = new SecondConvolutionalLayer(this);
+                var secondConvolutionalLayer = this.SecondConvolutionalLayers[i];
+                secondConvolutionalLayer.Initialize();
+                secondConvolutionalLayer.InitializeGradients();
+            }
+
+            this.EmbeddingLayer.Initialize();
+            this.EmbeddingLayer.InitializeGradients();
+
             this.HiddenLayers = new HiddenLayer[numLayers];
             for (int i = 0; i < numLayers; i++)
             {
@@ -52,6 +75,8 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
                 hiddenLayer.InitializeGradients();
             }
 
+            this.Output = new Matrix(outputSize, 1);
+
             this.OutputLayer.Initialize();
             this.OutputLayer.InitializeGradients();
         }
@@ -59,7 +84,28 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public Matrix Input { get; private set; }
+        public DeepMatrix Input { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the first convolutional layers.
+        /// </summary>
+        public FirstConvolutionalLayer[] FirstConvolutionalLayers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the second convolutional layers.
+        /// </summary>
+        public SecondConvolutionalLayer[] SecondConvolutionalLayers { get; set; }
+
+        /// <summary>
+        /// Gets the embedding layer.
+        /// </summary>
+        public EmbeddingLayer EmbeddingLayer
+        {
+            get
+            {
+                return this.embeddingLayer ??= new EmbeddingLayer(this);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the hidden layers.
@@ -179,10 +225,9 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         private async Task InitializeComputationGraph()
         {
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.computationGraph = new FeedForwardComputationGraph(this);
+            var jsonArchitecture = JsonConvert.DeserializeObject<TripleLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.computationGraph = new ConvolutionalComputationGraph(this);
             this.computationGraph
-                .AddIntermediate("Input", _ => this.Input)
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("H", x => this.HiddenLayers[x.Layer].H)
                 .AddWeight("We", _ => this.EmbeddingLayer.We)
@@ -213,7 +258,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            MatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
+            CommonMatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -307,7 +352,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
     /// <summary>
     /// The Adam optimization for a feed forward neural network.
     /// </summary>
-    public partial class FeedForwardNeuralNetwork
+    public partial class ConvolutionalNeuralNetwork
     {
         private readonly double beta1 = 0.9;
         private readonly double beta2 = 0.999;
@@ -334,16 +379,16 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon)
         {
             // Update biased first moment estimate
-            mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
+            mW = CommonMatrixUtils.MatrixAdd(CommonMatrixUtils.ScalarMultiply(beta1, mW), CommonMatrixUtils.ScalarMultiply(1 - beta1, gradient));
 
             // Update biased second raw moment estimate
-            vW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta2, vW), MatrixUtils.ScalarMultiply(1 - beta2, MatrixUtils.HadamardProduct(gradient, gradient)));
+            vW = CommonMatrixUtils.MatrixAdd(CommonMatrixUtils.ScalarMultiply(beta2, vW), CommonMatrixUtils.ScalarMultiply(1 - beta2, CommonMatrixUtils.HadamardProduct(gradient, gradient)));
 
             // Compute bias-corrected first moment estimate
-            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.AdamIteration)), mW);
+            Matrix mW_hat = CommonMatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.AdamIteration)), mW);
 
             // Compute bias-corrected second raw moment estimate
-            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.AdamIteration)), vW);
+            Matrix vW_hat = CommonMatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.AdamIteration)), vW);
 
             // Update weights
             for (int i = 0; i < w.Length; i++)

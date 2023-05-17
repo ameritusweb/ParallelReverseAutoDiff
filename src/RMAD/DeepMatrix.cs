@@ -39,6 +39,21 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Initializes a new instance of the <see cref="DeepMatrix"/> class.
         /// </summary>
+        /// <param name="dimensions">The dimensions of the deep matrix.</param>
+        public DeepMatrix(Dimension dimensions)
+        {
+            this.matrices = new Matrix[dimensions.Depth];
+            for (int i = 0; i < dimensions.Depth; ++i)
+            {
+                this.matrices[i] = new Matrix(dimensions.Height, dimensions.Width);
+            }
+
+            this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeepMatrix"/> class.
+        /// </summary>
         /// <param name="matrices">The matrices to initialize with.</param>
         public DeepMatrix(Matrix[] matrices)
         {

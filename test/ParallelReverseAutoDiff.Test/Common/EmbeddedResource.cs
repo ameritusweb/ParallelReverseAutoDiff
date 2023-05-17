@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParallelReverseAutoDiff.Test.FeedForward
+namespace ParallelReverseAutoDiff.Test.Common
 {
     /// <summary>
     /// Helper class to read embedded resources.

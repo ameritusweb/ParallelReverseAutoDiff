@@ -152,7 +152,8 @@
         {
           "id": "v_h_b_activate_final",
           "type": "SoftmaxOperation",
-          "inputs": [ "v_h_b" ]
+          "inputs": [ "v_h_b" ],
+          "setResultTo": "Output"
         }
       ]
     }
