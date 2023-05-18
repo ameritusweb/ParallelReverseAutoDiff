@@ -48,7 +48,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
             this.FirstConvolutionalLayers = new FirstConvolutionalLayer[numLayers];
             for (int i = 0; i < numLayers; i++)
             {
-                this.FirstConvolutionalLayers[i] = new FirstConvolutionalLayer(this);
+                this.FirstConvolutionalLayers[i] = new FirstConvolutionalLayer(this, i == 0 ? null : this.FirstConvolutionalLayers[i-1]);
                 var firstConvolutionalLayer = this.FirstConvolutionalLayers[i];
                 firstConvolutionalLayer.Initialize();
                 firstConvolutionalLayer.InitializeGradients();
@@ -57,7 +57,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
             this.SecondConvolutionalLayers = new SecondConvolutionalLayer[numLayers];
             for (int i = 0; i < numLayers; i++)
             {
-                this.SecondConvolutionalLayers[i] = new SecondConvolutionalLayer(this);
+                this.SecondConvolutionalLayers[i] = new SecondConvolutionalLayer(this, i == 0 ? this.FirstConvolutionalLayers.Last() : null, i == 0 ? null : this.SecondConvolutionalLayers[i-1]);
                 var secondConvolutionalLayer = this.SecondConvolutionalLayers[i];
                 secondConvolutionalLayer.Initialize();
                 secondConvolutionalLayer.InitializeGradients();

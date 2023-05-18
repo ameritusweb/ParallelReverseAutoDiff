@@ -15,11 +15,11 @@ namespace ParallelReverseAutoDiff.Test
                 ConvolutionalNeuralNetwork neuralNetwork = new ConvolutionalNeuralNetwork(
                     new Dimension { Depth = 12, Height = 8, Width = 8 },
                     new Dimension { Depth = 12, Height = 2, Width = 2 },
-                    1000,
-                    1000,
+                    30976,
+                    10000,
                     2048,
-                    12,
-                    3,
+                    32,
+                    4,
                     0.001d, 
                     null
                 );
