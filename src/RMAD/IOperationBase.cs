@@ -152,7 +152,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="info">The operation info.</param>
         /// <param name="gradients">The gradients.</param>
         /// <param name="layerInfo" >The layer info.</param>
-        void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients, LayerInfo layerInfo);
+        void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, object>> gradients, LayerInfo layerInfo);
 
         /// <summary>
         /// Gets the output of the operation.

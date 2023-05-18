@@ -127,7 +127,7 @@ namespace ParallelReverseAutoDiff.RMAD
         protected DeepMatrix DeepOutput { get; set; }
 
         /// <inheritdoc />
-        public void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients, LayerInfo layerInfo)
+        public void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, object>> gradients, LayerInfo layerInfo)
         {
             this.Id = info.Id;
             this.SpecificId = info.Id + layerInfo.ToString();

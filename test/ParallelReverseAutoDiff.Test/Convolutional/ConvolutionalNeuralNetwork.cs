@@ -200,7 +200,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         /// <param name="iterationIndex">The iteration index.</param>
         /// <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
         /// <returns>A task.</returns>
-        public async Task Optimize(Matrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
+        public async Task Optimize(DeepMatrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
         {
             this.Target = target;
             if (doNotUpdate == null)
@@ -215,6 +215,15 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
 
         private void ClearState()
         {
+            Parallel.For(0, this.FirstConvolutionalLayers.Length, (i) =>
+            {
+                this.FirstConvolutionalLayers[i].ClearState();
+            });
+            Parallel.For(0, this.SecondConvolutionalLayers.Length, (i) =>
+            {
+                this.SecondConvolutionalLayers[i].ClearState();
+            });
+            this.EmbeddingLayer.ClearState();
             Parallel.For(0, this.HiddenLayers.Length, (i) =>
             {
                 this.HiddenLayers[i].ClearState();
@@ -230,20 +239,26 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("H", x => this.HiddenLayers[x.Layer].H)
-                .AddWeight("We", _ => this.EmbeddingLayer.We)
-                .AddBias("Be", _ => this.EmbeddingLayer.Be)
-                .AddWeight("W", x => this.HiddenLayers[x.Layer].W)
-                .AddBias("B", x => this.HiddenLayers[x.Layer].B)
-                .AddWeight("V", _ => this.OutputLayer.V)
-                .AddBias("Bo", _ => this.OutputLayer.Bo)
-                .AddGradient("DWe", _ => this.EmbeddingLayer.DWe)
-                .AddGradient("DBe", _ => this.EmbeddingLayer.DBe)
-                .AddGradient("DW", x => this.HiddenLayers[x.Layer].DW)
-                .AddGradient("DB", x => this.HiddenLayers[x.Layer].DB)
-                .AddGradient("DV", _ => this.OutputLayer.DV)
-                .AddGradient("DBo", _ => this.OutputLayer.DBo)
+                .AddWeight("Cf1", x => this.FirstConvolutionalLayers[x.Layer].Cf1).AddGradient("DCf1", x => this.FirstConvolutionalLayers[x.Layer].DCf1)
+                .AddBias("Cb1", x => this.FirstConvolutionalLayers[x.Layer].Cb1).AddGradient("DCb1", x => this.FirstConvolutionalLayers[x.Layer].DCb1)
+                .AddWeight("Sc1", x => this.FirstConvolutionalLayers[x.Layer].Sc1).AddGradient("DSc1", x => this.FirstConvolutionalLayers[x.Layer].DSc1)
+                .AddWeight("Sh1", x => this.FirstConvolutionalLayers[x.Layer].Sh1).AddGradient("DSh1", x => this.FirstConvolutionalLayers[x.Layer].DSh1)
+                .AddWeight("Cf2", x => this.SecondConvolutionalLayers[x.Layer].Cf2).AddGradient("DCf2", x => this.SecondConvolutionalLayers[x.Layer].DCf2)
+                .AddBias("Cb2", x => this.SecondConvolutionalLayers[x.Layer].Cb2).AddGradient("DCb2", x => this.SecondConvolutionalLayers[x.Layer].DCb2)
+                .AddWeight("Sc2", x => this.SecondConvolutionalLayers[x.Layer].Sc2).AddGradient("DSc2", x => this.SecondConvolutionalLayers[x.Layer].DSc2)
+                .AddWeight("Sh2", x => this.SecondConvolutionalLayers[x.Layer].Sh2).AddGradient("DSh2", x => this.SecondConvolutionalLayers[x.Layer].DSh2)
+                .AddWeight("We", _ => this.EmbeddingLayer.We).AddGradient("DWe", _ => this.EmbeddingLayer.DWe)
+                .AddBias("Be", _ => this.EmbeddingLayer.Be).AddGradient("DBe", _ => this.EmbeddingLayer.DBe)
+                .AddWeight("W", x => this.HiddenLayers[x.Layer].W).AddGradient("DW", x => this.HiddenLayers[x.Layer].DW)
+                .AddBias("B", x => this.HiddenLayers[x.Layer].B).AddGradient("DB", x => this.HiddenLayers[x.Layer].DB)
+                .AddWeight("V", _ => this.OutputLayer.V).AddGradient("DV", _ => this.OutputLayer.DV)
+                .AddBias("Bo", _ => this.OutputLayer.Bo).AddGradient("DBo", _ => this.OutputLayer.DBo)
+                .AddOperationFinder("ActivatedFromLastLayer1", _ => this.computationGraph[$"activated1_0_{this.NumLayers - 1}"])
+                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.Input : this.computationGraph[$"activated1_0_{x.Layer - 1}"])
+                .AddOperationFinder("currentInputOrMaxPooling", x => x.Layer == 0 ? this.computationGraph[$"maxPooling1_0_0"] : this.computationGraph[$"activated2_0_{x.Layer - 1}"])
+                .AddOperationFinder("ActivatedFromLastLayer2", _ => this.computationGraph[$"activated2_0_{this.NumLayers - 1}"])
+                .AddOperationFinder("thirdLayerCurrentInput", x => x.Layer == 0 ? this.computationGraph["embeddedInput_0_0"] : this.computationGraph[$"h_act_0_{x.Layer - 1}"])
                 .AddOperationFinder("HFromLastLayer", _ => this.computationGraph[$"h_act_0_{this.NumLayers - 1}"])
-                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph["embeddedInput_0_0"] : this.computationGraph[$"h_act_0_{x.Layer - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
@@ -253,12 +268,12 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private async Task AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        private async Task AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
+            CommonMatrixUtils.SetInPlace(this.Input.ToArray(), input.ToArray());
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {

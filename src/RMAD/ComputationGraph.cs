@@ -14,9 +14,9 @@ namespace ParallelReverseAutoDiff.RMAD
     public abstract class ComputationGraph
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.RMAD";
-        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> weightsAndBiases = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
-        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
-        private readonly ConcurrentDictionary<string, Func<LayerInfo, Matrix>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, Matrix>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> weightsAndBiases = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, IOperationBase> operations = new ConcurrentDictionary<string, IOperationBase>();
@@ -75,7 +75,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="identifier">The identifier.</param>
         /// <param name="index">The matrix index.</param>
         /// <returns>The weight or gradient matrix.</returns>
-        public Matrix this[MatrixType type, string identifier, LayerInfo index]
+        public object this[MatrixType type, string identifier, LayerInfo index]
         {
             get
             {
@@ -500,6 +500,30 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds a weight to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The weight.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddWeight(string identifier, Func<LayerInfo, DeepMatrix> matrix)
+        {
+            this.WeightAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a weight to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The weight.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddWeight(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
+        {
+            this.WeightAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a bias to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -518,6 +542,30 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="matrix">The gradient.</param>
         /// <returns>A computation graph.</returns>
         public ComputationGraph AddGradient(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.GradientAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a gradient to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddGradient(string identifier, Func<LayerInfo, DeepMatrix> matrix)
+        {
+            this.GradientAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a gradient to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddGradient(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
         {
             this.GradientAdded(identifier, matrix);
             return this;
@@ -627,6 +675,26 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Lifecycle function for when a weight is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The weight.</param>
+        protected virtual void WeightAdded(string identifier, Func<LayerInfo, DeepMatrix> matrix)
+        {
+            this.weightsAndBiases.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when a weight is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The weight.</param>
+        protected virtual void WeightAdded(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
+        {
+            this.weightsAndBiases.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
         /// Lifecycle function for when a bias is added to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -642,6 +710,26 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="identifier">An identifier.</param>
         /// <param name="matrix">The gradient.</param>
         protected virtual void GradientAdded(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.gradients.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when a gradient is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void GradientAdded(string identifier, Func<LayerInfo, DeepMatrix> matrix)
+        {
+            this.gradients.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when a gradient is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void GradientAdded(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
         {
             this.gradients.TryAdd(identifier, matrix);
         }
