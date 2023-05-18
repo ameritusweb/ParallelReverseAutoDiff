@@ -57,7 +57,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample.RMAD
         /// </summary>
         /// <param name="output">The output matrix.</param>
         /// <returns>The gradient.</returns>
-        public override (Matrix?, Matrix?) Backward(Matrix output)
+        public override BackwardResult Backward(Matrix output)
         {
             int rowCount = output.Length;
             int colCount = output[0].Length;
@@ -72,7 +72,9 @@ namespace ParallelReverseAutoDiff.FeedForwardExample.RMAD
                 }
             }
 
-            return (gradient, null);
+            return new BackwardResultBuilder()
+                    .AddInputGradient(gradient)
+                    .Build();
         }
     }
 }
