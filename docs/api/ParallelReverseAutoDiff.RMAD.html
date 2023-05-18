@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace ParallelReverseAutoDiff.RMAD
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace ParallelReverseAutoDiff.RMAD
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.min.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+
+      <script>
+        MathJax = {
+          options: {
+            processHtmlClass: ['tex2jax_process', 'math']
+          }
+        };
+      </script>
+
+      <script type="text/javascript" src="../styles/docfx.min.js"></script>
+      <script type="text/javascript" src="../styles/main.js"></script>
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="ParallelReverseAutoDiff.RMAD">
+
+  <h1 id="ParallelReverseAutoDiff_RMAD" data-uid="ParallelReverseAutoDiff.RMAD" class="text-break">Namespace ParallelReverseAutoDiff.RMAD
+</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html">AmplifiedSigmoidOperation</a></dt>
+      <dd><p>The sigmoid operation utilizing gradient amplification.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.html">ApplyDropoutOperation</a></dt>
+      <dd><p>Applies dropout to a small portion of the input.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.BackwardResult.html">BackwardResult</a></dt>
+      <dd><p>The result of one step through a backward pass.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html">BackwardResultBuilder</a></dt>
+      <dd><p>The backward result builder.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.html">BatchNormalizationOperation</a></dt>
+      <dd><p>Batch normalization operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ComputationGraph.html">ComputationGraph</a></dt>
+      <dd><p>A computation graph.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.CudaBlas.html">CudaBlas</a></dt>
+      <dd><p>Wrapper for CUBLAS library.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.html">CudaMatrixMultiplyOperation</a></dt>
+      <dd><p>CUDA Matrix multiplication operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepBatchNormalizationOperation.html">DeepBatchNormalizationOperation</a></dt>
+      <dd><p>Deep batch normalization operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation.html">DeepConvolutionOperation</a></dt>
+      <dd><p>The convolution operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepLeakyReLUOperation.html">DeepLeakyReLUOperation</a></dt>
+      <dd><p>A leaky ReLU operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+      <dd><p>A deep matrix class used for deep matrix operations.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation.html">DeepMaxPoolOperation</a></dt>
+      <dd><p>Max Pooling operation for a DeepMatrix.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepOperation.html">DeepOperation</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepReLUOperation.html">DeepReLUOperation</a></dt>
+      <dd><p>Performs the forward and backward operations for the ReLU activation function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepScaleAndShiftOperation.html">DeepScaleAndShiftOperation</a></dt>
+      <dd><p>Deep scale and shift operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DualLayersJsonArchitecture.html">DualLayersJsonArchitecture</a></dt>
+      <dd><p>The dual layers JSON architecture for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.html">DualLayersTimeStep</a></dt>
+      <dd><p>Represents a time step with dual layers for an operation graph.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.FlattenOperation.html">FlattenOperation</a></dt>
+      <dd><p>Flatten operation for a DeepMatrix.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.GELUOperation.html">GELUOperation</a></dt>
+      <dd><p>Performs the forward and backward operations for the GELU activation function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.GradientUtils.html">GradientUtils</a></dt>
+      <dd><p>Gradient utilities for reverse mode automatic differentiation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.HadamardProductOperation.html">HadamardProductOperation</a></dt>
+      <dd><p>Element-wise multiplication operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.JsonArchitecture.html">JsonArchitecture</a></dt>
+      <dd><p>The JSON architecture for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Layer.html">Layer</a></dt>
+      <dd><p>Represents a layer of a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation.html">LayerNormalizationOperation</a></dt>
+      <dd><p>Layer normalization operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.LeakyReLUOperation.html">LeakyReLUOperation</a></dt>
+      <dd><p>A leaky ReLU operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+      <dd><p>A matrix class used for matrix operations.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddOperation.html">MatrixAddOperation</a></dt>
+      <dd><p>Matrix addition operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.html">MatrixAddThreeOperation</a></dt>
+      <dd><p>Matrix addition operation for three matrices or two matrices and a bias.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.html">MatrixMultiplyOperation</a></dt>
+      <dd><p>Matrix multiplication operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation.html">MatrixMultiplyScalarOperation</a></dt>
+      <dd><p>A matrix multiply scalar operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.html">MatrixTransposeOperation</a></dt>
+      <dd><p>A matrix transpose operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixUtils.html">MatrixUtils</a></dt>
+      <dd><p>Matrix utilities for reverse mode automatic differentiation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.NeuralNetwork.html">NeuralNetwork</a></dt>
+      <dd><p>The base class for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html">NeuralNetworkParameters</a></dt>
+      <dd><p>The parameters for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Operation.html">Operation</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html">OperationBase</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html">OperationGraphVisitor</a></dt>
+      <dd><p>The operation graph visitor for setting the backward dependency counts of the computation graph.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationInfo.html">OperationInfo</a></dt>
+      <dd><p>Information about an operation of the computation graph.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.html">OperationNeuralNetworkVisitor</a></dt>
+      <dd><p>The operation neural network visitor. Implements the visitor pattern for the backward pass.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ReLUOperation.html">ReLUOperation</a></dt>
+      <dd><p>Performs the forward and backward operations for the ReLU activation function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.html">ScaleAndShiftOperation</a></dt>
+      <dd><p>Scale and shift operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.SigmoidOperation.html">SigmoidOperation</a></dt>
+      <dd><p>Sigmoid operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.SoftmaxOperation.html">SoftmaxOperation</a></dt>
+      <dd><p>Softmax operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation.html">StretchedSigmoidOperation</a></dt>
+      <dd><p>A stretched sigmoid operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.SwigLUOperation.html">SwigLUOperation</a></dt>
+      <dd><p>SwigLU operation for a Matrix.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.SwishOperation.html">SwishOperation</a></dt>
+      <dd><p>Performs the forward and backward operations for the Swish activation function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.TanhOperation.html">TanhOperation</a></dt>
+      <dd><p>The tanh operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.TimeStep.html">TimeStep</a></dt>
+      <dd><p>Represents a time step for an operation graph.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.TripleLayersJsonArchitecture.html">TripleLayersJsonArchitecture</a></dt>
+      <dd><p>The triple layers JSON architecture for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.TripleLayersTimeStep.html">TripleLayersTimeStep</a></dt>
+      <dd><p>Represents a time step with triple layers for an operation graph.</p>
+</dd>
+    </dl>
+    <h3 id="structs">Structs
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Dimension.html">Dimension</a></dt>
+      <dd><p>Represents dimension information.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a></dt>
+      <dd><p>Matrix index.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IDeepOperation.html">IDeepOperation</a></dt>
+      <dd><p>Define the abstract base class for all deep operations.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IOperation.html">IOperation</a></dt>
+      <dd><p>Define the abstract base class for all operations.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IOperationBase.html">IOperationBase</a></dt>
+      <dd><p>Define the abstract base class for all operations.</p>
+</dd>
+    </dl>
+    <h3 id="enums">Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.InitializationType.html">InitializationType</a></dt>
+      <dd><p>The type of initialization to use.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixType.html">MatrixType</a></dt>
+      <dd><p>Determines the matrix type.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
