@@ -109,12 +109,12 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         /// </summary>
         public void Initialize()
         {
-            this.Cf1 = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.InputDimensions.Height, this.convolutionalNeuralNetwork.InputDimensions.Width);
+            this.Cf1 = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.FilterDimensions.Height, this.convolutionalNeuralNetwork.FilterDimensions.Width);
             this.Cb1 = CommonMatrixUtils.InitializeZeroMatrix(this.convolutionalNeuralNetwork.NumFilters, 1);
-            this.Sc1 = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.InputDimensions.Height, this.convolutionalNeuralNetwork.InputDimensions.Depth);
-            this.Sh1 = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.InputDimensions.Height, this.convolutionalNeuralNetwork.InputDimensions.Depth);
-            this.VCf1 = DeepMatrix.InitializeArray(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.InputDimensions.Height, this.convolutionalNeuralNetwork.InputDimensions.Width);
-            this.MCf1 = DeepMatrix.InitializeArray(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.InputDimensions.Height, this.convolutionalNeuralNetwork.InputDimensions.Width);
+            this.Sc1 = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.InputDimensions.Height + 3, this.convolutionalNeuralNetwork.NumFilters);
+            this.Sh1 = CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(this.convolutionalNeuralNetwork.InputDimensions.Height + 3, this.convolutionalNeuralNetwork.NumFilters);
+            this.VCf1 = DeepMatrix.InitializeArray(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.FilterDimensions.Height, this.convolutionalNeuralNetwork.FilterDimensions.Width);
+            this.MCf1 = DeepMatrix.InitializeArray(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.FilterDimensions.Height, this.convolutionalNeuralNetwork.FilterDimensions.Width);
             this.VCb1 = new Matrix(this.Cb1.Rows, this.Cb1.Cols);
             this.MCb1 = new Matrix(this.Cb1.Rows, this.Cb1.Cols);
             this.VSc1 = new Matrix(this.Sc1.Rows, this.Sc1.Cols);
@@ -128,7 +128,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         /// </summary>
         public void InitializeGradients()
         {
-            this.DCf1 = DeepMatrix.InitializeArray(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.InputDimensions.Height, this.convolutionalNeuralNetwork.InputDimensions.Width);
+            this.DCf1 = DeepMatrix.InitializeArray(this.convolutionalNeuralNetwork.NumFilters, this.convolutionalNeuralNetwork.InputDimensions.Depth, this.convolutionalNeuralNetwork.FilterDimensions.Height, this.convolutionalNeuralNetwork.FilterDimensions.Width);
             this.DCb1 = new Matrix(this.Cb1.Rows, this.Cb1.Cols);
             this.DSc1 = new Matrix(this.Sc1.Rows, this.Sc1.Cols);
             this.DSh1 = new Matrix(this.Sh1.Rows, this.Sh1.Cols);

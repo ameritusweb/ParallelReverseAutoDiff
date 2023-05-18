@@ -29,9 +29,9 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="net">The neural network.</param>
         /// <returns>The instantiated operation.</returns>
-        public static IOperation Instantiate(NeuralNetwork net)
+        public static IDeepOperation Instantiate(NeuralNetwork net)
         {
-            return new LeakyReLUOperation(net.Parameters.LeakyReLUAlpha);
+            return new DeepLeakyReLUOperation(net.Parameters.LeakyReLUAlpha);
         }
 
         /// <summary>
