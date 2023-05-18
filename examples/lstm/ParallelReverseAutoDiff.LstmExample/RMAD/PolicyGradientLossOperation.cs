@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// </summary>
         /// <param name="actionProbabilities">The action probabilities.</param>
         /// <returns>The gradient to pass upstream.</returns>
-        public override (Matrix?, Matrix?) Backward(Matrix actionProbabilities)
+        public override BackwardResult Backward(Matrix actionProbabilities)
         {
             Matrix gradientLossWrtOutput = new Matrix(this.numTimeSteps, 1);
             double beta = 0.01; // Entropy regularization coefficient, adjust as needed
@@ -82,7 +82,9 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
                 gradientLossWrtOutput[t][0] = gradLossWrtOutput_t;
             }
 
-            return (gradientLossWrtOutput, gradientLossWrtOutput);
+            return new BackwardResultBuilder()
+                .AddInputGradient(gradientLossWrtOutput)
+                .Build();
         }
 
         /// <summary>

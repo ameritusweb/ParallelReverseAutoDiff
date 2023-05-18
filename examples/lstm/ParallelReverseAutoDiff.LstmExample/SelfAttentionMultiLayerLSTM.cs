@@ -277,7 +277,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             // Forward propagate through the MultiLayerLSTM
             MatrixUtils.SetInPlace(this.Parameters.InputSequence, inputs);
             var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
-            IOperation? currOp = null;
+            IOperationBase? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
@@ -435,7 +435,7 @@ namespace ParallelReverseAutoDiff.LstmExample
                 .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.numLayers);
 
-            IOperation? backwardStartOperation = null;
+            IOperationBase? backwardStartOperation = null;
             for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
             {
                 backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
@@ -454,7 +454,7 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.Parameters.ChosenActions = chosenActions;
             this.Parameters.Rewards = rewards;
             var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
-            IOperation? currOp = null;
+            IOperationBase? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
@@ -494,9 +494,9 @@ namespace ParallelReverseAutoDiff.LstmExample
 
             Console.WriteLine($"{this.lstmName}: Policy gradient loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 as Matrix ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
-            IOperation? backwardStartOperation = null;
+            IOperationBase? backwardStartOperation = null;
             for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
             {
                 backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
