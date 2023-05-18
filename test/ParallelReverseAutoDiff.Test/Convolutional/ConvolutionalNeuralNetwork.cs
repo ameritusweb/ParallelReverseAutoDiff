@@ -253,6 +253,8 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
                 .AddBias("B", x => this.HiddenLayers[x.Layer].B).AddGradient("DB", x => this.HiddenLayers[x.Layer].DB)
                 .AddWeight("V", _ => this.OutputLayer.V).AddGradient("DV", _ => this.OutputLayer.DV)
                 .AddBias("Bo", _ => this.OutputLayer.Bo).AddGradient("DBo", _ => this.OutputLayer.DBo)
+                .AddWeight("ScEnd2", x => this.HiddenLayers[x.Layer].ScEnd2).AddGradient("DScEnd2", x => this.HiddenLayers[x.Layer].DScEnd2)
+                .AddWeight("ShEnd2", x => this.HiddenLayers[x.Layer].ShEnd2).AddGradient("DShEnd2", x => this.HiddenLayers[x.Layer].DShEnd2)
                 .AddOperationFinder("ActivatedFromLastLayer1", _ => this.computationGraph[$"activated1_0_{this.NumLayers - 1}"])
                 .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.Input : this.computationGraph[$"activated1_0_{x.Layer - 1}"])
                 .AddOperationFinder("currentInputOrMaxPooling", x => x.Layer == 0 ? this.computationGraph[$"maxPooling1_0_0"] : this.computationGraph[$"activated2_0_{x.Layer - 1}"])
@@ -333,6 +335,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
             {
                 backwardStartOperation.BackwardInput = gradientOfLossWrtOutput;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+                opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
                 traverseCount++;
@@ -365,7 +368,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// <summary>
-    /// The Adam optimization for a feed forward neural network.
+    /// The Adam optimization for a convolutional neural network.
     /// </summary>
     public partial class ConvolutionalNeuralNetwork
     {
