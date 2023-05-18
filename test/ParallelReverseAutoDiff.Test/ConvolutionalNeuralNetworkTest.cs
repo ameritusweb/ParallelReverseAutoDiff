@@ -18,7 +18,7 @@ namespace ParallelReverseAutoDiff.Test
                     1000,
                     1000,
                     2048,
-                    32,
+                    12,
                     3,
                     0.001d, 
                     null
