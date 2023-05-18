@@ -11,21 +11,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="architecture\MultiLayerCNNArchitecture.json" />
+    <None Remove="architecture\ConvolutionalArchitecture.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="architecture\MultiLayerCNNArchitecture.json">
+    <EmbeddedResource Include="architecture\ConvolutionalArchitecture.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ParallelReverseAutoDiff" Version="1.0.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="ParallelReverseAutoDiff" Version="1.0.31" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>
