@@ -34,9 +34,13 @@ namespace ParallelReverseAutoDiff.RMAD
             object[] parametersToReturn = new object[operationParameters.Length];
             for (int j = 0; j < operationParameters.Length; ++j)
             {
-                if (operationParameters[j] is IOperationBase)
+                if (operationParameters[j] is IOperation)
                 {
-                    parametersToReturn[j] = ((IOperationBase)operationParameters[j]).GetOutput();
+                    parametersToReturn[j] = ((IOperation)operationParameters[j]).GetOutput();
+                }
+                else if (operationParameters[j] is IDeepOperation)
+                {
+                    parametersToReturn[j] = ((IDeepOperation)operationParameters[j]).GetDeepOutput();
                 }
                 else
                 {
