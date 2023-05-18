@@ -60,8 +60,7 @@
               "id": "f",
               "description": "Compute the forget gate",
               "type": "AmplifiedSigmoidOperation",
-              "inputs": [ "intermediate_f_3" ],
-              "setResultTo": "f[t][layerIndex]"
+              "inputs": [ "intermediate_f_3" ]
             },
             {
               "id": "wi_currentInput",
@@ -103,8 +102,7 @@
               "id": "i",
               "description": "Compute the input gate",
               "type": "AmplifiedSigmoidOperation",
-              "inputs": [ "intermediate_i_3" ],
-              "setResultTo": "i[t][layerIndex]"
+              "inputs": [ "intermediate_i_3" ]
             },
             {
               "id": "wc_currentInput",
@@ -146,8 +144,7 @@
               "id": "cHat",
               "description": "Compute the candidate memory cell state",
               "type": "TanhOperation",
-              "inputs": [ "intermediate_cHat_3" ],
-              "setResultTo": "cHat[t][layerIndex]"
+              "inputs": [ "intermediate_cHat_3" ]
             },
             {
               "id": "f_previousMemoryCellState",
@@ -203,8 +200,7 @@
               "id": "o",
               "description": "Compute the output gate",
               "type": "LeakyReLUOperation",
-              "inputs": [ "o_add" ],
-              "setResultTo": "o[t][layerIndex]"
+              "inputs": [ "o_add" ]
             },
             {
               "id": "c_tanh",

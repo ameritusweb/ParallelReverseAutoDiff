@@ -7,10 +7,21 @@ Parallel Reverse Mode Automatic Differentiation in C#
 
 ParallelAutoDiff is a thread-safe C# library for reverse mode automatic differentiation, optimized for parallel computation. It leverages semaphores and locks to coordinate between threads, ensuring accuracy during gradient accumulation. Each operation in the library is implemented as a node with a forward and a backward function, facilitating efficient calculation of derivatives. A unique aspect of this library is its use of the visitor pattern: it includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is responsible for gradient accumulation on nodes shared across multiple threads. This design allows for parallelized computations while maintaining consistency and avoiding race conditions. The result is an efficient, scalable automatic differentiation solution, ideal for machine learning applications and neural network training.
 
+## Prerequisites
+Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
+
 ## Supported Operations
-AmplifiedSigmoidOperation - Used for gradient amplification
+
+### Regular Operations
+AmplifiedSigmoidOperation - Used for gradient amplification.
 
 ApplyDropoutOperation
+
+BatchNormalizationOperation
+
+CudaMatrixMultiplyOperation - Leverages the GPU for fast computation.
+
+GELUOperation
 
 HadamardProductOperation
 
@@ -30,17 +41,41 @@ MatrixTransposeOperation
 
 ReLUOperation
 
+ScaleAndShiftOperation
+
 SigmoidOperation
 
 SoftmaxOperation
 
 StretchedSigmoidOperation
 
+SwigLUOperation
+
+SwishOperation
+
 TanhOperation
+
+### Deep Operations
+These types of operations operate on instances of the DeepMatrix class which is a 3-D matrix.
+The first dimension is the channel size and the second and third dimensions are the row and column sizes respectively.
+
+DeepBatchNormalizationOperation
+
+DeepConvolutionOperation
+
+DeepLeakyReLUOperation
+
+DeepMaxPoolOperation
+
+DeepReLUOperation
+
+DeepScaleAndShiftOperation
+
+FlattenOperation
 
 ## Usage
 
-### Create architecture JSON file
+### Create an architecture JSON file
 
 Here is an example:
 ```json
@@ -361,53 +396,134 @@ Here is an example:
 }
 ```
 
+Each operation in the JSON represents a step in a computational graph used for automatic differentiation. Here's what each field means:
+
+* "timeSteps": This is an array that represents the sequence of computational operations. Each element in the array is an object that corresponds to a computational timestep.
+
+* "startOperations": This is an array that defines the initial operations for the current timestep.
+
+* "layers": This represents a sequence of operations corresponding to the layers of the network. Each operation in a layer is a step in the computation, and the order of operations matters, as some operations depend on the results of previous operations. 
+
+* "endOperations": This is an array that defines the final operations for the current timestep.
+
+Each operation object in "startOperations", "layers", or "endOperations" has several fields:
+
+* "id": This is a unique identifier for the operation.
+
+* "description": This is a human-readable description of what the operation does.
+
+* "type": This specifies the type of the operation.
+
+* "inputs": This is an array that lists the inputs for the operation. These are the identifiers of other nodes in the computational graph. The identifiers are either defined in the computational graph, or in operation finders declared in code when building an instance of the ComputationGraph class, for example the SelfAttentionMultiLayerLSTMComputationGraph class which is a subclass of ComputationGraph.
+
+* "gradientResultTo": This is an array that specifies where the results of the backward pass (i.e., the computed gradients) should be stored. A null value means that the gradient with respect to the input is not stored. There is an implicit mapping between the gradient and the input based on its position in the array.
+
+* "setResultTo": This is used to store the result of the operation for later use.
+
+The JSON defines the steps in a machine learning model's forward pass and also specifies how the backward pass (which computes gradients for optimization) should be carried out.
+
+By defining the operations and their connections in a JSON file, the graph can be easily constructed and modified, and the computations can be automatically differentiated and parallelized. This representation makes it possible to define a wide variety of models in a modular way, using the building blocks provided by the library.
+
 ### Instantiate the architecture
 
-Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JSONArchitecure object.
+Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JsonArchitecure object.
 
-### Instantiate and populate the operations
+### Instantiate the computational graph
 
-Instantiate each operation based on its type. Then set the Next property of each operation to be the next operation in the forward pass.
+```c#
+this.computationGraph = new SelfAttentionMultiLayerLSTMComputationGraph(this);
+var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
+this.computationGraph
+    .AddIntermediate("inputSequence", x => this.Parameters.InputSequence[x.TimeStep])
+    .AddIntermediate("output", x => this.output[x.TimeStep])
+    .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
+    .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
+    .AddScalar("scaledDotProductScalar", x => 1.0d / Math.Sqrt(this.hiddenSize))
+    .AddWeight("Wf", x => this.Wf[x.Layer]).AddGradient("dWf", x => this.dWf[x.Layer])
+    .AddWeight("Wi", x => this.Wi[x.Layer]).AddGradient("dWi", x => this.dWi[x.Layer])
+    .AddWeight("Wc", x => this.Wc[x.Layer]).AddGradient("dWc", x => this.dWc[x.Layer])
+    .AddWeight("Wo", x => this.Wo[x.Layer]).AddGradient("dWo", x => this.dWo[x.Layer])
+    .AddWeight("Uf", x => this.Uf[x.Layer]).AddGradient("dUf", x => this.dUf[x.Layer])
+    .AddWeight("Ui", x => this.Ui[x.Layer]).AddGradient("dUi", x => this.dUi[x.Layer])
+    .AddWeight("Uc", x => this.Uc[x.Layer]).AddGradient("dUc", x => this.dUc[x.Layer])
+    .AddWeight("Uo", x => this.Uo[x.Layer]).AddGradient("dUo", x => this.dUo[x.Layer])
+    .AddWeight("bf", x => this.bf[x.Layer]).AddGradient("dbf", x => this.dbf[x.Layer])
+    .AddWeight("bi", x => this.bi[x.Layer]).AddGradient("dbi", x => this.dbi[x.Layer])
+    .AddWeight("bc", x => this.bc[x.Layer]).AddGradient("dbc", x => this.dbc[x.Layer])
+    .AddWeight("bo", x => this.bo[x.Layer]).AddGradient("dbo", x => this.dbo[x.Layer])
+    .AddWeight("Wq", x => this.Wq[x.Layer]).AddGradient("dWq", x => this.dWq[x.Layer])
+    .AddWeight("Wk", x => this.Wk[x.Layer]).AddGradient("dWk", x => this.dWk[x.Layer])
+    .AddWeight("Wv", x => this.Wv[x.Layer]).AddGradient("dWv", x => this.dWv[x.Layer])
+    .AddWeight("We", x => this.We).AddGradient("dWe", x => this.dWe)
+    .AddWeight("be", x => this.be).AddGradient("dbe", x => this.dbe)
+    .AddWeight("V", x => this.V).AddGradient("dV", x => this.dV)
+    .AddWeight("b", x => this.b).AddGradient("db", x => this.db)
+    .AddOperationFinder("i", x => this.computationGraph[$"i_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("f", x => this.computationGraph[$"f_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("cHat", x => this.computationGraph[$"cHat_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("o", x => this.computationGraph[$"o_{x.TimeStep}_{x.Layer}"])
+    .AddOperationFinder("embeddedInput", x => this.computationGraph[$"embeddedInput_{x.TimeStep}_0"])
+    .AddOperationFinder("hFromCurrentTimeStepAndLastLayer", x => this.computationGraph[$"h_{x.TimeStep}_{this.numLayers - 1}"])
+    .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"embeddedInput_{x.TimeStep}_0"] : this.computationGraph[$"h_{x.TimeStep}_{x.Layer - 1}"])
+    .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
+    .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
+    .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.numLayers);
+```
 
-Add each operation that is backwards in the computation graph to the BackwardAdjacentOperations property of an operation. BackwardAdjacentOperations is just a list of operations.
+Operation finders are a key component used to define and locate different operations in a neural network's computational graph. They're essentially functions that link to specific operations at different layers or time steps within the network. This is achieved by mapping string identifiers (IDs) to these operations, which are then used within a JSON architecture to establish the network's structure and sequence of computations. For example, an operation finder could link to a matrix multiplication operation in a specific layer of the network. By using these operation finders, developers can effectively manage complex computational graphs.
 
-Add instances of the gradients to send the result to, to the GradientDestinations array. If there is no gradient result for a certain input, add null.
+### Populate the backward dependency counts
 
 Then populate the backward dependency counts by running the following code. It only has to be run once to set up the backward dependency counts.
 ```c#
-for (int t = numTimeSteps - 1; t >= 0; t--) // if there are multiple timesteps
+IOperationBase? backwardStartOperation = null;
+for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 {
-    backwardStartOperation = operationsMap[$"output_t_{t}"]; // the backward start operation
+    backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
     OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
-    await opVisitor.TraverseAsync(); // sets the backward dependency counts
+    await opVisitor.TraverseAsync();
     await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
 }
 ```
 
 ### Run the forward pass
 ```c#
-var op = startOperation; // the start operation
-IOperation currOp = null;
+var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
+IOperationBase? currOp = null;
 do
 {
-    var parameters = LookupParameters(op); // lookup the parameters
-    op.OperationType.GetMethod("Forward").Invoke(op, parameters); // call the forward function
+    var parameters = this.LookupParameters(op);
+    var forwardMethod = op.OperationType.GetMethod("Forward") ?? throw new Exception($"Forward method should exist on operation of type {op.OperationType.Name}.");
+    forwardMethod.Invoke(op, parameters);
     if (op.ResultToName != null)
     {
-        op.ResultTo(NameToValueFunc(op.ResultToName)); // send the result to the appropriate object
+        var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+        var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+        op.CopyResult(oo);
     }
-    operationsMap[op.SpecificId] = op;
+
     currOp = op;
     if (op.HasNext)
+    {
         op = op.Next;
-} while (currOp.Next != null);
+    }
+}
+while (currOp.Next != null);
 ```
+
+### Create a loss function
+Create a loss function like mean squared error, cross-entropy loss or using policy gradient methods.
+
+Then calculate the gradient of the loss with respect to the output.
+
+Plug the result in as the backward input for the backward start operation.
 
 ### Run the backward pass utilizing inherent parallelization
 ```c#
-for (int t = numTimeSteps - 1; t >= 0; t--)
+IOperationBase? backwardStartOperation = null;
+for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 {
-    backwardStartOperation = operationsMap[$"output_t_{t}"];
+    backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
     if (gradientOfLossWrtOutput[t][0] != 0.0d)
     {
         var backwardInput = new Matrix(1, 1);
@@ -419,4 +535,12 @@ for (int t = numTimeSteps - 1; t >= 0; t--)
         traverseCount++;
     }
 }
+```
+
+### Using CUDA operations
+```c#
+Cudablas.Instance.DeviceId = 0; // set the GPU to use, defaults to 0
+Cudablas.Instance.Initialize(); // initialize the CUDA library
+// ... <Run CUDA operations> ...
+Cudablas.Instance.Dispose(); // dispose the CUDA library
 ```

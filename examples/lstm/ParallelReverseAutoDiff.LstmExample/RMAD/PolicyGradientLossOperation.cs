@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// <returns>The instantiated policy gradient loss operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new PolicyGradientLossOperation(net.GetChosenActions(), net.GetRewards(), net.GetNumTimeSteps(), net.GetDiscountFactor());
+            return new PolicyGradientLossOperation(net.Parameters.ChosenActions, net.Parameters.Rewards, net.Parameters.NumTimeSteps, net.Parameters.DiscountFactor);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
         /// </summary>
         /// <param name="actionProbabilities">The action probabilities.</param>
         /// <returns>The gradient to pass upstream.</returns>
-        public override (Matrix?, Matrix?) Backward(Matrix actionProbabilities)
+        public override BackwardResult Backward(Matrix actionProbabilities)
         {
             Matrix gradientLossWrtOutput = new Matrix(this.numTimeSteps, 1);
             double beta = 0.01; // Entropy regularization coefficient, adjust as needed
@@ -82,7 +82,9 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
                 gradientLossWrtOutput[t][0] = gradLossWrtOutput_t;
             }
 
-            return (gradientLossWrtOutput, gradientLossWrtOutput);
+            return new BackwardResultBuilder()
+                .AddInputGradient(gradientLossWrtOutput)
+                .Build();
         }
 
         /// <summary>
@@ -140,9 +142,9 @@ namespace ParallelReverseAutoDiff.LstmExample.RMAD
             // Add the entropy regularization term
             loss -= regularizationCoefficient * entropy;
 
-            this.output = new Matrix(1, 1);
-            this.output[0, 0] = -loss;
-            return this.output;
+            this.Output = new Matrix(1, 1);
+            this.Output[0, 0] = -loss;
+            return this.Output;
         }
     }
 }

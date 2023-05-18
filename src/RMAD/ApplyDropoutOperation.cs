@@ -34,7 +34,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new ApplyDropoutOperation(net.GetDropoutRate());
+            return new ApplyDropoutOperation(net.Parameters.DropoutRate);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
+        public override BackwardResult Backward(Matrix dLdOutput)
         {
             int numRows = dLdOutput.Length;
             int numCols = dLdOutput[0].Length;
@@ -79,7 +79,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return (dLdInput, dLdInput);
+            return new BackwardResultBuilder()
+                .AddInputGradient(dLdInput)
+                .Build();
         }
     }
 }

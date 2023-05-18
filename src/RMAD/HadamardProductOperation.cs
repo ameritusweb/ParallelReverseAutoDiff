@@ -53,7 +53,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix dOutput)
+        public override BackwardResult Backward(Matrix dOutput)
         {
             int numRows = this.input1.Length;
             int numCols = this.input1[0].Length;
@@ -82,7 +82,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return (dInput1, dInput2);
+            return new BackwardResultBuilder()
+                .AddInputGradient(dInput1)
+                .AddInputGradient(dInput2)
+                .Build();
         }
     }
 }

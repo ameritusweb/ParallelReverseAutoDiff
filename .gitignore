@@ -28,6 +28,7 @@ bld/
 
 # Visual Studio cache files
 .vs/
+*.psmdcp
 
 # Executable files
 *.exe

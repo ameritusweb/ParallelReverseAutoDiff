@@ -14,14 +14,12 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
     /// </summary>
     public partial class FeedForwardNeuralNetwork : NeuralNetwork
     {
+        private const string NAMESPACE = "ParallelReverseAutoDiff.FeedForwardExample.architecture";
         private const string ARCHITECTURE = "FeedForwardArchitecture";
         private EmbeddingLayer embeddingLayer;
         private OutputLayer outputLayer;
 
-        private Dictionary<string, IOperation> operationsMap;
-        private IOperation? priorOperation;
-        private IOperation? startOperation;
-        private Dictionary<string, Func<int, object>> inputNameToValueMap;
+        private FeedForwardComputationGraph computationGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedForwardNeuralNetwork"/> class.
@@ -38,26 +36,28 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.OriginalInputSize = inputSize;
             this.HiddenSize = hiddenSize;
             this.OutputSize = outputSize;
-            this.LearningRate = learningRate;
+            this.Parameters.LearningRate = learningRate;
             this.NumLayers = numLayers;
             if (clipValue != null)
             {
                 this.ClipValue = clipValue.Value;
             }
 
+            this.Input = new Matrix(inputSize, 1);
+            this.Output = new Matrix(outputSize, 1);
             this.HiddenLayers = new HiddenLayer[numLayers];
             this.EmbeddingLayer.Initialize();
             this.EmbeddingLayer.InitializeGradients();
-            foreach (var hiddenLayer in this.HiddenLayers)
+            for (int i = 0; i < numLayers; i++)
             {
+                this.HiddenLayers[i] = new HiddenLayer(this);
+                var hiddenLayer = this.HiddenLayers[i];
                 hiddenLayer.Initialize();
                 hiddenLayer.InitializeGradients();
             }
 
             this.OutputLayer.Initialize();
             this.OutputLayer.InitializeGradients();
-
-            this.SetupInputNameToValueMap();
         }
 
         /// <summary>
@@ -177,58 +177,33 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.OutputLayer.ClearState();
         }
 
-        private void SetupInputNameToValueMap()
-        {
-            this.inputNameToValueMap = new Dictionary<string, Func<int, object>>
-            {
-                { "Input", (_) => this.Input },
-                { "Output", (_) => this.Output },
-                { "W", (l) => this.HiddenLayers[l].W },
-                { "B", (l) => this.HiddenLayers[l].B },
-                { "DW", (l) => this.HiddenLayers[l].DW },
-                { "DB", (l) => this.HiddenLayers[l].DB },
-                { "H", (l) => this.HiddenLayers[l].H },
-                { "We", (_) => this.EmbeddingLayer.We },
-                { "Be", (_) => this.EmbeddingLayer.Be },
-                { "DWe", (_) => this.EmbeddingLayer.DWe },
-                { "DBe", (_) => this.EmbeddingLayer.DBe },
-                { "V", (_) => this.OutputLayer.V },
-                { "Bo", (_) => this.OutputLayer.Bo },
-                { "DV", (_) => this.OutputLayer.DV },
-                { "DBo", (_) => this.OutputLayer.DBo },
-                { "HFromLastLayer", (_) => this.operationsMap["H_" + (this.NumLayers - 1)] },
-                { "currentInput", (l) => l == 0 ? this.operationsMap["embeddedInput"] : this.operationsMap["H_" + (l - 1)] },
-
-                // Add other input names and their corresponding getters here
-            };
-        }
-
         private async Task InitializeComputationGraph()
         {
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            this.CreateOperationsFromJson(json);
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.computationGraph = new FeedForwardComputationGraph(this);
+            this.computationGraph
+                .AddIntermediate("Input", _ => this.Input)
+                .AddIntermediate("Output", _ => this.Output)
+                .AddIntermediate("H", x => this.HiddenLayers[x.Layer].H)
+                .AddWeight("We", _ => this.EmbeddingLayer.We)
+                .AddWeight("Be", _ => this.EmbeddingLayer.Be)
+                .AddWeight("W", x => this.HiddenLayers[x.Layer].W)
+                .AddWeight("B", x => this.HiddenLayers[x.Layer].B)
+                .AddWeight("V", _ => this.OutputLayer.V)
+                .AddWeight("Bo", _ => this.OutputLayer.Bo)
+                .AddGradient("DWe", _ => this.EmbeddingLayer.DWe)
+                .AddGradient("DBe", _ => this.EmbeddingLayer.DBe)
+                .AddGradient("DW", x => this.HiddenLayers[x.Layer].DW)
+                .AddGradient("DB", x => this.HiddenLayers[x.Layer].DB)
+                .AddGradient("DV", _ => this.OutputLayer.DV)
+                .AddGradient("DBo", _ => this.OutputLayer.DBo)
+                .AddOperationFinder("HFromLastLayer", _ => this.computationGraph[$"h_act_0_{this.NumLayers - 1}"])
+                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph["embeddedInput_0_0"] : this.computationGraph[$"h_act_0_{x.Layer - 1}"])
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
-            var op = this.startOperation;
-            if (op == null)
-            {
-                throw new Exception("Start operation should not be null.");
-            }
-
-            IOperation? currOp = null;
-            do
-            {
-                this.SetupDependencies(op);
-                this.operationsMap[op.SpecificId] = op;
-                currOp = op;
-                if (op.HasNext)
-                {
-                    op = op.Next;
-                }
-            }
-            while (currOp.Next != null);
-
-            IOperation? backwardStartOperation = null;
-            backwardStartOperation = this.operationsMap[$"Output"];
+            IOperationBase? backwardStartOperation = null;
+            backwardStartOperation = this.computationGraph["output_t_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
@@ -240,13 +215,13 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             this.ClearState();
 
             MatrixUtils.SetInPlace(new[] { this.Input }, new[] { input });
-            var op = this.startOperation;
+            var op = this.computationGraph.StartOperation;
             if (op == null)
             {
                 throw new Exception("Start operation should not be null.");
             }
 
-            IOperation? currOp = null;
+            IOperationBase? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
@@ -259,10 +234,11 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
                 forward.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
-                    op.ResultTo(this.NameToValueFunc(op.ResultToName));
+                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+                    op.CopyResult(oo);
                 }
 
-                this.operationsMap[op.SpecificId] = op;
                 currOp = op;
                 if (op.HasNext)
                 {
@@ -290,10 +266,10 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
 
             Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = lossFunction.Backward(this.Output).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = lossFunction.Backward(this.Output).Item1 as Matrix ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
-            IOperation? backwardStartOperation = null;
-            backwardStartOperation = this.operationsMap[$"Output"];
+            IOperationBase? backwardStartOperation = null;
+            backwardStartOperation = this.computationGraph["output_t_0_0"];
             if (gradientOfLossWrtOutput[0][0] != 0.0d)
             {
                 backwardStartOperation.BackwardInput = gradientOfLossWrtOutput;
@@ -324,214 +300,6 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
                 this.UpdateHiddenLayerParametersWithAdam(this.HiddenLayers[i]);
             });
             this.UpdateOutputLayerParametersWithAdam(this.OutputLayer);
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /// <summary>
-    /// The operation processing for a feed forward neural network.
-    /// </summary>
-    public partial class FeedForwardNeuralNetwork
-    {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.FeedForwardExample.architecture";
-
-        private string ConvertIdToTimeAndLayer(string id, string[] split, IOperation op)
-        {
-            if (split.Length == 1)
-            {
-                if (op.LayerIndex == -1)
-                {
-                    return id + "_" + op.TimeStepIndex;
-                }
-                else
-                {
-                    return id + "_" + op.TimeStepIndex + "_" + op.LayerIndex;
-                }
-            }
-
-            return id;
-        }
-
-        private void SetupDependencies(IOperation op)
-        {
-            object[] parameters = new object[op.Inputs.Count];
-            for (int j = 0; j < op.Inputs.Count; ++j)
-            {
-                var input = op.Inputs[j];
-                var split = input.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                var specificId = this.ConvertIdToTimeAndLayer(input, split, op);
-                if (this.operationsMap.ContainsKey(specificId))
-                {
-                    var inputOp = this.operationsMap[specificId];
-                    inputOp.Outputs.Add(op.SpecificId);
-                    op.BackwardAdjacentOperations.Add(inputOp);
-                    parameters[j] = inputOp;
-                    continue;
-                }
-
-                string inputName = split[0];
-
-                if (this.inputNameToValueMap.ContainsKey(inputName))
-                {
-                    int layerIndex = op.LayerIndex;
-
-                    // Get the corresponding value from the dictionary using the input name
-                    var p = this.inputNameToValueMap[inputName](layerIndex);
-                    if (p is IOperation)
-                    {
-                        var inputOp = (IOperation)p;
-                        inputOp.Outputs.Add(op.SpecificId);
-                        op.BackwardAdjacentOperations.Add(inputOp);
-                        parameters[j] = inputOp;
-                        continue;
-                    }
-                    else
-                    {
-                        op.BackwardAdjacentOperations.Add(null);
-                    }
-
-                    parameters[j] = p;
-                }
-                else
-                {
-                    throw new Exception($"Input name {inputName} not found in value map");
-                }
-            }
-
-            op.Parameters = parameters;
-        }
-
-        private object[] LookupParameters(IOperation op)
-        {
-            object[] parameters = op.Parameters;
-            object[] parametersToReturn = new object[parameters.Length];
-            for (int j = 0; j < parameters.Length; ++j)
-            {
-                if (parameters[j] is IOperation)
-                {
-                    parametersToReturn[j] = ((IOperation)parameters[j]).GetOutput();
-                }
-                else
-                {
-                    parametersToReturn[j] = parameters[j];
-                }
-            }
-
-            return parametersToReturn;
-        }
-
-        private Func<int, object> NameToValueFunc(string name)
-        {
-            string[] split = name.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-            return this.inputNameToValueMap[split[0]];
-        }
-
-        private IOperation ProcessOperation(OperationInfo operation, int layerIndex = -1)
-        {
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation), $"The parameter {nameof(operation)} cannot be null.");
-            }
-
-            string id = operation.Id;
-            string typeName = operation.Type;
-            string[] inputs = operation.Inputs;
-
-            System.Type operationType = System.Type.GetType($"{NAMESPACE}.{typeName}") ?? throw new Exception($"Unsupported operation type {typeName}");
-
-            var instantiate = operationType.GetMethod("Instantiate");
-            if (instantiate == null)
-            {
-                throw new Exception($"Instantiate method should exist on operation of type {operationType.Name}");
-            }
-
-            IOperation op = (IOperation)(instantiate.Invoke(null, new object[] { (NeuralNetwork)this }) ?? throw new Exception("Instantiate method should return a non-null operation."));
-
-            op.OperationType = operationType;
-            op.Inputs = inputs.ToList();
-            string resultTo = operation.SetResultTo;
-            if (resultTo != null)
-            {
-                op.ResultToName = resultTo;
-            }
-
-            string[] gradientResultTo = operation.GradientResultTo;
-            if (gradientResultTo != null)
-            {
-                op.GradientDestinations = new object[gradientResultTo.Length];
-                for (int i = 0; i < gradientResultTo.Length; ++i)
-                {
-                    if (gradientResultTo[i] != null)
-                    {
-                        op.GradientDestinations[i] = this.NameToValueFunc(gradientResultTo[i])(layerIndex);
-                    }
-                }
-            }
-
-            if (this.priorOperation != null)
-            {
-                this.priorOperation.Next = op;
-            }
-
-            if (this.startOperation == null)
-            {
-                this.startOperation = op;
-            }
-
-            op.Id = id;
-
-            this.priorOperation = op;
-
-            return op;
-        }
-
-        private void ProcessAndAddOperation(OperationInfo operationInfo, int layerIndex = -1)
-        {
-            IOperation op = this.ProcessOperation(operationInfo, layerIndex);
-            op.SpecificId = op.Id;
-
-            if (layerIndex != -1)
-            {
-                op.LayerIndex = layerIndex;
-                op.SpecificId += "_" + layerIndex;
-            }
-
-            this.operationsMap[op.SpecificId] = op;
-        }
-
-        private void CreateOperationsFromJson(string json)
-        {
-            this.operationsMap = new Dictionary<string, IOperation>();
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.priorOperation = null;
-            this.startOperation = null;
-
-            foreach (var timeStep in jsonArchitecture.TimeSteps)
-            {
-                foreach (var start in timeStep.StartOperations)
-                {
-                    this.ProcessAndAddOperation(start);
-                }
-
-                for (int j = 0; j < this.NumLayers; ++j)
-                {
-                    foreach (var layer in timeStep.Layers)
-                    {
-                        foreach (var layerOp in layer.Operations)
-                        {
-                            this.ProcessAndAddOperation(layerOp, j);
-                        }
-                    }
-                }
-
-                foreach (var end in timeStep.EndOperations)
-                {
-                    this.ProcessAndAddOperation(end);
-                }
-            }
-
-            this.priorOperation = null;
         }
     }
 
@@ -583,7 +351,7 @@ namespace ParallelReverseAutoDiff.FeedForwardExample
             {
                 for (int j = 0; j < w[0].Length; j++)
                 {
-                    double weightReductionValue = this.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
+                    double weightReductionValue = this.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
                     w[i][j] -= weightReductionValue;
                 }
             }

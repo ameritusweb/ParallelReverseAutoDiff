@@ -38,7 +38,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public override (Matrix?, Matrix?) Backward(Matrix dLdOutput)
+        public override BackwardResult Backward(Matrix dLdOutput)
         {
             int numRows = this.Output.Length;
             int numCols = this.Output[0].Length;
@@ -62,7 +62,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            return (dLdInput, dLdInput);
+            return new BackwardResultBuilder()
+                .AddInputGradient(dLdInput)
+                .Build();
         }
 
         private Matrix Softmax(Matrix input)

@@ -5,110 +5,50 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// The base class for a neural network.
     /// </summary>
     public abstract class NeuralNetwork
     {
-        /// <summary>
-        /// Gets or sets the dropout rate for the apply dropout operation.
-        /// </summary>
-        protected double DropoutRate { get; set; } = 0.01d;
+        private NeuralNetworkParameters parameters;
 
         /// <summary>
-        /// Gets or sets the discount factor.
+        /// Gets the parameters for the neural network.
         /// </summary>
-        protected double DiscountFactor { get; set; } = 0.99d;
-
-        /// <summary>
-        /// Gets or sets the learning rate.
-        /// </summary>
-        protected double LearningRate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of time steps.
-        /// </summary>
-        protected int NumTimeSteps { get; set; }
-
-        /// <summary>
-        /// Gets or sets the input sequence.
-        /// </summary>
-        protected Matrix[] InputSequence { get; set; }
-
-        /// <summary>
-        /// Gets or sets the rewards for policy gradient optimization.
-        /// </summary>
-        protected List<double> Rewards { get; set; }
-
-        /// <summary>
-        /// Gets or sets the chosen actions for policy gradient optimization.
-        /// </summary>
-        protected List<Matrix> ChosenActions { get; set; }
-
-        /// <summary>
-        /// Gets the dropout rate for the apply dropout operation.
-        /// </summary>
-        /// <returns>The dropout rate.</returns>
-        public virtual double GetDropoutRate()
+        public NeuralNetworkParameters Parameters
         {
-            return this.DropoutRate;
+            get
+            {
+                return this.parameters ??= new NeuralNetworkParameters();
+            }
         }
 
         /// <summary>
-        /// Gets the discount factor.
+        /// Lookup the parameters for the operation.
         /// </summary>
-        /// <returns>The discount factor.</returns>
-        public virtual double GetDiscountFactor()
+        /// <param name="op">The operation to lookup.</param>
+        /// <returns>The parameters.</returns>
+        protected virtual object[] LookupParameters(IOperationBase op)
         {
-            return this.DiscountFactor;
-        }
+            object[] operationParameters = op.Parameters;
+            object[] parametersToReturn = new object[operationParameters.Length];
+            for (int j = 0; j < operationParameters.Length; ++j)
+            {
+                if (operationParameters[j] is IOperation)
+                {
+                    parametersToReturn[j] = ((IOperation)operationParameters[j]).GetOutput();
+                }
+                else if (operationParameters[j] is IDeepOperation)
+                {
+                    parametersToReturn[j] = ((IDeepOperation)operationParameters[j]).GetDeepOutput();
+                }
+                else
+                {
+                    parametersToReturn[j] = operationParameters[j];
+                }
+            }
 
-        /// <summary>
-        /// Gets the number of time steps.
-        /// </summary>
-        /// <returns>The number of tine steps.</returns>
-        public virtual int GetNumTimeSteps()
-        {
-            return this.NumTimeSteps;
-        }
-
-        /// <summary>
-        /// Gets the learning rate.
-        /// </summary>
-        /// <returns>The learning rate.</returns>
-        public virtual double GetLearningRate()
-        {
-            return this.LearningRate;
-        }
-
-        /// <summary>
-        /// Gets the rewards for policy gradient optimization.
-        /// </summary>
-        /// <returns>The rewards.</returns>
-        public virtual List<double> GetRewards()
-        {
-            return this.Rewards;
-        }
-
-        /// <summary>
-        /// Gets the input sequence.
-        /// </summary>
-        /// <returns>The input sequence.</returns>
-        public virtual Matrix[] GetInputSequence()
-        {
-            return this.InputSequence;
-        }
-
-        /// <summary>
-        /// Gets the chosen actions for policy gradient optimization.
-        /// </summary>
-        /// <returns>The chosen actions.</returns>
-        public virtual List<Matrix> GetChosenActions()
-        {
-            return this.ChosenActions;
+            return parametersToReturn;
         }
     }
 }

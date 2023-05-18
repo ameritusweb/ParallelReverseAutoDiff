@@ -14,14 +14,13 @@ namespace ParallelReverseAutoDiff.LstmExample
     /// </summary>
     public class SelfAttentionMultiLayerLSTM : NeuralNetwork, ILSTM
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.LstmExample.architecture";
         private readonly int hiddenSize;
-        private readonly Random rng;
         private readonly double clipValue;
         private readonly string architecture;
         private readonly int originalInputSize;
         private readonly int inputSize;
         private readonly int outputSize;
+        private readonly int numTimeSteps;
         private readonly int numLayers;
         private readonly string lstmName;
 
@@ -131,13 +130,11 @@ namespace ParallelReverseAutoDiff.LstmExample
 
         private int adamT;
 
-        private Dictionary<string, IOperation> operationsMap;
-        private IOperation? priorOperation;
-        private IOperation? startOperation;
-        private Dictionary<string, Func<int, int, object>> inputNameToValueMap;
         private Matrix[][][] arrays4D;
         private Matrix[][] arrays3D;
         private Matrix[] arrays2D;
+
+        private SelfAttentionMultiLayerLSTMComputationGraph computationGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfAttentionMultiLayerLSTM"/> class.
@@ -158,11 +155,11 @@ namespace ParallelReverseAutoDiff.LstmExample
             inputSize = hiddenSize;
             this.hiddenSize = hiddenSize;
             this.outputSize = outputSize;
-            this.rng = new Random(Guid.NewGuid().GetHashCode());
-            this.learningRate = learningRate;
+            this.Parameters.LearningRate = learningRate;
+            this.numTimeSteps = numTimeSteps;
             this.numLayers = numLayers;
             this.clipValue = clipValue;
-            this.numTimeSteps = numTimeSteps;
+            this.Parameters.NumTimeSteps = numTimeSteps;
             this.architecture = architecture;
             this.lstmName = lstmName;
 
@@ -194,8 +191,6 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.b = MatrixUtils.InitializeRandomMatrixWithXavierInitialization(outputSize, 1);
 
             this.InitializeState();
-
-            this.SetupInputNameToValueMap();
         }
 
         /// <inheritdoc/>
@@ -280,9 +275,9 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.ClearState();
 
             // Forward propagate through the MultiLayerLSTM
-            MatrixUtils.SetInPlace(this.inputSequence, inputs);
-            var op = this.startOperation ?? throw new Exception("Start operation should not be null.");
-            IOperation? currOp = null;
+            MatrixUtils.SetInPlace(this.Parameters.InputSequence, inputs);
+            var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
+            IOperationBase? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
@@ -290,10 +285,11 @@ namespace ParallelReverseAutoDiff.LstmExample
                 forwardMethod.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
-                    op.ResultTo(this.NameToValueFunc(op.ResultToName));
+                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+                    op.CopyResult(oo);
                 }
 
-                this.operationsMap[op.SpecificId] = op;
                 currOp = op;
                 if (op.HasNext)
                 {
@@ -346,9 +342,9 @@ namespace ParallelReverseAutoDiff.LstmExample
         private void InitializeState()
         {
             // Clear the hidden state and memory cell state
-            this.h = new Matrix[this.numTimeSteps][];
-            this.c = new Matrix[this.numTimeSteps][];
-            for (int t = 0; t < this.numTimeSteps; ++t)
+            this.h = new Matrix[this.Parameters.NumTimeSteps][];
+            this.c = new Matrix[this.Parameters.NumTimeSteps][];
+            for (int t = 0; t < this.Parameters.NumTimeSteps; ++t)
             {
                 this.h[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
                 this.c[t] = MatrixUtils.InitializeZeroMatrix(this.numLayers, this.hiddenSize, 1);
@@ -382,11 +378,11 @@ namespace ParallelReverseAutoDiff.LstmExample
             this.db = MatrixUtils.InitializeZeroMatrix(this.outputSize, 1);
 
             // Clear intermediates
-            this.output = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.outputSize, 1);
-            this.inputSequence = MatrixUtils.InitializeZeroMatrix(this.numTimeSteps, this.originalInputSize, 1);
+            this.output = MatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
+            this.Parameters.InputSequence = MatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.originalInputSize, 1);
 
             this.arrays4D = new Matrix[][][] { this.h, this.c };
-            this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.inputSequence };
+            this.arrays3D = new Matrix[][] { this.dWo, this.dUo, this.dbo, this.dWi, this.dUi, this.dbi, this.dWf, this.dUf, this.dbf, this.dWc, this.dUc, this.dbc, this.dWq, this.dWk, this.dWv, this.output, this.Parameters.InputSequence };
             this.arrays2D = new[] { this.dWe, this.dbe, this.dV, this.db };
         }
 
@@ -397,194 +393,56 @@ namespace ParallelReverseAutoDiff.LstmExample
             MatrixUtils.ClearArrays2D(this.arrays2D);
         }
 
-        private void SetupInputNameToValueMap()
-        {
-            var zeroMatrixHiddenSize = MatrixUtils.InitializeZeroMatrix(this.hiddenSize, 1);
-            this.inputNameToValueMap = new Dictionary<string, Func<int, int, object>>
-            {
-                { "inputSequence", (t, _) => this.inputSequence[t] },
-                { "output", (t, _) => this.output[t] },
-                { "Wf", (_, l) => this.Wf[l] },
-                { "Wi", (_, l) => this.Wi[l] },
-                { "Wc", (_, l) => this.Wc[l] },
-                { "Wo", (_, l) => this.Wo[l] },
-                { "Uf", (_, l) => this.Uf[l] },
-                { "Ui", (_, l) => this.Ui[l] },
-                { "Uc", (_, l) => this.Uc[l] },
-                { "Uo", (_, l) => this.Uo[l] },
-                { "bf", (_, l) => this.bf[l] },
-                { "bi", (_, l) => this.bi[l] },
-                { "bc", (_, l) => this.bc[l] },
-                { "bo", (_, l) => this.bo[l] },
-                { "dWf", (_, l) => this.dWf[l] },
-                { "dWi", (_, l) => this.dWi[l] },
-                { "dWc", (_, l) => this.dWc[l] },
-                { "dWo", (_, l) => this.dWo[l] },
-                { "dUf", (_, l) => this.dUf[l] },
-                { "dUi", (_, l) => this.dUi[l] },
-                { "dUc", (_, l) => this.dUc[l] },
-                { "dUo", (_, l) => this.dUo[l] },
-                { "dbf", (_, l) => this.dbf[l] },
-                { "dbi", (_, l) => this.dbi[l] },
-                { "dbc", (_, l) => this.dbc[l] },
-                { "dbo", (_, l) => this.dbo[l] },
-                { "f", (t, l) => this.operationsMap["f_" + t + "_" + l] },
-                { "i", (t, l) => this.operationsMap["i_" + t + "_" + l] },
-                { "cHat", (t, l) => this.operationsMap["cHat_" + t + "_" + l] },
-                { "h", (t, l) => this.h[t][l] },
-                { "c", (t, l) => this.c[t][l] },
-                { "o", (t, l) => this.operationsMap["o_" + t + "_" + l] },
-                { "We", (_, _) => this.We },
-                { "be", (_, _) => this.be },
-                { "Wq", (_, l) => this.Wq[l] },
-                { "Wk", (_, l) => this.Wk[l] },
-                { "Wv", (_, l) => this.Wv[l] },
-                { "V", (_, _) => this.V },
-                { "b", (_, _) => this.b },
-                { "dWe", (_, _) => this.dWe },
-                { "dbe", (_, _) => this.dbe },
-                { "dWq", (_, l) => this.dWq[l] },
-                { "dWk", (_, l) => this.dWk[l] },
-                { "dWv", (_, l) => this.dWv[l] },
-                { "dV", (_, _) => this.dV },
-                { "db", (_, _) => this.db },
-                { "scaledDotProductScalar", (_, _) => 1.0d / Math.Sqrt(this.hiddenSize) },
-                { "embeddedInput", (t, _) => this.operationsMap["embeddedInput_" + t] },
-                { "hFromCurrentTimeStepAndLastLayer", (t, _) => this.operationsMap["h_" + t + "_" + (this.numLayers - 1)] },
-                { "currentInput", (t, l) => l == 0 ? this.operationsMap["embeddedInput_" + t] : this.operationsMap["h_" + t + "_" + (l - 1)] },
-                { "previousHiddenState", (t, l) => t == 0 ? zeroMatrixHiddenSize : this.operationsMap["h_" + (t - 1) + "_" + l] },
-                { "previousMemoryCellState", (t, l) => t == 0 ? zeroMatrixHiddenSize : this.operationsMap["c_" + (t - 1) + "_" + l] },
-
-                // Add other input names and their corresponding getters here
-            };
-        }
-
-        private string ConvertIdToTimeAndLayer(string id, string[] split, IOperation op)
-        {
-            if (split.Length == 1)
-            {
-                if (op.LayerIndex == -1)
-                {
-                    return id + "_" + op.TimeStepIndex;
-                }
-                else
-                {
-                    return id + "_" + op.TimeStepIndex + "_" + op.LayerIndex;
-                }
-            }
-
-            return id;
-        }
-
-        private void SetupDependencies(IOperation op)
-        {
-            object[] parameters = new object[op.Inputs.Count];
-            for (int j = 0; j < op.Inputs.Count; ++j)
-            {
-                var input = op.Inputs[j];
-                var split = input.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                var specificId = this.ConvertIdToTimeAndLayer(input, split, op);
-                if (this.operationsMap.ContainsKey(specificId))
-                {
-                    var inputOp = this.operationsMap[specificId];
-                    inputOp.Outputs.Add(op.SpecificId);
-                    op.BackwardAdjacentOperations.Add(inputOp);
-                    parameters[j] = inputOp;
-                    continue;
-                }
-
-                string inputName = split[0];
-
-                if (this.inputNameToValueMap.ContainsKey(inputName))
-                {
-                    int timeStepIndex = op.TimeStepIndex;
-                    int layerIndex = op.LayerIndex;
-
-                    // Get the corresponding value from the dictionary using the input name
-                    var p = this.inputNameToValueMap[inputName](timeStepIndex, layerIndex);
-                    if (p is IOperation)
-                    {
-                        var inputOp = (IOperation)p;
-                        inputOp.Outputs.Add(op.SpecificId);
-                        op.BackwardAdjacentOperations.Add(inputOp);
-                        parameters[j] = inputOp;
-                        continue;
-                    }
-                    else
-                    {
-                        op.BackwardAdjacentOperations.Add(null);
-                    }
-
-                    parameters[j] = p;
-                }
-                else
-                {
-                    throw new Exception($"Input name {inputName} not found in value map");
-                }
-            }
-
-            op.Parameters = parameters;
-        }
-
-        private object[] LookupParameters(IOperation op)
-        {
-            object[] parameters = op.Parameters;
-            object[] parametersToReturn = new object[parameters.Length];
-            for (int j = 0; j < parameters.Length; ++j)
-            {
-                if (parameters[j] is IOperation)
-                {
-                    parametersToReturn[j] = ((IOperation)parameters[j]).GetOutput();
-                }
-                else
-                {
-                    parametersToReturn[j] = parameters[j];
-                }
-            }
-
-            return parametersToReturn;
-        }
-
-        private Func<int, int, object> NameToValueFunc(string name)
-        {
-            string[] split = name.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-            return this.inputNameToValueMap[split[0]];
-        }
-
         private async Task InitializeComputationGraph()
         {
             string json = EmbeddedResource.ReadAllJson(this.architecture);
-            this.CreateOperationsFromJson(json);
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.computationGraph = new SelfAttentionMultiLayerLSTMComputationGraph(this);
+            var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
+            this.computationGraph
+                .AddIntermediate("inputSequence", x => this.Parameters.InputSequence[x.TimeStep])
+                .AddIntermediate("output", x => this.output[x.TimeStep])
+                .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
+                .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
+                .AddScalar("scaledDotProductScalar", x => 1.0d / Math.Sqrt(this.hiddenSize))
+                .AddWeight("Wf", x => this.Wf[x.Layer]).AddGradient("dWf", x => this.dWf[x.Layer])
+                .AddWeight("Wi", x => this.Wi[x.Layer]).AddGradient("dWi", x => this.dWi[x.Layer])
+                .AddWeight("Wc", x => this.Wc[x.Layer]).AddGradient("dWc", x => this.dWc[x.Layer])
+                .AddWeight("Wo", x => this.Wo[x.Layer]).AddGradient("dWo", x => this.dWo[x.Layer])
+                .AddWeight("Uf", x => this.Uf[x.Layer]).AddGradient("dUf", x => this.dUf[x.Layer])
+                .AddWeight("Ui", x => this.Ui[x.Layer]).AddGradient("dUi", x => this.dUi[x.Layer])
+                .AddWeight("Uc", x => this.Uc[x.Layer]).AddGradient("dUc", x => this.dUc[x.Layer])
+                .AddWeight("Uo", x => this.Uo[x.Layer]).AddGradient("dUo", x => this.dUo[x.Layer])
+                .AddWeight("bf", x => this.bf[x.Layer]).AddGradient("dbf", x => this.dbf[x.Layer])
+                .AddWeight("bi", x => this.bi[x.Layer]).AddGradient("dbi", x => this.dbi[x.Layer])
+                .AddWeight("bc", x => this.bc[x.Layer]).AddGradient("dbc", x => this.dbc[x.Layer])
+                .AddWeight("bo", x => this.bo[x.Layer]).AddGradient("dbo", x => this.dbo[x.Layer])
+                .AddWeight("Wq", x => this.Wq[x.Layer]).AddGradient("dWq", x => this.dWq[x.Layer])
+                .AddWeight("Wk", x => this.Wk[x.Layer]).AddGradient("dWk", x => this.dWk[x.Layer])
+                .AddWeight("Wv", x => this.Wv[x.Layer]).AddGradient("dWv", x => this.dWv[x.Layer])
+                .AddWeight("We", x => this.We).AddGradient("dWe", x => this.dWe)
+                .AddWeight("be", x => this.be).AddGradient("dbe", x => this.dbe)
+                .AddWeight("V", x => this.V).AddGradient("dV", x => this.dV)
+                .AddWeight("b", x => this.b).AddGradient("db", x => this.db)
+                .AddOperationFinder("i", x => this.computationGraph[$"i_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("f", x => this.computationGraph[$"f_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("cHat", x => this.computationGraph[$"cHat_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("o", x => this.computationGraph[$"o_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("embeddedInput", x => this.computationGraph[$"embeddedInput_{x.TimeStep}_0"])
+                .AddOperationFinder("hFromCurrentTimeStepAndLastLayer", x => this.computationGraph[$"h_{x.TimeStep}_{this.numLayers - 1}"])
+                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"embeddedInput_{x.TimeStep}_0"] : this.computationGraph[$"h_{x.TimeStep}_{x.Layer - 1}"])
+                .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
+                .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
+                .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.numLayers);
 
-            var op = this.startOperation;
-            if (op == null)
+            IOperationBase? backwardStartOperation = null;
+            for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
             {
-                throw new Exception("Start operation should not be null.");
-            }
-
-            IOperation? currOp = null;
-            do
-            {
-                this.SetupDependencies(op);
-                this.operationsMap[op.SpecificId] = op;
-                currOp = op;
-                if (op.HasNext)
-                {
-                    op = op.Next;
-                }
-            }
-            while (currOp.Next != null);
-
-            IOperation? backwardStartOperation = null;
-            for (int t = this.numTimeSteps - 1; t >= 0; t--)
-            {
-                backwardStartOperation = this.operationsMap[$"output_t_{t}"];
+                backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
                 OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
                 await opVisitor.TraverseAsync();
                 await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
             }
-
-            Console.Clear();
         }
 
         private async Task AutomaticForwardPropagate(Matrix[] inputSequence, List<Matrix> chosenActions, List<double> rewards, bool doNotUpdate = false)
@@ -592,32 +450,23 @@ namespace ParallelReverseAutoDiff.LstmExample
             // Initialize memory cell, hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            MatrixUtils.SetInPlace(this.inputSequence, inputSequence);
-            this.chosenActions = chosenActions;
-            this.rewards = rewards;
-            var op = this.startOperation;
-            if (op == null)
-            {
-                throw new Exception("Start operation should not be null.");
-            }
-
-            IOperation? currOp = null;
+            MatrixUtils.SetInPlace(this.Parameters.InputSequence, inputSequence);
+            this.Parameters.ChosenActions = chosenActions;
+            this.Parameters.Rewards = rewards;
+            var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
+            IOperationBase? currOp = null;
             do
             {
                 var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward");
-                if (forward == null)
-                {
-                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
-                }
-
-                forward.Invoke(op, parameters);
+                var forwardMethod = op.OperationType.GetMethod("Forward") ?? throw new Exception($"Forward method should exist on operation of type {op.OperationType.Name}.");
+                forwardMethod.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
-                    op.ResultTo(this.NameToValueFunc(op.ResultToName));
+                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+                    op.CopyResult(oo);
                 }
 
-                this.operationsMap[op.SpecificId] = op;
                 currOp = op;
                 if (op.HasNext)
                 {
@@ -645,12 +494,12 @@ namespace ParallelReverseAutoDiff.LstmExample
 
             Console.WriteLine($"{this.lstmName}: Policy gradient loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = lossFunction.Backward(MatrixUtils.To2DArray(this.output)).Item1 as Matrix ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
-            IOperation? backwardStartOperation = null;
-            for (int t = this.numTimeSteps - 1; t >= 0; t--)
+            IOperationBase? backwardStartOperation = null;
+            for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
             {
-                backwardStartOperation = this.operationsMap[$"output_t_{t}"];
+                backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
                 if (gradientOfLossWrtOutput[t][0] != 0.0d)
                 {
                     var backwardInput = new Matrix(1, 1);
@@ -732,8 +581,8 @@ namespace ParallelReverseAutoDiff.LstmExample
             var frobeniusNorm = MatrixUtils.FrobeniusNorm(this.V);
             var learningRateReductionFactor = MatrixUtils.LearningRateReductionFactor(frobeniusNorm, 1.4d, 0.001d);
             Console.WriteLine($"{this.lstmName}: Frobenius norm: {frobeniusNorm}, learning rate reduction factor: {learningRateReductionFactor}");
-            this.UpdateWeightWithAdam(this.V, this.mV, this.vV, dV, beta1, beta2, epsilon, this.adamT, this.learningRate * learningRateReductionFactor);
-            this.UpdateWeightWithAdam(this.b, this.mb, this.vb, db, beta1, beta2, epsilon, this.adamT, this.learningRate * learningRateReductionFactor);
+            this.UpdateWeightWithAdam(this.V, this.mV, this.vV, dV, beta1, beta2, epsilon, this.adamT, this.Parameters.LearningRate * learningRateReductionFactor);
+            this.UpdateWeightWithAdam(this.b, this.mb, this.vb, db, beta1, beta2, epsilon, this.adamT, this.Parameters.LearningRate * learningRateReductionFactor);
 
             this.UpdateWeightWithAdam(this.We, this.mWe, this.vWe, dWe, beta1, beta2, epsilon, this.adamT);
             this.UpdateWeightWithAdam(this.be, this.mbe, this.vbe, dbe, beta1, beta2, epsilon, this.adamT);
@@ -787,7 +636,7 @@ namespace ParallelReverseAutoDiff.LstmExample
 
         private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, int t, double? newLearningRate = null)
         {
-            var lr = newLearningRate.HasValue ? newLearningRate.Value : this.learningRate;
+            var lr = newLearningRate.HasValue ? newLearningRate.Value : this.Parameters.LearningRate;
 
             // Update biased first moment estimate
             mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
@@ -810,117 +659,6 @@ namespace ParallelReverseAutoDiff.LstmExample
                     w[i][j] -= weightReductionValue;
                 }
             }
-        }
-
-        private IOperation ProcessOperation(OperationInfo operation, int timeStep = -1, int layerIndex = -1)
-        {
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation), $"The parameter {nameof(operation)} cannot be null.");
-            }
-
-            string id = operation.Id;
-            string typeName = operation.Type;
-            string[] inputs = operation.Inputs;
-
-            System.Type operationType = System.Type.GetType($"{NAMESPACE}.{typeName}") ?? throw new Exception($"Unsupported operation type {typeName}");
-
-            var instantiate = operationType.GetMethod("Instantiate");
-            if (instantiate == null)
-            {
-                throw new Exception($"Instantiate method should exist on operation of type {operationType.Name}");
-            }
-
-            IOperation op = (IOperation)(instantiate.Invoke(null, new object[] { (NeuralNetwork)this }) ?? throw new Exception("Instantiate method should return a non-null operation."));
-
-            op.OperationType = operationType;
-            op.Inputs = inputs.ToList();
-            string resultTo = operation.SetResultTo;
-            if (resultTo != null)
-            {
-                op.ResultToName = resultTo;
-            }
-
-            string[] gradientResultTo = operation.GradientResultTo;
-            if (gradientResultTo != null)
-            {
-                op.GradientDestinations = new object[gradientResultTo.Length];
-                for (int i = 0; i < gradientResultTo.Length; ++i)
-                {
-                    if (gradientResultTo[i] != null)
-                    {
-                        op.GradientDestinations[i] = this.NameToValueFunc(gradientResultTo[i])(timeStep, layerIndex);
-                    }
-                }
-            }
-
-            if (this.priorOperation != null)
-            {
-                this.priorOperation.Next = op;
-            }
-
-            if (this.startOperation == null)
-            {
-                this.startOperation = op;
-            }
-
-            op.Id = id;
-
-            this.priorOperation = op;
-
-            return op;
-        }
-
-        private void ProcessAndAddOperation(OperationInfo operationInfo, int timeStepIndex, int layerIndex = -1)
-        {
-            IOperation op = this.ProcessOperation(operationInfo, timeStepIndex, layerIndex);
-            op.TimeStepIndex = timeStepIndex;
-            op.SpecificId = op.Id + "_" + timeStepIndex;
-
-            if (layerIndex != -1)
-            {
-                op.LayerIndex = layerIndex;
-                op.SpecificId += "_" + layerIndex;
-            }
-
-            this.operationsMap[op.SpecificId] = op;
-        }
-
-        private void CreateOperationsFromJson(string json)
-        {
-            this.operationsMap = new Dictionary<string, IOperation>();
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.priorOperation = null;
-            this.startOperation = null;
-
-            for (int i = 0; i < this.numTimeSteps; ++i)
-            {
-                foreach (var timeStep in jsonArchitecture.TimeSteps)
-                {
-                    foreach (var start in timeStep.StartOperations)
-                    {
-                        this.ProcessAndAddOperation(start, i);
-                    }
-
-                    for (int j = 0; j < this.numLayers; ++j)
-                    {
-                        foreach (var layer in timeStep.Layers)
-                        {
-                            foreach (var layerOp in layer.Operations)
-                            {
-                                this.ProcessAndAddOperation(layerOp, i, j);
-                            }
-                        }
-                    }
-
-                    foreach (var end in timeStep.EndOperations)
-                    {
-                        this.ProcessAndAddOperation(end, i);
-                    }
-                }
-            }
-
-            this.priorOperation = null;
         }
     }
 }

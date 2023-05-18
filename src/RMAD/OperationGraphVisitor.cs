@@ -15,7 +15,7 @@ namespace ParallelReverseAutoDiff.RMAD
     public class OperationGraphVisitor
     {
         private readonly string id;
-        private readonly IOperation startNode;
+        private readonly IOperationBase startNode;
         private readonly int startingPointIndex;
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="id">A unique ID.</param>
         /// <param name="startNode">The start node of the computation graph.</param>
         /// <param name="startingPointIndex">The starting point index.</param>
-        public OperationGraphVisitor(string id, IOperation startNode, int startingPointIndex)
+        public OperationGraphVisitor(string id, IOperationBase startNode, int startingPointIndex)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -86,7 +86,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="node">The starting operation.</param>
         /// <param name="returnEarly">If it should return early if the visited count is already 0.</param>
         /// <returns>A task.</returns>
-        public async Task ResetVisitedCountsAsync(IOperation node, bool returnEarly = true)
+        public async Task ResetVisitedCountsAsync(IOperationBase node, bool returnEarly = true)
         {
             if (node == null)
             {
@@ -111,7 +111,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var adjacentTasks = new List<Task>();
             for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
             {
-                IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
+                IOperationBase? adjacentOperation = node.BackwardAdjacentOperations[i];
                 if (adjacentOperation != null)
                 {
                     adjacentTasks.Add(this.ResetVisitedCountsAsync(adjacentOperation));
@@ -121,7 +121,7 @@ namespace ParallelReverseAutoDiff.RMAD
             await Task.WhenAll(adjacentTasks);
         }
 
-        private async Task Traverse(IOperation node)
+        private async Task Traverse(IOperationBase node)
         {
             if (node == null)
             {
@@ -153,7 +153,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var adjacentTasks = new List<Task>();
             for (int i = 0; i < node.BackwardAdjacentOperations.Count; ++i)
             {
-                IOperation? adjacentOperation = node.BackwardAdjacentOperations[i];
+                IOperationBase? adjacentOperation = node.BackwardAdjacentOperations[i];
                 if (adjacentOperation != null)
                 {
                     adjacentTasks.Add(this.Traverse(adjacentOperation));

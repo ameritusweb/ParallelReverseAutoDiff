@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Gradient utilities for reverse mode automatic differentiation.
@@ -29,13 +30,44 @@ namespace ParallelReverseAutoDiff.RMAD
             int numCols = gradients[0][0].Length;
 
             Matrix accumulatedGradients = new Matrix(numRows, numCols);
-            for (int i = 0; i < numRows; i++)
+            Parallel.For(0, numRows, (i) =>
             {
                 for (int j = 0; j < numCols; j++)
                 {
                     accumulatedGradients[i][j] = gradients.Sum(g => g[i][j]);
                 }
+            });
+
+            return accumulatedGradients;
+        }
+
+        /// <summary>
+        /// Accumulates the gradients for multiple deep matrices.
+        /// </summary>
+        /// <param name="gradients">The gradients to accumulate.</param>
+        /// <returns>A deep matrix with the accumulated gradients.</returns>
+        public static DeepMatrix? AccumulateGradients(List<DeepMatrix> gradients)
+        {
+            if (gradients == null || gradients.Count == 0)
+            {
+                return null;
             }
+
+            int depth = gradients.Count;
+            int numRows = gradients[0].Rows;
+            int numCols = gradients[0].Cols;
+
+            DeepMatrix accumulatedGradients = new DeepMatrix(depth, numRows, numCols);
+            Parallel.For(0, depth, (d) =>
+            {
+                for (int i = 0; i < numRows; i++)
+                {
+                    for (int j = 0; j < numCols; j++)
+                    {
+                        accumulatedGradients[d][i][j] = gradients.Sum(g => g[d][i][j]);
+                    }
+                }
+            });
 
             return accumulatedGradients;
         }
@@ -45,20 +77,30 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="gradientsList">The list of gradients to accumulate.</param>
         /// <returns>The accumulated gradients.</returns>
-        public static (Matrix?, Matrix?) AccumulateBackwardGradients(List<(Matrix?, Matrix?)> gradientsList)
+        public static object?[] AccumulateBackwardGradients(List<BackwardResult> gradientsList)
         {
-            if (gradientsList == null || gradientsList.Count == 0)
+            List<object?> accumulatedBackwardGradients = new List<object?>();
+            var firstResult = gradientsList[0];
+            var size = firstResult.Results.Length;
+            for (int i = 0; i < size; ++i)
             {
-                return (null, null);
+                if (firstResult.Results[i] is Matrix)
+                {
+                    Matrix? accumulatedGradients = AccumulateGradients(gradientsList.Where(g => g.Results[i] != null).Select(g => g.Results[i]).OfType<Matrix>().ToList());
+                    accumulatedBackwardGradients.Add(accumulatedGradients);
+                }
+                else if (firstResult.Results[i] is DeepMatrix)
+                {
+                    DeepMatrix? accumulatedGradients = AccumulateGradients(gradientsList.Where(g => g.Results[i] != null).Select(g => g.Results[i]).OfType<DeepMatrix>().ToList());
+                    accumulatedBackwardGradients.Add(accumulatedGradients);
+                }
+                else
+                {
+                    accumulatedBackwardGradients.Add(null);
+                }
             }
 
-            List<Matrix> firstGradients = gradientsList.Where(g => g.Item1 != null).Select(g => g.Item1).OfType<Matrix>().ToList();
-            List<Matrix> secondGradients = gradientsList.Where(g => g.Item2 != null).Select(g => g.Item2).OfType<Matrix>().ToList();
-
-            Matrix? firstAccumulatedGradients = firstGradients.Count > 0 ? AccumulateGradients(firstGradients) : null;
-            Matrix? secondAccumulatedGradients = secondGradients.Count > 0 ? AccumulateGradients(secondGradients) : null;
-
-            return (firstAccumulatedGradients, secondAccumulatedGradients);
+            return accumulatedBackwardGradients.ToArray();
         }
     }
 }

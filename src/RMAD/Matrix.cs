@@ -8,7 +8,9 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
+    using ParallelReverseAutoDiff.Interprocess;
 
     /// <summary>
     /// A matrix class used for matrix operations.
@@ -29,6 +31,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 this.matrix[i] = new double[cols];
             }
+
+            this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
         }
 
         /// <summary>
@@ -38,7 +42,13 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix(double[][] matrix)
         {
             this.matrix = matrix;
+            this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
         }
+
+        /// <summary>
+        /// Gets the unique ID of the matrix.
+        /// </summary>
+        public int UniqueId { get; private set; }
 
         /// <summary>
         /// Gets the number of rows.
@@ -138,6 +148,90 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Deserialize from the buffer.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>A flat array.</returns>
+        public static double[] DeserializeToFlatArray(ReadOnlySpan<byte> buffer)
+        {
+            // Skip the transpose flag, unique ID, rows, and columns
+            int dataOffset = 1 + (3 * sizeof(int));
+
+            int rows = BitConverter.ToInt32(buffer.Slice(1 + sizeof(int), sizeof(int)));
+            int cols = BitConverter.ToInt32(buffer.Slice(1 + (2 * sizeof(int)), sizeof(int)));
+
+            int elementsCount = rows * cols;
+            double[] flatMatrix = new double[elementsCount];
+
+            for (int i = 0; i < elementsCount; i++)
+            {
+                flatMatrix[i] = BitConverter.ToDouble(buffer.Slice((i * sizeof(double)) + dataOffset, sizeof(double)));
+            }
+
+            return flatMatrix;
+        }
+
+        /// <summary>
+        /// Initializes the matrix with He or Xavier initialization.
+        /// </summary>
+        /// <param name="initializationType">The initialization type.</param>
+        public void Initialize(InitializationType initializationType)
+        {
+            switch (initializationType)
+            {
+                case InitializationType.He:
+                    this.InitializeHe();
+                    break;
+                case InitializationType.Xavier:
+                    this.InitializeXavier();
+                    break;
+                default:
+                    throw new ArgumentException("Invalid initialization type.");
+            }
+        }
+
+        /// <summary>
+        /// Serialize to the buffer.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="transpose">Whether to transpose the matrix.</param>
+        public void Serialize(Span<byte> buffer, bool transpose)
+        {
+            // Write the transpose flag
+            buffer[0] = (byte)(transpose ? 1 : 0);
+
+            // Write the unique identifier
+            BitConverter.TryWriteBytes(buffer.Slice(1, sizeof(int)), this.UniqueId);
+
+            // Write the dimensions
+            BitConverter.TryWriteBytes(buffer.Slice(1 + sizeof(int), sizeof(int)), this.Rows);
+            BitConverter.TryWriteBytes(buffer.Slice(1 + (2 * sizeof(int)), sizeof(int)), this.Cols);
+
+            // Write the matrix data as a flat array
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    int index = (i * this.Cols) + j;
+                    BitConverter.TryWriteBytes(buffer.Slice((index * sizeof(double)) + (1 + (3 * sizeof(int))), sizeof(double)), this[i, j]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the column at the specified index to the specified value.
+        /// </summary>
+        /// <param name="columnIndex">The column index.</param>
+        /// <param name="value">The value to set.</param>
+        public void SetColumn(int columnIndex, double value)
+        {
+            for (int i = 0; i < this.Rows; i++)
+            {
+                this[i, columnIndex] = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the enumerator for the matrix.
         /// </summary>
         /// <returns>The enumerator for the matrix.</returns>
@@ -156,6 +250,85 @@ namespace ParallelReverseAutoDiff.RMAD
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Overrides the equals operator.
+        /// </summary>
+        /// <param name="obj">The object to compare.</param>
+        /// <returns>The comparison.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is Matrix other)
+            {
+                if (this.UniqueId == other.UniqueId)
+                {
+                    return true;
+                }
+
+                if (this.Rows != other.Rows || this.Cols != other.Cols)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Cols; j++)
+                    {
+                        if (this[i, j] != other[i, j])
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Overrides the hash code.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode()
+        {
+            int hash = HashCode.Combine(this.UniqueId, this.Rows, this.Cols);
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    hash = HashCode.Combine(hash, this[i, j]);
+                }
+            }
+
+            return hash;
+        }
+
+        private void InitializeHe()
+        {
+            var variance = 2.0 / this.Cols;
+
+            Parallel.For(0, this.Rows, i =>
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    this[i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble();
+                }
+            });
+        }
+
+        private void InitializeXavier()
+        {
+            Parallel.For(0, this.Rows, i =>
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    this[i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols));
+                }
+            });
         }
     }
 }
