@@ -16,7 +16,7 @@ namespace ParallelReverseAutoDiff.Test
                     new Dimension { Depth = 12, Height = 8, Width = 8 },
                     new Dimension { Depth = 12, Height = 2, Width = 2 },
                     30976,
-                    10000,
+                    5000,
                     2048,
                     32,
                     4,
