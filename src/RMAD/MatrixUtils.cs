@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -12,15 +14,13 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public static class MatrixUtils
     {
+        [ThreadStatic]
+        private static Random random;
+
         /// <summary>
-        /// Converts the tuple to an array of matrices.
+        /// Gets a random number generator for the current thread.
         /// </summary>
-        /// <param name="dOutput">The tuple of matrices.</param>
-        /// <returns>The array of matrices.</returns>
-        public static Matrix?[] Reassemble((Matrix?, Matrix?) dOutput)
-        {
-            return new[] { dOutput.Item1, dOutput.Item2 };
-        }
+        public static Random Random => random ?? (random = new Random((int)((1 + Thread.CurrentThread.ManagedThreadId) * DateTime.UtcNow.Ticks)));
 
         /// <summary>
         /// Flattens a matrix into a 1D array.

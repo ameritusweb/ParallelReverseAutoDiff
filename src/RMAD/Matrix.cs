@@ -309,31 +309,24 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private void InitializeHe()
         {
-            Func<Random> randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
-            var localRandom = new ThreadLocal<Random>(randomFunc);
-            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
             var variance = 2.0 / this.Cols;
 
             Parallel.For(0, this.Rows, i =>
             {
                 for (int j = 0; j < this.Cols; j++)
                 {
-                    this[i, j] = Math.Sqrt(variance) * rand.NextDouble();
+                    this[i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble();
                 }
             });
         }
 
         private void InitializeXavier()
         {
-            Func<Random> randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
-            var localRandom = new ThreadLocal<Random>(randomFunc);
-            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
-
             Parallel.For(0, this.Rows, i =>
             {
                 for (int j = 0; j < this.Cols; j++)
                 {
-                    this[i, j] = ((rand.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols));
+                    this[i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols));
                 }
             });
         }

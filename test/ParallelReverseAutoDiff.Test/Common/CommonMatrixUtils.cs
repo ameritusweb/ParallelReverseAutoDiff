@@ -586,6 +586,11 @@ namespace ParallelReverseAutoDiff.Test.Common
             return result;
         }
 
+        [ThreadStatic]
+        private static Random __random;
+
+        public static Random Random => __random ?? (__random = new Random((int)((1 + Thread.CurrentThread.ManagedThreadId) * DateTime.UtcNow.Ticks)));
+
         /// <summary>
         /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
         /// </summary>
@@ -595,15 +600,12 @@ namespace ParallelReverseAutoDiff.Test.Common
         public static Matrix InitializeRandomMatrixWithXavierInitialization(int numRows, int numCols)
         {
             Matrix matrix = new Matrix(numRows, numCols);
-            var randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
-            var localRandom = new ThreadLocal<Random>(randomFunc);
-            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
 
             Parallel.For(0, numRows, i =>
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    matrix[i][j] = (rand.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                    matrix[i][j] = (Random.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                 }
             });
 
@@ -621,10 +623,6 @@ namespace ParallelReverseAutoDiff.Test.Common
         {
             Matrix[] matrix = new Matrix[numLayers];
 
-            var randomFunc = () => new Random(Guid.NewGuid().GetHashCode());
-            var localRandom = new ThreadLocal<Random>(randomFunc);
-            var rand = localRandom == null || localRandom.Value == null ? randomFunc() : localRandom.Value;
-
             Parallel.For(0, numLayers, layerIndex =>
             {
                 matrix[layerIndex] = new Matrix(numRows, numCols);
@@ -632,7 +630,7 @@ namespace ParallelReverseAutoDiff.Test.Common
                 {
                     for (int j = 0; j < numCols; j++)
                     {
-                        matrix[layerIndex][i][j] = (rand.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                        matrix[layerIndex][i][j] = (Random.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                     }
                 }
             });
