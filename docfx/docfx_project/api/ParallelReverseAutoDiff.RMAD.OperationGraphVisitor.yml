@@ -1,0 +1,602 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  commentId: T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  id: OperationGraphVisitor
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String)
+  - ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+  - ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase,System.Boolean)
+  - ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync
+  langs:
+  - csharp
+  - vb
+  name: OperationGraphVisitor
+  nameWithType: OperationGraphVisitor
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  type: Class
+  source:
+    remote:
+      path: src/RMAD/OperationGraphVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: OperationGraphVisitor
+    path: ../../src/RMAD/OperationGraphVisitor.cs
+    startLine: 14
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The operation graph visitor for setting the backward dependency counts of the computation graph.
+  example: []
+  syntax:
+    content: public class OperationGraphVisitor
+    content.vb: Public Class OperationGraphVisitor
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  langs:
+  - csharp
+  - vb
+  name: OperationGraphVisitor(string)
+  nameWithType: OperationGraphVisitor.OperationGraphVisitor(string)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.OperationGraphVisitor(string)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/OperationGraphVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/OperationGraphVisitor.cs
+    startLine: 24
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.OperationGraphVisitor" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public OperationGraphVisitor(string id)
+    parameters:
+    - id: id
+      type: System.String
+      description: A unique ID.
+    content.vb: Public Sub New(id As String)
+  overload: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor*
+  nameWithType.vb: OperationGraphVisitor.New(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.New(String)
+  name.vb: New(String)
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)
+  id: '#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  langs:
+  - csharp
+  - vb
+  name: OperationGraphVisitor(string, IOperationBase, int)
+  nameWithType: OperationGraphVisitor.OperationGraphVisitor(string, IOperationBase, int)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.OperationGraphVisitor(string, ParallelReverseAutoDiff.RMAD.IOperationBase, int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/OperationGraphVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/OperationGraphVisitor.cs
+    startLine: 40
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.OperationGraphVisitor" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public OperationGraphVisitor(string id, IOperationBase startNode, int startingPointIndex)
+    parameters:
+    - id: id
+      type: System.String
+      description: A unique ID.
+    - id: startNode
+      type: ParallelReverseAutoDiff.RMAD.IOperationBase
+      description: The start node of the computation graph.
+    - id: startingPointIndex
+      type: System.Int32
+      description: The starting point index.
+    content.vb: Public Sub New(id As String, startNode As IOperationBase, startingPointIndex As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor*
+  nameWithType.vb: OperationGraphVisitor.New(String, IOperationBase, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.New(String, ParallelReverseAutoDiff.RMAD.IOperationBase, Integer)
+  name.vb: New(String, IOperationBase, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+  id: Id
+  parent: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: OperationGraphVisitor.Id
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationGraphVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Id
+    path: ../../src/RMAD/OperationGraphVisitor.cs
+    startLine: 65
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the ID of the visitor.
+  example: []
+  syntax:
+    content: public string Id { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Id As String
+  overload: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id*
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync
+  id: TraverseAsync
+  parent: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  langs:
+  - csharp
+  - vb
+  name: TraverseAsync()
+  nameWithType: OperationGraphVisitor.TraverseAsync()
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/OperationGraphVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: TraverseAsync
+    path: ../../src/RMAD/OperationGraphVisitor.cs
+    startLine: 77
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Starts the traversal of the computation graph.
+  example: []
+  syntax:
+    content: public Task TraverseAsync()
+    return:
+      type: System.Threading.Tasks.Task
+      description: The task.
+    content.vb: Public Function TraverseAsync() As Task
+  overload: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync*
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase,System.Boolean)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase,System.Boolean)
+  id: ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase,System.Boolean)
+  parent: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  langs:
+  - csharp
+  - vb
+  name: ResetVisitedCountsAsync(IOperationBase, bool)
+  nameWithType: OperationGraphVisitor.ResetVisitedCountsAsync(IOperationBase, bool)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase, bool)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/OperationGraphVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ResetVisitedCountsAsync
+    path: ../../src/RMAD/OperationGraphVisitor.cs
+    startLine: 88
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Resets the visited counts of the computation graph.
+  example: []
+  syntax:
+    content: public Task ResetVisitedCountsAsync(IOperationBase node, bool returnEarly = true)
+    parameters:
+    - id: node
+      type: ParallelReverseAutoDiff.RMAD.IOperationBase
+      description: The starting operation.
+    - id: returnEarly
+      type: System.Boolean
+      description: If it should return early if the visited count is already 0.
+    return:
+      type: System.Threading.Tasks.Task
+      description: A task.
+    content.vb: Public Function ResetVisitedCountsAsync(node As IOperationBase, returnEarly As Boolean = True) As Task
+  overload: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync*
+  nameWithType.vb: OperationGraphVisitor.ResetVisitedCountsAsync(IOperationBase, Boolean)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase, Boolean)
+  name.vb: ResetVisitedCountsAsync(IOperationBase, Boolean)
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  commentId: T:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+  href: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html
+  name: OperationGraphVisitor
+  nameWithType: OperationGraphVisitor
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor
+  href: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html#ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.#ctor(System.String)
+  name: OperationGraphVisitor
+  nameWithType: OperationGraphVisitor.OperationGraphVisitor
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.OperationGraphVisitor
+  nameWithType.vb: OperationGraphVisitor.New
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase
+  commentId: T:ParallelReverseAutoDiff.RMAD.IOperationBase
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html
+  name: IOperationBase
+  nameWithType: IOperationBase
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+  href: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html#ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+  name: Id
+  nameWithType: OperationGraphVisitor.Id
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.Id
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync
+  href: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html#ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync
+  name: TraverseAsync
+  nameWithType: OperationGraphVisitor.TraverseAsync
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.TraverseAsync
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync
+  href: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html#ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync(ParallelReverseAutoDiff.RMAD.IOperationBase,System.Boolean)
+  name: ResetVisitedCountsAsync
+  nameWithType: OperationGraphVisitor.ResetVisitedCountsAsync
+  fullName: ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.ResetVisitedCountsAsync
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

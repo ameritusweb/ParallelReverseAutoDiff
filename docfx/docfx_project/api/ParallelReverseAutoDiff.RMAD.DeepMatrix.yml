@@ -1,0 +1,1257 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
+  id: DeepMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Dimension)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrix
+  nameWithType: DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  type: Class
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DeepMatrix
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 16
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A deep matrix class used for deep matrix operations.
+  example: []
+  syntax:
+    content: 'public class DeepMatrix : IEnumerable<Matrix>, IEnumerable'
+    content.vb: Public Class DeepMatrix Implements IEnumerable(Of Matrix), IEnumerable
+  inheritance:
+  - System.Object
+  implements:
+  - System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32,System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrix(int, int, int)
+  nameWithType: DeepMatrix.DeepMatrix(int, int, int)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix(int, int, int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 26
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.DeepMatrix" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public DeepMatrix(int depth, int rows, int cols)
+    parameters:
+    - id: depth
+      type: System.Int32
+      description: The depth.
+    - id: rows
+      type: System.Int32
+      description: The rows.
+    - id: cols
+      type: System.Int32
+      description: The cols.
+    content.vb: Public Sub New(depth As Integer, rows As Integer, cols As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
+  nameWithType.vb: DeepMatrix.New(Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New(Integer, Integer, Integer)
+  name.vb: New(Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Dimension)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Dimension)
+  id: '#ctor(ParallelReverseAutoDiff.RMAD.Dimension)'
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrix(Dimension)
+  nameWithType: DeepMatrix.DeepMatrix(Dimension)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix(ParallelReverseAutoDiff.RMAD.Dimension)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 41
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.DeepMatrix" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public DeepMatrix(Dimension dimensions)
+    parameters:
+    - id: dimensions
+      type: ParallelReverseAutoDiff.RMAD.Dimension
+      description: The dimensions of the deep matrix.
+    content.vb: Public Sub New(dimensions As Dimension)
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
+  nameWithType.vb: DeepMatrix.New(Dimension)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New(ParallelReverseAutoDiff.RMAD.Dimension)
+  name.vb: New(Dimension)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])
+  id: '#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])'
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrix(Matrix[])
+  nameWithType: DeepMatrix.DeepMatrix(Matrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix(ParallelReverseAutoDiff.RMAD.Matrix[])
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 56
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.DeepMatrix" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public DeepMatrix(Matrix[] matrices)
+    parameters:
+    - id: matrices
+      type: ParallelReverseAutoDiff.RMAD.Matrix[]
+      description: The matrices to initialize with.
+    content.vb: Public Sub New(matrices As Matrix())
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
+  nameWithType.vb: DeepMatrix.New(Matrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New(ParallelReverseAutoDiff.RMAD.Matrix())
+  name.vb: New(Matrix())
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  id: UniqueId
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: UniqueId
+  nameWithType: DeepMatrix.UniqueId
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: UniqueId
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 65
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the unique ID of the matrix.
+  example: []
+  syntax:
+    content: public int UniqueId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property UniqueId As Integer
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+  id: Rows
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Rows
+  nameWithType: DeepMatrix.Rows
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Rows
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 70
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the number of rows.
+  example: []
+  syntax:
+    content: public int Rows { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Rows As Integer
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  id: Cols
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Cols
+  nameWithType: DeepMatrix.Cols
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Cols
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 75
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the number of columns.
+  example: []
+  syntax:
+    content: public int Cols { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Cols As Integer
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  id: Depth
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Depth
+  nameWithType: DeepMatrix.Depth
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Depth
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 80
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the depth of the matrix.
+  example: []
+  syntax:
+    content: public int Depth { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Depth As Integer
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
+  id: Item(System.Int32,System.Int32,System.Int32)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: this[int, int, int]
+  nameWithType: DeepMatrix.this[int, int, int]
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.this[int, int, int]
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: this[]
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 89
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the value at the specified row and column and depth.
+  example: []
+  syntax:
+    content: public double this[int depth, int row, int col] { get; set; }
+    parameters:
+    - id: depth
+      type: System.Int32
+      description: The depth.
+    - id: row
+      type: System.Int32
+      description: The row.
+    - id: col
+      type: System.Int32
+      description: The column.
+    return:
+      type: System.Double
+      description: The value at the specified row and column and depth.
+    content.vb: Public Default Property this[](depth As Integer, row As Integer, col As Integer) As Double
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item*
+  nameWithType.vb: DeepMatrix.this[](Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.this[](Integer, Integer, Integer)
+  name.vb: this[](Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)
+  id: Item(System.Int32)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: this[int]
+  nameWithType: DeepMatrix.this[int]
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.this[int]
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: this[]
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 100
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the matrix at the specified index.
+  example: []
+  syntax:
+    content: public Matrix this[int index] { get; set; }
+    parameters:
+    - id: index
+      type: System.Int32
+      description: The matrix index.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The matrix.
+    content.vb: Public Default Property this[](index As Integer) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item*
+  nameWithType.vb: DeepMatrix.this[](Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.this[](Integer)
+  name.vb: this[](Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
+  id: InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitializeArray(int, int, int, int)
+  nameWithType: DeepMatrix.InitializeArray(int, int, int, int)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(int, int, int, int)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: InitializeArray
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 114
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes an array of deep matrices.
+  example: []
+  syntax:
+    content: public static DeepMatrix[] InitializeArray(int size, int depth, int height, int width)
+    parameters:
+    - id: size
+      type: System.Int32
+      description: The size.
+    - id: depth
+      type: System.Int32
+      description: The depth.
+    - id: height
+      type: System.Int32
+      description: The height.
+    - id: width
+      type: System.Int32
+      description: The width.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+      description: An array of deep matrices.
+    content.vb: Public Shared Function InitializeArray(size As Integer, depth As Integer, height As Integer, width As Integer) As DeepMatrix()
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray*
+  nameWithType.vb: DeepMatrix.InitializeArray(Integer, Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(Integer, Integer, Integer, Integer)
+  name.vb: InitializeArray(Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+  id: InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitializeDoubleArray(int, int, int, int, int)
+  nameWithType: DeepMatrix.InitializeDoubleArray(int, int, int, int, int)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(int, int, int, int, int)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: InitializeDoubleArray
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 134
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a double array of deep matrices.
+  example: []
+  syntax:
+    content: public static DeepMatrix[][] InitializeDoubleArray(int dim1, int dim2, int depth, int height, int width)
+    parameters:
+    - id: dim1
+      type: System.Int32
+      description: The first dimension.
+    - id: dim2
+      type: System.Int32
+      description: The second dimension.
+    - id: depth
+      type: System.Int32
+      description: The depth.
+    - id: height
+      type: System.Int32
+      description: The height.
+    - id: width
+      type: System.Int32
+      description: THe width.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix[][]
+      description: A double array of deep matrices.
+    content.vb: Public Shared Function InitializeDoubleArray(dim1 As Integer, dim2 As Integer, depth As Integer, height As Integer, width As Integer) As DeepMatrix()()
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray*
+  nameWithType.vb: DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
+  name.vb: InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+  id: ToArray
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: ToArray()
+  nameWithType: DeepMatrix.ToArray()
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToArray
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 153
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the deep matrix as an array of matrices.
+  example: []
+  syntax:
+    content: public Matrix[] ToArray()
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix[]
+      description: An array of matrices.
+    content.vb: Public Function ToArray() As Matrix()
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  id: Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Initialize(InitializationType)
+  nameWithType: DeepMatrix.Initialize(InitializationType)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Initialize
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 162
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes the matrix with He or Xavier initialization.
+  example: []
+  syntax:
+    content: public void Initialize(InitializationType initializationType)
+    parameters:
+    - id: initializationType
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+      description: The initialization type.
+    content.vb: Public Sub Initialize(initializationType As InitializationType)
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
+  id: GetEnumerator
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: DeepMatrix.GetEnumerator()
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GetEnumerator
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 181
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the enumerator for the matrix.
+  example: []
+  syntax:
+    content: public IEnumerator<Matrix> GetEnumerator()
+    return:
+      type: System.Collections.Generic.IEnumerator{ParallelReverseAutoDiff.RMAD.Matrix}
+      description: The enumerator for the matrix.
+    content.vb: Public Function GetEnumerator() As IEnumerator(Of Matrix)
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator*
+  implements:
+  - System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}.GetEnumerator
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}
+  commentId: T:System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Matrix>
+  nameWithType: IEnumerable<Matrix>
+  fullName: System.Collections.Generic.IEnumerable<ParallelReverseAutoDiff.RMAD.Matrix>
+  nameWithType.vb: IEnumerable(Of Matrix)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of ParallelReverseAutoDiff.RMAD.Matrix)
+  name.vb: IEnumerable(Of Matrix)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix
+  nameWithType: DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  name: DeepMatrix
+  nameWithType: DeepMatrix.DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix
+  nameWithType.vb: DeepMatrix.New
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New
+  name.vb: New
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.Dimension
+  commentId: T:ParallelReverseAutoDiff.RMAD.Dimension
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Dimension.html
+  name: Dimension
+  nameWithType: Dimension
+  fullName: ParallelReverseAutoDiff.RMAD.Dimension
+- uid: ParallelReverseAutoDiff.RMAD.Matrix[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix[]
+  nameWithType: Matrix[]
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix[]
+  nameWithType.vb: Matrix()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix()
+  name.vb: Matrix()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  name: UniqueId
+  nameWithType: DeepMatrix.UniqueId
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+  name: Rows
+  nameWithType: DeepMatrix.Rows
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  name: Cols
+  nameWithType: DeepMatrix.Cols
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  name: Depth
+  nameWithType: DeepMatrix.Depth
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Item
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
+  name: this
+  nameWithType: DeepMatrix.this
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.this
+  nameWithType.vb: DeepMatrix.this[]
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.this[]
+  name.vb: this[]
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
+  name: InitializeArray
+  nameWithType: DeepMatrix.InitializeArray
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix[]
+  nameWithType: DeepMatrix[]
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+  nameWithType.vb: DeepMatrix()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix()
+  name.vb: DeepMatrix()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+  name: InitializeDoubleArray
+  nameWithType: DeepMatrix.InitializeDoubleArray
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix[][]
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix[][]
+  nameWithType: DeepMatrix[][]
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix[][]
+  nameWithType.vb: DeepMatrix()()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix()()
+  name.vb: DeepMatrix()()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '['
+  - name: ']'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: (
+  - name: )
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+  name: ToArray
+  nameWithType: DeepMatrix.ToArray
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  name: Initialize
+  nameWithType: DeepMatrix.Initialize
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType
+  commentId: T:ParallelReverseAutoDiff.RMAD.InitializationType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.InitializationType.html
+  name: InitializationType
+  nameWithType: InitializationType
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
+  name: GetEnumerator
+  nameWithType: DeepMatrix.GetEnumerator
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
+- uid: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-parallelreverseautodiff.rmad.matrix-.getenumerator#system-collections-generic-ienumerable((parallelreverseautodiff-rmad-matrix))-getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<Matrix>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<ParallelReverseAutoDiff.RMAD.Matrix>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of Matrix).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of ParallelReverseAutoDiff.RMAD.Matrix).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-parallelreverseautodiff.rmad.matrix-.getenumerator#system-collections-generic-ienumerable((parallelreverseautodiff-rmad-matrix))-getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-parallelreverseautodiff.rmad.matrix-.getenumerator#system-collections-generic-ienumerable((parallelreverseautodiff-rmad-matrix))-getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator{ParallelReverseAutoDiff.RMAD.Matrix}
+  commentId: T:System.Collections.Generic.IEnumerator{ParallelReverseAutoDiff.RMAD.Matrix}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerator`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<Matrix>
+  nameWithType: IEnumerator<Matrix>
+  fullName: System.Collections.Generic.IEnumerator<ParallelReverseAutoDiff.RMAD.Matrix>
+  nameWithType.vb: IEnumerator(Of Matrix)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of ParallelReverseAutoDiff.RMAD.Matrix)
+  name.vb: IEnumerator(Of Matrix)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator`1
+  commentId: T:System.Collections.Generic.IEnumerator`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

@@ -1,0 +1,621 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  commentId: T:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  id: DualLayersTimeStep
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations
+  - ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+  - ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+  - ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+  - ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+  langs:
+  - csharp
+  - vb
+  name: DualLayersTimeStep
+  nameWithType: DualLayersTimeStep
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  type: Class
+  source:
+    remote:
+      path: src/RMAD/DualLayersTimeStep.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DualLayersTimeStep
+    path: ../../src/RMAD/DualLayersTimeStep.cs
+    startLine: 12
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Represents a time step with dual layers for an operation graph.
+  example: []
+  syntax:
+    content: public class DualLayersTimeStep
+    content.vb: Public Class DualLayersTimeStep
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+  commentId: P:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+  id: StartOperations
+  parent: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  langs:
+  - csharp
+  - vb
+  name: StartOperations
+  nameWithType: DualLayersTimeStep.StartOperations
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DualLayersTimeStep.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: StartOperations
+    path: ../../src/RMAD/DualLayersTimeStep.cs
+    startLine: 17
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the start operations for the time step.
+  example: []
+  syntax:
+    content: public List<OperationInfo> StartOperations { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.OperationInfo}
+    content.vb: Public Property StartOperations As List(Of OperationInfo)
+  overload: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations*
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+  commentId: P:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+  id: FirstLayers
+  parent: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  langs:
+  - csharp
+  - vb
+  name: FirstLayers
+  nameWithType: DualLayersTimeStep.FirstLayers
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DualLayersTimeStep.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: FirstLayers
+    path: ../../src/RMAD/DualLayersTimeStep.cs
+    startLine: 22
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the first layers for the time step.
+  example: []
+  syntax:
+    content: public List<Layer> FirstLayers { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Layer}
+    content.vb: Public Property FirstLayers As List(Of Layer)
+  overload: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers*
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+  commentId: P:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+  id: MiddleOperations
+  parent: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  langs:
+  - csharp
+  - vb
+  name: MiddleOperations
+  nameWithType: DualLayersTimeStep.MiddleOperations
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DualLayersTimeStep.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: MiddleOperations
+    path: ../../src/RMAD/DualLayersTimeStep.cs
+    startLine: 27
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the middle operations for the time step.
+  example: []
+  syntax:
+    content: public List<OperationInfo> MiddleOperations { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.OperationInfo}
+    content.vb: Public Property MiddleOperations As List(Of OperationInfo)
+  overload: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations*
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+  commentId: P:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+  id: SecondLayers
+  parent: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  langs:
+  - csharp
+  - vb
+  name: SecondLayers
+  nameWithType: DualLayersTimeStep.SecondLayers
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DualLayersTimeStep.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SecondLayers
+    path: ../../src/RMAD/DualLayersTimeStep.cs
+    startLine: 32
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the second layers for the time step.
+  example: []
+  syntax:
+    content: public List<Layer> SecondLayers { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Layer}
+    content.vb: Public Property SecondLayers As List(Of Layer)
+  overload: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers*
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations
+  commentId: P:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations
+  id: EndOperations
+  parent: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
+  langs:
+  - csharp
+  - vb
+  name: EndOperations
+  nameWithType: DualLayersTimeStep.EndOperations
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DualLayersTimeStep.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: EndOperations
+    path: ../../src/RMAD/DualLayersTimeStep.cs
+    startLine: 37
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the end operations for the time step.
+  example: []
+  syntax:
+    content: public List<OperationInfo> EndOperations { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.OperationInfo}
+    content.vb: Public Property EndOperations As List(Of OperationInfo)
+  overload: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations*
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+  href: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.html#ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+  name: StartOperations
+  nameWithType: DualLayersTimeStep.StartOperations
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
+- uid: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.OperationInfo}
+  commentId: T:System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.OperationInfo}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<OperationInfo>
+  nameWithType: List<OperationInfo>
+  fullName: System.Collections.Generic.List<ParallelReverseAutoDiff.RMAD.OperationInfo>
+  nameWithType.vb: List(Of OperationInfo)
+  fullName.vb: System.Collections.Generic.List(Of ParallelReverseAutoDiff.RMAD.OperationInfo)
+  name.vb: List(Of OperationInfo)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.OperationInfo
+    name: OperationInfo
+    href: ParallelReverseAutoDiff.RMAD.OperationInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.OperationInfo
+    name: OperationInfo
+    href: ParallelReverseAutoDiff.RMAD.OperationInfo.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+  href: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.html#ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+  name: FirstLayers
+  nameWithType: DualLayersTimeStep.FirstLayers
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.FirstLayers
+- uid: System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Layer}
+  commentId: T:System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Layer}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Layer>
+  nameWithType: List<Layer>
+  fullName: System.Collections.Generic.List<ParallelReverseAutoDiff.RMAD.Layer>
+  nameWithType.vb: List(Of Layer)
+  fullName.vb: System.Collections.Generic.List(Of ParallelReverseAutoDiff.RMAD.Layer)
+  name.vb: List(Of Layer)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.Layer
+    name: Layer
+    href: ParallelReverseAutoDiff.RMAD.Layer.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Layer
+    name: Layer
+    href: ParallelReverseAutoDiff.RMAD.Layer.html
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+  href: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.html#ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+  name: MiddleOperations
+  nameWithType: DualLayersTimeStep.MiddleOperations
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.MiddleOperations
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+  href: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.html#ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+  name: SecondLayers
+  nameWithType: DualLayersTimeStep.SecondLayers
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.SecondLayers
+- uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations
+  href: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.html#ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations
+  name: EndOperations
+  nameWithType: DualLayersTimeStep.EndOperations
+  fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.EndOperations

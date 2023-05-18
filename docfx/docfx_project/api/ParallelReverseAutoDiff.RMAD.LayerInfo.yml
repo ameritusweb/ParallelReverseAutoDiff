@@ -1,0 +1,623 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+  commentId: T:ParallelReverseAutoDiff.RMAD.LayerInfo
+  id: LayerInfo
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.Empty
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+  langs:
+  - csharp
+  - vb
+  name: LayerInfo
+  nameWithType: LayerInfo
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo
+  type: Struct
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: LayerInfo
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 12
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Matrix index.
+  example: []
+  syntax:
+    content: 'public struct LayerInfo : IEquatable<LayerInfo>'
+    content.vb: Public Structure LayerInfo Implements IEquatable(Of LayerInfo)
+  implements:
+  - System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Empty
+  commentId: F:ParallelReverseAutoDiff.RMAD.LayerInfo.Empty
+  id: Empty
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: Empty
+  nameWithType: LayerInfo.Empty
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Empty
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Empty
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 17
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: An empty layer info.
+  example: []
+  syntax:
+    content: public static readonly LayerInfo Empty
+    return:
+      type: ParallelReverseAutoDiff.RMAD.LayerInfo
+    content.vb: Public Shared ReadOnly Empty As LayerInfo
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  commentId: P:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  id: TimeStep
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: TimeStep
+  nameWithType: LayerInfo.TimeStep
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: TimeStep
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 22
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the time step.
+  example: []
+  syntax:
+    content: public int TimeStep { readonly get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property TimeStep As Integer
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep*
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  commentId: P:ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  id: Layer
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: Layer
+  nameWithType: LayerInfo.Layer
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Layer
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 27
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the layer index.
+  example: []
+  syntax:
+    content: public int Layer { readonly get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Layer As Integer
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer*
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  id: Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: Equals(LayerInfo)
+  nameWithType: LayerInfo.Equals(LayerInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Equals
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 34
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Determines whether the specified object is equal to the current <xref href="ParallelReverseAutoDiff.RMAD.LayerInfo" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public bool Equals(LayerInfo other)
+    parameters:
+    - id: other
+      type: ParallelReverseAutoDiff.RMAD.LayerInfo
+      description: The other object.
+    return:
+      type: System.Boolean
+      description: Whether they are equal.
+    content.vb: Public Function Equals(other As LayerInfo) As Boolean
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals*
+  implements:
+  - System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+  commentId: M:ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+  id: ToString
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: LayerInfo.ToString()
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToString
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 43
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: To the specific ID string.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The specific ID string.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.ToString*
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}
+  commentId: T:System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<LayerInfo>
+  nameWithType: IEquatable<LayerInfo>
+  fullName: System.IEquatable<ParallelReverseAutoDiff.RMAD.LayerInfo>
+  nameWithType.vb: IEquatable(Of LayerInfo)
+  fullName.vb: System.IEquatable(Of ParallelReverseAutoDiff.RMAD.LayerInfo)
+  name.vb: IEquatable(Of LayerInfo)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+  commentId: T:ParallelReverseAutoDiff.RMAD.LayerInfo
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  name: LayerInfo
+  nameWithType: LayerInfo
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  name: TimeStep
+  nameWithType: LayerInfo.TimeStep
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  name: Layer
+  nameWithType: LayerInfo.Layer
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.Equals
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  name: Equals
+  nameWithType: LayerInfo.Equals
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals
+- uid: System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  commentId: M:System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  parent: System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-parallelreverseautodiff.rmad.layerinfo-.equals#system-iequatable((parallelreverseautodiff-rmad-layerinfo))-equals(parallelreverseautodiff-rmad-layerinfo)
+  name: Equals(LayerInfo)
+  nameWithType: IEquatable<LayerInfo>.Equals(LayerInfo)
+  fullName: System.IEquatable<ParallelReverseAutoDiff.RMAD.LayerInfo>.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  nameWithType.vb: IEquatable(Of LayerInfo).Equals(LayerInfo)
+  fullName.vb: System.IEquatable(Of ParallelReverseAutoDiff.RMAD.LayerInfo).Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+  spec.csharp:
+  - uid: System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-parallelreverseautodiff.rmad.layerinfo-.equals#system-iequatable((parallelreverseautodiff-rmad-layerinfo))-equals(parallelreverseautodiff-rmad-layerinfo)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{ParallelReverseAutoDiff.RMAD.LayerInfo}.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-parallelreverseautodiff.rmad.layerinfo-.equals#system-iequatable((parallelreverseautodiff-rmad-layerinfo))-equals(parallelreverseautodiff-rmad-layerinfo)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.ToString*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+  name: ToString
+  nameWithType: LayerInfo.ToString
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String

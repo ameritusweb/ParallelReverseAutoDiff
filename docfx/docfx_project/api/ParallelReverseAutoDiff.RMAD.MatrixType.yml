@@ -1,0 +1,176 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixType
+  id: MatrixType
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.MatrixType.Bias
+  - ParallelReverseAutoDiff.RMAD.MatrixType.Gradient
+  - ParallelReverseAutoDiff.RMAD.MatrixType.Intermediate
+  - ParallelReverseAutoDiff.RMAD.MatrixType.Weight
+  langs:
+  - csharp
+  - vb
+  name: MatrixType
+  nameWithType: MatrixType
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType
+  type: Enum
+  source:
+    remote:
+      path: src/RMAD/MatrixType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: MatrixType
+    path: ../../src/RMAD/MatrixType.cs
+    startLine: 10
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Determines the matrix type.
+  example: []
+  syntax:
+    content: public enum MatrixType
+    content.vb: Public Enum MatrixType
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType.Weight
+  commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Weight
+  id: Weight
+  parent: ParallelReverseAutoDiff.RMAD.MatrixType
+  langs:
+  - csharp
+  - vb
+  name: Weight
+  nameWithType: MatrixType.Weight
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Weight
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/MatrixType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Weight
+    path: ../../src/RMAD/MatrixType.cs
+    startLine: 15
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A weight.
+  example: []
+  syntax:
+    content: Weight = 0
+    return:
+      type: ParallelReverseAutoDiff.RMAD.MatrixType
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType.Bias
+  commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Bias
+  id: Bias
+  parent: ParallelReverseAutoDiff.RMAD.MatrixType
+  langs:
+  - csharp
+  - vb
+  name: Bias
+  nameWithType: MatrixType.Bias
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Bias
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/MatrixType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Bias
+    path: ../../src/RMAD/MatrixType.cs
+    startLine: 20
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A bias.
+  example: []
+  syntax:
+    content: Bias = 1
+    return:
+      type: ParallelReverseAutoDiff.RMAD.MatrixType
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType.Gradient
+  commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Gradient
+  id: Gradient
+  parent: ParallelReverseAutoDiff.RMAD.MatrixType
+  langs:
+  - csharp
+  - vb
+  name: Gradient
+  nameWithType: MatrixType.Gradient
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Gradient
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/MatrixType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Gradient
+    path: ../../src/RMAD/MatrixType.cs
+    startLine: 25
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A gradient.
+  example: []
+  syntax:
+    content: Gradient = 2
+    return:
+      type: ParallelReverseAutoDiff.RMAD.MatrixType
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType.Intermediate
+  commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Intermediate
+  id: Intermediate
+  parent: ParallelReverseAutoDiff.RMAD.MatrixType
+  langs:
+  - csharp
+  - vb
+  name: Intermediate
+  nameWithType: MatrixType.Intermediate
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Intermediate
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/MatrixType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Intermediate
+    path: ../../src/RMAD/MatrixType.cs
+    startLine: 30
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: An intermediate matrix.
+  example: []
+  syntax:
+    content: Intermediate = 3
+    return:
+      type: ParallelReverseAutoDiff.RMAD.MatrixType
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.MatrixType.html
+  name: MatrixType
+  nameWithType: MatrixType
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType

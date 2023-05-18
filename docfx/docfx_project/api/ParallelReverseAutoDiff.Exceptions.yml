@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.Exceptions
+  commentId: N:ParallelReverseAutoDiff.Exceptions
+  id: ParallelReverseAutoDiff.Exceptions
+  children:
+  - ParallelReverseAutoDiff.Exceptions.CudaNotInitializedException
+  langs:
+  - csharp
+  - vb
+  name: ParallelReverseAutoDiff.Exceptions
+  nameWithType: ParallelReverseAutoDiff.Exceptions
+  fullName: ParallelReverseAutoDiff.Exceptions
+  type: Namespace
+  assemblies:
+  - ParallelReverseAutoDiff
+references:
+- uid: ParallelReverseAutoDiff.Exceptions.CudaNotInitializedException
+  commentId: T:ParallelReverseAutoDiff.Exceptions.CudaNotInitializedException
+  href: ParallelReverseAutoDiff.Exceptions.CudaNotInitializedException.html
+  name: CudaNotInitializedException
+  nameWithType: CudaNotInitializedException
+  fullName: ParallelReverseAutoDiff.Exceptions.CudaNotInitializedException

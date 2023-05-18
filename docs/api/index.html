@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>PLACEHOLDER </title>
+      <title>ParallelReverseAutoDiff </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="PLACEHOLDER ">
+      <meta name="title" content="ParallelReverseAutoDiff ">
       
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../styles/docfx.min.css">
@@ -69,9 +69,9 @@
         </div>
 
         <article data-uid="">
-<h1 id="placeholder">PLACEHOLDER</h1>
+<h1 id="parallelreverseautodiff">ParallelReverseAutoDiff</h1>
 
-<p>TODO: Add .NET projects to the <em>src</em> folder and run <code>docfx</code> to generate <strong>REAL</strong> <em>API Documentation</em>!</p>
+<p>ParallelAutoDiff is a thread-safe C# library for reverse mode automatic differentiation, optimized for parallel computation. It leverages semaphores and locks to coordinate between threads, ensuring accuracy during gradient accumulation. Each operation in the library is implemented as a node with a forward and a backward function, facilitating efficient calculation of derivatives. A unique aspect of this library is its use of the visitor pattern: it includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is responsible for gradient accumulation on nodes shared across multiple threads. This design allows for parallelized computations while maintaining consistency and avoiding race conditions. The result is an efficient, scalable automatic differentiation solution, ideal for machine learning applications and neural network training.</p>
 </article>
 
         <div class="contribution d-print-none">

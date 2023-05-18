@@ -1,0 +1,910 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas
+  commentId: T:ParallelReverseAutoDiff.RMAD.CudaBlas
+  id: CudaBlas
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(System.Double[],System.Int32,System.Int32,System.Boolean,System.Double[],System.Int32,System.Int32,System.Boolean)
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  langs:
+  - csharp
+  - vb
+  name: CudaBlas
+  nameWithType: CudaBlas
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas
+  type: Class
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: CudaBlas
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 20
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Wrapper for CUBLAS library.
+  example: []
+  syntax:
+    content: 'public class CudaBlas : IDisposable'
+    content.vb: Public Class CudaBlas Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+  commentId: P:ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+  id: Instance
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: CudaBlas.Instance
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Instance
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 60
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the singleton instance of the CUBLAS library.
+  example: []
+  syntax:
+    content: public static CudaBlas Instance { get; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.RMAD.CudaBlas
+    content.vb: Public Shared ReadOnly Property Instance As CudaBlas
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.Instance*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+  commentId: P:ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+  id: IsInitialized
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: IsInitialized
+  nameWithType: CudaBlas.IsInitialized
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IsInitialized
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 71
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets a value indicating whether the CUBLAS library is initialized.
+  example: []
+  syntax:
+    content: public bool IsInitialized { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsInitialized As Boolean
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+  commentId: P:ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+  id: AreDeviceVariablesInitialized
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: AreDeviceVariablesInitialized
+  nameWithType: CudaBlas.AreDeviceVariablesInitialized
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AreDeviceVariablesInitialized
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 82
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets a value indicating whether the device variables are initialized.
+  example: []
+  syntax:
+    content: public bool AreDeviceVariablesInitialized { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property AreDeviceVariablesInitialized As Boolean
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+  commentId: P:ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+  id: DeviceId
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: DeviceId
+  nameWithType: CudaBlas.DeviceId
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DeviceId
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 93
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the DeviceId for the GPU to use.
+  example: []
+  syntax:
+    content: public int DeviceId { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property DeviceId As Integer
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
+  id: Initialize
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: Initialize()
+  nameWithType: CudaBlas.Initialize()
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Initialize
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 98
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes the CUBLAS library.
+  example: []
+  syntax:
+    content: public void Initialize()
+    content.vb: Public Sub Initialize()
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose
+  id: Dispose
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: CudaBlas.Dispose()
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Dispose
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 118
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Disposes the CUBLAS library.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)
+  id: InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: InitializeDeviceVariables(int, int, int, int, bool, bool)
+  nameWithType: CudaBlas.InitializeDeviceVariables(int, int, int, int, bool, bool)
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(int, int, int, int, bool, bool)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: InitializeDeviceVariables
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 139
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes the device variables.
+  example: []
+  syntax:
+    content: public void InitializeDeviceVariables(int rows1, int cols1, int rows2, int cols2, bool transposeMatrix1, bool transposeMatrix2)
+    parameters:
+    - id: rows1
+      type: System.Int32
+      description: The number of rows in the first matrix.
+    - id: cols1
+      type: System.Int32
+      description: The number of columns in the first matrix.
+    - id: rows2
+      type: System.Int32
+      description: The number of rows in the second matrix.
+    - id: cols2
+      type: System.Int32
+      description: The number of columns in the second matrix.
+    - id: transposeMatrix1
+      type: System.Boolean
+      description: Whether to transpose matrix A before multiplying.
+    - id: transposeMatrix2
+      type: System.Boolean
+      description: Whether to transpose matrix B before multiplying.
+    content.vb: Public Sub InitializeDeviceVariables(rows1 As Integer, cols1 As Integer, rows2 As Integer, cols2 As Integer, transposeMatrix1 As Boolean, transposeMatrix2 As Boolean)
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables*
+  nameWithType.vb: CudaBlas.InitializeDeviceVariables(Integer, Integer, Integer, Integer, Boolean, Boolean)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(Integer, Integer, Integer, Integer, Boolean, Boolean)
+  name.vb: InitializeDeviceVariables(Integer, Integer, Integer, Integer, Boolean, Boolean)
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables
+  id: DisposeDeviceVariables
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: DisposeDeviceVariables()
+  nameWithType: CudaBlas.DisposeDeviceVariables()
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DisposeDeviceVariables
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 177
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Disposes the device variables.
+  example: []
+  syntax:
+    content: public void DisposeDeviceVariables()
+    content.vb: Public Sub DisposeDeviceVariables()
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  id: MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: MatrixMultiply(Matrix, bool, Matrix, bool)
+  nameWithType: CudaBlas.MatrixMultiply(Matrix, bool, Matrix, bool)
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix, bool, ParallelReverseAutoDiff.RMAD.Matrix, bool)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: MatrixMultiply
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 193
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Performs a matrix multiplication using the CUBLAS library.
+  example: []
+  syntax:
+    content: public Matrix MatrixMultiply(Matrix matrix1, bool transposeMatrix1, Matrix matrix2, bool transposeMatrix2)
+    parameters:
+    - id: matrix1
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: Matric A.
+    - id: transposeMatrix1
+      type: System.Boolean
+      description: Whether to transpose matrix A before multiplying.
+    - id: matrix2
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: Matrix B.
+    - id: transposeMatrix2
+      type: System.Boolean
+      description: Whether to transpose matrix B before multiplying.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The resultant matrix.
+    content.vb: Public Function MatrixMultiply(matrix1 As Matrix, transposeMatrix1 As Boolean, matrix2 As Matrix, transposeMatrix2 As Boolean) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply*
+  nameWithType.vb: CudaBlas.MatrixMultiply(Matrix, Boolean, Matrix, Boolean)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix, Boolean, ParallelReverseAutoDiff.RMAD.Matrix, Boolean)
+  name.vb: MatrixMultiply(Matrix, Boolean, Matrix, Boolean)
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(System.Double[],System.Int32,System.Int32,System.Boolean,System.Double[],System.Int32,System.Int32,System.Boolean)
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(System.Double[],System.Int32,System.Int32,System.Boolean,System.Double[],System.Int32,System.Int32,System.Boolean)
+  id: MatrixMultiply(System.Double[],System.Int32,System.Int32,System.Boolean,System.Double[],System.Int32,System.Int32,System.Boolean)
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: MatrixMultiply(double[], int, int, bool, double[], int, int, bool)
+  nameWithType: CudaBlas.MatrixMultiply(double[], int, int, bool, double[], int, int, bool)
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(double[], int, int, bool, double[], int, int, bool)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: MatrixMultiply
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 246
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Performs a matrix multiplication using the CUBLAS library.
+  example: []
+  syntax:
+    content: public Matrix MatrixMultiply(double[] matrixFlat1, int rows1, int cols1, bool transposeMatrix1, double[] matrixFlat2, int rows2, int cols2, bool transposeMatrix2)
+    parameters:
+    - id: matrixFlat1
+      type: System.Double[]
+      description: Matric A.
+    - id: rows1
+      type: System.Int32
+      description: The number of rows in the first matrix.
+    - id: cols1
+      type: System.Int32
+      description: The number of columns in the first matrix.
+    - id: transposeMatrix1
+      type: System.Boolean
+      description: Whether to transpose matrix A before multiplying.
+    - id: matrixFlat2
+      type: System.Double[]
+      description: Matrix B.
+    - id: rows2
+      type: System.Int32
+      description: The number of rows in the second matrix.
+    - id: cols2
+      type: System.Int32
+      description: The number of columns in the second matrix.
+    - id: transposeMatrix2
+      type: System.Boolean
+      description: Whether to transpose matrix B before multiplying.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The resultant matrix.
+    content.vb: Public Function MatrixMultiply(matrixFlat1 As Double(), rows1 As Integer, cols1 As Integer, transposeMatrix1 As Boolean, matrixFlat2 As Double(), rows2 As Integer, cols2 As Integer, transposeMatrix2 As Boolean) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply*
+  nameWithType.vb: CudaBlas.MatrixMultiply(Double(), Integer, Integer, Boolean, Double(), Integer, Integer, Boolean)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(Double(), Integer, Integer, Boolean, Double(), Integer, Integer, Boolean)
+  name.vb: MatrixMultiply(Double(), Integer, Integer, Boolean, Double(), Integer, Integer, Boolean)
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  id: WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: WriteMatricesToSharedMemory(Matrix, bool, Matrix, bool)
+  nameWithType: CudaBlas.WriteMatricesToSharedMemory(Matrix, bool, Matrix, bool)
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix, bool, ParallelReverseAutoDiff.RMAD.Matrix, bool)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: WriteMatricesToSharedMemory
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 290
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Writes the matrices to shared memory.
+  example: []
+  syntax:
+    content: public Matrix WriteMatricesToSharedMemory(Matrix matrixA, bool transposeA, Matrix matrixB, bool transposeB)
+    parameters:
+    - id: matrixA
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: Matrix A.
+    - id: transposeA
+      type: System.Boolean
+      description: Whether to transpose matrix A before multiplying.
+    - id: matrixB
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: Matrix B.
+    - id: transposeB
+      type: System.Boolean
+      description: Whether to transpose matrix B before multiplying.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The resultant matrix.
+    content.vb: Public Function WriteMatricesToSharedMemory(matrixA As Matrix, transposeA As Boolean, matrixB As Matrix, transposeB As Boolean) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory*
+  nameWithType.vb: CudaBlas.WriteMatricesToSharedMemory(Matrix, Boolean, Matrix, Boolean)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix, Boolean, ParallelReverseAutoDiff.RMAD.Matrix, Boolean)
+  name.vb: WriteMatricesToSharedMemory(Matrix, Boolean, Matrix, Boolean)
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod
+  id: CudaThreadMethod
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: CudaThreadMethod()
+  nameWithType: CudaBlas.CudaThreadMethod()
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: CudaThreadMethod
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 326
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A method that runs on a separate thread and performs the matrix multiplication using CudaBlas.
+  example: []
+  syntax:
+    content: public void CudaThreadMethod()
+    content.vb: Public Sub CudaThreadMethod()
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod*
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Instance*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+  name: Instance
+  nameWithType: CudaBlas.Instance
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Instance
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas
+  commentId: T:ParallelReverseAutoDiff.RMAD.CudaBlas
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html
+  name: CudaBlas
+  nameWithType: CudaBlas
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+  name: IsInitialized
+  nameWithType: CudaBlas.IsInitialized
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.IsInitialized
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+  name: AreDeviceVariablesInitialized
+  nameWithType: CudaBlas.AreDeviceVariablesInitialized
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+  name: DeviceId
+  nameWithType: CudaBlas.DeviceId
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
+  name: Initialize
+  nameWithType: CudaBlas.Initialize
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose
+  name: Dispose
+  nameWithType: CudaBlas.Dispose
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)
+  name: InitializeDeviceVariables
+  nameWithType: CudaBlas.InitializeDeviceVariables
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.InitializeDeviceVariables
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables
+  name: DisposeDeviceVariables
+  nameWithType: CudaBlas.DisposeDeviceVariables
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.DisposeDeviceVariables
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  name: MatrixMultiply
+  nameWithType: CudaBlas.MatrixMultiply
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.MatrixMultiply
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: System.Double[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double[]
+  nameWithType: double[]
+  fullName: double[]
+  nameWithType.vb: Double()
+  fullName.vb: Double()
+  name.vb: Double()
+  spec.csharp:
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory(ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean,ParallelReverseAutoDiff.RMAD.Matrix,System.Boolean)
+  name: WriteMatricesToSharedMemory
+  nameWithType: CudaBlas.WriteMatricesToSharedMemory
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.WriteMatricesToSharedMemory
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod
+  name: CudaThreadMethod
+  nameWithType: CudaBlas.CudaThreadMethod
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod

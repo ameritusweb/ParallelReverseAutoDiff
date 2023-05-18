@@ -1,0 +1,46 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.Interprocess
+  commentId: N:ParallelReverseAutoDiff.Interprocess
+  id: ParallelReverseAutoDiff.Interprocess
+  children:
+  - ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  langs:
+  - csharp
+  - vb
+  name: ParallelReverseAutoDiff.Interprocess
+  nameWithType: ParallelReverseAutoDiff.Interprocess
+  fullName: ParallelReverseAutoDiff.Interprocess
+  type: Namespace
+  assemblies:
+  - ParallelReverseAutoDiff
+references:
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  commentId: T:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  parent: ParallelReverseAutoDiff.Interprocess
+  href: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.html
+  name: PseudoUniqueIDGenerator
+  nameWithType: PseudoUniqueIDGenerator
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+- uid: ParallelReverseAutoDiff.Interprocess
+  commentId: N:ParallelReverseAutoDiff.Interprocess
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.Interprocess
+  nameWithType: ParallelReverseAutoDiff.Interprocess
+  fullName: ParallelReverseAutoDiff.Interprocess
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.Interprocess
+    name: Interprocess
+    href: ParallelReverseAutoDiff.Interprocess.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.Interprocess
+    name: Interprocess
+    href: ParallelReverseAutoDiff.Interprocess.html

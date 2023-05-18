@@ -1,0 +1,781 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.IOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.IOperation
+  id: IOperation
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.IOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  langs:
+  - csharp
+  - vb
+  name: IOperation
+  nameWithType: IOperation
+  fullName: ParallelReverseAutoDiff.RMAD.IOperation
+  type: Interface
+  source:
+    remote:
+      path: src/RMAD/IOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IOperation
+    path: ../../src/RMAD/IOperation.cs
+    startLine: 16
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Define the abstract base class for all operations.
+  example: []
+  syntax:
+    content: 'public interface IOperation : IOperationBase'
+    content.vb: Public Interface IOperation Inherits IOperationBase
+  inheritedMembers:
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.TimeStepIndex
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.LayerIndex
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.OperationType
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.HasNext
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Next
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.IsComplete
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Id
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencyCounts
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencies
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedFrom
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulatedGradients
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.CalculatedGradient
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedCount
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Lock
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.GradientDestinations
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+- uid: ParallelReverseAutoDiff.RMAD.IOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  id: Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.IOperation
+  langs:
+  - csharp
+  - vb
+  name: Backward(Matrix)
+  nameWithType: IOperation.Backward(Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Backward
+    path: ../../src/RMAD/IOperation.cs
+    startLine: 23
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Abstract method to perform backward pass, must be implemented by derived classes.
+  example: []
+  syntax:
+    content: BackwardResult Backward(Matrix dOutput)
+    parameters:
+    - id: dOutput
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The upstream gradient.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.BackwardResult
+      description: The gradients to send to the adjacent backward operations.
+    content.vb: Function Backward(dOutput As Matrix) As BackwardResult
+  overload: ParallelReverseAutoDiff.RMAD.IOperation.Backward*
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.TimeStepIndex
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.TimeStepIndex
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.TimeStepIndex
+  name: TimeStepIndex
+  nameWithType: IOperationBase.TimeStepIndex
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.TimeStepIndex
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.LayerIndex
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.LayerIndex
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.LayerIndex
+  name: LayerIndex
+  nameWithType: IOperationBase.LayerIndex
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.LayerIndex
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.OperationType
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.OperationType
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.OperationType
+  name: OperationType
+  nameWithType: IOperationBase.OperationType
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.OperationType
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.HasNext
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.HasNext
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.HasNext
+  name: HasNext
+  nameWithType: IOperationBase.HasNext
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.HasNext
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Next
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Next
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Next
+  name: Next
+  nameWithType: IOperationBase.Next
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Next
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.IsComplete
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.IsComplete
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.IsComplete
+  name: IsComplete
+  nameWithType: IOperationBase.IsComplete
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.IsComplete
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Id
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Id
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Id
+  name: Id
+  nameWithType: IOperationBase.Id
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Id
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+  name: SpecificId
+  nameWithType: IOperationBase.SpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
+  name: Parameters
+  nameWithType: IOperationBase.Parameters
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
+  name: Tasks
+  nameWithType: IOperationBase.Tasks
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+  name: Inputs
+  nameWithType: IOperationBase.Inputs
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
+  name: Outputs
+  nameWithType: IOperationBase.Outputs
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput
+  name: BackwardInput
+  nameWithType: IOperationBase.BackwardInput
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations
+  name: BackwardAdjacentOperations
+  nameWithType: IOperationBase.BackwardAdjacentOperations
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencyCounts
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencyCounts
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencyCounts
+  name: BackwardDependencyCounts
+  nameWithType: IOperationBase.BackwardDependencyCounts
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencyCounts
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencies
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencies
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencies
+  name: BackwardDependencies
+  nameWithType: IOperationBase.BackwardDependencies
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencies
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedFrom
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedFrom
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedFrom
+  name: VisitedFrom
+  nameWithType: IOperationBase.VisitedFrom
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedFrom
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulatedGradients
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulatedGradients
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulatedGradients
+  name: AccumulatedGradients
+  nameWithType: IOperationBase.AccumulatedGradients
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulatedGradients
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.CalculatedGradient
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.CalculatedGradient
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.CalculatedGradient
+  name: CalculatedGradient
+  nameWithType: IOperationBase.CalculatedGradient
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.CalculatedGradient
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
+  name: OutputDependencyCount
+  nameWithType: IOperationBase.OutputDependencyCount
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedCount
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedCount
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedCount
+  name: VisitedCount
+  nameWithType: IOperationBase.VisitedCount
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedCount
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Lock
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Lock
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Lock
+  name: Lock
+  nameWithType: IOperationBase.Lock
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Lock
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore
+  name: SyncSemaphore
+  nameWithType: IOperationBase.SyncSemaphore
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GradientDestinations
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.GradientDestinations
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GradientDestinations
+  name: GradientDestinations
+  nameWithType: IOperationBase.GradientDestinations
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.GradientDestinations
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName
+  name: ResultToName
+  nameWithType: IOperationBase.ResultToName
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo
+  name: LayerInfo
+  nameWithType: IOperationBase.LayerInfo
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+  name: InitializeFrom(OperationInfo, ConcurrentDictionary<string, Func<LayerInfo, object>>, LayerInfo)
+  nameWithType: IOperationBase.InitializeFrom(OperationInfo, ConcurrentDictionary<string, Func<LayerInfo, object>>, LayerInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo, System.Collections.Concurrent.ConcurrentDictionary<string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>>, ParallelReverseAutoDiff.RMAD.LayerInfo)
+  nameWithType.vb: IOperationBase.InitializeFrom(OperationInfo, ConcurrentDictionary(Of String, Func(Of LayerInfo, Object)), LayerInfo)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo, System.Collections.Concurrent.ConcurrentDictionary(Of String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object)), ParallelReverseAutoDiff.RMAD.LayerInfo)
+  name.vb: InitializeFrom(OperationInfo, ConcurrentDictionary(Of String, Func(Of LayerInfo, Object)), LayerInfo)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+    name: InitializeFrom
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.OperationInfo
+    name: OperationInfo
+    href: ParallelReverseAutoDiff.RMAD.OperationInfo.html
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+    name: InitializeFrom
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.OperationInfo
+    name: OperationInfo
+    href: ParallelReverseAutoDiff.RMAD.OperationInfo.html
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+  name: GetOutput()
+  nameWithType: IOperationBase.GetOutput()
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+    name: GetOutput
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+    name: GetOutput
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+  name: GetDeepOutput()
+  nameWithType: IOperationBase.GetDeepOutput()
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+    name: GetDeepOutput
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+    name: GetDeepOutput
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  name: Reset()
+  nameWithType: IOperationBase.Reset()
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Reset()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+    name: Reset
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+    name: Reset
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  name: AccumulateGradient(object[])
+  nameWithType: IOperationBase.AccumulateGradient(object[])
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(object[])
+  nameWithType.vb: IOperationBase.AccumulateGradient(Object())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(Object())
+  name.vb: AccumulateGradient(Object())
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+    name: AccumulateGradient
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+    name: AccumulateGradient
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: (
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+  name: ResultTo(Func<int, object>)
+  nameWithType: IOperationBase.ResultTo(Func<int, object>)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func<int, object>)
+  nameWithType.vb: IOperationBase.ResultTo(Func(Of Integer, Object))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func(Of Integer, Object))
+  name.vb: ResultTo(Func(Of Integer, Object))
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+    name: ResultTo
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+  - name: (
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+    name: ResultTo
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
+  - name: (
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+  name: ResultTo(Func<int, int, object>)
+  nameWithType: IOperationBase.ResultTo(Func<int, int, object>)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func<int, int, object>)
+  nameWithType.vb: IOperationBase.ResultTo(Func(Of Integer, Integer, Object))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func(Of Integer, Integer, Object))
+  name.vb: ResultTo(Func(Of Integer, Integer, Object))
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+    name: ResultTo
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+  - name: (
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+    name: ResultTo
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
+  - name: (
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  name: ResultTo(ComputationGraph)
+  nameWithType: IOperationBase.ResultTo(ComputationGraph)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+    name: ResultTo
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph
+    name: ComputationGraph
+    href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+    name: ResultTo
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph
+    name: ComputationGraph
+    href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  name: CopyResult(object)
+  nameWithType: IOperationBase.CopyResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(object)
+  nameWithType.vb: IOperationBase.CopyResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(Object)
+  name.vb: CopyResult(Object)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+    name: CopyResult
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+    name: CopyResult
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+  name: Initialize(int)
+  nameWithType: IOperationBase.Initialize(int)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(int)
+  nameWithType.vb: IOperationBase.Initialize(Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(Integer)
+  name.vb: Initialize(Integer)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+    name: Initialize
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+    name: Initialize
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+  name: InitializeLock()
+  nameWithType: IOperationBase.InitializeLock()
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+    name: InitializeLock
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+    name: InitializeLock
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+  name: InitializeSyncSemaphore()
+  nameWithType: IOperationBase.InitializeSyncSemaphore()
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+    name: InitializeSyncSemaphore
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+    name: InitializeSyncSemaphore
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase
+  commentId: T:ParallelReverseAutoDiff.RMAD.IOperationBase
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html
+  name: IOperationBase
+  nameWithType: IOperationBase
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase
+- uid: ParallelReverseAutoDiff.RMAD.IOperation.Backward*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperation.Backward
+  href: ParallelReverseAutoDiff.RMAD.IOperation.html#ParallelReverseAutoDiff.RMAD.IOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Backward
+  nameWithType: IOperation.Backward
+  fullName: ParallelReverseAutoDiff.RMAD.IOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResult
+  commentId: T:ParallelReverseAutoDiff.RMAD.BackwardResult
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html
+  name: BackwardResult
+  nameWithType: BackwardResult
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult

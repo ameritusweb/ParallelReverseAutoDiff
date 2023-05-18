@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType
+  commentId: T:ParallelReverseAutoDiff.RMAD.InitializationType
+  id: InitializationType
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.InitializationType.He
+  - ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
+  langs:
+  - csharp
+  - vb
+  name: InitializationType
+  nameWithType: InitializationType
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType
+  type: Enum
+  source:
+    remote:
+      path: src/RMAD/InitializationType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: InitializationType
+    path: ../../src/RMAD/InitializationType.cs
+    startLine: 10
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The type of initialization to use.
+  example: []
+  syntax:
+    content: public enum InitializationType
+    content.vb: Public Enum InitializationType
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType.He
+  commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.He
+  id: He
+  parent: ParallelReverseAutoDiff.RMAD.InitializationType
+  langs:
+  - csharp
+  - vb
+  name: He
+  nameWithType: InitializationType.He
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType.He
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/InitializationType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: He
+    path: ../../src/RMAD/InitializationType.cs
+    startLine: 15
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: He initialization.
+  example: []
+  syntax:
+    content: He = 0
+    return:
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
+  commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
+  id: Xavier
+  parent: ParallelReverseAutoDiff.RMAD.InitializationType
+  langs:
+  - csharp
+  - vb
+  name: Xavier
+  nameWithType: InitializationType.Xavier
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/InitializationType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Xavier
+    path: ../../src/RMAD/InitializationType.cs
+    startLine: 20
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Xavier/Glorot initialization.
+  example: []
+  syntax:
+    content: Xavier = 1
+    return:
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType
+  commentId: T:ParallelReverseAutoDiff.RMAD.InitializationType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.InitializationType.html
+  name: InitializationType
+  nameWithType: InitializationType
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType

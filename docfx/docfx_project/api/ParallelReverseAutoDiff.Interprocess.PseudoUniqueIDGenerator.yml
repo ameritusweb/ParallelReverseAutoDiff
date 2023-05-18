@@ -1,0 +1,394 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  commentId: T:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  id: PseudoUniqueIDGenerator
+  parent: ParallelReverseAutoDiff.Interprocess
+  children:
+  - ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID
+  - ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+  langs:
+  - csharp
+  - vb
+  name: PseudoUniqueIDGenerator
+  nameWithType: PseudoUniqueIDGenerator
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  type: Class
+  source:
+    remote:
+      path: src/Interprocess/PseudoUniqueIDGenerator.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: PseudoUniqueIDGenerator
+    path: ../../src/Interprocess/PseudoUniqueIDGenerator.cs
+    startLine: 13
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Generates a pseudo-unique ID.
+  example: []
+  syntax:
+    content: public class PseudoUniqueIDGenerator
+    content.vb: Public Class PseudoUniqueIDGenerator
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+  commentId: P:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+  id: Instance
+  parent: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: PseudoUniqueIDGenerator.Instance
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+  type: Property
+  source:
+    remote:
+      path: src/Interprocess/PseudoUniqueIDGenerator.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Instance
+    path: ../../src/Interprocess/PseudoUniqueIDGenerator.cs
+    startLine: 21
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Gets an instance of the <xref href="ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public static PseudoUniqueIDGenerator Instance { get; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+    content.vb: Public Shared ReadOnly Property Instance As PseudoUniqueIDGenerator
+  overload: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance*
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID
+  commentId: M:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID
+  id: GetNextID
+  parent: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  langs:
+  - csharp
+  - vb
+  name: GetNextID()
+  nameWithType: PseudoUniqueIDGenerator.GetNextID()
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID()
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/PseudoUniqueIDGenerator.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GetNextID
+    path: ../../src/Interprocess/PseudoUniqueIDGenerator.cs
+    startLine: 27
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Gets the next ID.
+  example: []
+  syntax:
+    content: public int GetNextID()
+    return:
+      type: System.Int32
+      description: The next ID.
+    content.vb: Public Function GetNextID() As Integer
+  overload: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID*
+references:
+- uid: ParallelReverseAutoDiff.Interprocess
+  commentId: N:ParallelReverseAutoDiff.Interprocess
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.Interprocess
+  nameWithType: ParallelReverseAutoDiff.Interprocess
+  fullName: ParallelReverseAutoDiff.Interprocess
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.Interprocess
+    name: Interprocess
+    href: ParallelReverseAutoDiff.Interprocess.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.Interprocess
+    name: Interprocess
+    href: ParallelReverseAutoDiff.Interprocess.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  commentId: T:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+  parent: ParallelReverseAutoDiff.Interprocess
+  href: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.html
+  name: PseudoUniqueIDGenerator
+  nameWithType: PseudoUniqueIDGenerator
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+  href: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.html#ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+  name: Instance
+  nameWithType: PseudoUniqueIDGenerator.Instance
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
+- uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID
+  href: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.html#ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID
+  name: GetNextID
+  nameWithType: PseudoUniqueIDGenerator.GetNextID
+  fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.GetNextID
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
