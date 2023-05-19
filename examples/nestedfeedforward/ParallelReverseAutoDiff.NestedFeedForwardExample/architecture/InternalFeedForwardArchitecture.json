@@ -1,0 +1,81 @@
+{
+  "id": "internal",
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "projectedInput",
+          "description": "Multiply the input with the weight matrix",
+          "type": "CudaMatrixMultiplyOperation",
+          "inputs": [ "We", "Input" ],
+          "gradientResultTo": [ "DWe", null ]
+        },
+        {
+          "id": "embeddedInput",
+          "description": "Add the bias",
+          "type": "MatrixAddOperation",
+          "inputs": [ "projectedInput", "Be" ],
+          "gradientResultTo": [ null, "DBe" ]
+        }
+      ],
+      "layers": [
+        {
+          "operations": [
+            {
+              "id": "w1_currentInput",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "W[layerIndex]", "currentInput" ],
+              "gradientResultTo": [ "DW[layerIndex]", null ]
+            },
+            {
+              "id": "h_add",
+              "type": "MatrixAddOperation",
+              "inputs": [ "w1_currentInput", "B[layerIndex]" ],
+              "gradientResultTo": [ null, null, "DB[layerIndex]" ]
+            },
+            {
+              "id": "intermediate_h_1",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "h_add" ]
+            },
+            {
+              "id": "intermediate_h_2",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "intermediate_h_1" ]
+            },
+            {
+              "id": "intermediate_h_3",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "intermediate_h_2" ]
+            },
+            {
+              "id": "h_act",
+              "type": "SigmoidOperation",
+              "inputs": [ "intermediate_h_3" ],
+              "setResultTo": "H[layerIndex]"
+            }
+          ]
+        }
+      ],
+      "endOperations": [
+        {
+          "id": "v_h",
+          "type": "CudaMatrixMultiplyOperation",
+          "inputs": [ "V", "HFromLastLayer" ],
+          "gradientResultTo": [ "DV", null ]
+        },
+        {
+          "id": "v_h_b",
+          "type": "MatrixAddOperation",
+          "inputs": [ "v_h", "Bo" ],
+          "gradientResultTo": [ null, "DBo" ]
+        },
+        {
+          "id": "output_t",
+          "type": "SigmoidOperation",
+          "inputs": [ "v_h_b" ]
+        }
+      ]
+    }
+  ]
+}
