@@ -10,7 +10,7 @@
     <icon>logo.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for parallelized reverse mode automatic differentiation in C# for neural network development.</description>
-	<repository type="git" url="https://github.com/ameritusweb/ParallelReverseAutoDiff.git" commit="4e87fc3554aa5eb31d7d44482c971e663780f126" />
+	<repository type="git" url="https://github.com/ameritusweb/ParallelReverseAutoDiff.git" commit="02a521096f15a1b13b220c916f0d5697144d0fe9" />
     <releaseNotes>Add RMSNormOperation.</releaseNotes>
     <copyright>ameritusweb, 2023</copyright>
     <tags>autodiff automatic-differentiation parallel reverse-mode differentiation C# neural network</tags>
