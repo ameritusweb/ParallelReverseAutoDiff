@@ -43,6 +43,8 @@ MatrixTransposeOperation
 
 ReLUOperation
 
+RMSNormOperation
+
 ScaleAndShiftOperation
 
 SigmoidOperation

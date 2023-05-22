@@ -63,6 +63,17 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Add scaling gradient to the backward result.
+        /// </summary>
+        /// <param name="matrix">The matrix to add.</param>
+        /// <returns>The backward result builder.</returns>
+        public BackwardResultBuilder AddScalingGradient(Matrix matrix)
+        {
+            this.backwardResults.Add(matrix);
+            return this;
+        }
+
+        /// <summary>
         /// Add beta gradient to the backward result.
         /// </summary>
         /// <param name="matrix">The matrix to add.</param>
