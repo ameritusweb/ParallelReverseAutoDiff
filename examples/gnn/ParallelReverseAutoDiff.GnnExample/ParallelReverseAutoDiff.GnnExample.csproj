@@ -20,6 +20,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="GNN\" />
 	  <Folder Include="Stockfish15\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ParallelReverseAutoDiff.ChessLibrary\ParallelReverseAutoDiff.ChessLibrary.csproj" />
 	</ItemGroup>
 </Project>
