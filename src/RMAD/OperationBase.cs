@@ -234,6 +234,32 @@ namespace ParallelReverseAutoDiff.RMAD
                                 }
                             }
                         }
+                        else if (gradientResultTo is DeepMatrix[] deepMatrixArrayGradientResult)
+                        {
+                            var output = (DeepMatrix[]?)gradients[dest];
+                            if (output == null)
+                            {
+                                throw new InvalidOperationException("The output gradient must be non-null.");
+                            }
+
+                            int length = deepMatrixArrayGradientResult.Length;
+                            int depth = deepMatrixArrayGradientResult[0].Depth;
+                            int numRows = deepMatrixArrayGradientResult[0].Rows;
+                            int numCols = deepMatrixArrayGradientResult[0].Cols;
+                            for (int l = 0; l < length; ++l)
+                            {
+                                for (int d = 0; d < depth; ++d)
+                                {
+                                    for (int i = 0; i < numRows; ++i)
+                                    {
+                                        for (int j = 0; j < numCols; ++j)
+                                        {
+                                            deepMatrixArrayGradientResult[l][d][i][j] += output[l][d][i][j];
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         else
                         {
                             throw new InvalidOperationException("The output gradient must be a matrix or a deep matrix.");

@@ -156,7 +156,7 @@ namespace ParallelReverseAutoDiff.Test.Convolutional
         /// </summary>
         public void ClearState()
         {
-            CommonMatrixUtils.ClearMatrices(new[] { this.DW, this.DB, this.H, this.ShEnd2, this.ScEnd2 });
+            CommonMatrixUtils.ClearMatrices(new[] { this.DW, this.DB, this.H, this.DShEnd2, this.DScEnd2 });
         }
     }
 }

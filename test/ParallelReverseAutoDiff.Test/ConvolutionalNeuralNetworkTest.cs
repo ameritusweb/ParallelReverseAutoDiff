@@ -16,7 +16,7 @@ namespace ParallelReverseAutoDiff.Test
                     new Dimension { Depth = 12, Height = 8, Width = 8 },
                     new Dimension { Depth = 12, Height = 2, Width = 2 },
                     30976,
-                    5000,
+                    20000,
                     2048,
                     32,
                     4,
@@ -27,6 +27,7 @@ namespace ParallelReverseAutoDiff.Test
                 for (int i = 0; i < 2; i++)
                 {
                     DeepMatrix input = new DeepMatrix(12, 8, 8);
+                    input.Initialize(InitializationType.Xavier);
                     Matrix target = new Matrix(2048, 1);
                     target[0][0] = 0.5d;
                     await neuralNetwork.Optimize(input, target, i, null);
