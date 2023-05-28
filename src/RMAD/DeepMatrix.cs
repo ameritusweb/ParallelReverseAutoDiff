@@ -170,6 +170,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 case InitializationType.Xavier:
                     this.InitializeXavier();
                     break;
+                case InitializationType.Zeroes:
+                    break;
                 default:
                     throw new ArgumentException("Invalid initialization type.");
             }
