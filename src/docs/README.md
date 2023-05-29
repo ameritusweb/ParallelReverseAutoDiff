@@ -1,7 +1,7 @@
 # ParallelReverseAutoDiff
 Parallel Reverse Mode Automatic Differentiation in C#
 
-![Logo](https://raw.githubusercontent.com/ameritusweb/ParallelReverseAutoDiff/main/docs/parallelreverseautodiff_logo_medium.png)
+![Logo](https://raw.githubusercontent.com/ameritusweb/ParallelReverseAutoDiff/main/docs/parallelreverseautodiff_logo2.png)
 
 [![NuGet version (parallelreverseautodiff)](https://img.shields.io/nuget/v/parallelreverseautodiff?style=flat-square)](https://www.nuget.org/packages/parallelreverseautodiff/)
 ![Nuget](https://img.shields.io/nuget/dt/parallelreverseautodiff?style=flat-square)

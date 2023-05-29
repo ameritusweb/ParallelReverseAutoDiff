@@ -11,6 +11,7 @@ namespace ParallelReverseAutoDiff.RMAD
     public abstract class NeuralNetwork
     {
         private NeuralNetworkParameters parameters;
+        private NeuralNetworkUtilities utilities;
 
         /// <summary>
         /// Gets the parameters for the neural network.
@@ -20,6 +21,17 @@ namespace ParallelReverseAutoDiff.RMAD
             get
             {
                 return this.parameters ??= new NeuralNetworkParameters();
+            }
+        }
+
+        /// <summary>
+        /// Gets the utilities for the neural network.
+        /// </summary>
+        public NeuralNetworkUtilities Utilities
+        {
+            get
+            {
+                return this.utilities ??= new NeuralNetworkUtilities(this);
             }
         }
 

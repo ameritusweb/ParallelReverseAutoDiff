@@ -48,6 +48,26 @@ namespace ParallelReverseAutoDiff.RMAD
         public double SwigLUBeta { get; set; } = 1d;
 
         /// <summary>
+        /// Gets or sets the Adam iteration.
+        /// </summary>
+        public double AdamIteration { get; set; } = 1d;
+
+        /// <summary>
+        /// Gets or sets the Adam beta 1.
+        /// </summary>
+        public double AdamBeta1 { get; set; } = 0.9d;
+
+        /// <summary>
+        /// Gets or sets the Adam beta 2.
+        /// </summary>
+        public double AdamBeta2 { get; set; } = 0.999d;
+
+        /// <summary>
+        /// Gets or sets the Adam epsilon value.
+        /// </summary>
+        public double AdamEpsilon { get; set; } = 1E-8d;
+
+        /// <summary>
         /// Gets or sets the number of time steps.
         /// </summary>
         public int NumTimeSteps { get; set; }
