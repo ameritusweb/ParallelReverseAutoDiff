@@ -30,48 +30,48 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The weight.</returns>
-        Matrix? WeightMatrix(string identifier);
+        public Matrix WeightMatrix(string identifier);
 
         /// <summary>
         /// Retrieve the weight by identifier.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The weight.</returns>
-        public DeepMatrix? WeightDeepMatrix(string identifier);
+        public DeepMatrix WeightDeepMatrix(string identifier);
 
         /// <summary>
         /// Retrieve the weight by identifier.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The weight.</returns>
-        public DeepMatrix[]? WeightDeepMatrixArray(string identifier);
+        public DeepMatrix[] WeightDeepMatrixArray(string identifier);
 
         /// <summary>
         /// Retrieve the gradient by identifier.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The gradient.</returns>
-        public Matrix? GradientMatrix(string identifier);
+        public Matrix GradientMatrix(string identifier);
 
         /// <summary>
         /// Retrieve the gradient by identifier.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The gradient.</returns>
-        public DeepMatrix? GradientDeepMatrix(string identifier);
+        public DeepMatrix GradientDeepMatrix(string identifier);
 
         /// <summary>
         /// Retrieve the gradient by identifier.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The gradient.</returns>
-        public DeepMatrix[]? GradientDeepMatrixArray(string identifier);
+        public DeepMatrix[] GradientDeepMatrixArray(string identifier);
 
         /// <summary>
         /// Retrieve the dimensions by identifier.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The dimensions.</returns>
-        public int[]? Dimensions(string identifier);
+        public int[] Dimensions(string identifier);
     }
 }
