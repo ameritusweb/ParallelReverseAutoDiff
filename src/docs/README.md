@@ -81,6 +81,45 @@ FlattenOperation
 
 ## Usage
 
+### Build out your neural network model
+
+```csharp
+var embeddingLayerBuilder = new ModelLayerBuilder(this)
+    .AddModelElementGroup("We", new[] { hiddenSize, this.originalInputSize }, InitializationType.Xavier)
+    .AddModelElementGroup("be", new[] { hiddenSize, outputSize }, InitializationType.Zeroes);
+this.embeddingLayer = embeddingLayerBuilder.Build();
+
+var hiddenLayerBuilder = new ModelLayerBuilder(this)
+    .AddModelElementGroup("Wo", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+    .AddModelElementGroup("Uo", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("bo", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+    .AddModelElementGroup("Wi", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+    .AddModelElementGroup("Ui", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("bi", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+    .AddModelElementGroup("Wf", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+    .AddModelElementGroup("Uf", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("bf", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+    .AddModelElementGroup("Wc", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+    .AddModelElementGroup("Uc", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("bc", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+    .AddModelElementGroup("Wq", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("Wk", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("Wv", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier);
+this.hiddenLayer = hiddenLayerBuilder.Build();
+
+var outputLayerBuilder = new ModelLayerBuilder(this)
+    .AddModelElementGroup("V", new[] { outputSize, hiddenSize }, InitializationType.Xavier)
+    .AddModelElementGroup("b", new[] { outputSize, 1 }, InitializationType.Zeroes);
+this.outputLayer = outputLayerBuilder.Build();
+```
+
+Each model element group needs a unique identifier, a size array, and an initialization type.
+The three possible initialization types are Xavier, He, and Zeroes.
+The group consists of weights, gradients, and moments for Adam optimization.
+The initialization type is used to initialize the model element group's weights. 
+The model element group's elements are stored in a matrix whose size is specified by the size array. 
+In this example, for the hidden layer, the first dimension is the number of layers and the second and third dimensions are the row and column sizes respectively.
+
 ### Create an architecture JSON file
 
 Here is an example:
@@ -437,6 +476,58 @@ Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON fi
 ### Instantiate the computational graph
 
 ```c#
+// Retrieve the matrices from the model layers created by the model layer builder.
+var we = this.embeddingLayer.WeightMatrix("We");
+var be = this.embeddingLayer.WeightMatrix("be");
+
+var dwe = this.embeddingLayer.GradientMatrix("We");
+var dbe = this.embeddingLayer.GradientMatrix("be");
+
+var wf = this.hiddenLayer.WeightDeepMatrix("Wf");
+var wi = this.hiddenLayer.WeightDeepMatrix("Wi");
+var wc = this.hiddenLayer.WeightDeepMatrix("Wc");
+var wo = this.hiddenLayer.WeightDeepMatrix("Wo");
+
+var dwf = this.hiddenLayer.GradientDeepMatrix("Wf");
+var dwi = this.hiddenLayer.GradientDeepMatrix("Wi");
+var dwc = this.hiddenLayer.GradientDeepMatrix("Wc");
+var dwo = this.hiddenLayer.GradientDeepMatrix("Wo");
+
+var uf = this.hiddenLayer.WeightDeepMatrix("Uf");
+var ui = this.hiddenLayer.WeightDeepMatrix("Ui");
+var uc = this.hiddenLayer.WeightDeepMatrix("Uc");
+var uo = this.hiddenLayer.WeightDeepMatrix("Uo");
+
+var duf = this.hiddenLayer.GradientDeepMatrix("Uf");
+var dui = this.hiddenLayer.GradientDeepMatrix("Ui");
+var duc = this.hiddenLayer.GradientDeepMatrix("Uc");
+var duo = this.hiddenLayer.GradientDeepMatrix("Uo");
+
+var bf = this.hiddenLayer.WeightDeepMatrix("bf");
+var bi = this.hiddenLayer.WeightDeepMatrix("bi");
+var bc = this.hiddenLayer.WeightDeepMatrix("bc");
+var bo = this.hiddenLayer.WeightDeepMatrix("bo");
+
+var dbf = this.hiddenLayer.GradientDeepMatrix("bf");
+var dbi = this.hiddenLayer.GradientDeepMatrix("bi");
+var dbc = this.hiddenLayer.GradientDeepMatrix("bc");
+var dbo = this.hiddenLayer.GradientDeepMatrix("bo");
+
+var wq = this.hiddenLayer.WeightDeepMatrix("Wq");
+var wk = this.hiddenLayer.WeightDeepMatrix("Wk");
+var wv = this.hiddenLayer.WeightDeepMatrix("Wv");
+
+var dwq = this.hiddenLayer.GradientDeepMatrix("Wf");
+var dwk = this.hiddenLayer.GradientDeepMatrix("Wi");
+var dwv = this.hiddenLayer.GradientDeepMatrix("Wc");
+
+var v = this.outputLayer.WeightMatrix("V");
+var b = this.outputLayer.WeightMatrix("b");
+
+var dv = this.outputLayer.GradientMatrix("V");
+var db = this.outputLayer.GradientMatrix("b");
+
+// Instantiate the computation graph
 this.computationGraph = new SelfAttentionMultiLayerLSTMComputationGraph(this);
 var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
 this.computationGraph
@@ -445,25 +536,25 @@ this.computationGraph
     .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
     .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
     .AddScalar("scaledDotProductScalar", x => 1.0d / Math.Sqrt(this.hiddenSize))
-    .AddWeight("Wf", x => this.Wf[x.Layer]).AddGradient("dWf", x => this.dWf[x.Layer])
-    .AddWeight("Wi", x => this.Wi[x.Layer]).AddGradient("dWi", x => this.dWi[x.Layer])
-    .AddWeight("Wc", x => this.Wc[x.Layer]).AddGradient("dWc", x => this.dWc[x.Layer])
-    .AddWeight("Wo", x => this.Wo[x.Layer]).AddGradient("dWo", x => this.dWo[x.Layer])
-    .AddWeight("Uf", x => this.Uf[x.Layer]).AddGradient("dUf", x => this.dUf[x.Layer])
-    .AddWeight("Ui", x => this.Ui[x.Layer]).AddGradient("dUi", x => this.dUi[x.Layer])
-    .AddWeight("Uc", x => this.Uc[x.Layer]).AddGradient("dUc", x => this.dUc[x.Layer])
-    .AddWeight("Uo", x => this.Uo[x.Layer]).AddGradient("dUo", x => this.dUo[x.Layer])
-    .AddWeight("bf", x => this.bf[x.Layer]).AddGradient("dbf", x => this.dbf[x.Layer])
-    .AddWeight("bi", x => this.bi[x.Layer]).AddGradient("dbi", x => this.dbi[x.Layer])
-    .AddWeight("bc", x => this.bc[x.Layer]).AddGradient("dbc", x => this.dbc[x.Layer])
-    .AddWeight("bo", x => this.bo[x.Layer]).AddGradient("dbo", x => this.dbo[x.Layer])
-    .AddWeight("Wq", x => this.Wq[x.Layer]).AddGradient("dWq", x => this.dWq[x.Layer])
-    .AddWeight("Wk", x => this.Wk[x.Layer]).AddGradient("dWk", x => this.dWk[x.Layer])
-    .AddWeight("Wv", x => this.Wv[x.Layer]).AddGradient("dWv", x => this.dWv[x.Layer])
-    .AddWeight("We", x => this.We).AddGradient("dWe", x => this.dWe)
-    .AddWeight("be", x => this.be).AddGradient("dbe", x => this.dbe)
-    .AddWeight("V", x => this.V).AddGradient("dV", x => this.dV)
-    .AddWeight("b", x => this.b).AddGradient("db", x => this.db)
+    .AddWeight("Wf", x => wf[x.Layer]).AddGradient("dWf", x => dwf[x.Layer])
+    .AddWeight("Wi", x => wi[x.Layer]).AddGradient("dWi", x => dwi[x.Layer])
+    .AddWeight("Wc", x => wc[x.Layer]).AddGradient("dWc", x => dwc[x.Layer])
+    .AddWeight("Wo", x => wo[x.Layer]).AddGradient("dWo", x => dwo[x.Layer])
+    .AddWeight("Uf", x => uf[x.Layer]).AddGradient("dUf", x => duf[x.Layer])
+    .AddWeight("Ui", x => ui[x.Layer]).AddGradient("dUi", x => dui[x.Layer])
+    .AddWeight("Uc", x => uc[x.Layer]).AddGradient("dUc", x => duc[x.Layer])
+    .AddWeight("Uo", x => uo[x.Layer]).AddGradient("dUo", x => duo[x.Layer])
+    .AddWeight("bf", x => bf[x.Layer]).AddGradient("dbf", x => dbf[x.Layer])
+    .AddWeight("bi", x => bi[x.Layer]).AddGradient("dbi", x => dbi[x.Layer])
+    .AddWeight("bc", x => bc[x.Layer]).AddGradient("dbc", x => dbc[x.Layer])
+    .AddWeight("bo", x => bo[x.Layer]).AddGradient("dbo", x => dbo[x.Layer])
+    .AddWeight("Wq", x => wq[x.Layer]).AddGradient("dWq", x => dwq[x.Layer])
+    .AddWeight("Wk", x => wk[x.Layer]).AddGradient("dWk", x => dwk[x.Layer])
+    .AddWeight("Wv", x => wv[x.Layer]).AddGradient("dWv", x => dwv[x.Layer])
+    .AddWeight("We", x => we).AddGradient("dWe", x => dwe)
+    .AddWeight("be", x => be).AddGradient("dbe", x => dbe)
+    .AddWeight("V", x => v).AddGradient("dV", x => dv)
+    .AddWeight("b", x => b).AddGradient("db", x => db)
     .AddOperationFinder("i", x => this.computationGraph[$"i_{x.TimeStep}_{x.Layer}"])
     .AddOperationFinder("f", x => this.computationGraph[$"f_{x.TimeStep}_{x.Layer}"])
     .AddOperationFinder("cHat", x => this.computationGraph[$"cHat_{x.TimeStep}_{x.Layer}"])
@@ -541,6 +632,18 @@ for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
         traverseCount++;
     }
 }
+```
+
+### Clip the gradients
+```c#
+GradientClipper clipper = new GradientClipper(this);
+clipper.Clip(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
+```
+
+### Update the weights
+```c#
+AdamOptimizer optimizer = new AdamOptimizer(this);
+optimizer.Optimize(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
 ```
 
 ### Using CUDA operations
