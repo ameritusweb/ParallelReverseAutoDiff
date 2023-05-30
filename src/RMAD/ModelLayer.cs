@@ -65,45 +65,45 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public Matrix? WeightMatrix(string identifier)
+        public Matrix WeightMatrix(string identifier)
         {
-            return this.elements[identifier].Item1 as Matrix;
+            return this.elements[identifier].Item1 as Matrix ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
 
         /// <inheritdoc />
-        public DeepMatrix? WeightDeepMatrix(string identifier)
+        public DeepMatrix WeightDeepMatrix(string identifier)
         {
-            return this.elements[identifier].Item1 as DeepMatrix;
+            return this.elements[identifier].Item1 as DeepMatrix ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
 
         /// <inheritdoc />
-        public DeepMatrix[]? WeightDeepMatrixArray(string identifier)
+        public DeepMatrix[] WeightDeepMatrixArray(string identifier)
         {
-            return this.elements[identifier].Item1 as DeepMatrix[];
+            return this.elements[identifier].Item1 as DeepMatrix[] ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
 
         /// <inheritdoc />
-        public Matrix? GradientMatrix(string identifier)
+        public Matrix GradientMatrix(string identifier)
         {
-            return this.elements[identifier].Item2 as Matrix;
+            return this.elements[identifier].Item2 as Matrix ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
 
         /// <inheritdoc />
-        public DeepMatrix? GradientDeepMatrix(string identifier)
+        public DeepMatrix GradientDeepMatrix(string identifier)
         {
-            return this.elements[identifier].Item2 as DeepMatrix;
+            return this.elements[identifier].Item2 as DeepMatrix ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
 
         /// <inheritdoc />
-        public DeepMatrix[]? GradientDeepMatrixArray(string identifier)
+        public DeepMatrix[] GradientDeepMatrixArray(string identifier)
         {
-            return this.elements[identifier].Item2 as DeepMatrix[];
+            return this.elements[identifier].Item2 as DeepMatrix[] ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
 
         /// <inheritdoc />
-        public int[]? Dimensions(string identifier)
+        public int[] Dimensions(string identifier)
         {
-            return this.elements[identifier].Item5 as int[];
+            return this.elements[identifier].Item5 as int[] ?? throw new ArgumentException("Identifier not found or wrong type.");
         }
     }
 }
