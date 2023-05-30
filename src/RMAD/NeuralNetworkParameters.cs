@@ -68,6 +68,16 @@ namespace ParallelReverseAutoDiff.RMAD
         public double AdamEpsilon { get; set; } = 1E-8d;
 
         /// <summary>
+        /// Gets or sets the clip value.
+        /// </summary>
+        public double ClipValue { get; set; } = 4;
+
+        /// <summary>
+        /// Gets or sets the minimum clip value.
+        /// </summary>
+        public double MinimumClipValue { get; set; } = 1E-6;
+
+        /// <summary>
         /// Gets or sets the number of time steps.
         /// </summary>
         public int NumTimeSteps { get; set; }
