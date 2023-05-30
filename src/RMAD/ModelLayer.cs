@@ -7,6 +7,8 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// A model layer for a neural network.
@@ -25,6 +27,15 @@ namespace ParallelReverseAutoDiff.RMAD
             this.neuralNetwork = neuralNetwork;
         }
 
+        /// <inheritdoc />
+        public List<string> Identifiers
+        {
+            get
+            {
+                return this.elements.Keys.ToList();
+            }
+        }
+
         /// <summary>
         /// Gets the model elements dictionary.
         /// </summary>
@@ -36,12 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        /// <summary>
-        /// Retrieve the model element by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <param name="elementType">The element type.</param>
-        /// <returns>The model element.</returns>
+        /// <inheritdoc />
         public object this[string identifier, ModelElementType elementType]
         {
             get
@@ -58,64 +64,46 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        /// <summary>
-        /// Retrieve the weight by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <returns>The weight.</returns>
+        /// <inheritdoc />
         public Matrix? WeightMatrix(string identifier)
         {
             return this.elements[identifier].Item1 as Matrix;
         }
 
-        /// <summary>
-        /// Retrieve the weight by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <returns>The weight.</returns>
+        /// <inheritdoc />
         public DeepMatrix? WeightDeepMatrix(string identifier)
         {
             return this.elements[identifier].Item1 as DeepMatrix;
         }
 
-        /// <summary>
-        /// Retrieve the weight by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <returns>The weight.</returns>
+        /// <inheritdoc />
         public DeepMatrix[]? WeightDeepMatrixArray(string identifier)
         {
             return this.elements[identifier].Item1 as DeepMatrix[];
         }
 
-        /// <summary>
-        /// Retrieve the gradient by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <returns>The gradient.</returns>
+        /// <inheritdoc />
         public Matrix? GradientMatrix(string identifier)
         {
-            return this.elements[identifier].Item1 as Matrix;
+            return this.elements[identifier].Item2 as Matrix;
         }
 
-        /// <summary>
-        /// Retrieve the gradient by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <returns>The gradient.</returns>
+        /// <inheritdoc />
         public DeepMatrix? GradientDeepMatrix(string identifier)
         {
-            return this.elements[identifier].Item1 as DeepMatrix;
+            return this.elements[identifier].Item2 as DeepMatrix;
         }
 
-        /// <summary>
-        /// Retrieve the gradient by identifier.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <returns>The gradient.</returns>
+        /// <inheritdoc />
         public DeepMatrix[]? GradientDeepMatrixArray(string identifier)
         {
-            return this.elements[identifier].Item1 as DeepMatrix[];
+            return this.elements[identifier].Item2 as DeepMatrix[];
+        }
+
+        /// <inheritdoc />
+        public int[]? Dimensions(string identifier)
+        {
+            return this.elements[identifier].Item5 as int[];
         }
     }
 }
