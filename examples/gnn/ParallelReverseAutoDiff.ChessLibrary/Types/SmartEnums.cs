@@ -113,6 +113,61 @@ namespace Chess
             };
         }
     }
+
+    /// <summary>
+    /// Smart enum for Move type in chess game
+    /// </summary>
+    public class MoveType : SmartEnum<MoveType>
+    {
+        public static readonly MoveType None = new("None", 1, 'n');
+        public static readonly MoveType Capture = new("Capture", 2, 'x');
+        public static readonly MoveType QueensideCastle = new("QueensideCastle", 3, 'q');
+        public static readonly MoveType KingsideCastle = new("KingsideCastle", 4, 'k');
+        public static readonly MoveType Promotion = new("Promotion", 5, 'p');
+        public static readonly MoveType EnPassant = new("EnPassant", 6, 'e');
+        public static readonly MoveType Defense = new("Defense", 7, 'd');
+
+        /// <summary>
+        /// None => 'n'<br/>
+        /// Capture => 'x'<br/>
+        /// QueensideCastle => 'q'<br/>
+        /// KingsideCastle => 'k'<br/>
+        /// Promotion => 'p'<br/>
+        /// EnPassant => 'e'<br/>
+        /// Defense => 'd'<br/>
+        /// </summary>
+        public char AsChar { get; }
+
+        private MoveType(string name, int value, char asChar) : base(name, value)
+        {
+            AsChar = asChar;
+        }
+
+        /// <summary>
+        /// PieceType object from char<br/>
+        /// 'n' => None<br/>
+        /// 'x' => Capture<br/>
+        /// 'q' => QueensideCastle<br/>
+        /// 'k' => KingsideCastle<br/>
+        /// 'p' => Promotion<br/>
+        /// 'e' => EnPassant<br/>
+        /// 'd' => Defense<br/>
+        /// </summary>
+        public static MoveType FromChar(char type)
+        {
+            return char.ToLower(type) switch
+            {
+                'n' => None,
+                'x' => Capture,
+                'q' => QueensideCastle,
+                'k' => KingsideCastle,
+                'p' => Promotion,
+                'e' => EnPassant,
+                'd' => Defense,
+                _ => throw new ChessArgumentException(null, nameof(type), nameof(MoveType.FromChar)),
+            };
+        }
+    }
 }
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

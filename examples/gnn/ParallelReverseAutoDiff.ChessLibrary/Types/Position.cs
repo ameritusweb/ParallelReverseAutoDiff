@@ -49,6 +49,16 @@ namespace Chess
         public short Y { get; internal set; }
 
         /// <summary>
+        /// Get the rank on chess board.
+        /// </summary>
+        public short RankValue => Y;
+
+        /// <summary>
+        /// Get the file on chess board.
+        /// </summary>
+        public short FileValue => X;
+
+        /// <summary>
         /// Initializes a new Position ex.:<br/>
         /// "a1" - notation => {X = 0, Y = 0}<br/>
         /// "h8" - notation => {X = 7, Y = 7}<br/>

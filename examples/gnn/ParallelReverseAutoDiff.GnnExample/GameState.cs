@@ -18,9 +18,7 @@ namespace RandomForestTest
     public class GameState
     {
         private Random rng;
-        private ConcurrentDictionary<(Position, char), List<(Move, char)>> positionToPossibleMoveMap;
-        private ConcurrentDictionary<Position, GNNNode> positionToPieceMap;
-        private ConcurrentDictionary<Position, GNNNode> positionToSquareMap;
+        private ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>> positionToPossibleMoveMap;
         private GNNGraph graph;
 
         /// <summary>
@@ -30,9 +28,7 @@ namespace RandomForestTest
         {
             this.Board = new ChessBoard();
             this.rng = new Random(DateTime.UtcNow.Millisecond);
-            this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Move, char)>>();
-            this.positionToPieceMap = new ConcurrentDictionary<Position, GNNNode>();
-            this.positionToSquareMap = new ConcurrentDictionary<Position, GNNNode>();
+            this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.graph = new GNNGraph();
             this.BuildGraph();
         }
@@ -45,9 +41,7 @@ namespace RandomForestTest
         {
             this.Board = board;
             this.rng = new Random(DateTime.UtcNow.Millisecond);
-            this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Move, char)>>();
-            this.positionToPieceMap = new ConcurrentDictionary<Position, GNNNode>();
-            this.positionToSquareMap = new ConcurrentDictionary<Position, GNNNode>();
+            this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.graph = new GNNGraph();
             this.BuildGraph();
         }
@@ -233,69 +227,350 @@ namespace RandomForestTest
             return this.Board.Moves().Any(x => x.ToString() == move.ToString());
         }
 
-        private void BuildGraph()
+        /// <summary>
+        /// Gets all positions on the chess board.
+        /// </summary>
+        /// <returns>The list of positions.</returns>
+        public List<Position> GetAllPositions()
         {
-            var piecesAndPositionsAll = this.Board.GetPiecesAndTheirPositionsAll();
-            foreach ((Piece? piece, Position position) pieceAndPosition in piecesAndPositionsAll)
+            var positions = new List<Position>();
+            for (var i = 0; i < 64; i++)
             {
-                try
-                {
-                    if (pieceAndPosition.piece != null)
-                    {
-                        var piece = pieceAndPosition.piece;
-                        var position = pieceAndPosition.position;
-                        ChessPieceGNNNode node = new ChessPieceGNNNode()
-                        {
-                            PieceColor = piece.Color,
-                            PieceType = piece.Type,
-                        };
-                        this.positionToPieceMap.TryAdd(position, node);
-                        ChessSquareGNNNode square = new ChessSquareGNNNode()
-                        {
-                            Position = pieceAndPosition.position,
-                        };
-                        this.positionToSquareMap.TryAdd(pieceAndPosition.position, square);
-                    }
-                    else
-                    {
-                        ChessSquareGNNNode node = new ChessSquareGNNNode()
-                        {
-                            Position = pieceAndPosition.position,
-                        };
-                        this.positionToSquareMap.TryAdd(pieceAndPosition.position, node);
-                    }
-                }
-                catch (Exception) { }
+                positions.Add(new Position((short)(i / 8), (short)(i % 8)));
             }
 
-            foreach ((Piece? piece, Position position) pieceAndPosition in piecesAndPositionsAll)
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all king positions from a position.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>The list of positions.</returns>
+        public List<Position> GetAllKingPositionsFrom(Position position)
+        {
+            var positions = new List<Position>();
+            for (var i = -1; i <= 1; ++i)
             {
-                try
+                for (var j = -1; j <= 1; ++j)
                 {
-                    if (pieceAndPosition.piece != null)
+                    if (i == 0 && j == 0)
                     {
-                        var piece = pieceAndPosition.piece;
-                        var position = pieceAndPosition.position;
-                        ChessPieceGNNNode node = (ChessPieceGNNNode)this.positionToPieceMap[position];
-                        var moveAndPieceList = pieceAndPosition.piece.GetAvailableMovesToAnyColor(this.Board, pieceAndPosition.position);
-                        this.positionToPossibleMoveMap.TryAdd((position, piece.Type.AsChar), moveAndPieceList.Select(x => (x.move, x.piece.Type.AsChar)).ToList());
-                        foreach (var moveAndPiece in moveAndPieceList)
-                        {
-                            var p = moveAndPiece.piece;
-                            var m = moveAndPiece.move;
-                            var newPosition = m.NewPosition;
-                            var newPositionNode = this.positionToPieceMap[newPosition];
-                            GNNEdge edge = new GNNEdge()
-                            {
-                                From = node,
-                                To = newPositionNode,
-                            };
-                            node.Edges.Add(edge);
-                            newPositionNode.Edges.Add(edge);
-                        }
+                        continue;
+                    }
+
+                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    if (this.Board.IsValid(pos))
+                    {
+                        positions.Add(pos);
                     }
                 }
-                catch (Exception) { }
+            }
+
+            if (position.RankValue == 0 || position.RankValue == 7)
+            {
+                if (position.FileValue == 3 || position.FileValue == 4)
+                {
+                    var castle1 = new Position(position.RankValue, (short)(position.FileValue + 2));
+                    if (this.Board.IsValid(castle1))
+                    {
+                        positions.Add(castle1);
+                    }
+
+                    var castle2 = new Position(position.RankValue, (short)(position.FileValue - 2));
+                    if (this.Board.IsValid(castle2))
+                    {
+                        positions.Add(castle2);
+                    }
+                }
+            }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all rook positions from a position.
+        /// </summary>
+        /// <param name="position">A position.</param>
+        /// <returns>The rook positions.</returns>
+        public List<Position> GetAllRookPositionsFrom(Position position)
+        {
+            var positions = new List<Position>();
+            for (var i = -7; i <= 7; ++i)
+            {
+                if (i == 0)
+                {
+                    continue;
+                }
+
+                var pos = new Position((short)(position.RankValue + i), position.FileValue);
+                if (this.Board.IsValid(pos))
+                {
+                    positions.Add(pos);
+                }
+            }
+
+            for (int j = -7; j <= 7; ++j)
+            {
+                if (j == 0)
+                {
+                    continue;
+                }
+
+                var pos = new Position(position.RankValue, (short)(position.FileValue + j));
+                if (this.Board.IsValid(pos))
+                {
+                    positions.Add(pos);
+                }
+            }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all bishop positions from a position.
+        /// </summary>
+        /// <param name="position">A position.</param>
+        /// <returns>The bishop positions.</returns>
+        public List<Position> GetAllBishopPositionsFrom(Position position)
+        {
+            var positions = new List<Position>();
+
+            for (var i = -7; i <= 7; ++i)
+            {
+                for (var j = -7; j <= 7; ++j)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        continue;
+                    }
+
+                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    if (this.Board.IsValid(pos))
+                    {
+                        positions.Add(pos);
+                    }
+                }
+            }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all queen positions from a position.
+        /// </summary>
+        /// <param name="position">A position.</param>
+        /// <returns>The queen positions.</returns>
+        public List<Position> GetAllQueenPositionsFrom(Position position)
+        {
+            var positions = new List<Position>();
+            for (var i = -7; i <= 7; ++i)
+            {
+                if (i == 0)
+                {
+                    continue;
+                }
+
+                var pos = new Position((short)(position.RankValue + i), position.FileValue);
+                if (this.Board.IsValid(pos))
+                {
+                    positions.Add(pos);
+                }
+            }
+
+            for (int j = -7; j <= 7; ++j)
+            {
+                if (j == 0)
+                {
+                    continue;
+                }
+
+                var pos = new Position(position.RankValue, (short)(position.FileValue + j));
+                if (this.Board.IsValid(pos))
+                {
+                    positions.Add(pos);
+                }
+            }
+
+            for (var i = -7; i <= 7; ++i)
+            {
+                for (var j = -7; j <= 7; ++j)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        continue;
+                    }
+
+                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    if (this.Board.IsValid(pos))
+                    {
+                        positions.Add(pos);
+                    }
+                }
+            }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all of the pawn positions from a position.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>The list of positions.</returns>
+        public List<Position> GetAllPawnPositionsFrom(Position position)
+        {
+            var positions = new List<Position>();
+            for (var i = -1; i <= 1; ++i)
+            {
+                for (var j = -1; j <= 1; ++j)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        continue;
+                    }
+
+                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    if (this.Board.IsValid(pos))
+                    {
+                        positions.Add(pos);
+                    }
+                }
+            }
+
+            for (var i = -2; i <= 2; ++i)
+            {
+                if (i == 0)
+                {
+                    continue;
+                }
+
+                var pos = new Position((short)(position.RankValue + i), position.FileValue);
+                if (this.Board.IsValid(pos))
+                {
+                    positions.Add(pos);
+                }
+            }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all knight positions from a position.
+        /// </summary>
+        /// <param name="position">A position.</param>
+        /// <returns>The knight positions.</returns>
+        public List<Position> GetAllKnightPositionsFrom(Position position)
+        {
+            var positions = new List<Position>();
+            for (var i = -2; i <= 2; ++i)
+            {
+                if (i == 0)
+                {
+                    continue;
+                }
+
+                for (var j = -2; j <= 2; ++j)
+                {
+                    if (j == 0)
+                    {
+                        continue;
+                    }
+
+                    if (Math.Abs(i) == Math.Abs(j))
+                    {
+                        continue;
+                    }
+
+                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    if (this.Board.IsValid(pos))
+                    {
+                        positions.Add(pos);
+                    }
+                }
+            }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Gets all piece types.
+        /// </summary>
+        /// <returns>A list of piece types.</returns>
+        public List<PieceType> GetAllPieceTypes()
+        {
+            return new List<PieceType>()
+            {
+                PieceType.Pawn,
+                PieceType.Knight,
+                PieceType.Bishop,
+                PieceType.Rook,
+                PieceType.Queen,
+                PieceType.King,
+            };
+        }
+
+        /// <summary>
+        /// Add position to map.
+        /// </summary>
+        /// <param name="startPos">The start position.</param>
+        /// <param name="moveInfo">The move info.</param>
+        public void AddToMap((Position Pos, char PieceType) startPos, (Position NewPos, MoveType MoveType, char? CapturePieceType, char? PromotionPieceType) moveInfo)
+        {
+            if (this.positionToPossibleMoveMap.ContainsKey(startPos))
+            {
+                var list = this.positionToPossibleMoveMap[startPos];
+                list.Add(moveInfo);
+                this.positionToPossibleMoveMap.AddOrUpdate(startPos, list, (key, oldValue) => list);
+            }
+            else
+            {
+                this.positionToPossibleMoveMap.TryAdd(startPos, new List<(Position NewPos, MoveType MoveType, char? CapturePieceType, char? PromotionPieceType)> { moveInfo });
+            }
+        }
+
+        private void BuildGraph()
+        {
+            var positions = this.GetAllPositions();
+            var pieceTypes = this.GetAllPieceTypes();
+            for (int i = 0; i < positions.Count; ++i)
+            {
+                var position = positions[i];
+                for (int j = 0; j < pieceTypes.Count; ++j)
+                {
+                    var pieceType = pieceTypes[j];
+                    var key = (position, pieceType.AsChar);
+                    switch (pieceType.AsChar)
+                    {
+                        case 'p':
+                            {
+                                var pawnPositions = this.GetAllPawnPositionsFrom(position);
+                                for (int k = 0; k < pawnPositions.Count; ++k)
+                                {
+                                    var pawnPosition = pawnPositions[k];
+                                    this.AddToMap(key, (pawnPosition, MoveType.Defense, null, null));
+                                    this.AddToMap(key, (pawnPosition, MoveType.QueensideCastle, null, null));
+                                    this.AddToMap(key, (pawnPosition, MoveType.KingsideCastle, null, null));
+                                    this.AddToMap(key, (pawnPosition, MoveType.EnPassant, PieceType.Pawn.AsChar, null));
+                                    this.AddToMap(key, (pawnPosition, MoveType.None, null, null));
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (pawnPosition, MoveType.Capture, pieceTypes[l].AsChar, null));
+                                        for (int m = 0; m < pieceTypes.Count; ++m)
+                                        {
+                                            this.AddToMap(key, (pawnPosition, MoveType.Capture, pieceTypes[l].AsChar, pieceTypes[m].AsChar));
+                                        }
+                                    }
+
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (pawnPosition, MoveType.Promotion, null, pieceTypes[l].AsChar));
+                                    }
+                                }
+
+                                break;
+                            }
+                    }
+                }
             }
         }
     }
