@@ -1,17 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//------------------------------------------------------------------------------
+// <copyright file="GNNMove.cs" author="ameritusweb" date="5/21/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample.GNN
 {
+    /// <summary>
+    /// The GNN selected move.
+    /// </summary>
     public class GNNMove
     {
-        public int FromX { get; set; }
-        public int FromY { get; set; }
-        public int ToX { get; set; }
-        public int ToY { get; set; }
+        /// <summary>
+        /// Gets or sets the node from.
+        /// </summary>
+        public GNNNode NodeFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the node to.
+        /// </summary>
+        public GNNNode NodeTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the score for the move.
+        /// </summary>
         public double Score { get; set; }
     }
 }

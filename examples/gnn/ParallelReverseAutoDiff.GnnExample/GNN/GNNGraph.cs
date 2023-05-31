@@ -1,14 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//------------------------------------------------------------------------------
+// <copyright file="GNNGraph.cs" author="ameritusweb" date="5/21/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample.GNN
 {
-    public class GNNWeightedGraph
+    /// <summary>
+    /// The GNN graph.
+    /// </summary>
+    public class GNNGraph
     {
+        /// <summary>
+        /// Gets or sets the GNN graph nodes.
+        /// </summary>
         public List<GNNNode> Nodes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the GNN graph edges.
+        /// </summary>
         public List<GNNEdge> Edges { get; set; }
     }
 }
