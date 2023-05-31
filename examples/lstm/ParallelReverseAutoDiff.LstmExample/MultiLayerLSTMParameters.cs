@@ -16,62 +16,62 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <summary>
         /// Gets or sets the weight matrix for the input gate.
         /// </summary>
-        public Matrix[] Wi { get; set; }
+        public DeepMatrix Wi { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the forget gate.
         /// </summary>
-        public Matrix[] Wf { get; set; }
+        public DeepMatrix Wf { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the memory cell gate.
         /// </summary>
-        public Matrix[] Wc { get; set; }
+        public DeepMatrix Wc { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the output gate.
         /// </summary>
-        public Matrix[] Wo { get; set; }
+        public DeepMatrix Wo { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the input gate.
         /// </summary>
-        public Matrix[] Ui { get; set; }
+        public DeepMatrix Ui { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the forget gate.
         /// </summary>
-        public Matrix[] Uf { get; set; }
+        public DeepMatrix Uf { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the memory cell gate.
         /// </summary>
-        public Matrix[] Uc { get; set; }
+        public DeepMatrix Uc { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the output gate.
         /// </summary>
-        public Matrix[] Uo { get; set; }
+        public DeepMatrix Uo { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the input gate.
         /// </summary>
-        public Matrix[] Bi { get; set; }
+        public DeepMatrix Bi { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the forget gate.
         /// </summary>
-        public Matrix[] Bf { get; set; }
+        public DeepMatrix Bf { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the memory cell gate.
         /// </summary>
-        public Matrix[] Bc { get; set; }
+        public DeepMatrix Bc { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the output gate.
         /// </summary>
-        public Matrix[] Bo { get; set; }
+        public DeepMatrix Bo { get; set; }
 
         /// <summary>
         /// Gets or sets the bias matrix for the embedding layer.
@@ -96,16 +96,16 @@ namespace ParallelReverseAutoDiff.LstmExample
         /// <summary>
         /// Gets or sets the weight matrix for the query layer.
         /// </summary>
-        public Matrix[] Wq { get; set; }
+        public DeepMatrix Wq { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the key layer.
         /// </summary>
-        public Matrix[] Wk { get; set; }
+        public DeepMatrix Wk { get; set; }
 
         /// <summary>
         /// Gets or sets the weight matrix for the value layer.
         /// </summary>
-        public Matrix[] Wv { get; set; }
+        public DeepMatrix Wv { get; set; }
     }
 }

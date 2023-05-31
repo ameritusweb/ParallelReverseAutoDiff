@@ -79,7 +79,7 @@
         {
           "id": "projectedInput",
           "description": "Multiply the input with the weight matrix",
-          "type": "CudaMatrixMultiplyOperation",
+          "type": "MatrixMultiplyOperation",
           "inputs": [ "We", "flatten" ],
           "gradientResultTo": [ "DWe", null ]
         },
@@ -96,7 +96,7 @@
           "operations": [
             {
               "id": "w1_currentInput",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "MatrixMultiplyOperation",
               "inputs": [ "W[layerIndex]", "thirdLayerCurrentInput" ],
               "gradientResultTo": [ "DW[layerIndex]", null ]
             },
@@ -150,9 +150,19 @@
           "gradientResultTo": [ null, "DBo" ]
         },
         {
-          "id": "output_t",
+          "id": "intermediate_v_h_b",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "v_h_b" ]
+        },
+        {
+          "id": "output_soft",
           "type": "SoftmaxOperation",
-          "inputs": [ "v_h_b" ],
+          "inputs": [ "intermediate_v_h_b" ]
+        },
+        {
+          "id": "output_t",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "output_soft" ],
           "setResultTo": "Output"
         }
       ]

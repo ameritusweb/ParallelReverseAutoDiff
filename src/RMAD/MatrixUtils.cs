@@ -61,5 +61,79 @@ namespace ParallelReverseAutoDiff.RMAD
             });
             return matrix;
         }
+
+        /// <summary>
+        /// The element-wise Hadamard product of two matrices.
+        /// </summary>
+        /// <param name="matrixA">The first matrix.</param>
+        /// <param name="matrixB">The second matrix.</param>
+        /// <returns>The resultant matrix.</returns>
+        public static Matrix HadamardProduct(Matrix matrixA, Matrix matrixB)
+        {
+            // Check if the dimensions of the matrices match
+            int rows = matrixA.Length;
+            int cols = matrixA[0].Length;
+            if (rows != matrixB.Length || cols != matrixB[0].Length)
+            {
+                throw new ArgumentException("Matrices must have the same dimensions.");
+            }
+
+            // Perform element-wise multiplication
+            var result = new Matrix(rows, cols);
+            Parallel.For(0, rows, i =>
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    result[i][j] = matrixA[i][j] * matrixB[i][j];
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Add two matrices together.
+        /// </summary>
+        /// <param name="a">Matrix A.</param>
+        /// <param name="b">Matrix B.</param>
+        /// <returns>The resultant matrix.</returns>
+        public static Matrix MatrixAdd(Matrix a, Matrix b)
+        {
+            int numRows = a.Length;
+            int numCols = a[0].Length;
+            Matrix result = new Matrix(numRows, numCols);
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i][j] = a[i][j] + b[i][j];
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Multiply a matrix by a scalar.
+        /// </summary>
+        /// <param name="scalar">The scalar to multiply.</param>
+        /// <param name="matrix">The matrix.</param>
+        /// <returns>The resultant matrix.</returns>
+        public static Matrix ScalarMultiply(double scalar, Matrix matrix)
+        {
+            int numRows = matrix.Length;
+            int numCols = matrix[0].Length;
+
+            Matrix result = new Matrix(numRows, numCols);
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i][j] = scalar * matrix[i][j];
+                }
+            });
+
+            return result;
+        }
     }
 }

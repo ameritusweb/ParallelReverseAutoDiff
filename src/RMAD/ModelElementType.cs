@@ -1,28 +1,33 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="InitializationType.cs" author="ameritusweb" date="5/15/2023">
+// <copyright file="ModelElementType.cs" author="ameritusweb" date="5/27/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
     /// <summary>
-    /// The type of initialization to use.
+    /// The model element type.
     /// </summary>
-    public enum InitializationType
+    public enum ModelElementType
     {
         /// <summary>
-        /// He initialization.
+        /// A weight or bias.
         /// </summary>
-        He,
+        Weight,
 
         /// <summary>
-        /// Xavier/Glorot initialization.
+        /// A gradient.
         /// </summary>
-        Xavier,
+        Gradient,
 
         /// <summary>
-        /// Initialize with zeroes
+        /// The first moment for Adam optimization.
         /// </summary>
-        Zeroes,
+        FirstMoment,
+
+        /// <summary>
+        /// The second moment for Adam optimization.
+        /// </summary>
+        SecondMoment,
     }
 }
