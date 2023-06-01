@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample.GNN
 {
+    using Chess;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -12,6 +13,16 @@ namespace ParallelReverseAutoDiff.GnnExample.GNN
     /// </summary>
     public class GNNNode
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GNNNode"/> class.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        public GNNNode(Position position)
+        {
+            this.X = position.X;
+            this.Y = position.Y;
+        }
+
         /// <summary>
         /// Gets or sets the node type.
         /// </summary>

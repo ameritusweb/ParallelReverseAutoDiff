@@ -19,6 +19,7 @@ namespace RandomForestTest
     {
         private Random rng;
         private ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>> positionToPossibleMoveMap;
+        private ConcurrentDictionary<Position, GNNNode> positionToNodeMap;
         private GNNGraph graph;
 
         /// <summary>
@@ -29,8 +30,9 @@ namespace RandomForestTest
             this.Board = new ChessBoard();
             this.rng = new Random(DateTime.UtcNow.Millisecond);
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
+            this.positionToNodeMap = new ConcurrentDictionary<Position, GNNNode>();
             this.graph = new GNNGraph();
-            this.BuildGraph();
+            this.BuildMap();
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace RandomForestTest
             this.rng = new Random(DateTime.UtcNow.Millisecond);
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.graph = new GNNGraph();
-            this.BuildGraph();
+            this.BuildMap();
         }
 
         /// <summary>
@@ -526,12 +528,28 @@ namespace RandomForestTest
             {
                 this.positionToPossibleMoveMap.TryAdd(startPos, new List<(Position NewPos, MoveType MoveType, char? CapturePieceType, char? PromotionPieceType)> { moveInfo });
             }
+
+            var nodeFrom = this.positionToNodeMap[startPos.Pos];
+            var nodeTo = this.positionToNodeMap[moveInfo.NewPos];
+            var edge = new GNNEdge(nodeFrom, nodeTo);
+
+            this.graph.Edges.Add(edge);
+            nodeFrom.Edges.Add(edge);
+            nodeTo.Edges.Add(edge);
         }
 
-        private void BuildGraph()
+        private void BuildMap()
         {
             var positions = this.GetAllPositions();
             var pieceTypes = this.GetAllPieceTypes();
+            for (int i = 0; i < positions.Count; ++i)
+            {
+                var position = positions[i];
+                GNNNode node = new GNNNode(position);
+                this.positionToNodeMap.AddOrUpdate(position, node, (key, oldValue) => node);
+                this.graph.Nodes.Add(node);
+            }
+
             for (int i = 0; i < positions.Count; ++i)
             {
                 var position = positions[i];
@@ -564,6 +582,93 @@ namespace RandomForestTest
                                     for (int l = 0; l < pieceTypes.Count; ++l)
                                     {
                                         this.AddToMap(key, (pawnPosition, MoveType.Promotion, null, pieceTypes[l].AsChar));
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        case 'n':
+                            {
+                                var knightPositions = this.GetAllKnightPositionsFrom(position);
+                                for (int k = 0; k < knightPositions.Count; ++k)
+                                {
+                                    var knightPosition = knightPositions[k];
+                                    this.AddToMap(key, (knightPosition, MoveType.Defense, null, null));
+                                    this.AddToMap(key, (knightPosition, MoveType.None, null, null));
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (knightPosition, MoveType.Capture, pieceTypes[l].AsChar, null));
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        case 'b':
+                            {
+                                var bishopPositions = this.GetAllBishopPositionsFrom(position);
+                                for (int k = 0; k < bishopPositions.Count; ++k)
+                                {
+                                    var bishopPosition = bishopPositions[k];
+                                    this.AddToMap(key, (bishopPosition, MoveType.Defense, null, null));
+                                    this.AddToMap(key, (bishopPosition, MoveType.None, null, null));
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (bishopPosition, MoveType.Capture, pieceTypes[l].AsChar, null));
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        case 'r':
+                            {
+                                var rookPositions = this.GetAllRookPositionsFrom(position);
+                                for (int k = 0; k < rookPositions.Count; ++k)
+                                {
+                                    var rookPosition = rookPositions[k];
+                                    this.AddToMap(key, (rookPosition, MoveType.Defense, null, null));
+                                    this.AddToMap(key, (rookPosition, MoveType.None, null, null));
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (rookPosition, MoveType.Capture, pieceTypes[l].AsChar, null));
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        case 'q':
+                            {
+                                var queenPositions = this.GetAllQueenPositionsFrom(position);
+                                for (int k = 0; k < queenPositions.Count; ++k)
+                                {
+                                    var queenPosition = queenPositions[k];
+                                    this.AddToMap(key, (queenPosition, MoveType.Defense, null, null));
+                                    this.AddToMap(key, (queenPosition, MoveType.None, null, null));
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (queenPosition, MoveType.Capture, pieceTypes[l].AsChar, null));
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        case 'k':
+                            {
+                                var kingPositions = this.GetAllKingPositionsFrom(position);
+                                for (int k = 0; k < kingPositions.Count; ++k)
+                                {
+                                    var kingPosition = kingPositions[k];
+                                    this.AddToMap(key, (kingPosition, MoveType.Defense, null, null));
+                                    this.AddToMap(key, (kingPosition, MoveType.None, null, null));
+                                    this.AddToMap(key, (kingPosition, MoveType.KingsideCastle, null, null));
+                                    this.AddToMap(key, (kingPosition, MoveType.QueensideCastle, null, null));
+                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    {
+                                        this.AddToMap(key, (kingPosition, MoveType.Capture, pieceTypes[l].AsChar, null));
                                     }
                                 }
 
