@@ -85,6 +85,11 @@ namespace Chess
             }
         }
 
+        public Piece GetPieceAt(Position position)
+        {
+            return pieces[position.Y, position.X] ?? throw new InvalidOperationException("No piece at the position.");
+        }
+
         public bool CanCastle(PieceColor color)
         {
             return HasRightToCastle(color, CastleType.Queen, this)

@@ -4,4 +4,10 @@
 // </copyright>
 //------------------------------------------------------------------------------
 // See https://aka.ms/new-console-template for more information
+using ParallelReverseAutoDiff.GnnExample;
+
 Console.WriteLine("Hello, World!");
+
+GameGenerator gameGenerator = new GameGenerator();
+var pgn = gameGenerator.GenerateBoth();
+Console.WriteLine(pgn);

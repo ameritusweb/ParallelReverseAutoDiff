@@ -46,7 +46,7 @@ namespace ParallelReverseAutoDiff.GnnExample.GNN
         /// <summary>
         /// Gets or sets the edges.
         /// </summary>
-        public List<GNNEdge> Edges { get; set; }
+        public List<GNNEdge> Edges { get; set; } = new List<GNNEdge>();
 
         /// <summary>
         /// Gets or sets the messages from one hop away.

@@ -3,7 +3,7 @@
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace RandomForestTest
+namespace ParallelReverseAutoDiff.GnnExample
 {
     using System;
     using System.Collections.Concurrent;
@@ -226,7 +226,13 @@ namespace RandomForestTest
         /// <returns>Whether the move is valid.</returns>
         public bool IsValidMove(Move move)
         {
-            return this.Board.Moves().Any(x => x.ToString() == move.ToString());
+            var moves = this.Board.Moves();
+            var isValid = moves.Any(x => x.ToString().Contains(move.ToString().Trim('{', '}').Trim('{', '}')));
+            if (!isValid)
+            {
+            }
+
+            return isValid;
         }
 
         /// <summary>
@@ -261,7 +267,7 @@ namespace RandomForestTest
                         continue;
                     }
 
-                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    var pos = new Position((short)(position.FileValue + j), (short)(position.RankValue + i));
                     if (this.Board.IsValid(pos))
                     {
                         positions.Add(pos);
@@ -273,13 +279,13 @@ namespace RandomForestTest
             {
                 if (position.FileValue == 3 || position.FileValue == 4)
                 {
-                    var castle1 = new Position(position.RankValue, (short)(position.FileValue + 2));
+                    var castle1 = new Position((short)(position.FileValue + 2), position.RankValue);
                     if (this.Board.IsValid(castle1))
                     {
                         positions.Add(castle1);
                     }
 
-                    var castle2 = new Position(position.RankValue, (short)(position.FileValue - 2));
+                    var castle2 = new Position((short)(position.FileValue - 2), position.RankValue);
                     if (this.Board.IsValid(castle2))
                     {
                         positions.Add(castle2);
@@ -305,7 +311,7 @@ namespace RandomForestTest
                     continue;
                 }
 
-                var pos = new Position((short)(position.RankValue + i), position.FileValue);
+                var pos = new Position(position.FileValue, (short)(position.RankValue + i));
                 if (this.Board.IsValid(pos))
                 {
                     positions.Add(pos);
@@ -319,7 +325,7 @@ namespace RandomForestTest
                     continue;
                 }
 
-                var pos = new Position(position.RankValue, (short)(position.FileValue + j));
+                var pos = new Position((short)(position.FileValue + j), position.RankValue);
                 if (this.Board.IsValid(pos))
                 {
                     positions.Add(pos);
@@ -347,7 +353,7 @@ namespace RandomForestTest
                         continue;
                     }
 
-                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    var pos = new Position((short)(position.FileValue + j), (short)(position.RankValue + i));
                     if (this.Board.IsValid(pos))
                     {
                         positions.Add(pos);
@@ -373,7 +379,7 @@ namespace RandomForestTest
                     continue;
                 }
 
-                var pos = new Position((short)(position.RankValue + i), position.FileValue);
+                var pos = new Position(position.FileValue, (short)(position.RankValue + i));
                 if (this.Board.IsValid(pos))
                 {
                     positions.Add(pos);
@@ -387,7 +393,7 @@ namespace RandomForestTest
                     continue;
                 }
 
-                var pos = new Position(position.RankValue, (short)(position.FileValue + j));
+                var pos = new Position((short)(position.FileValue + j), position.RankValue);
                 if (this.Board.IsValid(pos))
                 {
                     positions.Add(pos);
@@ -403,7 +409,7 @@ namespace RandomForestTest
                         continue;
                     }
 
-                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    var pos = new Position((short)(position.FileValue + j), (short)(position.RankValue + i));
                     if (this.Board.IsValid(pos))
                     {
                         positions.Add(pos);
@@ -426,12 +432,12 @@ namespace RandomForestTest
             {
                 for (var j = -1; j <= 1; ++j)
                 {
-                    if (i == 0 && j == 0)
+                    if (i == 0 || j == 0)
                     {
                         continue;
                     }
 
-                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    var pos = new Position((short)(position.FileValue + j), (short)(position.RankValue + i));
                     if (this.Board.IsValid(pos))
                     {
                         positions.Add(pos);
@@ -446,7 +452,7 @@ namespace RandomForestTest
                     continue;
                 }
 
-                var pos = new Position((short)(position.RankValue + i), position.FileValue);
+                var pos = new Position(position.FileValue, (short)(position.RankValue + i));
                 if (this.Board.IsValid(pos))
                 {
                     positions.Add(pos);
@@ -483,7 +489,7 @@ namespace RandomForestTest
                         continue;
                     }
 
-                    var pos = new Position((short)(position.RankValue + i), (short)(position.FileValue + j));
+                    var pos = new Position((short)(position.FileValue + j), (short)(position.RankValue + i));
                     if (this.Board.IsValid(pos))
                     {
                         positions.Add(pos);
@@ -579,9 +585,12 @@ namespace RandomForestTest
                                         }
                                     }
 
-                                    for (int l = 0; l < pieceTypes.Count; ++l)
+                                    if (pawnPosition.RankValue == 0 || pawnPosition.RankValue == 7)
                                     {
-                                        this.AddToMap(key, (pawnPosition, MoveType.Promotion, null, pieceTypes[l].AsChar));
+                                        for (int l = 0; l < pieceTypes.Count; ++l)
+                                        {
+                                            this.AddToMap(key, (pawnPosition, MoveType.Promotion, null, pieceTypes[l].AsChar));
+                                        }
                                     }
                                 }
 

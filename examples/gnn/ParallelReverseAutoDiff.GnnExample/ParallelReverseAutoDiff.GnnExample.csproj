@@ -11,11 +11,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Rebel\Rebel-14.2-avx2.exe" />
+    <None Remove="Rebel\rebeluci.exe" />
+    <None Remove="Stockfish15\stockfish-windows-2022-x86-64-avx2.exe" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Rebel\Rebel-14.2-avx2.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stockfish15\stockfish-windows-2022-x86-64-avx2.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 	<ItemGroup>
@@ -29,7 +41,6 @@
 
 	<ItemGroup>
 	  <Folder Include="GNN\" />
-	  <Folder Include="Stockfish15\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -13,11 +13,11 @@ namespace ParallelReverseAutoDiff.GnnExample.GNN
         /// <summary>
         /// Gets or sets the GNN graph nodes.
         /// </summary>
-        public List<GNNNode> Nodes { get; set; }
+        public List<GNNNode> Nodes { get; set; } = new List<GNNNode>();
 
         /// <summary>
         /// Gets or sets the GNN graph edges.
         /// </summary>
-        public List<GNNEdge> Edges { get; set; }
+        public List<GNNEdge> Edges { get; set; } = new List<GNNEdge>();
     }
 }

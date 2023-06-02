@@ -49,7 +49,9 @@ namespace ParallelReverseAutoDiff.GnnExample.GNN
         /// </summary>
         public char? PromotionPieceType { get; set; }
 
-
+        /// <summary>
+        /// Gets or sets the piece type.
+        /// </summary>
         public char PieceType { get; set; }
 
         /// <summary>

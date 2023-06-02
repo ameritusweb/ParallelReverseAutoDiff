@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="StockfishReader.cs" author="ameritusweb" date="5/21/2023">
+// <copyright file="RebelReader.cs" author="ameritusweb" date="5/21/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -8,9 +8,9 @@ namespace ParallelReverseAutoDiff.GnnExample
     using System.Diagnostics;
 
     /// <summary>
-    /// Reads from Stockfish.
+    /// Reads from Rebel.
     /// </summary>
-    public class StockfishReader
+    public class RebelReader
     {
         private Random rand = new Random(Guid.NewGuid().GetHashCode());
 
@@ -22,10 +22,10 @@ namespace ParallelReverseAutoDiff.GnnExample
         public (string Move, string Ponder) ReadBestMove(GameState gameState)
         {
             Process process = new Process();
-            process.StartInfo.WorkingDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Stockfish15";
+            process.StartInfo.WorkingDirectory = System.IO.Directory.GetCurrentDirectory() + "\\Rebel";
             process.StartInfo.FileName = "cmd.exe";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.Arguments = "/C stockfish-windows-2022-x86-64-avx2.exe";
+            process.StartInfo.Arguments = "/C Rebel-14.2-avx2.exe";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
@@ -36,11 +36,9 @@ namespace ParallelReverseAutoDiff.GnnExample
 
             streamWriter.WriteLine("uci");
             streamWriter.WriteLine("ucinewgame");
-            streamWriter.WriteLine("setoption name Threads value 8");
-            streamWriter.WriteLine("setoption name Hash value 128");
-            streamWriter.WriteLine("setoption name Skill Level value 20");
+            streamWriter.WriteLine("setoption Ponder type true");
             streamWriter.WriteLine("position fen " + gameState.Board.ToFen());
-            streamWriter.WriteLine("go movetime " + this.rand.Next(100, 2000));
+            streamWriter.WriteLine("go movetime " + this.rand.Next(2000, 5000));
 
             string output = string.Empty;
             while (true)
