@@ -12,6 +12,22 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class GameGenerator
     {
+        private Random rand = new Random(Guid.NewGuid().GetHashCode());
+
+        /// <summary>
+        /// Generate for both chess engines and save.
+        /// </summary>
+        /// <param name="dir">The directory to save to.</param>
+        /// <param name="iterations">The number of iterations.</param>
+        public void GenerateBothAndSave(string dir, int iterations)
+        {
+            for (int i = 0; i < iterations; ++i)
+            {
+                var pgn = this.GenerateBoth();
+                File.WriteAllText(dir + "\\stockfishwVrebelb" + Guid.NewGuid() + ".pgn", pgn);
+            }
+        }
+
         /// <summary>
         /// Generates for both chess engines.
         /// </summary>
@@ -19,6 +35,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         public string GenerateBoth()
         {
             GameState gameState = new GameState();
+            this.ApplyOpening(gameState);
             StockfishReader stockfishReader = new StockfishReader();
             RebelReader rebelReader = new RebelReader();
             while (true)
@@ -111,6 +128,18 @@ namespace ParallelReverseAutoDiff.GnnExample
             else
             {
                 return false;
+            }
+        }
+
+        private void ApplyOpening(GameState gameState)
+        {
+            var openings = OpeningBook.GetOpenings();
+            var keys = openings.Keys.ToList();
+            var key = keys[this.rand.Next(keys.Count)];
+            var moves = openings[key];
+            foreach (var move in moves)
+            {
+                gameState.Board.Move(move);
             }
         }
     }

@@ -41,6 +41,7 @@
 
 	<ItemGroup>
 	  <Folder Include="GNN\" />
+	  <Folder Include="PGNLibrary\" />
 	</ItemGroup>
 
 	<ItemGroup>

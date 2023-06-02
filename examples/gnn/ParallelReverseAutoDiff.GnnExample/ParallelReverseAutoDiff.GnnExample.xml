@@ -9,6 +9,13 @@
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSave(System.String,System.Int32)">
+            <summary>
+            Generate for both chess engines and save.
+            </summary>
+            <param name="dir">The directory to save to.</param>
+            <param name="iterations">The number of iterations.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBoth">
             <summary>
             Generates for both chess engines.
@@ -348,6 +355,17 @@
             <summary>
             Gets or sets the messages from two hops away.
             </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.OpeningBook">
+            <summary>
+            An opening book of chess openings.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.OpeningBook.GetOpenings">
+            <summary>
+            Gets chess openings.
+            </summary>
+            <returns>The map.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.RebelReader">
             <summary>
