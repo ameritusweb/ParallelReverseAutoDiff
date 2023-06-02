@@ -213,10 +213,22 @@ namespace ParallelReverseAutoDiff.GnnExample
                 new Move("{e2 - e4}"),
                 new Move("{e7 - e5}"),
                 new Move("{wn - g1 - f3}"),
-                new Move("{bn - d8 - c6}"),
+                new Move("{bn - b8 - c6}"),
                 new Move("{wb - f1 - b5}"),
             };
             openings.Add("Ruy Lopez", ruyLopez);
+            var ruyLopezBerlinRioGambit = new Move[]
+            {
+                new Move("{e2 - e4}"),
+                new Move("{e7 - e5}"),
+                new Move("{wn - g1 - f3}"),
+                new Move("{bn - b8 - c6}"),
+                new Move("{wb - f1 - b5}"),
+                new Move("{bn - g8 - f6}"),
+                new Move("{wk - e1 - g1 - o-o}"),
+                new Move("{bn - f6 - e4}"),
+            };
+            openings.Add("Ruy Lopez Berlin Rio Gambit", ruyLopezBerlinRioGambit);
             var kingsIndian = new Move[]
             {
                 new Move("{d2 - d4}"),
