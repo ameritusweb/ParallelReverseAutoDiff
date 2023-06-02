@@ -50,22 +50,37 @@ namespace ParallelReverseAutoDiff.GnnExample
                     }
                 }
 
-                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 149)
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
                 {
                     break;
                 }
 
-                (string move2, string ponder2) = rebelReader.ReadBestMove(gameState);
-                if (!string.IsNullOrWhiteSpace(move2))
+                if (this.rand.NextDouble() <= 0.5d)
                 {
-                    var res = this.MakeMove(gameState, move2);
-                    if (!res)
+                    (string move2, string ponder2) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
                     {
-                        break;
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    (string move2, string ponder2) = stockfishReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
                     }
                 }
 
-                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 149)
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
                 {
                     break;
                 }
@@ -139,7 +154,10 @@ namespace ParallelReverseAutoDiff.GnnExample
             var moves = openings[key];
             foreach (var move in moves)
             {
-                gameState.Board.Move(move);
+                bool valid = gameState.Board.Move(move);
+                if (!valid)
+                {
+                }
             }
         }
     }
