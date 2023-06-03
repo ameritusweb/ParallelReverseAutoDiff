@@ -23,9 +23,118 @@ namespace ParallelReverseAutoDiff.GnnExample
         {
             for (int i = 0; i < iterations; ++i)
             {
+                var pgn = this.GenerateBoth();
+                File.WriteAllText(dir + "\\stockfishwVrebelb" + Guid.NewGuid() + ".pgn", pgn);
+            }
+        }
+
+        /// <summary>
+        /// Generate for both chess engines and save switch.
+        /// </summary>
+        /// <param name="dir">The directory to save to.</param>
+        /// <param name="iterations">The number of iterations.</param>
+        public void GenerateBothAndSaveSwitch(string dir, int iterations)
+        {
+            for (int i = 0; i < iterations; ++i)
+            {
+                var pgn = this.GenerateBothOppositeStrict();
+                File.WriteAllText(dir + "\\stockfishwVrebelbswitch" + Guid.NewGuid() + ".pgn", pgn);
+            }
+        }
+
+        /// <summary>
+        /// Generate for both chess engines and save opposite.
+        /// </summary>
+        /// <param name="dir">The directory to save to.</param>
+        /// <param name="iterations">The number of iterations.</param>
+        public void GenerateBothAndSaveOpposite(string dir, int iterations)
+        {
+            for (int i = 0; i < iterations; ++i)
+            {
                 var pgn = this.GenerateBothOpposite();
                 File.WriteAllText(dir + "\\rebelwVstockfishb" + Guid.NewGuid() + ".pgn", pgn);
             }
+        }
+
+        /// <summary>
+        /// Generates for both chess engines opposite strict.
+        /// </summary>
+        /// <returns>The PGN.</returns>
+        public string GenerateBothOppositeStrict()
+        {
+            GameState gameState = new GameState();
+            this.ApplyOpening(gameState);
+            StockfishReader stockfishReader = new StockfishReader();
+            RebelReader rebelReader = new RebelReader();
+            while (true)
+            {
+                if (gameState.Board.ExecutedMoves.Count >= 70)
+                {
+                    (string move2, string ponder2) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                    {
+                        break;
+                    }
+
+                    (string move, string ponder) = stockfishReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move))
+                    {
+                        var res = this.MakeMove(gameState, move);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    (string move2, string ponder2) = stockfishReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                    {
+                        break;
+                    }
+
+                    (string move, string ponder) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move))
+                    {
+                        var res = this.MakeMove(gameState, move);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return gameState.Board.ToPgn();
         }
 
         /// <summary>

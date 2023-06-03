@@ -9,4 +9,4 @@ using ParallelReverseAutoDiff.GnnExample;
 Console.WriteLine("Hello, World!");
 
 GameGenerator gameGenerator = new GameGenerator();
-gameGenerator.GenerateBothAndSave(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName + "\\PGNLibrary", 100);
+gameGenerator.GenerateBothAndSaveSwitch(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName + "\\PGNLibrary", 100);
