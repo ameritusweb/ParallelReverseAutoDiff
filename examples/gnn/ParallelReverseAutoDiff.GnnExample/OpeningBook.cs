@@ -364,6 +364,66 @@ namespace ParallelReverseAutoDiff.GnnExample
                 new Move("{bn - g8 - f6}"),
             };
             openings.Add("Reti", retiOpening);
+            var neoGrunfeldUltraDelayedOpening = new Move[]
+            {
+                new Move("{wn - g1 - f3}"),
+                new Move("{d7 - d5}"),
+                new Move("{g2 - g3}"),
+                new Move("{bn - g8 - f6}"),
+                new Move("{wb - f1 - g2}"),
+                new Move("{g7 - g6}"),
+                new Move("{d2 - d4}"),
+                new Move("{bb - f8 - g7}"),
+                new Move("{wk - e1 - g1 - o-o}"),
+                new Move("{c7 - c6}"),
+                new Move("{c2 - c4}"),
+                new Move("{bk - e8 - g8 - o-o}"),
+                new Move("{c4 - d5}"),
+                new Move("{c6 - d5}"),
+            };
+            openings.Add("Neo-Grunfeld Ultra-Delayed", neoGrunfeldUltraDelayedOpening);
+            var neoGrunfeldOpening = new Move[]
+            {
+                new Move("{wn - g1 - f3}"),
+                new Move("{d7 - d5}"),
+                new Move("{g2 - g3}"),
+                new Move("{bn - g8 - f6}"),
+                new Move("{wb - f1 - g2}"),
+                new Move("{g7 - g6}"),
+                new Move("{d2 - d4}"),
+                new Move("{bb - f8 - g7}"),
+                new Move("{wk - e1 - g1 - o-o}"),
+                new Move("{c7 - c6}"),
+                new Move("{c2 - c4}"),
+                new Move("{bk - e8 - g8 - o-o}"),
+            };
+            openings.Add("Neo-Grunfeld", neoGrunfeldOpening);
+            var queensPawnZukertortOpening = new Move[]
+            {
+                new Move("{wn - g1 - f3}"),
+                new Move("{d7 - d5}"),
+                new Move("{g2 - g3}"),
+                new Move("{bn - g8 - f6}"),
+                new Move("{wb - f1 - g2}"),
+                new Move("{g7 - g6}"),
+                new Move("{d2 - d4}"),
+                new Move("{bb - f8 - g7}"),
+                new Move("{wk - e1 - g1 - o-o}"),
+                new Move("{c7 - c6}"),
+            };
+            openings.Add("Queen's Pawn Zukertort", queensPawnZukertortOpening);
+            var queensPawnPseudoCatalanOpening = new Move[]
+            {
+                new Move("{wn - g1 - f3}"),
+                new Move("{d7 - d5}"),
+                new Move("{g2 - g3}"),
+                new Move("{bn - g8 - f6}"),
+                new Move("{wb - f1 - g2}"),
+                new Move("{g7 - g6}"),
+                new Move("{d2 - d4}"),
+                new Move("{bb - f8 - g7}"),
+            };
+            openings.Add("Queen's Pawn Pseudo-Catalan", queensPawnPseudoCatalanOpening);
             var kingsIndianAttack = new Move[]
             {
                 new Move("{wn - g1 - f3}"),
@@ -496,41 +556,41 @@ namespace ParallelReverseAutoDiff.GnnExample
             };
             openings.Add("Sicilian Paulsen", sicilianPaulsen);
 
-            // Hedgehog for White
-            var hedgehogWhite = new Move[]
-            {
-                new Move("{d2 - d4}"),
-                new Move("{d7 - d6}"),
-                new Move("{c2 - c4}"),
-                new Move("{e7 - e6}"),
-                new Move("{b1 - d2}"),
-                new Move("{b8 - d7}"),
-                new Move("{g2 - g3}"),
-                new Move("{g7 - g6}"),
-                new Move("{b2 - b3}"),
-                new Move("{b7 - b6}"),
-                new Move("{f1 - b2}"),
-                new Move("{f8 - b7}"),
-            };
-            openings.Add("Hedgehog White", hedgehogWhite);
+            //// Hedgehog for White
+            // var hedgehogWhite = new Move[]
+            // {
+            //    new Move("{d2 - d4}"),
+            //    new Move("{d7 - d6}"),
+            //    new Move("{c2 - c4}"),
+            //    new Move("{e7 - e6}"),
+            //    new Move("{b1 - d2}"),
+            //    new Move("{b8 - d7}"),
+            //    new Move("{g2 - g3}"),
+            //    new Move("{g7 - g6}"),
+            //    new Move("{b2 - b3}"),
+            //    new Move("{b7 - b6}"),
+            //    new Move("{f1 - b2}"),
+            //    new Move("{f8 - b7}"),
+            // };
+            // openings.Add("Hedgehog White", hedgehogWhite);
 
-            // Hedgehog for Black
-            var hedgehogBlack = new Move[]
-            {
-                new Move("{e2 - e4}"),
-                new Move("{e7 - e6}"),
-                new Move("{d2 - d3}"),
-                new Move("{d7 - d6}"),
-                new Move("{g1 - d2}"),
-                new Move("{g8 - d7}"),
-                new Move("{g2 - g3}"),
-                new Move("{g7 - g6}"),
-                new Move("{b2 - b3}"),
-                new Move("{b7 - b6}"),
-                new Move("{f1 - b2}"),
-                new Move("{f8 - b7}"),
-            };
-            openings.Add("Hedgehog Black", hedgehogBlack);
+            //// Hedgehog for Black
+            // var hedgehogBlack = new Move[]
+            // {
+            //    new Move("{e2 - e4}"),
+            //    new Move("{e7 - e6}"),
+            //    new Move("{d2 - d3}"),
+            //    new Move("{d7 - d6}"),
+            //    new Move("{g1 - d2}"),
+            //    new Move("{g8 - d7}"),
+            //    new Move("{g2 - g3}"),
+            //    new Move("{g7 - g6}"),
+            //    new Move("{b2 - b3}"),
+            //    new Move("{b7 - b6}"),
+            //    new Move("{f1 - b2}"),
+            //    new Move("{f8 - b7}"),
+            // };
+            // openings.Add("Hedgehog Black", hedgehogBlack);
             return openings;
         }
     }
