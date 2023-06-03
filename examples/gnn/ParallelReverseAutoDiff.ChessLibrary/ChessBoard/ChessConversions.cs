@@ -23,6 +23,14 @@ namespace Chess
         }
 
         /// <summary>
+        /// Generates FEN string representing current board without half moves nor full moves.
+        /// </summary>
+        public string ToPositionFen()
+        {
+            return FenBoardBuilder.Load(this).ToPositionFen();
+        }
+
+        /// <summary>
         /// Generates PGN string representing current board
         /// </summary>
         public string ToPgn()

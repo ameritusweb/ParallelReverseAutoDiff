@@ -16,6 +16,12 @@
             <param name="dir">The directory to save to.</param>
             <param name="iterations">The number of iterations.</param>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothOpposite">
+            <summary>
+            Generates for both chess engines opposite.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBoth">
             <summary>
             Generates for both chess engines.

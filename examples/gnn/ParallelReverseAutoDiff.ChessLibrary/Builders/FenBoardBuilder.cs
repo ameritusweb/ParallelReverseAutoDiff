@@ -210,6 +210,15 @@ namespace Chess
                 FullMoves.ToString());
         }
 
+        public string ToPositionFen()
+        {
+            return string.Join(' ',
+                GetPiecePlacement(),
+                GetActiveColor(),
+                GetCastlingAvailability(),
+                GetEnPassantTargetSquare());
+        }
+
         private string GetPiecePlacement()
         {
             Span<char> span = stackalloc char[71]; // Max lenght is 71

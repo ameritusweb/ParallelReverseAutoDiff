@@ -10,6 +10,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Reflection;
 
 namespace Chess
 {
@@ -260,6 +262,10 @@ namespace Chess
         /// </summary>
         public bool IsEndGame => EndGame is not null;
 
+        internal Dictionary<string, int> fenCounts;
+
+        internal readonly Stack<Dictionary<string, int>> fenCountsHistory;
+
         internal readonly List<Move> executedMoves;
         /// <summary>
         /// Executed moves on this chess board<br/>
@@ -338,6 +344,8 @@ namespace Chess
         public ChessBoard()
         {
             executedMoves = new List<Move>();
+            fenCounts = new Dictionary<string, int>();
+            fenCountsHistory = new Stack<Dictionary<string, int>>();
             headers = new Dictionary<string, string>();
             SetChessBeginSituation();
         }
@@ -348,6 +356,8 @@ namespace Chess
         internal ChessBoard(Piece?[,] pieces, List<Move> moves)
         {
             executedMoves = new List<Move>(moves);
+            fenCounts = new Dictionary<string, int>();
+            fenCountsHistory = new Stack<Dictionary<string, int>>();
             this.pieces = (Piece[,])pieces.Clone();
         }
 
@@ -392,6 +402,25 @@ namespace Chess
                 moveIndex = executedMoves.Count - 1;
 
                 HandleKingChecked();
+
+                // Save a copy of the current fenCounts to the history stack
+                fenCountsHistory.Push(new Dictionary<string, int>(fenCounts));
+
+                string fen = this.ToPositionFen();
+                if (fenCounts.ContainsKey(fen))
+                {
+                    fenCounts[fen]++;
+                }
+                else
+                {
+                    fenCounts[fen] = 1;
+                }
+                if (move.CapturedPiece is not null
+                     || move.Piece.Type == PieceType.Pawn)
+                {
+                    fenCounts = new Dictionary<string, int>();
+                }
+
                 HandleEndGame();
 
                 return true;
@@ -459,6 +488,8 @@ namespace Chess
             SetChessBeginSituation();
             executedMoves.Clear();
             headers.Clear();
+            fenCounts.Clear();
+            fenCountsHistory.Clear();
             moveIndex = -1;
             endGame = null;
             FenBuilder = null;
@@ -483,6 +514,7 @@ namespace Chess
             if (IsLastMoveDisplayed && executedMoves.Count > 0)
             {
                 var move = executedMoves[^1];
+                var fen = this.ToFen();
 
                 if (move.Parameter is not null)
                     move.Parameter.Undo(move, this);
@@ -491,6 +523,16 @@ namespace Chess
 
                 executedMoves.RemoveAt(executedMoves.Count - 1);
                 moveIndex = executedMoves.Count - 1;
+
+                if (fenCountsHistory.Count > 0)
+                {
+                    fenCounts = fenCountsHistory.Pop();
+                }
+                else
+                {
+                    // If there's no history (i.e., we are at the start of the game), just clear fenCounts
+                    fenCounts.Clear();
+                }
 
                 HandleKingChecked();
                 EndGame = null;

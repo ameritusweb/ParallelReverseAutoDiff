@@ -126,6 +126,20 @@ namespace ParallelReverseAutoDiff.GnnExample
                 new Move("{wb - f1 - c4}"),
             };
             openings.Add("Italian", italian);
+            var italianPolerio = new Move[]
+            {
+                new Move("{e2 - e4}"),
+                new Move("{e7 - e5}"),
+                new Move("{wn - g1 - f3}"),
+                new Move("{bn - b8 - c6}"),
+                new Move("{wb - f1 - c4}"),
+                new Move("{bn - g8 - f6}"),
+                new Move("{wn - f3 - g5}"),
+                new Move("{d7 - d5}"),
+                new Move("{e4 - d5}"),
+                new Move("{bn - c6 - a5}"),
+            };
+            openings.Add("Italian Polerio", italianPolerio);
             var locock = new Move[]
             {
                 new Move("{e2 - e4}"),

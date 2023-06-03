@@ -23,9 +23,70 @@ namespace ParallelReverseAutoDiff.GnnExample
         {
             for (int i = 0; i < iterations; ++i)
             {
-                var pgn = this.GenerateBoth();
-                File.WriteAllText(dir + "\\stockfishwVrebelb" + Guid.NewGuid() + ".pgn", pgn);
+                var pgn = this.GenerateBothOpposite();
+                File.WriteAllText(dir + "\\rebelwVstockfishb" + Guid.NewGuid() + ".pgn", pgn);
             }
+        }
+
+        /// <summary>
+        /// Generates for both chess engines opposite.
+        /// </summary>
+        /// <returns>The PGN.</returns>
+        public string GenerateBothOpposite()
+        {
+            GameState gameState = new GameState();
+            this.ApplyOpening(gameState);
+            StockfishReader stockfishReader = new StockfishReader();
+            RebelReader rebelReader = new RebelReader();
+            while (true)
+            {
+                if (this.rand.NextDouble() <= 0.5d)
+                {
+                    (string move2, string ponder2) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    (string move2, string ponder2) = stockfishReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                {
+                    break;
+                }
+
+                (string move, string ponder) = stockfishReader.ReadBestMove(gameState);
+                if (!string.IsNullOrWhiteSpace(move))
+                {
+                    var res = this.MakeMove(gameState, move);
+                    if (!res)
+                    {
+                        break;
+                    }
+                }
+
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                {
+                    break;
+                }
+            }
+
+            return gameState.Board.ToPgn();
         }
 
         /// <summary>

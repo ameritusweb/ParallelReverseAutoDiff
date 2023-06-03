@@ -28,6 +28,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         public GameState()
         {
             this.Board = new ChessBoard();
+            this.Board.AutoEndgameRules = AutoEndgameRules.All;
             this.rng = new Random(DateTime.UtcNow.Millisecond);
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.positionToNodeMap = new ConcurrentDictionary<Position, GNNNode>();
@@ -42,6 +43,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         public GameState(ChessBoard board)
         {
             this.Board = board;
+            this.Board.AutoEndgameRules = AutoEndgameRules.All;
             this.rng = new Random(DateTime.UtcNow.Millisecond);
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.graph = new GNNGraph();
@@ -205,7 +207,19 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>Whether the game is over.</returns>
         public bool IsGameOver()
         {
-            return this.Board.EndGame?.EndgameType == EndgameType.DrawDeclared || this.Board.EndGame?.EndgameType == EndgameType.Checkmate || this.Board.EndGame?.EndgameType == EndgameType.Stalemate;
+            if (this.Board.EndGame?.EndgameType == EndgameType.Repetition)
+            {
+            }
+
+            return this.Board.EndGame?.EndgameType == EndgameType.DrawDeclared
+                ||
+                this.Board.EndGame?.EndgameType == EndgameType.Checkmate
+                ||
+                this.Board.EndGame?.EndgameType == EndgameType.Stalemate
+                ||
+                this.Board.EndGame?.EndgameType == EndgameType.Repetition
+                ||
+                this.Board.EndGame?.EndgameType == EndgameType.InsufficientMaterial;
         }
 
         /// <summary>
