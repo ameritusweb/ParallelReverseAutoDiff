@@ -555,6 +555,16 @@ namespace ParallelReverseAutoDiff.GnnExample
                 new Move("{a7 - a6}"),
             };
             openings.Add("Sicilian Paulsen", sicilianPaulsen);
+            var sicilianCanal = new Move[]
+            {
+                new Move("{e2 - e4}"),
+                new Move("{c7 - c5}"),
+                new Move("{wn - g1 - f3}"),
+                new Move("{d7 - d6}"),
+                new Move("{wb - f1 - b5}"),
+                new Move("{bn - b8 - d7}"),
+            };
+            openings.Add("Sicilian Canal", sicilianCanal);
 
             //// Hedgehog for White
             // var hedgehogWhite = new Move[]
