@@ -19,6 +19,20 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// </summary>
         /// <param name="dir">The directory to save to.</param>
         /// <param name="iterations">The number of iterations.</param>
+        public void GenerateBothAndSaveLeela(string dir, int iterations)
+        {
+            for (int i = 0; i < iterations; ++i)
+            {
+                var pgn = this.GenerateBothLeela();
+                File.WriteAllText(dir + "\\leelawVrebelb" + Guid.NewGuid() + ".pgn", pgn);
+            }
+        }
+
+        /// <summary>
+        /// Generate for both chess engines and save.
+        /// </summary>
+        /// <param name="dir">The directory to save to.</param>
+        /// <param name="iterations">The number of iterations.</param>
         public void GenerateBothAndSave(string dir, int iterations)
         {
             for (int i = 0; i < iterations; ++i)
@@ -186,6 +200,68 @@ namespace ParallelReverseAutoDiff.GnnExample
                     if (!res)
                     {
                         break;
+                    }
+                }
+
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                {
+                    break;
+                }
+            }
+
+            return gameState.Board.ToPgn();
+        }
+
+        /// <summary>
+        /// Generates for both chess engines.
+        /// </summary>
+        /// <returns>The PGN.</returns>
+        public string GenerateBothLeela()
+        {
+            GameState gameState = new GameState();
+            this.ApplyOpening(gameState);
+            LeelaReader leelaReader = new LeelaReader();
+            RebelReader rebelReader = new RebelReader();
+            StockfishReader stockfishReader = new StockfishReader();
+            while (true)
+            {
+                (string move, string ponder) = leelaReader.ReadBestMove(gameState);
+                if (!string.IsNullOrWhiteSpace(move))
+                {
+                    var res = this.MakeMove(gameState, move);
+                    if (!res)
+                    {
+                        break;
+                    }
+                }
+
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                {
+                    break;
+                }
+
+                if (this.rand.NextDouble() <= 0.5d)
+                {
+                    (string move2, string ponder2) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    (string move2, string ponder2) = stockfishReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
                     }
                 }
 
