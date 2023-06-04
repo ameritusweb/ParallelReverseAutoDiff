@@ -4,6 +4,23 @@
         <name>ParallelReverseAutoDiff.GnnExample</name>
     </assembly>
     <members>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader">
+            <summary>
+            A chess board loader.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.LoadMoves(System.Int32)">
+            <summary>
+            Load the chess board.
+            </summary>
+            <param name="skip">How many files to skip.</param>
+            <returns>The chess board list of moves.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.GameGenerator">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
@@ -429,6 +446,16 @@
             </summary>
             <param name="gameState">The game state.</param>
             <returns>The move and the next move.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate">
+            <summary>
+            Generates the statistics.
+            </summary>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.StockfishReader">
             <summary>
