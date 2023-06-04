@@ -321,7 +321,6 @@ namespace ParallelReverseAutoDiff.GnnExample
             var openings = OpeningBook.GetOpenings();
             var keys = openings.Keys.ToList();
             var key = keys[this.rand.Next(keys.Count)];
-            key = keys[54];
             var moves = openings[key];
             foreach (var move in moves)
             {
