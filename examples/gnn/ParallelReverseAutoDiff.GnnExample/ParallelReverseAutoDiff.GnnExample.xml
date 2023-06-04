@@ -9,6 +9,13 @@
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSaveLeela(System.String,System.Int32)">
+            <summary>
+            Generate for both chess engines and save.
+            </summary>
+            <param name="dir">The directory to save to.</param>
+            <param name="iterations">The number of iterations.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSave(System.String,System.Int32)">
             <summary>
             Generate for both chess engines and save.
@@ -39,6 +46,12 @@
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothOpposite">
             <summary>
             Generates for both chess engines opposite.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothLeela">
+            <summary>
+            Generates for both chess engines.
             </summary>
             <returns>The PGN.</returns>
         </member>
@@ -381,6 +394,18 @@
             <summary>
             Gets or sets the messages from two hops away.
             </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.LeelaReader">
+            <summary>
+            Reads from Leela.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.LeelaReader.ReadBestMove(ParallelReverseAutoDiff.GnnExample.GameState)">
+            <summary>
+            Reads the best move from Stockfish.
+            </summary>
+            <param name="gameState">The game state.</param>
+            <returns>The move and the next move.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.OpeningBook">
             <summary>
