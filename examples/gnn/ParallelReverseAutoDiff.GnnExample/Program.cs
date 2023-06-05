@@ -11,4 +11,4 @@ Console.WriteLine("Hello, World!");
 // StatisticsGenerator statisticsGenerator = new StatisticsGenerator();
 // statisticsGenerator.Generate();
 GameGenerator gameGenerator = new GameGenerator();
-gameGenerator.GenerateBothAndSaveLeela(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName + "\\PGNLibrary", 100);
+gameGenerator.GenerateBothAndSaveLeela(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName + "\\PGNLibrary", 200);

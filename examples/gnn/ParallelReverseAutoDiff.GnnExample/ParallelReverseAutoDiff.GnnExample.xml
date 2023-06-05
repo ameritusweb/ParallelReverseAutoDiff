@@ -66,6 +66,12 @@
             </summary>
             <returns>The PGN.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothLeelaStockfish">
+            <summary>
+            Generates for both chess engines.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothLeela">
             <summary>
             Generates for both chess engines.

@@ -23,8 +23,8 @@ namespace ParallelReverseAutoDiff.GnnExample
         {
             for (int i = 0; i < iterations; ++i)
             {
-                var pgn = this.GenerateBothLeela();
-                File.WriteAllText(dir + "\\leelawVrebelb" + Guid.NewGuid() + ".pgn", pgn);
+                var pgn = this.GenerateBothLeelaStockfish();
+                File.WriteAllText(dir + "\\leelawVstockfishb" + Guid.NewGuid() + ".pgn", pgn);
             }
         }
 
@@ -200,6 +200,83 @@ namespace ParallelReverseAutoDiff.GnnExample
                     if (!res)
                     {
                         break;
+                    }
+                }
+
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                {
+                    break;
+                }
+            }
+
+            return gameState.Board.ToPgn();
+        }
+
+        /// <summary>
+        /// Generates for both chess engines.
+        /// </summary>
+        /// <returns>The PGN.</returns>
+        public string GenerateBothLeelaStockfish()
+        {
+            GameState gameState = new GameState();
+            this.ApplyOpening(gameState);
+            LeelaReader leelaReader = new LeelaReader();
+            RebelReader rebelReader = new RebelReader();
+            StockfishReader stockfishReader = new StockfishReader();
+            while (true)
+            {
+                if (this.rand.NextDouble() <= 0.67d)
+                {
+                    (string move, string ponder) = leelaReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move))
+                    {
+                        var res = this.MakeMove(gameState, move);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    (string move, string ponder) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move))
+                    {
+                        var res = this.MakeMove(gameState, move);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (gameState.IsGameOver() || gameState.Board.ExecutedMoves.Count > 179)
+                {
+                    break;
+                }
+
+                if (this.rand.NextDouble() <= 0.67d)
+                {
+                    (string move2, string ponder2) = stockfishReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    (string move2, string ponder2) = rebelReader.ReadBestMove(gameState);
+                    if (!string.IsNullOrWhiteSpace(move2))
+                    {
+                        var res = this.MakeMove(gameState, move2);
+                        if (!res)
+                        {
+                            break;
+                        }
                     }
                 }
 
