@@ -302,6 +302,11 @@
             <param name="from">The from node.</param>
             <param name="to">The to node.</param>
         </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.From">
             <summary>
             Gets or sets the node from.

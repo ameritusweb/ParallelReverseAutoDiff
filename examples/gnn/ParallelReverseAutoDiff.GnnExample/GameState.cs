@@ -20,6 +20,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         private Random rng;
         private ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>> positionToPossibleMoveMap;
         private ConcurrentDictionary<Position, GNNNode> positionToNodeMap;
+        private ConcurrentDictionary<int, GNNEdge> idToEdgeMap;
         private GNNGraph graph;
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             this.rng = new Random(DateTime.UtcNow.Millisecond);
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.positionToNodeMap = new ConcurrentDictionary<Position, GNNNode>();
+            this.idToEdgeMap = new ConcurrentDictionary<int, GNNEdge>();
             this.graph = new GNNGraph();
             this.BuildMap();
         }
@@ -46,6 +48,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             this.Board.AutoEndgameRules = AutoEndgameRules.All;
             this.rng = new Random(DateTime.UtcNow.Millisecond);
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
+            this.idToEdgeMap = new ConcurrentDictionary<int, GNNEdge>();
             this.graph = new GNNGraph();
             this.BuildMap();
         }
@@ -552,7 +555,11 @@ namespace ParallelReverseAutoDiff.GnnExample
             var nodeFrom = this.positionToNodeMap[startPos.Pos];
             var nodeTo = this.positionToNodeMap[moveInfo.NewPos];
             var edge = new GNNEdge(nodeFrom, nodeTo);
-
+            edge.PieceType = startPos.PieceType;
+            edge.MoveType = moveInfo.MoveType;
+            edge.CapturePieceType = moveInfo.CapturePieceType;
+            edge.PromotionPieceType = moveInfo.PromotionPieceType;
+            this.idToEdgeMap.AddOrUpdate(edge.Id, edge, (key, oldValue) => edge);
             this.graph.Edges.Add(edge);
             nodeFrom.Edges.Add(edge);
             nodeTo.Edges.Add(edge);

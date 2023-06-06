@@ -17,6 +17,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// </summary>
         public void Generate()
         {
+            GameState gameState = new GameState();
             var moves = this.loader.LoadMoves(0);
         }
     }

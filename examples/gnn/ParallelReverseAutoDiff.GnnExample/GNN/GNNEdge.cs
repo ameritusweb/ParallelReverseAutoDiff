@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.GnnExample.GNN
 {
     using Chess;
+    using ParallelReverseAutoDiff.Interprocess;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -22,7 +23,13 @@ namespace ParallelReverseAutoDiff.GnnExample.GNN
         {
             this.From = from;
             this.To = to;
+            this.Id = PseudoUniqueIDGenerator.Instance.GetNextID();
         }
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the node from.
