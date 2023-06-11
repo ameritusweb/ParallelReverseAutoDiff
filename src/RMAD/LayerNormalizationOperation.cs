@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class LayerNormalizationOperation : Operation
     {
-        private const double EPSILON = 1E-6;
+        private const double EPSILON = 1E-9;
         private Matrix input;
         private double[] mean;
         private double[] stdDev;
@@ -80,7 +80,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 for (int j = 0; j < this.numCols; j++)
                 {
-                    var exp2 = Math.Sqrt(Math.Pow(this.input[i][j] - this.mean[i], 2)) / (this.numCols * Math.Pow(this.stdDev[i] + EPSILON, 2));
+                    var exp2 = Math.Pow(this.input[i][j] - this.mean[i], 2) / (this.numCols * Math.Pow(this.stdDev[i] + EPSILON, 3));
                     var exp3 = exp1 - exp2;
 
                     // Multiply the computed gradient by the upstream gradient
