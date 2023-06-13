@@ -39,6 +39,10 @@ MatrixAddBroadcastingOperation
 
 MatrixAddThreeOperation
 
+MatrixAverageOperation
+
+MatrixConcatenateOperation
+
 MatrixMultiplyOperation
 
 MatrixMultiplyScalarOperation
