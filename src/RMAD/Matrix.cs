@@ -172,6 +172,22 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Retrieves the column at the specified index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>The column.</returns>
+        public double[] Column(int index)
+        {
+            double[] column = new double[this.Rows];
+            for (int i = 0; i < this.Rows; i++)
+            {
+                column[i] = this[i, index];
+            }
+
+            return column;
+        }
+
+        /// <summary>
         /// Initializes the matrix with He or Xavier initialization.
         /// </summary>
         /// <param name="initializationType">The initialization type.</param>

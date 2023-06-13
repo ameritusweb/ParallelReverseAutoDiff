@@ -35,6 +35,8 @@ LeakyReLUOperation
 
 MatrixAddOperation
 
+MatrixAddBroadcastingOperation
+
 MatrixAddThreeOperation
 
 MatrixMultiplyOperation
