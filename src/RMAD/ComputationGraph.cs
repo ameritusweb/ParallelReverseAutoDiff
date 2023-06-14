@@ -154,6 +154,65 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Construct the computation graph from an architecture with nested layers and no temporal component.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numNestedLayers">The number of nested layers.</param>
+        /// <returns>The computation graph.</returns>
+        public ComputationGraph ConstructFromArchitecture(NestedLayersJsonArchitecture architecture, int numLayers, int numNestedLayers)
+        {
+            var layerInfo = LayerInfo.Empty;
+            foreach (var timeStep in architecture.TimeSteps)
+            {
+                foreach (var operationInfo in timeStep.StartOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+
+                for (int l = 0; l < numLayers; l++)
+                {
+                    layerInfo.Layer = l;
+                    foreach (var layer in timeStep.Layers)
+                    {
+                        foreach (var operationInfo in layer.StartOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+
+                        for (int nl = 0; nl < numNestedLayers; nl++)
+                        {
+                            layerInfo.NestedLayer = nl;
+                            foreach (var nestedLayer in layer.Layers)
+                            {
+                                foreach (var operationInfo in nestedLayer.Operations)
+                                {
+                                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                                }
+                            }
+                        }
+
+                        layerInfo.NestedLayer = 0;
+
+                        foreach (var operationInfo in timeStep.EndOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+
+                layerInfo.Layer = 0;
+
+                foreach (var operationInfo in timeStep.EndOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Construct the computation graph from a dual layers architecture with layers and no temporal component.
         /// </summary>
         /// <param name="architecture">The architecture.</param>
