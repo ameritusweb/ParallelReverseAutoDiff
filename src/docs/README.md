@@ -759,3 +759,69 @@ Cudablas.Instance.Initialize(); // initialize the CUDA library
 // ... <Run CUDA operations> ...
 Cudablas.Instance.Dispose(); // dispose the CUDA library
 ```
+
+## Customization
+The ParallelReverseAutoDiff (PRAD) library is designed with customization at its core.
+
+Understanding that the world of machine learning and neural networks is continually evolving, the library allows users to define their own neural network operations.
+
+This feature provides an immense level of flexibility and control over the architecture and behavior of the networks, making it adaptable to both traditional and experimental models.
+
+### Custom Neural Network Operations
+One of the standout features of PRAD is the ability to create custom operations. 
+
+These operations can encapsulate any computation or processing steps, including but not limited to, complex forward and backward calculations, and operations involving matrices, vectors, or scalars.
+
+Creating a custom operation requires extending the Operation abstract class, which involves implementing two key methods:
+
+* Forward(): This method is used to describe how your operation behaves during the forward pass of the neural network. It takes as input the relevant data, processes it as per the custom-defined operation, and produces the output.
+
+* Backward(): This method is responsible for defining how your operation behaves during the backward pass of the neural network, i.e., how it contributes to the gradients during backpropagation. It receives the gradient of the output and uses it to compute the gradients of its inputs.
+
+Let's look at an example custom operation, MatrixAverageOperation, which calculates the average of feature vectors across a matrix:
+
+```c#
+public class MatrixAverageOperation : Operation
+{
+    public static IOperation Instantiate(NeuralNetwork net)
+    {
+        return new MatrixAverageOperation();
+    }
+
+    public Matrix Forward(Matrix input)
+    {
+        int numRows = input.Rows;
+        this.Output = new Matrix(numRows, 1);
+
+        for (int i = 0; i < numRows; i++)
+        {
+            this.Output[i][0] = input[i].Average();
+        }
+
+        return this.Output;
+    }
+
+    public override BackwardResult Backward(Matrix dOutput)
+    {
+        int numRows = dOutput.Length;
+        int numCols = this.Output[0].Length;
+
+        Matrix dInput = new Matrix(numRows, numCols);
+
+        for (int i = 0; i < numRows; i++)
+        {
+            for (int j = 0; j < numCols; j++)
+            {
+                dInput[i][j] = dOutput[i][0] / numCols;
+            }
+        }
+
+        return new BackwardResultBuilder()
+            .AddInputGradient(dInput)
+            .Build();
+    }
+}
+```
+In this example, the Forward method calculates the average of the features for each path, while the Backward method spreads the gradient evenly across the features.
+
+This level of customization allows PRAD to be a versatile tool in the field of machine learning, capable of being tailored to a wide range of tasks, datasets, and innovative architectures.
