@@ -81,6 +81,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public int Depth => this.matrices.Length;
 
         /// <summary>
+        /// Gets the dimension of the matrix.
+        /// </summary>
+        public Dimension Dimension => new Dimension(this.Depth, this.Rows, this.Cols);
+
+        /// <summary>
         /// Gets or sets the value at the specified row and column and depth.
         /// </summary>
         /// <param name="depth">The depth.</param>

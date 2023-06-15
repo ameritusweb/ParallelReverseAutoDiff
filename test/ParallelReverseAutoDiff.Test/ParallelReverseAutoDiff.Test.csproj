@@ -10,11 +10,15 @@
 
   <ItemGroup>
     <None Remove="Convolutional\Architecture\ConvolutionalArchitecture.json" />
+    <None Remove="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
     <None Remove="FeedForward\Architecture\FeedForwardArchitecture.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Convolutional\Architecture\ConvolutionalArchitecture.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="FeedForward\Architecture\FeedForwardArchitecture.json">

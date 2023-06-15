@@ -18,6 +18,19 @@ namespace ParallelReverseAutoDiff.RMAD
         public static readonly Dimension Empty;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Dimension"/> struct.
+        /// </summary>
+        /// <param name="depth">The depth.</param>
+        /// <param name="height">The rows.</param>
+        /// <param name="width">The columns.</param>
+        public Dimension(int depth, int height, int width)
+        {
+            this.Depth = depth;
+            this.Height = height;
+            this.Width = width;
+        }
+
+        /// <summary>
         /// Gets or sets the height.
         /// </summary>
         public int Height { get; set; }

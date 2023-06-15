@@ -29,6 +29,22 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Add input gradient array to the backward result.
+        /// </summary>
+        /// <param name="matrix">The deep matrix to add.</param>
+        /// <returns>The backward result builder.</returns>
+        public BackwardResultBuilder AddInputGradientArray(DeepMatrix matrix)
+        {
+            foreach (var mat in matrix)
+            {
+                this.inputGradientCount++;
+                this.backwardResults.Add(mat);
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Add deep input gradient to the backward result.
         /// </summary>
         /// <param name="matrix">The deep matrix to add.</param>

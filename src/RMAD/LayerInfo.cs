@@ -28,13 +28,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public int Layer { get; set; }
 
         /// <summary>
+        /// Gets or sets the nested layer index.
+        /// </summary>
+        public int NestedLayer { get; set; }
+
+        /// <summary>
         /// Determines whether the specified object is equal to the current <see cref="LayerInfo"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>Whether they are equal.</returns>
         public bool Equals(LayerInfo other)
         {
-            return this.TimeStep == other.TimeStep && this.Layer == other.Layer;
+            return this.TimeStep == other.TimeStep && this.Layer == other.Layer && this.NestedLayer == other.NestedLayer;
         }
 
         /// <summary>
@@ -44,6 +49,15 @@ namespace ParallelReverseAutoDiff.RMAD
         public override string ToString()
         {
             return "_" + this.TimeStep.ToString() + "_" + this.Layer.ToString();
+        }
+
+        /// <summary>
+        /// To the nested specific ID string.
+        /// </summary>
+        /// <returns>The nested specific ID string.</returns>
+        public string ToNestedString()
+        {
+            return "_" + this.TimeStep.ToString() + "_" + this.Layer.ToString() + "_" + this.NestedLayer.ToString();
         }
     }
 }
