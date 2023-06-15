@@ -573,7 +573,7 @@ By defining the operations and their connections in a JSON file, the graph can b
 
 ### Instantiate the architecture
 
-Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JsonArchitecure object.
+Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JsonArchitecture object.
 
 There are other JSON architectures available as well.
 
