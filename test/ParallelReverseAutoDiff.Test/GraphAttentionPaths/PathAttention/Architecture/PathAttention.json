@@ -1,6 +1,13 @@
 {
   "timeSteps": [
     {
+      "startOperations": [
+        {
+          "id": "pathFeatures",
+          "type": "MatrixConcatenateOperation",
+          "inputs": [ "pathFeaturesArray" ]
+        }
+      ],
       "layers": [
         {
           "startOperations": [
@@ -85,9 +92,14 @@
                   "inputs": [ "queries_act", "keys_transpose" ]
                 },
                 {
+                  "id": "queries_keys_scale",
+                  "type": "MatrixMultiplyScalarOperation",
+                  "inputs": [ "queries_keys_transpose", "Divisor" ]
+                },
+                {
                   "id": "attention_weights",
                   "type": "SoftmaxOperation",
-                  "inputs": [ "queries_keys_transpose" ]
+                  "inputs": [ "queries_keys_scale" ]
                 },
                 {
                   "id": "attention_weights_values",
@@ -131,9 +143,19 @@
       ],
       "endoperations": [
         {
-          "id": "output_avg",
-          "type": "MatrixAverageOperation",
+          "id": "output_sum",
+          "type": "MatrixSumOperation",
           "inputs": [ "output_act_last" ]
+        },
+        {
+          "id": "output_sum_trans",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "output_sum" ]
+        },
+        {
+          "id": "output_sum_trans_soft",
+          "type": "SoftmaxOperation",
+          "inputs": [ "output_sum_trans" ]
         }
       ]
     }
