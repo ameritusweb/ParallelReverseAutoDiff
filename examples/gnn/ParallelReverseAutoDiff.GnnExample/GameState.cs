@@ -64,6 +64,126 @@ namespace ParallelReverseAutoDiff.GnnExample
         public int BoardSize { get; set; } = 8;
 
         /// <summary>
+        /// Gets the path from a move.
+        /// </summary>
+        /// <param name="move">A move.</param>
+        /// <returns>The list of positions.</returns>
+        public static List<Position> GetPath(Move move)
+        {
+            List<Position> path = new List<Position>();
+
+            // Get the piece type and positions
+            PieceType pieceType = move.Piece.Type;
+            Position originalPosition = move.OriginalPosition;
+            Position newPosition = move.NewPosition;
+
+            // Add the original position
+            path.Add(originalPosition);
+
+            // Check if the piece is a knight
+            if (pieceType == PieceType.Knight)
+            {
+                // Calculate the intermediate positions
+                Position intermediate1;
+                Position intermediate2;
+
+                if (Math.Abs(originalPosition.RankValue - newPosition.RankValue) == 2)
+                {
+                    intermediate1 = new Position(originalPosition.RankValue + Math.Sign(newPosition.RankValue - originalPosition.RankValue), originalPosition.FileValue);
+                    intermediate2 = new Position(intermediate1.RankValue + Math.Sign(newPosition.RankValue - originalPosition.RankValue), intermediate1.FileValue);
+                }
+                else
+                {
+                    intermediate1 = new Position(originalPosition.RankValue, originalPosition.FileValue + Math.Sign(newPosition.FileValue - originalPosition.FileValue));
+                    intermediate2 = new Position(intermediate1.RankValue, intermediate1.FileValue + Math.Sign(newPosition.FileValue - originalPosition.FileValue));
+                }
+
+                // Add the intermediate positions
+                path.Add(intermediate1);
+                path.Add(intermediate2);
+
+                // Add the new position
+                path.Add(newPosition);
+            }
+            else
+            {
+                // Calculate the path for other pieces (assuming straight-line moves)
+                int rankDifference = newPosition.RankValue - originalPosition.RankValue;
+                int fileDifference = newPosition.FileValue - originalPosition.FileValue;
+
+                int rankIncrement = Math.Sign(rankDifference);
+                int fileIncrement = Math.Sign(fileDifference);
+
+                int currentRank = originalPosition.RankValue;
+                int currentFile = originalPosition.FileValue;
+
+                while (currentRank != newPosition.RankValue || currentFile != newPosition.FileValue)
+                {
+                    currentRank += rankIncrement;
+                    currentFile += fileIncrement;
+
+                    path.Add(new Position(currentRank, currentFile));
+                }
+            }
+
+            return path;
+        }
+
+        /// <summary>
+        /// Gets the game phase.
+        /// </summary>
+        /// <returns>The game phase.</returns>
+        public GamePhase GetGamePhase()
+        {
+            if (this.Board.ExecutedMoves.Count < 15)
+            {
+                return GamePhase.Opening;
+            }
+            else if (this.Board.GetPieceCount() < 11 && this.Board.ExecutedMoves.Count > 40)
+            {
+                return GamePhase.EndGame;
+            }
+            else
+            {
+                return GamePhase.MiddleGame;
+            }
+        }
+
+        /// <summary>
+        /// Get all moves.
+        /// </summary>
+        /// <returns>All moves.</returns>
+        public List<string> GetMoves()
+        {
+            List<string> moves = new List<string>();
+            for (int rank = 0; rank < 8; ++rank)
+            {
+                for (int file = 0; file < 8; ++file)
+                {
+                    var position = new Position(rank, file);
+                    var piece = this.Board.GetPossiblePieceAt(position);
+                    if (piece != null)
+                    {
+                        var list = piece.GetAvailableMovesToAnyColor(this.Board, position);
+                        foreach (var m in list)
+                        {
+                            if (m.piece != null)
+                            {
+                                moves.Add(piece.ToString() + m.move.OriginalPosition.ToString() + m.move.NewPosition.ToString() + m.piece.ToString());
+                            }
+                            else
+                            {
+                                moves.Add(piece.ToString() + m.move.OriginalPosition.ToString() + m.move.NewPosition.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+
+            return moves;
+        }
+
+        /// <summary>
         /// Gets the king square.
         /// </summary>
         /// <param name="color">The piece color.</param>

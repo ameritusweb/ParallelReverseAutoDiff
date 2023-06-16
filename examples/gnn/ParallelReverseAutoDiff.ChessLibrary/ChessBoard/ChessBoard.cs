@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -90,6 +91,11 @@ namespace Chess
         public Piece GetPieceAt(Position position)
         {
             return pieces[position.Y, position.X] ?? throw new InvalidOperationException("No piece at the position.");
+        }
+
+        public Piece? GetPossiblePieceAt(Position position)
+        {
+            return pieces[position.Y, position.X];
         }
 
         public bool CanCastle(PieceColor color)
@@ -207,6 +213,22 @@ namespace Chess
                 for (int j = 0; j < 8; ++j)
                 {
                     if (pieces[i, j]?.Color == color)
+                    {
+                        numberOfPieces++;
+                    }
+                }
+            }
+            return numberOfPieces;
+        }
+
+        public int GetPieceCount()
+        {
+            int numberOfPieces = 0;
+            for (int i = 0; i < 8; ++i)
+            {
+                for (int j = 0; j < 8; ++j)
+                {
+                    if (pieces[j, i] != null)
                     {
                         numberOfPieces++;
                     }

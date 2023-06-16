@@ -23,6 +23,15 @@ namespace ParallelReverseAutoDiff.GnnExample
         }
 
         /// <summary>
+        /// Gets the total.
+        /// </summary>
+        /// <returns>The total.</returns>
+        public int GetTotal()
+        {
+            return this.files.Count;
+        }
+
+        /// <summary>
         /// Load the chess board.
         /// </summary>
         /// <param name="skip">How many files to skip.</param>

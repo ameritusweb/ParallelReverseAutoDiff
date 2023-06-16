@@ -8,7 +8,11 @@ using ParallelReverseAutoDiff.GnnExample;
 
 Console.WriteLine("Hello, World!");
 
+AdjacencyMatrixGenerator matrix = new AdjacencyMatrixGenerator();
+matrix.Generate();
+
 // StatisticsGenerator statisticsGenerator = new StatisticsGenerator();
-// statisticsGenerator.Generate();
-GameGenerator gameGenerator = new GameGenerator();
-gameGenerator.GenerateBothAndSaveLeela(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName + "\\PGNLibrary", 200);
+// statisticsGenerator.Read2a();
+
+// GameGenerator gameGenerator = new GameGenerator();
+// gameGenerator.GenerateBothAndSaveLeela(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName + "\\PGNLibrary", 200);

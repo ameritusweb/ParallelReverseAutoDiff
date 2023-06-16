@@ -4,6 +4,16 @@
         <name>ParallelReverseAutoDiff.GnnExample</name>
     </assembly>
     <members>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.AdjacencyMatrixGenerator">
+            <summary>
+            An adjacency matrix generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.AdjacencyMatrixGenerator.Generate">
+            <summary>
+            Generate an adjacency matrix.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader">
             <summary>
             A chess board loader.
@@ -13,6 +23,12 @@
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader"/> class.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.GetTotal">
+            <summary>
+            Gets the total.
+            </summary>
+            <returns>The total.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.LoadMoves(System.Int32)">
             <summary>
@@ -90,6 +106,26 @@
             </summary>
             <returns>The game in PGN format.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GamePhase">
+            <summary>
+            The game phase.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.GamePhase.Opening">
+            <summary>
+            The opening.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.GamePhase.MiddleGame">
+            <summary>
+            The middle game.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.GamePhase.EndGame">
+            <summary>
+            The end game.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.GameState">
             <summary>
             The chess game state.
@@ -115,6 +151,25 @@
             <summary>
             Gets or sets the board size.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPath(Chess.Move)">
+            <summary>
+            Gets the path from a move.
+            </summary>
+            <param name="move">A move.</param>
+            <returns>The list of positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGamePhase">
+            <summary>
+            Gets the game phase.
+            </summary>
+            <returns>The game phase.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetMoves">
+            <summary>
+            Get all moves.
+            </summary>
+            <returns>All moves.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetKingSquare(Chess.PieceColor)">
             <summary>
@@ -460,10 +515,45 @@
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator">
             <summary>
+            A statistics generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.#ctor">
+            <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator"/> class.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read2">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read2a">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read3">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate">
+            <summary>
+            Generates the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate2">
+            <summary>
+            Generates the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate3">
             <summary>
             Generates the statistics.
             </summary>
