@@ -1,0 +1,66 @@
+{
+  "timeSteps": [
+    {
+      "layers": [
+        {
+          "operations": [
+            {
+              "id": "weighted_currentPathFeatures",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "Weights", "CurrentPathFeatures" ],
+              "gradientResultTo": [ "DWeights", null ]
+            },
+            {
+              "id": "currentPathFeatures_add",
+              "type": "MatrixAddOperation",
+              "inputs": [ "weighted_currentPathFeatures", "B" ],
+              "gradientResultTo": [ null, "DB" ]
+            },
+            {
+              "id": "weighted_connectedPathFeatures",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "ConnectedPathsMatrix", "ConnectedWeights" ],
+              "gradientResultTo": [ null, "DConnectedWeights" ]
+            },
+            {
+              "id": "connectedPathFeatures_add",
+              "type": "MatrixAddOperation",
+              "inputs": [ "weighted_connectedPathFeatures", "CB" ],
+              "gradientResultTo": [ null, "DCB" ]
+            },
+            {
+              "id": "connectedPathFeatures_add_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "connectedPathFeatures_add" ]
+            },
+            {
+              "id": "interactionScores",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "currentPathFeatures_add", "connectedPathFeatures_add_trans" ]
+            },
+            {
+              "id": "attention_scores",
+              "type": "SoftmaxOperation",
+              "inputs": [ "interactionScores" ]
+            },
+            {
+              "id": "broadcasted_attention_scores",
+              "type": "MatrixBroadcastOperation",
+              "inputs": [ "attention_scores", "connectedPathsMatrixRows", "connectedPathsMatrixColumns" ]
+            },
+            {
+              "id": "weighted_connected_paths_features",
+              "type": "HadamardProductOperation",
+              "inputs": [ "broadcasted_attention_scores", "ConnectedPathsMatrix" ]
+            },
+            {
+              "id": "current_path_features",
+              "type": "MatrixSumOperation",
+              "inputs": [ "weighted_connected_paths_features" ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
