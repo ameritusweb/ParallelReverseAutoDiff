@@ -47,6 +47,8 @@ MatrixMultiplyOperation
 
 MatrixMultiplyScalarOperation
 
+MatrixSumOperation
+
 MatrixTransposeOperation
 
 ReLUOperation
