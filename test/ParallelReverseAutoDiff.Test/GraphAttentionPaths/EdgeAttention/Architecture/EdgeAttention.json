@@ -85,9 +85,14 @@
                   "inputs": [ "queries_act", "keys_transpose" ]
                 },
                 {
+                  "id": "queries_keys_scale",
+                  "type": "MatrixMultiplyScalarOperation",
+                  "inputs": [ "queries_keys_transpose", "Divisor" ]
+                },
+                {
                   "id": "attention_weights",
                   "type": "SoftmaxOperation",
-                  "inputs": [ "queries_keys_transpose" ]
+                  "inputs": [ "queries_keys_scale" ]
                 },
                 {
                   "id": "attention_weights_values",
