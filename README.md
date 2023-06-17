@@ -17,6 +17,8 @@ Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-1
 ## Supported Operations
 
 ### Regular Operations
+AddGaussianNoiseOperation
+
 AmplifiedSigmoidOperation - Used for gradient amplification.
 
 ApplyDropoutOperation
@@ -113,6 +115,11 @@ public double LeakyReLUAlpha { get; set; } = 0.01d;
 /// Gets or sets the learning rate.
 /// </summary>
 public double LearningRate { get; set; } = 0.001d;
+
+/// <summary>
+/// Gets or sets the noise ratio for the AddGaussianNoise operation.
+/// </summary>
+public double NoiseRatio { get; set; } = 0.01d;
 
 /// <summary>
 /// Gets or sets the pool size for the max pool operation.
