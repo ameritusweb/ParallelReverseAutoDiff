@@ -15,7 +15,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// A matrix class used for matrix operations.
     /// </summary>
-    public class Matrix : IEnumerable<double[]>
+    public class Matrix : IEnumerable<double[]>, ICloneable
     {
         private readonly double[][] matrix;
 
@@ -268,6 +268,15 @@ namespace ParallelReverseAutoDiff.RMAD
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Clones the matrix.
+        /// </summary>
+        /// <returns>The cloned matrix.</returns>
+        public object Clone()
+        {
+            return new Matrix((double[][])this.matrix.Clone());
         }
 
         /// <summary>
