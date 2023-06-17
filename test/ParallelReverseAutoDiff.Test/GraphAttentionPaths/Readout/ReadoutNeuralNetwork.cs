@@ -21,11 +21,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public ReadoutNeuralNetwork(int numLayers, double learningRate, double clipValue)
+        public ReadoutNeuralNetwork(int numLayers, int numPaths, int numFeatures, double learningRate, double clipValue)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
+            this.NumPaths = numPaths;
+            this.NumFeatures = numFeatures;
+
+            //var hiddenLayerBuilder = new ModelLayerBuilder(this)
+            //    .AddModelElementGroup("Wo", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+            //this.hiddenLayer = hiddenLayerBuilder.Build();
         }
 
         /// <summary>
@@ -47,6 +53,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
+
+        /// <summary>
+        /// Gets the number of features of the neural network.
+        /// </summary>
+        internal int NumFeatures { get; private set; }
+
+        /// <summary>
+        /// Gets the number of paths of the neural network.
+        /// </summary>
+        internal int NumPaths { get; private set; }
 
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.
