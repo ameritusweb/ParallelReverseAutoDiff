@@ -12,12 +12,33 @@
             {
               "id": "ah_w",
               "type": "MatrixMultiplyOperation",
-              "inputs": [ "ah", "W" ]
+              "inputs": [ "ah", "W" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numOutputFeatures"
+                }
+              ]
+            },
+            {
+              "id": "ah_w_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "ah_w", "B" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numOutputFeatures"
+                }
+              ]
             },
             {
               "id": "ah_w_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "ah_w" ]
+              "inputs": [ "ah_w_broadcasting" ]
             }
           ]
         }

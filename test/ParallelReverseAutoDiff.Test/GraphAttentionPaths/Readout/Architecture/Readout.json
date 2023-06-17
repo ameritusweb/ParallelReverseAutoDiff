@@ -8,13 +8,29 @@
               "id": "keys_pathFeatures",
               "type": "CudaMatrixMultiplyOperation",
               "inputs": [ "pathFeatures", "Keys" ],
-              "gradientResultTo": [ null, "DKeys" ]
+              "gradientResultTo": [ null, "DKeys" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
             },
             {
               "id": "keypath_add",
               "type": "MatrixAddBroadcastingOperation",
               "inputs": [ "keys_pathFeatures", "KB" ],
-              "gradientResultTo": [ null, "DKB" ]
+              "gradientResultTo": [ null, "DKB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numFeatures"
+                }
+              ]
             },
             {
               "id": "layernorm_keys",
@@ -30,13 +46,29 @@
               "id": "values_pathFeatures",
               "type": "CudaMatrixMultiplyOperation",
               "inputs": [ "pathFeatures", "Values" ],
-              "gradientResultTo": [ null, "DValues" ]
+              "gradientResultTo": [ null, "DValues" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
             },
             {
               "id": "valuepath_add",
               "type": "MatrixAddBroadcastingOperation",
               "inputs": [ "values_pathFeatures", "VB" ],
-              "gradientResultTo": [ null, "DVB" ]
+              "gradientResultTo": [ null, "DVB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numFeatures"
+                }
+              ]
             },
             {
               "id": "layernorm_values",
@@ -56,13 +88,29 @@
                   "id": "queries_edgeFeatures",
                   "type": "CudaMatrixMultiplyOperation",
                   "inputs": [ "pathFeatures", "Queries[layerIndex]" ],
-                  "gradientResultTo": [ null, "DQueries[layerIndex]" ]
+                  "gradientResultTo": [ null, "DQueries[layerIndex]" ],
+                  "initializations": [
+                    null,
+                    {
+                      "type": "Xavier",
+                      "rows": "numFeatures",
+                      "columns": "numFeatures"
+                    }
+                  ]
                 },
                 {
                   "id": "queryedge_add",
                   "type": "MatrixAddBroadcastingOperation",
                   "inputs": [ "queries_pathFeatures", "QB" ],
-                  "gradientResultTo": [ null, "DQB" ]
+                  "gradientResultTo": [ null, "DQB" ],
+                  "initializations": [
+                    null,
+                    {
+                      "type": "Zeroes",
+                      "rows": "1",
+                      "columns": "numFeatures"
+                    }
+                  ]
                 },
                 {
                   "id": "layernorm_queries",

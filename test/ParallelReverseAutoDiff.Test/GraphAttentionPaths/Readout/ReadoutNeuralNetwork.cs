@@ -86,7 +86,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private async Task InitializeComputationGraph()
         {
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<TripleLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            var jsonArchitecture = JsonConvert.DeserializeObject<NestedLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new ReadoutComputationGraph(this);
             //this.computationGraph
             //    .AddIntermediate("Output", _ => this.Output)

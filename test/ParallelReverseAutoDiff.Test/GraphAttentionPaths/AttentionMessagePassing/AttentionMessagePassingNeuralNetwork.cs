@@ -15,6 +15,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
         private AttentionMessagePassingComputationGraph computationGraph;
 
+        private IModelLayer hiddenLayer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AttentionMessagePassingNeuralNetwork"/> class.
         /// </summary>
@@ -86,7 +88,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         private async Task InitializeComputationGraph()
         {
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<TripleLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new AttentionMessagePassingComputationGraph(this);
             //this.computationGraph
             //    .AddIntermediate("Output", _ => this.Output)

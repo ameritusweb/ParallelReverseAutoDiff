@@ -8,25 +8,57 @@
               "id": "weighted_currentPathFeatures",
               "type": "CudaMatrixMultiplyOperation",
               "inputs": [ "Weights", "CurrentPathFeatures" ],
-              "gradientResultTo": [ "DWeights", null ]
+              "gradientResultTo": [ "DWeights", null ],
+              "initializations": [
+                {
+                  "type": "Xavier",
+                  "rows": "numPaths",
+                  "columns": "numFeatures"
+                },
+                null
+              ]
             },
             {
               "id": "currentPathFeatures_add",
               "type": "MatrixAddOperation",
               "inputs": [ "weighted_currentPathFeatures", "B" ],
-              "gradientResultTo": [ null, "DB" ]
+              "gradientResultTo": [ null, "DB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "numPaths",
+                  "columns": 1
+                }
+              ]
             },
             {
               "id": "weighted_connectedPathFeatures",
               "type": "CudaMatrixMultiplyOperation",
               "inputs": [ "ConnectedPathsMatrix", "ConnectedWeights" ],
-              "gradientResultTo": [ null, "DConnectedWeights" ]
+              "gradientResultTo": [ null, "DConnectedWeights" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": 1
+                }
+              ]
             },
             {
               "id": "connectedPathFeatures_add",
               "type": "MatrixAddOperation",
               "inputs": [ "weighted_connectedPathFeatures", "CB" ],
-              "gradientResultTo": [ null, "DCB" ]
+              "gradientResultTo": [ null, "DCB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "numPaths",
+                  "columns": 1
+                }
+              ]
             },
             {
               "id": "connectedPathFeatures_add_trans",
