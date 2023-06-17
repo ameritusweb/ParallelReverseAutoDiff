@@ -136,9 +136,14 @@
       ],
       "endoperations": [
         {
+          "id": "pre_output",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "output_act_last" ]
+        },
+        {
           "id": "output_avg",
           "type": "MatrixAverageOperation",
-          "inputs": [ "output_act_last" ]
+          "inputs": [ "pre_output" ]
         }
       ]
     }
