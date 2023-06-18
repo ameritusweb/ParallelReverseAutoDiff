@@ -143,7 +143,8 @@
         {
           "id": "output_avg",
           "type": "MatrixAverageOperation",
-          "inputs": [ "pre_output" ]
+          "inputs": [ "pre_output" ],
+          "setResultTo": "Output"
         }
       ]
     }

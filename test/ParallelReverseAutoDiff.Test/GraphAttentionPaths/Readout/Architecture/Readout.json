@@ -196,7 +196,8 @@
         {
           "id": "output_sum_trans_soft",
           "type": "SoftmaxOperation",
-          "inputs": [ "output_sum_trans" ]
+          "inputs": [ "output_sum_trans" ],
+          "setResultTo": "Output"
         }
       ]
     }

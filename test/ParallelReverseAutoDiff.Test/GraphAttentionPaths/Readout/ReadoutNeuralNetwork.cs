@@ -76,12 +76,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
             }
+
+            this.InitializeState();
         }
 
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public DeepMatrix Input { get; private set; }
+        public Matrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
@@ -130,7 +132,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <param name="iterationIndex">The iteration index.</param>
         /// <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
         /// <returns>A task.</returns>
-        public async Task Optimize(DeepMatrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
+        public async Task Optimize(Matrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
         {
             this.Target = target;
             if (doNotUpdate == null)
@@ -227,12 +229,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private async Task AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        private async Task AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Input.ToArray(), input.ToArray());
+            CommonMatrixUtils.SetInPlace(this.Input, input);
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -302,6 +304,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             {
                 return;
             }
+        }
+
+        private void InitializeState()
+        {
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.inputLayers.ToArray());
+            clearer.Clear(this.nestedLayers.ToArray());
+            clearer.Clear(this.outputLayers.ToArray());
+
+            // Clear intermediates
+            this.Output = CommonMatrixUtils.InitializeZeroMatrix(1, this.NumFeatures);
+            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
         }
     }
 }

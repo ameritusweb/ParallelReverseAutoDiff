@@ -423,6 +423,24 @@ namespace ParallelReverseAutoDiff.Test.Common
         }
 
         /// <summary>
+        /// Sets the following matrix to the specified values.
+        /// </summary>
+        /// <param name="matrix">The matrix to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlace(Matrix matrix, Matrix value)
+        {
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int j = 0; j < numRows; ++j)
+            {
+                for (int k = 0; k < numCols; ++k)
+                {
+                    matrix[j][k] = value[j][k];
+                }
+            }
+        }
+
+        /// <summary>
         /// Clears the following 2-D matrices.
         /// </summary>
         /// <param name="matrices">The 2-D matrices to clear.</param>

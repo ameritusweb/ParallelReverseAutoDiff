@@ -25,6 +25,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private readonly IModelLayer hiddenLayer;
         private readonly IModelLayer outputLayer;
 
+        private Matrix[][] h;
+        private Matrix[][] c; // Memory cell state
+
+        private Matrix[][][] arrays4D;
+        private Matrix[][] arrays3D;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LstmNeuralNetwork"/> class.
         /// </summary>
@@ -70,6 +77,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddModelElementGroup("V", new[] { outputSize, hiddenSize }, InitializationType.Xavier)
                 .AddModelElementGroup("b", new[] { outputSize, 1 }, InitializationType.Zeroes);
             this.outputLayer = outputLayerBuilder.Build();
+
+            this.InitializeState();
         }
 
         /// <summary>
@@ -80,7 +89,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public Matrix Output { get; private set; }
+        public Matrix[] Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -261,7 +270,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         {
             var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
             var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
-            var loss = meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
+            var loss = new Matrix(1,1);// meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
             if (loss[0][0] >= 0.0d)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -273,7 +282,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = new Matrix(1,1);// (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];
@@ -291,6 +300,28 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             {
                 return;
             }
+        }
+
+        private void InitializeState()
+        {
+            // Clear the hidden state and memory cell state
+            this.h = new Matrix[this.Parameters.NumTimeSteps][];
+            this.c = new Matrix[this.Parameters.NumTimeSteps][];
+            for (int t = 0; t < this.Parameters.NumTimeSteps; ++t)
+            {
+                this.h[t] = CommonMatrixUtils.InitializeZeroMatrix(this.NumLayers, this.hiddenSize, 1);
+                this.c[t] = CommonMatrixUtils.InitializeZeroMatrix(this.NumLayers, this.hiddenSize, 1);
+            }
+
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
+
+            // Clear intermediates
+            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
+            this.Parameters.InputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.originalInputSize, 1);
+
+            this.arrays4D = new Matrix[][][] { this.h, this.c };
+            this.arrays3D = new Matrix[][] { this.Output, this.Parameters.InputSequence };
         }
     }
 }

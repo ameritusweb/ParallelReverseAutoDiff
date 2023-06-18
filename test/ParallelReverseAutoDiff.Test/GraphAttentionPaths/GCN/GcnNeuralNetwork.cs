@@ -44,17 +44,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 numInputFeatures = numInputOutputFeatures;
                 numInputOutputFeatures = numInputFeatures * 2;
             }
+
+            this.InitializeState();
         }
 
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public DeepMatrix Input { get; private set; }
+        public Matrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public Matrix Output { get; private set; }
+        public Matrix[] Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -93,7 +95,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <param name="iterationIndex">The iteration index.</param>
         /// <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
         /// <returns>A task.</returns>
-        public async Task Optimize(DeepMatrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
+        public async Task Optimize(Matrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
         {
             this.Target = target;
             if (doNotUpdate == null)
@@ -158,12 +160,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private async Task AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        private async Task AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Input.ToArray(), input.ToArray());
+            CommonMatrixUtils.SetInPlace(this.Input, input);
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -203,7 +205,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         {
             var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
             var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
-            var loss = meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
+            var loss = new Matrix(1, 1); // meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
             if (loss[0][0] >= 0.0d)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -215,7 +217,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
             Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
+            var gradientOfLossWrtOutput = new Matrix(1, 1); // (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];
@@ -233,6 +235,22 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             {
                 return;
             }
+        }
+
+        private void InitializeState()
+        {
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.hiddenLayers.ToArray());
+
+            // Clear intermediates
+            this.Output = new Matrix[NumLayers];
+            int numFeatures = this.NumFeatures;
+            for (int i = 0; i < NumLayers; i++)
+            {
+                numFeatures *= 2;
+                this.Output[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, numFeatures);
+            }
+            this.Parameters.InputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
         }
     }
 }

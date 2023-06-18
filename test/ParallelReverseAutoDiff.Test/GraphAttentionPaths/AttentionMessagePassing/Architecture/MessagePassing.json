@@ -103,7 +103,8 @@
             {
               "id": "current_path_features",
               "type": "MatrixSumOperation",
-              "inputs": [ "current_path_features_trans" ]
+              "inputs": [ "current_path_features_trans" ],
+              "setResultTo": "Output"
             }
           ]
         }
