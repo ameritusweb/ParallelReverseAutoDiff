@@ -150,6 +150,46 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private async Task InitializeComputationGraph()
         {
+            List<Matrix> keys = new List<Matrix>();
+            List<Matrix> keysBias = new List<Matrix>();
+            List<Matrix> values = new List<Matrix>();
+            List<Matrix> valuesBias = new List<Matrix>();
+            List<Matrix> queries = new List<Matrix>();
+            List<Matrix> queriesBias = new List<Matrix>();
+            List<Matrix> reduce = new List<Matrix>();
+            List<Matrix> reduceBias = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                keys.Add(this.inputLayers[i].WeightMatrix("Keys"));
+                keysBias.Add(this.inputLayers[i].WeightMatrix("KB"));
+                values.Add(this.inputLayers[i].WeightMatrix("Values"));
+                valuesBias.Add(this.inputLayers[i].WeightMatrix("VB"));
+                queries.Add(this.nestedLayers[i].WeightMatrix("Queries"));
+                queriesBias.Add(this.nestedLayers[i].WeightMatrix("QB"));
+                reduce.Add(this.outputLayers[i].WeightMatrix("R"));
+                reduceBias.Add(this.outputLayers[i].WeightMatrix("RB"));
+            }
+
+            List<Matrix> keysGradient = new List<Matrix>();
+            List<Matrix> keysBiasGradient = new List<Matrix>();
+            List<Matrix> valuesGradient = new List<Matrix>();
+            List<Matrix> valuesBiasGradient = new List<Matrix>();
+            List<Matrix> queriesGradient = new List<Matrix>();
+            List<Matrix> queriesBiasGradient = new List<Matrix>();
+            List<Matrix> reduceGradient = new List<Matrix>();
+            List<Matrix> reduceBiasGradient = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                keys.Add(this.inputLayers[i].GradientMatrix("Keys"));
+                keysBias.Add(this.inputLayers[i].GradientMatrix("KB"));
+                values.Add(this.inputLayers[i].GradientMatrix("Values"));
+                valuesBias.Add(this.inputLayers[i].GradientMatrix("VB"));
+                queries.Add(this.nestedLayers[i].GradientMatrix("Queries"));
+                queriesBias.Add(this.nestedLayers[i].GradientMatrix("QB"));
+                reduce.Add(this.outputLayers[i].GradientMatrix("R"));
+                reduceBias.Add(this.outputLayers[i].GradientMatrix("RB"));
+            }
+
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<NestedLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new ReadoutComputationGraph(this);

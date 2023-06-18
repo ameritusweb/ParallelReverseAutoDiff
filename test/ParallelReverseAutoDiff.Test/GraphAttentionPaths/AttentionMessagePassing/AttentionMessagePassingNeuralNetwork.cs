@@ -106,6 +106,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
         private async Task InitializeComputationGraph()
         {
+            var weights = this.hiddenLayer.WeightDeepMatrix("Weights");
+            var b = this.hiddenLayer.WeightDeepMatrix("B");
+            var connected = this.hiddenLayer.WeightDeepMatrix("ConnectedWeights");
+            var cb = this.hiddenLayer.WeightDeepMatrix("CB");
+
+            var weightsGradient = this.hiddenLayer.GradientDeepMatrix("Weights");
+            var bGradient = this.hiddenLayer.GradientDeepMatrix("B");
+            var connectedGradient = this.hiddenLayer.GradientDeepMatrix("ConnectedWeights");
+            var cbGradient = this.hiddenLayer.GradientDeepMatrix("CB");
+
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new AttentionMessagePassingComputationGraph(this);

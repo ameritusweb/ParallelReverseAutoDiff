@@ -129,6 +129,56 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private async Task InitializeComputationGraph()
         {
+            var we = this.embeddingLayer.WeightMatrix("We");
+            var be = this.embeddingLayer.WeightMatrix("be");
+
+            var dwe = this.embeddingLayer.GradientMatrix("We");
+            var dbe = this.embeddingLayer.GradientMatrix("be");
+
+            var wf = this.hiddenLayer.WeightDeepMatrix("Wf");
+            var wi = this.hiddenLayer.WeightDeepMatrix("Wi");
+            var wc = this.hiddenLayer.WeightDeepMatrix("Wc");
+            var wo = this.hiddenLayer.WeightDeepMatrix("Wo");
+
+            var dwf = this.hiddenLayer.GradientDeepMatrix("Wf");
+            var dwi = this.hiddenLayer.GradientDeepMatrix("Wi");
+            var dwc = this.hiddenLayer.GradientDeepMatrix("Wc");
+            var dwo = this.hiddenLayer.GradientDeepMatrix("Wo");
+
+            var uf = this.hiddenLayer.WeightDeepMatrix("Uf");
+            var ui = this.hiddenLayer.WeightDeepMatrix("Ui");
+            var uc = this.hiddenLayer.WeightDeepMatrix("Uc");
+            var uo = this.hiddenLayer.WeightDeepMatrix("Uo");
+
+            var duf = this.hiddenLayer.GradientDeepMatrix("Uf");
+            var dui = this.hiddenLayer.GradientDeepMatrix("Ui");
+            var duc = this.hiddenLayer.GradientDeepMatrix("Uc");
+            var duo = this.hiddenLayer.GradientDeepMatrix("Uo");
+
+            var bf = this.hiddenLayer.WeightDeepMatrix("bf");
+            var bi = this.hiddenLayer.WeightDeepMatrix("bi");
+            var bc = this.hiddenLayer.WeightDeepMatrix("bc");
+            var bo = this.hiddenLayer.WeightDeepMatrix("bo");
+
+            var dbf = this.hiddenLayer.GradientDeepMatrix("bf");
+            var dbi = this.hiddenLayer.GradientDeepMatrix("bi");
+            var dbc = this.hiddenLayer.GradientDeepMatrix("bc");
+            var dbo = this.hiddenLayer.GradientDeepMatrix("bo");
+
+            var wq = this.hiddenLayer.WeightDeepMatrix("Wq");
+            var wk = this.hiddenLayer.WeightDeepMatrix("Wk");
+            var wv = this.hiddenLayer.WeightDeepMatrix("Wv");
+
+            var dwq = this.hiddenLayer.GradientDeepMatrix("Wf");
+            var dwk = this.hiddenLayer.GradientDeepMatrix("Wi");
+            var dwv = this.hiddenLayer.GradientDeepMatrix("Wc");
+
+            var v = this.outputLayer.WeightMatrix("V");
+            var b = this.outputLayer.WeightMatrix("b");
+
+            var dv = this.outputLayer.GradientMatrix("V");
+            var db = this.outputLayer.GradientMatrix("b");
+
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new LstmComputationGraph(this);

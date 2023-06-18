@@ -113,6 +113,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private async Task InitializeComputationGraph()
         {
+            List<Matrix> w = new List<Matrix>();
+            List<Matrix> b = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                w.Add(this.hiddenLayers[i].WeightMatrix("W"));
+                b.Add(this.hiddenLayers[i].WeightMatrix("B"));
+            }
+
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new GcnComputationGraph(this);
