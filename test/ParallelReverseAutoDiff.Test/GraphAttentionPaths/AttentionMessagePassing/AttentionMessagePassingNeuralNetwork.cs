@@ -23,11 +23,20 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public AttentionMessagePassingNeuralNetwork(int numLayers, double learningRate, double clipValue)
+        public AttentionMessagePassingNeuralNetwork(int numLayers, int numPaths, int numFeatures, double learningRate, double clipValue)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
+            this.NumPaths = numPaths;
+            this.NumFeatures = numFeatures;
+
+            var hiddenLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("Weights", new[] { 6, numFeatures, numFeatures }, InitializationType.Xavier) // one weight per piece type
+                .AddModelElementGroup("B", new[] { 6, numFeatures, 1 }, InitializationType.Zeroes) // similarly one bias per piece type
+                .AddModelElementGroup("ConnectedWeights", new[] { numPaths, numFeatures, numFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("CB", new[] { numPaths, 1, numFeatures }, InitializationType.Zeroes);
+            this.hiddenLayer = hiddenLayerBuilder.Build();
         }
 
         /// <summary>
@@ -49,6 +58,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
+
+        /// <summary>
+        /// Gets the number of paths of the neural network.
+        /// </summary>
+        internal int NumPaths { get; private set; }
+
+        /// <summary>
+        /// Gets the number of features of the neural network.
+        /// </summary>
+        internal int NumFeatures { get; private set; }
 
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.

@@ -15,17 +15,61 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private LstmComputationGraph computationGraph;
 
+        private readonly int hiddenSize;
+        private readonly int originalInputSize;
+        private readonly int inputSize;
+        private readonly int outputSize;
+        private readonly int numTimeSteps;
+
+        private readonly IModelLayer embeddingLayer;
+        private readonly IModelLayer hiddenLayer;
+        private readonly IModelLayer outputLayer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LstmNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public LstmNeuralNetwork(int numLayers, double learningRate, double clipValue)
+        public LstmNeuralNetwork(int inputSize, int hiddenSize, int outputSize, int numTimeSteps, int numLayers, double learningRate, double clipValue)
         {
+            this.inputSize = hiddenSize;
+            this.originalInputSize = inputSize;
+            inputSize = hiddenSize;
+            this.hiddenSize = hiddenSize;
+            this.outputSize = outputSize;
             this.Parameters.LearningRate = learningRate;
+            this.numTimeSteps = numTimeSteps;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
+
+            var embeddingLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("We", new[] { hiddenSize, this.originalInputSize }, InitializationType.Xavier)
+                .AddModelElementGroup("be", new[] { hiddenSize, outputSize }, InitializationType.Zeroes);
+            this.embeddingLayer = embeddingLayerBuilder.Build();
+
+            var hiddenLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("Wo", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+                .AddModelElementGroup("Uo", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("bo", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("Wi", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+                .AddModelElementGroup("Ui", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("bi", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("Wf", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+                .AddModelElementGroup("Uf", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("bf", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("Wc", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
+                .AddModelElementGroup("Uc", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("bc", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("Wq", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("Wk", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("Wv", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier);
+            this.hiddenLayer = hiddenLayerBuilder.Build();
+
+            var outputLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("V", new[] { outputSize, hiddenSize }, InitializationType.Xavier)
+                .AddModelElementGroup("b", new[] { outputSize, 1 }, InitializationType.Zeroes);
+            this.outputLayer = outputLayerBuilder.Build();
         }
 
         /// <summary>

@@ -31,6 +31,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
+            this.NumQueries = numQueries;
             this.NumPaths = numPaths;
             this.NumFeatures = numFeatures;
 

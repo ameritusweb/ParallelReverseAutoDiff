@@ -15,17 +15,35 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private GcnComputationGraph computationGraph;
 
+        private readonly List<IModelLayer> hiddenLayers;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GcnNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public GcnNeuralNetwork(int numLayers, double learningRate, double clipValue)
+        public GcnNeuralNetwork(int numLayers, int numPaths, int numFeatures, double learningRate, double clipValue)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
+            this.NumPaths = numPaths;
+            this.NumFeatures = numFeatures;
+
+            this.hiddenLayers = new List<IModelLayer>();
+            int numInputFeatures = numFeatures;
+            int numInputOutputFeatures = numFeatures * 2;
+            for (int i = 0; i < numLayers; ++i)
+            {
+                var hiddenLayerBuilder = new ModelLayerBuilder(this)
+                    .AddModelElementGroup("W", new[] { numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("B", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes);
+                var hiddenLayer = hiddenLayerBuilder.Build();
+                this.hiddenLayers.Add(hiddenLayer);
+                numInputFeatures = numInputOutputFeatures;
+                numInputOutputFeatures = numInputFeatures * 2;
+            }
         }
 
         /// <summary>
@@ -47,6 +65,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
+
+        /// <summary>
+        /// Gets the number of paths of the neural network.
+        /// </summary>
+        internal int NumPaths { get; private set; }
+
+        /// <summary>
+        /// Gets the number of features of the neural network.
+        /// </summary>
+        internal int NumFeatures { get; private set; }
 
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.

@@ -12,7 +12,7 @@
               "initializations": [
                 {
                   "type": "Xavier",
-                  "rows": "numPaths",
+                  "rows": "numFeatures",
                   "columns": "numFeatures"
                 },
                 null
@@ -27,7 +27,7 @@
                 null,
                 {
                   "type": "Zeroes",
-                  "rows": "numPaths",
+                  "rows": "numFeatures",
                   "columns": 1
                 }
               ]
@@ -42,23 +42,28 @@
                 {
                   "type": "Xavier",
                   "rows": "numFeatures",
-                  "columns": 1
+                  "columns": "numFeatures"
                 }
               ]
             },
             {
               "id": "connectedPathFeatures_add",
-              "type": "MatrixAddOperation",
+              "type": "MatrixAddBroadcastingOperation",
               "inputs": [ "weighted_connectedPathFeatures", "CB" ],
               "gradientResultTo": [ null, "DCB" ],
               "initializations": [
                 null,
                 {
                   "type": "Zeroes",
-                  "rows": "numPaths",
-                  "columns": 1
+                  "rows": 1,
+                  "columns": "numFeatures"
                 }
               ]
+            },
+            {
+              "id": "currentPathFeatures_add_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "currentPathFeatures_add" ]
             },
             {
               "id": "connectedPathFeatures_add_trans",
@@ -68,12 +73,17 @@
             {
               "id": "interactionScores",
               "type": "CudaMatrixMultiplyOperation",
-              "inputs": [ "currentPathFeatures_add", "connectedPathFeatures_add_trans" ]
+              "inputs": [ "currentPathFeatures_add_trans", "connectedPathFeatures_add_trans" ]
             },
             {
               "id": "attention_scores",
               "type": "SoftmaxOperation",
               "inputs": [ "interactionScores" ]
+            },
+            {
+              "id": "attention_scores_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "attention_scores" ]
             },
             {
               "id": "broadcasted_attention_scores",
@@ -86,9 +96,14 @@
               "inputs": [ "broadcasted_attention_scores", "ConnectedPathsMatrix" ]
             },
             {
+              "id": "current_path_features_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "weighted_connected_paths_features" ]
+            },
+            {
               "id": "current_path_features",
               "type": "MatrixSumOperation",
-              "inputs": [ "weighted_connected_paths_features" ]
+              "inputs": [ "current_path_features_trans" ]
             }
           ]
         }

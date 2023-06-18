@@ -184,14 +184,9 @@
       ],
       "endoperations": [
         {
-          "id": "pre_output_sum_trans",
-          "type": "MatrixTransposeOperation",
-          "inputs": [ "output_act_last" ]
-        },
-        {
           "id": "output_sum",
           "type": "MatrixSumOperation",
-          "inputs": [ "pre_output_sum_trans" ]
+          "inputs": [ "output_act_last" ]
         },
         {
           "id": "output_sum_trans",

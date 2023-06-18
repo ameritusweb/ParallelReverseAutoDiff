@@ -15,17 +15,66 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
 
         private EdgeAttentionComputationGraph computationGraph;
 
+        private readonly List<IModelLayer> inputLayers;
+        private readonly List<IModelLayer> nestedLayers;
+        private readonly List<IModelLayer> outputLayers;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EdgeAttentionNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public EdgeAttentionNeuralNetwork(int numLayers, double learningRate, double clipValue)
+        public EdgeAttentionNeuralNetwork(int numLayers, int numQueries, int numPaths, int numFeatures, double learningRate, double clipValue)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
+            this.NumQueries = numQueries;
+            this.NumPaths = numPaths;
+            this.NumFeatures = numFeatures;
+
+            this.inputLayers = new List<IModelLayer>();
+            int numInputFeatures = numFeatures;
+            int numInputOutputFeatures = numFeatures * 2;
+            for (int i = 0; i < numLayers; ++i)
+            {
+                var inputLayerBuilder = new ModelLayerBuilder(this)
+                    .AddModelElementGroup("Keys", new[] { numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes)
+                    .AddModelElementGroup("Values", new[] { numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("VB", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes);
+                var inputLayer = inputLayerBuilder.Build();
+                this.inputLayers.Add(inputLayer);
+                numInputFeatures = numInputOutputFeatures;
+                numInputOutputFeatures = numInputFeatures * 2;
+            }
+
+            this.nestedLayers = new List<IModelLayer>();
+            int numNestedFeatures = numFeatures;
+            int numNestedOutputFeatures = numFeatures * 2;
+            List<int> outputFeaturesList = new List<int>();
+            for (int i = 0; i < numLayers; ++i)
+            {
+                var nestedLayerBuilder = new ModelLayerBuilder(this)
+                    .AddModelElementGroup("Queries", new[] { numQueries, numNestedFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("QB", new[] { numQueries, 1, numNestedOutputFeatures }, InitializationType.Zeroes);
+                var nestedLayer = nestedLayerBuilder.Build();
+                this.nestedLayers.Add(nestedLayer);
+                numNestedFeatures = numNestedOutputFeatures;
+                numNestedOutputFeatures = numNestedFeatures * 2;
+                outputFeaturesList.Add(numNestedOutputFeatures);
+            }
+
+            this.outputLayers = new List<IModelLayer>();
+            for (int i = 0; i < numLayers; ++i)
+            {
+                var outputLayerBuilder = new ModelLayerBuilder(this)
+                    .AddModelElementGroup("R", new[] { outputFeaturesList[i], numFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("RB", new[] { 1, numFeatures }, InitializationType.Zeroes);
+                var outputLayer = outputLayerBuilder.Build();
+                this.outputLayers.Add(outputLayer);
+            }
         }
 
         /// <summary>
@@ -47,6 +96,21 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
+
+        /// <summary>
+        /// Gets the number of queries of the neural network.
+        /// </summary>
+        internal int NumQueries { get; private set; }
+
+        /// <summary>
+        /// Gets the number of features of the neural network.
+        /// </summary>
+        internal int NumFeatures { get; private set; }
+
+        /// <summary>
+        /// Gets the number of paths of the neural network.
+        /// </summary>
+        internal int NumPaths { get; private set; }
 
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.
