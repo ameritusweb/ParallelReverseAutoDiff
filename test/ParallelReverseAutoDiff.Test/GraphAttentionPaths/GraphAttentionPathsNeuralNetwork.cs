@@ -12,9 +12,9 @@
         private GcnNeuralNetwork gcnNeuralNetwork;
         private AttentionMessagePassingNeuralNetwork attentionMessagePassingNeuralNetwork;
         private ReadoutNeuralNetwork readoutNeuralNetwork;
-        private List<GapEdge> gapEdges;
-        private List<GapNode> gapNodes;
-        private List<GapPath> gapPaths;
+        private List<GapEdge> gapEdges = new List<GapEdge>();
+        private List<GapNode> gapNodes = new List<GapNode>();
+        private List<GapPath> gapPaths = new List<GapPath>();
         private int numFeatures;
         private int numLayers;
         private int numQueries;
@@ -83,14 +83,16 @@
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                this.edgeAttentionNeuralNetwork[i] = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+                var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+                this.edgeAttentionNeuralNetwork.Add(model);
                 this.edgeAttentionNeuralNetwork[i].Initialize();
             }
 
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                this.lstmNeuralNetwork[i] = new LstmNeuralNetwork(numFeatures, 500, numFeatures * 2, 1, numLayers, learningRate, clipValue);
+                var model = new LstmNeuralNetwork(numFeatures, 500, numFeatures * 2, 1, numLayers, learningRate, clipValue);
+                this.lstmNeuralNetwork.Add(model);
                 this.lstmNeuralNetwork[i].Initialize();
             }
 
