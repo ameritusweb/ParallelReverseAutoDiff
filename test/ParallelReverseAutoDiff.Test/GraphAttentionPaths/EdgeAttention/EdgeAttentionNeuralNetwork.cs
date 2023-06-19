@@ -155,8 +155,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             List<Matrix> keysBias = new List<Matrix>();
             List<Matrix> values = new List<Matrix>();
             List<Matrix> valuesBias = new List<Matrix>();
-            List<Matrix> queries = new List<Matrix>();
-            List<Matrix> queriesBias = new List<Matrix>();
+            List<DeepMatrix> queries = new List<DeepMatrix>();
+            List<DeepMatrix> queriesBias = new List<DeepMatrix>();
             List<Matrix> reduce = new List<Matrix>();
             List<Matrix> reduceBias = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
@@ -165,8 +165,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 keysBias.Add(this.inputLayers[i].WeightMatrix("KB"));
                 values.Add(this.inputLayers[i].WeightMatrix("Values"));
                 valuesBias.Add(this.inputLayers[i].WeightMatrix("VB"));
-                queries.Add(this.nestedLayers[i].WeightMatrix("Queries"));
-                queriesBias.Add(this.nestedLayers[i].WeightMatrix("QB"));
+                queries.Add(this.nestedLayers[i].WeightDeepMatrix("Queries"));
+                queriesBias.Add(this.nestedLayers[i].WeightDeepMatrix("QB"));
                 reduce.Add(this.outputLayers[i].WeightMatrix("R"));
                 reduceBias.Add(this.outputLayers[i].WeightMatrix("RB"));
             }
@@ -175,8 +175,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             List<Matrix> keysBiasGradient = new List<Matrix>();
             List<Matrix> valuesGradient = new List<Matrix>();
             List<Matrix> valuesBiasGradient = new List<Matrix>();
-            List<Matrix> queriesGradient = new List<Matrix>();
-            List<Matrix> queriesBiasGradient = new List<Matrix>();
+            List<DeepMatrix> queriesGradient = new List<DeepMatrix>();
+            List<DeepMatrix> queriesBiasGradient = new List<DeepMatrix>();
             List<Matrix> reduceGradient = new List<Matrix>();
             List<Matrix> reduceBiasGradient = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
@@ -185,8 +185,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 keysBias.Add(this.inputLayers[i].GradientMatrix("KB"));
                 values.Add(this.inputLayers[i].GradientMatrix("Values"));
                 valuesBias.Add(this.inputLayers[i].GradientMatrix("VB"));
-                queries.Add(this.nestedLayers[i].GradientMatrix("Queries"));
-                queriesBias.Add(this.nestedLayers[i].GradientMatrix("QB"));
+                queries.Add(this.nestedLayers[i].GradientDeepMatrix("Queries"));
+                queriesBias.Add(this.nestedLayers[i].GradientDeepMatrix("QB"));
                 reduce.Add(this.outputLayers[i].GradientMatrix("R"));
                 reduceBias.Add(this.outputLayers[i].GradientMatrix("RB"));
             }
@@ -194,32 +194,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<NestedLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new EdgeAttentionComputationGraph(this);
-            //this.computationGraph
-            //    .AddIntermediate("Output", _ => this.Output)
-            //    .AddIntermediate("H", x => this.HiddenLayers[x.Layer].H)
-            //    .AddWeight("Cf1", x => this.FirstConvolutionalLayers[x.Layer].Cf1).AddGradient("DCf1", x => this.FirstConvolutionalLayers[x.Layer].DCf1)
-            //    .AddBias("Cb1", x => this.FirstConvolutionalLayers[x.Layer].Cb1).AddGradient("DCb1", x => this.FirstConvolutionalLayers[x.Layer].DCb1)
-            //    .AddWeight("Sc1", x => this.FirstConvolutionalLayers[x.Layer].Sc1).AddGradient("DSc1", x => this.FirstConvolutionalLayers[x.Layer].DSc1)
-            //    .AddWeight("Sh1", x => this.FirstConvolutionalLayers[x.Layer].Sh1).AddGradient("DSh1", x => this.FirstConvolutionalLayers[x.Layer].DSh1)
-            //    .AddWeight("Cf2", x => this.SecondConvolutionalLayers[x.Layer].Cf2).AddGradient("DCf2", x => this.SecondConvolutionalLayers[x.Layer].DCf2)
-            //    .AddBias("Cb2", x => this.SecondConvolutionalLayers[x.Layer].Cb2).AddGradient("DCb2", x => this.SecondConvolutionalLayers[x.Layer].DCb2)
-            //    .AddWeight("Sc2", x => this.SecondConvolutionalLayers[x.Layer].Sc2).AddGradient("DSc2", x => this.SecondConvolutionalLayers[x.Layer].DSc2)
-            //    .AddWeight("Sh2", x => this.SecondConvolutionalLayers[x.Layer].Sh2).AddGradient("DSh2", x => this.SecondConvolutionalLayers[x.Layer].DSh2)
-            //    .AddWeight("We", _ => this.EmbeddingLayer.We).AddGradient("DWe", _ => this.EmbeddingLayer.DWe)
-            //    .AddBias("Be", _ => this.EmbeddingLayer.Be).AddGradient("DBe", _ => this.EmbeddingLayer.DBe)
-            //    .AddWeight("W", x => this.HiddenLayers[x.Layer].W).AddGradient("DW", x => this.HiddenLayers[x.Layer].DW)
-            //    .AddBias("B", x => this.HiddenLayers[x.Layer].B).AddGradient("DB", x => this.HiddenLayers[x.Layer].DB)
-            //    .AddWeight("V", _ => this.OutputLayer.V).AddGradient("DV", _ => this.OutputLayer.DV)
-            //    .AddBias("Bo", _ => this.OutputLayer.Bo).AddGradient("DBo", _ => this.OutputLayer.DBo)
-            //    .AddWeight("ScEnd2", x => this.HiddenLayers[x.Layer].ScEnd2).AddGradient("DScEnd2", x => this.HiddenLayers[x.Layer].DScEnd2)
-            //    .AddWeight("ShEnd2", x => this.HiddenLayers[x.Layer].ShEnd2).AddGradient("DShEnd2", x => this.HiddenLayers[x.Layer].DShEnd2)
-            //    .AddOperationFinder("ActivatedFromLastLayer1", _ => this.computationGraph[$"activated1_0_{this.NumLayers - 1}"])
-            //    .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.Input : this.computationGraph[$"activated1_0_{x.Layer - 1}"])
-            //    .AddOperationFinder("currentInputOrMaxPooling", x => x.Layer == 0 ? this.computationGraph[$"maxPooling1_0_0"] : this.computationGraph[$"activated2_0_{x.Layer - 1}"])
-            //    .AddOperationFinder("ActivatedFromLastLayer2", _ => this.computationGraph[$"activated2_0_{this.NumLayers - 1}"])
-            //    .AddOperationFinder("thirdLayerCurrentInput", x => x.Layer == 0 ? this.computationGraph["embeddedInput_0_0"] : this.computationGraph[$"h_act_0_{x.Layer - 1}"])
-            //    .AddOperationFinder("HFromLastLayer", _ => this.computationGraph[$"h_act_0_{this.NumLayers - 1}"])
-            //    .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
+            this.computationGraph
+                .AddIntermediate("Output", _ => this.Output)
+                .AddWeight("Keys", x => keys[x.Layer])
+                .AddBias("KB", x => keysBias[x.Layer])
+                .AddWeight("Values", x => values[x.Layer])
+                .AddBias("VB", x => valuesBias[x.Layer])
+                .AddWeight("Queries", x => queries[x.Layer][x.NestedLayer])
+                .AddBias("QB", x => queriesBias[x.Layer][x.NestedLayer])
+                .AddWeight("R", x => reduce[x.Layer])
+                .AddBias("RB", x => reduceBias[x.Layer])
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];

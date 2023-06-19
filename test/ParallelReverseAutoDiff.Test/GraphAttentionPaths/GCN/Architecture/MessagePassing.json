@@ -13,6 +13,7 @@
               "id": "ah_w",
               "type": "MatrixMultiplyOperation",
               "inputs": [ "ah", "W" ],
+              "gradientResultTo": "DW[layerIndex]",
               "initializations": [
                 null,
                 {
@@ -26,6 +27,7 @@
               "id": "ah_w_broadcasting",
               "type": "MatrixAddBroadcastingOperation",
               "inputs": [ "ah_w", "B" ],
+              "gradientResultTo": "DB[layerIndex]",
               "initializations": [
                 null,
                 {
@@ -38,7 +40,8 @@
             {
               "id": "ah_w_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "ah_w_broadcasting" ]
+              "inputs": [ "ah_w_broadcasting" ],
+              "setResultTo": "Output"
             }
           ]
         }

@@ -6,7 +6,7 @@
           "id": "projectedInput",
           "description": "Multiply the input with the weight matrix",
           "type": "MatrixMultiplyOperation",
-          "inputs": [ "We", "inputNodeFeatures[t]" ],
+          "inputs": [ "We", "InputNodeFeatures[t]" ],
           "gradientResultTo": [ "dWe", null ]
         },
         {
@@ -303,7 +303,7 @@
           "id": "output_t",
           "type": "AmplifiedSigmoidOperation",
           "inputs": [ "v_h_b" ],
-          "setResultTo": "outputPathFeatures[t]"
+          "setResultTo": "OutputPathFeatures[t]"
         }
       ]
     }

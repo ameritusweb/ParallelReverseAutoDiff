@@ -45,6 +45,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             inputSize = hiddenSize;
             this.hiddenSize = hiddenSize;
             this.outputSize = outputSize;
+            this.Parameters.NumTimeSteps = numTimeSteps;
             this.Parameters.LearningRate = learningRate;
             this.numTimeSteps = numTimeSteps;
             this.Parameters.ClipValue = clipValue;
@@ -87,9 +88,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public DeepMatrix Input { get; private set; }
 
         /// <summary>
-        /// Gets the output matrix.
+        /// Gets the output path features matrix.
         /// </summary>
-        public Matrix[] Output { get; private set; }
+        public Matrix[] OutputPathFeatures { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -191,38 +192,51 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new LstmComputationGraph(this);
-            //this.computationGraph
-            //    .AddIntermediate("Output", _ => this.Output)
-            //    .AddIntermediate("H", x => this.HiddenLayers[x.Layer].H)
-            //    .AddWeight("Cf1", x => this.FirstConvolutionalLayers[x.Layer].Cf1).AddGradient("DCf1", x => this.FirstConvolutionalLayers[x.Layer].DCf1)
-            //    .AddBias("Cb1", x => this.FirstConvolutionalLayers[x.Layer].Cb1).AddGradient("DCb1", x => this.FirstConvolutionalLayers[x.Layer].DCb1)
-            //    .AddWeight("Sc1", x => this.FirstConvolutionalLayers[x.Layer].Sc1).AddGradient("DSc1", x => this.FirstConvolutionalLayers[x.Layer].DSc1)
-            //    .AddWeight("Sh1", x => this.FirstConvolutionalLayers[x.Layer].Sh1).AddGradient("DSh1", x => this.FirstConvolutionalLayers[x.Layer].DSh1)
-            //    .AddWeight("Cf2", x => this.SecondConvolutionalLayers[x.Layer].Cf2).AddGradient("DCf2", x => this.SecondConvolutionalLayers[x.Layer].DCf2)
-            //    .AddBias("Cb2", x => this.SecondConvolutionalLayers[x.Layer].Cb2).AddGradient("DCb2", x => this.SecondConvolutionalLayers[x.Layer].DCb2)
-            //    .AddWeight("Sc2", x => this.SecondConvolutionalLayers[x.Layer].Sc2).AddGradient("DSc2", x => this.SecondConvolutionalLayers[x.Layer].DSc2)
-            //    .AddWeight("Sh2", x => this.SecondConvolutionalLayers[x.Layer].Sh2).AddGradient("DSh2", x => this.SecondConvolutionalLayers[x.Layer].DSh2)
-            //    .AddWeight("We", _ => this.EmbeddingLayer.We).AddGradient("DWe", _ => this.EmbeddingLayer.DWe)
-            //    .AddBias("Be", _ => this.EmbeddingLayer.Be).AddGradient("DBe", _ => this.EmbeddingLayer.DBe)
-            //    .AddWeight("W", x => this.HiddenLayers[x.Layer].W).AddGradient("DW", x => this.HiddenLayers[x.Layer].DW)
-            //    .AddBias("B", x => this.HiddenLayers[x.Layer].B).AddGradient("DB", x => this.HiddenLayers[x.Layer].DB)
-            //    .AddWeight("V", _ => this.OutputLayer.V).AddGradient("DV", _ => this.OutputLayer.DV)
-            //    .AddBias("Bo", _ => this.OutputLayer.Bo).AddGradient("DBo", _ => this.OutputLayer.DBo)
-            //    .AddWeight("ScEnd2", x => this.HiddenLayers[x.Layer].ScEnd2).AddGradient("DScEnd2", x => this.HiddenLayers[x.Layer].DScEnd2)
-            //    .AddWeight("ShEnd2", x => this.HiddenLayers[x.Layer].ShEnd2).AddGradient("DShEnd2", x => this.HiddenLayers[x.Layer].DShEnd2)
-            //    .AddOperationFinder("ActivatedFromLastLayer1", _ => this.computationGraph[$"activated1_0_{this.NumLayers - 1}"])
-            //    .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.Input : this.computationGraph[$"activated1_0_{x.Layer - 1}"])
-            //    .AddOperationFinder("currentInputOrMaxPooling", x => x.Layer == 0 ? this.computationGraph[$"maxPooling1_0_0"] : this.computationGraph[$"activated2_0_{x.Layer - 1}"])
-            //    .AddOperationFinder("ActivatedFromLastLayer2", _ => this.computationGraph[$"activated2_0_{this.NumLayers - 1}"])
-            //    .AddOperationFinder("thirdLayerCurrentInput", x => x.Layer == 0 ? this.computationGraph["embeddedInput_0_0"] : this.computationGraph[$"h_act_0_{x.Layer - 1}"])
-            //    .AddOperationFinder("HFromLastLayer", _ => this.computationGraph[$"h_act_0_{this.NumLayers - 1}"])
-            //    .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
+            var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
+            this.computationGraph
+                .AddIntermediate("InputNodeFeatures", x => this.Parameters.InputSequence[x.TimeStep])
+                .AddIntermediate("OutputPathFeatures", x => this.OutputPathFeatures[x.TimeStep])
+                .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
+                .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
+                .AddScalar("scaledDotProductScalar", x => 1.0d / Math.Sqrt(this.hiddenSize))
+                .AddWeight("Wf", x => wf[x.Layer]).AddGradient("dWf", x => dwf[x.Layer])
+                .AddWeight("Wi", x => wi[x.Layer]).AddGradient("dWi", x => dwi[x.Layer])
+                .AddWeight("Wc", x => wc[x.Layer]).AddGradient("dWc", x => dwc[x.Layer])
+                .AddWeight("Wo", x => wo[x.Layer]).AddGradient("dWo", x => dwo[x.Layer])
+                .AddWeight("Uf", x => uf[x.Layer]).AddGradient("dUf", x => duf[x.Layer])
+                .AddWeight("Ui", x => ui[x.Layer]).AddGradient("dUi", x => dui[x.Layer])
+                .AddWeight("Uc", x => uc[x.Layer]).AddGradient("dUc", x => duc[x.Layer])
+                .AddWeight("Uo", x => uo[x.Layer]).AddGradient("dUo", x => duo[x.Layer])
+                .AddWeight("bf", x => bf[x.Layer]).AddGradient("dbf", x => dbf[x.Layer])
+                .AddWeight("bi", x => bi[x.Layer]).AddGradient("dbi", x => dbi[x.Layer])
+                .AddWeight("bc", x => bc[x.Layer]).AddGradient("dbc", x => dbc[x.Layer])
+                .AddWeight("bo", x => bo[x.Layer]).AddGradient("dbo", x => dbo[x.Layer])
+                .AddWeight("Wq", x => wq[x.Layer]).AddGradient("dWq", x => dwq[x.Layer])
+                .AddWeight("Wk", x => wk[x.Layer]).AddGradient("dWk", x => dwk[x.Layer])
+                .AddWeight("Wv", x => wv[x.Layer]).AddGradient("dWv", x => dwv[x.Layer])
+                .AddWeight("We", x => we).AddGradient("dWe", x => dwe)
+                .AddWeight("be", x => be).AddGradient("dbe", x => dbe)
+                .AddWeight("V", x => v).AddGradient("dV", x => dv)
+                .AddWeight("b", x => b).AddGradient("db", x => db)
+                .AddOperationFinder("i", x => this.computationGraph[$"i_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("f", x => this.computationGraph[$"f_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("cHat", x => this.computationGraph[$"cHat_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("o", x => this.computationGraph[$"o_{x.TimeStep}_{x.Layer}"])
+                .AddOperationFinder("embeddedInput", x => this.computationGraph[$"embeddedInput_{x.TimeStep}_0"])
+                .AddOperationFinder("hFromCurrentTimeStepAndLastLayer", x => this.computationGraph[$"h_{x.TimeStep}_{this.NumLayers - 1}"])
+                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"embeddedInput_{x.TimeStep}_0"] : this.computationGraph[$"h_{x.TimeStep}_{x.Layer - 1}"])
+                .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
+                .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
+                .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
-            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-            await opVisitor.TraverseAsync();
-            await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
+            for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
+            {
+                backwardStartOperation = this.computationGraph[$"output_t_{t}_0"];
+                OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
+                await opVisitor.TraverseAsync();
+                await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
+            }
         }
 
         private async Task AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
@@ -317,11 +331,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             clearer.Clear(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
 
             // Clear intermediates
-            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
+            this.OutputPathFeatures = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
             this.Parameters.InputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.originalInputSize, 1);
 
             this.arrays4D = new Matrix[][][] { this.h, this.c };
-            this.arrays3D = new Matrix[][] { this.Output, this.Parameters.InputSequence };
+            this.arrays3D = new Matrix[][] { this.OutputPathFeatures, this.Parameters.InputSequence };
         }
     }
 }
