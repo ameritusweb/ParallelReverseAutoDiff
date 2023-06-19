@@ -299,7 +299,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             clearer.Clear(this.outputLayers.ToArray());
 
             // Clear intermediates
-            this.Output = CommonMatrixUtils.InitializeZeroMatrix(1, this.NumFeatures);
+            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
             this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
         }
     }

@@ -184,19 +184,14 @@
       ],
       "endoperations": [
         {
-          "id": "output_sum",
-          "type": "MatrixSumOperation",
+          "id": "pre_output",
+          "type": "MatrixTransposeOperation",
           "inputs": [ "output_act_last" ]
         },
         {
-          "id": "output_sum_trans",
-          "type": "MatrixTransposeOperation",
-          "inputs": [ "output_sum" ]
-        },
-        {
-          "id": "output_sum_trans_soft",
-          "type": "SoftmaxOperation",
-          "inputs": [ "output_sum_trans" ],
+          "id": "output_avg",
+          "type": "MatrixAverageOperation",
+          "inputs": [ "pre_output" ],
           "setResultTo": "Output"
         }
       ]
