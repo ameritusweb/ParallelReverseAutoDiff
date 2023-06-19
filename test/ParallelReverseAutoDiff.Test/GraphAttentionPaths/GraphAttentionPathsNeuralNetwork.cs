@@ -84,19 +84,43 @@
             for (int i = 0; i < 7; ++i)
             {
                 this.edgeAttentionNeuralNetwork[i] = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+                this.edgeAttentionNeuralNetwork[i].Initialize();
             }
 
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
                 this.lstmNeuralNetwork[i] = new LstmNeuralNetwork(numFeatures, 500, numFeatures * 2, 1, numLayers, learningRate, clipValue);
+                this.lstmNeuralNetwork[i].Initialize();
             }
 
             this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
+            this.gcnNeuralNetwork.Initialize();
 
             this.attentionMessagePassingNeuralNetwork = new AttentionMessagePassingNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
+            this.attentionMessagePassingNeuralNetwork.Initialize();
 
             this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+            this.readoutNeuralNetwork.Initialize();
+        }
+
+        public void Forward()
+        {
+            foreach (var node in this.gapNodes)
+            {
+                var edgeCount = node.Edges.Count;
+                var input = new Matrix(edgeCount, numFeatures);
+                for (int i = 0; i < edgeCount; ++i)
+                {
+                    for (int j = 0; i < numFeatures; ++i)
+                    {
+                        input[i][j] = node.Edges[i].FeatureVector[j][0];
+                    }
+                }
+                var index = (int)node.GapType;
+                var edgeAttentionNet = this.edgeAttentionNeuralNetwork[index];
+                edgeAttentionNet.AutomaticForwardPropagate(input);
+            }
         }
     }
 }

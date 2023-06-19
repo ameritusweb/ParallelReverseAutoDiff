@@ -187,13 +187,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
+            backwardStartOperation = this.computationGraph["output_avg_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        public void AutomaticForwardPropagate(Matrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();

@@ -117,7 +117,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
+            backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
