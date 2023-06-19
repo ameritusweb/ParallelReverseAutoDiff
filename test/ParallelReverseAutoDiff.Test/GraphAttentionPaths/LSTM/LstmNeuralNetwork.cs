@@ -111,27 +111,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await this.InitializeComputationGraph();
         }
 
-        /// <summary>
-        /// Optimize the neural network.
-        /// </summary>
-        /// <param name="input">The input matrix.</param>
-        /// <param name="target">The target matrix.</param>
-        /// <param name="iterationIndex">The iteration index.</param>
-        /// <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
-        /// <returns>A task.</returns>
-        public async Task Optimize(DeepMatrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
-        {
-            this.Target = target;
-            if (doNotUpdate == null)
-            {
-                doNotUpdate = false;
-            }
-
-            this.Parameters.AdamIteration = iterationIndex + 1;
-
-            await this.AutomaticForwardPropagate(input, doNotUpdate.Value);
-        }
-
         private void ClearState()
         {
 
@@ -239,7 +218,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             }
         }
 
-        private async Task AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        private void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -277,7 +256,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             }
             while (currOp.Next != null);
 
-            await this.AutomaticBackwardPropagate(doNotUpdate);
+            // await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
         private async Task AutomaticBackwardPropagate(bool doNotUpdate)

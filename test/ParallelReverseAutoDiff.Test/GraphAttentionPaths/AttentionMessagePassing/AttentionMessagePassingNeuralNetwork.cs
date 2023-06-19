@@ -80,27 +80,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             await this.InitializeComputationGraph();
         }
 
-        /// <summary>
-        /// Optimize the neural network.
-        /// </summary>
-        /// <param name="input">The input matrix.</param>
-        /// <param name="target">The target matrix.</param>
-        /// <param name="iterationIndex">The iteration index.</param>
-        /// <param name="doNotUpdate">Whether or not the parameters should be updated.</param>
-        /// <returns>A task.</returns>
-        public async Task Optimize(Matrix input, Matrix target, int iterationIndex, bool? doNotUpdate)
-        {
-            this.Target = target;
-            if (doNotUpdate == null)
-            {
-                doNotUpdate = false;
-            }
-
-            this.Parameters.AdamIteration = iterationIndex + 1;
-
-            await this.AutomaticForwardPropagate(input, doNotUpdate.Value);
-        }
-
         private void ClearState()
         {
 
@@ -131,13 +110,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
+            backwardStartOperation = this.computationGraph[$"current_path_features_0_{this.NumLayers - 1}"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private async Task AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        private void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -175,7 +154,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             }
             while (currOp.Next != null);
 
-            await this.AutomaticBackwardPropagate(doNotUpdate);
+            //await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
         private async Task AutomaticBackwardPropagate(bool doNotUpdate)
