@@ -172,6 +172,79 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Calculates the cosine similarity between two vectors.
+        /// </summary>
+        /// <param name="other">The other vector.</param>
+        /// <returns>The cosine similarity.</returns>
+        public double CosineSimilarity(Matrix other)
+        {
+            if (this.matrix.Length != other.matrix.Length || this.matrix[0].Length != 1 || other.matrix[0].Length != 1)
+            {
+                throw new ArgumentException("Both matrices must be vectors of the same size.");
+            }
+
+            double dotProduct = 0.0;
+            double thisMagnitude = 0.0;
+            double otherMagnitude = 0.0;
+
+            for (int i = 0; i < this.matrix.Length; i++)
+            {
+                double thisValue = this.matrix[i][0];
+                double otherValue = other.matrix[i][0];
+
+                dotProduct += thisValue * otherValue;
+                thisMagnitude += Math.Pow(thisValue, 2);
+                otherMagnitude += Math.Pow(otherValue, 2);
+            }
+
+            if (thisMagnitude == 0.0 || otherMagnitude == 0.0)
+            {
+                throw new ArithmeticException("Cosine similarity is not defined if one or both of the vectors are zero-vectors.");
+            }
+
+            return dotProduct / (Math.Sqrt(thisMagnitude) * Math.Sqrt(otherMagnitude));
+        }
+
+        /// <summary>
+        /// Calculate gradient wrt to the cosine similarity between two vectors.
+        /// </summary>
+        /// <param name="other">The other vector.</param>
+        /// <param name="dLoss">The gradient of the loss.</param>
+        /// <returns>The gradient wrt the cosine similarity.</returns>
+        public Matrix GradientWRTCosineSimilarity(Matrix other, double dLoss)
+        {
+            if (this.matrix.Length != other.matrix.Length || this.matrix[0].Length != 1 || other.matrix[0].Length != 1)
+            {
+                throw new ArgumentException("Both matrices must be vectors of the same size.");
+            }
+
+            double dotProduct = 0.0;
+            double thisMagnitude = 0.0;
+            double otherMagnitude = 0.0;
+            Matrix grad = new Matrix(this.matrix.Length, 1);
+
+            for (int i = 0; i < this.matrix.Length; i++)
+            {
+                double thisValue = this.matrix[i][0];
+                double otherValue = other.matrix[i][0];
+
+                dotProduct += thisValue * otherValue;
+                thisMagnitude += Math.Pow(thisValue, 2);
+                otherMagnitude += Math.Pow(otherValue, 2);
+            }
+
+            for (int i = 0; i < this.matrix.Length; i++)
+            {
+                double thisValue = this.matrix[i][0];
+                double otherValue = other.matrix[i][0];
+
+                grad[i][0] = dLoss * ((otherValue / (Math.Sqrt(thisMagnitude) * Math.Sqrt(otherMagnitude))) - ((thisValue * dotProduct) / (Math.Pow(thisMagnitude, 1.5) * Math.Sqrt(otherMagnitude))));
+            }
+
+            return grad;
+        }
+
+        /// <summary>
         /// Retrieves the column at the specified index.
         /// </summary>
         /// <param name="index">The index.</param>
