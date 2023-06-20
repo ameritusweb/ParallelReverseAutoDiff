@@ -29,6 +29,23 @@ namespace ParallelReverseAutoDiff.RMAD
             return new DeepBatchNormalizationOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            var data = new[] { (object)this.input, (object)this.means, (object)this.vars, (object)this.n };
+            this.IntermediateObjectArrays.AddOrUpdate(id, data, (key, oldValue) => data);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateObjectArrays[id];
+            this.input = (DeepMatrix)restored[0];
+            this.means = (double[])restored[1];
+            this.vars = (double[])restored[2];
+            this.n = (double)restored[3];
+        }
+
         /// <summary>
         /// The forward pass of the deep batch normalization operation.
         /// </summary>

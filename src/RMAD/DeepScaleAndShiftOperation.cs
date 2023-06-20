@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -33,6 +34,21 @@ namespace ParallelReverseAutoDiff.RMAD
         public static IDeepOperation Instantiate(NeuralNetwork net)
         {
             return new DeepScaleAndShiftOperation();
+        }
+
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            var data = new[] { (object)this.input, (object)this.beta };
+            this.IntermediateObjectArrays.AddOrUpdate(id, data, (key, oldValue) => data);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateObjectArrays[id];
+            this.input = (DeepMatrix)restored[0];
+            this.beta = (Matrix)restored[1];
         }
 
         /// <summary>

@@ -35,6 +35,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return new DeepMaxPoolOperation(net.Parameters.PoolSize);
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateDeepMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.input = this.IntermediateDeepMatrices[id];
+        }
+
         /// <summary>
         /// The forward pass of the max pooling operation.
         /// </summary>

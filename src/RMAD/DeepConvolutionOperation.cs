@@ -36,6 +36,23 @@ namespace ParallelReverseAutoDiff.RMAD
             return new DeepConvolutionOperation(net.Parameters.ConvolutionPadding);
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            var data = new[] { (object)this.input, (object)this.paddedInput, (object)this.filters, (object)this.padding };
+            this.IntermediateObjectArrays.AddOrUpdate(id, data, (key, oldValue) => data);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateObjectArrays[id];
+            this.input = (DeepMatrix)restored[0];
+            this.paddedInput = (DeepMatrix)restored[1];
+            this.filters = (DeepMatrix[])restored[2];
+            this.padding = (int)restored[3];
+        }
+
         /// <summary>
         /// The forward pass of the operation.
         /// </summary>
