@@ -193,6 +193,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
+        public void StoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.StoreOperationIntermediates(id);
+        }
+
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.RestoreOperationIntermediates(id);
+        }
+
         public void AutomaticForwardPropagate(Matrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates

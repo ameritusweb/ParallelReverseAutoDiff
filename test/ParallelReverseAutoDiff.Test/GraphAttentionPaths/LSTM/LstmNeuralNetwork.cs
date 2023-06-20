@@ -218,7 +218,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             }
         }
 
-        private void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        public void StoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.StoreOperationIntermediates(id);
+        }
+
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.RestoreOperationIntermediates(id);
+        }
+
+        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();

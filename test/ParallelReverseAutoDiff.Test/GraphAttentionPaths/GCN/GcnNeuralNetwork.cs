@@ -49,9 +49,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         }
 
         /// <summary>
-        /// Gets the input matrix.
+        /// Gets the input deep matrix.
         /// </summary>
-        public Matrix Input { get; private set; }
+        public DeepMatrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
@@ -62,6 +62,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// Gets the target matrix.
         /// </summary>
         public Matrix Target { get; private set; }
+
+        /// <summary>
+        /// Gets the adjacency matrix.
+        /// </summary>
+        public Matrix Adjacency { get; set; }
 
         /// <summary>
         /// Gets the number of layers of the neural network.
@@ -113,7 +118,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddIntermediate("Output", x => this.Output[x.Layer])
                 .AddWeight("W", x => w[x.Layer]).AddGradient("DW", x => wGrad[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGrad[x.Layer])
-                .AddOperationFinder("CurrentH", x => x.Layer == 0 ? this.Input : this.computationGraph[$"ah_w_act_0_{x.Layer - 1}"])
+                .AddOperationFinder("Adjacency", _ => Adjacency)
+                .AddOperationFinder("CurrentH", x => x.Layer == 0 ? this.computationGraph["input_trans_0_0"] : this.computationGraph[$"ah_w_act_0_{x.Layer - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
@@ -123,7 +129,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();

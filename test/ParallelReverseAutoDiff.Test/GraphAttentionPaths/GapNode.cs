@@ -9,9 +9,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     public class GapNode
     {
+        public Guid Id { get; set; }
+
         public int PositionX { get; set; }
 
         public int PositionY { get; set; }
+
+        public bool IsInPath { get; set; }
 
         public GapType GapType { get; set; }
 

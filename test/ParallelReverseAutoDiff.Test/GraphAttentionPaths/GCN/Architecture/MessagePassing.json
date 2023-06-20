@@ -1,6 +1,18 @@
 {
   "timeSteps": [
     {
+      "startOperations": [
+        {
+          "id": "input",
+          "type": "MatrixConcatenateOperation",
+          "inputs": [ "Input" ]
+        },
+        {
+          "id": "input_trans",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "input" ]
+        }
+      ],
       "layers": [
         {
           "operations": [

@@ -116,7 +116,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        private void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        public void StoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.StoreOperationIntermediates(id);
+        }
+
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.RestoreOperationIntermediates(id);
+        }
+
+        public void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -157,23 +167,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             //await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        private async Task AutomaticBackwardPropagate(bool doNotUpdate)
+        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
         {
-            var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
-            var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
-            var loss = meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
-            if (loss[0][0] >= 0.0d)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-
-            Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
-            Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_t_0_0"];
@@ -185,11 +180,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
                 traverseCount++;
-            }
-
-            if (traverseCount == 0 || doNotUpdate)
-            {
-                return;
             }
         }
 

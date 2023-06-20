@@ -423,6 +423,28 @@ namespace ParallelReverseAutoDiff.Test.Common
         }
 
         /// <summary>
+        /// Sets the following deep matrix to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlace(DeepMatrix matrix, DeepMatrix value)
+        {
+            int numMatrices = matrix.Depth;
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                for (int j = 0; j < numRows; ++j)
+                {
+                    for (int k = 0; k < numCols; ++k)
+                    {
+                        matrix[i][j][k] = value[i][j][k];
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets the following matrix to the specified values.
         /// </summary>
         /// <param name="matrix">The matrix to replace.</param>
@@ -438,6 +460,23 @@ namespace ParallelReverseAutoDiff.Test.Common
                     matrix[j][k] = value[j][k];
                 }
             }
+        }
+
+        public static bool IsAllZeroes(Matrix matrix)
+        {
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int j = 0; j < numRows; ++j)
+            {
+                for (int k = 0; k < numCols; ++k)
+                {
+                    if (matrix[j][k] != 0.0d)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         /// <summary>
