@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+
     /// <summary>
     /// A leaky ReLU operation.
     /// </summary>
@@ -30,6 +32,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new LeakyReLUOperation(net.Parameters.LeakyReLUAlpha);
+        }
+
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.input = this.IntermediateMatrices[id];
         }
 
         /// <summary>

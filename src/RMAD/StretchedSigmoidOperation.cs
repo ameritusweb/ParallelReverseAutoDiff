@@ -24,6 +24,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return new StretchedSigmoidOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.input = this.IntermediateMatrices[id];
+        }
+
         /// <summary>
         /// Performs the forward operation for the stretched sigmoid activation function.
         /// </summary>

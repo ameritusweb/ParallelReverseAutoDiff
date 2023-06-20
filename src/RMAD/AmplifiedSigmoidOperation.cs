@@ -24,6 +24,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return new AmplifiedSigmoidOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+           this.input = this.IntermediateMatrices[id];
+        }
+
         /// <summary>
         /// The forward pass of the operation.
         /// </summary>

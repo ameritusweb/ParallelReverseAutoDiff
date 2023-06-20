@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+
     /// <summary>
     /// Performs the forward and backward operations for the ReLU activation function.
     /// </summary>
@@ -20,6 +22,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public static IOperation Instantiate(NeuralNetwork net)
         {
             return new ReLUOperation();
+        }
+
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.input = this.IntermediateMatrices[id];
         }
 
         /// <summary>

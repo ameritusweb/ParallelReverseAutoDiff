@@ -24,6 +24,20 @@ namespace ParallelReverseAutoDiff.RMAD
             return new SigmoidOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input, this.Output }, (key, oldValue) => new[] { this.input, this.Output });
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateMatrixArrays[id];
+            this.input = restored[0];
+            this.Output = restored[1];
+        }
+
         /// <summary>
         /// Performs the forward operation for the sigmoid activation function.
         /// </summary>

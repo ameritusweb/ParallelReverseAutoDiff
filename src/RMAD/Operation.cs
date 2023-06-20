@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+
     /// <inheritdoc />
     public abstract class Operation : OperationBase, IOperation
     {

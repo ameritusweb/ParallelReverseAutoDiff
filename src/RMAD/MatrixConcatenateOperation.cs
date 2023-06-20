@@ -25,6 +25,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixConcatenateOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateDeepMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.input = this.IntermediateDeepMatrices[id];
+        }
+
         /// <summary>
         /// Performs the forward operation for the matrix concatenate function.
         /// </summary>

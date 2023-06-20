@@ -23,6 +23,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return new MatrixSumOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrices.AddOrUpdate(id, this.Output, (key, oldValue) => this.Output);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.Output = this.IntermediateMatrices[id];
+        }
+
         /// <summary>
         /// Performs the forward operation for the matrix sum function.
         /// </summary>
