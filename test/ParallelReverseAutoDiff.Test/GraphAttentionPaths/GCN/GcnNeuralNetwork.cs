@@ -170,40 +170,22 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        private async Task AutomaticBackwardPropagate(bool doNotUpdate)
+        public async Task<DeepMatrix> AutomaticBackwardPropagate(Matrix gradient)
         {
-            var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
-            var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
-            var loss = new Matrix(1, 1); // meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
-            if (loss[0][0] >= 0.0d)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-
-            Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
-            Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = new Matrix(1, 1); // (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
             int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
-            if (gradientOfLossWrtOutput[0][0] != 0.0d)
+            backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
+            if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
-                backwardStartOperation.BackwardInput = gradientOfLossWrtOutput;
+                backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
                 traverseCount++;
             }
-
-            if (traverseCount == 0 || doNotUpdate)
-            {
-                return;
-            }
+            IOperationBase? backwardEndOperation = this.computationGraph["input_0_0"];
+            return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
         private void InitializeState()

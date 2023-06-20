@@ -20,7 +20,7 @@ namespace ParallelReverseAutoDiff.Test
                         adjacencyMatrix[i][j] = 1;
                     }
                 }
-                Random rand = GraphAttentionPathsNeuralNetwork.rand;
+                Random rand = new Random(Guid.NewGuid().GetHashCode());
                 List<GapNode> gapNodes = new List<GapNode>();
                 List<GapEdge> gapEdges = new List<GapEdge>();   
                 List<GapPath> gapPaths = new List<GapPath>();

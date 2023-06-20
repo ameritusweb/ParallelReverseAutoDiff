@@ -7,7 +7,6 @@
 
     public class GraphAttentionPathsNeuralNetwork
     {
-        internal static Random rand = new Random(Guid.NewGuid().GetHashCode());
         private List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
         private List<LstmNeuralNetwork> lstmNeuralNetwork;
         private List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
@@ -167,6 +166,28 @@
             var inputGradient = await readoutNet.AutomaticBackwardPropagate(gradientOfLossWrtReadoutOutput);
             var gcnNet = this.gcnNeuralNetwork;
             var gcnInputGradient = await gcnNet.AutomaticBackwardPropagate(inputGradient);
+            List<Matrix> attentionNetGradients = new List<Matrix>();
+            int pathIndex = 0;
+            foreach (var path in this.gapPaths)
+            {
+                var index = (int)path.GapType;
+                var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
+                attentionNet.RestoreOperationIntermediates(path.Id);
+                var attentionGradient = await attentionNet.AutomaticBackwardPropagate(gcnInputGradient[pathIndex]);
+                attentionNetGradients.Add(attentionGradient);
+                pathIndex++;
+            }
+            List<Matrix> lstmNetGradients = new List<Matrix>();
+            pathIndex = 0;
+            foreach (var path in this.gapPaths)
+            {
+                var index = (int)path.GapType;
+                var lstmNet = this.lstmNeuralNetwork[index];
+                lstmNet.RestoreOperationIntermediates(path.Id);
+                var lstmGradient = await lstmNet.AutomaticBackwardPropagate(attentionNetGradients[pathIndex]);
+                lstmNetGradients.Add(lstmGradient);
+                pathIndex++;
+            }
         }
     }
 }
