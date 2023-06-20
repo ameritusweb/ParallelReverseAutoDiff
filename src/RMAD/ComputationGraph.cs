@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Linq;
 
     /// <summary>
     /// A computation graph.
@@ -87,6 +88,32 @@ namespace ParallelReverseAutoDiff.RMAD
                     MatrixType.Intermediate => this.intermediates[identifier](index),
                     _ => throw new ArgumentException("Invalid matrix type."),
                 };
+            }
+        }
+
+        /// <summary>
+        /// Stores the operation intermediates.
+        /// </summary>
+        /// <param name="id">The ID.</param>
+        public void StoreOperationIntermediates(Guid id)
+        {
+            var operations = this.operations.Values;
+            foreach (var operation in operations)
+            {
+                operation.Store(id);
+            }
+        }
+
+        /// <summary>
+        /// Restores the operation intermediates.
+        /// </summary>
+        /// <param name="id">The ID.</param>
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            var operations = this.operations.Values;
+            foreach (var operation in operations)
+            {
+                operation.Restore(id);
             }
         }
 
