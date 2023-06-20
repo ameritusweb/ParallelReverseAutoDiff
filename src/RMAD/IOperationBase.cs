@@ -172,6 +172,18 @@ namespace ParallelReverseAutoDiff.RMAD
         void Reset();
 
         /// <summary>
+        /// Stores the intermediates.
+        /// </summary>
+        /// <param name="id">The ID.</param>
+        void Store(Guid id);
+
+        /// <summary>
+        /// Restores the intermediates.
+        /// </summary>
+        /// <param name="id">The ID.</param>
+        void Restore(Guid id);
+
+        /// <summary>
         /// Send the calculated gradient to the appropriate destination object.
         /// </summary>
         /// <param name="dOutput">The calculated gradients to accumulate.</param>

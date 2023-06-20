@@ -16,6 +16,12 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <inheritdoc />
     public abstract class OperationBase : IOperationBase
     {
+        private ConcurrentDictionary<Guid, Matrix> intermediateMatrices;
+        private ConcurrentDictionary<Guid, Matrix[]> intermediateMatrixArrays;
+        private ConcurrentDictionary<Guid, DeepMatrix> intermediateDeepMatrices;
+        private ConcurrentDictionary<Guid, DeepMatrix[]> intermediateDeepMatrixArrays;
+        private ConcurrentDictionary<Guid, object[]> intermediateObjectArrays;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationBase"/> class.
         /// </summary>
@@ -126,6 +132,61 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         protected DeepMatrix DeepOutput { get; set; }
 
+        /// <summary>
+        /// Gets the property to store the intermediate matrices of the operation.
+        /// </summary>
+        protected ConcurrentDictionary<Guid, Matrix> IntermediateMatrices
+        {
+            get
+            {
+                return this.intermediateMatrices ??= new ConcurrentDictionary<Guid, Matrix>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the property to store the intermediate deep matrices of the operation.
+        /// </summary>
+        protected ConcurrentDictionary<Guid, DeepMatrix> IntermediateDeepMatrices
+        {
+            get
+            {
+                return this.intermediateDeepMatrices ??= new ConcurrentDictionary<Guid, DeepMatrix>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the property to store the intermediate matrix arrays of the operation.
+        /// </summary>
+        protected ConcurrentDictionary<Guid, Matrix[]> IntermediateMatrixArrays
+        {
+            get
+            {
+                return this.intermediateMatrixArrays ??= new ConcurrentDictionary<Guid, Matrix[]>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the property to store the intermediate deep matrix arrays of the operation.
+        /// </summary>
+        protected ConcurrentDictionary<Guid, DeepMatrix[]> IntermediateDeepMatrixArrays
+        {
+            get
+            {
+                return this.intermediateDeepMatrixArrays ??= new ConcurrentDictionary<Guid, DeepMatrix[]>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the property to store the intermediate object arrays of the operation.
+        /// </summary>
+        protected ConcurrentDictionary<Guid, object[]> IntermediateObjectArrays
+        {
+            get
+            {
+                return this.intermediateObjectArrays ??= new ConcurrentDictionary<Guid, object[]>();
+            }
+        }
+
         /// <inheritdoc />
         public void InitializeFrom(OperationInfo info, ConcurrentDictionary<string, Func<LayerInfo, object>> gradients, LayerInfo layerInfo)
         {
@@ -165,6 +226,16 @@ namespace ParallelReverseAutoDiff.RMAD
             this.SyncSemaphore = null;
             this.IsComplete = false;
             this.Tasks?.Clear();
+        }
+
+        /// <inheritdoc />
+        public virtual void Store(Guid id)
+        {
+        }
+
+        /// <inheritdoc />
+        public virtual void Restore(Guid id)
+        {
         }
 
         /// <inheritdoc />

@@ -100,14 +100,20 @@ namespace ParallelReverseAutoDiff.RMAD
             LayerInfo layerInfo = LayerInfo.Empty;
             foreach (var timeStep in architecture.TimeSteps)
             {
-                foreach (var operationInfo in timeStep.StartOperations)
+                if (timeStep.StartOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
-                foreach (var operationInfo in timeStep.EndOperations)
+                if (timeStep.EndOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
             }
 
@@ -125,9 +131,12 @@ namespace ParallelReverseAutoDiff.RMAD
             var layerInfo = LayerInfo.Empty;
             foreach (var timeStep in architecture.TimeSteps)
             {
-                foreach (var operationInfo in timeStep.StartOperations)
+                if (timeStep.StartOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -144,9 +153,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.EndOperations)
+                if (timeStep.EndOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
             }
 
@@ -165,9 +177,12 @@ namespace ParallelReverseAutoDiff.RMAD
             var layerInfo = LayerInfo.Empty;
             foreach (var timeStep in architecture.TimeSteps)
             {
-                foreach (var operationInfo in timeStep.StartOperations)
+                if (timeStep.StartOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -175,9 +190,12 @@ namespace ParallelReverseAutoDiff.RMAD
                     layerInfo.Layer = l;
                     foreach (var layer in timeStep.Layers)
                     {
-                        foreach (var operationInfo in layer.StartOperations)
+                        if (layer.StartOperations != null)
                         {
-                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            foreach (var operationInfo in layer.StartOperations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
                         }
 
                         for (int nl = 0; nl < numNestedLayers; nl++)
@@ -194,18 +212,24 @@ namespace ParallelReverseAutoDiff.RMAD
 
                         layerInfo.NestedLayer = 0;
 
-                        foreach (var operationInfo in timeStep.EndOperations)
+                        if (layer.EndOperations != null)
                         {
-                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            foreach (var operationInfo in layer.EndOperations)
+                            {
+                                this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                            }
                         }
                     }
                 }
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.EndOperations)
+                if (timeStep.EndOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
             }
 
@@ -223,9 +247,12 @@ namespace ParallelReverseAutoDiff.RMAD
             var layerInfo = LayerInfo.Empty;
             foreach (var timeStep in architecture.TimeSteps)
             {
-                foreach (var operationInfo in timeStep.StartOperations)
+                if (timeStep.StartOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -242,9 +269,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.MiddleOperations)
+                if (timeStep.MiddleOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.MiddleOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -261,9 +291,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.EndOperations)
+                if (timeStep.EndOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
             }
 
@@ -281,9 +314,12 @@ namespace ParallelReverseAutoDiff.RMAD
             var layerInfo = LayerInfo.Empty;
             foreach (var timeStep in architecture.TimeSteps)
             {
-                foreach (var operationInfo in timeStep.StartOperations)
+                if (timeStep.StartOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.StartOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -300,9 +336,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.PostFirstOperations)
+                if (timeStep.PostFirstOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.PostFirstOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -319,9 +358,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.PostSecondOperations)
+                if (timeStep.PostSecondOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.PostSecondOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
 
                 for (int l = 0; l < numLayers; l++)
@@ -338,9 +380,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 layerInfo.Layer = 0;
 
-                foreach (var operationInfo in timeStep.EndOperations)
+                if (timeStep.EndOperations != null)
                 {
-                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    foreach (var operationInfo in timeStep.EndOperations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
                 }
             }
 
@@ -362,9 +407,12 @@ namespace ParallelReverseAutoDiff.RMAD
                 layerInfo.TimeStep = t;
                 foreach (var timeStep in architecture.TimeSteps)
                 {
-                    foreach (var operationInfo in timeStep.StartOperations)
+                    if (timeStep.StartOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.StartOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
 
                     for (int l = 0; l < numLayers; l++)
@@ -381,9 +429,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     layerInfo.Layer = 0;
 
-                    foreach (var operationInfo in timeStep.MiddleOperations)
+                    if (timeStep.MiddleOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.MiddleOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
 
                     for (int l = 0; l < numLayers; l++)
@@ -400,9 +451,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     layerInfo.Layer = 0;
 
-                    foreach (var operationInfo in timeStep.EndOperations)
+                    if (timeStep.EndOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.EndOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
                 }
             }
@@ -425,9 +479,12 @@ namespace ParallelReverseAutoDiff.RMAD
                 layerInfo.TimeStep = t;
                 foreach (var timeStep in architecture.TimeSteps)
                 {
-                    foreach (var operationInfo in timeStep.StartOperations)
+                    if (timeStep.StartOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.StartOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
 
                     for (int l = 0; l < numLayers; l++)
@@ -444,9 +501,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     layerInfo.Layer = 0;
 
-                    foreach (var operationInfo in timeStep.PostFirstOperations)
+                    if (timeStep.PostFirstOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.PostFirstOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
 
                     for (int l = 0; l < numLayers; l++)
@@ -463,9 +523,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     layerInfo.Layer = 0;
 
-                    foreach (var operationInfo in timeStep.PostSecondOperations)
+                    if (timeStep.PostSecondOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.PostSecondOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
 
                     for (int l = 0; l < numLayers; l++)
@@ -482,9 +545,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     layerInfo.Layer = 0;
 
-                    foreach (var operationInfo in timeStep.EndOperations)
+                    if (timeStep.EndOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.EndOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
                 }
             }
@@ -507,9 +573,12 @@ namespace ParallelReverseAutoDiff.RMAD
                 layerInfo.TimeStep = t;
                 foreach (var timeStep in architecture.TimeSteps)
                 {
-                    foreach (var operationInfo in timeStep.StartOperations)
+                    if (timeStep.StartOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.StartOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
 
                     for (int l = 0; l < numLayers; l++)
@@ -526,9 +595,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     layerInfo.Layer = 0;
 
-                    foreach (var operationInfo in timeStep.EndOperations)
+                    if (timeStep.EndOperations != null)
                     {
-                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        foreach (var operationInfo in timeStep.EndOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
                     }
                 }
             }

@@ -39,6 +39,23 @@ namespace ParallelReverseAutoDiff.RMAD
             return new SwigLUOperation(net.Parameters.SwigLUBeta);
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input, this.w, this.v, this.b, this.c }, (key, oldValue) => new[] { this.input, this.w, this.v, this.b, this.c });
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateMatrixArrays[id];
+            this.input = restored[0];
+            this.w = restored[1];
+            this.v = restored[2];
+            this.b = restored[3];
+            this.c = restored[4];
+        }
+
         /// <summary>
         /// The forward pass of the SwigLU operation.
         /// </summary>

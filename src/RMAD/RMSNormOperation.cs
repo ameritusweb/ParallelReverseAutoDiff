@@ -25,6 +25,20 @@ namespace ParallelReverseAutoDiff.RMAD
             return new RMSNormOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input, this.g }, (key, oldValue) => new[] { this.input, this.g });
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateMatrixArrays[id];
+            this.input = restored[0];
+            this.g = restored[1];
+        }
+
         /// <summary>
         /// The forward pass of the RMSNorm operation.
         /// </summary>

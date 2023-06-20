@@ -31,6 +31,24 @@ namespace ParallelReverseAutoDiff.RMAD
             return new BatchNormalizationOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateObjectArrays.AddOrUpdate(id, new[] { (object)this.input, (object)this.mean, (object)this.var, (object)this.n, (object)this.numRows, (object)this.numCols }, (key, oldValue) => new[] { (object)this.input, (object)this.mean, (object)this.var, (object)this.n, (object)this.numRows, (object)this.numCols });
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateObjectArrays[id];
+            this.input = (Matrix)restored[0];
+            this.mean = (double)restored[1];
+            this.var = (double)restored[2];
+            this.n = (double)restored[3];
+            this.numRows = (int)restored[4];
+            this.numCols = (int)restored[5];
+        }
+
         /// <summary>
         /// The forward pass of the batch normalization operation.
         /// </summary>

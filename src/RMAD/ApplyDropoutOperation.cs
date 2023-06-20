@@ -37,6 +37,18 @@ namespace ParallelReverseAutoDiff.RMAD
             return new ApplyDropoutOperation(net.Parameters.DropoutRate);
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrices.AddOrUpdate(id, this.dropoutMask, (key, oldValue) => this.dropoutMask);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.dropoutMask = this.IntermediateMatrices[id];
+        }
+
         /// <summary>
         /// The forward pass of the apply dropout operation.
         /// </summary>

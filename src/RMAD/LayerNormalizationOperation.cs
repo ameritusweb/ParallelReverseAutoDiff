@@ -31,6 +31,23 @@ namespace ParallelReverseAutoDiff.RMAD
             return new LayerNormalizationOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateObjectArrays.AddOrUpdate(id, new[] { (object)this.input, (object)this.mean, (object)this.stdDev, (object)this.numRows, (object)this.numCols }, (key, oldValue) => new[] { (object)this.input, (object)this.mean, (object)this.stdDev, (object)this.numRows, (object)this.numCols });
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateObjectArrays[id];
+            this.input = (Matrix)restored[0];
+            this.mean = (double[])restored[1];
+            this.stdDev = (double[])restored[2];
+            this.numRows = (int)restored[3];
+            this.numCols = (int)restored[4];
+        }
+
         /// <summary>
         /// The forward pass of the layer normalization operation.
         /// </summary>
