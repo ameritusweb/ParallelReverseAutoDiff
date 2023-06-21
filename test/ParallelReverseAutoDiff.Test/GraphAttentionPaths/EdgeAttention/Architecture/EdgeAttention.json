@@ -107,7 +107,7 @@
             {
               "id": "concatenated",
               "type": "MatrixConcatenateOperation",
-              "inputs": [ "AV" ]
+              "inputs": [ "attention_weights_values_array" ]
             },
             {
               "id": "reduce",

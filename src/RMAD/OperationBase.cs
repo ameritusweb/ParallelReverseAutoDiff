@@ -69,6 +69,9 @@ namespace ParallelReverseAutoDiff.RMAD
         public string SpecificId { get; set; }
 
         /// <inheritdoc />
+        public string NestedSpecificId { get; set; }
+
+        /// <inheritdoc />
         public object[] GradientDestinations { get; set; }
 
         /// <inheritdoc />

@@ -20,9 +20,9 @@
         /// Lifecycle method to setup the dependencies of the computation graph.
         /// </summary>
         /// <param name="operation">The operation.</param>
-        protected override void DependenciesSetup(IOperationBase operation)
+        protected override void DependenciesSetup(IOperationBase operation, LayerInfo layerInfo)
         {
-            base.DependenciesSetup(operation);
+            base.DependenciesSetup(operation, layerInfo);
         }
     }
 }

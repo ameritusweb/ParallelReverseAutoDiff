@@ -2,6 +2,7 @@
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
 using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
+using System.Diagnostics;
 
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
 {
@@ -95,6 +96,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         public Matrix Target { get; private set; }
 
         /// <summary>
+        /// Gets the AV matrix array.
+        /// </summary>
+        public Matrix[] AV { get; private set; }
+
+        /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
@@ -175,15 +181,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             this.computationGraph = new EdgeAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddWeight("Keys", x => keys[x.Layer]).AddGradient("Keys", x => keysGradient[x.Layer])
-                .AddBias("KB", x => keysBias[x.Layer]).AddGradient("KB", x => keysBiasGradient[x.Layer])
-                .AddWeight("Values", x => values[x.Layer]).AddGradient("Values", x => valuesGradient[x.Layer])
-                .AddBias("VB", x => valuesBias[x.Layer]).AddGradient("VB", x => valuesBiasGradient[x.Layer])
-                .AddWeight("Queries", x => queries[x.Layer][x.NestedLayer]).AddGradient("Queries", x => queriesGradient[x.Layer][x.NestedLayer])
-                .AddBias("QB", x => queriesBias[x.Layer][x.NestedLayer]).AddGradient("QB", x => queriesBiasGradient[x.Layer][x.NestedLayer])
-                .AddWeight("R", x => reduce[x.Layer]).AddGradient("R", x => reduceGradient[x.Layer])
-                .AddBias("RB", x => reduceBias[x.Layer]).AddGradient("RB", x => reduceBiasGradient[x.Layer])
+                .AddIntermediate("AV", x => this.AV[x.Layer])
+                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2 + x.Layer))
+                .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])
+                .AddBias("KB", x => keysBias[x.Layer]).AddGradient("DKB", x => keysBiasGradient[x.Layer])
+                .AddWeight("Values", x => values[x.Layer]).AddGradient("DValues", x => valuesGradient[x.Layer])
+                .AddBias("VB", x => valuesBias[x.Layer]).AddGradient("DVB", x => valuesBiasGradient[x.Layer])
+                .AddWeight("Queries", x => queries[x.Layer][x.NestedLayer]).AddGradient("DQueries", x => queriesGradient[x.Layer][x.NestedLayer])
+                .AddBias("QB", x => queriesBias[x.Layer][x.NestedLayer]).AddGradient("DQB", x => queriesBiasGradient[x.Layer][x.NestedLayer])
+                .AddWeight("R", x => reduce[x.Layer]).AddGradient("DR", x => reduceGradient[x.Layer])
+                .AddBias("RB", x => reduceBias[x.Layer]).AddGradient("DRB", x => reduceBiasGradient[x.Layer])
                 .AddOperationFinder("edgeFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
+                .AddOperationFinder("attention_weights_values_array", x => this.computationGraph.ToOperationArray("attention_weights_values", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumLayers - 1)))
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 
             IOperationBase? backwardStartOperation = null;
@@ -262,6 +271,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             clearer.Clear(this.inputLayers.ToArray());
             clearer.Clear(this.nestedLayers.ToArray());
             clearer.Clear(this.outputLayers.ToArray());
+
+            this.AV = new Matrix[this.NumLayers];
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                this.AV[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
+            }
 
             // Clear intermediates
             this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);

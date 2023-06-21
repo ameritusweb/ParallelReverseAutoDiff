@@ -18,6 +18,33 @@ namespace ParallelReverseAutoDiff.RMAD
         public static readonly LayerInfo Empty;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LayerInfo"/> struct.
+        /// </summary>
+        /// <param name="timeStep">The time step.</param>
+        /// <param name="layer">The layer.</param>
+        /// <param name="nestedLayer">The nested layer.</param>
+        public LayerInfo(int timeStep, int layer, int nestedLayer)
+        {
+            this.TimeStep = timeStep;
+            this.Layer = layer;
+            this.NestedLayer = nestedLayer;
+            this.Type = LayerInfoType.Nested;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LayerInfo"/> struct.
+        /// </summary>
+        /// <param name="timeStep">The time step.</param>
+        /// <param name="layer">The layer.</param>
+        public LayerInfo(int timeStep, int layer)
+        {
+            this.TimeStep = timeStep;
+            this.Layer = layer;
+            this.NestedLayer = default(int);
+            this.Type = LayerInfoType.Normal;
+        }
+
+        /// <summary>
         /// Gets or sets the time step.
         /// </summary>
         public int TimeStep { get; set; }
@@ -31,6 +58,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets or sets the nested layer index.
         /// </summary>
         public int NestedLayer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the layer info type.
+        /// </summary>
+        public LayerInfoType Type { get; set; }
 
         /// <summary>
         /// Determines whether the specified object is equal to the current <see cref="LayerInfo"/>.

@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -89,6 +90,65 @@ namespace ParallelReverseAutoDiff.RMAD
                     _ => throw new ArgumentException("Invalid matrix type."),
                 };
             }
+        }
+
+        /// <summary>
+        /// Retrieve an array of operations starting from the start position inclusive, and ending at the end position inclusive.
+        /// </summary>
+        /// <param name="identifier">The identifier not including the time step or layer.</param>
+        /// <param name="start">The start position.</param>
+        /// <param name="end">The end position.</param>
+        /// <returns>The array of operations.</returns>
+        public IOperationBase[] ToOperationArray(string identifier, LayerInfo start, LayerInfo end)
+        {
+            List<IOperationBase> operationList = new List<IOperationBase>();
+
+            for (int t = start.TimeStep; t <= end.TimeStep; ++t)
+            {
+                int startLayer = t == start.TimeStep ? start.Layer : 0;
+                int l = startLayer;
+                while (true)
+                {
+                    // If not nested, directly check operation with layer
+                    if (start.Type != LayerInfoType.Nested)
+                    {
+                        var key = $"{identifier}_{t}_{l}";
+                        if (!this.operations.ContainsKey(key))
+                        {
+                            break;  // Break the loop if no operation for the current layer index.
+                        }
+
+                        operationList.Add(this.operations[key]);
+                        l++;
+                        continue;  // Continue the loop if operation found
+                    }
+
+                    // If it is nested, check operations with nested layers
+                    int startNestedLayer = t == start.TimeStep && l == startLayer ? start.NestedLayer : 0;
+                    int nl = startNestedLayer;
+                    while (true)
+                    {
+                        var key = $"{identifier}_{t}_{l}_{nl}";
+                        if (!this.operations.ContainsKey(key))
+                        {
+                            break;  // Break the inner loop if no operation for the current nested layer index.
+                        }
+
+                        operationList.Add(this.operations[key]);
+                        nl++;
+                    }
+
+                    // If the nested layer index didn't increase, there's no operation for the current layer index.
+                    if (nl == startNestedLayer)
+                    {
+                        break;  // Break the outer loop
+                    }
+
+                    l++;
+                }
+            }
+
+            return operationList.ToArray();
         }
 
         /// <summary>
@@ -225,6 +285,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             }
                         }
 
+                        layerInfo.Type = LayerInfoType.Nested;
                         for (int nl = 0; nl < numNestedLayers; nl++)
                         {
                             layerInfo.NestedLayer = nl;
@@ -238,6 +299,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
 
                         layerInfo.NestedLayer = 0;
+                        layerInfo.Type = LayerInfoType.Normal;
 
                         if (layer.EndOperations != null)
                         {
@@ -796,8 +858,8 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.OperationAdded(operation, info);
             this.InitializeOperation(operation, info, layerInfo);
-            this.operations.TryAdd(operation.SpecificId, operation);
-            this.SetupDependencies(operation);
+            this.operations.TryAdd(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId, operation);
+            this.SetupDependencies(operation, layerInfo);
             return this;
         }
 
@@ -960,16 +1022,18 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Setup dependencies for the operation.
         /// </summary>
         /// <param name="operation">The operation to setup.</param>
-        protected void SetupDependencies(IOperationBase operation)
+        /// <param name="layerInfo">The layer info.</param>
+        protected void SetupDependencies(IOperationBase operation, LayerInfo layerInfo)
         {
-            this.DependenciesSetup(operation);
+            this.DependenciesSetup(operation, layerInfo);
         }
 
         /// <summary>
         /// Lifecycle method for when the dependencies are setup for an operation.
         /// </summary>
         /// <param name="operation">The operation.</param>
-        protected virtual void DependenciesSetup(IOperationBase operation)
+        /// <param name="layerInfo">The layer info.</param>
+        protected virtual void DependenciesSetup(IOperationBase operation, LayerInfo layerInfo)
         {
             object[] parameters = new object[operation.Inputs.Count];
             for (int j = 0; j < operation.Inputs.Count; ++j)
@@ -977,11 +1041,11 @@ namespace ParallelReverseAutoDiff.RMAD
                 var input = operation.Inputs[j];
                 var split = input.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
                 var inputName = split[0];
-                var specificId = inputName + operation.LayerInfo.ToString();
+                var specificId = inputName + (layerInfo.Type == LayerInfoType.Normal ? operation.LayerInfo.ToString() : operation.LayerInfo.ToNestedString());
                 if (this.operations.ContainsKey(specificId))
                 {
                     var inputOp = this.operations[specificId];
-                    inputOp.Outputs.Add(operation.SpecificId);
+                    inputOp.Outputs.Add(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId);
                     operation.BackwardAdjacentOperations.Add(inputOp);
                     parameters[j] = inputOp;
                     continue;
@@ -993,9 +1057,19 @@ namespace ParallelReverseAutoDiff.RMAD
                     var finder = this.operationFinders[inputName](operation.LayerInfo);
                     if (finder is IOperationBase op)
                     {
-                        op.Outputs.Add(operation.SpecificId);
+                        op.Outputs.Add(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId);
                         operation.BackwardAdjacentOperations.Add(op);
                         parameters[j] = op;
+                    }
+                    else if (finder is IOperationBase[] opArray)
+                    {
+                        foreach (var op2 in opArray)
+                        {
+                            op2.Outputs.Add(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId);
+                            operation.BackwardAdjacentOperations.Add(op2);
+                        }
+
+                        parameters[j] = opArray;
                     }
                     else
                     {

@@ -57,6 +57,11 @@ namespace ParallelReverseAutoDiff.RMAD
         string SpecificId { get; set; }
 
         /// <summary>
+        /// Gets or sets the nested specific ID of the operation.
+        /// </summary>
+        string NestedSpecificId { get; set; }
+
+        /// <summary>
         /// Gets or sets the parameters to the Forward function for this operation.
         /// </summary>
         object[] Parameters { get; set; }
