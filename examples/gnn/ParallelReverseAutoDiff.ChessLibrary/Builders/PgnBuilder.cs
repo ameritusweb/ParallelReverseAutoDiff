@@ -114,10 +114,14 @@ namespace Chess
             StringBuilder builder = new();
 
             foreach (var header in board.headers)
+            {
                 builder.Append('[' + header.Key + @" """ + header.Value + '"' + ']' + '\n');
+            }
 
             if (board.headers.Count > 0)
+            {
                 builder.Append('\n');
+            }
 
             // Needed for moves count logic
             board.moveIndex = -1;
@@ -130,7 +134,10 @@ namespace Chess
                     count = board.GetFullMovesCount();
 
                     // Add space before move count if not first move
-                    if (i != 0) builder.Append(' ');
+                    if (i != 0)
+                    {
+                        builder.Append(' ');
+                    }
 
                     builder.Append(count + ".");
                 }
@@ -139,7 +146,9 @@ namespace Chess
                 {
                     // From position?
                     if (board.LoadedFromFen && board.FenBuilder.Turn == PieceColor.Black)
+                    {
                         builder.Append("..");
+                    }
                 }
 
                 builder.Append(' ' + board.executedMoves[i].San);
@@ -150,11 +159,17 @@ namespace Chess
             if (board.IsEndGame)
             {
                 if (board.EndGame.WonSide == PieceColor.White)
+                {
                     builder.Append(" 1-0");
+                }
                 else if (board.EndGame.WonSide == PieceColor.Black)
+                {
                     builder.Append(" 0-1");
+                }
                 else
+                {
                     builder.Append(" 1/2-1/2");
+                }
             }
 
             // Back to positions

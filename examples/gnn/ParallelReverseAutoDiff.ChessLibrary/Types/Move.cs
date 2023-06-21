@@ -110,11 +110,16 @@ namespace Chess
             var matches = Regexes.RegexMove.Matches(move.ToLower());
 
             if (matches.Count < 1)
+            {
                 throw new ChessArgumentException(null, "Move should match pattern: " + Regexes.MovePattern);
+            }
 
             foreach (var group in matches[0].Groups.OfType<Group>())
             {
-                if (!group.Success) continue;
+                if (!group.Success)
+                {
+                    continue;
+                }
 
                 switch (group.Name)
                 {
@@ -135,14 +140,18 @@ namespace Chess
                         break;
                     case "10":
                         if (group.Value == "+")
+                        {
                             IsCheck = true;
+                        }
                         else if (group.Value == "#")
                         {
                             IsCheck = true;
                             IsMate = true;
                         }
                         else if (group.Value == "$")
+                        {
                             IsMate = true;
+                        }
                         break;
                 }
             }
@@ -172,16 +181,22 @@ namespace Chess
         internal Move(Move source)
         {
             if (source.Piece is not null)
+            {
                 Piece = new Piece(source.Piece);
+            }
 
             OriginalPosition = new Position(source.OriginalPosition.X, source.OriginalPosition.Y);
             NewPosition = new Position(source.NewPosition.X, source.NewPosition.Y);
 
             if (source.CapturedPiece is not null)
+            {
                 CapturedPiece = new Piece(source.CapturedPiece);
+            }
 
             if (source.Parameter is not null)
+            {
                 Parameter = IMoveParameter.FromString(source.Parameter.ShortStr);
+            }
 
             IsCheck = source.IsCheck;
             IsMate = source.IsMate;
@@ -209,25 +224,37 @@ namespace Chess
             builder.Append('{');
 
             if (Piece is not null)
+            {
                 builder.Append(Piece + " - ");
+            }
 
             builder.Append(OriginalPosition + " - " + NewPosition);
 
             if (CapturedPiece is not null)
+            {
                 builder.Append(" - " + CapturedPiece);
+            }
 
             if (Parameter is not null)
+            {
                 builder.Append(" - " + Parameter.ShortStr);
+            }
 
             if (IsCheck)
             {
                 if (IsMate)
+                {
                     builder.Append(" - #");
+                }
                 else
+                {
                     builder.Append(" - +");
+                }
             }
             else if (IsMate)
+            {
                 builder.Append(" - $");
+            }
 
             builder.Append('}');
 

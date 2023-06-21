@@ -63,10 +63,14 @@ namespace Chess
             var matches = Regexes.RegexFen.Matches(fen);
 
             if (matches.Count == 0)
+            {
                 return (false, new ChessArgumentException(null, "FEN board string should match pattern: " + Regexes.FenPattern));
+            }
 
             if (!Regexes.RegexFenContainsOneWhiteKing.IsMatch(fen) || !Regexes.RegexFenContainsOneBlackKing.IsMatch(fen))
+            {
                 return (false, new ChessArgumentException(null, "Chess board should have exact 1 white king and exact 1 black king"));
+            }
 
             builder = new FenBoardBuilder();
 
@@ -232,7 +236,9 @@ namespace Chess
                 for (int j = 0; j < 8 && offset < span.Length; j++)
                 {
                     if (pieces[i, j] is null)
+                    {
                         emptySquaresCount++;
+                    }
                     else
                     {
                         if (emptySquaresCount > 0)
@@ -246,10 +252,14 @@ namespace Chess
                 }
 
                 if (emptySquaresCount > 0)
+                {
                     span[offset++] = (char)('0' + emptySquaresCount);
+                }
 
                 if (i - 1 >= 0)
+                {
                     span[offset++] = '/';
+                }
 
                 i--;
             }
@@ -267,13 +277,28 @@ namespace Chess
             Span<char> span = stackalloc char[4]; // Max lenght is 4
             int offset = 0;
 
-            if (CastleWK) span[offset++] = 'K';
-            if (CastleWQ) span[offset++] = 'Q';
-            if (CastleBK) span[offset++] = 'k';
-            if (CastleBQ) span[offset++] = 'q';
+            if (CastleWK)
+            {
+                span[offset++] = 'K';
+            }
+            if (CastleWQ)
+            {
+                span[offset++] = 'Q';
+            }
+            if (CastleBK)
+            {
+                span[offset++] = 'k';
+            }
+            if (CastleBQ)
+            {
+                span[offset++] = 'q';
+            }
 
             // Castling not available
-            if (offset == 0) span[offset++] = '-';
+            if (offset == 0)
+            {
+                span[offset++] = '-';
+            }
 
             return new string(span.Slice(0, offset));
         }
@@ -281,7 +306,9 @@ namespace Chess
         private string GetEnPassantTargetSquare()
         {
             if (EnPassant.HasValue)
+            {
                 return EnPassant.ToString();
+            }
 
             return "-";
         }

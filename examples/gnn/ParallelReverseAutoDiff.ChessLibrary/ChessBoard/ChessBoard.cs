@@ -73,10 +73,13 @@ namespace Chess
             get
             {
                 if (LoadedFromFen)
+                {
                     return DisplayedMoves.Count % 2 == 0 ? FenBuilder.Turn : FenBuilder.Turn.OppositeColor();
+                }
                 else
+                {
                     return DisplayedMoves.Count % 2 == 0 ? PieceColor.White : PieceColor.Black;
-
+                }
             }
         }
 
@@ -177,7 +180,9 @@ namespace Chess
                 var captured = new List<Piece>();
 
                 if (LoadedFromFen)
+                {
                     captured.AddRange(FenBuilder!.WhiteCaptured);
+                }
 
                 captured.AddRange(DisplayedMoves.Where(m => m.CapturedPiece?.Color == PieceColor.White)
                                                 .Select(m => new Piece(m.CapturedPiece.Color, m.CapturedPiece.Type)));
@@ -309,9 +314,13 @@ namespace Chess
             set
             {
                 if (value < executedMoves.Count && value >= -1)
+                {
                     DisplayMoves(executedMoves.GetRange(0, value + 1));
+                }
                 else
+                {
                     throw new IndexOutOfRangeException("Move not found");
+                }
             }
         }
 
@@ -404,20 +413,28 @@ namespace Chess
         public bool Move(Move move)
         {
             if (IsEndGame)
+            {
                 throw new ChessGameEndedException(this, EndGame);
+            }
 
             if (!IsLastMoveDisplayed)
+            {
                 throw new ChessInvalidMoveException(this, "Please use board.DisplayLastMove(); to be able to perform new moves in this chess game", move);
+            }
 
             if (IsValidMove(move, this, true, true))
             {
                 if (move.San is null)
+                {
                     ParseToSan(move);
+                }
 
                 executedMoves.Add(move);
 
                 if (move.CapturedPiece is not null)
+                {
                     OnCapturedEvent(move.CapturedPiece);
+                }
 
                 DropPieceToNewPosition(move);
 
@@ -461,12 +478,18 @@ namespace Chess
         public void AddHeader(string name, string value)
         {
             if (string.IsNullOrWhiteSpace(name))
+            {
                 throw new ArgumentNullException(nameof(name));
+            }
             if (string.IsNullOrWhiteSpace(value))
+            {
                 throw new ArgumentNullException(nameof(value));
+            }
 
             if (name.ToLower() == "fen")
+            {
                 throw new ChessArgumentException(this, "To load game from fen please use: board.LoadFen();");
+            }
 
             headers.Add(name, value);
         }
@@ -478,7 +501,9 @@ namespace Chess
         public void RemoveHeader(string name)
         {
             if (name.ToLower() == "fen")
+            {
                 throw new ChessArgumentException(this, "Could not remove FEN header from current game: FEN header required when loaded from FEN...");
+            }
 
             headers.Remove(name);
         }
@@ -539,9 +564,13 @@ namespace Chess
                 var fen = this.ToFen();
 
                 if (move.Parameter is not null)
+                {
                     move.Parameter.Undo(move, this);
+                }
                 else
+                {
                     RestorePiece(move, this);
+                }
 
                 executedMoves.RemoveAt(executedMoves.Count - 1);
                 moveIndex = executedMoves.Count - 1;
@@ -589,7 +618,9 @@ namespace Chess
         public void Resign(PieceColor resignedSide)
         {
             if (IsEndGame)
+            {
                 throw new ChessGameEndedException(this, EndGame);
+            }
 
             EndGame = new EndGameInfo(EndgameType.Resigned, resignedSide.OppositeColor());
         }
@@ -601,7 +632,9 @@ namespace Chess
         public void Draw()
         {
             if (IsEndGame)
+            {
                 throw new ChessGameEndedException(this, EndGame);
+            }
 
             EndGame = new EndGameInfo(EndgameType.DrawDeclared, null);
         }
@@ -649,12 +682,18 @@ namespace Chess
         private void DisplayMoves(List<Move> moves)
         {
             if (LoadedFromFen)
+            {
                 pieces = FenBuilder.Pieces;
+            }
             else
+            {
                 SetChessBeginSituation();
+            }
 
             for (int i = 0; i < moves.Count; i++)
+            {
                 DropPieceToNewPosition(moves[i]);
+            }
 
             moveIndex = moves.Count - 1;
 
@@ -673,10 +712,14 @@ namespace Chess
             if (moveIndex >= 0 && executedMoves[moveIndex].IsCheck)
             {
                 if (executedMoves[moveIndex].Piece.Color == PieceColor.White)
+                {
                     BlackKingChecked = true;
+                }
 
                 else if (executedMoves[moveIndex].Piece.Color == PieceColor.Black)
+                {
                     WhiteKingChecked = true;
+                }
             }
             else if (LoadedFromFen)
             {

@@ -53,9 +53,13 @@ namespace Chess
                     builder.Append(' ');
 
                     if (pieces[i, j] is not null)
+                    {
                         builder.Append(pieces[i, j].ToFenChar());
+                    }
                     else
+                    {
                         builder.Append('.');
+                    }
 
                     builder.Append(' ');
                 }
@@ -72,9 +76,13 @@ namespace Chess
                 builder.Append("  Turn: " + Turn + '\n');
 
                 if (CapturedWhite.Length > 0)
+                {
                     builder.Append("  White Captured: " + string.Join(", ", CapturedWhite.Select(p => p.ToFenChar())) + '\n');
+                }
                 if (CapturedBlack.Length > 0)
+                {
                     builder.Append("  Black Captured: " + string.Join(", ", CapturedBlack.Select(p => p.ToFenChar())) + '\n');
+                }
             }
 
             return builder.ToString();
@@ -85,12 +93,18 @@ namespace Chess
             int index = LastIrreversibleMoveIndex;
 
             if (LoadedFromFen && index < 0)
+            {
                 return FenBuilder!.HalfMoves + moveIndex + 1;
+            }
 
             if (index >= 0)
+            {
                 return moveIndex - index;
+            }
             else
+            {
                 return moveIndex + 1;
+            }
         }
 
         internal int GetFullMovesCount()
@@ -98,7 +112,9 @@ namespace Chess
             var count = 0;
 
             if (LoadedFromFen)
+            {
                 count += (FenBuilder.FullMoves * 2) + (FenBuilder.Turn == PieceColor.Black ? 1 : 0) - 2;
+            }
 
             return (moveIndex + count + 3) / 2;
         }
