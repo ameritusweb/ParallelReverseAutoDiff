@@ -124,10 +124,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return clone;
         }
 
-        /// <summary>
-        /// Takes the average of two model layers.
-        /// </summary>
-        /// <param name="layer">The other model layer.</param>
+        /// <inheritdoc />
         public void Average(IModelLayer layer)
         {
             IAverageableModelLayer other = (IAverageableModelLayer)layer;
@@ -145,10 +142,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        /// <summary>
-        /// Averages the gradients of two model layers.
-        /// </summary>
-        /// <param name="layer">The other model layer.</param>
+        /// <inheritdoc />
         public void AverageGradients(IModelLayer layer)
         {
             IAverageableModelLayer other = (IAverageableModelLayer)layer;

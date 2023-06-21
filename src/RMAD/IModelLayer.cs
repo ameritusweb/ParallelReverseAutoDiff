@@ -7,7 +7,6 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Collections.Generic;
     using System.IO;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Am interface to a model layer.
