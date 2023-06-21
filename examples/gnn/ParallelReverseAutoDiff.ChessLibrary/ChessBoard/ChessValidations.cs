@@ -63,14 +63,24 @@ namespace Chess
         internal static bool IsValidMove(Move move, ChessBoard board, bool raise, bool checkTurn)
         {
             if (move is null || !move.HasValue)
+            {
                 throw new ArgumentNullException(nameof(move));
+            }
 
             if (board.pieces[move.OriginalPosition.Y, move.OriginalPosition.X] is null)
+            {
                 throw new ChessPieceNotFoundException(board, move.OriginalPosition);
+            }
 
-            if (checkTurn && board.pieces[move.OriginalPosition.Y, move.OriginalPosition.X].Color != board.Turn) return false;
+            if (checkTurn && board.pieces[move.OriginalPosition.Y, move.OriginalPosition.X].Color != board.Turn)
+            {
+                return false;
+            }
 
-            if (move.OriginalPosition == move.NewPosition) return false;
+            if (move.OriginalPosition == move.NewPosition)
+            {
+                return false;
+            }
 
             move.Piece = board.pieces[move.OriginalPosition.Y, move.OriginalPosition.X];
             move.IsCheck = false;
@@ -163,8 +173,12 @@ namespace Chess
                 short step = (short)(castle.CastleType == CastleType.King ? 1 : -1);
 
                 for (short i = kingPos.GetValueOrDefault().X; i < 7 && i > 1; i += step)
+                {
                     if (IsKingCheckedValidation(new(kingPos.GetValueOrDefault(), new() { Y = kingPos.GetValueOrDefault().Y, X = i }), side, board))
+                    {
                         return true;
+                    }
+                }
 
                 return false;
             }
@@ -183,7 +197,9 @@ namespace Chess
 
             // move in Validation => King is being captured!
             if (!kingPos.HasValue)
+            {
                 return false;
+            }
 
             for (short i = 0; i < 8; i++)
             {
@@ -191,10 +207,15 @@ namespace Chess
                 {
                     if (board.pieces[i, j] is not null && board.pieces[i, j]?.Color != side)
                     {
-                        if (kingPos.GetValueOrDefault().X == j && kingPos.GetValueOrDefault().Y == i) continue;
+                        if (kingPos.GetValueOrDefault().X == j && kingPos.GetValueOrDefault().Y == i)
+                        {
+                            continue;
+                        }
 
                         if (IsValidMove(new Move(new Position { Y = i, X = j }, kingPos.GetValueOrDefault()) { Piece = board.pieces[i, j], }, board))
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -228,7 +249,9 @@ namespace Chess
                         {
                             var move = new Move(fromPosition, position) { Piece = board.pieces[i, j]! };
                             if (!IsKingCheckedValidation(move, side, board))
+                            {
                                 return true;
+                            }
                         }
                     }
                 }
@@ -341,7 +364,10 @@ namespace Chess
             {
                 return pieces[move.NewPosition.Y, move.NewPosition.X]?.Color != move.Piece.Color;
             }
-            else return false;
+            else
+            {
+                return false;
+            }
         }
 
         private static bool BishopValidation(Move move, Piece?[,] pieces)
@@ -394,7 +420,9 @@ namespace Chess
                             if (move.NewPosition.X == 0 || move.NewPosition.X == 2)
                             {
                                 if (!HasRightToCastle(PieceColor.White, CastleType.Queen, board))
+                                {
                                     return false;
+                                }
 
                                 if (board.pieces[0, 1] is null && board.pieces[0, 2] is null && board.pieces[0, 3] is null)
                                 {
@@ -406,7 +434,9 @@ namespace Chess
                             else if (move.NewPosition.X == 7 || move.NewPosition.X == 6)
                             {
                                 if (!HasRightToCastle(PieceColor.White, CastleType.King, board))
+                                {
                                     return false;
+                                }
 
                                 if (board.pieces[0, 5] is null && board.pieces[0, 6] is null)
                                 {
@@ -420,7 +450,9 @@ namespace Chess
                             if (move.NewPosition.X == 0 || move.NewPosition.X == 2)
                             {
                                 if (!HasRightToCastle(PieceColor.Black, CastleType.Queen, board))
+                                {
                                     return false;
+                                }
 
                                 if (board.pieces[7, 1] is null && board.pieces[7, 2] is null && board.pieces[7, 3] is null)
                                 {
@@ -432,7 +464,9 @@ namespace Chess
                             else if (move.NewPosition.X == 7 || move.NewPosition.X == 6)
                             {
                                 if (!HasRightToCastle(PieceColor.Black, CastleType.King, board))
+                                {
                                     return false;
+                                }
 
                                 if (board.pieces[7, 5] is null && board.pieces[7, 6] is null)
                                 {
@@ -456,23 +490,35 @@ namespace Chess
                 if (side == PieceColor.White)
                 {
                     if (castleType == CastleType.King)
+                    {
                         valid = board.FenBuilder.CastleWK;
+                    }
                     else if (castleType == CastleType.Queen)
+                    {
                         valid = board.FenBuilder.CastleWQ;
+                    }
                 }
                 else if (side == PieceColor.Black)
                 {
                     if (castleType == CastleType.King)
+                    {
                         valid = board.FenBuilder.CastleBK;
+                    }
                     else if (castleType == CastleType.Queen)
+                    {
                         valid = board.FenBuilder.CastleBQ;
+                    }
                 }
 
                 if (valid && board.moveIndex >= 0)
+                {
                     valid = ValidByMoves();
+                }
             }
             else
+            {
                 valid = ValidByMoves();
+            }
 
             return valid;
 
