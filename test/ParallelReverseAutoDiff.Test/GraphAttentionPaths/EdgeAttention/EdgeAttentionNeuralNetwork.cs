@@ -240,43 +240,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 }
             }
             while (currOp.Next != null);
-
-            // await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        private async Task AutomaticBackwardPropagate(bool doNotUpdate)
+        public async Task AutomaticBackwardPropagate(Matrix gradient)
         {
-            var lossFunction = MeanSquaredErrorLossOperation.Instantiate(this);
-            var meanSquaredErrorLossOperation = (MeanSquaredErrorLossOperation)lossFunction;
-            var loss = meanSquaredErrorLossOperation.Forward(this.Output, this.Target);
-            if (loss[0][0] >= 0.0d)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-
-            Console.WriteLine($"Mean squared error loss: {loss[0][0]}");
-            Console.ForegroundColor = ConsoleColor.White;
-            var gradientOfLossWrtOutput = (lossFunction.Backward(this.Output).Item1 as Matrix) ?? throw new Exception("Gradient of the loss wrt the output should not be null.");
-            int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
-            if (gradientOfLossWrtOutput[0][0] != 0.0d)
+            backwardStartOperation = this.computationGraph["output_avg_0_0"];
+            if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
-                backwardStartOperation.BackwardInput = gradientOfLossWrtOutput;
+                backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
-                traverseCount++;
-            }
-
-            if (traverseCount == 0 || doNotUpdate)
-            {
-                return;
             }
         }
 

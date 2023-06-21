@@ -121,9 +121,23 @@
                 for (int j = 0; j < this.gapPaths.Count; ++j)
                 {
                     var path2 = this.gapPaths[j];
-                    adjacency[i][j] = this.adjacencyMatrix[path1.AdjacencyIndex][path2.AdjacencyIndex];
+                    var adjacencyInt = (int)this.adjacencyMatrix[path1.AdjacencyIndex][path2.AdjacencyIndex];
+                    if (adjacencyInt == 1)
+                    {
+                        var cosineSimilarity = path1.FeatureVector.CosineSimilarity(path2.FeatureVector);
+                        var sigmoid = 1.0 / (1.0 + Math.Exp(-cosineSimilarity));
+                        adjacency[i][j] = sigmoid;
+                    }
                 }
             }
+
+            Matrix degreeMatrix = new Matrix(adjacency.Rows, adjacency.Cols);  // Step 1
+            for (int i = 0; i < adjacency.Rows; ++i)
+            {
+                int degree = (int)adjacency[i].Sum();
+                degreeMatrix[i, i] = degree != 0 ? Math.Pow(degree, -0.5) : 0;  // Step 2
+            }
+            Matrix normalizedAdjacency = degreeMatrix * adjacency * degreeMatrix;  // Step 3
 
             DeepMatrix gcnInput = new DeepMatrix(this.gapPaths.Count, numFeatures, 1);
             for (int i = 0; i < this.gapPaths.Count; ++i)
@@ -135,7 +149,7 @@
             }
 
             var gcnNet = this.gcnNeuralNetwork;
-            gcnNet.Adjacency = adjacency;
+            gcnNet.Adjacency = normalizedAdjacency;
             gcnNet.AutomaticForwardPropagate(gcnInput, true);
             var gcnOutput = gcnNet.Output.Last();
 
@@ -177,7 +191,7 @@
                 attentionNetGradients.Add(attentionGradient);
                 pathIndex++;
             }
-            List<Matrix> lstmNetGradients = new List<Matrix>();
+            List<DeepMatrix> lstmNetGradients = new List<DeepMatrix>();
             pathIndex = 0;
             foreach (var path in this.gapPaths)
             {
@@ -188,7 +202,20 @@
                 lstmNetGradients.Add(lstmGradient);
                 pathIndex++;
             }
-            // TODO: Complete backward pass.
+            pathIndex = 0;
+            foreach (var path in this.gapPaths)
+            {
+                var nodeIndex = 0;
+                foreach (var node in path.Nodes)
+                {
+                    var index = (int)node.GapType;
+                    var edgeAttentionNet = this.edgeAttentionNeuralNetwork[index];
+                    edgeAttentionNet.RestoreOperationIntermediates(node.Id);
+                    await edgeAttentionNet.AutomaticBackwardPropagate(lstmNetGradients[pathIndex][nodeIndex]);
+                    nodeIndex++;
+                }
+                pathIndex++;
+            }
         }
     }
 }
