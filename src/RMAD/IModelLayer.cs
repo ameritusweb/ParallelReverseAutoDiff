@@ -6,6 +6,8 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Collections.Generic;
+    using System.IO;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Am interface to a model layer.
@@ -73,5 +75,35 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="identifier">The identifier.</param>
         /// <returns>The dimensions.</returns>
         public int[] Dimensions(string identifier);
+
+        /// <summary>
+        /// Clones the model layer.
+        /// </summary>
+        /// <returns>The model layer.</returns>
+        public IModelLayer Clone();
+
+        /// <summary>
+        /// Takes the average of two model layers.
+        /// </summary>
+        /// <param name="layer">The other model layer.</param>
+        public void Average(IModelLayer layer);
+
+        /// <summary>
+        /// Averages the gradients of two model layers.
+        /// </summary>
+        /// <param name="layer">The other model layer.</param>
+        public void AverageGradients(IModelLayer layer);
+
+        /// <summary>
+        /// Save the weights to a file.
+        /// </summary>
+        /// <param name="file">The file info.</param>
+        public void SaveWeights(FileInfo file);
+
+        /// <summary>
+        /// Load the weights from a file.
+        /// </summary>
+        /// <param name="file">The file info.</param>
+        public void LoadWeights(FileInfo file);
     }
 }

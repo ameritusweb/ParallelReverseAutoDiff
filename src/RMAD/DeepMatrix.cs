@@ -8,13 +8,16 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Newtonsoft.Json;
     using ParallelReverseAutoDiff.Interprocess;
 
     /// <summary>
     /// A deep matrix class used for deep matrix operations.
     /// </summary>
-    public class DeepMatrix : IEnumerable<Matrix>
+    [Serializable]
+    public class DeepMatrix : IEnumerable<Matrix>, ICloneable
     {
         private readonly Matrix[] matrices;
 
@@ -61,8 +64,21 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DeepMatrix"/> class.
+        /// </summary>
+        /// <param name="uniqueId">The unique ID.</param>
+        /// <param name="matrixArrayValues">The matrices.</param>
+        [JsonConstructor]
+        public DeepMatrix(int uniqueId, Matrix[] matrixArrayValues)
+        {
+            this.UniqueId = uniqueId;
+            this.matrices = matrixArrayValues;
+        }
+
+        /// <summary>
         /// Gets the unique ID of the matrix.
         /// </summary>
+        [JsonProperty]
         public int UniqueId { get; private set; }
 
         /// <summary>
@@ -84,6 +100,12 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets the dimension of the matrix.
         /// </summary>
         public Dimension Dimension => new Dimension(this.Depth, this.Rows, this.Cols);
+
+        /// <summary>
+        /// Gets the matrix values.
+        /// </summary>
+        [JsonProperty]
+        internal Matrix[] MatrixArrayValues => this.matrices;
 
         /// <summary>
         /// Gets or sets the value at the specified row and column and depth.
@@ -153,12 +175,49 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Computes the element-wise average of this deep matrix and another deep matrix.
+        /// </summary>
+        /// <param name="other">The other deep matrix.</param>
+        /// <returns>A new deep matrix representing the element-wise average.</returns>
+        public DeepMatrix Average(DeepMatrix other)
+        {
+            if (this.Depth != other.Depth || this.Rows != other.Rows || this.Cols != other.Cols)
+            {
+                throw new ArgumentException("Both matrices must have the same dimensions.");
+            }
+
+            DeepMatrix result = new DeepMatrix(this.Depth, this.Rows, this.Cols);
+
+            Parallel.For(0, this.Depth, d =>
+            {
+                for (int i = 0; i < this.Rows; ++i)
+                {
+                    for (int j = 0; j < this.Cols; ++j)
+                    {
+                        result[d, i, j] = (this[d, i, j] + other[d, i, j]) / 2.0;
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets the deep matrix as an array of matrices.
         /// </summary>
         /// <returns>An array of matrices.</returns>
         public Matrix[] ToArray()
         {
             return this.matrices;
+        }
+
+        /// <summary>
+        /// Clones the matrix.
+        /// </summary>
+        /// <returns>The cloned matrix.</returns>
+        public object Clone()
+        {
+            return new DeepMatrix(this.matrices.Select(x => x.Clone()).OfType<Matrix>().ToArray());
         }
 
         /// <summary>

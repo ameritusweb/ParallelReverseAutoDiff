@@ -1,0 +1,114 @@
+{
+  "timeSteps": [
+    {
+      "layers": [
+        {
+          "operations": [
+            {
+              "id": "weighted_currentPathFeatures",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "Weights", "CurrentPathFeatures" ],
+              "gradientResultTo": [ "DWeights", null ],
+              "initializations": [
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                },
+                null
+              ]
+            },
+            {
+              "id": "currentPathFeatures_add",
+              "type": "MatrixAddOperation",
+              "inputs": [ "weighted_currentPathFeatures", "B" ],
+              "gradientResultTo": [ null, "DB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "numFeatures",
+                  "columns": 1
+                }
+              ]
+            },
+            {
+              "id": "weighted_connectedPathFeatures",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "ConnectedPathsMatrix", "ConnectedWeights" ],
+              "gradientResultTo": [ null, "DConnectedWeights" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "connectedPathFeatures_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "weighted_connectedPathFeatures", "CB" ],
+              "gradientResultTo": [ null, "DCB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": 1,
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "currentPathFeatures_add_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "currentPathFeatures_add" ]
+            },
+            {
+              "id": "connectedPathFeatures_add_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "connectedPathFeatures_add" ]
+            },
+            {
+              "id": "interactionScores",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "currentPathFeatures_add_trans", "connectedPathFeatures_add_trans" ]
+            },
+            {
+              "id": "attention_scores",
+              "type": "SoftmaxOperation",
+              "inputs": [ "interactionScores" ]
+            },
+            {
+              "id": "attention_scores_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "attention_scores" ]
+            },
+            {
+              "id": "broadcasted_attention_scores",
+              "type": "MatrixBroadcastOperation",
+              "inputs": [ "attention_scores", "connectedPathsMatrixRows", "connectedPathsMatrixColumns" ]
+            },
+            {
+              "id": "weighted_connected_paths_features",
+              "type": "HadamardProductOperation",
+              "inputs": [ "broadcasted_attention_scores", "ConnectedPathsMatrix" ]
+            },
+            {
+              "id": "current_path_features_trans",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "weighted_connected_paths_features" ]
+            },
+            {
+              "id": "current_path_features",
+              "type": "MatrixSumOperation",
+              "inputs": [ "current_path_features_trans" ],
+              "setResultTo": "Output"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

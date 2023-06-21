@@ -85,9 +85,14 @@
                   "inputs": [ "queries_act", "keys_transpose" ]
                 },
                 {
+                  "id": "queries_keys_scale",
+                  "type": "MatrixMultiplyScalarOperation",
+                  "inputs": [ "queries_keys_transpose", "Divisor" ]
+                },
+                {
                   "id": "attention_weights",
                   "type": "SoftmaxOperation",
-                  "inputs": [ "queries_keys_transpose" ]
+                  "inputs": [ "queries_keys_scale" ]
                 },
                 {
                   "id": "attention_weights_values",
@@ -131,9 +136,15 @@
       ],
       "endoperations": [
         {
+          "id": "pre_output",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "output_act_last" ]
+        },
+        {
           "id": "output_avg",
           "type": "MatrixAverageOperation",
-          "inputs": [ "output_act_last" ]
+          "inputs": [ "pre_output" ],
+          "setResultTo": "Output"
         }
       ]
     }

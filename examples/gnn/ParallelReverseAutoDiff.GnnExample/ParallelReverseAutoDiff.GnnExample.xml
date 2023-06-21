@@ -1,0 +1,574 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParallelReverseAutoDiff.GnnExample</name>
+    </assembly>
+    <members>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.AdjacencyMatrixGenerator">
+            <summary>
+            An adjacency matrix generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.AdjacencyMatrixGenerator.Generate">
+            <summary>
+            Generate an adjacency matrix.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader">
+            <summary>
+            A chess board loader.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.GetTotal">
+            <summary>
+            Gets the total.
+            </summary>
+            <returns>The total.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.LoadMoves(System.Int32)">
+            <summary>
+            Load the chess board.
+            </summary>
+            <param name="skip">How many files to skip.</param>
+            <returns>The chess board list of moves.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GameGenerator">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSaveLeela(System.String,System.Int32)">
+            <summary>
+            Generate for both chess engines and save.
+            </summary>
+            <param name="dir">The directory to save to.</param>
+            <param name="iterations">The number of iterations.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSave(System.String,System.Int32)">
+            <summary>
+            Generate for both chess engines and save.
+            </summary>
+            <param name="dir">The directory to save to.</param>
+            <param name="iterations">The number of iterations.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSaveSwitch(System.String,System.Int32)">
+            <summary>
+            Generate for both chess engines and save switch.
+            </summary>
+            <param name="dir">The directory to save to.</param>
+            <param name="iterations">The number of iterations.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothAndSaveOpposite(System.String,System.Int32)">
+            <summary>
+            Generate for both chess engines and save opposite.
+            </summary>
+            <param name="dir">The directory to save to.</param>
+            <param name="iterations">The number of iterations.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothOppositeStrict">
+            <summary>
+            Generates for both chess engines opposite strict.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothOpposite">
+            <summary>
+            Generates for both chess engines opposite.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothLeelaStockfish">
+            <summary>
+            Generates for both chess engines.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBothLeela">
+            <summary>
+            Generates for both chess engines.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.GenerateBoth">
+            <summary>
+            Generates for both chess engines.
+            </summary>
+            <returns>The PGN.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameGenerator.Generate">
+            <summary>
+            Generates a chess game.
+            </summary>
+            <returns>The game in PGN format.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GamePhase">
+            <summary>
+            The game phase.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.GamePhase.Opening">
+            <summary>
+            The opening.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.GamePhase.MiddleGame">
+            <summary>
+            The middle game.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.GamePhase.EndGame">
+            <summary>
+            The end game.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GameState">
+            <summary>
+            The chess game state.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameState"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.#ctor(Chess.ChessBoard)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameState"/> class.
+            </summary>
+            <param name="board">The chess board.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GameState.Board">
+            <summary>
+            Gets or sets the chess game board.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GameState.BoardSize">
+            <summary>
+            Gets or sets the board size.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPath(Chess.Move)">
+            <summary>
+            Gets the path from a move.
+            </summary>
+            <param name="move">A move.</param>
+            <returns>The list of positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGamePhase">
+            <summary>
+            Gets the game phase.
+            </summary>
+            <returns>The game phase.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetMoves">
+            <summary>
+            Get all moves.
+            </summary>
+            <returns>All moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetKingSquare(Chess.PieceColor)">
+            <summary>
+            Gets the king square.
+            </summary>
+            <param name="color">The piece color.</param>
+            <returns>The position.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPieceAt(Chess.Position)">
+            <summary>
+            Gets the piece at the position.
+            </summary>
+            <param name="position">The position.</param>
+            <returns>The piece.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPieceAt(System.Int32)">
+            <summary>
+            Gets the piece at the position.
+            </summary>
+            <param name="position">The position.</param>
+            <returns>The piece.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMoves">
+            <summary>
+            Get all possible moves.
+            </summary>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForColor(Chess.PieceColor)">
+            <summary>
+            Get all moves for a piece color.
+            </summary>
+            <param name="color">The color.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForColorAndType(Chess.PieceColor,Chess.PieceType)">
+            <summary>
+            Get all moves for a piece's color and type.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="type">The type.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetLegalMoves(System.Int32)">
+            <summary>
+            Get all of the legal moves for a position integer.
+            </summary>
+            <param name="position">The position integer.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetLegalMoves(Chess.Position)">
+            <summary>
+            Get all the legal moves for a certain position.
+            </summary>
+            <param name="position">The position.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetLegalMovesForPositionAndColor(Chess.Position,Chess.PieceColor)">
+            <summary>
+            Gets the legal moves for a position and color.
+            </summary>
+            <param name="position">The position.</param>
+            <param name="color">The color.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForPositionAndColor(Chess.Position,Chess.PieceColor)">
+            <summary>
+            Gets all possible moves for the position and color.
+            </summary>
+            <param name="position">The position.</param>
+            <param name="color">The color.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.MoveRandomly">
+            <summary>
+            Makes a random and move and returns it.
+            </summary>
+            <returns>The move made.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.MoveRandomly(System.Collections.Generic.List{Chess.Move})">
+            <summary>
+            Chooses a ramdom move from the list.
+            </summary>
+            <param name="moves">The list of moves.</param>
+            <returns>The move.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.LastMoves(System.Int32)">
+            <summary>
+            Get the last number of moves.
+            </summary>
+            <param name="numOfMoves">The number of moves.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.IsGameOver">
+            <summary>
+            Is the game over.
+            </summary>
+            <returns>Whether the game is over.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.IsValid(System.Int32,System.Int32)">
+            <summary>
+            Is the position valid by rank and file.
+            </summary>
+            <param name="rank">The rank.</param>
+            <param name="file">The file.</param>
+            <returns>Whether the position is valid.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.IsValidMove(Chess.Move)">
+            <summary>
+            Is the chess move valid.
+            </summary>
+            <param name="move">The move.</param>
+            <returns>Whether the move is valid.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllPositions">
+            <summary>
+            Gets all positions on the chess board.
+            </summary>
+            <returns>The list of positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllKingPositionsFrom(Chess.Position)">
+            <summary>
+            Gets all king positions from a position.
+            </summary>
+            <param name="position">The position.</param>
+            <returns>The list of positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllRookPositionsFrom(Chess.Position)">
+            <summary>
+            Gets all rook positions from a position.
+            </summary>
+            <param name="position">A position.</param>
+            <returns>The rook positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllBishopPositionsFrom(Chess.Position)">
+            <summary>
+            Gets all bishop positions from a position.
+            </summary>
+            <param name="position">A position.</param>
+            <returns>The bishop positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllQueenPositionsFrom(Chess.Position)">
+            <summary>
+            Gets all queen positions from a position.
+            </summary>
+            <param name="position">A position.</param>
+            <returns>The queen positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllPawnPositionsFrom(Chess.Position)">
+            <summary>
+            Gets all of the pawn positions from a position.
+            </summary>
+            <param name="position">The position.</param>
+            <returns>The list of positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllKnightPositionsFrom(Chess.Position)">
+            <summary>
+            Gets all knight positions from a position.
+            </summary>
+            <param name="position">A position.</param>
+            <returns>The knight positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllPieceTypes">
+            <summary>
+            Gets all piece types.
+            </summary>
+            <returns>A list of piece types.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.AddToMap(System.ValueTuple{Chess.Position,System.Char},System.ValueTuple{Chess.Position,Chess.MoveType,System.Nullable{System.Char},System.Nullable{System.Char}})">
+            <summary>
+            Add position to map.
+            </summary>
+            <param name="startPos">The start position.</param>
+            <param name="moveInfo">The move info.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge">
+            <summary>
+            A GNN Edge.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.#ctor(ParallelReverseAutoDiff.GnnExample.GNN.GNNNode,ParallelReverseAutoDiff.GnnExample.GNN.GNNNode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge"/> class.
+            </summary>
+            <param name="from">The from node.</param>
+            <param name="to">The to node.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.From">
+            <summary>
+            Gets or sets the node from.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.To">
+            <summary>
+            Gets or sets the node to.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.MoveType">
+            <summary>
+            Gets or sets the move type.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.CapturePieceType">
+            <summary>
+            Gets or sets the capture piece type.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.PromotionPieceType">
+            <summary>
+            Gets or sets the promotion piece type.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.PieceType">
+            <summary>
+            Gets or sets the piece type.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge.State">
+            <summary>
+            Gets or sets the node state.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNGraph">
+            <summary>
+            The GNN graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNGraph.Nodes">
+            <summary>
+            Gets or sets the GNN graph nodes.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNGraph.Edges">
+            <summary>
+            Gets or sets the GNN graph edges.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNMove">
+            <summary>
+            The GNN selected move.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNMove.NodeFrom">
+            <summary>
+            Gets or sets the node from.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNMove.NodeTo">
+            <summary>
+            Gets or sets the node to.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNMove.Score">
+            <summary>
+            Gets or sets the score for the move.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode">
+            <summary>
+            The GNN Node.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.#ctor(Chess.Position)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode"/> class.
+            </summary>
+            <param name="position">The position.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.Type">
+            <summary>
+            Gets or sets the node type.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.X">
+            <summary>
+            Gets or sets the node position X.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.Y">
+            <summary>
+            Gets or sets the node position Y.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.State">
+            <summary>
+            Gets or sets the node state.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.Edges">
+            <summary>
+            Gets or sets the edges.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.Messages">
+            <summary>
+            Gets or sets the messages from one hop away.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GNN.GNNNode.MessagesTwoHops">
+            <summary>
+            Gets or sets the messages from two hops away.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.LeelaReader">
+            <summary>
+            Reads from Leela.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.LeelaReader.ReadBestMove(ParallelReverseAutoDiff.GnnExample.GameState)">
+            <summary>
+            Reads the best move from Stockfish.
+            </summary>
+            <param name="gameState">The game state.</param>
+            <returns>The move and the next move.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.OpeningBook">
+            <summary>
+            An opening book of chess openings.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.OpeningBook.GetOpenings">
+            <summary>
+            Gets chess openings.
+            </summary>
+            <returns>The map.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.RebelReader">
+            <summary>
+            Reads from Rebel.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.RebelReader.ReadBestMove(ParallelReverseAutoDiff.GnnExample.GameState)">
+            <summary>
+            Reads the best move from Stockfish.
+            </summary>
+            <param name="gameState">The game state.</param>
+            <returns>The move and the next move.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator">
+            <summary>
+            A statistics generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read2">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read2a">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Read3">
+            <summary>
+            Reads the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate">
+            <summary>
+            Generates the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate2">
+            <summary>
+            Generates the statistics.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StatisticsGenerator.Generate3">
+            <summary>
+            Generates the statistics.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.StockfishReader">
+            <summary>
+            Reads from Stockfish.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StockfishReader.ReadBestMove(ParallelReverseAutoDiff.GnnExample.GameState)">
+            <summary>
+            Reads the best move from Stockfish.
+            </summary>
+            <param name="gameState">The game state.</param>
+            <returns>The move and the next move.</returns>
+        </member>
+    </members>
+</doc>

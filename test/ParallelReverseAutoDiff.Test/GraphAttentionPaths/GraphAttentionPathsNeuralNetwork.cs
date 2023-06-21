@@ -1,0 +1,194 @@
+﻿namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
+{
+    using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
+    using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
+    using ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN;
+
+    public class GraphAttentionPathsNeuralNetwork
+    {
+        private List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
+        private List<LstmNeuralNetwork> lstmNeuralNetwork;
+        private List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
+        private GcnNeuralNetwork gcnNeuralNetwork;
+        private ReadoutNeuralNetwork readoutNeuralNetwork;
+        private List<GapEdge> gapEdges = new List<GapEdge>();
+        private List<GapNode> gapNodes = new List<GapNode>();
+        private List<GapPath> gapPaths = new List<GapPath>();
+        private int numFeatures;
+        private int numLayers;
+        private int numQueries;
+        private Matrix adjacencyMatrix;
+
+        public GraphAttentionPathsNeuralNetwork(List<GapEdge> edges, List<GapNode> nodes, List<GapPath> paths, Matrix adjacencyMatrix, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
+        {
+            this.gapEdges = edges;
+            this.gapNodes = nodes;
+            this.gapPaths = paths;
+            this.adjacencyMatrix = adjacencyMatrix;
+            this.numFeatures = numFeatures;
+            this.numLayers = numLayers;
+            this.numQueries = numQueries;
+            this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
+            for (int i = 0; i < 7; ++i)
+            {
+                var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+                this.edgeAttentionNeuralNetwork.Add(model);
+                this.edgeAttentionNeuralNetwork[i].Initialize();
+            }
+
+            this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
+            for (int i = 0; i < 7; ++i)
+            {
+                var model = new LstmNeuralNetwork(numFeatures, 500, numFeatures * 2, 1, numLayers, learningRate, clipValue);
+                this.lstmNeuralNetwork.Add(model);
+                this.lstmNeuralNetwork[i].Initialize();
+            }
+
+            this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
+            for (int i = 0; i < 7; ++i)
+            {
+                var model = new AttentionMessagePassingNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
+                this.attentionMessagePassingNeuralNetwork.Add(model);
+                this.attentionMessagePassingNeuralNetwork[i].Initialize();
+            }
+
+            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
+            this.gcnNeuralNetwork.Initialize();
+
+            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+            this.readoutNeuralNetwork.Initialize();
+        }
+
+        public Matrix Forward()
+        {
+            foreach (var node in this.gapNodes.Where(x => x.IsInPath == true))
+            {
+                var edgeCount = node.Edges.Count;
+                var input = new Matrix(edgeCount, numFeatures);
+                for (int i = 0; i < edgeCount; ++i)
+                {
+                    for (int j = 0; i < numFeatures; ++i)
+                    {
+                        input[i][j] = node.Edges[i].FeatureVector[j][0];
+                    }
+                }
+                var index = (int)node.GapType;
+                var edgeAttentionNet = this.edgeAttentionNeuralNetwork[index];
+                edgeAttentionNet.AutomaticForwardPropagate(input);
+                edgeAttentionNet.StoreOperationIntermediates(node.Id);
+                node.FeatureVector = edgeAttentionNet.Output;
+            }
+
+            foreach (var path in this.gapPaths)
+            {
+                var pathLength = path.Nodes.Count;
+                var input = new DeepMatrix(pathLength, numFeatures, 1);
+                for (int i = 0; i < pathLength; ++i)
+                {
+                    for (int j = 0; j < numFeatures; ++j)
+                    {
+                        input[i][j][0] = path.Nodes[i].FeatureVector[j][0];
+                    }
+                }
+                var index = (int)path.GapType;
+                var lstmNet = this.lstmNeuralNetwork[index];
+                lstmNet.AutomaticForwardPropagate(input, true);
+                lstmNet.StoreOperationIntermediates(path.Id);
+                path.FeatureVector = lstmNet.OutputPathFeatures[pathLength - 1];
+            }
+
+            List<Matrix> attentionNetOutputs = new List<Matrix>();
+            foreach (var path in this.gapPaths)
+            {
+                var index = (int)path.GapType;
+                var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
+                attentionNet.AutomaticForwardPropagate(path.FeatureVector, true);
+                attentionNet.StoreOperationIntermediates(path.Id);
+                attentionNetOutputs.Add(attentionNet.Output);
+            }
+
+            for (int i = 0; i < attentionNetOutputs.Count; ++i)
+            {
+                var path = this.gapPaths[i];
+                path.FeatureVector = attentionNetOutputs[i];
+            }
+
+            Matrix adjacency = new Matrix(this.gapPaths.Count, this.gapPaths.Count);
+            for (int i = 0; i < this.gapPaths.Count; ++i)
+            {
+                var path1 = this.gapPaths[i];
+                for (int j = 0; j < this.gapPaths.Count; ++j)
+                {
+                    var path2 = this.gapPaths[j];
+                    adjacency[i][j] = this.adjacencyMatrix[path1.AdjacencyIndex][path2.AdjacencyIndex];
+                }
+            }
+
+            DeepMatrix gcnInput = new DeepMatrix(this.gapPaths.Count, numFeatures, 1);
+            for (int i = 0; i < this.gapPaths.Count; ++i)
+            {
+                for (int j = 0; j < numFeatures; ++j)
+                {
+                    gcnInput[i][j][0] = this.gapPaths[i].FeatureVector[j][0];
+                }
+            }
+
+            var gcnNet = this.gcnNeuralNetwork;
+            gcnNet.Adjacency = adjacency;
+            gcnNet.AutomaticForwardPropagate(gcnInput, true);
+            var gcnOutput = gcnNet.Output.Last();
+
+            var readoutInput = gcnOutput;
+            var readoutNet = this.readoutNeuralNetwork;
+            readoutNet.AutomaticForwardPropagate(readoutInput, true);
+            var readoutOutput = readoutNet.Output;
+
+            var targetFeatures = gcnOutput[0].Length;
+            var gapPathTarget = this.gapPaths.Single(x => x.IsTarget);
+            var targetPathIndex = this.gapPaths.IndexOf(gapPathTarget);
+            var targetPath = gcnOutput[targetPathIndex];
+            Matrix targetMatrix = new Matrix(targetFeatures, 1);
+            for (int i = 0; i < targetFeatures; ++i)
+            {
+                targetMatrix[i][0] = targetPath[i];
+            }
+
+            CosineDistanceLossOperation cosineDistanceLossOperation = new CosineDistanceLossOperation();
+            var loss = cosineDistanceLossOperation.Forward(readoutOutput, targetMatrix);
+            var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new double[] { -1.0d } }));
+            return gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value.");
+        }
+
+        public async Task Backward(Matrix gradientOfLossWrtReadoutOutput)
+        {
+            var readoutNet = this.readoutNeuralNetwork;
+            var inputGradient = await readoutNet.AutomaticBackwardPropagate(gradientOfLossWrtReadoutOutput);
+            var gcnNet = this.gcnNeuralNetwork;
+            var gcnInputGradient = await gcnNet.AutomaticBackwardPropagate(inputGradient);
+            List<Matrix> attentionNetGradients = new List<Matrix>();
+            int pathIndex = 0;
+            foreach (var path in this.gapPaths)
+            {
+                var index = (int)path.GapType;
+                var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
+                attentionNet.RestoreOperationIntermediates(path.Id);
+                var attentionGradient = await attentionNet.AutomaticBackwardPropagate(gcnInputGradient[pathIndex]);
+                attentionNetGradients.Add(attentionGradient);
+                pathIndex++;
+            }
+            List<Matrix> lstmNetGradients = new List<Matrix>();
+            pathIndex = 0;
+            foreach (var path in this.gapPaths)
+            {
+                var index = (int)path.GapType;
+                var lstmNet = this.lstmNeuralNetwork[index];
+                lstmNet.RestoreOperationIntermediates(path.Id);
+                var lstmGradient = await lstmNet.AutomaticBackwardPropagate(attentionNetGradients[pathIndex]);
+                lstmNetGradients.Add(lstmGradient);
+                pathIndex++;
+            }
+            // TODO: Complete backward pass.
+        }
+    }
+}
