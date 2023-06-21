@@ -42,49 +42,73 @@ namespace Chess
         private void OnWhiteKingCheckedChangedEvent(CheckEventArgs e)
         {
             if (context is not null)
+            {
                 context.Send(delegate { OnWhiteKingCheckedChanged(this, e); }, null);
+            }
             else
+            {
                 OnWhiteKingCheckedChanged(this, e);
+            }
         }
 
         private void OnBlackKingCheckedChangedEvent(CheckEventArgs e)
         {
             if (context is not null)
+            {
                 context.Send(delegate { OnBlackKingCheckedChanged(this, e); }, null);
+            }
             else
+            {
                 OnBlackKingCheckedChanged(this, e);
+            }
         }
 
         private void OnInvalidMoveKingCheckedEvent(CheckEventArgs e)
         {
             if (context is not null)
+            {
                 context.Send(delegate { OnInvalidMoveKingChecked(this, e); }, null);
+            }
             else
+            {
                 OnInvalidMoveKingChecked(this, e);
+            }
         }
 
         private void OnPromotePawnEvent(PromotionEventArgs e)
         {
             if (context is not null)
+            {
                 context.Send(delegate { OnPromotePawn(this, e); }, null);
+            }
             else
+            {
                 OnPromotePawn(this, e);
+            }
         }
 
         private void OnEndGameEvent()
         {
             if (context is not null)
+            {
                 context.Send(delegate { OnEndGame(this, new EndgameEventArgs(this, EndGame)); }, null);
+            }
             else
+            {
                 OnEndGame(this, new EndgameEventArgs(this, EndGame));
+            }
         }
 
         private void OnCapturedEvent(Piece piece)
         {
             if (context is not null)
+            {
                 context.Send(delegate { OnCaptured(this, new CaptureEventArgs(this, piece, CapturedWhite, CapturedBlack)); }, null);
+            }
             else
+            {
                 OnCaptured(this, new CaptureEventArgs(this, piece, CapturedWhite, CapturedBlack));
+            }
         }
     }
 }

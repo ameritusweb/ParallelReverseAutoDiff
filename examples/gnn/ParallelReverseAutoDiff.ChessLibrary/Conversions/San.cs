@@ -42,7 +42,9 @@ namespace Chess
             var (succeeded, exception) = SanBuilder.TryParse(this, san, out var move, resetSan);
 
             if (!succeeded && exception is not null)
+            {
                 throw exception;
+            }
 
             return move!;
         }

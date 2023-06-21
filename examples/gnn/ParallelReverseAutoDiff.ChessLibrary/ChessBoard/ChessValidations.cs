@@ -353,7 +353,10 @@ namespace Chess
                 // This return will never be reached (in theory)
                 return false;
             }
-            else return false;
+            else
+            {
+                return false;
+            }
         }
 
         private static bool KnightValidation(Move move, Piece?[,] pieces)

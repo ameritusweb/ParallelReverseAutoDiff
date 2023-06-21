@@ -46,7 +46,9 @@ namespace Chess
         public Piece(string piece)
         {
             if (!Regexes.RegexPiece.IsMatch(piece))
+            {
                 throw new ChessArgumentException(null, "Piece should match pattern: " + Regexes.PiecePattern);
+            }
 
             Color = PieceColor.FromChar(piece[0]);
             Type = PieceType.FromChar(piece[1]);
@@ -63,13 +65,21 @@ namespace Chess
             get
             {
                 if (Type == PieceType.Pawn)
+                {
                     return 1;
+                }
                 if (Type == PieceType.Knight || Type == PieceType.Bishop)
+                {
                     return 3;
+                }
                 if (Type == PieceType.Rook)
+                {
                     return 5;
+                }
                 if (Type == PieceType.Queen)
+                {
                     return 9;
+                }
                 return 0;
             }
         }
@@ -83,7 +93,9 @@ namespace Chess
         public Piece(char fenChar)
         {
             if (!Regexes.RegexFenPiece.IsMatch(fenChar.ToString()))
+            {
                 throw new ChessArgumentException(null, "FEN piece character should match pattern: " + Regexes.FenPiecePattern);
+            }
 
             Type = PieceType.FromChar(fenChar);
             Color = char.IsLower(fenChar) ? PieceColor.Black : PieceColor.White;

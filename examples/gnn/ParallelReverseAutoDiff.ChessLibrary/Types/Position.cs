@@ -69,7 +69,9 @@ namespace Chess
             position = position.ToLower();
 
             if (!Regexes.RegexPosition.IsMatch(position))
+            {
                 throw new ChessArgumentException(null, "Table position should match pattern: " + Regexes.PositionPattern);
+            }
 
             X = FromFile(position[0]);
             Y = FromRank(position[1]);
@@ -155,17 +157,35 @@ namespace Chess
             var positions = new List<Position>();
             if (X > 0)
             {
-                if (Y > 0) positions.Add(new Position((short)(X - 1), (short)(Y - 1)));
+                if (Y > 0)
+                {
+                    positions.Add(new Position((short)(X - 1), (short)(Y - 1)));
+                }
                 positions.Add(new Position((short)(X - 1), Y));
-                if (Y < 7) positions.Add(new Position((short)(X - 1), (short)(Y + 1)));
+                if (Y < 7)
+                {
+                    positions.Add(new Position((short)(X - 1), (short)(Y + 1)));
+                }
             }
-            if (Y > 0) positions.Add(new Position(X, (short)(Y - 1)));
-            if (Y < 7) positions.Add(new Position(X, (short)(Y + 1)));
+            if (Y > 0)
+            {
+                positions.Add(new Position(X, (short)(Y - 1)));
+            }
+            if (Y < 7)
+            {
+                positions.Add(new Position(X, (short)(Y + 1)));
+            }
             if (X < 7)
             {
-                if (Y > 0) positions.Add(new Position((short)(X + 1), (short)(Y - 1)));
+                if (Y > 0)
+                {
+                    positions.Add(new Position((short)(X + 1), (short)(Y - 1)));
+                }
                 positions.Add(new Position((short)(X + 1), Y));
-                if (Y < 7) positions.Add(new Position((short)(X + 1), (short)(Y + 1)));
+                if (Y < 7)
+                {
+                    positions.Add(new Position((short)(X + 1), (short)(Y + 1)));
+                }
             }
             return positions;
         }

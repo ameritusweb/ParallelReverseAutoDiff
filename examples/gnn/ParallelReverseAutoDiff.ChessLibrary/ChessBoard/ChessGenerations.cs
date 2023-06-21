@@ -382,7 +382,9 @@ namespace Chess
                         if (!ignoreStop)
                         {
                             if (currentPiece.Color != board[piecePosition].Color)
+                            {
                                 positions.Add(new Position { X = currentPosition.x, Y = currentPosition.y });
+                            }
                         }
                         else
                         {

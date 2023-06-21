@@ -28,9 +28,13 @@ namespace Chess
              && board.executedMoves[board.moveIndex].IsMate)
             {
                 if (board.executedMoves[board.moveIndex].IsCheck)
+                {
                     endgameInfo = new EndGameInfo(EndgameType.Checkmate, board.Turn.OppositeColor());
+                }
                 else
+                {
                     endgameInfo = new EndGameInfo(EndgameType.Stalemate, null);
+                }
             }
             else if (board.LoadedFromFen)
             {
@@ -38,13 +42,19 @@ namespace Chess
                 var blackHasMoves = ChessBoard.PlayerHasMoves(PieceColor.Black, board);
 
                 if (!whiteHasMoves && board.WhiteKingChecked)
+                {
                     endgameInfo = new EndGameInfo(EndgameType.Checkmate, PieceColor.Black);
+                }
 
                 else if (!blackHasMoves && board.BlackKingChecked)
+                {
                     endgameInfo = new EndGameInfo(EndgameType.Checkmate, PieceColor.White);
+                }
 
                 else if (!whiteHasMoves || !blackHasMoves)
+                {
                     endgameInfo = new EndGameInfo(EndgameType.Stalemate, null);
+                }
             }
 
             if (endgameInfo is null)
@@ -62,13 +72,19 @@ namespace Chess
             var rules = new List<EndGameRule>();
 
             if ((autoEndgameRules & AutoEndgameRules.InsufficientMaterial) == AutoEndgameRules.InsufficientMaterial)
+            {
                 rules.Add(new InsufficientMaterialRule(board));
+            }
 
             if ((autoEndgameRules & AutoEndgameRules.Repetition) == AutoEndgameRules.Repetition)
+            {
                 rules.Add(new RepetitionRule(board));
+            }
 
             if ((autoEndgameRules & AutoEndgameRules.FiftyMoveRule) == AutoEndgameRules.FiftyMoveRule)
+            {
                 rules.Add(new FiftyMoveRule(board));
+            }
 
             for (int i = 0; i < rules.Count && endgameInfo is null; i++)
             {

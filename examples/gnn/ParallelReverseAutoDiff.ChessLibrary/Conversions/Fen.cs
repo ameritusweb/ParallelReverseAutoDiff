@@ -52,7 +52,9 @@ namespace Chess
             var (succeeded, exception) = FenBoardBuilder.TryLoad(fen, out var builder);
 
             if (!succeeded && exception is not null)
+            {
                 throw exception;
+            }
 
             return BuildBoardFromFen(builder, autoEndgameRules);
         }
