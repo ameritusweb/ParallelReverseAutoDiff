@@ -23,7 +23,9 @@ namespace Chess
             var matches = Regexes.RegexSanOneMove.Matches(san);
 
             if (matches.Count == 0)
+            {
                 return (false, new ChessArgumentException(board, "SAN move string should match pattern: " + Regexes.SanMovesPattern));
+            }
 
             var moveOut = new Move();
             var originalPos = Position.Empty;
@@ -31,13 +33,18 @@ namespace Chess
 
             foreach (var group in matches[0].Groups.OfType<Group>())
             {
-                if (!group.Success) continue;
+                if (!group.Success)
+                {
+                    continue;
+                }
 
                 switch (group.Name)
                 {
                     case "1":
                         if (group.Value == "O-O" || group.Value == "O-O-O")
+                        {
                             ParseCastling(board, group, moveOut, ref originalPos);
+                        }
                         break;
                     case "2":
                         moveOut.Piece = new Piece(board.Turn, PieceType.FromChar(group.Value[0]));
@@ -50,7 +57,9 @@ namespace Chess
                         break;
                     case "5":
                         if (group.Value == "x" || group.Value == "X")
+                        {
                             isCapture = true;
+                        }
                         break;
                     case "6":
                         moveOut.NewPosition = new Position(group.Value);
@@ -68,12 +77,17 @@ namespace Chess
             moveOut.Piece ??= new Piece(board.Turn, PieceType.Pawn);
 
             if (isCapture && board[moveOut.NewPosition] is not null)
+            {
                 moveOut.CapturedPiece = board[moveOut.NewPosition];
+            }
 
             if (!originalPos.HasValue)
             {
                 var (succeeded, exception) = ParseOriginalPosition(board, san, moveOut, ref originalPos);
-                if (!succeeded) return (false, exception);
+                if (!succeeded)
+                {
+                    return (false, exception);
+                }
             }
 
             moveOut.OriginalPosition = originalPos;
@@ -97,7 +111,9 @@ namespace Chess
                 ambiguousMoves = ambiguousMoves.Where(m => m.OriginalPosition.X == originalPosX).ToList();
 
                 if (ambiguousMoves.Count != 1)
+                {
                     return (false, GetException(ambiguousMoves.Count, ambiguousMoves));
+                }
 
                 originalPos.Y = ambiguousMoves.ElementAt(0).OriginalPosition.Y;
             }
@@ -107,14 +123,18 @@ namespace Chess
                 ambiguousMoves = ambiguousMoves.Where(m => m.OriginalPosition.Y == originalPosY).ToList();
 
                 if (ambiguousMoves.Count != 1)
+                {
                     return (false, GetException(ambiguousMoves.Count, ambiguousMoves));
+                }
 
                 originalPos.X = ambiguousMoves.ElementAt(0).OriginalPosition.X;
             }
             else
             {
                 if (ambiguousMoves.Count != 1)
+                {
                     return (false, GetException(ambiguousMoves.Count, ambiguousMoves));
+                }
 
                 originalPos.X = ambiguousMoves.ElementAt(0).OriginalPosition.X;
                 originalPos.Y = ambiguousMoves.ElementAt(0).OriginalPosition.Y;
@@ -157,17 +177,25 @@ namespace Chess
             {
                 originalPos = new Position("e1");
                 if (group.Value == "O-O")
+                {
                     moveOut.NewPosition = new Position("h1");
+                }
                 else if (group.Value == "O-O-O")
+                {
                     moveOut.NewPosition = new Position("a1");
+                }
             }
             else if (board.Turn == PieceColor.Black)
             {
                 originalPos = new Position("e8");
                 if (group.Value == "O-O")
+                {
                     moveOut.NewPosition = new Position("h8");
+                }
                 else if (group.Value == "O-O-O")
+                {
                     moveOut.NewPosition = new Position("a8");
+                }
             }
         }
 
@@ -176,7 +204,9 @@ namespace Chess
             san = null;
 
             if (move is not { HasValue: true })
-                return (false, new ChessArgumentException(board, "Given move is null or doesn'adamT have valid positions values"));
+            {
+                return (false, new ChessArgumentException(board, "Given move is null or doesn't have valid positions values"));
+            }
 
             Span<char> span = stackalloc char[10];
             int offset = 0;
@@ -193,13 +223,17 @@ namespace Chess
 
                     // Only rooks, knights, bishops(second from promotion) and queens(second from promotion) can have ambiguous moves
                     if (move.Piece.Type != PieceType.King)
+                    {
                         offset = span.InsertSpan(offset, HandleAmbiguousMovesNotation(move, board));
+                    }
                 }
 
                 if (move.CapturedPiece is not null)
                 {
                     if (move.Piece.Type == PieceType.Pawn)
+                    {
                         span[offset++] = move.OriginalPosition.File();
+                    }
 
                     span[offset++] = 'x';
                 }
@@ -208,12 +242,23 @@ namespace Chess
                 offset = span.InsertSpan(offset, move.NewPosition.ToString().AsSpan());
 
                 if (move.Parameter is MovePromotion)
+                {
                     offset = span.InsertSpan(offset, move.Parameter.ShortStr.AsSpan());
+                }
             }
 
-            if (move.IsCheck && move.IsMate) span[offset++] = '#';
-            else if (move.IsCheck) span[offset++] = '+';
-            else if (move.IsMate) span[offset++] = '$';
+            if (move.IsCheck && move.IsMate)
+            {
+                span[offset++] = '#';
+            }
+            else if (move.IsCheck)
+            {
+                span[offset++] = '+';
+            }
+            else if (move.IsMate)
+            {
+                span[offset++] = '$';
+            }
 
             san = new string(span.Slice(0, offset));
             move.San = san;
@@ -230,13 +275,19 @@ namespace Chess
             if (ambiguousMoves.Any())
             {
                 if (ambiguousMoves.Any(m => m.OriginalPosition.Y == move.OriginalPosition.Y))
+                {
                     span[0] = move.OriginalPosition.File();
+                }
 
                 if (ambiguousMoves.Any(m => m.OriginalPosition.X == move.OriginalPosition.X))
+                {
                     span[1] = move.OriginalPosition.Rank();
+                }
 
                 if (!char.IsLetterOrDigit(span[0]) && !char.IsLetterOrDigit(span[1]))
+                {
                     span[0] = move.OriginalPosition.File();
+                }
             }
 
             ReadOnlySpan<char> readOnlySpan = MemoryMarshal.CreateReadOnlySpan(ref span[0], span.Length);
@@ -254,12 +305,17 @@ namespace Chess
                         && board.pieces[i, j].Type == piece.Type)
                     {
                         // if original pos == new pos
-                        if (newPosition.Y == i && newPosition.X == j) continue;
+                        if (newPosition.Y == i && newPosition.X == j)
+                        {
+                            continue;
+                        }
 
                         var move = new Move(new Position { Y = i, X = j }, newPosition) { Piece = piece };
 
                         if (ChessBoard.IsValidMove(move, board) && !ChessBoard.IsKingCheckedValidation(move, piece.Color, board))
+                        {
                             yield return move;
+                        }
                     }
                 }
             }
