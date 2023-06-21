@@ -10,11 +10,13 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Newtonsoft.Json;
     using ParallelReverseAutoDiff.Interprocess;
 
     /// <summary>
     /// A matrix class used for matrix operations.
     /// </summary>
+    [Serializable]
     public class Matrix : IEnumerable<double[]>, ICloneable
     {
         private readonly double[][] matrix;
@@ -46,8 +48,21 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
+        /// </summary>
+        /// <param name="uniqueId">The unique ID.</param>
+        /// <param name="matrixValues">The matrix values.</param>
+        [JsonConstructor]
+        public Matrix(int uniqueId, double[][] matrixValues)
+        {
+            this.UniqueId = uniqueId;
+            this.matrix = matrixValues;
+        }
+
+        /// <summary>
         /// Gets the unique ID of the matrix.
         /// </summary>
+        [JsonProperty]
         public int UniqueId { get; private set; }
 
         /// <summary>
@@ -64,6 +79,12 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets the length of the matrix.
         /// </summary>
         public int Length => this.matrix.Length;
+
+        /// <summary>
+        /// Gets the matrix values.
+        /// </summary>
+        [JsonProperty]
+        internal double[][] MatrixValues => this.matrix;
 
         /// <summary>
         /// Gets or sets the value at the specified row and column.
@@ -169,6 +190,31 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return flatMatrix;
+        }
+
+        /// <summary>
+        /// Calculates the average of two matrices element-wise.
+        /// </summary>
+        /// <param name="other">The other matrix.</param>
+        /// <returns>The resultant matrix.</returns>
+        public Matrix Average(Matrix other)
+        {
+            if (this.Rows != other.Rows || this.Cols != other.Cols)
+            {
+                throw new ArgumentException("Matrices dimensions must be the same for averaging.");
+            }
+
+            Matrix result = new Matrix(this.Rows, this.Cols);
+
+            Parallel.For(0, this.Rows, i =>
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    result[i, j] = (this[i, j] + other[i, j]) / 2.0;
+                }
+            });
+
+            return result;
         }
 
         /// <summary>
@@ -349,7 +395,19 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The cloned matrix.</returns>
         public object Clone()
         {
-            return new Matrix((double[][])this.matrix.Clone());
+            double[][] original = this.matrix;
+
+            // Create new array of same length.
+            double[][] deepCopy = new double[original.Length][];
+
+            for (int i = 0; i < original.Length; i++)
+            {
+                // Allocate inner array and copy elements.
+                deepCopy[i] = new double[original[i].Length];
+                Array.Copy(original[i], deepCopy[i], original[i].Length);
+            }
+
+            return new Matrix(deepCopy);
         }
 
         /// <summary>

@@ -188,6 +188,7 @@
                 lstmNetGradients.Add(lstmGradient);
                 pathIndex++;
             }
+            // TODO: Complete backward pass.
         }
     }
 }
