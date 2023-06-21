@@ -7,18 +7,18 @@
 
     public class GraphAttentionPathsNeuralNetwork
     {
-        private List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
-        private List<LstmNeuralNetwork> lstmNeuralNetwork;
-        private List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
-        private GcnNeuralNetwork gcnNeuralNetwork;
-        private ReadoutNeuralNetwork readoutNeuralNetwork;
-        private List<GapEdge> gapEdges = new List<GapEdge>();
-        private List<GapNode> gapNodes = new List<GapNode>();
-        private List<GapPath> gapPaths = new List<GapPath>();
-        private int numFeatures;
-        private int numLayers;
-        private int numQueries;
-        private Matrix adjacencyMatrix;
+        private readonly List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
+        private readonly List<LstmNeuralNetwork> lstmNeuralNetwork;
+        private readonly List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
+        private readonly GcnNeuralNetwork gcnNeuralNetwork;
+        private readonly ReadoutNeuralNetwork readoutNeuralNetwork;
+        private readonly List<GapEdge> gapEdges = new List<GapEdge>();
+        private readonly List<GapNode> gapNodes = new List<GapNode>();
+        private readonly List<GapPath> gapPaths = new List<GapPath>();
+        private readonly int numFeatures;
+        private readonly int numLayers;
+        private readonly int numQueries;
+        private readonly Matrix adjacencyMatrix;
 
         public GraphAttentionPathsNeuralNetwork(List<GapEdge> edges, List<GapNode> nodes, List<GapPath> paths, Matrix adjacencyMatrix, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
         {
@@ -68,7 +68,7 @@
                 var input = new Matrix(edgeCount, numFeatures);
                 for (int i = 0; i < edgeCount; ++i)
                 {
-                    for (int j = 0; i < numFeatures; ++i)
+                    for (int j = 0; j < numFeatures; ++j)
                     {
                         input[i][j] = node.Edges[i].FeatureVector[j][0];
                     }
@@ -155,8 +155,8 @@
             }
 
             CosineDistanceLossOperation cosineDistanceLossOperation = new CosineDistanceLossOperation();
-            var loss = cosineDistanceLossOperation.Forward(readoutOutput, targetMatrix);
-            var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new double[] { -1.0d } }));
+            cosineDistanceLossOperation.Forward(readoutOutput, targetMatrix);
+            var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { -1.0d } }));
             return gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value.");
         }
 
