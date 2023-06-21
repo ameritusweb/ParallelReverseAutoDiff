@@ -8,7 +8,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
     /// <summary>
     /// A GCN neural network.
     /// </summary>
-    public partial class GcnNeuralNetwork : NeuralNetwork
+    public class GcnNeuralNetwork : NeuralNetwork
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.Architecture";
         private const string ARCHITECTURE = "MessagePassing";

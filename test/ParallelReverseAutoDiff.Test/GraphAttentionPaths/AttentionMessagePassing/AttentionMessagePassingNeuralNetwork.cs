@@ -8,7 +8,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
     /// <summary>
     /// An attention message passing neural network.
     /// </summary>
-    public partial class AttentionMessagePassingNeuralNetwork : NeuralNetwork
+    public class AttentionMessagePassingNeuralNetwork : NeuralNetwork
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.Architecture";
         private const string ARCHITECTURE = "MessagePassing";
@@ -169,18 +169,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
         public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
         {
-            int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
-            if (gradientOfLossWrtOutput[0][0] != 0.0d)
+            backwardStartOperation = this.computationGraph[$"current_path_features_0_{this.NumLayers - 1}"];
+            if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
-                backwardStartOperation.BackwardInput = gradientOfLossWrtOutput;
+                backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
-                traverseCount++;
             }
+            IOperationBase? backwardEndOperation = this.computationGraph["weighted_currentPathFeatures_0_0"];
+            return backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
         private void InitializeState()

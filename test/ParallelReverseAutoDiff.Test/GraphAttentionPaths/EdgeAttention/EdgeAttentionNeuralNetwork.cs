@@ -8,7 +8,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
     /// <summary>
     /// An edge attention neural network.
     /// </summary>
-    public partial class EdgeAttentionNeuralNetwork : NeuralNetwork
+    public class EdgeAttentionNeuralNetwork : NeuralNetwork
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.Architecture";
         private const string ARCHITECTURE = "EdgeAttention";
@@ -160,14 +160,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             List<Matrix> reduceBiasGradient = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
-                keys.Add(this.inputLayers[i].GradientMatrix("Keys"));
-                keysBias.Add(this.inputLayers[i].GradientMatrix("KB"));
-                values.Add(this.inputLayers[i].GradientMatrix("Values"));
-                valuesBias.Add(this.inputLayers[i].GradientMatrix("VB"));
-                queries.Add(this.nestedLayers[i].GradientDeepMatrix("Queries"));
-                queriesBias.Add(this.nestedLayers[i].GradientDeepMatrix("QB"));
-                reduce.Add(this.outputLayers[i].GradientMatrix("R"));
-                reduceBias.Add(this.outputLayers[i].GradientMatrix("RB"));
+                keysGradient.Add(this.inputLayers[i].GradientMatrix("Keys"));
+                keysBiasGradient.Add(this.inputLayers[i].GradientMatrix("KB"));
+                valuesGradient.Add(this.inputLayers[i].GradientMatrix("Values"));
+                valuesBiasGradient.Add(this.inputLayers[i].GradientMatrix("VB"));
+                queriesGradient.Add(this.nestedLayers[i].GradientDeepMatrix("Queries"));
+                queriesBiasGradient.Add(this.nestedLayers[i].GradientDeepMatrix("QB"));
+                reduceGradient.Add(this.outputLayers[i].GradientMatrix("R"));
+                reduceBiasGradient.Add(this.outputLayers[i].GradientMatrix("RB"));
             }
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
@@ -175,14 +175,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             this.computationGraph = new EdgeAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddWeight("Keys", x => keys[x.Layer])
-                .AddBias("KB", x => keysBias[x.Layer])
-                .AddWeight("Values", x => values[x.Layer])
-                .AddBias("VB", x => valuesBias[x.Layer])
-                .AddWeight("Queries", x => queries[x.Layer][x.NestedLayer])
-                .AddBias("QB", x => queriesBias[x.Layer][x.NestedLayer])
-                .AddWeight("R", x => reduce[x.Layer])
-                .AddBias("RB", x => reduceBias[x.Layer])
+                .AddWeight("Keys", x => keys[x.Layer]).AddGradient("Keys", x => keysGradient[x.Layer])
+                .AddBias("KB", x => keysBias[x.Layer]).AddGradient("KB", x => keysBiasGradient[x.Layer])
+                .AddWeight("Values", x => values[x.Layer]).AddGradient("Values", x => valuesGradient[x.Layer])
+                .AddBias("VB", x => valuesBias[x.Layer]).AddGradient("VB", x => valuesBiasGradient[x.Layer])
+                .AddWeight("Queries", x => queries[x.Layer][x.NestedLayer]).AddGradient("Queries", x => queriesGradient[x.Layer][x.NestedLayer])
+                .AddBias("QB", x => queriesBias[x.Layer][x.NestedLayer]).AddGradient("QB", x => queriesBiasGradient[x.Layer][x.NestedLayer])
+                .AddWeight("R", x => reduce[x.Layer]).AddGradient("R", x => reduceGradient[x.Layer])
+                .AddBias("RB", x => reduceBias[x.Layer]).AddGradient("RB", x => reduceBiasGradient[x.Layer])
                 .AddOperationFinder("edgeFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 

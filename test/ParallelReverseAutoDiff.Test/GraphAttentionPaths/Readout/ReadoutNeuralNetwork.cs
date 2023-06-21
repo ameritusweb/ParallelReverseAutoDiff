@@ -8,7 +8,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
     /// <summary>
     /// A readout neural network.
     /// </summary>
-    public partial class ReadoutNeuralNetwork : NeuralNetwork
+    public class ReadoutNeuralNetwork : NeuralNetwork
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.Readout.Architecture";
         private const string ARCHITECTURE = "Readout";
