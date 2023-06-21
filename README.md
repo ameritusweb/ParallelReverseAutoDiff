@@ -556,27 +556,27 @@ Here is an example:
 
 Each operation in the JSON represents a step in a computational graph used for automatic differentiation. Here's what each field means:
 
-* "timeSteps": This is an array that represents the sequence of computational operations. Each element in the array is an object that corresponds to a computational timestep.
+*   "timeSteps": This is an array that represents the sequence of computational operations. Each element in the array is an object that corresponds to a computational timestep.
 
-* "startOperations": This is an array that defines the initial operations for the current timestep.
+*   "startOperations": This is an array that defines the initial operations for the current timestep.
 
-* "layers": This represents a sequence of operations corresponding to the layers of the network. Each operation in a layer is a step in the computation, and the order of operations matters, as some operations depend on the results of previous operations. 
+*   "layers": This represents a sequence of operations corresponding to the layers of the network. Each operation in a layer is a step in the computation, and the order of operations matters, as some operations depend on the results of previous operations. 
 
-* "endOperations": This is an array that defines the final operations for the current timestep.
+*   "endOperations": This is an array that defines the final operations for the current timestep.
 
 Each operation object in "startOperations", "layers", or "endOperations" has several fields:
 
-* "id": This is a unique identifier for the operation.
+*   "id": This is a unique identifier for the operation.
 
-* "description": This is a human-readable description of what the operation does.
+*   "description": This is a human-readable description of what the operation does.
 
-* "type": This specifies the type of the operation.
+*   "type": This specifies the type of the operation.
 
-* "inputs": This is an array that lists the inputs for the operation. These are the identifiers of other nodes in the computational graph. The identifiers are either defined in the computational graph, or in operation finders declared in code when building an instance of the ComputationGraph class, for example the SelfAttentionMultiLayerLSTMComputationGraph class which is a subclass of ComputationGraph.
+*   "inputs": This is an array that lists the inputs for the operation. These are the identifiers of other nodes in the computational graph. The identifiers are either defined in the computational graph, or in operation finders declared in code when building an instance of the ComputationGraph class, for example the SelfAttentionMultiLayerLSTMComputationGraph class which is a subclass of ComputationGraph.
 
-* "gradientResultTo": This is an array that specifies where the results of the backward pass (i.e., the computed gradients) should be stored. A null value means that the gradient with respect to the input is not stored. There is an implicit mapping between the gradient and the input based on its position in the array.
+*   "gradientResultTo": This is an array that specifies where the results of the backward pass (i.e., the computed gradients) should be stored. A null value means that the gradient with respect to the input is not stored. There is an implicit mapping between the gradient and the input based on its position in the array.
 
-* "setResultTo": This is used to store the result of the operation for later use.
+*   "setResultTo": This is used to store the result of the operation for later use.
 
 The JSON defines the steps in a machine learning model's forward pass and also specifies how the backward pass (which computes gradients for optimization) should be carried out.
 
@@ -785,9 +785,9 @@ These operations can encapsulate any computation or processing steps, including 
 
 Creating a custom operation requires extending the Operation abstract class, which involves implementing two key methods:
 
-* Forward(): This method is used to describe how your operation behaves during the forward pass of the neural network. It takes as input the relevant data, processes it as per the custom-defined operation, and produces the output.
+*   Forward(): This method is used to describe how your operation behaves during the forward pass of the neural network. It takes as input the relevant data, processes it as per the custom-defined operation, and produces the output.
 
-* Backward(): This method is responsible for defining how your operation behaves during the backward pass of the neural network, i.e., how it contributes to the gradients during backpropagation. It receives the gradient of the output and uses it to compute the gradients of its inputs.
+*   Backward(): This method is responsible for defining how your operation behaves during the backward pass of the neural network, i.e., how it contributes to the gradients during backpropagation. It receives the gradient of the output and uses it to compute the gradients of its inputs.
 
 Let's look at an example custom operation, MatrixAverageOperation, which calculates the average of feature vectors across a matrix:
 
