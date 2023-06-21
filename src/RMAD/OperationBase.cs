@@ -195,6 +195,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.Id = info.Id;
             this.SpecificId = info.Id + layerInfo.ToString();
+            this.NestedSpecificId = info.Id + layerInfo.ToNestedString();
             this.LayerInfo = layerInfo;
             this.OperationType = this.GetType();
             this.Inputs = info.Inputs.ToList();

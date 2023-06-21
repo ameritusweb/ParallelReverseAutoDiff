@@ -9,6 +9,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using ParallelReverseAutoDiff.Interprocess;
 
     /// <summary>
     /// A computation graph.
@@ -22,6 +23,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, IOperationBase> operations = new ConcurrentDictionary<string, IOperationBase>();
+        private readonly ConcurrentHashSet<string> nestedOperations = new ConcurrentHashSet<string>();
         private readonly NeuralNetwork neuralNetwork;
         private IOperationBase? startOperation;
         private IOperationBase? currentOperation;
@@ -858,7 +860,16 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.OperationAdded(operation, info);
             this.InitializeOperation(operation, info, layerInfo);
-            this.operations.TryAdd(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId, operation);
+            if (layerInfo.Type == LayerInfoType.Normal)
+            {
+                this.operations.TryAdd(operation.SpecificId, operation);
+            }
+            else
+            {
+                this.operations.TryAdd(operation.NestedSpecificId, operation);
+                this.nestedOperations.Add(info.Id);
+            }
+
             this.SetupDependencies(operation, layerInfo);
             return this;
         }
@@ -1041,14 +1052,29 @@ namespace ParallelReverseAutoDiff.RMAD
                 var input = operation.Inputs[j];
                 var split = input.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
                 var inputName = split[0];
-                var specificId = inputName + (layerInfo.Type == LayerInfoType.Normal ? operation.LayerInfo.ToString() : operation.LayerInfo.ToNestedString());
-                if (this.operations.ContainsKey(specificId))
+                if (this.nestedOperations.Contains(inputName))
                 {
-                    var inputOp = this.operations[specificId];
-                    inputOp.Outputs.Add(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId);
-                    operation.BackwardAdjacentOperations.Add(inputOp);
-                    parameters[j] = inputOp;
-                    continue;
+                    var nestedSpecificId = inputName + operation.LayerInfo.ToNestedString();
+                    if (this.operations.ContainsKey(nestedSpecificId))
+                    {
+                        var inputOp = this.operations[nestedSpecificId];
+                        inputOp.Outputs.Add(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId);
+                        operation.BackwardAdjacentOperations.Add(inputOp);
+                        parameters[j] = inputOp;
+                        continue;
+                    }
+                }
+                else
+                {
+                    var specificId = inputName + operation.LayerInfo.ToString();
+                    if (this.operations.ContainsKey(specificId))
+                    {
+                        var inputOp = this.operations[specificId];
+                        inputOp.Outputs.Add(layerInfo.Type == LayerInfoType.Normal ? operation.SpecificId : operation.NestedSpecificId);
+                        operation.BackwardAdjacentOperations.Add(inputOp);
+                        parameters[j] = inputOp;
+                        continue;
+                    }
                 }
 
                 if (this.operationFinders.ContainsKey(inputName))
