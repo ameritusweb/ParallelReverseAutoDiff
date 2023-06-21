@@ -17,7 +17,6 @@
     <None Remove="Leela\cudart64_110.dll" />
     <None Remove="Leela\lc0.exe" />
     <None Remove="Leela\mimalloc-override.dll" />
-    <None Remove="Leela\mimalloc-readme.md" />
     <None Remove="Leela\mimalloc-redirect.dll" />
     <None Remove="Rebel\Rebel-14.2-avx2.exe" />
     <None Remove="Rebel\rebeluci.exe" />
@@ -46,9 +45,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\mimalloc-override.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Leela\mimalloc-readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\mimalloc-redirect.dll">
