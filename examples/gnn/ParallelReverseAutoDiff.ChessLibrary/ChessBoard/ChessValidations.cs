@@ -52,7 +52,7 @@ namespace Chess
                 {
                     if (board.pieces[i, j]?.Color == side && board.pieces[i, j]?.Type == PieceType.King)
                     {
-                        var kingPos = new Position() { Y = i, X = j, };
+                        var kingPos = new Position { Y = i, X = j, };
                         return kingPos;
                     }
                 }

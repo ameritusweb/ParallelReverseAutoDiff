@@ -27,7 +27,9 @@ namespace Chess
         public Move[] Moves(Position piecePosition, bool allowAmbiguousCastle = false, bool generateSan = true, bool checkTurn = true)
         {
             if (pieces[piecePosition.Y, piecePosition.X] is null)
+            {
                 throw new ChessPieceNotFoundException(this, piecePosition);
+            }
 
             var moves = new List<Move>();
             var positions = GeneratePositions(piecePosition, this);
@@ -69,7 +71,10 @@ namespace Chess
 
         private void AddPromotionMoves(List<Move> moves, Move move, bool generateSan, PromotionType skipPromotion)
         {
-            if (skipPromotion == PromotionType.Default) skipPromotion = PromotionType.ToQueen;
+            if (skipPromotion == PromotionType.Default)
+            {
+                skipPromotion = PromotionType.ToQueen;
+            }
 
             moves.Add(new Move(move, skipPromotion));
             if (generateSan)
@@ -163,7 +168,9 @@ namespace Chess
         public Position[] GeneratePositions(Position piecePosition, bool ignoreStop = false)
         {
             if (pieces[piecePosition.Y, piecePosition.X] is null)
+            {
                 throw new ChessPieceNotFoundException(this, piecePosition);
+            }
 
             return GeneratePositions(piecePosition, this, ignoreStop);
         }
@@ -201,32 +208,44 @@ namespace Chess
         private static void GenerateKingPositions(Position piecePosition, ChessBoard board, List<Position> positions)
         {
             for (short x = (short)Math.Max(0, piecePosition.X - 1); x <= Math.Min(7, piecePosition.X + 1); x++)
+            {
                 for (short y = (short)Math.Max(0, piecePosition.Y - 1); y <= Math.Min(7, piecePosition.Y + 1); y++)
+                {
                     if (x != piecePosition.X || y != piecePosition.Y)
+                    {
                         if (board[x, y] == null || board[x, y].Color != board[piecePosition].Color)
+                        {
                             positions.Add(new Position(x, y));
+                        }
+                    }
+                }
+            }
 
             if (piecePosition.Y % 7 == 0 && piecePosition.X == 4)
             {
                 // Castle options
 
-                var piece = board[new Position() { X = 0, Y = piecePosition.Y }];
+                var piece = board[new Position { X = 0, Y = piecePosition.Y }];
 
                 if (board[1, piecePosition.Y] is null && board[2, piecePosition.Y] is null && board[3, piecePosition.Y] is null)
+                {
                     if (piece?.Type == PieceType.Rook && piece.Color == board[piecePosition].Color)
                     {
-                        positions.Add(new Position() { X = 0, Y = piecePosition.Y });
-                        positions.Add(new Position() { X = 2, Y = piecePosition.Y });
+                        positions.Add(new Position { X = 0, Y = piecePosition.Y });
+                        positions.Add(new Position { X = 2, Y = piecePosition.Y });
                     }
+                }
 
-                piece = board[new Position() { X = 7, Y = piecePosition.Y }];
+                piece = board[new Position { X = 7, Y = piecePosition.Y }];
 
                 if (board[5, piecePosition.Y] is null && board[6, piecePosition.Y] is null)
+                {
                     if (piece?.Type == PieceType.Rook && piece.Color == board[piecePosition].Color)
                     {
-                        positions.Add(new Position() { X = 6, Y = piecePosition.Y });
-                        positions.Add(new Position() { X = 7, Y = piecePosition.Y });
+                        positions.Add(new Position { X = 6, Y = piecePosition.Y });
+                        positions.Add(new Position { X = 7, Y = piecePosition.Y });
                     }
+                }
             }
         }
 
@@ -276,7 +295,9 @@ namespace Chess
             short nextY = (short)(y + step);
 
             if (board[x, nextY] is null)
-                positions.Add(new Position() { X = x, Y = nextY });
+            {
+                positions.Add(new Position { X = x, Y = nextY });
+            }
 
             short rightX = (short)(x + 1);
             if (rightX < 8)
@@ -284,17 +305,23 @@ namespace Chess
                 if (!ignoreStop)
                 {
                     if (board[rightX, nextY] is not null && board[rightX, nextY].Color != board[piecePosition].Color)
-                        positions.Add(new Position() { X = rightX, Y = nextY });
+                    {
+                        positions.Add(new Position { X = rightX, Y = nextY });
+                    }
 
-                    else if (IsValidEnPassant(new Move(piecePosition, new Position() { Y = nextY, X = rightX }) { Piece = board[piecePosition] }, board, step, 1))
-                        positions.Add(new Position() { X = rightX, Y = nextY });
+                    else if (IsValidEnPassant(new Move(piecePosition, new Position { Y = nextY, X = rightX }) { Piece = board[piecePosition] }, board, step, 1))
+                    {
+                        positions.Add(new Position { X = rightX, Y = nextY });
+                    }
                 }
                 else
                 {
-                    positions.Add(new Position() { X = rightX, Y = nextY });
+                    positions.Add(new Position { X = rightX, Y = nextY });
 
-                    if (IsValidEnPassant(new Move(piecePosition, new Position() { Y = nextY, X = rightX }) { Piece = board[piecePosition] }, board, step, 1))
-                        positions.Add(new Position() { X = rightX, Y = nextY });
+                    if (IsValidEnPassant(new Move(piecePosition, new Position { Y = nextY, X = rightX }) { Piece = board[piecePosition] }, board, step, 1))
+                    {
+                        positions.Add(new Position { X = rightX, Y = nextY });
+                    }
                 }
             }
 
@@ -304,17 +331,23 @@ namespace Chess
                 if (!ignoreStop)
                 {
                     if (board[leftX, nextY] is not null && board[leftX, nextY].Color != board[piecePosition].Color)
-                        positions.Add(new Position() { X = leftX, Y = nextY });
+                    {
+                        positions.Add(new Position { X = leftX, Y = nextY });
+                    }
 
-                    else if (IsValidEnPassant(new Move(piecePosition, new Position() { Y = nextY, X = leftX }) { Piece = board[piecePosition] }, board, step, -1))
-                        positions.Add(new Position() { X = leftX, Y = nextY });
+                    else if (IsValidEnPassant(new Move(piecePosition, new Position { Y = nextY, X = leftX }) { Piece = board[piecePosition] }, board, step, -1))
+                    {
+                        positions.Add(new Position { X = leftX, Y = nextY });
+                    }
                 }
                 else
                 {
-                    positions.Add(new Position() { X = leftX, Y = nextY });
+                    positions.Add(new Position { X = leftX, Y = nextY });
 
-                    if (IsValidEnPassant(new Move(piecePosition, new Position() { Y = nextY, X = leftX }) { Piece = board[piecePosition] }, board, step, -1))
-                        positions.Add(new Position() { X = leftX, Y = nextY });
+                    if (IsValidEnPassant(new Move(piecePosition, new Position { Y = nextY, X = leftX }) { Piece = board[piecePosition] }, board, step, -1))
+                    {
+                        positions.Add(new Position { X = leftX, Y = nextY });
+                    }
                 }
             }
 
@@ -322,7 +355,9 @@ namespace Chess
             if ((y == 1 && board[piecePosition].Color == PieceColor.White || y == 6 && board[piecePosition].Color == PieceColor.Black)
                 && board[x, nextY] is null
                 && board[x, (short)(y + step * 2)] is null)
-                positions.Add(new Position() { X = x, Y = (short)(y + step * 2) });
+            {
+                positions.Add(new Position { X = x, Y = (short)(y + step * 2) });
+            }
         }
 
         // Directions for which the bishop can move
@@ -347,11 +382,11 @@ namespace Chess
                         if (!ignoreStop)
                         {
                             if (currentPiece.Color != board[piecePosition].Color)
-                                positions.Add(new Position() { X = currentPosition.x, Y = currentPosition.y });
+                                positions.Add(new Position { X = currentPosition.x, Y = currentPosition.y });
                         }
                         else
                         {
-                            positions.Add(new Position() { X = currentPosition.x, Y = currentPosition.y });
+                            positions.Add(new Position { X = currentPosition.x, Y = currentPosition.y });
                         }
 
                         // Break out of the loop
@@ -359,7 +394,7 @@ namespace Chess
                     }
 
                     // Add the current position to the list of positions
-                    positions.Add(new Position() { X = currentPosition.x, Y = currentPosition.y });
+                    positions.Add(new Position { X = currentPosition.x, Y = currentPosition.y });
 
                     // Move to the next position in the current direction
                     currentPosition.x += direction.x;
@@ -385,16 +420,18 @@ namespace Chess
                         if (!ignoreStop)
                         {
                             if (board[x, y]!.Color != board[piecePosition]!.Color)
-                                positions.Add(new Position() { X = x, Y = y });
+                            {
+                                positions.Add(new Position { X = x, Y = y });
+                            }
                         }
                         else
                         {
-                            positions.Add(new Position() { X = x, Y = y });
+                            positions.Add(new Position { X = x, Y = y });
                         }
                         break;
                     }
 
-                    positions.Add(new Position() { X = x, Y = y });
+                    positions.Add(new Position { X = x, Y = y });
 
                     x += direction.x;
                     y += direction.y;

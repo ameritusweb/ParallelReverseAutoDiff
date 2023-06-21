@@ -147,7 +147,7 @@ namespace Chess
 
         public Position MoveBy(int rank, int file)
         {
-            return new Position() { X = ((short)(this.X + file)), Y = ((short)(this.Y + rank)) };
+            return new Position { X = ((short)(this.X + file)), Y = ((short)(this.Y + rank)) };
         }
 
         public IEnumerable<Position> GetAdjacentSquares()
