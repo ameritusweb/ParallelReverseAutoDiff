@@ -90,7 +90,7 @@ namespace ParallelReverseAutoDiff.Test
                 path4.AddNode(gapNodes[59]);
                 gapPaths.Add(path4);
                 GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(gapEdges, gapNodes, gapPaths, adjacencyMatrix, 10, 2, 4, 0.001d, 4d);
-                neuralNetwork.Forward();
+                await neuralNetwork.Forward();
             }
             finally
             {

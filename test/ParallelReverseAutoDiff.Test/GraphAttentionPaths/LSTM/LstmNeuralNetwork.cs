@@ -19,7 +19,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private readonly int originalInputSize;
         private readonly int inputSize;
         private readonly int outputSize;
-        private readonly int numTimeSteps;
 
         private readonly IModelLayer embeddingLayer;
         private readonly IModelLayer hiddenLayer;
@@ -47,7 +46,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.outputSize = outputSize;
             this.Parameters.NumTimeSteps = numTimeSteps;
             this.Parameters.LearningRate = learningRate;
-            this.numTimeSteps = numTimeSteps;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
 
@@ -98,6 +96,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public Matrix Target { get; private set; }
 
         /// <summary>
+        /// Gets the JSON architecture.
+        /// </summary>
+        public JsonArchitecture Architecture { get; private set; }
+
+        /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
@@ -109,6 +112,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public async Task Initialize()
         {
             await this.InitializeComputationGraph();
+        }
+
+        /// <summary>
+        /// Initializes the computation graph of the convolutional neural network.
+        /// </summary>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <returns>The task.</returns>
+        public async Task Reinitialize(int numTimeSteps)
+        {
+            this.Parameters.NumTimeSteps = numTimeSteps;
+            await this.InitializeComputationGraph();
+            this.InitializeState();
         }
 
         private void ClearState()
@@ -170,6 +185,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.Architecture = jsonArchitecture;
             this.computationGraph = new LstmComputationGraph(this);
             var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
             this.computationGraph
@@ -206,7 +222,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"embeddedInput_{x.TimeStep}_0"] : this.computationGraph[$"h_{x.TimeStep}_{x.Layer - 1}"])
                 .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
                 .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
-                .ConstructFromArchitecture(jsonArchitecture, this.numTimeSteps, this.NumLayers);
+                .ConstructFromArchitecture(jsonArchitecture, this.Parameters.NumTimeSteps, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
             for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
@@ -228,12 +244,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.computationGraph.RestoreOperationIntermediates(id);
         }
 
-        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        public async Task AutomaticForwardPropagate(DeepMatrix input, int numTimeSteps)
         {
+            if (numTimeSteps != this.Parameters.NumTimeSteps)
+            {
+                this.Parameters.NumTimeSteps = numTimeSteps;
+                await Reinitialize(numTimeSteps);
+            }
+
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Input.ToArray(), input.ToArray());
+            CommonMatrixUtils.SetInPlace(this.Parameters.InputSequence, input.ToArray());
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {

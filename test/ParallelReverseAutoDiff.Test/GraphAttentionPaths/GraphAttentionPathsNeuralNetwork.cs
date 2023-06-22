@@ -42,7 +42,7 @@
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                var model = new LstmNeuralNetwork(numFeatures, 500, numFeatures * 2, 1, numLayers, learningRate, clipValue);
+                var model = new LstmNeuralNetwork(numFeatures, 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1, numLayers, learningRate, clipValue);
                 this.lstmNeuralNetwork.Add(model);
                 this.lstmNeuralNetwork[i].Initialize();
             }
@@ -62,7 +62,7 @@
             this.readoutNeuralNetwork.Initialize();
         }
 
-        public Matrix Forward()
+        public async Task<Matrix> Forward()
         {
             foreach (var node in this.gapNodes.Where(x => x.IsInPath == true))
             {
@@ -85,17 +85,17 @@
             foreach (var path in this.gapPaths)
             {
                 var pathLength = path.Nodes.Count;
-                var input = new DeepMatrix(pathLength, numFeatures * numQueries, 1);
-                for (int i = 0; i < pathLength; ++i)
+                var input = new DeepMatrix(pathLength, numFeatures * (int)Math.Pow(2d, (double)numLayers), 1);
+                for (int i = 0; i < input.Depth; ++i)
                 {
-                    for (int j = 0; j < numFeatures; ++j)
+                    for (int j = 0; j < input.Rows; ++j)
                     {
                         input[i][j][0] = path.Nodes[i].FeatureVector[j][0];
                     }
                 }
                 var index = (int)path.GapType;
                 var lstmNet = this.lstmNeuralNetwork[index];
-                lstmNet.AutomaticForwardPropagate(input, true);
+                await lstmNet.AutomaticForwardPropagate(input, pathLength);
                 lstmNet.StoreOperationIntermediates(path.Id);
                 path.FeatureVector = lstmNet.OutputPathFeatures[pathLength - 1];
             }
