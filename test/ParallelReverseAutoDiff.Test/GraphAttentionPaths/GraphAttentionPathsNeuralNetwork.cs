@@ -19,6 +19,7 @@
         private readonly int numLayers;
         private readonly int numQueries;
         private readonly Matrix adjacencyMatrix;
+        private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
 
         public GraphAttentionPathsNeuralNetwork(List<GapEdge> edges, List<GapNode> nodes, List<GapPath> paths, Matrix adjacencyMatrix, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
         {
@@ -30,6 +31,7 @@
             this.numLayers = numLayers;
             this.numQueries = numQueries;
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
+            this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
@@ -103,6 +105,15 @@
             {
                 var index = (int)path.GapType;
                 var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
+                var connectedPaths = this.gapPaths.Where(x => IsConnected(path, x, this.adjacencyMatrix)).ToList();
+                DeepMatrix connectedPathsMatrix = new DeepMatrix(connectedPaths.Count, numFeatures, 1);
+                for (int i = 0; i < connectedPaths.Count; ++i)
+                {
+                    var connectedPath = connectedPaths[i];
+                    connectedPathsMatrix[i] = connectedPath.FeatureVector;
+                }
+                this.connectedPathsMap.Add(path, connectedPaths);
+                attentionNet.ConnectedPathsDeepMatrix = connectedPathsMatrix;
                 attentionNet.AutomaticForwardPropagate(path.FeatureVector, true);
                 attentionNet.StoreOperationIntermediates(path.Id);
                 attentionNetOutputs.Add(attentionNet.Output);
@@ -121,8 +132,7 @@
                 for (int j = 0; j < this.gapPaths.Count; ++j)
                 {
                     var path2 = this.gapPaths[j];
-                    var adjacencyInt = (int)this.adjacencyMatrix[path1.AdjacencyIndex][path2.AdjacencyIndex];
-                    if (adjacencyInt == 1)
+                    if (IsConnected(path1, path2, this.adjacencyMatrix))
                     {
                         var cosineSimilarity = path1.FeatureVector.CosineSimilarity(path2.FeatureVector);
                         var sigmoid = 1.0 / (1.0 + Math.Exp(-cosineSimilarity));
@@ -181,6 +191,7 @@
             var gcnNet = this.gcnNeuralNetwork;
             var gcnInputGradient = await gcnNet.AutomaticBackwardPropagate(inputGradient);
             List<Matrix> attentionNetGradients = new List<Matrix>();
+            List<DeepMatrix> attentionNetConnectedGradients = new List<DeepMatrix>();
             int pathIndex = 0;
             foreach (var path in this.gapPaths)
             {
@@ -188,9 +199,12 @@
                 var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
                 attentionNet.RestoreOperationIntermediates(path.Id);
                 var attentionGradient = await attentionNet.AutomaticBackwardPropagate(gcnInputGradient[pathIndex]);
+                var connectedPathsGradient = attentionNet.DConnectedPathsDeepMatrix;
                 attentionNetGradients.Add(attentionGradient);
+                attentionNetConnectedGradients.Add(connectedPathsGradient);
                 pathIndex++;
             }
+            attentionNetGradients = ApplyGradients(attentionNetGradients, attentionNetConnectedGradients);
             List<DeepMatrix> lstmNetGradients = new List<DeepMatrix>();
             pathIndex = 0;
             foreach (var path in this.gapPaths)
@@ -216,6 +230,29 @@
                 }
                 pathIndex++;
             }
+        }
+
+        private List<Matrix> ApplyGradients(List<Matrix> attentionNetGradients, List<DeepMatrix> attentionNetConnectedGradients)
+        {
+            for (int i = 0; i < this.gapPaths.Count; ++i)
+            {
+                var path = this.gapPaths[i];
+                var connectedPaths = this.connectedPathsMap[path];
+                var gradients = attentionNetConnectedGradients[i];
+                for (int j = 0; j < connectedPaths.Count; ++j)
+                {
+                    var connectedPath = connectedPaths[j];
+                    var connectedPathIndex = this.gapPaths.IndexOf(connectedPath);
+                    var gradient = gradients[j];
+                    attentionNetGradients[connectedPathIndex] += gradient;
+                }   
+            }
+            return attentionNetGradients;
+        }
+
+        private bool IsConnected(GapPath path1, GapPath path2, Matrix adjacency)
+        {
+            return (int)adjacency[path1.AdjacencyIndex][path2.AdjacencyIndex] == 1;
         }
     }
 }
