@@ -806,6 +806,30 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds an intermediate to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddIntermediate(string identifier, Func<LayerInfo, DeepMatrix> matrix)
+        {
+            this.IntermediateAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an intermediate to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddIntermediate(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
+        {
+            this.IntermediateAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a scalar to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -971,6 +995,26 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="identifier">An identifier.</param>
         /// <param name="matrix">The gradient.</param>
         protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.intermediates.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when an intermediate is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, DeepMatrix> matrix)
+        {
+            this.intermediates.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when an intermediate is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
         {
             this.intermediates.TryAdd(identifier, matrix);
         }

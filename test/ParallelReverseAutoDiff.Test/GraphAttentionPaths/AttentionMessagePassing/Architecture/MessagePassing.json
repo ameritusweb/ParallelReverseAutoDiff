@@ -1,6 +1,19 @@
 {
   "timeSteps": [
     {
+      "startOperations": [
+        {
+          "id": "connected_paths_deepmatrix",
+          "type": "MatrixConcatenateOperation",
+          "inputs": [ "ConnectedPathsDeepMatrix" ],
+          "gradientResultTo": [ "DConnectedPathsDeepMatrix" ]
+        },
+        {
+          "id": "connected_paths_matrix_trans",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "connected_paths_deepmatrix" ]
+        }
+      ],
       "layers": [
         {
           "operations": [
@@ -35,7 +48,7 @@
             {
               "id": "weighted_connectedPathFeatures",
               "type": "CudaMatrixMultiplyOperation",
-              "inputs": [ "ConnectedPathsMatrix", "ConnectedWeights" ],
+              "inputs": [ "connected_paths_matrix_trans_find", "ConnectedWeights" ],
               "gradientResultTo": [ null, "DConnectedWeights" ],
               "initializations": [
                 null,
@@ -93,7 +106,7 @@
             {
               "id": "weighted_connected_paths_features",
               "type": "HadamardProductOperation",
-              "inputs": [ "broadcasted_attention_scores", "ConnectedPathsMatrix" ]
+              "inputs": [ "broadcasted_attention_scores", "connected_paths_matrix_trans_find" ],
             },
             {
               "id": "current_path_features_trans",

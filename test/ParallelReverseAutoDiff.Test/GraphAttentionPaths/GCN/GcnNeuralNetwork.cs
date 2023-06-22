@@ -115,6 +115,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new GcnComputationGraph(this);
             this.computationGraph
+                .AddIntermediate("Input", _ => this.Input)
                 .AddIntermediate("Output", x => this.Output[x.Layer])
                 .AddWeight("W", x => w[x.Layer]).AddGradient("DW", x => wGrad[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGrad[x.Layer])

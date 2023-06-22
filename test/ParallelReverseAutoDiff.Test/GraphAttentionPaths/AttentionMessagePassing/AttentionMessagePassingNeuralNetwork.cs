@@ -57,6 +57,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         public Matrix Target { get; private set; }
 
         /// <summary>
+        /// Gets the connected paths deep matrix.
+        /// </summary>
+        public DeepMatrix ConnectedPathsDeepMatrix { get; set; }
+
+        /// <summary>
+        /// Gets the connected paths deep matrix.
+        /// </summary>
+        public DeepMatrix DConnectedPathsDeepMatrix { get; set; }
+
+        /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
@@ -102,11 +112,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.computationGraph = new AttentionMessagePassingComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
+                .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrix)
+                .AddScalar("connectedPathsMatrixRows", _ => this.ConnectedPathsDeepMatrix.Rows)
+                .AddScalar("connectedPathsMatrixColumns", _ => this.ConnectedPathsDeepMatrix.Cols)
+                .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrix)
                 .AddWeight("Weights", x => weights[x.Layer]).AddGradient("DWeights", x => weightsGradient[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGradient[x.Layer])
                 .AddWeight("ConnectedWeights", x => connected[x.Layer]).AddGradient("DConnectedWeights", x => connectedGradient[x.Layer])
                 .AddBias("CB", x => cb[x.Layer]).AddGradient("DCB", x => cbGradient[x.Layer])
                 .AddOperationFinder("CurrentPathFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"current_path_features_0_{x.Layer - 1}"])
+                .AddOperationFinder("connected_paths_matrix_trans_find", _ => this.computationGraph["connected_paths_matrix_trans_0_0"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
@@ -187,6 +202,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         {
             GradientClearer clearer = new GradientClearer();
             clearer.Clear(new[] { this.hiddenLayer});
+
+            this.ConnectedPathsDeepMatrix = new DeepMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
+            this.DConnectedPathsDeepMatrix = new DeepMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
 
             // Clear intermediates
             this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);

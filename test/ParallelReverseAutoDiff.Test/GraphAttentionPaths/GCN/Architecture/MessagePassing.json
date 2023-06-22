@@ -25,7 +25,7 @@
               "id": "ah_w",
               "type": "MatrixMultiplyOperation",
               "inputs": [ "ah", "W" ],
-              "gradientResultTo": "DW[layerIndex]",
+              "gradientResultTo": [ null, "DW[layerIndex]" ],
               "initializations": [
                 null,
                 {
@@ -39,7 +39,7 @@
               "id": "ah_w_broadcasting",
               "type": "MatrixAddBroadcastingOperation",
               "inputs": [ "ah_w", "B" ],
-              "gradientResultTo": "DB[layerIndex]",
+              "gradientResultTo": [ null, "DB[layerIndex]" ],
               "initializations": [
                 null,
                 {
