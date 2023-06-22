@@ -85,7 +85,7 @@
             {
               "operations": [
                 {
-                  "id": "queries_edgeFeatures",
+                  "id": "queries_pathFeatures",
                   "type": "CudaMatrixMultiplyOperation",
                   "inputs": [ "pathFeatures", "Queries[layerIndex]" ],
                   "gradientResultTo": [ null, "DQueries[layerIndex]" ],
@@ -99,7 +99,7 @@
                   ]
                 },
                 {
-                  "id": "queryedge_add",
+                  "id": "querypath_add",
                   "type": "MatrixAddBroadcastingOperation",
                   "inputs": [ "queries_pathFeatures", "QB" ],
                   "gradientResultTo": [ null, "DQB" ],
@@ -155,7 +155,7 @@
             {
               "id": "concatenated",
               "type": "MatrixConcatenateOperation",
-              "inputs": [ "AV" ]
+              "inputs": [ "attention_weights_values_array" ]
             },
             {
               "id": "reduce",
