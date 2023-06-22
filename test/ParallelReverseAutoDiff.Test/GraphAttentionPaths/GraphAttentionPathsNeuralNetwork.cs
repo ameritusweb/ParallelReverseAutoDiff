@@ -85,7 +85,7 @@
             foreach (var path in this.gapPaths)
             {
                 var pathLength = path.Nodes.Count;
-                var input = new DeepMatrix(pathLength, numFeatures, 1);
+                var input = new DeepMatrix(pathLength, numFeatures * numQueries, 1);
                 for (int i = 0; i < pathLength; ++i)
                 {
                     for (int j = 0; j < numFeatures; ++j)

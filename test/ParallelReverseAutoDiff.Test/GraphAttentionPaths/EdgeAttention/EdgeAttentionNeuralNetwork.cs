@@ -64,17 +64,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 this.nestedLayers.Add(nestedLayer);
                 numNestedFeatures = numNestedOutputFeatures;
                 numNestedOutputFeatures = numNestedFeatures * 2;
-                outputFeaturesList.Add(numNestedOutputFeatures);
+                outputFeaturesList.Add(numNestedFeatures * numQueries);
             }
 
             this.outputLayers = new List<IModelLayer>();
+            numNestedFeatures = numFeatures * 2;
             for (int i = 0; i < numLayers; ++i)
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("R", new[] { outputFeaturesList[i], numFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("RB", new[] { 1, numFeatures }, InitializationType.Zeroes);
+                    .AddModelElementGroup("R", new[] { outputFeaturesList[i], numNestedFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("RB", new[] { 1, numNestedFeatures }, InitializationType.Zeroes);
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
+                numNestedFeatures *= 2;
             }
 
             this.InitializeState();
@@ -94,11 +96,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         /// Gets the target matrix.
         /// </summary>
         public Matrix Target { get; private set; }
-
-        /// <summary>
-        /// Gets the AV matrix array.
-        /// </summary>
-        public Matrix[] AV { get; private set; }
 
         /// <summary>
         /// Gets the number of layers of the neural network.
@@ -181,7 +178,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             this.computationGraph = new EdgeAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddIntermediate("AV", x => this.AV[x.Layer])
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2 + x.Layer))
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])
                 .AddBias("KB", x => keysBias[x.Layer]).AddGradient("DKB", x => keysBiasGradient[x.Layer])
@@ -235,6 +231,21 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
+                if (op.Id == "concatenated")
+                {
+                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
+                    DeepMatrix deepMatrix = new DeepMatrix(objArray.Length, 1, 1);
+                    for (int i = 0; i < objArray.Length; ++i)
+                    {
+                        var obj = objArray[i];
+                        if (obj is Matrix m)
+                        {
+                            deepMatrix[i] = m;
+                        }
+                    }
+                    parameters[0] = deepMatrix;
+                }
+
                 forward.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
@@ -273,14 +284,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             clearer.Clear(this.nestedLayers.ToArray());
             clearer.Clear(this.outputLayers.ToArray());
 
-            this.AV = new Matrix[this.NumLayers];
-            for (int i = 0; i < this.NumLayers; ++i)
-            {
-                this.AV[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
-            }
-
             // Clear intermediates
-            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
+            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures * this.NumQueries, 1);
             this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
         }
     }

@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The base class for a neural network.
     /// </summary>
@@ -53,6 +55,27 @@ namespace ParallelReverseAutoDiff.RMAD
                 else if (operationParameters[j] is IDeepOperation)
                 {
                     parametersToReturn[j] = ((IDeepOperation)operationParameters[j]).GetDeepOutput();
+                }
+                else if (operationParameters[j] is IOperationBase[] parameters)
+                {
+                    List<object> parametersList = new List<object>();
+                    for (int k = 0; k < parameters.Length; ++k)
+                    {
+                        if (parameters[k] is IOperation)
+                        {
+                            parametersList.Add(((IOperation)parameters[k]).GetOutput());
+                        }
+                        else if (parameters[k] is IDeepOperation)
+                        {
+                            parametersList.Add(((IDeepOperation)parameters[k]).GetDeepOutput());
+                        }
+                        else
+                        {
+                            parametersList.Add(parameters[k]);
+                        }
+                    }
+
+                    parametersToReturn[j] = parametersList.ToArray();
                 }
                 else
                 {
