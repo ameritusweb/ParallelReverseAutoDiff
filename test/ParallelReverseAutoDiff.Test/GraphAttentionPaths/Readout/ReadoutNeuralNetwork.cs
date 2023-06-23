@@ -33,11 +33,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.NumLayers = numLayers;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures;
+            this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 8;
 
             this.inputLayers = new List<IModelLayer>();
-            int numInputFeatures = numFeatures;
-            int numInputOutputFeatures = numFeatures * 2;
+            int numInputFeatures = this.NumFeatures;
+            int numInputOutputFeatures = this.NumFeatures * 2;
             for (int i = 0; i < numLayers; ++i)
             {
                 var inputLayerBuilder = new ModelLayerBuilder(this)
@@ -47,13 +47,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     .AddModelElementGroup("VB", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes);
                 var inputLayer = inputLayerBuilder.Build();
                 this.inputLayers.Add(inputLayer);
-                numInputFeatures = numInputOutputFeatures;
-                numInputOutputFeatures = numInputFeatures * 2;
             }
 
             this.nestedLayers = new List<IModelLayer>();
-            int numNestedFeatures = numFeatures;
-            int numNestedOutputFeatures = numFeatures * 2;
+            int numNestedFeatures = this.NumFeatures;
+            int numNestedOutputFeatures = this.NumFeatures * 2;
             List<int> outputFeaturesList = new List<int>();
             for (int i = 0; i < numLayers; ++i)
             {
@@ -62,8 +60,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     .AddModelElementGroup("QB", new[] { numQueries, 1, numNestedOutputFeatures }, InitializationType.Zeroes);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
-                numNestedFeatures = numNestedOutputFeatures;
-                numNestedOutputFeatures = numNestedFeatures * 2;
                 outputFeaturesList.Add(numNestedOutputFeatures);
             }
 
@@ -71,8 +67,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             for (int i = 0; i < numLayers; ++i)
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("R", new[] { outputFeaturesList[i], numFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("RB", new[] { 1, numFeatures }, InitializationType.Zeroes);
+                    .AddModelElementGroup("R", new[] { outputFeaturesList[i], this.NumFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
             }

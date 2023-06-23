@@ -19,7 +19,7 @@ namespace ParallelReverseAutoDiff.RMAD
     [Serializable]
     public class Matrix : IEnumerable<double[]>, ICloneable
     {
-        private readonly double[][] matrix;
+        private double[][] matrix;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
@@ -387,6 +387,24 @@ namespace ParallelReverseAutoDiff.RMAD
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Replace the matrix with the specified 2-D array.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        public void Replace(double[][] matrix)
+        {
+            this.matrix = matrix;
+        }
+
+        /// <summary>
+        /// Retrieve the matrix as a 2-D array.
+        /// </summary>
+        /// <returns>The 2-D array.</returns>
+        public double[][] ToArray()
+        {
+            return this.matrix;
         }
 
         /// <summary>

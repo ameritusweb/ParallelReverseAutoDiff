@@ -29,11 +29,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures;
+            this.NumFeatures = numFeatures * (int)Math.Pow(2d, numLayers) * 2;
 
             this.hiddenLayers = new List<IModelLayer>();
-            int numInputFeatures = numFeatures;
-            int numInputOutputFeatures = numFeatures * 2;
+            int numInputFeatures = this.NumFeatures;
+            int numInputOutputFeatures = this.NumFeatures * 2;
             for (int i = 0; i < numLayers; ++i)
             {
                 var hiddenLayerBuilder = new ModelLayerBuilder(this)
@@ -94,7 +94,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private void ClearState()
         {
-
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.hiddenLayers.ToArray());
         }
 
         private async Task InitializeComputationGraph()
@@ -191,9 +192,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private void InitializeState()
         {
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(this.hiddenLayers.ToArray());
-
             // Clear intermediates
             this.Output = new Matrix[NumLayers];
             int numFeatures = this.NumFeatures;
@@ -202,6 +200,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 numFeatures *= 2;
                 this.Output[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, numFeatures);
             }
+            this.Adjacency = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumPaths);
+            this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures, 1));
             this.Parameters.InputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
         }
     }

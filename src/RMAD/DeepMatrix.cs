@@ -19,7 +19,7 @@ namespace ParallelReverseAutoDiff.RMAD
     [Serializable]
     public class DeepMatrix : IEnumerable<Matrix>, ICloneable
     {
-        private readonly Matrix[] matrices;
+        private Matrix[] matrices;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeepMatrix"/> class.
@@ -209,6 +209,15 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix[] ToArray()
         {
             return this.matrices;
+        }
+
+        /// <summary>
+        /// Replace the matrices with the specified matrices.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace with.</param>
+        public void Replace(Matrix[] matrices)
+        {
+            this.matrices = matrices;
         }
 
         /// <summary>

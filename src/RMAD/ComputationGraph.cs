@@ -20,7 +20,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> weightsAndBiases = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
-        private readonly ConcurrentDictionary<string, Func<LayerInfo, double>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, double>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, IOperationBase> operations = new ConcurrentDictionary<string, IOperationBase>();
         private readonly ConcurrentHashSet<string> nestedOperations = new ConcurrentHashSet<string>();
@@ -842,6 +842,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds a scalar to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="scalar">The scalar.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddScalar(string identifier, Func<LayerInfo, int> scalar)
+        {
+            this.ScalarAdded(identifier, scalar);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a operation finder to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -1026,7 +1038,19 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="scalar">The scalar.</param>
         protected virtual void ScalarAdded(string identifier, Func<LayerInfo, double> scalar)
         {
-            this.scalars.TryAdd(identifier, scalar);
+            Func<LayerInfo, object> scalarAsObject = li => (object)scalar(li);
+            this.scalars.TryAdd(identifier, scalarAsObject);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when a scalar is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="scalar">The scalar.</param>
+        protected virtual void ScalarAdded(string identifier, Func<LayerInfo, int> scalar)
+        {
+            Func<LayerInfo, object> scalarAsObject = li => (object)scalar(li);
+            this.scalars.TryAdd(identifier, scalarAsObject);
         }
 
         /// <summary>

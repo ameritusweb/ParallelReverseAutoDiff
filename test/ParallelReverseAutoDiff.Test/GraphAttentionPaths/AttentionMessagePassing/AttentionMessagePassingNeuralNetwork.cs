@@ -29,13 +29,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures;
+            this.NumFeatures = numFeatures * (int)Math.Pow(2d, (int)numLayers) * 2;
 
             var hiddenLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("Weights", new[] { 6, numFeatures, numFeatures }, InitializationType.Xavier) // one weight per piece type
-                .AddModelElementGroup("B", new[] { 6, numFeatures, 1 }, InitializationType.Zeroes) // similarly one bias per piece type
-                .AddModelElementGroup("ConnectedWeights", new[] { numPaths, numFeatures, numFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("CB", new[] { numPaths, 1, numFeatures }, InitializationType.Zeroes);
+                .AddModelElementGroup("Weights", new[] { numLayers, this.NumFeatures, this.NumFeatures }, InitializationType.Xavier) // one weight per piece type
+                .AddModelElementGroup("B", new[] { numLayers, this.NumFeatures, 1 }, InitializationType.Zeroes) // similarly one bias per piece type
+                .AddModelElementGroup("ConnectedWeights", new[] { numLayers, this.NumFeatures, this.NumFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("CB", new[] { numLayers, 1, this.NumFeatures }, InitializationType.Zeroes);
             this.hiddenLayer = hiddenLayerBuilder.Build();
 
             this.InitializeState();
@@ -208,7 +208,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
             // Clear intermediates
             this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
-            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
+            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
         }
     }
 }

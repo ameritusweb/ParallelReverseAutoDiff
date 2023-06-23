@@ -42,7 +42,7 @@
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                var model = new LstmNeuralNetwork(numFeatures, 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1, numLayers, learningRate, clipValue);
+                var model = new LstmNeuralNetwork(numFeatures * (int)Math.Pow(2d, (double)numLayers), 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1, numLayers, learningRate, clipValue);
                 this.lstmNeuralNetwork.Add(model);
                 this.lstmNeuralNetwork[i].Initialize();
             }
@@ -113,7 +113,8 @@
                     connectedPathsMatrix[i] = connectedPath.FeatureVector;
                 }
                 this.connectedPathsMap.Add(path, connectedPaths);
-                attentionNet.ConnectedPathsDeepMatrix = connectedPathsMatrix;
+                attentionNet.ConnectedPathsDeepMatrix.Replace(connectedPathsMatrix.ToArray());
+                attentionNet.DConnectedPathsDeepMatrix.Replace(new DeepMatrix(attentionNet.ConnectedPathsDeepMatrix.Dimension).ToArray());
                 attentionNet.AutomaticForwardPropagate(path.FeatureVector, true);
                 attentionNet.StoreOperationIntermediates(path.Id);
                 attentionNetOutputs.Add(attentionNet.Output);
@@ -149,17 +150,17 @@
             }
             Matrix normalizedAdjacency = degreeMatrix * adjacency * degreeMatrix;  // Step 3
 
-            DeepMatrix gcnInput = new DeepMatrix(this.gapPaths.Count, numFeatures, 1);
-            for (int i = 0; i < this.gapPaths.Count; ++i)
+            DeepMatrix gcnInput = new DeepMatrix(this.gapPaths.Count, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1);
+            for (int i = 0; i < gcnInput.Depth; ++i)
             {
-                for (int j = 0; j < numFeatures; ++j)
+                for (int j = 0; j < gcnInput.Rows; ++j)
                 {
                     gcnInput[i][j][0] = this.gapPaths[i].FeatureVector[j][0];
                 }
             }
 
             var gcnNet = this.gcnNeuralNetwork;
-            gcnNet.Adjacency = normalizedAdjacency;
+            gcnNet.Adjacency.Replace(normalizedAdjacency.ToArray());
             gcnNet.AutomaticForwardPropagate(gcnInput, true);
             var gcnOutput = gcnNet.Output.Last();
 
