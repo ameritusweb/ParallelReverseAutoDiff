@@ -145,8 +145,7 @@
                 {
                   "id": "attention_weights_values",
                   "type": "CudaMatrixMultiplyOperation",
-                  "inputs": [ "attention_weights", "values_act" ],
-                  "setResultTo": "AV[layerIndex]"
+                  "inputs": [ "attention_weights", "values_act" ]
                 }
               ]
             }
@@ -160,7 +159,7 @@
             {
               "id": "reduce",
               "type": "CudaMatrixMultiplyOperation",
-              "inputs": [ "AV", "R" ],
+              "inputs": [ "concatenated", "R" ],
               "gradientResultTo": [ null, "DR" ]
             },
             {

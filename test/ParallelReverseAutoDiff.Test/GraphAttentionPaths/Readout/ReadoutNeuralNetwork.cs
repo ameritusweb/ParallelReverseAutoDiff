@@ -60,7 +60,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     .AddModelElementGroup("QB", new[] { numQueries, 1, numNestedOutputFeatures }, InitializationType.Zeroes);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
-                outputFeaturesList.Add(numNestedOutputFeatures);
+                outputFeaturesList.Add(numNestedOutputFeatures * numQueries);
             }
 
             this.outputLayers = new List<IModelLayer>();
@@ -127,7 +127,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private void ClearState()
         {
-
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.inputLayers.ToArray());
+            clearer.Clear(this.nestedLayers.ToArray());
+            clearer.Clear(this.outputLayers.ToArray());
         }
 
         private async Task InitializeComputationGraph()
@@ -221,6 +224,21 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
+                if (op.Id == "concatenated")
+                {
+                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
+                    DeepMatrix deepMatrix = new DeepMatrix(objArray.Length, 1, 1);
+                    for (int i = 0; i < objArray.Length; ++i)
+                    {
+                        var obj = objArray[i];
+                        if (obj is Matrix m)
+                        {
+                            deepMatrix[i] = m;
+                        }
+                    }
+                    parameters[0] = deepMatrix;
+                }
+
                 forward.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
@@ -259,17 +277,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         private void InitializeState()
         {
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(this.inputLayers.ToArray());
-            clearer.Clear(this.nestedLayers.ToArray());
-            clearer.Clear(this.outputLayers.ToArray());
-
-            this.AV = new Matrix[this.NumLayers];
-            for (int i = 0; i < this.NumLayers; ++i)
-            {
-                this.AV[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
-            }
-
             // Clear intermediates
             this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
             this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
