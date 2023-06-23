@@ -30,7 +30,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
-            this.NumLayers = numLayers;
+            this.NumLayers = numLayers * 10;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
             this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 8;
@@ -38,7 +38,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.inputLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
             int numInputOutputFeatures = this.NumFeatures * 2;
-            for (int i = 0; i < numLayers; ++i)
+            for (int i = 0; i < this.NumLayers; ++i)
             {
                 var inputLayerBuilder = new ModelLayerBuilder(this)
                     .AddModelElementGroup("Keys", new[] { numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
@@ -53,7 +53,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             int numNestedFeatures = this.NumFeatures;
             int numNestedOutputFeatures = this.NumFeatures * 2;
             List<int> outputFeaturesList = new List<int>();
-            for (int i = 0; i < numLayers; ++i)
+            for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
                     .AddModelElementGroup("Queries", new[] { numQueries, numNestedFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
@@ -64,7 +64,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             }
 
             this.outputLayers = new List<IModelLayer>();
-            for (int i = 0; i < numLayers; ++i)
+            for (int i = 0; i < this.NumLayers; ++i)
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
                     .AddModelElementGroup("R", new[] { outputFeaturesList[i], this.NumFeatures }, InitializationType.Xavier)
