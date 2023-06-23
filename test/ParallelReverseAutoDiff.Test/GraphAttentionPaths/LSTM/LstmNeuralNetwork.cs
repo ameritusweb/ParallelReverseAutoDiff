@@ -54,22 +54,22 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             var embeddingLayerBuilder = new ModelLayerBuilder(this)
                 .AddModelElementGroup("We", new[] { hiddenSize, this.originalInputSize }, InitializationType.Xavier)
-                .AddModelElementGroup("be", new[] { hiddenSize, outputSize }, InitializationType.Zeroes);
+                .AddModelElementGroup("be", new[] { hiddenSize, 1 }, InitializationType.Zeroes);
             this.embeddingLayer = embeddingLayerBuilder.Build();
 
             var hiddenLayerBuilder = new ModelLayerBuilder(this)
                 .AddModelElementGroup("Wo", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
                 .AddModelElementGroup("Uo", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
-                .AddModelElementGroup("bo", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("bo", new[] { numLayers, hiddenSize, 1 }, InitializationType.Zeroes)
                 .AddModelElementGroup("Wi", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
                 .AddModelElementGroup("Ui", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
-                .AddModelElementGroup("bi", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("bi", new[] { numLayers, hiddenSize, 1 }, InitializationType.Zeroes)
                 .AddModelElementGroup("Wf", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
                 .AddModelElementGroup("Uf", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
-                .AddModelElementGroup("bf", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("bf", new[] { numLayers, hiddenSize, 1 }, InitializationType.Zeroes)
                 .AddModelElementGroup("Wc", new[] { numLayers, hiddenSize, inputSize }, InitializationType.Xavier)
                 .AddModelElementGroup("Uc", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
-                .AddModelElementGroup("bc", new[] { numLayers, hiddenSize, outputSize }, InitializationType.Zeroes)
+                .AddModelElementGroup("bc", new[] { numLayers, hiddenSize, 1 }, InitializationType.Zeroes)
                 .AddModelElementGroup("Wq", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
                 .AddModelElementGroup("Wk", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier)
                 .AddModelElementGroup("Wv", new[] { numLayers, hiddenSize, hiddenSize }, InitializationType.Xavier);
@@ -306,23 +306,20 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         public async Task<DeepMatrix> AutomaticBackwardPropagate(Matrix gradient)
         {
-            int traverseCount = 0;
-            IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_t_0_0"];
+            IOperationBase? backwardStartOperation = this.computationGraph[$"output_t_{this.Parameters.NumTimeSteps - 1}_0"];
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
-                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, this.Parameters.NumTimeSteps - 1);
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
-                traverseCount++;
             }
             DeepMatrix output = new DeepMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
             for (int i = 0; i < this.Parameters.NumTimeSteps; ++i)
             {
-                IOperationBase? backwardEndOperation = this.computationGraph[$"InputNodeFeatures_{i}_0"];
-                output[i] = backwardEndOperation.CalculatedGradient[0] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+                IOperationBase? backwardEndOperation = this.computationGraph[$"projectedInput_{i}_0"];
+                output[i] = backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
             }
             return output;
         }
