@@ -794,6 +794,8 @@ Let's look at an example custom operation, MatrixAverageOperation, which calcula
 ```c#
 public class MatrixAverageOperation : Operation
 {
+    private Matrix input;
+
     public static IOperation Instantiate(NeuralNetwork net)
     {
         return new MatrixAverageOperation();
@@ -802,6 +804,7 @@ public class MatrixAverageOperation : Operation
     public Matrix Forward(Matrix input)
     {
         int numRows = input.Rows;
+        this.input = input;
         this.Output = new Matrix(numRows, 1);
 
         for (int i = 0; i < numRows; i++)
@@ -815,7 +818,7 @@ public class MatrixAverageOperation : Operation
     public override BackwardResult Backward(Matrix dOutput)
     {
         int numRows = dOutput.Length;
-        int numCols = this.Output[0].Length;
+        int numCols = this.input.Cols;
 
         Matrix dInput = new Matrix(numRows, numCols);
 
