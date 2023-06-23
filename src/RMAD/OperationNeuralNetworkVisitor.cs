@@ -112,12 +112,12 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 this.operations.Add(node);
 
-                if (node.VisitedFrom.Contains(fromNode.SpecificId))
+                if (node.VisitedFrom.Contains(fromNode.NestedSpecificId))
                 {
                     throw new InvalidOperationException("Node must not be visited twice.");
                 }
 
-                node.VisitedFrom.Add(fromNode.SpecificId);
+                node.VisitedFrom.Add(fromNode.NestedSpecificId);
             }
 
             var backwardResult = (node is IDeepOperation

@@ -289,7 +289,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                         else if (gradientResultTo is DeepMatrix deepMatrixGradientResult)
                         {
-                            var output = (DeepMatrix?)gradients[dest];
+                            var output = gradients[dest] is Matrix ? new DeepMatrix(gradients.OfType<Matrix>().ToArray()) : (DeepMatrix?)gradients[dest];
                             if (output == null)
                             {
                                 throw new InvalidOperationException("The output gradient must be non-null.");

@@ -187,7 +187,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 traverseCount++;
             }
             IOperationBase? backwardEndOperation = this.computationGraph["input_0_0"];
-            return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+            var matrixArray = backwardEndOperation.CalculatedGradient.OfType<Matrix>().ToArray();
+            return new DeepMatrix(matrixArray);
         }
 
         private void InitializeState()

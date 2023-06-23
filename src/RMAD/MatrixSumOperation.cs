@@ -13,6 +13,8 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class MatrixSumOperation : Operation
     {
+        private Matrix input;
+
         /// <summary>
         /// A common method for instantiating an operation.
         /// </summary>
@@ -26,13 +28,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateMatrices.AddOrUpdate(id, this.Output, (key, oldValue) => this.Output);
+            this.IntermediateMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.Output = this.IntermediateMatrices[id];
+            this.input = this.IntermediateMatrices[id];
         }
 
         /// <summary>
@@ -43,6 +45,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix Forward(Matrix input)
         {
             int numRows = input.Rows;
+            this.input = input;
             this.Output = new Matrix(numRows, 1);
 
             for (int i = 0; i < numRows; i++)
@@ -57,7 +60,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public override BackwardResult Backward(Matrix dOutput)
         {
             int numRows = dOutput.Rows;
-            int numCols = this.Output.Cols;
+            int numCols = this.input.Cols;
             Matrix dInput = new Matrix(numRows, numCols);
 
             // The gradient with respect to the input is the gradient of the output distributed equally across each element of the input row
