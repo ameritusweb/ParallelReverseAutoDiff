@@ -126,6 +126,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds a range of model layers.
+        /// </summary>
+        /// <param name="modelLayers">The model layers.</param>
+        public void AddRange(IEnumerable<IModelLayer> modelLayers)
+        {
+            foreach (var modelLayer in modelLayers)
+            {
+                this.Add(modelLayer);
+            }
+        }
+
+        /// <summary>
         /// Save gradients to a file.
         /// </summary>
         /// <param name="file">The file info.</param>
