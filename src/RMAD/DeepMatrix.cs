@@ -24,6 +24,14 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Initializes a new instance of the <see cref="DeepMatrix"/> class.
         /// </summary>
+        [JsonConstructor]
+        public DeepMatrix()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeepMatrix"/> class.
+        /// </summary>
         /// <param name="depth">The depth.</param>
         /// <param name="rows">The rows.</param>
         /// <param name="cols">The cols.</param>
@@ -68,7 +76,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="uniqueId">The unique ID.</param>
         /// <param name="matrixArrayValues">The matrices.</param>
-        [JsonConstructor]
         public DeepMatrix(int uniqueId, Matrix[] matrixArrayValues)
         {
             this.UniqueId = uniqueId;

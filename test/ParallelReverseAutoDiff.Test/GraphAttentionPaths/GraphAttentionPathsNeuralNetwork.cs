@@ -7,6 +7,7 @@
 
     public class GraphAttentionPathsNeuralNetwork
     {
+        private const string WEIGHTSSAVEPATH = "C:\\model\\initialWeights3.json";
         private readonly List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
         private readonly List<LstmNeuralNetwork> lstmNeuralNetwork;
         private readonly List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
@@ -20,6 +21,8 @@
         private readonly int numQueries;
         private readonly Matrix adjacencyMatrix;
         private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
+        private readonly List<IModelLayer> modelLayers;
+        private readonly WeightStore weightStore;
 
         public GraphAttentionPathsNeuralNetwork(List<GapEdge> edges, List<GapNode> nodes, List<GapPath> paths, Matrix adjacencyMatrix, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
         {
@@ -30,6 +33,8 @@
             this.numFeatures = numFeatures;
             this.numLayers = numLayers;
             this.numQueries = numQueries;
+            this.modelLayers = new List<IModelLayer>();
+            this.weightStore = new WeightStore();
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             for (int i = 0; i < 7; ++i)
@@ -37,6 +42,7 @@
                 var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
                 this.edgeAttentionNeuralNetwork.Add(model);
                 this.edgeAttentionNeuralNetwork[i].Initialize();
+                this.modelLayers = this.modelLayers.Concat(this.edgeAttentionNeuralNetwork[i].ModelLayers).ToList();
             }
 
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
@@ -45,6 +51,7 @@
                 var model = new LstmNeuralNetwork(numFeatures * (int)Math.Pow(2d, (double)numLayers), 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1, numLayers, learningRate, clipValue);
                 this.lstmNeuralNetwork.Add(model);
                 this.lstmNeuralNetwork[i].Initialize();
+                this.modelLayers = this.modelLayers.Concat(this.lstmNeuralNetwork[i].ModelLayers).ToList();
             }
 
             this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
@@ -53,13 +60,18 @@
                 var model = new AttentionMessagePassingNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
                 this.attentionMessagePassingNeuralNetwork.Add(model);
                 this.attentionMessagePassingNeuralNetwork[i].Initialize();
+                this.modelLayers = this.modelLayers.Concat(this.attentionMessagePassingNeuralNetwork[i].ModelLayers).ToList();
             }
 
             this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
             this.gcnNeuralNetwork.Initialize();
+            this.modelLayers = this.modelLayers.Concat(this.gcnNeuralNetwork.ModelLayers).ToList();
 
             this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
             this.readoutNeuralNetwork.Initialize();
+            this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
+            this.weightStore.AddRange(this.modelLayers);
+            this.weightStore.Save(new FileInfo(WEIGHTSSAVEPATH));
         }
 
         public async Task<Matrix> Forward()

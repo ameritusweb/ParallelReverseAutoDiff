@@ -24,6 +24,14 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
+        [JsonConstructor]
+        public Matrix()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
+        /// </summary>
         /// <param name="rows">The number of rows.</param>
         /// <param name="cols">The number of cols.</param>
         public Matrix(int rows, int cols)
@@ -52,7 +60,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="uniqueId">The unique ID.</param>
         /// <param name="matrixValues">The matrix values.</param>
-        [JsonConstructor]
         public Matrix(int uniqueId, double[][] matrixValues)
         {
             this.UniqueId = uniqueId;

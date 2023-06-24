@@ -117,16 +117,57 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Save gradients to a file.
+        /// Save to a file.
         /// </summary>
-        /// <param name="file">The file info.</param>
-        public void Save(FileInfo file)
+        /// <param name="fileInfo">The file info.</param>
+        public void Save(FileInfo fileInfo)
         {
-            // Serialize the weights dictionary to JSON
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            using (StreamWriter file = File.CreateText(fileInfo.FullName))
+            using (JsonTextWriter writer = new JsonTextWriter(file))
+            {
+                JsonSerializer serializer = new JsonSerializer();
 
-            // Write JSON string to file
-            File.WriteAllText(file.FullName, json);
+                // Start a JSON array
+                writer.WriteStartArray();
+
+                foreach (Guid id in this.Ids)
+                {
+                    serializer.Serialize(writer, id);
+                }
+
+                foreach (string type in this.Types)
+                {
+                    serializer.Serialize(writer, type);
+                }
+
+                foreach (var indexPair in this.ModelLayerIndices)
+                {
+                    serializer.Serialize(writer, indexPair);
+                }
+
+                foreach (var matrixKey in this.Matrices.Keys)
+                {
+                    serializer.Serialize(writer, matrixKey);
+                }
+
+                foreach (Matrix matrix in this.Matrices.Values)
+                {
+                    serializer.Serialize(writer, matrix);
+                }
+
+                foreach (var deepMatrixKey in this.DeepMatrices.Keys)
+                {
+                    serializer.Serialize(writer, deepMatrixKey);
+                }
+
+                foreach (DeepMatrix matrix in this.DeepMatrices.Values)
+                {
+                    serializer.Serialize(writer, matrix);
+                }
+
+                // End the JSON array
+                writer.WriteEndArray();
+            }
         }
 
         /// <summary>
