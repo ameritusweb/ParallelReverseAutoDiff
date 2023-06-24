@@ -27,17 +27,20 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.LayerIndex
   - ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Lock
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Next
   - ParallelReverseAutoDiff.RMAD.IOperationBase.OperationType
   - ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName
   - ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
   - ParallelReverseAutoDiff.RMAD.IOperationBase.TimeStepIndex
@@ -314,6 +317,37 @@ items:
       type: System.String
     content.vb: Property SpecificId As String
   overload: ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId*
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  id: NestedSpecificId
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  langs:
+  - csharp
+  - vb
+  name: NestedSpecificId
+  nameWithType: IOperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/IOperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: NestedSpecificId
+    path: ../../src/RMAD/IOperationBase.cs
+    startLine: 61
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the nested specific ID of the operation.
+  example: []
+  syntax:
+    content: string NestedSpecificId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property NestedSpecificId As String
+  overload: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId*
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   id: Parameters
@@ -332,7 +366,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Parameters
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 61
+    startLine: 66
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -363,7 +397,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Tasks
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 66
+    startLine: 71
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -394,7 +428,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Inputs
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 71
+    startLine: 76
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -425,7 +459,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Outputs
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 76
+    startLine: 81
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -456,7 +490,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardInput
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 81
+    startLine: 86
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -487,7 +521,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardAdjacentOperations
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 86
+    startLine: 91
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -518,7 +552,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardDependencyCounts
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 91
+    startLine: 96
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -549,7 +583,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardDependencies
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 96
+    startLine: 101
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -580,7 +614,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: VisitedFrom
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 101
+    startLine: 106
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -611,7 +645,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulatedGradients
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 106
+    startLine: 111
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -642,7 +676,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CalculatedGradient
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 111
+    startLine: 116
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -673,7 +707,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OutputDependencyCount
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 116
+    startLine: 121
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -704,7 +738,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: VisitedCount
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 121
+    startLine: 126
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -735,7 +769,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Lock
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 126
+    startLine: 131
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -766,7 +800,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SyncSemaphore
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 131
+    startLine: 136
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -797,7 +831,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientDestinations
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 136
+    startLine: 141
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -828,7 +862,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultToName
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 141
+    startLine: 146
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -859,7 +893,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LayerInfo
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 146
+    startLine: 151
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -890,7 +924,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeFrom
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 154
+    startLine: 159
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -931,7 +965,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetOutput
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 160
+    startLine: 165
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -962,7 +996,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetDeepOutput
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 166
+    startLine: 171
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -993,7 +1027,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Reset
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 171
+    startLine: 176
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1003,6 +1037,70 @@ items:
     content: void Reset()
     content.vb: Sub Reset()
   overload: ParallelReverseAutoDiff.RMAD.IOperationBase.Reset*
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  id: Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  langs:
+  - csharp
+  - vb
+  name: Store(Guid)
+  nameWithType: IOperationBase.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IOperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Store
+    path: ../../src/RMAD/IOperationBase.cs
+    startLine: 182
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Stores the intermediates.
+  example: []
+  syntax:
+    content: void Store(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Sub Store(id As Guid)
+  overload: ParallelReverseAutoDiff.RMAD.IOperationBase.Store*
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  id: Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  langs:
+  - csharp
+  - vb
+  name: Restore(Guid)
+  nameWithType: IOperationBase.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IOperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Restore
+    path: ../../src/RMAD/IOperationBase.cs
+    startLine: 188
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Restores the intermediates.
+  example: []
+  syntax:
+    content: void Restore(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Sub Restore(id As Guid)
+  overload: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore*
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
   commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
   id: AccumulateGradient(System.Object[])
@@ -1021,7 +1119,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulateGradient
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 177
+    startLine: 194
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1056,7 +1154,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 184
+    startLine: 201
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1094,7 +1192,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 191
+    startLine: 208
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1132,7 +1230,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 197
+    startLine: 214
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1164,7 +1262,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CopyResult
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 203
+    startLine: 220
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1199,7 +1297,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 209
+    startLine: 226
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1234,7 +1332,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeLock
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 214
+    startLine: 231
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1262,7 +1360,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeSyncSemaphore
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 219
+    startLine: 236
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1398,6 +1496,12 @@ references:
   name: SpecificId
   nameWithType: IOperationBase.SpecificId
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  name: NestedSpecificId
+  nameWithType: IOperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
@@ -2062,6 +2166,26 @@ references:
   name: Reset
   nameWithType: IOperationBase.Reset
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.Store
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  name: Store
+  nameWithType: IOperationBase.Store
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Store
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.guid
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.Restore
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  name: Restore
+  nameWithType: IOperationBase.Restore
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient
   href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])

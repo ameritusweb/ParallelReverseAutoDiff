@@ -5,11 +5,16 @@ items:
   id: LayerInfo
   parent: ParallelReverseAutoDiff.RMAD
   children:
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.LayerInfo.Empty
   - ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
   - ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
   - ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString
   - ParallelReverseAutoDiff.RMAD.LayerInfo.ToString
+  - ParallelReverseAutoDiff.RMAD.LayerInfo.Type
   langs:
   - csharp
   - vb
@@ -70,6 +75,85 @@ items:
     return:
       type: ParallelReverseAutoDiff.RMAD.LayerInfo
     content.vb: Public Shared ReadOnly Empty As LayerInfo
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32,System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: LayerInfo(int, int, int)
+  nameWithType: LayerInfo.LayerInfo(int, int, int)
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.LayerInfo(int, int, int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 25
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.LayerInfo" data-throw-if-not-resolved="false"></xref> struct.
+  example: []
+  syntax:
+    content: public LayerInfo(int timeStep, int layer, int nestedLayer)
+    parameters:
+    - id: timeStep
+      type: System.Int32
+      description: The time step.
+    - id: layer
+      type: System.Int32
+      description: The layer.
+    - id: nestedLayer
+      type: System.Int32
+      description: The nested layer.
+    content.vb: Public Sub New(timeStep As Integer, layer As Integer, nestedLayer As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor*
+  nameWithType.vb: LayerInfo.New(Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.LayerInfo.New(Integer, Integer, Integer)
+  name.vb: New(Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: LayerInfo(int, int)
+  nameWithType: LayerInfo.LayerInfo(int, int)
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.LayerInfo(int, int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 38
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.LayerInfo" data-throw-if-not-resolved="false"></xref> struct.
+  example: []
+  syntax:
+    content: public LayerInfo(int timeStep, int layer)
+    parameters:
+    - id: timeStep
+      type: System.Int32
+      description: The time step.
+    - id: layer
+      type: System.Int32
+      description: The layer.
+    content.vb: Public Sub New(timeStep As Integer, layer As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor*
+  nameWithType.vb: LayerInfo.New(Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.LayerInfo.New(Integer, Integer)
+  name.vb: New(Integer, Integer)
 - uid: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
   commentId: P:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
   id: TimeStep
@@ -88,7 +172,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: TimeStep
     path: ../../src/RMAD/LayerInfo.cs
-    startLine: 22
+    startLine: 49
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -119,7 +203,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Layer
     path: ../../src/RMAD/LayerInfo.cs
-    startLine: 27
+    startLine: 54
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -132,6 +216,68 @@ items:
       type: System.Int32
     content.vb: Public Property Layer As Integer
   overload: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer*
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
+  commentId: P:ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
+  id: NestedLayer
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: NestedLayer
+  nameWithType: LayerInfo.NestedLayer
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: NestedLayer
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 59
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the nested layer index.
+  example: []
+  syntax:
+    content: public int NestedLayer { readonly get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property NestedLayer As Integer
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer*
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Type
+  commentId: P:ParallelReverseAutoDiff.RMAD.LayerInfo.Type
+  id: Type
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: LayerInfo.Type
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Type
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Type
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 64
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the layer info type.
+  example: []
+  syntax:
+    content: public LayerInfoType Type { readonly get; set; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.RMAD.LayerInfoType
+    content.vb: Public Property Type As LayerInfoType
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.Type*
 - uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
   commentId: M:ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
   id: Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
@@ -150,7 +296,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Equals
     path: ../../src/RMAD/LayerInfo.cs
-    startLine: 34
+    startLine: 71
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -187,7 +333,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToString
     path: ../../src/RMAD/LayerInfo.cs
-    startLine: 43
+    startLine: 80
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -201,6 +347,37 @@ items:
     content.vb: Public Overrides Function ToString() As String
   overridden: System.ValueType.ToString
   overload: ParallelReverseAutoDiff.RMAD.LayerInfo.ToString*
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString
+  commentId: M:ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString
+  id: ToNestedString
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfo
+  langs:
+  - csharp
+  - vb
+  name: ToNestedString()
+  nameWithType: LayerInfo.ToNestedString()
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/LayerInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToNestedString
+    path: ../../src/RMAD/LayerInfo.cs
+    startLine: 89
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: To the nested specific ID string.
+  example: []
+  syntax:
+    content: public string ToNestedString()
+    return:
+      type: System.String
+      description: The nested specific ID string.
+    content.vb: Public Function ToNestedString() As String
+  overload: ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString*
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -487,12 +664,15 @@ references:
   name: LayerInfo
   nameWithType: LayerInfo
   fullName: ParallelReverseAutoDiff.RMAD.LayerInfo
-- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
-  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
-  name: TimeStep
-  nameWithType: LayerInfo.TimeStep
-  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.#ctor(System.Int32,System.Int32,System.Int32)
+  name: LayerInfo
+  nameWithType: LayerInfo.LayerInfo
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.LayerInfo
+  nameWithType.vb: LayerInfo.New
+  fullName.vb: ParallelReverseAutoDiff.RMAD.LayerInfo.New
+  name.vb: New
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -504,12 +684,37 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
+  name: TimeStep
+  nameWithType: LayerInfo.TimeStep
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.TimeStep
 - uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
   href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
   name: Layer
   nameWithType: LayerInfo.Layer
   fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Layer
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
+  name: NestedLayer
+  nameWithType: LayerInfo.NestedLayer
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.NestedLayer
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Type*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.Type
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.Type
+  name: Type
+  nameWithType: LayerInfo.Type
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.Type
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  commentId: T:ParallelReverseAutoDiff.RMAD.LayerInfoType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.LayerInfoType.html
+  name: LayerInfoType
+  nameWithType: LayerInfoType
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfoType
 - uid: ParallelReverseAutoDiff.RMAD.LayerInfo.Equals*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.Equals
   href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.Equals(ParallelReverseAutoDiff.RMAD.LayerInfo)
@@ -621,3 +826,9 @@ references:
   nameWithType.vb: String
   fullName.vb: String
   name.vb: String
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString
+  href: ParallelReverseAutoDiff.RMAD.LayerInfo.html#ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString
+  name: ToNestedString
+  nameWithType: LayerInfo.ToNestedString
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfo.ToNestedString

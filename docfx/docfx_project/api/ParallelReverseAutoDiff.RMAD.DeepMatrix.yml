@@ -5,17 +5,23 @@ items:
   id: DeepMatrix
   parent: ParallelReverseAutoDiff.RMAD
   children:
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Dimension)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
@@ -33,20 +39,27 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeepMatrix
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 16
+    startLine: 18
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: A deep matrix class used for deep matrix operations.
   example: []
   syntax:
-    content: 'public class DeepMatrix : IEnumerable<Matrix>, IEnumerable'
-    content.vb: Public Class DeepMatrix Implements IEnumerable(Of Matrix), IEnumerable
+    content: >-
+      [Serializable]
+
+      public class DeepMatrix : IEnumerable<Matrix>, IEnumerable, ICloneable
+    content.vb: >-
+      <Serializable>
+
+      Public Class DeepMatrix Implements IEnumerable(Of Matrix), IEnumerable, ICloneable
   inheritance:
   - System.Object
   implements:
   - System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.Matrix}
   - System.Collections.IEnumerable
+  - System.ICloneable
   inheritedMembers:
   - System.Object.Equals(System.Object)
   - System.Object.Equals(System.Object,System.Object)
@@ -55,6 +68,51 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
+  id: '#ctor'
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrix()
+  nameWithType: DeepMatrix.DeepMatrix()
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix()
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 26
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.DeepMatrix" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public DeepMatrix()
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New()
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: DeepMatrix.New()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New()
+  name.vb: New()
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
   id: '#ctor(System.Int32,System.Int32,System.Int32)'
@@ -73,7 +131,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 26
+    startLine: 37
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -114,7 +172,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 41
+    startLine: 52
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -149,7 +207,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 56
+    startLine: 67
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -166,6 +224,44 @@ items:
   nameWithType.vb: DeepMatrix.New(Matrix())
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New(ParallelReverseAutoDiff.RMAD.Matrix())
   name.vb: New(Matrix())
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])
+  id: '#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])'
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrix(int, Matrix[])
+  nameWithType: DeepMatrix.DeepMatrix(int, Matrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix(int, ParallelReverseAutoDiff.RMAD.Matrix[])
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 78
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.DeepMatrix" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public DeepMatrix(int uniqueId, Matrix[] matrixArrayValues)
+    parameters:
+    - id: uniqueId
+      type: System.Int32
+      description: The unique ID.
+    - id: matrixArrayValues
+      type: ParallelReverseAutoDiff.RMAD.Matrix[]
+      description: The matrices.
+    content.vb: Public Sub New(uniqueId As Integer, matrixArrayValues As Matrix())
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
+  nameWithType.vb: DeepMatrix.New(Integer, Matrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.New(Integer, ParallelReverseAutoDiff.RMAD.Matrix())
+  name.vb: New(Integer, Matrix())
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
   commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
   id: UniqueId
@@ -184,19 +280,29 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: UniqueId
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 65
+    startLine: 87
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: Gets the unique ID of the matrix.
   example: []
   syntax:
-    content: public int UniqueId { get; }
+    content: >-
+      [JsonProperty]
+
+      public int UniqueId { get; }
     parameters: []
     return:
       type: System.Int32
-    content.vb: Public Property UniqueId As Integer
+    content.vb: >-
+      <JsonProperty>
+
+      Public Property UniqueId As Integer
   overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId*
+  attributes:
+  - type: Newtonsoft.Json.JsonPropertyAttribute
+    ctor: Newtonsoft.Json.JsonPropertyAttribute.#ctor
+    arguments: []
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
   commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
   id: Rows
@@ -215,7 +321,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Rows
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 70
+    startLine: 93
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -246,7 +352,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Cols
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 75
+    startLine: 98
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -277,7 +383,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Depth
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 80
+    startLine: 103
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -290,6 +396,37 @@ items:
       type: System.Int32
     content.vb: Public ReadOnly Property Depth As Integer
   overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
+  id: Dimension
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Dimension
+  nameWithType: DeepMatrix.Dimension
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Dimension
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 108
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the dimension of the matrix.
+  example: []
+  syntax:
+    content: public Dimension Dimension { get; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Dimension
+    content.vb: Public ReadOnly Property Dimension As Dimension
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension*
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
   commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
   id: Item(System.Int32,System.Int32,System.Int32)
@@ -308,7 +445,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 89
+    startLine: 123
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -352,7 +489,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 100
+    startLine: 134
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -390,7 +527,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 114
+    startLine: 148
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -437,7 +574,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeDoubleArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 134
+    startLine: 168
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -469,6 +606,41 @@ items:
   nameWithType.vb: DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
   name.vb: InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  id: Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Average(DeepMatrix)
+  nameWithType: DeepMatrix.Average(DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Average
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 188
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the element-wise average of this deep matrix and another deep matrix.
+  example: []
+  syntax:
+    content: public DeepMatrix Average(DeepMatrix other)
+    parameters:
+    - id: other
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The other deep matrix.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: A new deep matrix representing the element-wise average.
+    content.vb: Public Function Average(other As DeepMatrix) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average*
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   id: ToArray
@@ -487,7 +659,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 153
+    startLine: 215
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -500,6 +672,74 @@ items:
       description: An array of matrices.
     content.vb: Public Function ToArray() As Matrix()
   overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
+  id: Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Replace(Matrix[])
+  nameWithType: DeepMatrix.Replace(Matrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Replace
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 224
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Replace the matrices with the specified matrices.
+  example: []
+  syntax:
+    content: public void Replace(Matrix[] matrices)
+    parameters:
+    - id: matrices
+      type: ParallelReverseAutoDiff.RMAD.Matrix[]
+      description: The matrices to replace with.
+    content.vb: Public Sub Replace(matrices As Matrix())
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace*
+  nameWithType.vb: DeepMatrix.Replace(Matrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix())
+  name.vb: Replace(Matrix())
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
+  id: Clone
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: DeepMatrix.Clone()
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Clone
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 233
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Clones the matrix.
+  example: []
+  syntax:
+    content: public object Clone()
+    return:
+      type: System.Object
+      description: The cloned matrix.
+    content.vb: Public Function Clone() As Object
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone*
+  implements:
+  - System.ICloneable.Clone
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
   id: Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
@@ -518,7 +758,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 162
+    startLine: 242
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -550,7 +790,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 181
+    startLine: 263
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -640,6 +880,14 @@ references:
   name: IEnumerable
   nameWithType: IEnumerable
   fullName: System.Collections.IEnumerable
+- uid: System.ICloneable
+  commentId: T:System.ICloneable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.icloneable
+  name: ICloneable
+  nameWithType: ICloneable
+  fullName: System.ICloneable
 - uid: System.Object.Equals(System.Object)
   commentId: M:System.Object.Equals(System.Object)
   parent: System.Object
@@ -967,7 +1215,7 @@ references:
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
-  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
   name: DeepMatrix
   nameWithType: DeepMatrix.DeepMatrix
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.DeepMatrix
@@ -1037,6 +1285,12 @@ references:
   name: Depth
   nameWithType: DeepMatrix.Depth
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
+  name: Dimension
+  nameWithType: DeepMatrix.Dimension
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Item*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Item
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
@@ -1122,12 +1376,52 @@ references:
   - name: )
   - name: (
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Average
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Average
+  nameWithType: DeepMatrix.Average
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   name: ToArray
   nameWithType: DeepMatrix.ToArray
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
+  name: Replace
+  nameWithType: DeepMatrix.Replace
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
+  name: Clone
+  nameWithType: DeepMatrix.Clone
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
+- uid: System.ICloneable.Clone
+  commentId: M:System.ICloneable.Clone
+  parent: System.ICloneable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.icloneable.clone
+  name: Clone()
+  nameWithType: ICloneable.Clone()
+  fullName: System.ICloneable.Clone()
+  spec.csharp:
+  - uid: System.ICloneable.Clone
+    name: Clone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icloneable.clone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ICloneable.Clone
+    name: Clone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icloneable.clone
+  - name: (
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)

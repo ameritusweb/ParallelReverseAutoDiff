@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
+      
+      
       <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_IOperationBase.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.IOperationBase%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -112,7 +115,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_AccumulatedGradients" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulatedGradients">
   AccumulatedGradients
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the accumulated gradients from all output dependent operations.</p>
@@ -144,7 +147,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_BackwardAdjacentOperations" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations">
   BackwardAdjacentOperations
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L92"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the operations that are next when traversing the computational graph via the backward pass.</p>
@@ -176,7 +179,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_BackwardDependencies" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencies">
   BackwardDependencies
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L102"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the backward dependencies for this operation.</p>
@@ -208,7 +211,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_BackwardDependencyCounts" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardDependencyCounts">
   BackwardDependencyCounts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the number of operations that take this operation's output as input based on the timestep that you start at when doing the backward pass.</p>
@@ -240,7 +243,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_BackwardInput" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput">
   BackwardInput
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the input to the Backward function for this operation.</p>
@@ -272,7 +275,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_CalculatedGradient" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.CalculatedGradient">
   CalculatedGradient
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the accumulated gradients from all backward passes through this operation node.</p>
@@ -304,7 +307,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_GradientDestinations" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.GradientDestinations">
   GradientDestinations
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L142"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the property to store the gradient destination objects.</p>
@@ -400,7 +403,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Inputs" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs">
   Inputs
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L77"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the specific ID of the operations whose outputs are the inputs to the Forward function for this operation.</p>
@@ -496,7 +499,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_LayerInfo" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.LayerInfo">
   LayerInfo
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the layer info.</p>
@@ -528,7 +531,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Lock" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Lock">
   Lock
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets a lock to handle issues that arise from concurrent access to shared resources.</p>
@@ -546,6 +549,38 @@
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_IOperationBase_NestedSpecificId_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_NestedSpecificId" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId">
+  NestedSpecificId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the nested specific ID of the operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string NestedSpecificId { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -624,7 +659,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_OutputDependencyCount" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount">
   OutputDependencyCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets, for the current backward pass, the number of operations that take this operation's output as input.</p>
@@ -656,7 +691,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Outputs" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs">
   Outputs
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the specific ID of the operations who take in this operation's output as input.</p>
@@ -688,7 +723,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Parameters" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters">
   Parameters
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the parameters to the Forward function for this operation.</p>
@@ -720,7 +755,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_ResultToName" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ResultToName">
   ResultToName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L142"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the property to store the name of the result variable.</p>
@@ -784,7 +819,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_SyncSemaphore" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.SyncSemaphore">
   SyncSemaphore
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets a semaphore to synchronize visitor instances to make sure nodes aren't passed through multiple times during a pass through the computational graph.</p>
@@ -816,7 +851,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Tasks" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks">
   Tasks
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L67"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the backward tasks running for this operation.</p>
@@ -880,7 +915,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_VisitedCount" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedCount">
   VisitedCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the number of times this operation node has been visited during a specific pass.</p>
@@ -912,7 +947,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_VisitedFrom" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.VisitedFrom">
   VisitedFrom
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets which node this node was visited from.</p>
@@ -948,7 +983,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_AccumulateGradient_System_Object___" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])">
   AccumulateGradient(object?[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L195"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Send the calculated gradient to the appropriate destination object.</p>
@@ -981,7 +1016,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_CopyResult_System_Object_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)">
   CopyResult(object)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L204"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L221"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Copies the result of the operation to the specified destination.</p>
@@ -1014,7 +1049,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_GetDeepOutput" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput">
   GetDeepOutput()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the deep output of the operation.</p>
@@ -1047,7 +1082,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_GetOutput" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput">
   GetOutput()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L161"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the output of the operation.</p>
@@ -1080,7 +1115,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Initialize_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)">
   Initialize(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L210"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L227"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the operation with the specified starting point index.</p>
@@ -1113,7 +1148,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_InitializeFrom_ParallelReverseAutoDiff_RMAD_OperationInfo_System_Collections_Concurrent_ConcurrentDictionary_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object___ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)">
   InitializeFrom(OperationInfo, ConcurrentDictionary&lt;string, Func&lt;LayerInfo, object&gt;&gt;, LayerInfo)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L160"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the operation from the given operation info.</p>
@@ -1152,7 +1187,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_InitializeLock" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock">
   InitializeLock()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L232"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the lock object.</p>
@@ -1179,7 +1214,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_InitializeSyncSemaphore" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore">
   InitializeSyncSemaphore()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L237"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the synchronization semaphore.</p>
@@ -1206,7 +1241,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Reset" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Reset">
   Reset()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Resets the visitor count, accumulated gradients, among other things.</p>
@@ -1229,11 +1264,44 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_IOperationBase_Restore_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Restore*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Restore_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)">
+  Restore(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L189"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Restores the intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Restore(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_IOperationBase_ResultTo_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_ResultTo_ParallelReverseAutoDiff_RMAD_ComputationGraph_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)">
   ResultTo(ComputationGraph)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L198"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L215"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Copies the result of the operation to the destination.</p>
@@ -1266,7 +1334,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_ResultTo_System_Func_System_Int32_System_Int32_System_Object__" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})">
   ResultTo(Func&lt;int, int, object&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L209"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Copies the result of the operation to the specified destination.
@@ -1300,7 +1368,7 @@ It uses the time step index and layer index to get the object to copy the result
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_ResultTo_System_Func_System_Int32_System_Object__" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})">
   ResultTo(Func&lt;int, object&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L185"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L202"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Copies the result of the operation to the specified destination.
@@ -1316,6 +1384,39 @@ It uses the layer index to get the object to copy the result to.</p>
   <dl class="parameters">
     <dt><code>func</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;</dt>
     <dd><p>The function to get the object to copy the result to.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_IOperationBase_Store_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Store*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Store_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)">
+  Store(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Stores the intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Store(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
 </dd>
   </dl>
 

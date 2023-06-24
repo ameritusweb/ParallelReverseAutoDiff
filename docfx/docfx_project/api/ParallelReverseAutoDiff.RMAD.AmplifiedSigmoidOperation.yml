@@ -8,6 +8,8 @@ items:
   - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore(System.Guid)
+  - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store(System.Guid)
   langs:
   - csharp
   - vb
@@ -47,6 +49,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.Next
   - ParallelReverseAutoDiff.RMAD.OperationBase.Id
   - ParallelReverseAutoDiff.RMAD.OperationBase.SpecificId
+  - ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
   - ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
   - ParallelReverseAutoDiff.RMAD.OperationBase.ResultToName
   - ParallelReverseAutoDiff.RMAD.OperationBase.Parameters
@@ -67,6 +70,11 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.LayerInfo
   - ParallelReverseAutoDiff.RMAD.OperationBase.Output
   - ParallelReverseAutoDiff.RMAD.OperationBase.DeepOutput
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
   - ParallelReverseAutoDiff.RMAD.OperationBase.Reset
   - ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput
@@ -121,6 +129,72 @@ items:
       description: The instantiated operation.
     content.vb: Public Shared Function Instantiate(net As NeuralNetwork) As IOperation
   overload: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Instantiate*
+- uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store(System.Guid)
+  id: Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
+  langs:
+  - csharp
+  - vb
+  name: Store(Guid)
+  nameWithType: AmplifiedSigmoidOperation.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/AmplifiedSigmoidOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Store
+    path: ../../src/RMAD/AmplifiedSigmoidOperation.cs
+    startLine: 27
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Stores the intermediates.
+  example: []
+  syntax:
+    content: public override void Store(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Public Overrides Sub Store(id As Guid)
+  overridden: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  overload: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store*
+- uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore(System.Guid)
+  id: Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
+  langs:
+  - csharp
+  - vb
+  name: Restore(Guid)
+  nameWithType: AmplifiedSigmoidOperation.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/AmplifiedSigmoidOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Restore
+    path: ../../src/RMAD/AmplifiedSigmoidOperation.cs
+    startLine: 33
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Restores the intermediates.
+  example: []
+  syntax:
+    content: public override void Restore(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Public Overrides Sub Restore(id As Guid)
+  overridden: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  overload: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore*
 - uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
   id: Forward(ParallelReverseAutoDiff.RMAD.Matrix)
@@ -139,7 +213,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Forward
     path: ../../src/RMAD/AmplifiedSigmoidOperation.cs
-    startLine: 31
+    startLine: 43
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -174,7 +248,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Backward
     path: ../../src/RMAD/AmplifiedSigmoidOperation.cs
-    startLine: 50
+    startLine: 62
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -310,6 +384,13 @@ references:
   name: SpecificId
   nameWithType: OperationBase.SpecificId
   fullName: ParallelReverseAutoDiff.RMAD.OperationBase.SpecificId
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  name: NestedSpecificId
+  nameWithType: OperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
   commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
   parent: ParallelReverseAutoDiff.RMAD.OperationBase
@@ -450,6 +531,41 @@ references:
   name: DeepOutput
   nameWithType: OperationBase.DeepOutput
   fullName: ParallelReverseAutoDiff.RMAD.OperationBase.DeepOutput
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  name: IntermediateMatrices
+  nameWithType: OperationBase.IntermediateMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  name: IntermediateDeepMatrices
+  nameWithType: OperationBase.IntermediateDeepMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  name: IntermediateMatrixArrays
+  nameWithType: OperationBase.IntermediateMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  name: IntermediateDeepMatrixArrays
+  nameWithType: OperationBase.IntermediateDeepMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  name: IntermediateObjectArrays
+  nameWithType: OperationBase.IntermediateObjectArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
   commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
   parent: ParallelReverseAutoDiff.RMAD.OperationBase
@@ -1133,6 +1249,82 @@ references:
   name: NeuralNetwork
   nameWithType: NeuralNetwork
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetwork
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  name: Store(Guid)
+  nameWithType: OperationBase.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store
+  href: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html#ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store(System.Guid)
+  name: Store
+  nameWithType: AmplifiedSigmoidOperation.Store
+  fullName: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Store
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.guid
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  name: Restore(Guid)
+  nameWithType: OperationBase.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore
+  href: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html#ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore(System.Guid)
+  name: Restore
+  nameWithType: AmplifiedSigmoidOperation.Restore
+  fullName: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Restore
 - uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward
   href: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html#ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)

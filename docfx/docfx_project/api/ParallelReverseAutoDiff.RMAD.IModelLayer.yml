@@ -1,0 +1,1006 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+  commentId: T:ParallelReverseAutoDiff.RMAD.IModelLayer
+  id: IModelLayer
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List{System.Object})
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights(System.Collections.Generic.List{System.Object})
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.Average(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(System.String)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix(System.String)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray(System.String)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix(System.String)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.Item(System.String,ParallelReverseAutoDiff.RMAD.ModelElementType)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(System.String)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(System.String)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(System.String)
+  langs:
+  - csharp
+  - vb
+  name: IModelLayer
+  nameWithType: IModelLayer
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer
+  type: Interface
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IModelLayer
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 13
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Am interface to a model layer.
+  example: []
+  syntax:
+    content: public interface IModelLayer
+    content.vb: Public Interface IModelLayer
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+  commentId: P:ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+  id: Identifiers
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: Identifiers
+  nameWithType: IModelLayer.Identifiers
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Identifiers
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 18
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets identifiers.
+  example: []
+  syntax:
+    content: List<string> Identifiers { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: ReadOnly Property Identifiers As List(Of String)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Item(System.String,ParallelReverseAutoDiff.RMAD.ModelElementType)
+  commentId: P:ParallelReverseAutoDiff.RMAD.IModelLayer.Item(System.String,ParallelReverseAutoDiff.RMAD.ModelElementType)
+  id: Item(System.String,ParallelReverseAutoDiff.RMAD.ModelElementType)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: this[string, ModelElementType]
+  nameWithType: IModelLayer.this[string, ModelElementType]
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.this[string, ParallelReverseAutoDiff.RMAD.ModelElementType]
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: this[]
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 26
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the model element from the model layer.
+  example: []
+  syntax:
+    content: object this[string identifier, ModelElementType elementType] { get; }
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    - id: elementType
+      type: ParallelReverseAutoDiff.RMAD.ModelElementType
+      description: The element type.
+    return:
+      type: System.Object
+      description: The model element.
+    content.vb: ReadOnly Default Property this[](identifier As String, elementType As ModelElementType) As Object
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.Item*
+  nameWithType.vb: IModelLayer.this[](String, ModelElementType)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.this[](String, ParallelReverseAutoDiff.RMAD.ModelElementType)
+  name.vb: this[](String, ModelElementType)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(System.String)
+  id: WeightMatrix(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: WeightMatrix(string)
+  nameWithType: IModelLayer.WeightMatrix(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: WeightMatrix
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 33
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the weight by identifier.
+  example: []
+  syntax:
+    content: Matrix WeightMatrix(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The weight.
+    content.vb: Function WeightMatrix(identifier As String) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix*
+  nameWithType.vb: IModelLayer.WeightMatrix(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(String)
+  name.vb: WeightMatrix(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(System.String)
+  id: WeightDeepMatrix(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: WeightDeepMatrix(string)
+  nameWithType: IModelLayer.WeightDeepMatrix(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: WeightDeepMatrix
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 40
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the weight by identifier.
+  example: []
+  syntax:
+    content: DeepMatrix WeightDeepMatrix(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The weight.
+    content.vb: Function WeightDeepMatrix(identifier As String) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix*
+  nameWithType.vb: IModelLayer.WeightDeepMatrix(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(String)
+  name.vb: WeightDeepMatrix(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(System.String)
+  id: WeightDeepMatrixArray(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: WeightDeepMatrixArray(string)
+  nameWithType: IModelLayer.WeightDeepMatrixArray(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: WeightDeepMatrixArray
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 47
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the weight by identifier.
+  example: []
+  syntax:
+    content: DeepMatrix[] WeightDeepMatrixArray(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+      description: The weight.
+    content.vb: Function WeightDeepMatrixArray(identifier As String) As DeepMatrix()
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray*
+  nameWithType.vb: IModelLayer.WeightDeepMatrixArray(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(String)
+  name.vb: WeightDeepMatrixArray(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix(System.String)
+  id: GradientMatrix(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: GradientMatrix(string)
+  nameWithType: IModelLayer.GradientMatrix(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GradientMatrix
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 54
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the gradient by identifier.
+  example: []
+  syntax:
+    content: Matrix GradientMatrix(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The gradient.
+    content.vb: Function GradientMatrix(identifier As String) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix*
+  nameWithType.vb: IModelLayer.GradientMatrix(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix(String)
+  name.vb: GradientMatrix(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix(System.String)
+  id: GradientDeepMatrix(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: GradientDeepMatrix(string)
+  nameWithType: IModelLayer.GradientDeepMatrix(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GradientDeepMatrix
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 61
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the gradient by identifier.
+  example: []
+  syntax:
+    content: DeepMatrix GradientDeepMatrix(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The gradient.
+    content.vb: Function GradientDeepMatrix(identifier As String) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix*
+  nameWithType.vb: IModelLayer.GradientDeepMatrix(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix(String)
+  name.vb: GradientDeepMatrix(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray(System.String)
+  id: GradientDeepMatrixArray(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: GradientDeepMatrixArray(string)
+  nameWithType: IModelLayer.GradientDeepMatrixArray(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GradientDeepMatrixArray
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 68
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the gradient by identifier.
+  example: []
+  syntax:
+    content: DeepMatrix[] GradientDeepMatrixArray(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+      description: The gradient.
+    content.vb: Function GradientDeepMatrixArray(identifier As String) As DeepMatrix()
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray*
+  nameWithType.vb: IModelLayer.GradientDeepMatrixArray(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray(String)
+  name.vb: GradientDeepMatrixArray(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(System.String)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(System.String)
+  id: Dimensions(System.String)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: Dimensions(string)
+  nameWithType: IModelLayer.Dimensions(string)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(string)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Dimensions
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 75
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Retrieve the dimensions by identifier.
+  example: []
+  syntax:
+    content: int[] Dimensions(string identifier)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: The identifier.
+    return:
+      type: System.Int32[]
+      description: The dimensions.
+    content.vb: Function Dimensions(identifier As String) As Integer()
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions*
+  nameWithType.vb: IModelLayer.Dimensions(String)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(String)
+  name.vb: Dimensions(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  id: Clone
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: IModelLayer.Clone()
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Clone
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 81
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Clones the model layer.
+  example: []
+  syntax:
+    content: IModelLayer Clone()
+    return:
+      type: ParallelReverseAutoDiff.RMAD.IModelLayer
+      description: The model layer.
+    content.vb: Function Clone() As IModelLayer
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List{System.Object})
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List{System.Object})
+  id: ApplyGradients(System.Collections.Generic.List{System.Object})
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: ApplyGradients(List<object>)
+  nameWithType: IModelLayer.ApplyGradients(List<object>)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List<object>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ApplyGradients
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 87
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Applies the gradients.
+  example: []
+  syntax:
+    content: void ApplyGradients(List<object> gradients)
+    parameters:
+    - id: gradients
+      type: System.Collections.Generic.List{System.Object}
+      description: The gradients to apply.
+    content.vb: Sub ApplyGradients(gradients As List(Of Object))
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients*
+  nameWithType.vb: IModelLayer.ApplyGradients(List(Of Object))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List(Of Object))
+  name.vb: ApplyGradients(List(Of Object))
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights(System.Collections.Generic.List{System.Object})
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights(System.Collections.Generic.List{System.Object})
+  id: ApplyWeights(System.Collections.Generic.List{System.Object})
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: ApplyWeights(List<object>)
+  nameWithType: IModelLayer.ApplyWeights(List<object>)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights(System.Collections.Generic.List<object>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ApplyWeights
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 93
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Applies the weights.
+  example: []
+  syntax:
+    content: void ApplyWeights(List<object> weights)
+    parameters:
+    - id: weights
+      type: System.Collections.Generic.List{System.Object}
+      description: The weights to apply.
+    content.vb: Sub ApplyWeights(weights As List(Of Object))
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights*
+  nameWithType.vb: IModelLayer.ApplyWeights(List(Of Object))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights(System.Collections.Generic.List(Of Object))
+  name.vb: ApplyWeights(List(Of Object))
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Average(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.Average(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  id: Average(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: Average(IModelLayer)
+  nameWithType: IModelLayer.Average(IModelLayer)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Average(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Average
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 99
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Takes the average of two model layers.
+  example: []
+  syntax:
+    content: void Average(IModelLayer layer)
+    parameters:
+    - id: layer
+      type: ParallelReverseAutoDiff.RMAD.IModelLayer
+      description: The other model layer.
+    content.vb: Sub Average(layer As IModelLayer)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.Average*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  id: AverageGradients(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: AverageGradients(IModelLayer)
+  nameWithType: IModelLayer.AverageGradients(IModelLayer)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AverageGradients
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 105
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Averages the gradients of two model layers.
+  example: []
+  syntax:
+    content: void AverageGradients(IModelLayer layer)
+    parameters:
+    - id: layer
+      type: ParallelReverseAutoDiff.RMAD.IModelLayer
+      description: The other model layer.
+    content.vb: Sub AverageGradients(layer As IModelLayer)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
+  id: SaveWeights(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: SaveWeights(FileInfo)
+  nameWithType: IModelLayer.SaveWeights(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SaveWeights
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 111
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Save the weights to a file.
+  example: []
+  syntax:
+    content: void SaveWeights(FileInfo file)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Sub SaveWeights(file As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
+  id: LoadWeights(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: LoadWeights(FileInfo)
+  nameWithType: IModelLayer.LoadWeights(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: LoadWeights
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 117
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Load the weights from a file.
+  example: []
+  syntax:
+    content: void LoadWeights(FileInfo file)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Sub LoadWeights(file As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights*
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+  name: Identifiers
+  nameWithType: IModelLayer.Identifiers
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Item*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Item
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Item(System.String,ParallelReverseAutoDiff.RMAD.ModelElementType)
+  name: this
+  nameWithType: IModelLayer.this
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.this
+  nameWithType.vb: IModelLayer.this[]
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.this[]
+  name.vb: this[]
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType
+  commentId: T:ParallelReverseAutoDiff.RMAD.ModelElementType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.ModelElementType.html
+  name: ModelElementType
+  nameWithType: ModelElementType
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(System.String)
+  name: WeightMatrix
+  nameWithType: IModelLayer.WeightMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(System.String)
+  name: WeightDeepMatrix
+  nameWithType: IModelLayer.WeightDeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix
+  nameWithType: DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(System.String)
+  name: WeightDeepMatrixArray
+  nameWithType: IModelLayer.WeightDeepMatrixArray
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix[]
+  nameWithType: DeepMatrix[]
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+  nameWithType.vb: DeepMatrix()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix()
+  name.vb: DeepMatrix()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix(System.String)
+  name: GradientMatrix
+  nameWithType: IModelLayer.GradientMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientMatrix
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix(System.String)
+  name: GradientDeepMatrix
+  nameWithType: IModelLayer.GradientDeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray(System.String)
+  name: GradientDeepMatrixArray
+  nameWithType: IModelLayer.GradientDeepMatrixArray
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.GradientDeepMatrixArray
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(System.String)
+  name: Dimensions
+  nameWithType: IModelLayer.Dimensions
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  name: Clone
+  nameWithType: IModelLayer.Clone
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+  commentId: T:ParallelReverseAutoDiff.RMAD.IModelLayer
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html
+  name: IModelLayer
+  nameWithType: IModelLayer
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List{System.Object})
+  name: ApplyGradients
+  nameWithType: IModelLayer.ApplyGradients
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients
+- uid: System.Collections.Generic.List{System.Object}
+  commentId: T:System.Collections.Generic.List{System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<object>
+  nameWithType: List<object>
+  fullName: System.Collections.Generic.List<object>
+  nameWithType.vb: List(Of Object)
+  fullName.vb: System.Collections.Generic.List(Of Object)
+  name.vb: List(Of Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights(System.Collections.Generic.List{System.Object})
+  name: ApplyWeights
+  nameWithType: IModelLayer.ApplyWeights
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyWeights
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Average*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Average
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Average(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  name: Average
+  nameWithType: IModelLayer.Average
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Average
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  name: AverageGradients
+  nameWithType: IModelLayer.AverageGradients
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.AverageGradients
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
+  name: SaveWeights
+  nameWithType: IModelLayer.SaveWeights
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights
+- uid: System.IO.FileInfo
+  commentId: T:System.IO.FileInfo
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.fileinfo
+  name: FileInfo
+  nameWithType: FileInfo
+  fullName: System.IO.FileInfo
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
+  name: LoadWeights
+  nameWithType: IModelLayer.LoadWeights
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights

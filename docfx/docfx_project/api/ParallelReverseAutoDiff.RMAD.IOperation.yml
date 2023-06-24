@@ -38,6 +38,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.IsComplete
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Id
   - ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
@@ -60,6 +61,8 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.GetOutput
   - ParallelReverseAutoDiff.RMAD.IOperationBase.GetDeepOutput
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
@@ -182,6 +185,13 @@ references:
   name: SpecificId
   nameWithType: IOperationBase.SpecificId
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  name: NestedSpecificId
+  nameWithType: IOperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   parent: ParallelReverseAutoDiff.RMAD.IOperationBase
@@ -465,6 +475,62 @@ references:
     name: Reset
     href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
   - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  name: Store(Guid)
+  nameWithType: IOperationBase.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  name: Restore(Guid)
+  nameWithType: IOperationBase.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
   - name: )
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
   commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])

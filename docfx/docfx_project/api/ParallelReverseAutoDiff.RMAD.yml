@@ -4,6 +4,8 @@ items:
   commentId: N:ParallelReverseAutoDiff.RMAD
   id: ParallelReverseAutoDiff.RMAD
   children:
+  - ParallelReverseAutoDiff.RMAD.AdamOptimizer
+  - ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation
   - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
   - ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation
   - ParallelReverseAutoDiff.RMAD.BackwardResult
@@ -16,6 +18,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation
   - ParallelReverseAutoDiff.RMAD.DeepLeakyReLUOperation
   - ParallelReverseAutoDiff.RMAD.DeepMatrix
+  - ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter
   - ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation
   - ParallelReverseAutoDiff.RMAD.DeepOperation
   - ParallelReverseAutoDiff.RMAD.DeepReLUOperation
@@ -25,36 +28,54 @@ items:
   - ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
   - ParallelReverseAutoDiff.RMAD.FlattenOperation
   - ParallelReverseAutoDiff.RMAD.GELUOperation
+  - ParallelReverseAutoDiff.RMAD.GradientClearer
+  - ParallelReverseAutoDiff.RMAD.GradientClipper
+  - ParallelReverseAutoDiff.RMAD.GradientStore
   - ParallelReverseAutoDiff.RMAD.GradientUtils
   - ParallelReverseAutoDiff.RMAD.HadamardProductOperation
   - ParallelReverseAutoDiff.RMAD.IDeepOperation
+  - ParallelReverseAutoDiff.RMAD.IModelLayer
   - ParallelReverseAutoDiff.RMAD.IOperation
   - ParallelReverseAutoDiff.RMAD.IOperationBase
   - ParallelReverseAutoDiff.RMAD.InitializationType
   - ParallelReverseAutoDiff.RMAD.JsonArchitecture
   - ParallelReverseAutoDiff.RMAD.Layer
   - ParallelReverseAutoDiff.RMAD.LayerInfo
+  - ParallelReverseAutoDiff.RMAD.LayerInfoType
   - ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation
   - ParallelReverseAutoDiff.RMAD.LeakyReLUOperation
   - ParallelReverseAutoDiff.RMAD.Matrix
+  - ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation
   - ParallelReverseAutoDiff.RMAD.MatrixAddOperation
   - ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixAverageOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixJsonConverter
   - ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
   - ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixSumOperation
   - ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation
   - ParallelReverseAutoDiff.RMAD.MatrixType
   - ParallelReverseAutoDiff.RMAD.MatrixUtils
+  - ParallelReverseAutoDiff.RMAD.ModelElementType
+  - ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+  - ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture
+  - ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep
   - ParallelReverseAutoDiff.RMAD.NeuralNetwork
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
+  - ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
   - ParallelReverseAutoDiff.RMAD.Operation
   - ParallelReverseAutoDiff.RMAD.OperationBase
   - ParallelReverseAutoDiff.RMAD.OperationGraphVisitor
   - ParallelReverseAutoDiff.RMAD.OperationInfo
   - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor
+  - ParallelReverseAutoDiff.RMAD.RMSNormOperation
   - ParallelReverseAutoDiff.RMAD.ReLUOperation
   - ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
   - ParallelReverseAutoDiff.RMAD.SigmoidOperation
   - ParallelReverseAutoDiff.RMAD.SoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.StoreBase
   - ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation
   - ParallelReverseAutoDiff.RMAD.SwigLUOperation
   - ParallelReverseAutoDiff.RMAD.SwishOperation
@@ -62,6 +83,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.TimeStep
   - ParallelReverseAutoDiff.RMAD.TripleLayersJsonArchitecture
   - ParallelReverseAutoDiff.RMAD.TripleLayersTimeStep
+  - ParallelReverseAutoDiff.RMAD.WeightStore
   langs:
   - csharp
   - vb
@@ -72,6 +94,19 @@ items:
   assemblies:
   - ParallelReverseAutoDiff
 references:
+- uid: ParallelReverseAutoDiff.RMAD.AdamOptimizer
+  commentId: T:ParallelReverseAutoDiff.RMAD.AdamOptimizer
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.AdamOptimizer.html
+  name: AdamOptimizer
+  nameWithType: AdamOptimizer
+  fullName: ParallelReverseAutoDiff.RMAD.AdamOptimizer
+- uid: ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation
+  href: ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation.html
+  name: AddGaussianNoiseOperation
+  nameWithType: AddGaussianNoiseOperation
+  fullName: ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation
 - uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
   href: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html
@@ -149,6 +184,12 @@ references:
   name: DeepMatrix
   nameWithType: DeepMatrix
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter.html
+  name: DeepMatrixJsonConverter
+  nameWithType: DeepMatrixJsonConverter
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter
 - uid: ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation
   href: ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation.html
@@ -206,6 +247,26 @@ references:
   name: GELUOperation
   nameWithType: GELUOperation
   fullName: ParallelReverseAutoDiff.RMAD.GELUOperation
+- uid: ParallelReverseAutoDiff.RMAD.GradientClearer
+  commentId: T:ParallelReverseAutoDiff.RMAD.GradientClearer
+  href: ParallelReverseAutoDiff.RMAD.GradientClearer.html
+  name: GradientClearer
+  nameWithType: GradientClearer
+  fullName: ParallelReverseAutoDiff.RMAD.GradientClearer
+- uid: ParallelReverseAutoDiff.RMAD.GradientClipper
+  commentId: T:ParallelReverseAutoDiff.RMAD.GradientClipper
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.GradientClipper.html
+  name: GradientClipper
+  nameWithType: GradientClipper
+  fullName: ParallelReverseAutoDiff.RMAD.GradientClipper
+- uid: ParallelReverseAutoDiff.RMAD.GradientStore
+  commentId: T:ParallelReverseAutoDiff.RMAD.GradientStore
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.GradientStore.html
+  name: GradientStore
+  nameWithType: GradientStore
+  fullName: ParallelReverseAutoDiff.RMAD.GradientStore
 - uid: ParallelReverseAutoDiff.RMAD.GradientUtils
   commentId: T:ParallelReverseAutoDiff.RMAD.GradientUtils
   href: ParallelReverseAutoDiff.RMAD.GradientUtils.html
@@ -225,6 +286,13 @@ references:
   name: IDeepOperation
   nameWithType: IDeepOperation
   fullName: ParallelReverseAutoDiff.RMAD.IDeepOperation
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+  commentId: T:ParallelReverseAutoDiff.RMAD.IModelLayer
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html
+  name: IModelLayer
+  nameWithType: IModelLayer
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer
 - uid: ParallelReverseAutoDiff.RMAD.InitializationType
   commentId: T:ParallelReverseAutoDiff.RMAD.InitializationType
   parent: ParallelReverseAutoDiff.RMAD
@@ -266,6 +334,13 @@ references:
   name: LayerInfo
   nameWithType: LayerInfo
   fullName: ParallelReverseAutoDiff.RMAD.LayerInfo
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  commentId: T:ParallelReverseAutoDiff.RMAD.LayerInfoType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.LayerInfoType.html
+  name: LayerInfoType
+  nameWithType: LayerInfoType
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfoType
 - uid: ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation
   href: ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation.html
@@ -285,6 +360,12 @@ references:
   name: Matrix
   nameWithType: Matrix
   fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation
+  href: ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation.html
+  name: MatrixAddBroadcastingOperation
+  nameWithType: MatrixAddBroadcastingOperation
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation
 - uid: ParallelReverseAutoDiff.RMAD.MatrixAddOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.MatrixAddOperation
   href: ParallelReverseAutoDiff.RMAD.MatrixAddOperation.html
@@ -297,6 +378,30 @@ references:
   name: MatrixAddThreeOperation
   nameWithType: MatrixAddThreeOperation
   fullName: ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation
+- uid: ParallelReverseAutoDiff.RMAD.MatrixAverageOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixAverageOperation
+  href: ParallelReverseAutoDiff.RMAD.MatrixAverageOperation.html
+  name: MatrixAverageOperation
+  nameWithType: MatrixAverageOperation
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixAverageOperation
+- uid: ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation
+  href: ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation.html
+  name: MatrixBroadcastOperation
+  nameWithType: MatrixBroadcastOperation
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation
+- uid: ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation
+  href: ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation.html
+  name: MatrixConcatenateOperation
+  nameWithType: MatrixConcatenateOperation
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation
+- uid: ParallelReverseAutoDiff.RMAD.MatrixJsonConverter
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixJsonConverter
+  href: ParallelReverseAutoDiff.RMAD.MatrixJsonConverter.html
+  name: MatrixJsonConverter
+  nameWithType: MatrixJsonConverter
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixJsonConverter
 - uid: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
   href: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.html
@@ -309,6 +414,12 @@ references:
   name: MatrixMultiplyScalarOperation
   nameWithType: MatrixMultiplyScalarOperation
   fullName: ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation
+- uid: ParallelReverseAutoDiff.RMAD.MatrixSumOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.MatrixSumOperation
+  href: ParallelReverseAutoDiff.RMAD.MatrixSumOperation.html
+  name: MatrixSumOperation
+  nameWithType: MatrixSumOperation
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixSumOperation
 - uid: ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation
   href: ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.html
@@ -328,6 +439,33 @@ references:
   name: MatrixUtils
   nameWithType: MatrixUtils
   fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType
+  commentId: T:ParallelReverseAutoDiff.RMAD.ModelElementType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.ModelElementType.html
+  name: ModelElementType
+  nameWithType: ModelElementType
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType
+- uid: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+  commentId: T:ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.html
+  name: ModelLayerBuilder
+  nameWithType: ModelLayerBuilder
+  fullName: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+- uid: ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture
+  commentId: T:ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture.html
+  name: NestedLayersJsonArchitecture
+  nameWithType: NestedLayersJsonArchitecture
+  fullName: ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture
+- uid: ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep
+  commentId: T:ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep
+  href: ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep.html
+  name: NestedLayersTimeStep
+  nameWithType: NestedLayersTimeStep
+  fullName: ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork
   commentId: T:ParallelReverseAutoDiff.RMAD.NeuralNetwork
   parent: ParallelReverseAutoDiff.RMAD
@@ -342,6 +480,13 @@ references:
   name: NeuralNetworkParameters
   nameWithType: NeuralNetworkParameters
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
+  commentId: T:ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities.html
+  name: NeuralNetworkUtilities
+  nameWithType: NeuralNetworkUtilities
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
 - uid: ParallelReverseAutoDiff.RMAD.Operation
   commentId: T:ParallelReverseAutoDiff.RMAD.Operation
   parent: ParallelReverseAutoDiff.RMAD
@@ -381,6 +526,12 @@ references:
   name: ReLUOperation
   nameWithType: ReLUOperation
   fullName: ParallelReverseAutoDiff.RMAD.ReLUOperation
+- uid: ParallelReverseAutoDiff.RMAD.RMSNormOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.RMSNormOperation
+  href: ParallelReverseAutoDiff.RMAD.RMSNormOperation.html
+  name: RMSNormOperation
+  nameWithType: RMSNormOperation
+  fullName: ParallelReverseAutoDiff.RMAD.RMSNormOperation
 - uid: ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
   href: ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.html
@@ -399,6 +550,13 @@ references:
   name: SoftmaxOperation
   nameWithType: SoftmaxOperation
   fullName: ParallelReverseAutoDiff.RMAD.SoftmaxOperation
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase
+  commentId: T:ParallelReverseAutoDiff.RMAD.StoreBase
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html
+  name: StoreBase
+  nameWithType: StoreBase
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase
 - uid: ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation
   href: ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation.html
@@ -442,6 +600,13 @@ references:
   name: TripleLayersTimeStep
   nameWithType: TripleLayersTimeStep
   fullName: ParallelReverseAutoDiff.RMAD.TripleLayersTimeStep
+- uid: ParallelReverseAutoDiff.RMAD.WeightStore
+  commentId: T:ParallelReverseAutoDiff.RMAD.WeightStore
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.WeightStore.html
+  name: WeightStore
+  nameWithType: WeightStore
+  fullName: ParallelReverseAutoDiff.RMAD.WeightStore
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
   href: ParallelReverseAutoDiff.html

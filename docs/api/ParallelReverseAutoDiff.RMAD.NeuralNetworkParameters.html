@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
+      
+      
       <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -140,11 +143,139 @@
 </h2>
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamBeta1_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamBeta1*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamBeta1" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamBeta1">
+  AdamBeta1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the Adam beta 1.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double AdamBeta1 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamBeta2_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamBeta2*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamBeta2" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamBeta2">
+  AdamBeta2
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the Adam beta 2.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double AdamBeta2 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamEpsilon_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamEpsilon*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamEpsilon" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamEpsilon">
+  AdamEpsilon
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the Adam epsilon value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double AdamEpsilon { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamIteration_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamIteration*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_AdamIteration" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamIteration">
+  AdamIteration
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the Adam iteration.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double AdamIteration { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ChosenActions_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ChosenActions*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ChosenActions" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ChosenActions">
   ChosenActions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the chosen actions for policy gradient optimization.</p>
@@ -172,11 +303,43 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ClipValue_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ClipValue*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ClipValue" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ClipValue">
+  ClipValue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the clip value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double ClipValue { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ConvolutionPadding_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ConvolutionPadding" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding">
   ConvolutionPadding
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the convolution padding for the convolution operation.</p>
@@ -272,7 +435,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_InputSequence" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.InputSequence">
   InputSequence
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the input sequence.</p>
@@ -364,11 +527,75 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_MinimumClipValue_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.MinimumClipValue*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_MinimumClipValue" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.MinimumClipValue">
+  MinimumClipValue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the minimum clip value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double MinimumClipValue { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_NoiseRatio_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NoiseRatio*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_NoiseRatio" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NoiseRatio">
+  NoiseRatio
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the noise ratio for the AddGaussianNoise operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double NoiseRatio { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_NumTimeSteps_" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NumTimeSteps*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_NumTimeSteps" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.NumTimeSteps">
   NumTimeSteps
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the number of time steps.</p>
@@ -400,7 +627,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_PoolSize" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.PoolSize">
   PoolSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the pool size for the max pool operation.</p>
@@ -432,7 +659,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_Rewards" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards">
   Rewards
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the rewards for policy gradient optimization.</p>
@@ -464,7 +691,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_SwigLUBeta" data-uid="ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.SwigLUBeta">
   SwigLUBeta
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/NeuralNetworkParameters.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the beta value for the SwigLU operation.</p>

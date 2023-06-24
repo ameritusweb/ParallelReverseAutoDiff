@@ -8,11 +8,17 @@ items:
 - uid: ParallelReverseAutoDiff.Interprocess
   name: ParallelReverseAutoDiff.Interprocess
   items:
+  - uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+    name: ConcurrentHashSet<T>
   - uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
     name: PseudoUniqueIDGenerator
 - uid: ParallelReverseAutoDiff.RMAD
   name: ParallelReverseAutoDiff.RMAD
   items:
+  - uid: ParallelReverseAutoDiff.RMAD.AdamOptimizer
+    name: AdamOptimizer
+  - uid: ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation
+    name: AddGaussianNoiseOperation
   - uid: ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
     name: AmplifiedSigmoidOperation
   - uid: ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation
@@ -37,6 +43,8 @@ items:
     name: DeepLeakyReLUOperation
   - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
     name: DeepMatrix
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter
+    name: DeepMatrixJsonConverter
   - uid: ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation
     name: DeepMaxPoolOperation
   - uid: ParallelReverseAutoDiff.RMAD.DeepOperation
@@ -55,12 +63,20 @@ items:
     name: FlattenOperation
   - uid: ParallelReverseAutoDiff.RMAD.GELUOperation
     name: GELUOperation
+  - uid: ParallelReverseAutoDiff.RMAD.GradientClearer
+    name: GradientClearer
+  - uid: ParallelReverseAutoDiff.RMAD.GradientClipper
+    name: GradientClipper
+  - uid: ParallelReverseAutoDiff.RMAD.GradientStore
+    name: GradientStore
   - uid: ParallelReverseAutoDiff.RMAD.GradientUtils
     name: GradientUtils
   - uid: ParallelReverseAutoDiff.RMAD.HadamardProductOperation
     name: HadamardProductOperation
   - uid: ParallelReverseAutoDiff.RMAD.IDeepOperation
     name: IDeepOperation
+  - uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+    name: IModelLayer
   - uid: ParallelReverseAutoDiff.RMAD.InitializationType
     name: InitializationType
   - uid: ParallelReverseAutoDiff.RMAD.IOperation
@@ -73,30 +89,54 @@ items:
     name: Layer
   - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
     name: LayerInfo
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfoType
+    name: LayerInfoType
   - uid: ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation
     name: LayerNormalizationOperation
   - uid: ParallelReverseAutoDiff.RMAD.LeakyReLUOperation
     name: LeakyReLUOperation
   - uid: ParallelReverseAutoDiff.RMAD.Matrix
     name: Matrix
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation
+    name: MatrixAddBroadcastingOperation
   - uid: ParallelReverseAutoDiff.RMAD.MatrixAddOperation
     name: MatrixAddOperation
   - uid: ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation
     name: MatrixAddThreeOperation
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixAverageOperation
+    name: MatrixAverageOperation
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation
+    name: MatrixBroadcastOperation
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation
+    name: MatrixConcatenateOperation
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixJsonConverter
+    name: MatrixJsonConverter
   - uid: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
     name: MatrixMultiplyOperation
   - uid: ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation
     name: MatrixMultiplyScalarOperation
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixSumOperation
+    name: MatrixSumOperation
   - uid: ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation
     name: MatrixTransposeOperation
   - uid: ParallelReverseAutoDiff.RMAD.MatrixType
     name: MatrixType
   - uid: ParallelReverseAutoDiff.RMAD.MatrixUtils
     name: MatrixUtils
+  - uid: ParallelReverseAutoDiff.RMAD.ModelElementType
+    name: ModelElementType
+  - uid: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+    name: ModelLayerBuilder
+  - uid: ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture
+    name: NestedLayersJsonArchitecture
+  - uid: ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep
+    name: NestedLayersTimeStep
   - uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork
     name: NeuralNetwork
   - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
     name: NeuralNetworkParameters
+  - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
+    name: NeuralNetworkUtilities
   - uid: ParallelReverseAutoDiff.RMAD.Operation
     name: Operation
   - uid: ParallelReverseAutoDiff.RMAD.OperationBase
@@ -109,12 +149,16 @@ items:
     name: OperationNeuralNetworkVisitor
   - uid: ParallelReverseAutoDiff.RMAD.ReLUOperation
     name: ReLUOperation
+  - uid: ParallelReverseAutoDiff.RMAD.RMSNormOperation
+    name: RMSNormOperation
   - uid: ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
     name: ScaleAndShiftOperation
   - uid: ParallelReverseAutoDiff.RMAD.SigmoidOperation
     name: SigmoidOperation
   - uid: ParallelReverseAutoDiff.RMAD.SoftmaxOperation
     name: SoftmaxOperation
+  - uid: ParallelReverseAutoDiff.RMAD.StoreBase
+    name: StoreBase
   - uid: ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation
     name: StretchedSigmoidOperation
   - uid: ParallelReverseAutoDiff.RMAD.SwigLUOperation
@@ -129,4 +173,6 @@ items:
     name: TripleLayersJsonArchitecture
   - uid: ParallelReverseAutoDiff.RMAD.TripleLayersTimeStep
     name: TripleLayersTimeStep
+  - uid: ParallelReverseAutoDiff.RMAD.WeightStore
+    name: WeightStore
 memberLayout: SamePage

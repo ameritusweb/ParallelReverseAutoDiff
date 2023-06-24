@@ -5,6 +5,7 @@ items:
   id: Dimension
   parent: ParallelReverseAutoDiff.RMAD
   children:
+  - ParallelReverseAutoDiff.RMAD.Dimension.#ctor(System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.Dimension.Depth
   - ParallelReverseAutoDiff.RMAD.Dimension.Empty
   - ParallelReverseAutoDiff.RMAD.Dimension.Equals(ParallelReverseAutoDiff.RMAD.Dimension)
@@ -71,6 +72,47 @@ items:
     return:
       type: ParallelReverseAutoDiff.RMAD.Dimension
     content.vb: Public Shared ReadOnly Empty As Dimension
+- uid: ParallelReverseAutoDiff.RMAD.Dimension.#ctor(System.Int32,System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.Dimension.#ctor(System.Int32,System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32,System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.Dimension
+  langs:
+  - csharp
+  - vb
+  name: Dimension(int, int, int)
+  nameWithType: Dimension.Dimension(int, int, int)
+  fullName: ParallelReverseAutoDiff.RMAD.Dimension.Dimension(int, int, int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/Dimension.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/Dimension.cs
+    startLine: 25
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.Dimension" data-throw-if-not-resolved="false"></xref> struct.
+  example: []
+  syntax:
+    content: public Dimension(int depth, int height, int width)
+    parameters:
+    - id: depth
+      type: System.Int32
+      description: The depth.
+    - id: height
+      type: System.Int32
+      description: The rows.
+    - id: width
+      type: System.Int32
+      description: The columns.
+    content.vb: Public Sub New(depth As Integer, height As Integer, width As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.Dimension.#ctor*
+  nameWithType.vb: Dimension.New(Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Dimension.New(Integer, Integer, Integer)
+  name.vb: New(Integer, Integer, Integer)
 - uid: ParallelReverseAutoDiff.RMAD.Dimension.Height
   commentId: P:ParallelReverseAutoDiff.RMAD.Dimension.Height
   id: Height
@@ -89,7 +131,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Height
     path: ../../src/RMAD/Dimension.cs
-    startLine: 22
+    startLine: 35
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -120,7 +162,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Width
     path: ../../src/RMAD/Dimension.cs
-    startLine: 27
+    startLine: 40
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -151,7 +193,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Depth
     path: ../../src/RMAD/Dimension.cs
-    startLine: 32
+    startLine: 45
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -182,7 +224,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Equals
     path: ../../src/RMAD/Dimension.cs
-    startLine: 39
+    startLine: 52
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -509,12 +551,15 @@ references:
   name: Dimension
   nameWithType: Dimension
   fullName: ParallelReverseAutoDiff.RMAD.Dimension
-- uid: ParallelReverseAutoDiff.RMAD.Dimension.Height*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.Dimension.Height
-  href: ParallelReverseAutoDiff.RMAD.Dimension.html#ParallelReverseAutoDiff.RMAD.Dimension.Height
-  name: Height
-  nameWithType: Dimension.Height
-  fullName: ParallelReverseAutoDiff.RMAD.Dimension.Height
+- uid: ParallelReverseAutoDiff.RMAD.Dimension.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Dimension.#ctor
+  href: ParallelReverseAutoDiff.RMAD.Dimension.html#ParallelReverseAutoDiff.RMAD.Dimension.#ctor(System.Int32,System.Int32,System.Int32)
+  name: Dimension
+  nameWithType: Dimension.Dimension
+  fullName: ParallelReverseAutoDiff.RMAD.Dimension.Dimension
+  nameWithType.vb: Dimension.New
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Dimension.New
+  name.vb: New
 - uid: System.Int32
   commentId: T:System.Int32
   parent: System
@@ -526,6 +571,12 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.Dimension.Height*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Dimension.Height
+  href: ParallelReverseAutoDiff.RMAD.Dimension.html#ParallelReverseAutoDiff.RMAD.Dimension.Height
+  name: Height
+  nameWithType: Dimension.Height
+  fullName: ParallelReverseAutoDiff.RMAD.Dimension.Height
 - uid: ParallelReverseAutoDiff.RMAD.Dimension.Width*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.Dimension.Width
   href: ParallelReverseAutoDiff.RMAD.Dimension.html#ParallelReverseAutoDiff.RMAD.Dimension.Width

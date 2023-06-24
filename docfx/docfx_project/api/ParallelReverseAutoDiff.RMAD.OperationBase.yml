@@ -25,10 +25,16 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeLock
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeSyncSemaphore
   - ParallelReverseAutoDiff.RMAD.OperationBase.Inputs
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IsComplete
   - ParallelReverseAutoDiff.RMAD.OperationBase.LayerIndex
   - ParallelReverseAutoDiff.RMAD.OperationBase.LayerInfo
   - ParallelReverseAutoDiff.RMAD.OperationBase.Lock
+  - ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
   - ParallelReverseAutoDiff.RMAD.OperationBase.Next
   - ParallelReverseAutoDiff.RMAD.OperationBase.OperationType
   - ParallelReverseAutoDiff.RMAD.OperationBase.Output
@@ -36,11 +42,13 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.Outputs
   - ParallelReverseAutoDiff.RMAD.OperationBase.Parameters
   - ParallelReverseAutoDiff.RMAD.OperationBase.Reset
+  - ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.OperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
   - ParallelReverseAutoDiff.RMAD.OperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.OperationBase.ResultTo(System.Func{System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.OperationBase.ResultToName
   - ParallelReverseAutoDiff.RMAD.OperationBase.SpecificId
+  - ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
   - ParallelReverseAutoDiff.RMAD.OperationBase.SyncSemaphore
   - ParallelReverseAutoDiff.RMAD.OperationBase.Tasks
   - ParallelReverseAutoDiff.RMAD.OperationBase.TimeStepIndex
@@ -64,6 +72,7 @@ items:
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
+  summary: Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.
   example: []
   syntax:
     content: 'public abstract class OperationBase : IOperationBase'
@@ -101,7 +110,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 21
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -132,7 +141,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IsComplete
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 35
+    startLine: 41
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -165,7 +174,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: TimeStepIndex
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 38
+    startLine: 44
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -198,7 +207,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LayerIndex
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 41
+    startLine: 47
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -231,7 +240,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationType
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 44
+    startLine: 50
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -264,7 +273,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: HasNext
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 47
+    startLine: 53
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -297,7 +306,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Next
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 56
+    startLine: 62
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -330,7 +339,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Id
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 59
+    startLine: 65
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -363,7 +372,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SpecificId
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 62
+    startLine: 68
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -378,6 +387,39 @@ items:
   overload: ParallelReverseAutoDiff.RMAD.OperationBase.SpecificId*
   implements:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  id: NestedSpecificId
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: NestedSpecificId
+  nameWithType: OperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: NestedSpecificId
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 71
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the nested specific ID of the operation.
+  example: []
+  syntax:
+    content: public string NestedSpecificId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property NestedSpecificId As String
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId*
+  implements:
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
   commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
   id: GradientDestinations
@@ -396,7 +438,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientDestinations
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 65
+    startLine: 74
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -429,7 +471,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultToName
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 68
+    startLine: 77
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -462,7 +504,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Parameters
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 71
+    startLine: 80
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -495,7 +537,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Tasks
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 74
+    startLine: 83
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -528,7 +570,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Inputs
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 77
+    startLine: 86
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -561,7 +603,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Outputs
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 80
+    startLine: 89
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -594,7 +636,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardInput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 83
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -627,7 +669,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardDependencies
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 86
+    startLine: 95
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -660,7 +702,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: VisitedFrom
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 89
+    startLine: 98
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -693,7 +735,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardAdjacentOperations
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 92
+    startLine: 101
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -726,7 +768,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardDependencyCounts
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 95
+    startLine: 104
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -759,7 +801,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulatedGradients
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 98
+    startLine: 107
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -792,7 +834,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CalculatedGradient
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 101
+    startLine: 110
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -825,7 +867,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OutputDependencyCount
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 104
+    startLine: 113
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -858,7 +900,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: VisitedCount
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 107
+    startLine: 116
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -891,7 +933,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Lock
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 110
+    startLine: 119
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -924,7 +966,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SyncSemaphore
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 113
+    startLine: 122
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -957,7 +999,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LayerInfo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 116
+    startLine: 125
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -990,7 +1032,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Output
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 121
+    startLine: 130
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1021,7 +1063,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeepOutput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 126
+    startLine: 135
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1034,6 +1076,161 @@ items:
       type: ParallelReverseAutoDiff.RMAD.DeepMatrix
     content.vb: Protected Property DeepOutput As DeepMatrix
   overload: ParallelReverseAutoDiff.RMAD.OperationBase.DeepOutput*
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  id: IntermediateMatrices
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: IntermediateMatrices
+  nameWithType: OperationBase.IntermediateMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IntermediateMatrices
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 140
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the property to store the intermediate matrices of the operation.
+  example: []
+  syntax:
+    content: protected ConcurrentDictionary<Guid, Matrix> IntermediateMatrices { get; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix}
+    content.vb: Protected ReadOnly Property IntermediateMatrices As ConcurrentDictionary(Of Guid, Matrix)
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices*
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  id: IntermediateDeepMatrices
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: IntermediateDeepMatrices
+  nameWithType: OperationBase.IntermediateDeepMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IntermediateDeepMatrices
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 151
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the property to store the intermediate deep matrices of the operation.
+  example: []
+  syntax:
+    content: protected ConcurrentDictionary<Guid, DeepMatrix> IntermediateDeepMatrices { get; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix}
+    content.vb: Protected ReadOnly Property IntermediateDeepMatrices As ConcurrentDictionary(Of Guid, DeepMatrix)
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices*
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  id: IntermediateMatrixArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: IntermediateMatrixArrays
+  nameWithType: OperationBase.IntermediateMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IntermediateMatrixArrays
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 162
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the property to store the intermediate matrix arrays of the operation.
+  example: []
+  syntax:
+    content: protected ConcurrentDictionary<Guid, Matrix[]> IntermediateMatrixArrays { get; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix[]}
+    content.vb: Protected ReadOnly Property IntermediateMatrixArrays As ConcurrentDictionary(Of Guid, Matrix())
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays*
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  id: IntermediateDeepMatrixArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: IntermediateDeepMatrixArrays
+  nameWithType: OperationBase.IntermediateDeepMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IntermediateDeepMatrixArrays
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 173
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the property to store the intermediate deep matrix arrays of the operation.
+  example: []
+  syntax:
+    content: protected ConcurrentDictionary<Guid, DeepMatrix[]> IntermediateDeepMatrixArrays { get; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix[]}
+    content.vb: Protected ReadOnly Property IntermediateDeepMatrixArrays As ConcurrentDictionary(Of Guid, DeepMatrix())
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays*
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  id: IntermediateObjectArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: IntermediateObjectArrays
+  nameWithType: OperationBase.IntermediateObjectArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IntermediateObjectArrays
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 184
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the property to store the intermediate object arrays of the operation.
+  example: []
+  syntax:
+    content: protected ConcurrentDictionary<Guid, object[]> IntermediateObjectArrays { get; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,System.Object[]}
+    content.vb: Protected ReadOnly Property IntermediateObjectArrays As ConcurrentDictionary(Of Guid, Object())
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays*
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
   commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
   id: InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
@@ -1052,7 +1249,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeFrom
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 129
+    startLine: 193
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1095,7 +1292,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Reset
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 158
+    startLine: 223
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1107,6 +1304,74 @@ items:
   overload: ParallelReverseAutoDiff.RMAD.OperationBase.Reset*
   implements:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  id: Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: Store(Guid)
+  nameWithType: OperationBase.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Store
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 235
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Stores the intermediates.
+  example: []
+  syntax:
+    content: public virtual void Store(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Public Overridable Sub Store(id As Guid)
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.Store*
+  implements:
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  id: Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: Restore(Guid)
+  nameWithType: OperationBase.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Restore
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 240
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Restores the intermediates.
+  example: []
+  syntax:
+    content: public virtual void Restore(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Public Overridable Sub Restore(id As Guid)
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.Restore*
+  implements:
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput
   commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput
   id: GetOutput
@@ -1125,7 +1390,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetOutput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 170
+    startLine: 245
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1158,7 +1423,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetDeepOutput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 176
+    startLine: 251
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1191,7 +1456,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulateGradient
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 182
+    startLine: 257
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1227,7 +1492,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 246
+    startLine: 347
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1267,7 +1532,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 253
+    startLine: 354
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1307,7 +1572,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 260
+    startLine: 361
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1341,7 +1606,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 268
+    startLine: 369
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1378,7 +1643,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeLock
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 276
+    startLine: 377
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1408,7 +1673,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeSyncSemaphore
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 285
+    startLine: 386
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1438,7 +1703,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CopyResult
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 294
+    startLine: 395
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1884,6 +2149,19 @@ references:
   name: SpecificId
   nameWithType: IOperationBase.SpecificId
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.SpecificId
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+  name: NestedSpecificId
+  nameWithType: OperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.NestedSpecificId
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
+  name: NestedSpecificId
+  nameWithType: IOperationBase.NestedSpecificId
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.NestedSpecificId
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
   href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.GradientDestinations
@@ -2502,6 +2780,346 @@ references:
   name: DeepMatrix
   nameWithType: DeepMatrix
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+  name: IntermediateMatrices
+  nameWithType: OperationBase.IntermediateMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, Matrix>
+  nameWithType: ConcurrentDictionary<Guid, Matrix>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.Matrix>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, Matrix)
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.Matrix)
+  name.vb: ConcurrentDictionary(Of Guid, Matrix)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: )
+- uid: System.Collections.Concurrent.ConcurrentDictionary`2
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<TKey, TValue>
+  nameWithType: ConcurrentDictionary<TKey, TValue>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<TKey, TValue>
+  nameWithType.vb: ConcurrentDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of TKey, TValue)
+  name.vb: ConcurrentDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Concurrent
+  commentId: N:System.Collections.Concurrent
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Concurrent
+  nameWithType: System.Collections.Concurrent
+  fullName: System.Collections.Concurrent
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Concurrent
+    name: Concurrent
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Concurrent
+    name: Concurrent
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  name: IntermediateDeepMatrices
+  nameWithType: OperationBase.IntermediateDeepMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, DeepMatrix>
+  nameWithType: ConcurrentDictionary<Guid, DeepMatrix>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, DeepMatrix)
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name.vb: ConcurrentDictionary(Of Guid, DeepMatrix)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+  name: IntermediateMatrixArrays
+  nameWithType: OperationBase.IntermediateMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix[]}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix[]}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, Matrix[]>
+  nameWithType: ConcurrentDictionary<Guid, Matrix[]>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.Matrix[]>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, Matrix())
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.Matrix())
+  name.vb: ConcurrentDictionary(Of Guid, Matrix())
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: (
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+  name: IntermediateDeepMatrixArrays
+  nameWithType: OperationBase.IntermediateDeepMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix[]}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix[]}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, DeepMatrix[]>
+  nameWithType: ConcurrentDictionary<Guid, DeepMatrix[]>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix[]>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, DeepMatrix())
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  name.vb: ConcurrentDictionary(Of Guid, DeepMatrix())
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: (
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+  name: IntermediateObjectArrays
+  nameWithType: OperationBase.IntermediateObjectArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,System.Object[]}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,System.Object[]}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, object[]>
+  nameWithType: ConcurrentDictionary<Guid, object[]>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, object[]>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, Object())
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, Object())
+  name.vb: ConcurrentDictionary(Of Guid, Object())
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: (
+  - name: )
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom
   href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
@@ -2687,77 +3305,6 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
   - name: )
-- uid: System.Collections.Concurrent.ConcurrentDictionary`2
-  commentId: T:System.Collections.Concurrent.ConcurrentDictionary`2
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
-  name: ConcurrentDictionary<TKey, TValue>
-  nameWithType: ConcurrentDictionary<TKey, TValue>
-  fullName: System.Collections.Concurrent.ConcurrentDictionary<TKey, TValue>
-  nameWithType.vb: ConcurrentDictionary(Of TKey, TValue)
-  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of TKey, TValue)
-  name.vb: ConcurrentDictionary(Of TKey, TValue)
-  spec.csharp:
-  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
-    name: ConcurrentDictionary
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
-  - name: <
-  - name: TKey
-  - name: ','
-  - name: " "
-  - name: TValue
-  - name: '>'
-  spec.vb:
-  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
-    name: ConcurrentDictionary
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
-  - name: (
-  - name: Of
-  - name: " "
-  - name: TKey
-  - name: ','
-  - name: " "
-  - name: TValue
-  - name: )
-- uid: System.Collections.Concurrent
-  commentId: N:System.Collections.Concurrent
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system
-  name: System.Collections.Concurrent
-  nameWithType: System.Collections.Concurrent
-  fullName: System.Collections.Concurrent
-  spec.csharp:
-  - uid: System
-    name: System
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system
-  - name: .
-  - uid: System.Collections
-    name: Collections
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections
-  - name: .
-  - uid: System.Collections.Concurrent
-    name: Concurrent
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent
-  spec.vb:
-  - uid: System
-    name: System
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system
-  - name: .
-  - uid: System.Collections
-    name: Collections
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections
-  - name: .
-  - uid: System.Collections.Concurrent
-    name: Concurrent
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Reset*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.Reset
   href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Reset
@@ -2782,6 +3329,82 @@ references:
     name: Reset
     href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
   - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.Store
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  name: Store
+  nameWithType: OperationBase.Store
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Store
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  name: Store(Guid)
+  nameWithType: IOperationBase.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.guid
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.Restore
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  name: Restore
+  nameWithType: OperationBase.Restore
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Restore
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  name: Restore(Guid)
+  nameWithType: IOperationBase.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
   - name: )
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput

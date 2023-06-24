@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
+      
+      
       <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_Operation.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.Operation%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -76,7 +79,7 @@
 
   <h1 id="ParallelReverseAutoDiff_RMAD_Operation" data-uid="ParallelReverseAutoDiff.RMAD.Operation" class="text-break">
     Class Operation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Operation.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Operation.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -84,7 +87,8 @@
   <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -114,6 +118,7 @@
   <dl class="typelist derived">
     <dt>Derived</dt>
     <dd>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation.html">AddGaussianNoiseOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html">AmplifiedSigmoidOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation.html">ApplyDropoutOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.html">BatchNormalizationOperation</a></div>
@@ -123,12 +128,18 @@
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.HadamardProductOperation.html">HadamardProductOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation.html">LayerNormalizationOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.LeakyReLUOperation.html">LeakyReLUOperation</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation.html">MatrixAddBroadcastingOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddOperation.html">MatrixAddOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.html">MatrixAddThreeOperation</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAverageOperation.html">MatrixAverageOperation</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation.html">MatrixBroadcastOperation</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation.html">MatrixConcatenateOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.html">MatrixMultiplyOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation.html">MatrixMultiplyScalarOperation</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixSumOperation.html">MatrixSumOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.html">MatrixTransposeOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.ReLUOperation.html">ReLUOperation</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.RMSNormOperation.html">RMSNormOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation.html">ScaleAndShiftOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.SigmoidOperation.html">SigmoidOperation</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.SoftmaxOperation.html">SoftmaxOperation</a></div>
@@ -165,6 +176,9 @@
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_SpecificId">OperationBase.SpecificId</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_NestedSpecificId">OperationBase.NestedSpecificId</a>
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_GradientDestinations">OperationBase.GradientDestinations</a>
@@ -227,10 +241,31 @@
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_DeepOutput">OperationBase.DeepOutput</a>
     </div>
     <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateMatrices">OperationBase.IntermediateMatrices</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateDeepMatrices">OperationBase.IntermediateDeepMatrices</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateMatrixArrays">OperationBase.IntermediateMatrixArrays</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateDeepMatrixArrays">OperationBase.IntermediateDeepMatrixArrays</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateObjectArrays">OperationBase.IntermediateObjectArrays</a>
+    </div>
+    <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_InitializeFrom_ParallelReverseAutoDiff_RMAD_OperationInfo_System_Collections_Concurrent_ConcurrentDictionary_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object___ParallelReverseAutoDiff_RMAD_LayerInfo_">OperationBase.InitializeFrom(OperationInfo, ConcurrentDictionary&lt;string, Func&lt;LayerInfo, object&gt;&gt;, LayerInfo)</a>
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Reset">OperationBase.Reset()</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Store_System_Guid_">OperationBase.Store(Guid)</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Restore_System_Guid_">OperationBase.Restore(Guid)</a>
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_GetOutput">OperationBase.GetOutput()</a>
@@ -298,7 +333,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Operation_Backward_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.Operation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
   Backward(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Operation.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Operation.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Abstract method to perform backward pass, must be implemented by derived classes.</p>
@@ -337,7 +372,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Operation.cs/#L9" class="edit-link">Edit this page</a>
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Operation.cs/#L11" class="edit-link">Edit this page</a>
         </div>
 
         

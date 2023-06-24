@@ -7,6 +7,7 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperationBase)
   - ParallelReverseAutoDiff.RMAD.NeuralNetwork.Parameters
+  - ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
   langs:
   - csharp
   - vb
@@ -21,7 +22,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: NeuralNetwork
     path: ../../src/RMAD/NeuralNetwork.cs
-    startLine: 10
+    startLine: 12
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -58,7 +59,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Parameters
     path: ../../src/RMAD/NeuralNetwork.cs
-    startLine: 17
+    startLine: 20
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -71,6 +72,37 @@ items:
       type: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
     content.vb: Public ReadOnly Property Parameters As NeuralNetworkParameters
   overload: ParallelReverseAutoDiff.RMAD.NeuralNetwork.Parameters*
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
+  commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
+  id: Utilities
+  parent: ParallelReverseAutoDiff.RMAD.NeuralNetwork
+  langs:
+  - csharp
+  - vb
+  name: Utilities
+  nameWithType: NeuralNetwork.Utilities
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/NeuralNetwork.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Utilities
+    path: ../../src/RMAD/NeuralNetwork.cs
+    startLine: 31
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the utilities for the neural network.
+  example: []
+  syntax:
+    content: public NeuralNetworkUtilities Utilities { get; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
+    content.vb: Public ReadOnly Property Utilities As NeuralNetworkUtilities
+  overload: ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities*
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperationBase)
   commentId: M:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperationBase)
   id: LookupParameters(ParallelReverseAutoDiff.RMAD.IOperationBase)
@@ -89,7 +121,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LookupParameters
     path: ../../src/RMAD/NeuralNetwork.cs
-    startLine: 30
+    startLine: 44
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -379,6 +411,19 @@ references:
   name: NeuralNetworkParameters
   nameWithType: NeuralNetworkParameters
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
+  href: ParallelReverseAutoDiff.RMAD.NeuralNetwork.html#ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
+  name: Utilities
+  nameWithType: NeuralNetwork.Utilities
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetwork.Utilities
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
+  commentId: T:ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities.html
+  name: NeuralNetworkUtilities
+  nameWithType: NeuralNetworkUtilities
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters
   href: ParallelReverseAutoDiff.RMAD.NeuralNetwork.html#ParallelReverseAutoDiff.RMAD.NeuralNetwork.LookupParameters(ParallelReverseAutoDiff.RMAD.IOperationBase)

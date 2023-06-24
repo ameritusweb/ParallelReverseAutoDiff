@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
+      
+      
       <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_ComputationGraph.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.ComputationGraph%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -76,7 +79,7 @@
 
   <h1 id="ParallelReverseAutoDiff_RMAD_ComputationGraph" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph" class="text-break">
     Class ComputationGraph
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -144,7 +147,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph__ctor_ParallelReverseAutoDiff_RMAD_NeuralNetwork_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
   ComputationGraph(NeuralNetwork)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.ComputationGraph.html">ComputationGraph</a> class.</p>
@@ -181,7 +184,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_CurrentOperation" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.CurrentOperation">
   CurrentOperation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current operation.</p>
@@ -213,7 +216,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_Item_ParallelReverseAutoDiff_RMAD_MatrixType_System_String_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(ParallelReverseAutoDiff.RMAD.MatrixType,System.String,ParallelReverseAutoDiff.RMAD.LayerInfo)">
   this[MatrixType, string, LayerInfo]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieve the weight or gradient matrix by type and identifier.</p>
@@ -258,7 +261,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_Item_System_String_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(System.String)">
   this[string]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieve the operation by the operation identifier.</p>
@@ -297,7 +300,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_StartOperation" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.StartOperation">
   StartOperation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the start operation.</p>
@@ -333,7 +336,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddBias_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddBias(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   AddBias(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L532"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L754"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a bias to the computation graph.</p>
@@ -375,7 +378,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddGradient_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})">
   AddGradient(string, Func&lt;LayerInfo, DeepMatrix[]&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L568"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L790"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a gradient to the computation graph.</p>
@@ -417,7 +420,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddGradient_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})">
   AddGradient(string, Func&lt;LayerInfo, DeepMatrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L556"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L778"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a gradient to the computation graph.</p>
@@ -459,7 +462,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddGradient_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   AddGradient(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L544"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L766"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a gradient to the computation graph.</p>
@@ -499,9 +502,93 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate*"></a>
 
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})">
+  AddIntermediate(string, Func&lt;LayerInfo, DeepMatrix[]&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L826"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds an intermediate to the computation graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComputationGraph AddIntermediate(string identifier, Func&lt;LayerInfo, DeepMatrix[]&gt; matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An identifier.</p>
+</dd>
+    <dt><code>matrix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>[]&gt;</dt>
+    <dd><p>The gradient.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ComputationGraph.html">ComputationGraph</a></dt>
+    <dd><p>A computation graph.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})">
+  AddIntermediate(string, Func&lt;LayerInfo, DeepMatrix&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L814"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds an intermediate to the computation graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComputationGraph AddIntermediate(string identifier, Func&lt;LayerInfo, DeepMatrix&gt; matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An identifier.</p>
+</dd>
+    <dt><code>matrix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>&gt;</dt>
+    <dd><p>The gradient.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ComputationGraph.html">ComputationGraph</a></dt>
+    <dd><p>A computation graph.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate*"></a>
+
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   AddIntermediate(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L580"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L802"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds an intermediate to the computation graph.</p>
@@ -543,7 +630,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddOperation_ParallelReverseAutoDiff_RMAD_IOperationBase_ParallelReverseAutoDiff_RMAD_OperationInfo_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperation(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
   AddOperation(IOperationBase, OperationInfo, LayerInfo)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L637"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L895"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds an operation to the computation graph.</p>
@@ -588,7 +675,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddOperationByType_System_Type_ParallelReverseAutoDiff_RMAD_OperationInfo_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationByType(System.Type,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
   AddOperationByType(Type, OperationInfo, LayerInfo)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L617"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L875"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds an operation to the computation graph by type.</p>
@@ -633,7 +720,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddOperationFinder_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationFinder(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})">
   AddOperationFinder(string, Func&lt;LayerInfo, object&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L604"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L862"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a operation finder to the computation graph.</p>
@@ -675,7 +762,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddScalar_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Double__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})">
   AddScalar(string, Func&lt;LayerInfo, double&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L592"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L838"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a scalar to the computation graph.</p>
@@ -713,11 +800,53 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddScalar_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddScalar_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Int32__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Int32})">
+  AddScalar(string, Func&lt;LayerInfo, int&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L850"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a scalar to the computation graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComputationGraph AddScalar(string identifier, Func&lt;LayerInfo, int&gt; scalar)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An identifier.</p>
+</dd>
+    <dt><code>scalar</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>The scalar.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ComputationGraph.html">ComputationGraph</a></dt>
+    <dd><p>A computation graph.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddWeight_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddWeight*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddWeight_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddWeight(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})">
   AddWeight(string, Func&lt;LayerInfo, DeepMatrix[]&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L520"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L742"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a weight to the computation graph.</p>
@@ -759,7 +888,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddWeight_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddWeight(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})">
   AddWeight(string, Func&lt;LayerInfo, DeepMatrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L508"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L730"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a weight to the computation graph.</p>
@@ -801,7 +930,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_AddWeight_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.AddWeight(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   AddWeight(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L496"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L718"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a weight to the computation graph.</p>
@@ -843,7 +972,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_BiasAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.BiasAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   BiasAdded(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L702"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L969"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a bias is added to the computation graph.</p>
@@ -879,7 +1008,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_DualLayersJsonArchitecture_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.DualLayersJsonArchitecture,System.Int32)">
   ConstructFromArchitecture(DualLayersJsonArchitecture, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L336"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from a dual layers architecture with layers and no temporal component.</p>
@@ -921,7 +1050,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_DualLayersJsonArchitecture_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.DualLayersJsonArchitecture,System.Int32,System.Int32)">
   ConstructFromArchitecture(DualLayersJsonArchitecture, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L493"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from a dual layers architecture with time steps and layers.</p>
@@ -966,7 +1095,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_JsonArchitecture_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.JsonArchitecture)">
   ConstructFromArchitecture(JsonArchitecture)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L187"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from an architecture with no layers and no temporal component.</p>
@@ -1005,7 +1134,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_JsonArchitecture_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.JsonArchitecture,System.Int32)">
   ConstructFromArchitecture(JsonArchitecture, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L218"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from an architecture with layers and no temporal component.</p>
@@ -1047,7 +1176,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_JsonArchitecture_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.JsonArchitecture,System.Int32,System.Int32)">
   ConstructFromArchitecture(JsonArchitecture, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L443"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L659"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from an architecture with time steps and layers.</p>
@@ -1090,9 +1219,54 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture*"></a>
 
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_NestedLayersJsonArchitecture_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture,System.Int32,System.Int32)">
+  ConstructFromArchitecture(NestedLayersJsonArchitecture, int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Construct the computation graph from an architecture with nested layers and no temporal component.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ComputationGraph ConstructFromArchitecture(NestedLayersJsonArchitecture architecture, int numLayers, int numNestedLayers)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>architecture</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture.html">NestedLayersJsonArchitecture</a></dt>
+    <dd><p>The architecture.</p>
+</dd>
+    <dt><code>numLayers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of layers.</p>
+</dd>
+    <dt><code>numNestedLayers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of nested layers.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ComputationGraph.html">ComputationGraph</a></dt>
+    <dd><p>The computation graph.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture*"></a>
+
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_TripleLayersJsonArchitecture_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.TripleLayersJsonArchitecture,System.Int32)">
   ConstructFromArchitecture(TripleLayersJsonArchitecture, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L403"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from a triple layers architecture with layers and no temporal component.</p>
@@ -1134,7 +1308,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ConstructFromArchitecture_ParallelReverseAutoDiff_RMAD_TripleLayersJsonArchitecture_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.TripleLayersJsonArchitecture,System.Int32,System.Int32)">
   ConstructFromArchitecture(TripleLayersJsonArchitecture, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L361"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L565"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Construct the computation graph from a triple layers architecture with time steps and layers.</p>
@@ -1177,9 +1351,9 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_DependenciesSetup_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_DependenciesSetup_ParallelReverseAutoDiff_RMAD_IOperationBase_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase)">
-  DependenciesSetup(IOperationBase)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L814"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_DependenciesSetup_ParallelReverseAutoDiff_RMAD_IOperationBase_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+  DependenciesSetup(IOperationBase, LayerInfo)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1115"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle method for when the dependencies are setup for an operation.</p>
@@ -1187,13 +1361,16 @@
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void DependenciesSetup(IOperationBase operation)</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual void DependenciesSetup(IOperationBase operation, LayerInfo layerInfo)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>operation</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.IOperationBase.html">IOperationBase</a></dt>
     <dd><p>The operation.</p>
+</dd>
+    <dt><code>layerInfo</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a></dt>
+    <dd><p>The layer info.</p>
 </dd>
   </dl>
 
@@ -1212,7 +1389,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_GetTypeFrom_System_String_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.GetTypeFrom(System.String)">
   GetTypeFrom(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L485"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L707"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the type from a string.</p>
@@ -1251,7 +1428,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_GradientAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})">
   GradientAdded(string, Func&lt;LayerInfo, DeepMatrix[]&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L732"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L999"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a gradient is added to the computation graph.</p>
@@ -1287,7 +1464,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_GradientAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})">
   GradientAdded(string, Func&lt;LayerInfo, DeepMatrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L722"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L989"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a gradient is added to the computation graph.</p>
@@ -1323,7 +1500,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_GradientAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   GradientAdded(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L712"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L979"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a gradient is added to the computation graph.</p>
@@ -1359,7 +1536,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_InitializeOperation_ParallelReverseAutoDiff_RMAD_IOperationBase_ParallelReverseAutoDiff_RMAD_OperationInfo_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.InitializeOperation(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
   InitializeOperation(IOperationBase, OperationInfo, LayerInfo)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L652"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L919"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the computation graph operation.</p>
@@ -1396,9 +1573,81 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded*"></a>
 
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})">
+  IntermediateAdded(string, Func&lt;LayerInfo, DeepMatrix[]&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1029"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lifecycle function for when an intermediate is added to the computation graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void IntermediateAdded(string identifier, Func&lt;LayerInfo, DeepMatrix[]&gt; matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An identifier.</p>
+</dd>
+    <dt><code>matrix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>[]&gt;</dt>
+    <dd><p>The gradient.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})">
+  IntermediateAdded(string, Func&lt;LayerInfo, DeepMatrix&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1019"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lifecycle function for when an intermediate is added to the computation graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void IntermediateAdded(string identifier, Func&lt;LayerInfo, DeepMatrix&gt; matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An identifier.</p>
+</dd>
+    <dt><code>matrix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>&gt;</dt>
+    <dd><p>The gradient.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded*"></a>
+
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   IntermediateAdded(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L742"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1009"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when an intermediate is added to the computation graph.</p>
@@ -1434,7 +1683,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_OperationAdded_ParallelReverseAutoDiff_RMAD_IOperationBase_ParallelReverseAutoDiff_RMAD_OperationInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationAdded(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo)">
   OperationAdded(IOperationBase, OperationInfo)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L772"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1071"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when an operation is added to the computation graph.</p>
@@ -1470,7 +1719,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_OperationFinderAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationFinderAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})">
   OperationFinderAdded(string, Func&lt;LayerInfo, object&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L762"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1061"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when an operation finder is added to the computation graph.</p>
@@ -1506,7 +1755,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_OperationInitialized_ParallelReverseAutoDiff_RMAD_IOperationBase_ParallelReverseAutoDiff_RMAD_OperationInfo_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.OperationInitialized(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
   OperationInitialized(IOperationBase, OperationInfo, LayerInfo)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L796"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1095"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when an operation is initialized.</p>
@@ -1541,11 +1790,44 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_RestoreOperationIntermediates_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.RestoreOperationIntermediates*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_RestoreOperationIntermediates_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.RestoreOperationIntermediates(System.Guid)">
+  RestoreOperationIntermediates(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Restores the operation intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RestoreOperationIntermediates(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ScalarAdded_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ScalarAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Double__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})">
   ScalarAdded(string, Func&lt;LayerInfo, double&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L752"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1039"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a scalar is added to the computation graph.</p>
@@ -1577,11 +1859,47 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ScalarAdded_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ScalarAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Int32__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Int32})">
+  ScalarAdded(string, Func&lt;LayerInfo, int&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1050"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lifecycle function for when a scalar is added to the computation graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void ScalarAdded(string identifier, Func&lt;LayerInfo, int&gt; scalar)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An identifier.</p>
+</dd>
+    <dt><code>scalar</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>The scalar.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_SetupDependencies_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.SetupDependencies*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_SetupDependencies_ParallelReverseAutoDiff_RMAD_IOperationBase_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.SetupDependencies(ParallelReverseAutoDiff.RMAD.IOperationBase)">
-  SetupDependencies(IOperationBase)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L805"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_SetupDependencies_ParallelReverseAutoDiff_RMAD_IOperationBase_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.SetupDependencies(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+  SetupDependencies(IOperationBase, LayerInfo)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L1105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Setup dependencies for the operation.</p>
@@ -1589,7 +1907,7 @@
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void SetupDependencies(IOperationBase operation)</code></pre>
+    <pre><code class="lang-csharp hljs">protected void SetupDependencies(IOperationBase operation, LayerInfo layerInfo)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -1597,8 +1915,89 @@
     <dt><code>operation</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.IOperationBase.html">IOperationBase</a></dt>
     <dd><p>The operation to setup.</p>
 </dd>
+    <dt><code>layerInfo</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a></dt>
+    <dd><p>The layer info.</p>
+</dd>
   </dl>
 
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_StoreOperationIntermediates_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.StoreOperationIntermediates*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_StoreOperationIntermediates_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.StoreOperationIntermediates(System.Guid)">
+  StoreOperationIntermediates(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L160"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Stores the operation intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void StoreOperationIntermediates(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ToOperationArray_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ToOperationArray*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_ToOperationArray_System_String_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_LayerInfo_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.ToOperationArray(System.String,ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+  ToOperationArray(string, LayerInfo, LayerInfo)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Retrieve an array of operations starting from the start position inclusive, and ending at the end position inclusive.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IOperationBase[] ToOperationArray(string identifier, LayerInfo start, LayerInfo end)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The identifier not including the time step or layer.</p>
+</dd>
+    <dt><code>start</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a></dt>
+    <dd><p>The start position.</p>
+</dd>
+    <dt><code>end</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfo.html">LayerInfo</a></dt>
+    <dd><p>The end position.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IOperationBase.html">IOperationBase</a>[]</dt>
+    <dd><p>The array of operations.</p>
+</dd>
+  </dl>
 
 
 
@@ -1614,7 +2013,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_TypeRetrieved_System_String_" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.TypeRetrieved(System.String)">
   TypeRetrieved(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L662"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L929"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a type is retrieved from a string.</p>
@@ -1653,7 +2052,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_WeightAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.WeightAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})">
   WeightAdded(string, Func&lt;LayerInfo, DeepMatrix[]&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L692"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L959"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a weight is added to the computation graph.</p>
@@ -1689,7 +2088,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_WeightAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.WeightAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})">
   WeightAdded(string, Func&lt;LayerInfo, DeepMatrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L682"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L949"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a weight is added to the computation graph.</p>
@@ -1725,7 +2124,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_ComputationGraph_WeightAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__" data-uid="ParallelReverseAutoDiff.RMAD.ComputationGraph.WeightAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})">
   WeightAdded(string, Func&lt;LayerInfo, Matrix&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L672"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L939"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lifecycle function for when a weight is added to the computation graph.</p>
@@ -1761,7 +2160,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L14" class="edit-link">Edit this page</a>
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/ComputationGraph.cs/#L17" class="edit-link">Edit this page</a>
         </div>
 
         

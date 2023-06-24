@@ -4,6 +4,7 @@ items:
   commentId: N:ParallelReverseAutoDiff.Interprocess
   id: ParallelReverseAutoDiff.Interprocess
   children:
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
   - ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   langs:
   - csharp
@@ -15,6 +16,31 @@ items:
   assemblies:
   - ParallelReverseAutoDiff
 references:
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  commentId: T:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html
+  name: ConcurrentHashSet<T>
+  nameWithType: ConcurrentHashSet<T>
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>
+  nameWithType.vb: ConcurrentHashSet(Of T)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T)
+  name.vb: ConcurrentHashSet(Of T)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+    name: ConcurrentHashSet
+    href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+    name: ConcurrentHashSet
+    href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   commentId: T:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   parent: ParallelReverseAutoDiff.Interprocess

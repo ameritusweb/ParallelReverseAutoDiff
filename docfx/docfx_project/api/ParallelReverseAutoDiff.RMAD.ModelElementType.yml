@@ -1,0 +1,176 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType
+  commentId: T:ParallelReverseAutoDiff.RMAD.ModelElementType
+  id: ModelElementType
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.ModelElementType.FirstMoment
+  - ParallelReverseAutoDiff.RMAD.ModelElementType.Gradient
+  - ParallelReverseAutoDiff.RMAD.ModelElementType.SecondMoment
+  - ParallelReverseAutoDiff.RMAD.ModelElementType.Weight
+  langs:
+  - csharp
+  - vb
+  name: ModelElementType
+  nameWithType: ModelElementType
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType
+  type: Enum
+  source:
+    remote:
+      path: src/RMAD/ModelElementType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ModelElementType
+    path: ../../src/RMAD/ModelElementType.cs
+    startLine: 10
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The model element type.
+  example: []
+  syntax:
+    content: public enum ModelElementType
+    content.vb: Public Enum ModelElementType
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType.Weight
+  commentId: F:ParallelReverseAutoDiff.RMAD.ModelElementType.Weight
+  id: Weight
+  parent: ParallelReverseAutoDiff.RMAD.ModelElementType
+  langs:
+  - csharp
+  - vb
+  name: Weight
+  nameWithType: ModelElementType.Weight
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType.Weight
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/ModelElementType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Weight
+    path: ../../src/RMAD/ModelElementType.cs
+    startLine: 15
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A weight or bias.
+  example: []
+  syntax:
+    content: Weight = 0
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ModelElementType
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType.Gradient
+  commentId: F:ParallelReverseAutoDiff.RMAD.ModelElementType.Gradient
+  id: Gradient
+  parent: ParallelReverseAutoDiff.RMAD.ModelElementType
+  langs:
+  - csharp
+  - vb
+  name: Gradient
+  nameWithType: ModelElementType.Gradient
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType.Gradient
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/ModelElementType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Gradient
+    path: ../../src/RMAD/ModelElementType.cs
+    startLine: 20
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A gradient.
+  example: []
+  syntax:
+    content: Gradient = 1
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ModelElementType
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType.FirstMoment
+  commentId: F:ParallelReverseAutoDiff.RMAD.ModelElementType.FirstMoment
+  id: FirstMoment
+  parent: ParallelReverseAutoDiff.RMAD.ModelElementType
+  langs:
+  - csharp
+  - vb
+  name: FirstMoment
+  nameWithType: ModelElementType.FirstMoment
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType.FirstMoment
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/ModelElementType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: FirstMoment
+    path: ../../src/RMAD/ModelElementType.cs
+    startLine: 25
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The first moment for Adam optimization.
+  example: []
+  syntax:
+    content: FirstMoment = 2
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ModelElementType
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType.SecondMoment
+  commentId: F:ParallelReverseAutoDiff.RMAD.ModelElementType.SecondMoment
+  id: SecondMoment
+  parent: ParallelReverseAutoDiff.RMAD.ModelElementType
+  langs:
+  - csharp
+  - vb
+  name: SecondMoment
+  nameWithType: ModelElementType.SecondMoment
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType.SecondMoment
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/ModelElementType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SecondMoment
+    path: ../../src/RMAD/ModelElementType.cs
+    startLine: 30
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The second moment for Adam optimization.
+  example: []
+  syntax:
+    content: SecondMoment = 3
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ModelElementType
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.ModelElementType
+  commentId: T:ParallelReverseAutoDiff.RMAD.ModelElementType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.ModelElementType.html
+  name: ModelElementType
+  nameWithType: ModelElementType
+  fullName: ParallelReverseAutoDiff.RMAD.ModelElementType

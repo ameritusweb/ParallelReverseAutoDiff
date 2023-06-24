@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
+      
+      
       <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_MatrixUtils.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.MatrixUtils%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -215,6 +218,90 @@
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_MatrixUtils_HadamardProduct_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_MatrixUtils_HadamardProduct_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+  HadamardProduct(Matrix, Matrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/MatrixUtils.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The element-wise Hadamard product of two matrices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Matrix HadamardProduct(Matrix matrixA, Matrix matrixB)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrixA</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrixB</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The resultant matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_MatrixUtils_MatrixAdd_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_MatrixUtils_MatrixAdd_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+  MatrixAdd(Matrix, Matrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/MatrixUtils.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Add two matrices together.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Matrix MatrixAdd(Matrix a, Matrix b)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>a</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>Matrix A.</p>
+</dd>
+    <dt><code>b</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>Matrix B.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The resultant matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_MatrixUtils_ReshapeMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.ReshapeMatrix*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_MatrixUtils_ReshapeMatrix_System_Double___System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.ReshapeMatrix(System.Double[],System.Int32,System.Int32)">
@@ -247,6 +334,48 @@
   <dl class="parameters">
     <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
     <dd><p>A reshaped matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_MatrixUtils_ScalarMultiply_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_MatrixUtils_ScalarMultiply_System_Double_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)">
+  ScalarMultiply(double, Matrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/MatrixUtils.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiply a matrix by a scalar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Matrix ScalarMultiply(double scalar, Matrix matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>scalar</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd><p>The scalar to multiply.</p>
+</dd>
+    <dt><code>matrix</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The resultant matrix.</p>
 </dd>
   </dl>
 

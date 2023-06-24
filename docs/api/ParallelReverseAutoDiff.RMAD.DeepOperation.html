@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
+      
+      
       <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_DeepOperation.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.DeepOperation%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -84,7 +87,8 @@
   <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -151,6 +155,9 @@
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_SpecificId">OperationBase.SpecificId</a>
     </div>
     <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_NestedSpecificId">OperationBase.NestedSpecificId</a>
+    </div>
+    <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_GradientDestinations">OperationBase.GradientDestinations</a>
     </div>
     <div>
@@ -211,10 +218,31 @@
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_DeepOutput">OperationBase.DeepOutput</a>
     </div>
     <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateMatrices">OperationBase.IntermediateMatrices</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateDeepMatrices">OperationBase.IntermediateDeepMatrices</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateMatrixArrays">OperationBase.IntermediateMatrixArrays</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateDeepMatrixArrays">OperationBase.IntermediateDeepMatrixArrays</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateObjectArrays">OperationBase.IntermediateObjectArrays</a>
+    </div>
+    <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_InitializeFrom_ParallelReverseAutoDiff_RMAD_OperationInfo_System_Collections_Concurrent_ConcurrentDictionary_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object___ParallelReverseAutoDiff_RMAD_LayerInfo_">OperationBase.InitializeFrom(OperationInfo, ConcurrentDictionary&lt;string, Func&lt;LayerInfo, object&gt;&gt;, LayerInfo)</a>
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Reset">OperationBase.Reset()</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Store_System_Guid_">OperationBase.Store(Guid)</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Restore_System_Guid_">OperationBase.Restore(Guid)</a>
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_GetOutput">OperationBase.GetOutput()</a>

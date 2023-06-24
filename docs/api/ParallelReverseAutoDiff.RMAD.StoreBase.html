@@ -1,0 +1,643 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class StoreBase
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class StoreBase
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_StoreBase.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.StoreBase%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="ParallelReverseAutoDiff.RMAD.StoreBase">
+
+
+
+  <h1 id="ParallelReverseAutoDiff_RMAD_StoreBase" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase" class="text-break">
+    Class StoreBase
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="ParallelReverseAutoDiff.html">ParallelReverseAutoDiff</a>.<a class="xref" href="ParallelReverseAutoDiff.RMAD.html">RMAD</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A base store for the neural network.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class StoreBase</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">StoreBase</span></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.GradientStore.html">GradientStore</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.WeightStore.html">WeightStore</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_DeepMatrices_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_DeepMatrices" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices">
+  DeepMatrices
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the deep matrix gradients.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ConcurrentDictionary&lt;Guid, DeepMatrix&gt; DeepMatrices { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2">ConcurrentDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_DeepMatrixArrays_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_DeepMatrixArrays" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays">
+  DeepMatrixArrays
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the deep matrix array gradients.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ConcurrentDictionary&lt;Guid, DeepMatrix[]&gt; DeepMatrixArrays { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2">ConcurrentDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>[]&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Ids_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Ids*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Ids" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Ids">
+  Ids
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the ids.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Guid&gt; Ids { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Matrices_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Matrices*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Matrices" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Matrices">
+  Matrices
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the matrix gradients.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ConcurrentDictionary&lt;Guid, Matrix&gt; Matrices { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2">ConcurrentDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>, <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_ModelLayerIndices_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_ModelLayerIndices" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices">
+  ModelLayerIndices
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the model layer indices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;(int, int)&gt; ModelLayerIndices { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>)&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Types_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Types*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Types" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Types">
+  Types
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the types.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;string&gt; Types { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+  Add(DeepMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a deep matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Add(DeepMatrix deepMatrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>deepMatrix</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The deep matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_ParallelReverseAutoDiff_RMAD_DeepMatrix___" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix[])">
+  Add(DeepMatrix[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a deep matrix array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Add(DeepMatrix[] deepMatrixArray)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>deepMatrixArray</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a>[]</dt>
+    <dd><p>The deep matrix array.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_ParallelReverseAutoDiff_RMAD_IModelLayer_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)">
+  Add(IModelLayer)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a model layer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void Add(IModelLayer modelLayer)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>modelLayer</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.IModelLayer.html">IModelLayer</a></dt>
+    <dd><p>The model layer to add.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Add_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.Matrix)">
+  Add(Matrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Add(Matrix matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_AddRange_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.AddRange*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_AddRange_System_Collections_Generic_IEnumerable_ParallelReverseAutoDiff_RMAD_IModelLayer__" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})">
+  AddRange(IEnumerable&lt;IModelLayer&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a range of model layers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddRange(IEnumerable&lt;IModelLayer&gt; modelLayers)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>modelLayers</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.IModelLayer.html">IModelLayer</a>&gt;</dt>
+    <dd><p>The model layers.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Combine_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Combine*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Combine_ParallelReverseAutoDiff_RMAD_StoreBase_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)">
+  Combine(StoreBase)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Combines this store with another store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StoreBase Combine(StoreBase incomingStore)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>incomingStore</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.StoreBase.html">StoreBase</a></dt>
+    <dd><p>The incoming store.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.StoreBase.html">StoreBase</a></dt>
+    <dd><p>The result store.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_InternalLoad_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_InternalLoad_System_IO_FileInfo_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)">
+  InternalLoad(FileInfo)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Load from a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void InternalLoad(FileInfo fileInfo)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>fileInfo</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a></dt>
+    <dd><p>The file info.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_StoreBase_Save_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Save*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_StoreBase_Save_System_IO_FileInfo_" data-uid="ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)">
+  Save(FileInfo)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Save to a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Save(FileInfo fileInfo)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>fileInfo</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a></dt>
+    <dd><p>The file info.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/StoreBase.cs/#L17" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

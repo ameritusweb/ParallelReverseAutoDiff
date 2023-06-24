@@ -1,0 +1,1328 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  commentId: T:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  id: ConcurrentHashSet`1
+  parent: ParallelReverseAutoDiff.Interprocess
+  children:
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add(`0)
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains(`0)
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo(`0[],System.Int32)
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith(System.Collections.Generic.IEnumerable{`0})
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly
+  - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove(`0)
+  langs:
+  - csharp
+  - vb
+  name: ConcurrentHashSet<T>
+  nameWithType: ConcurrentHashSet<T>
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>
+  type: Class
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ConcurrentHashSet
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 15
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: A concurrent hash set.
+  example: []
+  syntax:
+    content: 'public class ConcurrentHashSet<T> : ICollection<T>, IEnumerable<T>, IEnumerable'
+    typeParameters:
+    - id: T
+      description: The type of hash set.
+    content.vb: Public Class ConcurrentHashSet(Of T) Implements ICollection(Of T), IEnumerable(Of T), IEnumerable
+  inheritance:
+  - System.Object
+  implements:
+  - System.Collections.Generic.ICollection{{T}}
+  - System.Collections.Generic.IEnumerable{{T}}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  nameWithType.vb: ConcurrentHashSet(Of T)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T)
+  name.vb: ConcurrentHashSet(Of T)
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count
+  commentId: P:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count
+  id: Count
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: ConcurrentHashSet<T>.Count
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Count
+  type: Property
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Count
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 22
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Gets the count.
+  example: []
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Count
+  nameWithType.vb: ConcurrentHashSet(Of T).Count
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Count
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly
+  commentId: P:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly
+  id: IsReadOnly
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: IsReadOnly
+  nameWithType: ConcurrentHashSet<T>.IsReadOnly
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.IsReadOnly
+  type: Property
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IsReadOnly
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 30
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Gets a value indicating whether the hash set is read only.
+  example: []
+  syntax:
+    content: public bool IsReadOnly { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsReadOnly As Boolean
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.IsReadOnly
+  nameWithType.vb: ConcurrentHashSet(Of T).IsReadOnly
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).IsReadOnly
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add(`0)
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add(`0)
+  id: Add(`0)
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Add(T)
+  nameWithType: ConcurrentHashSet<T>.Add(T)
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Add(T)
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Add
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 40
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Add an item.
+  example: []
+  syntax:
+    content: public bool Add(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The item.
+    return:
+      type: System.Boolean
+      description: A success boolean.
+    content.vb: Public Function Add(item As T) As Boolean
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add*
+  nameWithType.vb: ConcurrentHashSet(Of T).Add(T)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Add(T)
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith(System.Collections.Generic.IEnumerable{`0})
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith(System.Collections.Generic.IEnumerable{`0})
+  id: ExceptWith(System.Collections.Generic.IEnumerable{`0})
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: ExceptWith(IEnumerable<T>)
+  nameWithType: ConcurrentHashSet<T>.ExceptWith(IEnumerable<T>)
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.ExceptWith(System.Collections.Generic.IEnumerable<T>)
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ExceptWith
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 49
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Except with.
+  example: []
+  syntax:
+    content: public void ExceptWith(IEnumerable<T> other)
+    parameters:
+    - id: other
+      type: System.Collections.Generic.IEnumerable{{T}}
+      description: The other enumerable.
+    content.vb: Public Sub ExceptWith(other As IEnumerable(Of T))
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith*
+  nameWithType.vb: ConcurrentHashSet(Of T).ExceptWith(IEnumerable(Of T))
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).ExceptWith(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: ExceptWith(IEnumerable(Of T))
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear
+  id: Clear
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: ConcurrentHashSet<T>.Clear()
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Clear()
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Clear
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 61
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Clears the hash set.
+  example: []
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Clear
+  nameWithType.vb: ConcurrentHashSet(Of T).Clear()
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Clear()
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains(`0)
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains(`0)
+  id: Contains(`0)
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Contains(T)
+  nameWithType: ConcurrentHashSet<T>.Contains(T)
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Contains(T)
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Contains
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 71
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Contains an item.
+  example: []
+  syntax:
+    content: public bool Contains(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The item.
+    return:
+      type: System.Boolean
+      description: A success boolean.
+    content.vb: Public Function Contains(item As T) As Boolean
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Contains({T})
+  nameWithType.vb: ConcurrentHashSet(Of T).Contains(T)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Contains(T)
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo(`0[],System.Int32)
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo(`0[],System.Int32)
+  id: CopyTo(`0[],System.Int32)
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: CopyTo(T[], int)
+  nameWithType: ConcurrentHashSet<T>.CopyTo(T[], int)
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.CopyTo(T[], int)
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: CopyTo
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 81
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Copy to an array.
+  example: []
+  syntax:
+    content: public void CopyTo(T[] array, int arrayIndex)
+    parameters:
+    - id: array
+      type: '{T}[]'
+      description: The array.
+    - id: arrayIndex
+      type: System.Int32
+      description: The array index.
+    content.vb: Public Sub CopyTo(array As T(), arrayIndex As Integer)
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.CopyTo({T}[],System.Int32)
+  nameWithType.vb: ConcurrentHashSet(Of T).CopyTo(T(), Integer)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove(`0)
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove(`0)
+  id: Remove(`0)
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: Remove(T)
+  nameWithType: ConcurrentHashSet<T>.Remove(T)
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Remove(T)
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Remove
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 91
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Remove an item.
+  example: []
+  syntax:
+    content: public bool Remove(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The item.
+    return:
+      type: System.Boolean
+      description: A success boolean.
+    content.vb: Public Function Remove(item As T) As Boolean
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Remove({T})
+  nameWithType.vb: ConcurrentHashSet(Of T).Remove(T)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Remove(T)
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator
+  commentId: M:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator
+  id: GetEnumerator
+  parent: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: ConcurrentHashSet<T>.GetEnumerator()
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.GetEnumerator()
+  type: Method
+  source:
+    remote:
+      path: src/Interprocess/ConcurrentHashSet.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GetEnumerator
+    path: ../../src/Interprocess/ConcurrentHashSet.cs
+    startLine: 110
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.Interprocess
+  summary: Gets an enumerator.
+  example: []
+  syntax:
+    content: public IEnumerator<T> GetEnumerator()
+    return:
+      type: System.Collections.Generic.IEnumerator{{T}}
+      description: The enumerator.
+    content.vb: Public Function GetEnumerator() As IEnumerator(Of T)
+  overload: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator*
+  implements:
+  - System.Collections.Generic.IEnumerable{{T}}.GetEnumerator
+  nameWithType.vb: ConcurrentHashSet(Of T).GetEnumerator()
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).GetEnumerator()
+references:
+- uid: ParallelReverseAutoDiff.Interprocess
+  commentId: N:ParallelReverseAutoDiff.Interprocess
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.Interprocess
+  nameWithType: ParallelReverseAutoDiff.Interprocess
+  fullName: ParallelReverseAutoDiff.Interprocess
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.Interprocess
+    name: Interprocess
+    href: ParallelReverseAutoDiff.Interprocess.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.Interprocess
+    name: Interprocess
+    href: ParallelReverseAutoDiff.Interprocess.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Collections.Generic.ICollection{{T}}
+  commentId: T:System.Collections.Generic.ICollection{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.ICollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<T>
+  nameWithType: ICollection<T>
+  fullName: System.Collections.Generic.ICollection<T>
+  nameWithType.vb: ICollection(Of T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T)
+  name.vb: ICollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.ICollection`1
+  commentId: T:System.Collections.Generic.ICollection`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<T>
+  nameWithType: ICollection<T>
+  fullName: System.Collections.Generic.ICollection<T>
+  nameWithType.vb: ICollection(Of T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T)
+  name.vb: ICollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Count
+  name: Count
+  nameWithType: ConcurrentHashSet<T>.Count
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Count
+  nameWithType.vb: ConcurrentHashSet(Of T).Count
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Count
+- uid: System.Collections.Generic.ICollection{{T}}.Count
+  commentId: P:System.Collections.Generic.ICollection{`0}.Count
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Count
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.count
+  name: Count
+  nameWithType: ICollection<T>.Count
+  fullName: System.Collections.Generic.ICollection<T>.Count
+  nameWithType.vb: ICollection(Of T).Count
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Collections.Generic.ICollection`1.Count
+  commentId: P:System.Collections.Generic.ICollection`1.Count
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.count
+  name: Count
+  nameWithType: ICollection<T>.Count
+  fullName: System.Collections.Generic.ICollection<T>.Count
+  nameWithType.vb: ICollection(Of T).Count
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Count
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.IsReadOnly
+  name: IsReadOnly
+  nameWithType: ConcurrentHashSet<T>.IsReadOnly
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.IsReadOnly
+  nameWithType.vb: ConcurrentHashSet(Of T).IsReadOnly
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).IsReadOnly
+- uid: System.Collections.Generic.ICollection{{T}}.IsReadOnly
+  commentId: P:System.Collections.Generic.ICollection{`0}.IsReadOnly
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.IsReadOnly
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.isreadonly
+  name: IsReadOnly
+  nameWithType: ICollection<T>.IsReadOnly
+  fullName: System.Collections.Generic.ICollection<T>.IsReadOnly
+  nameWithType.vb: ICollection(Of T).IsReadOnly
+  fullName.vb: System.Collections.Generic.ICollection(Of T).IsReadOnly
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.Generic.ICollection`1.IsReadOnly
+  commentId: P:System.Collections.Generic.ICollection`1.IsReadOnly
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.isreadonly
+  name: IsReadOnly
+  nameWithType: ICollection<T>.IsReadOnly
+  fullName: System.Collections.Generic.ICollection<T>.IsReadOnly
+  nameWithType.vb: ICollection(Of T).IsReadOnly
+  fullName.vb: System.Collections.Generic.ICollection(Of T).IsReadOnly
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Add(`0)
+  name: Add
+  nameWithType: ConcurrentHashSet<T>.Add
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Add
+  nameWithType.vb: ConcurrentHashSet(Of T).Add
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Add
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.ExceptWith(System.Collections.Generic.IEnumerable{`0})
+  name: ExceptWith
+  nameWithType: ConcurrentHashSet<T>.ExceptWith
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.ExceptWith
+  nameWithType.vb: ConcurrentHashSet(Of T).ExceptWith
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).ExceptWith
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Clear
+  name: Clear
+  nameWithType: ConcurrentHashSet<T>.Clear
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Clear
+  nameWithType.vb: ConcurrentHashSet(Of T).Clear
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Clear
+- uid: System.Collections.Generic.ICollection{{T}}.Clear
+  commentId: M:System.Collections.Generic.ICollection{`0}.Clear
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Clear
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.clear#system-collections-generic-icollection((-0))-clear
+  name: Clear()
+  nameWithType: ICollection<T>.Clear()
+  fullName: System.Collections.Generic.ICollection<T>.Clear()
+  nameWithType.vb: ICollection(Of T).Clear()
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Clear()
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.clear#system-collections-generic-icollection((-0))-clear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.clear#system-collections-generic-icollection((-0))-clear
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Clear
+  commentId: M:System.Collections.Generic.ICollection`1.Clear
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  name: Clear()
+  nameWithType: ICollection<T>.Clear()
+  fullName: System.Collections.Generic.ICollection<T>.Clear()
+  nameWithType.vb: ICollection(Of T).Clear()
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Clear()
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Contains(`0)
+  name: Contains
+  nameWithType: ConcurrentHashSet<T>.Contains
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Contains
+  nameWithType.vb: ConcurrentHashSet(Of T).Contains
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Contains
+- uid: System.Collections.Generic.ICollection{{T}}.Contains({T})
+  commentId: M:System.Collections.Generic.ICollection{`0}.Contains(`0)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Contains(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.contains#system-collections-generic-icollection((-0))-contains(-0)
+  name: Contains(T)
+  nameWithType: ICollection<T>.Contains(T)
+  fullName: System.Collections.Generic.ICollection<T>.Contains(T)
+  nameWithType.vb: ICollection(Of T).Contains(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Contains(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.contains#system-collections-generic-icollection((-0))-contains(-0)
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.contains#system-collections-generic-icollection((-0))-contains(-0)
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Contains(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Contains(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  name: Contains(T)
+  nameWithType: ICollection<T>.Contains(T)
+  fullName: System.Collections.Generic.ICollection<T>.Contains(T)
+  nameWithType.vb: ICollection(Of T).Contains(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Contains(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.CopyTo(`0[],System.Int32)
+  name: CopyTo
+  nameWithType: ConcurrentHashSet<T>.CopyTo
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.CopyTo
+  nameWithType.vb: ConcurrentHashSet(Of T).CopyTo
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).CopyTo
+- uid: System.Collections.Generic.ICollection{{T}}.CopyTo({T}[],System.Int32)
+  commentId: M:System.Collections.Generic.ICollection{`0}.CopyTo(`0[],System.Int32)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.copyto#system-collections-generic-icollection((-0))-copyto(-0()-system-int32)
+  name: CopyTo(T[], int)
+  nameWithType: ICollection<T>.CopyTo(T[], int)
+  fullName: System.Collections.Generic.ICollection<T>.CopyTo(T[], int)
+  nameWithType.vb: ICollection(Of T).CopyTo(T(), Integer)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.copyto#system-collections-generic-icollection((-0))-copyto(-0()-system-int32)
+  - name: (
+  - name: T
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.copyto#system-collections-generic-icollection((-0))-copyto(-0()-system-int32)
+  - name: (
+  - name: T
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  commentId: M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  name: CopyTo(T[], int)
+  nameWithType: ICollection<T>.CopyTo(T[], int)
+  fullName: System.Collections.Generic.ICollection<T>.CopyTo(T[], int)
+  nameWithType.vb: ICollection(Of T).CopyTo(T(), Integer)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.Remove(`0)
+  name: Remove
+  nameWithType: ConcurrentHashSet<T>.Remove
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.Remove
+  nameWithType.vb: ConcurrentHashSet(Of T).Remove
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Remove
+- uid: System.Collections.Generic.ICollection{{T}}.Remove({T})
+  commentId: M:System.Collections.Generic.ICollection{`0}.Remove(`0)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Remove(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.remove#system-collections-generic-icollection((-0))-remove(-0)
+  name: Remove(T)
+  nameWithType: ICollection<T>.Remove(T)
+  fullName: System.Collections.Generic.ICollection<T>.Remove(T)
+  nameWithType.vb: ICollection(Of T).Remove(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Remove(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.remove#system-collections-generic-icollection((-0))-remove(-0)
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection--0-.remove#system-collections-generic-icollection((-0))-remove(-0)
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Remove(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Remove(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  name: Remove(T)
+  nameWithType: ICollection<T>.Remove(T)
+  fullName: System.Collections.Generic.ICollection<T>.Remove(T)
+  nameWithType.vb: ICollection(Of T).Remove(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Remove(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+- uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator*
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator
+  href: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet-1.html#ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1.GetEnumerator
+  name: GetEnumerator
+  nameWithType: ConcurrentHashSet<T>.GetEnumerator
+  fullName: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet<T>.GetEnumerator
+  nameWithType.vb: ConcurrentHashSet(Of T).GetEnumerator
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).GetEnumerator
+- uid: System.Collections.Generic.IEnumerable{{T}}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{{T}}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable--0-.getenumerator#system-collections-generic-ienumerable((-0))-getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable--0-.getenumerator#system-collections-generic-ienumerable((-0))-getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable--0-.getenumerator#system-collections-generic-ienumerable((-0))-getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator{{T}}
+  commentId: T:System.Collections.Generic.IEnumerator{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerator`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator`1
+  commentId: T:System.Collections.Generic.IEnumerator`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

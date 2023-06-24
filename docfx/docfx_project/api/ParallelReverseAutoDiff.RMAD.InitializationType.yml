@@ -7,6 +7,7 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.InitializationType.He
   - ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
+  - ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
   langs:
   - csharp
   - vb
@@ -84,6 +85,34 @@ items:
   example: []
   syntax:
     content: Xavier = 1
+    return:
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
+  commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
+  id: Zeroes
+  parent: ParallelReverseAutoDiff.RMAD.InitializationType
+  langs:
+  - csharp
+  - vb
+  name: Zeroes
+  nameWithType: InitializationType.Zeroes
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/InitializationType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Zeroes
+    path: ../../src/RMAD/InitializationType.cs
+    startLine: 25
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initialize with zeroes
+  example: []
+  syntax:
+    content: Zeroes = 2
     return:
       type: ParallelReverseAutoDiff.RMAD.InitializationType
 references:

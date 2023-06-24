@@ -9,25 +9,28 @@
  ">
       
       <link rel="icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.min.css">
-      <link rel="stylesheet" href="../styles/main.css">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
       <meta name="docfx:tocrel" content="toc.html">
       
       
       
-
-      <script>
-        MathJax = {
-          options: {
-            processHtmlClass: ['tex2jax_process', 'math']
-          }
-        };
-      </script>
-
-      <script type="text/javascript" src="../styles/docfx.min.js"></script>
-      <script type="text/javascript" src="../styles/main.js"></script>
+      
+      
   </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -78,8 +81,19 @@
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
 
-    <h3 id="classes">Classes
+    <h3 id="classes">
+Classes
 </h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.AdamOptimizer.html">AdamOptimizer</a></dt>
+      <dd><p>An Adam optimizer.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.AddGaussianNoiseOperation.html">AddGaussianNoiseOperation</a></dt>
+      <dd><p>Add Gaussian noise operation.</p>
+</dd>
+    </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation.html">AmplifiedSigmoidOperation</a></dt>
       <dd><p>The sigmoid operation utilizing gradient amplification.</p>
@@ -141,13 +155,19 @@
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter.html">DeepMatrixJsonConverter</a></dt>
+      <dd><p>A JSON converter for a DeepMatrix.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation.html">DeepMaxPoolOperation</a></dt>
       <dd><p>Max Pooling operation for a DeepMatrix.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepOperation.html">DeepOperation</a></dt>
-      <dd></dd>
+      <dd><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepReLUOperation.html">DeepReLUOperation</a></dt>
@@ -177,6 +197,21 @@
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.GELUOperation.html">GELUOperation</a></dt>
       <dd><p>Performs the forward and backward operations for the GELU activation function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.GradientClearer.html">GradientClearer</a></dt>
+      <dd><p>A gradient clearer.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.GradientClipper.html">GradientClipper</a></dt>
+      <dd><p>A gradient clipper.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.GradientStore.html">GradientStore</a></dt>
+      <dd><p>A gradient store.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -215,6 +250,11 @@
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation.html">MatrixAddBroadcastingOperation</a></dt>
+      <dd><p>Matrix addition broadcasting operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddOperation.html">MatrixAddOperation</a></dt>
       <dd><p>Matrix addition operation.</p>
 </dd>
@@ -222,6 +262,26 @@
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.html">MatrixAddThreeOperation</a></dt>
       <dd><p>Matrix addition operation for three matrices or two matrices and a bias.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixAverageOperation.html">MatrixAverageOperation</a></dt>
+      <dd><p>Matrix average operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation.html">MatrixBroadcastOperation</a></dt>
+      <dd><p>Matrix broadcast operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation.html">MatrixConcatenateOperation</a></dt>
+      <dd><p>Matrix concatenate operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixJsonConverter.html">MatrixJsonConverter</a></dt>
+      <dd><p>A JSON converter for a Matrix.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -235,6 +295,11 @@
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixSumOperation.html">MatrixSumOperation</a></dt>
+      <dd><p>Matrix sum operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation.html">MatrixTransposeOperation</a></dt>
       <dd><p>A matrix transpose operation.</p>
 </dd>
@@ -242,6 +307,21 @@
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixUtils.html">MatrixUtils</a></dt>
       <dd><p>Matrix utilities for reverse mode automatic differentiation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.html">ModelLayerBuilder</a></dt>
+      <dd><p>A model layer builder for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.NestedLayersJsonArchitecture.html">NestedLayersJsonArchitecture</a></dt>
+      <dd><p>The nested layers JSON architecture for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.NestedLayersTimeStep.html">NestedLayersTimeStep</a></dt>
+      <dd><p>Represents a time step with nested layers for an operation graph.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -255,12 +335,19 @@
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.NeuralNetworkUtilities.html">NeuralNetworkUtilities</a></dt>
+      <dd><p>The utilities for a neural network.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Operation.html">Operation</a></dt>
-      <dd></dd>
+      <dd><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html">OperationBase</a></dt>
-      <dd></dd>
+      <dd><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationGraphVisitor.html">OperationGraphVisitor</a></dt>
@@ -275,6 +362,11 @@
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.html">OperationNeuralNetworkVisitor</a></dt>
       <dd><p>The operation neural network visitor. Implements the visitor pattern for the backward pass.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.RMSNormOperation.html">RMSNormOperation</a></dt>
+      <dd><p>RMSNorm operation for a Matrix.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -295,6 +387,11 @@
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.SoftmaxOperation.html">SoftmaxOperation</a></dt>
       <dd><p>Softmax operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.StoreBase.html">StoreBase</a></dt>
+      <dd><p>A base store for the neural network.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -332,7 +429,13 @@
       <dd><p>Represents a time step with triple layers for an operation graph.</p>
 </dd>
     </dl>
-    <h3 id="structs">Structs
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.WeightStore.html">WeightStore</a></dt>
+      <dd><p>A weight store.</p>
+</dd>
+    </dl>
+    <h3 id="structs">
+Structs
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Dimension.html">Dimension</a></dt>
@@ -344,11 +447,17 @@
       <dd><p>Matrix index.</p>
 </dd>
     </dl>
-    <h3 id="interfaces">Interfaces
+    <h3 id="interfaces">
+Interfaces
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IDeepOperation.html">IDeepOperation</a></dt>
       <dd><p>Define the abstract base class for all deep operations.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IModelLayer.html">IModelLayer</a></dt>
+      <dd><p>Am interface to a model layer.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -361,7 +470,8 @@
       <dd><p>Define the abstract base class for all operations.</p>
 </dd>
     </dl>
-    <h3 id="enums">Enums
+    <h3 id="enums">
+Enums
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.InitializationType.html">InitializationType</a></dt>
@@ -369,8 +479,18 @@
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.LayerInfoType.html">LayerInfoType</a></dt>
+      <dd><p>The type of layer info.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixType.html">MatrixType</a></dt>
       <dd><p>Determines the matrix type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.ModelElementType.html">ModelElementType</a></dt>
+      <dd><p>The model element type.</p>
 </dd>
     </dl>
 

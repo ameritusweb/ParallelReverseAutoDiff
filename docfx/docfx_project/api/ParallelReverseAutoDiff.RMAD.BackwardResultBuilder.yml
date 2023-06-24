@@ -11,6 +11,8 @@ items:
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddGammaGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddWeightGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.Build
   langs:
@@ -81,6 +83,41 @@ items:
       description: The backward result builder.
     content.vb: Public Function AddInputGradient(matrix As Matrix) As BackwardResultBuilder
   overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient*
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  id: AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  parent: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+  langs:
+  - csharp
+  - vb
+  name: AddInputGradientArray(DeepMatrix)
+  nameWithType: BackwardResultBuilder.AddInputGradientArray(DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BackwardResultBuilder.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddInputGradientArray
+    path: ../../src/RMAD/BackwardResultBuilder.cs
+    startLine: 35
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add input gradient array to the backward result.
+  example: []
+  syntax:
+    content: public BackwardResultBuilder AddInputGradientArray(DeepMatrix matrix)
+    parameters:
+    - id: matrix
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The deep matrix to add.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+      description: The backward result builder.
+    content.vb: Public Function AddInputGradientArray(matrix As DeepMatrix) As BackwardResultBuilder
+  overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   id: AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -99,7 +136,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddDeepInputGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 35
+    startLine: 51
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -134,7 +171,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddFiltersGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 47
+    startLine: 63
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -172,7 +209,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddWeightGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 58
+    startLine: 74
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -189,6 +226,41 @@ items:
       description: The backward result builder.
     content.vb: Public Function AddWeightGradient(matrix As Matrix) As BackwardResultBuilder
   overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddWeightGradient*
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  id: AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+  langs:
+  - csharp
+  - vb
+  name: AddScalingGradient(Matrix)
+  nameWithType: BackwardResultBuilder.AddScalingGradient(Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BackwardResultBuilder.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddScalingGradient
+    path: ../../src/RMAD/BackwardResultBuilder.cs
+    startLine: 85
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add scaling gradient to the backward result.
+  example: []
+  syntax:
+    content: public BackwardResultBuilder AddScalingGradient(Matrix matrix)
+    parameters:
+    - id: matrix
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The matrix to add.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+      description: The backward result builder.
+    content.vb: Public Function AddScalingGradient(matrix As Matrix) As BackwardResultBuilder
+  overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient*
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   id: AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)
@@ -207,7 +279,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBetaGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 69
+    startLine: 96
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -242,7 +314,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddGammaGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 80
+    startLine: 107
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -277,7 +349,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBiasGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 91
+    startLine: 118
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -312,7 +384,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Build
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 101
+    startLine: 128
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -605,12 +677,12 @@ references:
   name: BackwardResultBuilder
   nameWithType: BackwardResultBuilder
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient
-  href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  name: AddDeepInputGradient
-  nameWithType: BackwardResultBuilder.AddDeepInputGradient
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray
+  href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: AddInputGradientArray
+  nameWithType: BackwardResultBuilder.AddInputGradientArray
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
   commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
   parent: ParallelReverseAutoDiff.RMAD
@@ -618,6 +690,12 @@ references:
   name: DeepMatrix
   nameWithType: DeepMatrix
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient
+  href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: AddDeepInputGradient
+  nameWithType: BackwardResultBuilder.AddDeepInputGradient
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient
   href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
@@ -651,6 +729,12 @@ references:
   name: AddWeightGradient
   nameWithType: BackwardResultBuilder.AddWeightGradient
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddWeightGradient
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient
+  href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  name: AddScalingGradient
+  nameWithType: BackwardResultBuilder.AddScalingGradient
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient
   href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)

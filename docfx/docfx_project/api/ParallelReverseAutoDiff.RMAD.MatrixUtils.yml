@@ -6,8 +6,11 @@ items:
   parent: ParallelReverseAutoDiff.RMAD
   children:
   - ParallelReverseAutoDiff.RMAD.MatrixUtils.FlattenMatrix(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.MatrixUtils.Random
   - ParallelReverseAutoDiff.RMAD.MatrixUtils.ReshapeMatrix(System.Double[],System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)
   langs:
   - csharp
   - vb
@@ -151,6 +154,123 @@ items:
   nameWithType.vb: MatrixUtils.ReshapeMatrix(Double(), Integer, Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.MatrixUtils.ReshapeMatrix(Double(), Integer, Integer)
   name.vb: ReshapeMatrix(Double(), Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  id: HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.MatrixUtils
+  langs:
+  - csharp
+  - vb
+  name: HadamardProduct(Matrix, Matrix)
+  nameWithType: MatrixUtils.HadamardProduct(Matrix, Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/MatrixUtils.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: HadamardProduct
+    path: ../../src/RMAD/MatrixUtils.cs
+    startLine: 70
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The element-wise Hadamard product of two matrices.
+  example: []
+  syntax:
+    content: public static Matrix HadamardProduct(Matrix matrixA, Matrix matrixB)
+    parameters:
+    - id: matrixA
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The first matrix.
+    - id: matrixB
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The second matrix.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The resultant matrix.
+    content.vb: Public Shared Function HadamardProduct(matrixA As Matrix, matrixB As Matrix) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct*
+- uid: ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  id: MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.MatrixUtils
+  langs:
+  - csharp
+  - vb
+  name: MatrixAdd(Matrix, Matrix)
+  nameWithType: MatrixUtils.MatrixAdd(Matrix, Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/MatrixUtils.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: MatrixAdd
+    path: ../../src/RMAD/MatrixUtils.cs
+    startLine: 99
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add two matrices together.
+  example: []
+  syntax:
+    content: public static Matrix MatrixAdd(Matrix a, Matrix b)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: Matrix A.
+    - id: b
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: Matrix B.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The resultant matrix.
+    content.vb: Public Shared Function MatrixAdd(a As Matrix, b As Matrix) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd*
+- uid: ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)
+  id: ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.MatrixUtils
+  langs:
+  - csharp
+  - vb
+  name: ScalarMultiply(double, Matrix)
+  nameWithType: MatrixUtils.ScalarMultiply(double, Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(double, ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/MatrixUtils.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ScalarMultiply
+    path: ../../src/RMAD/MatrixUtils.cs
+    startLine: 121
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Multiply a matrix by a scalar.
+  example: []
+  syntax:
+    content: public static Matrix ScalarMultiply(double scalar, Matrix matrix)
+    parameters:
+    - id: scalar
+      type: System.Double
+      description: The scalar to multiply.
+    - id: matrix
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The matrix.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The resultant matrix.
+    content.vb: Public Shared Function ScalarMultiply(scalar As Double, matrix As Matrix) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply*
+  nameWithType.vb: MatrixUtils.ScalarMultiply(Double, Matrix)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(Double, ParallelReverseAutoDiff.RMAD.Matrix)
+  name.vb: ScalarMultiply(Double, Matrix)
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -478,3 +598,32 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct
+  href: ParallelReverseAutoDiff.RMAD.MatrixUtils.html#ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: HadamardProduct
+  nameWithType: MatrixUtils.HadamardProduct
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils.HadamardProduct
+- uid: ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd
+  href: ParallelReverseAutoDiff.RMAD.MatrixUtils.html#ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: MatrixAdd
+  nameWithType: MatrixUtils.MatrixAdd
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils.MatrixAdd
+- uid: ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply
+  href: ParallelReverseAutoDiff.RMAD.MatrixUtils.html#ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: ScalarMultiply
+  nameWithType: MatrixUtils.ScalarMultiply
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixUtils.ScalarMultiply
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double

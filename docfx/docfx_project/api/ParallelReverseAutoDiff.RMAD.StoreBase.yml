@@ -1,0 +1,1375 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase
+  commentId: T:ParallelReverseAutoDiff.RMAD.StoreBase
+  id: StoreBase
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+  - ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  - ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+  - ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.Types
+  langs:
+  - csharp
+  - vb
+  name: StoreBase
+  nameWithType: StoreBase
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase
+  type: Class
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: StoreBase
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 16
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A base store for the neural network.
+  example: []
+  syntax:
+    content: public abstract class StoreBase
+    content.vb: Public MustInherit Class StoreBase
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - ParallelReverseAutoDiff.RMAD.GradientStore
+  - ParallelReverseAutoDiff.RMAD.WeightStore
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+  commentId: P:ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+  id: Matrices
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Matrices
+  nameWithType: StoreBase.Matrices
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Matrices
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 21
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the matrix gradients.
+  example: []
+  syntax:
+    content: public ConcurrentDictionary<Guid, Matrix> Matrices { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix}
+    content.vb: Public Property Matrices As ConcurrentDictionary(Of Guid, Matrix)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Matrices*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+  commentId: P:ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+  id: DeepMatrices
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrices
+  nameWithType: StoreBase.DeepMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DeepMatrices
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 26
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the deep matrix gradients.
+  example: []
+  syntax:
+    content: public ConcurrentDictionary<Guid, DeepMatrix> DeepMatrices { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix}
+    content.vb: Public Property DeepMatrices As ConcurrentDictionary(Of Guid, DeepMatrix)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+  id: DeepMatrixArrays
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: DeepMatrixArrays
+  nameWithType: StoreBase.DeepMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DeepMatrixArrays
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 31
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the deep matrix array gradients.
+  example: []
+  syntax:
+    content: public ConcurrentDictionary<Guid, DeepMatrix[]> DeepMatrixArrays { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix[]}
+    content.vb: Public Property DeepMatrixArrays As ConcurrentDictionary(Of Guid, DeepMatrix())
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  commentId: P:ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  id: Ids
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Ids
+  nameWithType: StoreBase.Ids
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Ids
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 36
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the ids.
+  example: []
+  syntax:
+    content: public List<Guid> Ids { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.Guid}
+    content.vb: Public Property Ids As List(Of Guid)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Ids*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Types
+  commentId: P:ParallelReverseAutoDiff.RMAD.StoreBase.Types
+  id: Types
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Types
+  nameWithType: StoreBase.Types
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Types
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Types
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 41
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the types.
+  example: []
+  syntax:
+    content: public List<string> Types { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: Public Property Types As List(Of String)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Types*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+  commentId: P:ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+  id: ModelLayerIndices
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: ModelLayerIndices
+  nameWithType: StoreBase.ModelLayerIndices
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ModelLayerIndices
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 46
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the model layer indices.
+  example: []
+  syntax:
+    content: public List<(int, int)> ModelLayerIndices { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Int32}}
+    content.vb: Public Property ModelLayerIndices As List(Of (Integer, Integer))
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  id: Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Add(IModelLayer)
+  nameWithType: StoreBase.Add(IModelLayer)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Add
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 52
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a model layer.
+  example: []
+  syntax:
+    content: public abstract void Add(IModelLayer modelLayer)
+    parameters:
+    - id: modelLayer
+      type: ParallelReverseAutoDiff.RMAD.IModelLayer
+      description: The model layer to add.
+    content.vb: Public MustOverride Sub Add(modelLayer As IModelLayer)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Add*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})
+  id: AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: AddRange(IEnumerable<IModelLayer>)
+  nameWithType: StoreBase.AddRange(IEnumerable<IModelLayer>)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable<ParallelReverseAutoDiff.RMAD.IModelLayer>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddRange
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 58
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a range of model layers.
+  example: []
+  syntax:
+    content: public void AddRange(IEnumerable<IModelLayer> modelLayers)
+    parameters:
+    - id: modelLayers
+      type: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer}
+      description: The model layers.
+    content.vb: Public Sub AddRange(modelLayers As IEnumerable(Of IModelLayer))
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.AddRange*
+  nameWithType.vb: StoreBase.AddRange(IEnumerable(Of IModelLayer))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable(Of ParallelReverseAutoDiff.RMAD.IModelLayer))
+  name.vb: AddRange(IEnumerable(Of IModelLayer))
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
+  id: Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Combine(StoreBase)
+  nameWithType: StoreBase.Combine(StoreBase)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Combine
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 71
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Combines this store with another store.
+  example: []
+  syntax:
+    content: public StoreBase Combine(StoreBase incomingStore)
+    parameters:
+    - id: incomingStore
+      type: ParallelReverseAutoDiff.RMAD.StoreBase
+      description: The incoming store.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.StoreBase
+      description: The result store.
+    content.vb: Public Function Combine(incomingStore As StoreBase) As StoreBase
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Combine*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)
+  id: Save(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Save(FileInfo)
+  nameWithType: StoreBase.Save(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Save
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 122
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Save to a file.
+  example: []
+  syntax:
+    content: public void Save(FileInfo fileInfo)
+    parameters:
+    - id: fileInfo
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Public Sub Save(fileInfo As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Save*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
+  id: InternalLoad(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: InternalLoad(FileInfo)
+  nameWithType: StoreBase.InternalLoad(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: InternalLoad
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 180
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Load from a file.
+  example: []
+  syntax:
+    content: protected void InternalLoad(FileInfo fileInfo)
+    parameters:
+    - id: fileInfo
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Protected Sub InternalLoad(fileInfo As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.Matrix)
+  id: Add(ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Add(Matrix)
+  nameWithType: StoreBase.Add(Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Add
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 263
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a matrix.
+  example: []
+  syntax:
+    content: protected void Add(Matrix matrix)
+    parameters:
+    - id: matrix
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The matrix.
+    content.vb: Protected Sub Add(matrix As Matrix)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Add*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  id: Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Add(DeepMatrix)
+  nameWithType: StoreBase.Add(DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Add
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 275
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a deep matrix.
+  example: []
+  syntax:
+    content: protected void Add(DeepMatrix deepMatrix)
+    parameters:
+    - id: deepMatrix
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The deep matrix.
+    content.vb: Protected Sub Add(deepMatrix As DeepMatrix)
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Add*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  id: Add(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: Add(DeepMatrix[])
+  nameWithType: StoreBase.Add(DeepMatrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Add
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 287
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a deep matrix array.
+  example: []
+  syntax:
+    content: protected void Add(DeepMatrix[] deepMatrixArray)
+    parameters:
+    - id: deepMatrixArray
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+      description: The deep matrix array.
+    content.vb: Protected Sub Add(deepMatrixArray As DeepMatrix())
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.Add*
+  nameWithType.vb: StoreBase.Add(DeepMatrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  name.vb: Add(DeepMatrix())
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Matrices*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+  name: Matrices
+  nameWithType: StoreBase.Matrices
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.Matrix}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, Matrix>
+  nameWithType: ConcurrentDictionary<Guid, Matrix>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.Matrix>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, Matrix)
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.Matrix)
+  name.vb: ConcurrentDictionary(Of Guid, Matrix)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.Matrix
+    name: Matrix
+    href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  - name: )
+- uid: System.Collections.Concurrent.ConcurrentDictionary`2
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<TKey, TValue>
+  nameWithType: ConcurrentDictionary<TKey, TValue>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<TKey, TValue>
+  nameWithType.vb: ConcurrentDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of TKey, TValue)
+  name.vb: ConcurrentDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Concurrent
+  commentId: N:System.Collections.Concurrent
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Concurrent
+  nameWithType: System.Collections.Concurrent
+  fullName: System.Collections.Concurrent
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Concurrent
+    name: Concurrent
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Concurrent
+    name: Concurrent
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+  name: DeepMatrices
+  nameWithType: StoreBase.DeepMatrices
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, DeepMatrix>
+  nameWithType: ConcurrentDictionary<Guid, DeepMatrix>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, DeepMatrix)
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name.vb: ConcurrentDictionary(Of Guid, DeepMatrix)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+  name: DeepMatrixArrays
+  nameWithType: StoreBase.DeepMatrixArrays
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
+- uid: System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix[]}
+  commentId: T:System.Collections.Concurrent.ConcurrentDictionary{System.Guid,ParallelReverseAutoDiff.RMAD.DeepMatrix[]}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  name: ConcurrentDictionary<Guid, DeepMatrix[]>
+  nameWithType: ConcurrentDictionary<Guid, DeepMatrix[]>
+  fullName: System.Collections.Concurrent.ConcurrentDictionary<System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix[]>
+  nameWithType.vb: ConcurrentDictionary(Of Guid, DeepMatrix())
+  fullName.vb: System.Collections.Concurrent.ConcurrentDictionary(Of System.Guid, ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  name.vb: ConcurrentDictionary(Of Guid, DeepMatrix())
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentDictionary`2
+    name: ConcurrentDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: (
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Ids*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  name: Ids
+  nameWithType: StoreBase.Ids
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+- uid: System.Collections.Generic.List{System.Guid}
+  commentId: T:System.Collections.Generic.List{System.Guid}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Guid>
+  nameWithType: List<Guid>
+  fullName: System.Collections.Generic.List<System.Guid>
+  nameWithType.vb: List(Of Guid)
+  fullName.vb: System.Collections.Generic.List(Of System.Guid)
+  name.vb: List(Of Guid)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Types*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.Types
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.Types
+  name: Types
+  nameWithType: StoreBase.Types
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Types
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+  name: ModelLayerIndices
+  nameWithType: StoreBase.ModelLayerIndices
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
+- uid: System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Int32}}
+  commentId: T:System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Int32}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<(int, int)>
+  nameWithType: List<(int, int)>
+  fullName: System.Collections.Generic.List<(int, int)>
+  nameWithType.vb: List(Of (Integer, Integer))
+  fullName.vb: System.Collections.Generic.List(Of (Integer, Integer))
+  name.vb: List(Of (Integer, Integer))
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Add*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.Add
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
+  name: Add
+  nameWithType: StoreBase.Add
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Add
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+  commentId: T:ParallelReverseAutoDiff.RMAD.IModelLayer
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html
+  name: IModelLayer
+  nameWithType: IModelLayer
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.AddRange*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.AddRange
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})
+  name: AddRange
+  nameWithType: StoreBase.AddRange
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.AddRange
+- uid: System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer}
+  commentId: T:System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<IModelLayer>
+  nameWithType: IEnumerable<IModelLayer>
+  fullName: System.Collections.Generic.IEnumerable<ParallelReverseAutoDiff.RMAD.IModelLayer>
+  nameWithType.vb: IEnumerable(Of IModelLayer)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of ParallelReverseAutoDiff.RMAD.IModelLayer)
+  name.vb: IEnumerable(Of IModelLayer)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+    name: IModelLayer
+    href: ParallelReverseAutoDiff.RMAD.IModelLayer.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.IModelLayer
+    name: IModelLayer
+    href: ParallelReverseAutoDiff.RMAD.IModelLayer.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Combine*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.Combine
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
+  name: Combine
+  nameWithType: StoreBase.Combine
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Combine
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase
+  commentId: T:ParallelReverseAutoDiff.RMAD.StoreBase
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html
+  name: StoreBase
+  nameWithType: StoreBase
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.Save*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.Save
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)
+  name: Save
+  nameWithType: StoreBase.Save
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Save
+- uid: System.IO.FileInfo
+  commentId: T:System.IO.FileInfo
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.fileinfo
+  name: FileInfo
+  nameWithType: FileInfo
+  fullName: System.IO.FileInfo
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
+  name: InternalLoad
+  nameWithType: StoreBase.InternalLoad
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix
+  nameWithType: DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix[]
+  nameWithType: DeepMatrix[]
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+  nameWithType.vb: DeepMatrix()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix()
+  name.vb: DeepMatrix()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: (
+  - name: )

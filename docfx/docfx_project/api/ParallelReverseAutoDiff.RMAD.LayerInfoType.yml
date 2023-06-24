@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  commentId: T:ParallelReverseAutoDiff.RMAD.LayerInfoType
+  id: LayerInfoType
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.LayerInfoType.Nested
+  - ParallelReverseAutoDiff.RMAD.LayerInfoType.Normal
+  langs:
+  - csharp
+  - vb
+  name: LayerInfoType
+  nameWithType: LayerInfoType
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  type: Enum
+  source:
+    remote:
+      path: src/RMAD/LayerInfoType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: LayerInfoType
+    path: ../../src/RMAD/LayerInfoType.cs
+    startLine: 10
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: The type of layer info.
+  example: []
+  syntax:
+    content: public enum LayerInfoType
+    content.vb: Public Enum LayerInfoType
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfoType.Normal
+  commentId: F:ParallelReverseAutoDiff.RMAD.LayerInfoType.Normal
+  id: Normal
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  langs:
+  - csharp
+  - vb
+  name: Normal
+  nameWithType: LayerInfoType.Normal
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfoType.Normal
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/LayerInfoType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Normal
+    path: ../../src/RMAD/LayerInfoType.cs
+    startLine: 15
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Normal.
+  example: []
+  syntax:
+    content: Normal = 0
+    return:
+      type: ParallelReverseAutoDiff.RMAD.LayerInfoType
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfoType.Nested
+  commentId: F:ParallelReverseAutoDiff.RMAD.LayerInfoType.Nested
+  id: Nested
+  parent: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  langs:
+  - csharp
+  - vb
+  name: Nested
+  nameWithType: LayerInfoType.Nested
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfoType.Nested
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/LayerInfoType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Nested
+    path: ../../src/RMAD/LayerInfoType.cs
+    startLine: 20
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Nested.
+  example: []
+  syntax:
+    content: Nested = 1
+    return:
+      type: ParallelReverseAutoDiff.RMAD.LayerInfoType
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.LayerInfoType
+  commentId: T:ParallelReverseAutoDiff.RMAD.LayerInfoType
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.LayerInfoType.html
+  name: LayerInfoType
+  nameWithType: LayerInfoType
+  fullName: ParallelReverseAutoDiff.RMAD.LayerInfoType
