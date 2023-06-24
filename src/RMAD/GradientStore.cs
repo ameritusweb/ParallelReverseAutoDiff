@@ -9,7 +9,6 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A gradient store.
@@ -111,12 +110,8 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The gradient store.</returns>
         public static GradientStore Load(FileInfo fileInfo)
         {
-            // Read JSON string from file
-            var json = File.ReadAllText(fileInfo.FullName);
-
-            // Deserialize JSON string to a gradient store
-            var store = JsonConvert.DeserializeObject<GradientStore>(json) ?? throw new InvalidOperationException("An error occurred during deserialization.");
-
+            GradientStore store = new GradientStore();
+            store.InternalLoad(fileInfo);
             return store;
         }
 

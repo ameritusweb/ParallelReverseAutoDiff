@@ -23,12 +23,8 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The weight store.</returns>
         public static WeightStore Load(FileInfo fileInfo)
         {
-            // Read JSON string from file
-            var json = File.ReadAllText(fileInfo.FullName);
-
-            // Deserialize JSON string to a gradient store
-            var store = JsonConvert.DeserializeObject<WeightStore>(json) ?? throw new InvalidOperationException("An error occurred during deserialization.");
-
+            WeightStore store = new WeightStore();
+            store.InternalLoad(fileInfo);
             return store;
         }
 

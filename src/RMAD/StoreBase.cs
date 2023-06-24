@@ -130,43 +130,130 @@ namespace ParallelReverseAutoDiff.RMAD
                 // Start a JSON array
                 writer.WriteStartArray();
 
+                writer.WriteValue(Constants.IdsStart);
                 foreach (Guid id in this.Ids)
                 {
                     serializer.Serialize(writer, id);
                 }
 
+                writer.WriteValue(Constants.TypesStart);
                 foreach (string type in this.Types)
                 {
                     serializer.Serialize(writer, type);
                 }
 
+                writer.WriteValue(Constants.ModelLayerIndicesStart);
                 foreach (var indexPair in this.ModelLayerIndices)
                 {
                     serializer.Serialize(writer, indexPair);
                 }
 
+                writer.WriteValue(Constants.MatricesStart);
                 foreach (var matrixKey in this.Matrices.Keys)
                 {
                     serializer.Serialize(writer, matrixKey);
+                    serializer.Serialize(writer, this.Matrices[matrixKey]);
                 }
 
-                foreach (Matrix matrix in this.Matrices.Values)
-                {
-                    serializer.Serialize(writer, matrix);
-                }
-
+                writer.WriteValue(Constants.DeepMatricesStart);
                 foreach (var deepMatrixKey in this.DeepMatrices.Keys)
                 {
                     serializer.Serialize(writer, deepMatrixKey);
+                    serializer.Serialize(writer, this.DeepMatrices[deepMatrixKey]);
                 }
 
-                foreach (DeepMatrix matrix in this.DeepMatrices.Values)
+                writer.WriteValue(Constants.DeepMatrixArraysStart);
+                foreach (var deepMatrixArrayKey in this.DeepMatrixArrays.Keys)
                 {
-                    serializer.Serialize(writer, matrix);
+                    serializer.Serialize(writer, deepMatrixArrayKey);
+                    serializer.Serialize(writer, this.DeepMatrixArrays[deepMatrixArrayKey]);
                 }
 
                 // End the JSON array
                 writer.WriteEndArray();
+            }
+        }
+
+        /// <summary>
+        /// Load from a file.
+        /// </summary>
+        /// <param name="fileInfo">The file info.</param>
+        protected void InternalLoad(FileInfo fileInfo)
+        {
+            using (StreamReader file = File.OpenText(fileInfo.FullName))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+
+                // The reader should be positioned at the start of an array
+                if (!reader.Read() || reader.TokenType != JsonToken.StartArray)
+                {
+                    throw new InvalidDataException("Expected start of array");
+                }
+
+                // Read until we reach the end of the array
+                while (reader.Read())
+                {
+                    // Expect a string to start each section
+                    if (reader.TokenType != JsonToken.String)
+                    {
+                        throw new InvalidDataException("Expected section start marker");
+                    }
+
+                    string sectionStart = (string)reader.Value!;
+
+                    // Read the elements of the section
+                    while (reader.Read() && reader.TokenType != JsonToken.String)
+                    {
+                        switch (sectionStart)
+                        {
+                            case Constants.IdsStart:
+                                if (reader.Value != null)
+                                {
+                                    this.Ids.Add(new Guid(reader.Value.ToString()));
+                                }
+
+                                break;
+
+                            case Constants.TypesStart:
+                                if (reader.Value != null)
+                                {
+                                    this.Types.Add(reader.Value.ToString());
+                                }
+
+                                break;
+
+                            case Constants.ModelLayerIndicesStart:
+                                var indices = serializer.Deserialize<(int, int)>(reader);
+                                this.ModelLayerIndices.Add(indices);
+                                break;
+
+                            case Constants.MatricesStart:
+                                Guid matrixKey = new Guid(reader.Value!.ToString());
+                                reader.Read(); // Read the corresponding value
+                                Matrix matrixValue = serializer.Deserialize<Matrix>(reader) ?? throw new InvalidOperationException("Matrix should not be null.");
+                                this.Matrices.TryAdd(matrixKey, matrixValue);
+                                break;
+
+                            case Constants.DeepMatricesStart:
+                                Guid deepMatrixKey = new Guid(reader.Value!.ToString());
+                                reader.Read(); // Read the corresponding value
+                                DeepMatrix deepMatrixValue = serializer.Deserialize<DeepMatrix>(reader) ?? throw new InvalidOperationException("DeepMatrix should not be null.");
+                                this.DeepMatrices.TryAdd(deepMatrixKey, deepMatrixValue);
+                                break;
+
+                            case Constants.DeepMatrixArraysStart:
+                                Guid deepMatrixArrayKey = new Guid(reader.Value!.ToString());
+                                reader.Read(); // Read the corresponding value
+                                DeepMatrix[] deepMatrixArrayValue = serializer.Deserialize<DeepMatrix[]>(reader) ?? throw new InvalidOperationException("DeepMatrix array should not be null.");
+                                this.DeepMatrixArrays.TryAdd(deepMatrixArrayKey, deepMatrixArrayValue);
+                                break;
+
+                            default:
+                                throw new InvalidDataException("Unknown section start marker: " + sectionStart);
+                        }
+                    }
+                }
             }
         }
 
