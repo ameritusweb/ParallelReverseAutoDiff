@@ -192,6 +192,82 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
+        /// <inheritdoc />
+        public void ApplyGradients(List<object> gradients)
+        {
+            for (int i = 0; i < gradients.Count; ++i)
+            {
+                var key = this.elements.Keys.ElementAt(i);
+                var tuple = this.elements[key];
+                if (tuple.Item2 is Matrix matrix)
+                {
+                    if (gradients[i] is Matrix gradientMatrix)
+                    {
+                        matrix.Replace(gradientMatrix.ToArray());
+                    }
+                }
+                else if (tuple.Item2 is DeepMatrix deepMatrix)
+                {
+                    if (gradients[i] is DeepMatrix gradientDeepMatrix)
+                    {
+                        deepMatrix.Replace(gradientDeepMatrix.ToArray());
+                    }
+                }
+                else if (tuple.Item2 is DeepMatrix[] deepMatrixArray)
+                {
+                    if (gradients[i] is DeepMatrix[] gradientDeepMatrixArray)
+                    {
+                        for (int j = 0; j < deepMatrixArray.Length; ++j)
+                        {
+                            deepMatrixArray[j].Replace(gradientDeepMatrixArray[j].ToArray());
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Unsupported gradient type.");
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public void ApplyWeights(List<object> weights)
+        {
+            for (int i = 0; i < weights.Count; ++i)
+            {
+                var key = this.elements.Keys.ElementAt(i);
+                var tuple = this.elements[key];
+                if (tuple.Item1 is Matrix matrix)
+                {
+                    if (weights[i] is Matrix weightMatrix)
+                    {
+                        matrix.Replace(weightMatrix.ToArray());
+                    }
+                }
+                else if (tuple.Item1 is DeepMatrix deepMatrix)
+                {
+                    if (weights[i] is DeepMatrix weightDeepMatrix)
+                    {
+                        deepMatrix.Replace(weightDeepMatrix.ToArray());
+                    }
+                }
+                else if (tuple.Item1 is DeepMatrix[] deepMatrixArray)
+                {
+                    if (weights[i] is DeepMatrix[] weightDeepMatrixArray)
+                    {
+                        for (int j = 0; j < deepMatrixArray.Length; ++j)
+                        {
+                            deepMatrixArray[j].Replace(weightDeepMatrixArray[j].ToArray());
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Unsupported weight type.");
+                }
+            }
+        }
+
         private object CloneHelper(object element)
         {
             switch (element)

@@ -6,46 +6,103 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using Newtonsoft.Json;
 
     /// <summary>
     /// A gradient store.
     /// </summary>
     [Serializable]
-    public class GradientStore
+    public class GradientStore : StoreBase
     {
         /// <summary>
-        /// Gets or sets the matrix gradients.
+        /// Average the gradients from the gradient stores.
         /// </summary>
-        public ConcurrentDictionary<Guid, Matrix> MatrixGradients { get; set; } = new ConcurrentDictionary<Guid, Matrix>();
+        /// <param name="gradientStores">The gradient stores.</param>
+        /// <returns>The averaged gradients.</returns>
+        public static GradientStore AverageGradients(IEnumerable<GradientStore> gradientStores)
+        {
+            // Instantiate a new gradient store for the averaged gradients
+            GradientStore averageGradientStore = new GradientStore();
 
-        /// <summary>
-        /// Gets or sets the deep matrix gradients.
-        /// </summary>
-        public ConcurrentDictionary<Guid, DeepMatrix> DeepMatrixGradients { get; set; } = new ConcurrentDictionary<Guid, DeepMatrix>();
+            // Create a list from the enumerable to avoid multiple enumerations
+            List<GradientStore> gradientStoresList = gradientStores.ToList();
 
-        /// <summary>
-        /// Gets or sets the deep matrix array gradients.
-        /// </summary>
-        public ConcurrentDictionary<Guid, DeepMatrix[]> DeepMatrixArrayGradients { get; set; } = new ConcurrentDictionary<Guid, DeepMatrix[]>();
+            // If the list is not empty, copy the Ids, Types, and ModelLayerIndices from the first gradient store
+            if (gradientStoresList.Count > 0)
+            {
+                var firstGradientStore = gradientStoresList[0];
+                averageGradientStore.Ids = new List<Guid>(firstGradientStore.Ids);
+                averageGradientStore.Types = new List<string>(firstGradientStore.Types);
+                averageGradientStore.ModelLayerIndices = new List<(int, int)>(firstGradientStore.ModelLayerIndices);
+            }
 
-        /// <summary>
-        /// Gets or sets the ids.
-        /// </summary>
-        public List<Guid> Ids { get; set; } = new List<Guid>();
+            // For each gradient store in the collection
+            foreach (var gradientStore in gradientStoresList)
+            {
+                // Iterate through each id in the gradient store
+                for (int i = 0; i < gradientStore.Ids.Count; i++)
+                {
+                    var id = gradientStore.Ids[i];
+                    var type = gradientStore.Types[i];
 
-        /// <summary>
-        /// Gets or sets the types.
-        /// </summary>
-        public List<string> Types { get; set; } = new List<string>();
+                    switch (type)
+                    {
+                        case "matrix":
+                            if (averageGradientStore.Matrices.ContainsKey(id))
+                            {
+                                averageGradientStore.Matrices[id] =
+                                    averageGradientStore.Matrices[id].Average(gradientStore.Matrices[id]);
+                            }
+                            else
+                            {
+                                averageGradientStore.Matrices.TryAdd(id, gradientStore.Matrices[id]);
+                            }
 
-        /// <summary>
-        /// Gets or sets the model layer indices.
-        /// </summary>
-        public List<(int, int)> ModelLayerIndices { get; set; } = new List<(int, int)>();
+                            break;
+
+                        case "deepMatrix":
+                            if (averageGradientStore.DeepMatrices.ContainsKey(id))
+                            {
+                                averageGradientStore.DeepMatrices[id] =
+                                    averageGradientStore.DeepMatrices[id].Average(gradientStore.DeepMatrices[id]);
+                            }
+                            else
+                            {
+                                averageGradientStore.DeepMatrices.TryAdd(id, gradientStore.DeepMatrices[id]);
+                            }
+
+                            break;
+
+                        case "deepMatrixArray":
+                            if (averageGradientStore.DeepMatrixArrays.ContainsKey(id))
+                            {
+                                var averagedArray = averageGradientStore.DeepMatrixArrays[id];
+                                var newArray = gradientStore.DeepMatrixArrays[id];
+                                for (int j = 0; j < averagedArray.Length; ++j)
+                                {
+                                    averagedArray[j] = averagedArray[j].Average(newArray[j]);
+                                }
+
+                                averageGradientStore.DeepMatrixArrays[id] = averagedArray;
+                            }
+                            else
+                            {
+                                averageGradientStore.DeepMatrixArrays.TryAdd(id, gradientStore.DeepMatrixArrays[id]);
+                            }
+
+                            break;
+
+                        default:
+                            throw new InvalidOperationException($"Gradient type '{type}' not found.");
+                    }
+                }
+            }
+
+            return averageGradientStore;
+        }
 
         /// <summary>
         /// Loads a gradient store from a file.
@@ -81,13 +138,13 @@ namespace ParallelReverseAutoDiff.RMAD
                 switch (type)
                 {
                     case "matrix":
-                        gradients.Add(this.MatrixGradients[id]);
+                        gradients.Add(this.Matrices[id]);
                         break;
                     case "deepMatrix":
-                        gradients.Add(this.DeepMatrixGradients[id]);
+                        gradients.Add(this.DeepMatrices[id]);
                         break;
                     case "deepMatrixArray":
-                        gradients.Add(this.DeepMatrixArrayGradients[id]);
+                        gradients.Add(this.DeepMatrixArrays[id]);
                         break;
                     default:
                         throw new InvalidOperationException("Type not found.");
@@ -101,7 +158,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Adds a model layer.
         /// </summary>
         /// <param name="modelLayer">The model layer.</param>
-        public void Add(IModelLayer modelLayer)
+        public override void Add(IModelLayer modelLayer)
         {
             var index = this.Ids.Count;
             foreach (var identifier in modelLayer.Identifiers)
@@ -123,67 +180,6 @@ namespace ParallelReverseAutoDiff.RMAD
 
             var lastIndex = this.Ids.Count - 1;
             this.ModelLayerIndices.Add((index, lastIndex));
-        }
-
-        /// <summary>
-        /// Adds a range of model layers.
-        /// </summary>
-        /// <param name="modelLayers">The model layers.</param>
-        public void AddRange(IEnumerable<IModelLayer> modelLayers)
-        {
-            foreach (var modelLayer in modelLayers)
-            {
-                this.Add(modelLayer);
-            }
-        }
-
-        /// <summary>
-        /// Save gradients to a file.
-        /// </summary>
-        /// <param name="file">The file info.</param>
-        public void Save(FileInfo file)
-        {
-            // Serialize the weights dictionary to JSON
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-
-            // Write JSON string to file
-            File.WriteAllText(file.FullName, json);
-        }
-
-        /// <summary>
-        /// Adds a matrix.
-        /// </summary>
-        /// <param name="matrix">The matrix.</param>
-        private void Add(Matrix matrix)
-        {
-            Guid id = Guid.NewGuid();
-            this.Ids.Add(id);
-            this.Types.Add(nameof(matrix));
-            this.MatrixGradients.AddOrUpdate(id, matrix, (key, oldValue) => matrix);
-        }
-
-        /// <summary>
-        /// Adds a deep matrix.
-        /// </summary>
-        /// <param name="deepMatrix">The deep matrix.</param>
-        private void Add(DeepMatrix deepMatrix)
-        {
-            Guid id = Guid.NewGuid();
-            this.Ids.Add(id);
-            this.Types.Add(nameof(deepMatrix));
-            this.DeepMatrixGradients.AddOrUpdate(id, deepMatrix, (key, oldValue) => deepMatrix);
-        }
-
-        /// <summary>
-        /// Adds a deep matrix array.
-        /// </summary>
-        /// <param name="deepMatrixArray">The deep matrix array.</param>
-        private void Add(DeepMatrix[] deepMatrixArray)
-        {
-            Guid id = Guid.NewGuid();
-            this.Ids.Add(id);
-            this.Types.Add(nameof(deepMatrixArray));
-            this.DeepMatrixArrayGradients.AddOrUpdate(id, deepMatrixArray, (key, oldValue) => deepMatrixArray);
         }
     }
 }

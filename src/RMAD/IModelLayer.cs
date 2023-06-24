@@ -82,6 +82,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public IModelLayer Clone();
 
         /// <summary>
+        /// Applies the gradients.
+        /// </summary>
+        /// <param name="gradients">The gradients to apply.</param>
+        public void ApplyGradients(List<object> gradients);
+
+        /// <summary>
+        /// Applies the weights.
+        /// </summary>
+        /// <param name="weights">The weights to apply.</param>
+        public void ApplyWeights(List<object> weights);
+
+        /// <summary>
         /// Takes the average of two model layers.
         /// </summary>
         /// <param name="layer">The other model layer.</param>
