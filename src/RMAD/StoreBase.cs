@@ -131,47 +131,78 @@ namespace ParallelReverseAutoDiff.RMAD
                 writer.WriteStartArray();
 
                 writer.WriteValue(Constants.IdsStart);
+                writer.WriteStartArray();
                 foreach (Guid id in this.Ids)
                 {
                     serializer.Serialize(writer, id);
                 }
 
+                writer.WriteEndArray();
+
                 writer.WriteValue(Constants.TypesStart);
+                writer.WriteStartArray();
                 foreach (string type in this.Types)
                 {
                     serializer.Serialize(writer, type);
                 }
 
+                writer.WriteEndArray();
+
                 writer.WriteValue(Constants.ModelLayerIndicesStart);
+                writer.WriteStartArray();
                 foreach (var indexPair in this.ModelLayerIndices)
                 {
                     serializer.Serialize(writer, indexPair);
                 }
 
+                writer.WriteEndArray();
+
                 writer.WriteValue(Constants.MatricesStart);
+                writer.WriteStartArray();
                 foreach (var matrixKey in this.Matrices.Keys)
                 {
                     serializer.Serialize(writer, matrixKey);
                     serializer.Serialize(writer, this.Matrices[matrixKey]);
                 }
 
+                writer.WriteEndArray();
+
                 writer.WriteValue(Constants.DeepMatricesStart);
+                writer.WriteStartArray();
                 foreach (var deepMatrixKey in this.DeepMatrices.Keys)
                 {
                     serializer.Serialize(writer, deepMatrixKey);
                     serializer.Serialize(writer, this.DeepMatrices[deepMatrixKey]);
                 }
 
+                writer.WriteEndArray();
+
                 writer.WriteValue(Constants.DeepMatrixArraysStart);
+                writer.WriteStartArray();
                 foreach (var deepMatrixArrayKey in this.DeepMatrixArrays.Keys)
                 {
                     serializer.Serialize(writer, deepMatrixArrayKey);
                     serializer.Serialize(writer, this.DeepMatrixArrays[deepMatrixArrayKey]);
                 }
 
+                writer.WriteEndArray();
+
                 // End the JSON array
                 writer.WriteEndArray();
             }
+        }
+
+        /// <summary>
+        /// Clears the store.
+        /// </summary>
+        protected void InternalClear()
+        {
+            this.Ids.Clear();
+            this.Types.Clear();
+            this.ModelLayerIndices.Clear();
+            this.Matrices.Clear();
+            this.DeepMatrices.Clear();
+            this.DeepMatrixArrays.Clear();
         }
 
         /// <summary>
@@ -192,7 +223,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
 
                 // Read until we reach the end of the array
-                while (reader.Read())
+                while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                 {
                     // Expect a string to start each section
                     if (reader.TokenType != JsonToken.String)
@@ -201,9 +232,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     }
 
                     string sectionStart = (string)reader.Value!;
+                    reader.Read();
 
                     // Read the elements of the section
-                    while (reader.Read() && reader.TokenType != JsonToken.String)
+                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                     {
                         switch (sectionStart)
                         {

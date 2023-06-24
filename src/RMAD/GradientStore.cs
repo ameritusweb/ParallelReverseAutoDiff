@@ -108,11 +108,21 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="fileInfo">The file info.</param>
         /// <returns>The gradient store.</returns>
-        public static GradientStore Load(FileInfo fileInfo)
+        public static GradientStore LoadNew(FileInfo fileInfo)
         {
             GradientStore store = new GradientStore();
             store.InternalLoad(fileInfo);
             return store;
+        }
+
+        /// <summary>
+        /// Loads a gradient store from a file.
+        /// </summary>
+        /// <param name="fileInfo">The file info.</param>
+        public void Load(FileInfo fileInfo)
+        {
+            this.InternalClear();
+            this.InternalLoad(fileInfo);
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// A deep matrix class used for deep matrix operations.
     /// </summary>
     [Serializable]
+    [JsonConverter(typeof(DeepMatrixJsonConverter))]
     public class DeepMatrix : IEnumerable<Matrix>, ICloneable
     {
         private Matrix[] matrices;

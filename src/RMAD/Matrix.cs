@@ -17,6 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// A matrix class used for matrix operations.
     /// </summary>
     [Serializable]
+    [JsonConverter(typeof(MatrixJsonConverter))]
     public class Matrix : IEnumerable<double[]>, ICloneable
     {
         private double[][] matrix;

@@ -21,11 +21,21 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="fileInfo">The file info.</param>
         /// <returns>The weight store.</returns>
-        public static WeightStore Load(FileInfo fileInfo)
+        public static WeightStore LoadNew(FileInfo fileInfo)
         {
             WeightStore store = new WeightStore();
             store.InternalLoad(fileInfo);
             return store;
+        }
+
+        /// <summary>
+        /// Loads a weight store from a file.
+        /// </summary>
+        /// <param name="fileInfo">The file info.</param>
+        public void Load(FileInfo fileInfo)
+        {
+            this.InternalClear();
+            this.InternalLoad(fileInfo);
         }
 
         /// <summary>
