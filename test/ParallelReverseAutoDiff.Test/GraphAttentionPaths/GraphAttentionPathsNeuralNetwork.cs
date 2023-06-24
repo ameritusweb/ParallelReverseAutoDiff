@@ -72,6 +72,12 @@
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
             this.weightStore.AddRange(this.modelLayers);
             this.weightStore.Load(new FileInfo(WEIGHTSSAVEPATH));
+            for (int i = 0; i < this.modelLayers.Count; ++i)
+            {
+                var modelLayer = this.modelLayers[i];
+                var weights = this.weightStore.ToModelLayerWeights(i);
+                modelLayer.ApplyWeights(weights);
+            }
         }
 
         public async Task<Matrix> Forward()
