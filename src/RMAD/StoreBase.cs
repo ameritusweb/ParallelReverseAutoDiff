@@ -65,6 +65,58 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Combines this store with another store.
+        /// </summary>
+        /// <param name="incomingStore">The incoming store.</param>
+        /// <returns>The result store.</returns>
+        public StoreBase Combine(StoreBase incomingStore)
+        {
+            if (incomingStore == null)
+            {
+                throw new ArgumentNullException(nameof(incomingStore));
+            }
+
+            // Ensure the two stores are of the same subtype
+            if (this.GetType() != incomingStore.GetType())
+            {
+                throw new ArgumentException("The two stores must be of the same type.", nameof(incomingStore));
+            }
+
+            // Get the offset for ModelLayerIndices
+            int offset = this.ModelLayerIndices[^1].Item2 + 1;
+
+            // Copy all data from incoming store
+            for (int i = 0; i < incomingStore.Ids.Count; i++)
+            {
+                var id = incomingStore.Ids[i];
+                this.Ids.Add(id);
+                this.Types.Add(incomingStore.Types[i]);
+
+                // Check which dictionary the ID belongs to and add the corresponding item to this store
+                if (incomingStore.Matrices.ContainsKey(id))
+                {
+                    this.Matrices.TryAdd(id, incomingStore.Matrices[id]);
+                }
+                else if (incomingStore.DeepMatrices.ContainsKey(id))
+                {
+                    this.DeepMatrices.TryAdd(id, incomingStore.DeepMatrices[id]);
+                }
+                else if (incomingStore.DeepMatrixArrays.ContainsKey(id))
+                {
+                    this.DeepMatrixArrays.TryAdd(id, incomingStore.DeepMatrixArrays[id]);
+                }
+            }
+
+            // Adjust and copy the ModelLayerIndices from the incoming store
+            foreach (var indexPair in incomingStore.ModelLayerIndices)
+            {
+                this.ModelLayerIndices.Add((indexPair.Item1 + offset, indexPair.Item2 + offset));
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Save gradients to a file.
         /// </summary>
         /// <param name="file">The file info.</param>
