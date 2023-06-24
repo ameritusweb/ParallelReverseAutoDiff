@@ -116,6 +116,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// </summary>
         internal int NumPaths { get; private set; }
 
+        public IEnumerable<IModelLayer> ModelLayers
+        {
+            get
+            {
+                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
+            }
+        }
+
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.
         /// </summary>

@@ -66,6 +66,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// </summary>
         public DeepMatrix DConnectedPathsDeepMatrix { get; set; }
 
+        public IEnumerable<IModelLayer> ModelLayers
+        {
+            get
+            {
+                return new[] { this.hiddenLayer };
+            }
+        }
+
         /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>

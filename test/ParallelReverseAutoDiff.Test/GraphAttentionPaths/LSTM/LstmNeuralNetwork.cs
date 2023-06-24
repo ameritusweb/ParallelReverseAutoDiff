@@ -103,6 +103,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// </summary>
         public JsonArchitecture Architecture { get; private set; }
 
+        public IEnumerable<IModelLayer> ModelLayers
+        {
+            get
+            {
+                return new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer };
+            }
+        }
+
         /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>

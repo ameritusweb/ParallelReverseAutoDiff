@@ -68,6 +68,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// </summary>
         public Matrix Adjacency { get; set; }
 
+        public IEnumerable<IModelLayer> ModelLayers
+        {
+            get
+            {
+                return this.hiddenLayers;
+            }
+        }
+
         /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>

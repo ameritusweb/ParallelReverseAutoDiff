@@ -97,6 +97,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         /// </summary>
         public Matrix Target { get; private set; }
 
+        public IEnumerable<IModelLayer> ModelLayers
+        {
+            get
+            {
+                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
+            }
+        }
+
         /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>
