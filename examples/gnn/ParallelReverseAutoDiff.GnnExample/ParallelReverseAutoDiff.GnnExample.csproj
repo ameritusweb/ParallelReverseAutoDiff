@@ -11,6 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
+    <None Remove="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
+    <None Remove="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
+    <None Remove="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
+    <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
     <None Remove="Leela\791556.pb.gz" />
     <None Remove="Leela\cublas64_11.dll" />
     <None Remove="Leela\cublasLt64_11.dll" />
@@ -50,6 +55,11 @@
     <Content Include="Leela\mimalloc-redirect.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\Readout\Architecture\Readout.json" />
     <EmbeddedResource Include="Rebel\Rebel-14.2-avx2.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -60,7 +70,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="ParallelReverseAutoDiff" Version="1.0.43" />
+		<PackageReference Include="ParallelReverseAutoDiff" Version="1.0.54" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

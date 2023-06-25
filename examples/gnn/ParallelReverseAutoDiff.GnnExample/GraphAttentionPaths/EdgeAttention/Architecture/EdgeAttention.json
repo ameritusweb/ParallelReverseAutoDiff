@@ -1,0 +1,151 @@
+{
+  "timeSteps": [
+    {
+      "layers": [
+        {
+          "startOperations": [
+            {
+              "id": "keys_edgeFeatures",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "edgeFeatures", "Keys" ],
+              "gradientResultTo": [ null, "DKeys" ]
+            },
+            {
+              "id": "keyedge_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "keys_edgeFeatures", "KB" ],
+              "gradientResultTo": [ null, "DKB" ]
+            },
+            {
+              "id": "layernorm_keys",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "keyedge_add" ]
+            },
+            {
+              "id": "keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "layernorm_keys" ]
+            },
+            {
+              "id": "values_edgeFeatures",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "edgeFeatures", "Values" ],
+              "gradientResultTo": [ null, "DValues" ]
+            },
+            {
+              "id": "valueedge_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "values_edgeFeatures", "VB" ],
+              "gradientResultTo": [ null, "DVB" ]
+            },
+            {
+              "id": "layernorm_values",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "valueedge_add" ]
+            },
+            {
+              "id": "values_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "layernorm_values" ]
+            }
+          ],
+          "layers": [
+            {
+              "operations": [
+                {
+                  "id": "queries_edgeFeatures",
+                  "type": "CudaMatrixMultiplyOperation",
+                  "inputs": [ "edgeFeatures", "Queries[layerIndex]" ],
+                  "gradientResultTo": [ null, "DQueries[layerIndex]" ]
+                },
+                {
+                  "id": "queryedge_add",
+                  "type": "MatrixAddBroadcastingOperation",
+                  "inputs": [ "queries_edgeFeatures", "QB" ],
+                  "gradientResultTo": [ null, "DQB" ]
+                },
+                {
+                  "id": "layernorm_queries",
+                  "type": "LayerNormalizationOperation",
+                  "inputs": [ "queryedge_add" ]
+                },
+                {
+                  "id": "queries_act",
+                  "type": "LeakyReLUOperation",
+                  "inputs": [ "layernorm_queries" ]
+                },
+                {
+                  "id": "keys_transpose",
+                  "type": "MatrixTransposeOperation",
+                  "inputs": [ "keys_act" ]
+                },
+                {
+                  "id": "queries_keys_transpose",
+                  "type": "CudaMatrixMultiplyOperation",
+                  "inputs": [ "queries_act", "keys_transpose" ]
+                },
+                {
+                  "id": "queries_keys_scale",
+                  "type": "MatrixMultiplyScalarOperation",
+                  "inputs": [ "queries_keys_transpose", "Divisor" ]
+                },
+                {
+                  "id": "attention_weights",
+                  "type": "SoftmaxOperation",
+                  "inputs": [ "queries_keys_scale" ]
+                },
+                {
+                  "id": "attention_weights_values",
+                  "type": "CudaMatrixMultiplyOperation",
+                  "inputs": [ "attention_weights", "values_act" ]
+                }
+              ]
+            }
+          ],
+          "endOperations": [
+            {
+              "id": "concatenated",
+              "type": "MatrixConcatenateOperation",
+              "inputs": [ "attention_weights_values_array" ]
+            },
+            {
+              "id": "reduce",
+              "type": "CudaMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "R" ],
+              "gradientResultTo": [ null, "DR" ]
+            },
+            {
+              "id": "reduce_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "reduce", "RB" ],
+              "gradientResultTo": [ null, "DRB" ]
+            },
+            {
+              "id": "layernorm_reduce",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "reduce_add" ]
+            },
+            {
+              "id": "output_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "layernorm_reduce" ]
+            }
+          ]
+        }
+      ],
+      "endoperations": [
+        {
+          "id": "pre_output",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "output_act_last" ]
+        },
+        {
+          "id": "output_avg",
+          "type": "MatrixAverageOperation",
+          "inputs": [ "pre_output" ],
+          "setResultTo": "Output"
+        }
+      ]
+    }
+  ]
+}
