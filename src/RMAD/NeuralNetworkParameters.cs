@@ -15,7 +15,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the batch size.
         /// </summary>
-        public int BatchSize { get; set; } = 32;
+        public int BatchSize { get; set; } = 2;
 
         /// <summary>
         /// Gets or sets the dropout rate for the apply dropout operation.

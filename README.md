@@ -97,6 +97,11 @@ Each neural network base class has a set of parameters that can be used to confi
 
 ```csharp
 /// <summary>
+/// Gets or sets the batch size.
+/// </summary>
+public int BatchSize { get; set; } = 2;
+
+/// <summary>
 /// Gets or sets the dropout rate for the apply dropout operation.
 /// </summary>
 public double DropoutRate { get; set; } = 0.01d;
