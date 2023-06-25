@@ -6,46 +6,46 @@
           "startOperations": [
             {
               "id": "keys_edgeFeatures",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "BatchCudaMatrixMultiplyOperation",
               "inputs": [ "edgeFeatures", "Keys" ],
               "gradientResultTo": [ null, "DKeys" ]
             },
             {
               "id": "keyedge_add",
-              "type": "MatrixAddBroadcastingOperation",
+              "type": "BatchMatrixAddBroadcastingOperation",
               "inputs": [ "keys_edgeFeatures", "KB" ],
               "gradientResultTo": [ null, "DKB" ]
             },
             {
               "id": "layernorm_keys",
-              "type": "LayerNormalizationOperation",
+              "type": "BatchLayerNormalizationOperation",
               "inputs": [ "keyedge_add" ]
             },
             {
               "id": "keys_act",
-              "type": "LeakyReLUOperation",
+              "type": "BatchLeakyReLUOperation",
               "inputs": [ "layernorm_keys" ]
             },
             {
               "id": "values_edgeFeatures",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "BatchCudaMatrixMultiplyOperation",
               "inputs": [ "edgeFeatures", "Values" ],
               "gradientResultTo": [ null, "DValues" ]
             },
             {
               "id": "valueedge_add",
-              "type": "MatrixAddBroadcastingOperation",
+              "type": "BatchMatrixAddBroadcastingOperation",
               "inputs": [ "values_edgeFeatures", "VB" ],
               "gradientResultTo": [ null, "DVB" ]
             },
             {
               "id": "layernorm_values",
-              "type": "LayerNormalizationOperation",
+              "type": "BatchLayerNormalizationOperation",
               "inputs": [ "valueedge_add" ]
             },
             {
               "id": "values_act",
-              "type": "LeakyReLUOperation",
+              "type": "BatchLeakyReLUOperation",
               "inputs": [ "layernorm_values" ]
             }
           ],
@@ -54,49 +54,49 @@
               "operations": [
                 {
                   "id": "queries_edgeFeatures",
-                  "type": "CudaMatrixMultiplyOperation",
+                  "type": "BatchCudaMatrixMultiplyOperation",
                   "inputs": [ "edgeFeatures", "Queries[layerIndex]" ],
                   "gradientResultTo": [ null, "DQueries[layerIndex]" ]
                 },
                 {
                   "id": "queryedge_add",
-                  "type": "MatrixAddBroadcastingOperation",
+                  "type": "BatchMatrixAddBroadcastingOperation",
                   "inputs": [ "queries_edgeFeatures", "QB" ],
                   "gradientResultTo": [ null, "DQB" ]
                 },
                 {
                   "id": "layernorm_queries",
-                  "type": "LayerNormalizationOperation",
+                  "type": "BatchLayerNormalizationOperation",
                   "inputs": [ "queryedge_add" ]
                 },
                 {
                   "id": "queries_act",
-                  "type": "LeakyReLUOperation",
+                  "type": "BatchLeakyReLUOperation",
                   "inputs": [ "layernorm_queries" ]
                 },
                 {
                   "id": "keys_transpose",
-                  "type": "MatrixTransposeOperation",
+                  "type": "BatchMatrixTransposeOperation",
                   "inputs": [ "keys_act" ]
                 },
                 {
                   "id": "queries_keys_transpose",
-                  "type": "CudaMatrixMultiplyOperation",
+                  "type": "BatchCudaMatrixMultiplyOperation",
                   "inputs": [ "queries_act", "keys_transpose" ]
                 },
                 {
                   "id": "queries_keys_scale",
-                  "type": "MatrixMultiplyScalarOperation",
+                  "type": "BatchMatrixMultiplyScalarOperation",
                   "inputs": [ "queries_keys_transpose", "Divisor" ]
                 },
                 {
                   "id": "attention_weights",
-                  "type": "SoftmaxOperation",
+                  "type": "BatchSoftmaxOperation",
                   "inputs": [ "queries_keys_scale" ]
                 },
                 {
                   "id": "attention_weights_values",
-                  "type": "CudaMatrixMultiplyOperation",
+                  "type": "BatchCudaMatrixMultiplyOperation",
                   "inputs": [ "attention_weights", "values_act" ]
                 }
               ]
@@ -105,29 +105,29 @@
           "endOperations": [
             {
               "id": "concatenated",
-              "type": "MatrixConcatenateOperation",
+              "type": "BatchMatrixConcatenateOperation",
               "inputs": [ "attention_weights_values_array" ]
             },
             {
               "id": "reduce",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "BatchCudaMatrixMultiplyOperation",
               "inputs": [ "concatenated", "R" ],
               "gradientResultTo": [ null, "DR" ]
             },
             {
               "id": "reduce_add",
-              "type": "MatrixAddBroadcastingOperation",
+              "type": "BatchMatrixAddBroadcastingOperation",
               "inputs": [ "reduce", "RB" ],
               "gradientResultTo": [ null, "DRB" ]
             },
             {
               "id": "layernorm_reduce",
-              "type": "LayerNormalizationOperation",
+              "type": "BatchLayerNormalizationOperation",
               "inputs": [ "reduce_add" ]
             },
             {
               "id": "output_act",
-              "type": "LeakyReLUOperation",
+              "type": "BatchLeakyReLUOperation",
               "inputs": [ "layernorm_reduce" ]
             }
           ]
@@ -136,12 +136,12 @@
       "endoperations": [
         {
           "id": "pre_output",
-          "type": "MatrixTransposeOperation",
+          "type": "BatchMatrixTransposeOperation",
           "inputs": [ "output_act_last" ]
         },
         {
           "id": "output_avg",
-          "type": "MatrixAverageOperation",
+          "type": "BatchMatrixAverageOperation",
           "inputs": [ "pre_output" ],
           "setResultTo": "Output"
         }

@@ -68,6 +68,54 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.DeepOutput;
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix multiply function.
+        /// </summary>
+        /// <param name="input1">The first input to the matrix multiply operation.</param>
+        /// <param name="input2">The second input to the matrix multiply operation.</param>
+        /// <returns>The output of the matrix multiply operation.</returns>
+        public DeepMatrix Forward(DeepMatrix input1, Matrix input2)
+        {
+            if (!CudaBlas.Instance.IsInitialized)
+            {
+                throw new CudaNotInitializedException();
+            }
+
+            var matrixArray = new Matrix[input1.Depth];
+            for (int i = 0; i < input1.Depth; i++)
+            {
+                this.operations[i] = new CudaMatrixMultiplyOperation();
+                matrixArray[i] = this.operations[i].Forward(input1[i], input2);
+            }
+
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
+        /// <summary>
+        /// Performs the forward operation for the matrix multiply function.
+        /// </summary>
+        /// <param name="input1">The first input to the matrix multiply operation.</param>
+        /// <param name="input2">The second input to the matrix multiply operation.</param>
+        /// <returns>The output of the matrix multiply operation.</returns>
+        public DeepMatrix Forward(Matrix input1, DeepMatrix input2)
+        {
+            if (!CudaBlas.Instance.IsInitialized)
+            {
+                throw new CudaNotInitializedException();
+            }
+
+            var matrixArray = new Matrix[input2.Depth];
+            for (int i = 0; i < input2.Depth; i++)
+            {
+                this.operations[i] = new CudaMatrixMultiplyOperation();
+                matrixArray[i] = this.operations[i].Forward(input1, input2[i]);
+            }
+
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
         /// <inheritdoc />
         public override BackwardResult[] Backward(DeepMatrix dOutput)
         {
