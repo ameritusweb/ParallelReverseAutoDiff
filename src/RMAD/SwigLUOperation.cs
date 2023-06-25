@@ -6,7 +6,6 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// SwigLU operation for a Matrix.

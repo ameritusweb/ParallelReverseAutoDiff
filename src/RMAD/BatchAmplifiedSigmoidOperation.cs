@@ -1,22 +1,24 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="BatchMatrixAddBroadcastingOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="BatchAmplifiedSigmoidOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Batch matrix addition broadcasting operation.
+    /// The Batch sigmoid operation utilizing gradient amplification.
     /// </summary>
-    public class BatchMatrixAddBroadcastingOperation : BatchOperation
+    public class BatchAmplifiedSigmoidOperation : BatchOperation
     {
-        private MatrixAddBroadcastingOperation[] operations;
+        private AmplifiedSigmoidOperation[] operations;
 
-        private BatchMatrixAddBroadcastingOperation(int batchSize)
+        private BatchAmplifiedSigmoidOperation(int batchSize)
         {
-            this.operations = new MatrixAddBroadcastingOperation[batchSize];
+            this.operations = new AmplifiedSigmoidOperation[batchSize];
         }
 
         /// <summary>
@@ -26,22 +28,33 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchMatrixAddBroadcastingOperation(net.Parameters.BatchSize);
+            return new BatchAmplifiedSigmoidOperation(net.Parameters.BatchSize);
+        }
+
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.operations, (key, oldValue) => this.operations);
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            this.operations = this.IntermediateOperationArrays[id].OfType<AmplifiedSigmoidOperation>().ToArray();
         }
 
         /// <summary>
-        /// Performs the forward operation for the matrix add broadcasting function.
+        /// The forward pass of the operation.
         /// </summary>
-        /// <param name="input">The first input to the matrix add broadcasting operation.</param>
-        /// <param name="bias">The bias to the matrix add broadcasting operation, a 1xN matrix where N is the number of input columns.</param>
-        /// <returns>The output of the matrix add boradcasting operation.</returns>
-        public DeepMatrix Forward(DeepMatrix input, Matrix bias)
+        /// <param name="input">The input for the operation.</param>
+        /// <returns>The output for the operation.</returns>
+        public DeepMatrix Forward(DeepMatrix input)
         {
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {
-                this.operations[i] = new MatrixAddBroadcastingOperation();
-                matrixArray[i] = this.operations[i].Forward(input[i], bias);
+                this.operations[i] = new AmplifiedSigmoidOperation();
+                matrixArray[i] = this.operations[i].Forward(input[i]);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
