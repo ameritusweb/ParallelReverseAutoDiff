@@ -164,7 +164,7 @@ public double ClipValue { get; set; } = 4;
 /// <summary>
 /// Gets or sets the minimum clip value.
 /// </summary>
-public double MinimumClipValue { get; set; } = 1E-6;
+public double MinimumClipValue { get; set; } = 1E-16;
 
 /// <summary>
 /// Gets or sets the number of time steps.
