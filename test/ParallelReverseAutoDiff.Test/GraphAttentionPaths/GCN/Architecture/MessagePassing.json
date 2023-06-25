@@ -18,12 +18,12 @@
           "operations": [
             {
               "id": "ah",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Adjacency", "CurrentH" ]
             },
             {
               "id": "ah_w",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "ah", "W" ],
               "gradientResultTo": [ null, "DW[layerIndex]" ],
               "initializations": [

@@ -19,7 +19,7 @@
           "operations": [
             {
               "id": "weighted_currentPathFeatures",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Weights", "CurrentPathFeatures" ],
               "gradientResultTo": [ "DWeights", null ],
               "initializations": [
@@ -47,7 +47,7 @@
             },
             {
               "id": "weighted_connectedPathFeatures",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "connected_paths_matrix_trans_find", "ConnectedWeights" ],
               "gradientResultTo": [ null, "DConnectedWeights" ],
               "initializations": [
@@ -85,7 +85,7 @@
             },
             {
               "id": "interactionScores",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "currentPathFeatures_add_trans", "connectedPathFeatures_add_trans" ]
             },
             {

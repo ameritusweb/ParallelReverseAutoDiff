@@ -6,7 +6,7 @@
           "startOperations": [
             {
               "id": "keys_edgeFeatures",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "edgeFeatures", "Keys" ],
               "gradientResultTo": [ null, "DKeys" ]
             },
@@ -28,7 +28,7 @@
             },
             {
               "id": "values_edgeFeatures",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "edgeFeatures", "Values" ],
               "gradientResultTo": [ null, "DValues" ]
             },
@@ -54,7 +54,7 @@
               "operations": [
                 {
                   "id": "queries_edgeFeatures",
-                  "type": "BatchCudaMatrixMultiplyOperation",
+                  "type": "BatchGpuMatrixMultiplyOperation",
                   "inputs": [ "edgeFeatures", "Queries[layerIndex]" ],
                   "gradientResultTo": [ null, "DQueries[layerIndex]" ]
                 },
@@ -81,7 +81,7 @@
                 },
                 {
                   "id": "queries_keys_transpose",
-                  "type": "BatchCudaMatrixMultiplyOperation",
+                  "type": "BatchGpuMatrixMultiplyOperation",
                   "inputs": [ "queries_act", "keys_transpose" ]
                 },
                 {
@@ -96,7 +96,7 @@
                 },
                 {
                   "id": "attention_weights_values",
-                  "type": "BatchCudaMatrixMultiplyOperation",
+                  "type": "BatchGpuMatrixMultiplyOperation",
                   "inputs": [ "attention_weights", "values_act" ]
                 }
               ]
@@ -110,7 +110,7 @@
             },
             {
               "id": "reduce",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "concatenated", "R" ],
               "gradientResultTo": [ null, "DR" ]
             },

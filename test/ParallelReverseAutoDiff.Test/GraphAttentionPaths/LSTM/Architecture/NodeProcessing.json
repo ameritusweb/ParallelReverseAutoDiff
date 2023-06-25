@@ -5,7 +5,7 @@
         {
           "id": "projectedInput",
           "description": "Multiply the input with the weight matrix",
-          "type": "BatchCudaMatrixMultiplyOperation",
+          "type": "BatchGpuMatrixMultiplyOperation",
           "inputs": [ "We", "InputNodeFeatures[t]" ],
           "gradientResultTo": [ "dWe", null ]
         },
@@ -22,13 +22,13 @@
           "operations": [
             {
               "id": "wf_currentInput",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wf[layerIndex]", "currentInput" ],
               "gradientResultTo": [ "dWf[layerIndex]", null ]
             },
             {
               "id": "uf_previousHiddenState",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Uf[layerIndex]", "previousHiddenState" ],
               "gradientResultTo": [ "dUf[layerIndex]", null ]
             },
@@ -64,13 +64,13 @@
             },
             {
               "id": "wi_currentInput",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wi[layerIndex]", "currentInput" ],
               "gradientResultTo": [ "dWi[layerIndex]", null ]
             },
             {
               "id": "ui_previousHiddenState",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Ui[layerIndex]", "previousHiddenState" ],
               "gradientResultTo": [ "dUi[layerIndex]", null ]
             },
@@ -106,13 +106,13 @@
             },
             {
               "id": "wc_currentInput",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wc[layerIndex]", "currentInput" ],
               "gradientResultTo": [ "dWc[layerIndex]", null ]
             },
             {
               "id": "uc_previousHiddenState",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Uc[layerIndex]", "previousHiddenState" ],
               "gradientResultTo": [ "dUc[layerIndex]", null ]
             },
@@ -180,13 +180,13 @@
             },
             {
               "id": "wo_currentInput",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wo[layerIndex]", "currentInput" ],
               "gradientResultTo": [ "dWo[layerIndex]", null ]
             },
             {
               "id": "uo_previousHiddenState",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Uo[layerIndex]", "previousHiddenState" ],
               "gradientResultTo": [ "dUo[layerIndex]", null ]
             },
@@ -214,19 +214,19 @@
             },
             {
               "id": "keys",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wk[layerIndex]", "embeddedInput" ],
               "gradientResultTo": [ "dWk[layerIndex]", null ]
             },
             {
               "id": "queries",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wq[layerIndex]", "previousHiddenState" ],
               "gradientResultTo": [ "dWq[layerIndex]", null ]
             },
             {
               "id": "values",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Wv[layerIndex]", "embeddedInput" ],
               "gradientResultTo": [ "dWv[layerIndex]", null ]
             },
@@ -238,7 +238,7 @@
             {
               "id": "dotProduct",
               "description": "Compute the dot product of the queries and keys",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "keys", "queriesTranspose" ]
             },
             {
@@ -259,7 +259,7 @@
             },
             {
               "id": "attentionOutput",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "attentionWeights", "values" ]
             },
             {
@@ -289,7 +289,7 @@
       "endOperations": [
         {
           "id": "v_h",
-          "type": "BatchCudaMatrixMultiplyOperation",
+          "type": "BatchGpuMatrixMultiplyOperation",
           "inputs": [ "V", "hFromCurrentTimeStepAndLastLayer" ],
           "gradientResultTo": [ "dV", null ]
         },

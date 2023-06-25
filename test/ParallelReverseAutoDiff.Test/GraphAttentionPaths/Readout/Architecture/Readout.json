@@ -6,7 +6,7 @@
           "startOperations": [
             {
               "id": "keys_pathFeatures",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "pathFeatures", "Keys" ],
               "gradientResultTo": [ null, "DKeys" ],
               "initializations": [
@@ -44,7 +44,7 @@
             },
             {
               "id": "values_pathFeatures",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "pathFeatures", "Values" ],
               "gradientResultTo": [ null, "DValues" ],
               "initializations": [
@@ -86,7 +86,7 @@
               "operations": [
                 {
                   "id": "queries_pathFeatures",
-                  "type": "BatchCudaMatrixMultiplyOperation",
+                  "type": "BatchGpuMatrixMultiplyOperation",
                   "inputs": [ "pathFeatures", "Queries[layerIndex]" ],
                   "gradientResultTo": [ null, "DQueries[layerIndex]" ],
                   "initializations": [
@@ -129,7 +129,7 @@
                 },
                 {
                   "id": "queries_keys_transpose",
-                  "type": "BatchCudaMatrixMultiplyOperation",
+                  "type": "BatchGpuMatrixMultiplyOperation",
                   "inputs": [ "queries_act", "keys_transpose" ]
                 },
                 {
@@ -144,7 +144,7 @@
                 },
                 {
                   "id": "attention_weights_values",
-                  "type": "BatchCudaMatrixMultiplyOperation",
+                  "type": "BatchGpuMatrixMultiplyOperation",
                   "inputs": [ "attention_weights", "values_act" ]
                 }
               ]
@@ -158,7 +158,7 @@
             },
             {
               "id": "reduce",
-              "type": "BatchCudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "concatenated", "R" ],
               "gradientResultTo": [ null, "DR" ]
             },
