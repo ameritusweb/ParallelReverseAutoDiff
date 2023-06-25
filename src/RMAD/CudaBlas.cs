@@ -11,6 +11,9 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
+    using ILGPU;
+    using ILGPU.Runtime;
+    using ILGPU.Runtime.Cuda;
     using ManagedCuda;
     using ParallelReverseAutoDiff.Interprocess;
     using Cuda = ManagedCuda.CudaBlas;
@@ -43,6 +46,12 @@ namespace ParallelReverseAutoDiff.RMAD
         private CudaDeviceVariable<double> dB;
 
         private CudaDeviceVariable<double> dC;
+
+        private Context context;
+
+        private CudaDevice cudaDevice;
+
+        private CudaAccelerator cudaAccelerator;
 
         private bool isInitialized;
 
@@ -94,6 +103,17 @@ namespace ParallelReverseAutoDiff.RMAD
         public int DeviceId { get; set; }
 
         /// <summary>
+        /// Gets the CUDA accelerator.
+        /// </summary>
+        public CudaAccelerator Accelerator
+        {
+            get
+            {
+                return this.cudaAccelerator;
+            }
+        }
+
+        /// <summary>
         /// Initializes the CUBLAS library.
         /// </summary>
         public void Initialize()
@@ -106,6 +126,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 this.producerMutex = new Semaphore(0, 1);
                 this.consumerMutex = new Semaphore(1, 1);
                 this.resultMutex = new Semaphore(0, 1);
+                this.context = Context.CreateDefault();
+                this.cudaDevice = this.context.GetCudaDevice(0);
+                this.cudaAccelerator = this.cudaDevice.CreateCudaAccelerator(this.context);
                 this.isInitialized = true;
                 this.initializationMutex.Release();
                 this.CudaThreadMethod();
@@ -125,6 +148,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
             this.blas.Dispose();
             this.primaryContext.Dispose();
+            this.cudaAccelerator.Dispose();
+            this.context.Dispose();
             this.isInitialized = false;
         }
 

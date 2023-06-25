@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="CuBlasNetStandard21.CUDA12" Version="1.0.0" />
+    <PackageReference Include="ILGPU" Version="1.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
