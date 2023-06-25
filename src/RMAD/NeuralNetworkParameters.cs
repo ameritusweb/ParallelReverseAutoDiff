@@ -13,6 +13,11 @@ namespace ParallelReverseAutoDiff.RMAD
     public class NeuralNetworkParameters
     {
         /// <summary>
+        /// Gets or sets the batch size.
+        /// </summary>
+        public int BatchSize { get; set; } = 32;
+
+        /// <summary>
         /// Gets or sets the dropout rate for the apply dropout operation.
         /// </summary>
         public double DropoutRate { get; set; } = 0.01d;

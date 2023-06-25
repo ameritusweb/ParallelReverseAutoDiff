@@ -17,6 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
     public abstract class OperationBase : IOperationBase
     {
         private ConcurrentDictionary<Guid, Matrix> intermediateMatrices;
+        private ConcurrentDictionary<Guid, IOperationBase[]> intermediateOperationArrays;
         private ConcurrentDictionary<Guid, Matrix[]> intermediateMatrixArrays;
         private ConcurrentDictionary<Guid, DeepMatrix> intermediateDeepMatrices;
         private ConcurrentDictionary<Guid, DeepMatrix[]> intermediateDeepMatrixArrays;
@@ -154,6 +155,17 @@ namespace ParallelReverseAutoDiff.RMAD
             get
             {
                 return this.intermediateDeepMatrices ??= new ConcurrentDictionary<Guid, DeepMatrix>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the property to store the intermediate operation arrays of the operation.
+        /// </summary>
+        protected ConcurrentDictionary<Guid, IOperationBase[]> IntermediateOperationArrays
+        {
+            get
+            {
+                return this.intermediateOperationArrays ??= new ConcurrentDictionary<Guid, IOperationBase[]>();
             }
         }
 

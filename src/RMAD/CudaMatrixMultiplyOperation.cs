@@ -28,6 +28,20 @@ namespace ParallelReverseAutoDiff.RMAD
             return new CudaMatrixMultiplyOperation();
         }
 
+        /// <inheritdoc />
+        public override void Store(Guid id)
+        {
+            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input1, this.input2 }, (key, oldValue) => new[] { this.input1, this.input2 });
+        }
+
+        /// <inheritdoc />
+        public override void Restore(Guid id)
+        {
+            var restored = this.IntermediateMatrixArrays[id];
+            this.input1 = restored[0];
+            this.input2 = restored[1];
+        }
+
         /// <summary>
         /// Performs the forward operation for the matrix multiply function.
         /// </summary>
