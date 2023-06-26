@@ -209,19 +209,22 @@ namespace ParallelReverseAutoDiff.RMAD
                 int firstDim = source.Length;
                 int secondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
 
-                var result = new double[firstDim, secondDim];
                 if (transpose)
                 {
-                    for (int i = 0; i < firstDim; ++i)
+                    var result = new double[secondDim, firstDim];
+                    for (int i = 0; i < secondDim; ++i)
                     {
-                        for (int j = 0; j < secondDim; ++j)
+                        for (int j = 0; j < firstDim; ++j)
                         {
                             result[i, j] = source[j][i];
                         }
                     }
+
+                    return result;
                 }
                 else
                 {
+                    var result = new double[firstDim, secondDim];
                     for (int i = 0; i < firstDim; ++i)
                     {
                         for (int j = 0; j < secondDim; ++j)
@@ -229,9 +232,9 @@ namespace ParallelReverseAutoDiff.RMAD
                             result[i, j] = source[i][j];
                         }
                     }
-                }
 
-                return result;
+                    return result;
+                }
             }
             catch (InvalidOperationException)
             {
