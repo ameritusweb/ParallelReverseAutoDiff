@@ -25,9 +25,11 @@ ApplyDropoutOperation
 
 BatchNormalizationOperation
 
-CudaMatrixMultiplyOperation - Leverages the GPU for fast computation.
+CudaMatrixMultiplyOperation - Leverages NVIDIA GPUs for fast computation.
 
 GELUOperation
+
+GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, and Intel GPUs for fast computation.
 
 HadamardProductOperation
 
