@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch matrix average operation.
     /// </summary>
-    public class BatchMatrixAverageOperation : BatchOperation
+    public class BatchMatrixAverageOperation : BatchOperation<MatrixAverageOperation>
     {
         private MatrixAverageOperation[] operations;
 
-        private BatchMatrixAverageOperation(int batchSize)
+        private BatchMatrixAverageOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new MatrixAverageOperation[batchSize];
+            this.operations = new MatrixAverageOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchMatrixAverageOperation(net.Parameters.BatchSize);
+            return new BatchMatrixAverageOperation(net);
         }
 
         /// <inheritdoc />
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the matrix average operation.</returns>
         public DeepMatrix Forward(DeepMatrix input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

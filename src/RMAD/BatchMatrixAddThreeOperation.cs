@@ -10,13 +10,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch matrix addition operation for three matrices or two matrices and a bias.
     /// </summary>
-    public class BatchMatrixAddThreeOperation : BatchOperation
+    public class BatchMatrixAddThreeOperation : BatchOperation<MatrixAddThreeOperation>
     {
         private MatrixAddThreeOperation[] operations;
 
-        private BatchMatrixAddThreeOperation(int batchSize)
+        private BatchMatrixAddThreeOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new MatrixAddThreeOperation[batchSize];
+            this.operations = new MatrixAddThreeOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchMatrixAddThreeOperation(net.Parameters.BatchSize);
+            return new BatchMatrixAddThreeOperation(net);
         }
 
         /// <summary>
@@ -38,6 +39,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the matrix add operation.</returns>
         public DeepMatrix Forward(DeepMatrix inputA, DeepMatrix inputB, DeepMatrix bias)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[inputA.Depth];
             Parallel.For(0, inputA.Depth, i =>
             {

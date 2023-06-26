@@ -13,17 +13,18 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch GPU Matrix multiplication operation.
     /// </summary>
-    public class BatchGpuMatrixMultiplyOperation : BatchOperation
+    public class BatchGpuMatrixMultiplyOperation : BatchOperation<GpuMatrixMultiplyOperation>
     {
         private GpuMatrixMultiplyOperation[] operations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BatchGpuMatrixMultiplyOperation"/> class.
         /// </summary>
-        /// <param name="batchSize">The batch size.</param>
-        private BatchGpuMatrixMultiplyOperation(int batchSize)
+        /// <param name="net">The neural network.</param>
+        private BatchGpuMatrixMultiplyOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new GpuMatrixMultiplyOperation[batchSize];
+            this.operations = new GpuMatrixMultiplyOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchGpuMatrixMultiplyOperation(net.Parameters.BatchSize);
+            return new BatchGpuMatrixMultiplyOperation(net);
         }
 
         /// <inheritdoc />
@@ -61,6 +62,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new CudaNotInitializedException();
             }
 
+            this.ExtendOperations();
+
             var matrixArray = new Matrix[input1.Depth];
             Parallel.For(0, input2.Depth, i =>
             {
@@ -85,6 +88,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new CudaNotInitializedException();
             }
 
+            this.ExtendOperations();
+
             var matrixArray = new Matrix[input1.Depth];
             Parallel.For(0, input1.Depth, i =>
             {
@@ -108,6 +113,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 throw new CudaNotInitializedException();
             }
+
+            this.ExtendOperations();
 
             var matrixArray = new Matrix[input2.Depth];
             Parallel.For(0, input2.Depth, i =>

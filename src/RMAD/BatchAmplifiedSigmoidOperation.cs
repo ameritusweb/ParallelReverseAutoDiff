@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// The Batch sigmoid operation utilizing gradient amplification.
     /// </summary>
-    public class BatchAmplifiedSigmoidOperation : BatchOperation
+    public class BatchAmplifiedSigmoidOperation : BatchOperation<AmplifiedSigmoidOperation>
     {
         private AmplifiedSigmoidOperation[] operations;
 
-        private BatchAmplifiedSigmoidOperation(int batchSize)
+        private BatchAmplifiedSigmoidOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new AmplifiedSigmoidOperation[batchSize];
+            this.operations = new AmplifiedSigmoidOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchAmplifiedSigmoidOperation(net.Parameters.BatchSize);
+            return new BatchAmplifiedSigmoidOperation(net);
         }
 
         /// <inheritdoc />
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output for the operation.</returns>
         public DeepMatrix Forward(DeepMatrix input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch softmax operation.
     /// </summary>
-    public class BatchSoftmaxOperation : BatchOperation
+    public class BatchSoftmaxOperation : BatchOperation<SoftmaxOperation>
     {
         private SoftmaxOperation[] operations;
 
-        private BatchSoftmaxOperation(int batchSize)
+        private BatchSoftmaxOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new SoftmaxOperation[batchSize];
+            this.operations = new SoftmaxOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchSoftmaxOperation(net.Parameters.BatchSize);
+            return new BatchSoftmaxOperation(net);
         }
 
         /// <inheritdoc />
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the softmax operation.</returns>
         public DeepMatrix Forward(DeepMatrix input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch matrix concatenate operation.
     /// </summary>
-    public class BatchMatrixConcatenateOperation : BatchOperation
+    public class BatchMatrixConcatenateOperation : BatchOperation<MatrixConcatenateOperation>
     {
         private MatrixConcatenateOperation[] operations;
 
-        private BatchMatrixConcatenateOperation(int batchSize)
+        private BatchMatrixConcatenateOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new MatrixConcatenateOperation[batchSize];
+            this.operations = new MatrixConcatenateOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchMatrixConcatenateOperation(net.Parameters.BatchSize);
+            return new BatchMatrixConcatenateOperation(net);
         }
 
         /// <inheritdoc />
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the matrix concatenate operation.</returns>
         public DeepMatrix Forward(DeepMatrix[] input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Length];
             Parallel.For(0, input.Length, i =>
             {

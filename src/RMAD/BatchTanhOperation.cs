@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// The Batch tanh operation.
     /// </summary>
-    public class BatchTanhOperation : BatchOperation
+    public class BatchTanhOperation : BatchOperation<TanhOperation>
     {
         private TanhOperation[] operations;
 
-        private BatchTanhOperation(int batchSize)
+        private BatchTanhOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new TanhOperation[batchSize];
+            this.operations = new TanhOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchTanhOperation(net.Parameters.BatchSize);
+            return new BatchTanhOperation(net);
         }
 
         /// <inheritdoc />
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the Tanh operation.</returns>
         public DeepMatrix Forward(DeepMatrix input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

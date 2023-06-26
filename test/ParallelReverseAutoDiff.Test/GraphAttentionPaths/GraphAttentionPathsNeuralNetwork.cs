@@ -312,7 +312,7 @@
             return new DeepMatrix(outputGradients.ToArray());
         }
 
-        public async Task Backward(Matrix gradientOfLossWrtReadoutOutput)
+        public async Task Backward(DeepMatrix gradientOfLossWrtReadoutOutput)
         {
             var readoutNet = this.readoutNeuralNetwork;
             var inputGradient = await readoutNet.AutomaticBackwardPropagate(gradientOfLossWrtReadoutOutput);

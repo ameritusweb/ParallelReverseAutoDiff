@@ -56,6 +56,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     parametersToReturn[j] = ((IDeepOperation)operationParameters[j]).GetDeepOutput();
                 }
+                else if (operationParameters[j] is IBatchOperation)
+                {
+                    parametersToReturn[j] = ((IBatchOperation)operationParameters[j]).GetDeepOutput();
+                }
                 else if (operationParameters[j] is IOperationBase[] parameters)
                 {
                     List<object> parametersList = new List<object>();

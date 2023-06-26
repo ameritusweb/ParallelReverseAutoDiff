@@ -93,13 +93,14 @@ namespace ParallelReverseAutoDiff.Test
                 List<GapGraph> graphs = new List<GapGraph>();
                 for (int i = 0; i < 8; ++i)
                 {
-                    graphs[i] = new GapGraph()
+                    var graph = new GapGraph()
                     {
                         AdjacencyMatrix = adjacencyMatrix,
                         GapPaths = gapPaths,
                         GapNodes = gapNodes,
                         GapEdges = gapEdges
                     };
+                    graphs.Add(graph);
                 }
 
                 int batchSize = 8;

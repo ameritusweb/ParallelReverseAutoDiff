@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch scale and shift operation.
     /// </summary>
-    public class BatchScaleAndShiftOperation : BatchOperation
+    public class BatchScaleAndShiftOperation : BatchOperation<ScaleAndShiftOperation>
     {
         private ScaleAndShiftOperation[] operations;
 
-        private BatchScaleAndShiftOperation(int batchSize)
+        private BatchScaleAndShiftOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new ScaleAndShiftOperation[batchSize];
+            this.operations = new ScaleAndShiftOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchScaleAndShiftOperation(net.Parameters.BatchSize);
+            return new BatchScaleAndShiftOperation(net);
         }
 
         /// <inheritdoc />
@@ -52,6 +53,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output matrix.</returns>
         public DeepMatrix Forward(DeepMatrix input, Matrix beta, Matrix gamma)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

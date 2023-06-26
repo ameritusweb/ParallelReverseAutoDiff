@@ -493,6 +493,27 @@ namespace ParallelReverseAutoDiff.Test.Common
             return true;
         }
 
+        public static bool IsAllZeroes(DeepMatrix matrix)
+        {
+            int numDepth = matrix.Depth;
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int i = 0; i < numDepth; ++i)
+            {
+                for (int j = 0; j < numRows; ++j)
+                {
+                    for (int k = 0; k < numCols; ++k)
+                    {
+                        if (matrix[i][j][k] != 0.0d)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// Clears the following 2-D matrices.
         /// </summary>

@@ -236,7 +236,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             do
             {
                 var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward");
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");

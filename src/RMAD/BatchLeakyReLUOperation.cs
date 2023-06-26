@@ -12,15 +12,16 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// A Batch leaky ReLU operation.
     /// </summary>
-    public class BatchLeakyReLUOperation : BatchOperation
+    public class BatchLeakyReLUOperation : BatchOperation<LeakyReLUOperation>
     {
         private readonly double alpha;
         private LeakyReLUOperation[] operations;
 
-        private BatchLeakyReLUOperation(int batchSize, double alpha)
+        private BatchLeakyReLUOperation(NeuralNetwork net, double alpha)
+            : base(net)
         {
             this.alpha = alpha;
-            this.operations = new LeakyReLUOperation[batchSize];
+            this.operations = new LeakyReLUOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchLeakyReLUOperation(net.Parameters.BatchSize, net.Parameters.LeakyReLUAlpha);
+            return new BatchLeakyReLUOperation(net, net.Parameters.LeakyReLUAlpha);
         }
 
         /// <inheritdoc />
@@ -52,6 +53,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output for the leaky ReLU operation.</returns>
         public DeepMatrix Forward(DeepMatrix input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

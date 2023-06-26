@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch element-wise multiplication operation.
     /// </summary>
-    public class BatchHadamardProductOperation : BatchOperation
+    public class BatchHadamardProductOperation : BatchOperation<HadamardProductOperation>
     {
         private HadamardProductOperation[] operations;
 
-        private BatchHadamardProductOperation(int batchSize)
+        private BatchHadamardProductOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new HadamardProductOperation[batchSize];
+            this.operations = new HadamardProductOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchHadamardProductOperation(net.Parameters.BatchSize);
+            return new BatchHadamardProductOperation(net);
         }
 
         /// <inheritdoc />
@@ -51,6 +52,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the Hadamard product operation.</returns>
         public DeepMatrix Forward(DeepMatrix input1, DeepMatrix input2)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input1.Depth];
             for (int i = 0; i < input1.Depth; i++)
             {

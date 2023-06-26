@@ -13,13 +13,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch CUDA Matrix multiplication operation.
     /// </summary>
-    public class BatchCudaMatrixMultiplyOperation : BatchOperation
+    public class BatchCudaMatrixMultiplyOperation : BatchOperation<CudaMatrixMultiplyOperation>
     {
         private CudaMatrixMultiplyOperation[] operations;
 
-        private BatchCudaMatrixMultiplyOperation(int batchSize)
+        private BatchCudaMatrixMultiplyOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new CudaMatrixMultiplyOperation[batchSize];
+            this.operations = new CudaMatrixMultiplyOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchCudaMatrixMultiplyOperation(net.Parameters.BatchSize);
+            return new BatchCudaMatrixMultiplyOperation(net);
         }
 
         /// <inheritdoc />
@@ -57,6 +58,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new CudaNotInitializedException();
             }
 
+            this.ExtendOperations();
+
             var matrixArray = new Matrix[input1.Depth];
             for (int i = 0; i < input1.Depth; i++)
             {
@@ -81,6 +84,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new CudaNotInitializedException();
             }
 
+            this.ExtendOperations();
+
             var matrixArray = new Matrix[input1.Depth];
             for (int i = 0; i < input1.Depth; i++)
             {
@@ -104,6 +109,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 throw new CudaNotInitializedException();
             }
+
+            this.ExtendOperations();
 
             var matrixArray = new Matrix[input2.Depth];
             for (int i = 0; i < input2.Depth; i++)

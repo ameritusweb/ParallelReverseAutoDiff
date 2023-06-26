@@ -12,15 +12,16 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch swigLU operation for a Matrix.
     /// </summary>
-    public class BatchSwigLUOperation : BatchOperation
+    public class BatchSwigLUOperation : BatchOperation<SwigLUOperation>
     {
         private double beta;
         private SwigLUOperation[] operations;
 
-        private BatchSwigLUOperation(int batchSize, double beta)
+        private BatchSwigLUOperation(NeuralNetwork net, double beta)
+            : base(net)
         {
             this.beta = beta;
-            this.operations = new SwigLUOperation[batchSize];
+            this.operations = new SwigLUOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchSwigLUOperation(net.Parameters.BatchSize, net.Parameters.SwigLUBeta);
+            return new BatchSwigLUOperation(net, net.Parameters.SwigLUBeta);
         }
 
         /// <inheritdoc />
@@ -56,6 +57,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output matrix.</returns>
         public DeepMatrix Forward(DeepMatrix input, Matrix w, Matrix v, Matrix b, Matrix c)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

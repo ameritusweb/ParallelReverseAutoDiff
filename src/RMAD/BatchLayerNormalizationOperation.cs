@@ -12,13 +12,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Batch layer normalization operation.
     /// </summary>
-    public class BatchLayerNormalizationOperation : BatchOperation
+    public class BatchLayerNormalizationOperation : BatchOperation<LayerNormalizationOperation>
     {
         private LayerNormalizationOperation[] operations;
 
-        private BatchLayerNormalizationOperation(int batchSize)
+        private BatchLayerNormalizationOperation(NeuralNetwork net)
+            : base(net)
         {
-            this.operations = new LayerNormalizationOperation[batchSize];
+            this.operations = new LayerNormalizationOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchLayerNormalizationOperation(net.Parameters.BatchSize);
+            return new BatchLayerNormalizationOperation(net);
         }
 
         /// <inheritdoc />
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output for the layer normalization operation.</returns>
         public DeepMatrix Forward(DeepMatrix input)
         {
+            this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {

@@ -180,7 +180,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        public async Task<DeepMatrix> AutomaticBackwardPropagate(Matrix gradient)
+        public async Task<DeepMatrix[]> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
             int traverseCount = 0;
             IOperationBase? backwardStartOperation = null;
@@ -195,8 +195,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 traverseCount++;
             }
             IOperationBase? backwardEndOperation = this.computationGraph["input_0_0"];
-            var matrixArray = backwardEndOperation.CalculatedGradient.OfType<Matrix>().ToArray();
-            return new DeepMatrix(matrixArray);
+            var matrixArray = backwardEndOperation.CalculatedGradient.OfType<DeepMatrix>().ToArray();
+            return matrixArray;
         }
 
         public void InitializeState()
