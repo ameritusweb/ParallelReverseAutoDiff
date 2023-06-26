@@ -84,14 +84,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         }
 
         /// <summary>
-        /// Gets the input matrix.
-        /// </summary>
-        public DeepMatrix Input { get; private set; }
-
-        /// <summary>
         /// Gets the output path features matrix.
         /// </summary>
-        public Matrix[] OutputPathFeatures { get; private set; }
+        public DeepMatrix[] OutputPathFeatures { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -204,7 +199,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 this.computationGraph = new LstmComputationGraph(this);
                 var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
                 this.computationGraph
-                    .AddIntermediate("InputNodeFeatures", x => this.Parameters.InputSequence[x.TimeStep])
+                    .AddIntermediate("InputNodeFeatures", x => this.Parameters.DeepInputSequence[x.TimeStep])
                     .AddIntermediate("OutputPathFeatures", x => this.OutputPathFeatures[x.TimeStep])
                     .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
                     .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
@@ -266,7 +261,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.computationGraph.RestoreOperationIntermediates(id);
         }
 
-        public async Task AutomaticForwardPropagate(DeepMatrix input, int numTimeSteps)
+        public async Task AutomaticForwardPropagate(DeepMatrix[] input, int numTimeSteps)
         {
             if (numTimeSteps != this.Parameters.NumTimeSteps)
             {
@@ -276,7 +271,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Parameters.InputSequence, input.ToArray());
+            CommonMatrixUtils.SetInPlace(this.Parameters.DeepInputSequence, input);
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -332,7 +327,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             return output;
         }
 
-        private void InitializeState()
+        public void InitializeState()
         {
             // Clear the hidden state and memory cell state
             this.h = new Matrix[this.Parameters.NumTimeSteps][];
@@ -344,11 +339,28 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             }
 
             // Clear intermediates
-            this.OutputPathFeatures = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
-            this.Parameters.InputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.originalInputSize, 1);
+            var outputPathFeatures = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1).Select(x => new DeepMatrix(x)).ToArray();
+            var deepInputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.originalInputSize, 1).Select(x => new DeepMatrix(x)).ToArray();
+
+            if (this.OutputPathFeatures == null)
+            {
+                this.OutputPathFeatures = outputPathFeatures;
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlace(this.OutputPathFeatures, outputPathFeatures);
+            }
+
+            if (this.Parameters.DeepInputSequence == null)
+            {
+                this.Parameters.DeepInputSequence = deepInputSequence;
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlace(this.Parameters.DeepInputSequence, deepInputSequence);
+            }
 
             this.arrays4D = new Matrix[][][] { this.h, this.c };
-            this.arrays3D = new Matrix[][] { this.OutputPathFeatures, this.Parameters.InputSequence };
         }
     }
 }

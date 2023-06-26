@@ -85,12 +85,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public Matrix Input { get; private set; }
+        public DeepMatrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public Matrix Output { get; private set; }
+        public DeepMatrix Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -136,7 +136,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
 
         private void ClearState()
         {
-
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.inputLayers.ToArray());
+            clearer.Clear(this.nestedLayers.ToArray());
+            clearer.Clear(this.outputLayers.ToArray());
         }
 
         private async Task InitializeComputationGraph()
@@ -217,7 +220,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             this.computationGraph.RestoreOperationIntermediates(id);
         }
 
-        public void AutomaticForwardPropagate(Matrix input)
+        public void AutomaticForwardPropagate(DeepMatrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -285,16 +288,25 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             }
         }
 
-        private void InitializeState()
+        public void InitializeState()
         {
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(this.inputLayers.ToArray());
-            clearer.Clear(this.nestedLayers.ToArray());
-            clearer.Clear(this.outputLayers.ToArray());
+            if (this.Output == null)
+            {
+                this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * this.NumQueries, 1));
+            }
+            else
+            {
+                this.Output.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * this.NumQueries, 1));
+            }
 
-            // Clear intermediates
-            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures * this.NumQueries, 1);
-            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
+            if (this.Input == null)
+            {
+                this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            }
+            else
+            {
+                this.Input.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            }
         }
     }
 }

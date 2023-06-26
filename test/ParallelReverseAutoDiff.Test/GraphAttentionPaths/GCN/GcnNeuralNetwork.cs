@@ -51,12 +51,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <summary>
         /// Gets the input deep matrix.
         /// </summary>
-        public DeepMatrix Input { get; private set; }
+        public DeepMatrix[] Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public Matrix[] Output { get; private set; }
+        public DeepMatrix[] Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -66,7 +66,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <summary>
         /// Gets the adjacency matrix.
         /// </summary>
-        public Matrix Adjacency { get; set; }
+        public DeepMatrix Adjacency { get; set; }
 
         public IEnumerable<IModelLayer> ModelLayers
         {
@@ -139,7 +139,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        public void AutomaticForwardPropagate(DeepMatrix[] input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -199,7 +199,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             return new DeepMatrix(matrixArray);
         }
 
-        private void InitializeState()
+        public void InitializeState()
         {
             // Clear intermediates
             this.Output = new Matrix[NumLayers];
@@ -209,9 +209,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 numFeatures *= 2;
                 this.Output[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, numFeatures);
             }
-            this.Adjacency = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumPaths);
-            this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures, 1));
-            this.Parameters.InputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
+            this.Adjacency = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumPaths));
+            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures, 1).Select(x => new DeepMatrix(x)).ToArray();
         }
     }
 }

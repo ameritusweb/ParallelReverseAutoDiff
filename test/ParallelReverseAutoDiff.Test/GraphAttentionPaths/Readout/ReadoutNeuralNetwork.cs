@@ -79,12 +79,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public Matrix Input { get; private set; }
+        public DeepMatrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public Matrix Output { get; private set; }
+        public DeepMatrix Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -210,7 +210,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        public void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -283,11 +283,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             return backwardEndOperation.CalculatedGradient[0] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
-        private void InitializeState()
+        public void InitializeState()
         {
             // Clear intermediates
-            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
-            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, this.NumFeatures);
+            this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+            this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
         }
     }
 }

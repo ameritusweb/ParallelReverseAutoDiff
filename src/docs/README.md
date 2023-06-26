@@ -99,7 +99,7 @@ Each neural network base class has a set of parameters that can be used to confi
 /// <summary>
 /// Gets or sets the batch size.
 /// </summary>
-public int BatchSize { get; set; } = 2;
+public int BatchSize { get; set; } = 8;
 
 /// <summary>
 /// Gets or sets the dropout rate for the apply dropout operation.

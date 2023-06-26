@@ -1,6 +1,7 @@
 ﻿namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.Test.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN;
@@ -13,30 +14,26 @@
         private readonly List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
         private readonly GcnNeuralNetwork gcnNeuralNetwork;
         private readonly ReadoutNeuralNetwork readoutNeuralNetwork;
-        private readonly List<GapEdge> gapEdges = new List<GapEdge>();
-        private readonly List<GapNode> gapNodes = new List<GapNode>();
-        private readonly List<GapPath> gapPaths = new List<GapPath>();
+        private readonly List<GapGraph> gapGraphs = new List<GapGraph>();
         private readonly int numFeatures;
         private readonly int numLayers;
         private readonly int numQueries;
-        private readonly Matrix adjacencyMatrix;
+        private readonly int batchSize;
         private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
         private readonly List<IModelLayer> modelLayers;
-        private readonly WeightStore weightStore;
+        private readonly Dictionary<int, Guid> typeToIdMap;
 
-        public GraphAttentionPathsNeuralNetwork(List<GapEdge> edges, List<GapNode> nodes, List<GapPath> paths, Matrix adjacencyMatrix, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
+        public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
         {
-            this.gapEdges = edges;
-            this.gapNodes = nodes;
-            this.gapPaths = paths;
-            this.adjacencyMatrix = adjacencyMatrix;
+            this.gapGraphs = graphs;
             this.numFeatures = numFeatures;
             this.numLayers = numLayers;
             this.numQueries = numQueries;
+            this.batchSize = batchSize;
             this.modelLayers = new List<IModelLayer>();
-            this.weightStore = new WeightStore();
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
+            this.typeToIdMap = new Dictionary<int, Guid>();
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
@@ -70,120 +67,224 @@
             this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
             this.readoutNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
-            this.weightStore.AddRange(this.modelLayers);
-            this.weightStore.Load(new FileInfo(WEIGHTSSAVEPATH));
+            this.ApplyWeights();
+        }
+
+        public void ApplyWeights()
+        {
+            var weightStore = new WeightStore();    
+            weightStore.AddRange(this.modelLayers);
+            weightStore.Load(new FileInfo(WEIGHTSSAVEPATH));
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
                 var modelLayer = this.modelLayers[i];
-                var weights = this.weightStore.ToModelLayerWeights(i);
+                var weights = weightStore.ToModelLayerWeights(i);
                 modelLayer.ApplyWeights(weights);
             }
+            weightStore = null;
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
 
         public async Task<Matrix> Forward()
         {
-            foreach (var node in this.gapNodes.Where(x => x.IsInPath == true))
+            Dictionary<int, List<Matrix>> inputsByType = new Dictionary<int, List<Matrix>>();
+            Dictionary<(int type, int index), GapNode> nodeIndexMap = new Dictionary<(int type, int index), GapNode>();
+
+            foreach (var graph in gapGraphs)
             {
-                var edgeCount = node.Edges.Count;
-                var input = new Matrix(edgeCount, numFeatures);
-                for (int i = 0; i < edgeCount; ++i)
+                foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
-                    for (int j = 0; j < numFeatures; ++j)
+                    var edgeCount = node.Edges.Count;
+                    var input = new Matrix(edgeCount, numFeatures);
+                    for (int i = 0; i < edgeCount; ++i)
                     {
-                        input[i][j] = node.Edges[i].FeatureVector[j][0];
+                        for (int j = 0; j < numFeatures; ++j)
+                        {
+                            input[i][j] = node.Edges[i].FeatureVector[j][0];
+                        }
+                    }
+
+                    var index = (int)node.GapType;
+                    if (!inputsByType.ContainsKey(index))
+                    {
+                        inputsByType[index] = new List<Matrix>();
+                    }
+                    inputsByType[index].Add(input);
+
+                    nodeIndexMap[(index, inputsByType[index].Count - 1)] = node;
+                }
+            }
+
+            foreach (var type in inputsByType.Keys)
+            {
+                var batchedInput = new DeepMatrix(inputsByType[type].ToArray());
+                var edgeAttentionNet = this.edgeAttentionNeuralNetwork[type];
+                edgeAttentionNet.Parameters.BatchSize = batchedInput.Depth;
+                edgeAttentionNet.InitializeState();
+                edgeAttentionNet.AutomaticForwardPropagate(batchedInput);
+                var id = Guid.NewGuid();
+                this.typeToIdMap.Add(type, id);
+                edgeAttentionNet.StoreOperationIntermediates(id);
+                var output = edgeAttentionNet.Output;
+                for (int i = 0; i < output.Depth; ++i)
+                {
+                    var node = nodeIndexMap[(type, i)];
+                    node.FeatureVector = output[i];
+                }
+            }
+
+            Dictionary<int, List<DeepMatrix>> inputsByLength = new Dictionary<int, List<DeepMatrix>>();
+            Dictionary<(int length, int index), GapPath> pathIndexMap = new Dictionary<(int length, int index), GapPath>();
+
+            foreach (var graph in gapGraphs)
+            {
+                foreach (var path in graph.GapPaths)
+                {
+                    var pathLength = path.Nodes.Count;
+                    var input = new DeepMatrix(pathLength, numFeatures * (int)Math.Pow(2d, (double)numLayers), 1);
+                    for (int i = 0; i < pathLength; ++i)
+                    {
+                        for (int j = 0; j < numFeatures; ++j)
+                        {
+                            input[i][j][0] = path.Nodes[i].FeatureVector[j][0];
+                        }
+                    }
+
+                    if (!inputsByLength.ContainsKey(pathLength))
+                    {
+                        inputsByLength[pathLength] = new List<DeepMatrix>();
+                    }
+                    inputsByLength[pathLength].Add(input);
+
+                    pathIndexMap[(pathLength, inputsByLength[pathLength].Count - 1)] = path;
+                }
+            }
+
+            foreach (var length in inputsByLength.Keys)
+            {
+                var batchedInput = inputsByLength[length].ToArray(); // Array of DeepMatrix where each DeepMatrix is a timestep for all sequences in the batch
+                var lstmNet = this.lstmNeuralNetwork[length - 2]; // Because a path must have a length of at least two
+                lstmNet.Parameters.BatchSize = batchedInput[0].Rows;
+                lstmNet.InitializeState();
+                await lstmNet.AutomaticForwardPropagate(batchedInput, length);
+                var id = Guid.NewGuid();
+                this.typeToIdMap.Add(length, id);
+                lstmNet.StoreOperationIntermediates(id);
+                var output = lstmNet.OutputPathFeatures[length - 1];
+                for (int i = 0; i < output.Depth; ++i)
+                {
+                    var path = pathIndexMap[(length, i)];
+                    path.FeatureVector = output[i];
+                }
+            }
+
+            Dictionary<int, List<(Matrix, DeepMatrix)>> inputsByTypeAttention = new Dictionary<int, List<(Matrix, DeepMatrix)>>();
+            Dictionary<(int type, int index), GapPath> pathIndexMapAttention = new Dictionary<(int type, int index), GapPath>();
+
+            foreach (var graph in gapGraphs)
+            {
+                foreach (var path in graph.GapPaths)
+                {
+                    var index = (int)path.GapType;
+                    var connectedPaths = graph.GapPaths.Where(x => IsConnected(path, x, graph.AdjacencyMatrix)).ToList();
+                    DeepMatrix connectedPathsMatrix = new DeepMatrix(connectedPaths.Count, numFeatures, 1);
+                    for (int i = 0; i < connectedPaths.Count; ++i)
+                    {
+                        var connectedPath = connectedPaths[i];
+                        connectedPathsMatrix[i] = connectedPath.FeatureVector;
+                    }
+
+                    if (!inputsByTypeAttention.ContainsKey(index))
+                    {
+                        inputsByTypeAttention[index] = new List<(Matrix, DeepMatrix)>();
+                    }
+                    inputsByTypeAttention[index].Add((path.FeatureVector, connectedPathsMatrix));
+
+                    pathIndexMap[(index, inputsByTypeAttention[index].Count - 1)] = path;
+                }
+            }
+
+            foreach (var type in inputsByTypeAttention.Keys)
+            {
+                var batchedInputs = inputsByTypeAttention[type].Select(x => x.Item1).ToArray();
+                var batchedConnectedPaths = inputsByTypeAttention[type].Select(x => x.Item2).ToArray();
+
+                var attentionNet = this.attentionMessagePassingNeuralNetwork[type];
+                attentionNet.Parameters.BatchSize = batchedInputs.Length;
+                attentionNet.InitializeState();
+                CommonMatrixUtils.SetInPlace(attentionNet.ConnectedPathsDeepMatrixArray, batchedConnectedPaths);
+                CommonMatrixUtils.SetInPlace(attentionNet.DConnectedPathsDeepMatrixArray, batchedConnectedPaths.Select(x => new DeepMatrix(x.Dimension)).ToArray());
+                attentionNet.AutomaticForwardPropagate(new DeepMatrix(batchedInputs), true);
+                var id = Guid.NewGuid();
+                this.typeToIdMap.Add(type, id);
+                attentionNet.StoreOperationIntermediates(id);
+                for (int i = 0; i < attentionNet.Output.Depth; ++i)
+                {
+                    var path = pathIndexMapAttention[(type, i)];
+                    path.FeatureVector = attentionNet.Output[i];
+                }
+            }
+
+            foreach (var graph in gapGraphs)
+            {
+                var gapPaths = graph.GapPaths;
+                Matrix adjacency = new Matrix(gapPaths.Count, gapPaths.Count);
+                for (int i = 0; i < gapPaths.Count; ++i)
+                {
+                    var path1 = gapPaths[i];
+                    for (int j = 0; j < gapPaths.Count; ++j)
+                    {
+                        var path2 = gapPaths[j];
+                        if (IsConnected(path1, path2, graph.AdjacencyMatrix))
+                        {
+                            var cosineSimilarity = path1.FeatureVector.CosineSimilarity(path2.FeatureVector);
+                            var sigmoid = 1.0 / (1.0 + Math.Exp(-cosineSimilarity));
+                            adjacency[i][j] = sigmoid;
+                        }
                     }
                 }
-                var index = (int)node.GapType;
-                var edgeAttentionNet = this.edgeAttentionNeuralNetwork[index];
-                edgeAttentionNet.AutomaticForwardPropagate(input);
-                edgeAttentionNet.StoreOperationIntermediates(node.Id);
-                node.FeatureVector = edgeAttentionNet.Output;
+
+                Matrix degreeMatrix = new Matrix(adjacency.Rows, adjacency.Cols);  // Step 1
+                for (int i = 0; i < adjacency.Rows; ++i)
+                {
+                    int degree = (int)adjacency[i].Sum();
+                    degreeMatrix[i, i] = degree != 0 ? Math.Pow(degree, -0.5) : 0;  // Step 2
+                }
+                Matrix normalizedAdjacency = degreeMatrix * adjacency * degreeMatrix;  // Step 3
+                graph.NormalizedAdjacency = normalizedAdjacency;
             }
 
-            foreach (var path in this.gapPaths)
+            List<DeepMatrix> gcnInputList = new List<DeepMatrix>();
+            List<Matrix> adjacencyList = new List<Matrix>();
+
+            foreach (var graph in gapGraphs)
             {
-                var pathLength = path.Nodes.Count;
-                var input = new DeepMatrix(pathLength, numFeatures * (int)Math.Pow(2d, (double)numLayers), 1);
-                for (int i = 0; i < input.Depth; ++i)
+                // GCN Input
+                DeepMatrix gcnInput = new DeepMatrix(graph.GapPaths.Count, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1);
+                for (int i = 0; i < gcnInput.Depth; ++i)
                 {
-                    for (int j = 0; j < input.Rows; ++j)
+                    for (int j = 0; j < gcnInput.Rows; ++j)
                     {
-                        input[i][j][0] = path.Nodes[i].FeatureVector[j][0];
+                        gcnInput[i][j][0] = graph.GapPaths[i].FeatureVector[j][0];
                     }
                 }
-                var index = (int)path.GapType;
-                var lstmNet = this.lstmNeuralNetwork[index];
-                await lstmNet.AutomaticForwardPropagate(input, pathLength);
-                lstmNet.StoreOperationIntermediates(path.Id);
-                path.FeatureVector = lstmNet.OutputPathFeatures[pathLength - 1];
-            }
+                gcnInputList.Add(gcnInput);
 
-            List<Matrix> attentionNetOutputs = new List<Matrix>();
-            foreach (var path in this.gapPaths)
-            {
-                var index = (int)path.GapType;
-                var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
-                var connectedPaths = this.gapPaths.Where(x => IsConnected(path, x, this.adjacencyMatrix)).ToList();
-                DeepMatrix connectedPathsMatrix = new DeepMatrix(connectedPaths.Count, numFeatures, 1);
-                for (int i = 0; i < connectedPaths.Count; ++i)
-                {
-                    var connectedPath = connectedPaths[i];
-                    connectedPathsMatrix[i] = connectedPath.FeatureVector;
-                }
-                this.connectedPathsMap.Add(path, connectedPaths);
-                attentionNet.ConnectedPathsDeepMatrix.Replace(connectedPathsMatrix.ToArray());
-                attentionNet.DConnectedPathsDeepMatrix.Replace(new DeepMatrix(attentionNet.ConnectedPathsDeepMatrix.Dimension).ToArray());
-                attentionNet.AutomaticForwardPropagate(path.FeatureVector, true);
-                attentionNet.StoreOperationIntermediates(path.Id);
-                attentionNetOutputs.Add(attentionNet.Output);
-            }
-
-            for (int i = 0; i < attentionNetOutputs.Count; ++i)
-            {
-                var path = this.gapPaths[i];
-                path.FeatureVector = attentionNetOutputs[i];
-            }
-
-            Matrix adjacency = new Matrix(this.gapPaths.Count, this.gapPaths.Count);
-            for (int i = 0; i < this.gapPaths.Count; ++i)
-            {
-                var path1 = this.gapPaths[i];
-                for (int j = 0; j < this.gapPaths.Count; ++j)
-                {
-                    var path2 = this.gapPaths[j];
-                    if (IsConnected(path1, path2, this.adjacencyMatrix))
-                    {
-                        var cosineSimilarity = path1.FeatureVector.CosineSimilarity(path2.FeatureVector);
-                        var sigmoid = 1.0 / (1.0 + Math.Exp(-cosineSimilarity));
-                        adjacency[i][j] = sigmoid;
-                    }
-                }
-            }
-
-            Matrix degreeMatrix = new Matrix(adjacency.Rows, adjacency.Cols);  // Step 1
-            for (int i = 0; i < adjacency.Rows; ++i)
-            {
-                int degree = (int)adjacency[i].Sum();
-                degreeMatrix[i, i] = degree != 0 ? Math.Pow(degree, -0.5) : 0;  // Step 2
-            }
-            Matrix normalizedAdjacency = degreeMatrix * adjacency * degreeMatrix;  // Step 3
-
-            DeepMatrix gcnInput = new DeepMatrix(this.gapPaths.Count, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1);
-            for (int i = 0; i < gcnInput.Depth; ++i)
-            {
-                for (int j = 0; j < gcnInput.Rows; ++j)
-                {
-                    gcnInput[i][j][0] = this.gapPaths[i].FeatureVector[j][0];
-                }
+                // Normalized Adjacency
+                adjacencyList.Add(graph.NormalizedAdjacency);
             }
 
             var gcnNet = this.gcnNeuralNetwork;
-            gcnNet.Adjacency.Replace(normalizedAdjacency.ToArray());
-            gcnNet.AutomaticForwardPropagate(gcnInput, true);
-            var gcnOutput = gcnNet.Output.Last();
+            gcnNet.Adjacency.Replace(adjacencyList.ToArray());
+            gcnNet.Parameters.BatchSize = gcnInputList.Count;
+            gcnNet.InitializeState();
+            gcnNet.AutomaticForwardPropagate(gcnInputList.ToArray(), true);
+            var gcnOutputs = new DeepMatrix(gcnNet.Output.Select(x => x.Last()).ToArray());
 
-            var readoutInput = gcnOutput;
+            var readoutInput = gcnOutputs;
             var readoutNet = this.readoutNeuralNetwork;
+            readoutNet.Parameters.BatchSize = readoutInput.Depth;
+            readoutNet.InitializeState();
             readoutNet.AutomaticForwardPropagate(readoutInput, true);
             var readoutOutput = readoutNet.Output;
 

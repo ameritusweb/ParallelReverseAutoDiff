@@ -423,6 +423,20 @@ namespace ParallelReverseAutoDiff.Test.Common
         }
 
         /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlace(DeepMatrix[] matrices, DeepMatrix[] value)
+        {
+            int numMatrices = matrices.Length;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                matrices[i].Replace(value[i].ToArray());
+            }
+        }
+
+        /// <summary>
         /// Sets the following deep matrix to the specified values.
         /// </summary>
         /// <param name="matrices">The matrices to replace.</param>

@@ -44,12 +44,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public Matrix Input { get; private set; }
+        public DeepMatrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public Matrix Output { get; private set; }
+        public DeepMatrix Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -59,12 +59,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// <summary>
         /// Gets the connected paths deep matrix.
         /// </summary>
-        public DeepMatrix ConnectedPathsDeepMatrix { get; set; }
+        public DeepMatrix[] ConnectedPathsDeepMatrixArray { get; set; }
 
         /// <summary>
         /// Gets the connected paths deep matrix.
         /// </summary>
-        public DeepMatrix DConnectedPathsDeepMatrix { get; set; }
+        public DeepMatrix[] DConnectedPathsDeepMatrixArray { get; set; }
 
         public IEnumerable<IModelLayer> ModelLayers
         {
@@ -100,7 +100,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
         private void ClearState()
         {
-
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(new[] { this.hiddenLayer });
         }
 
         private async Task InitializeComputationGraph()
@@ -149,7 +150,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.computationGraph.RestoreOperationIntermediates(id);
         }
 
-        public void AutomaticForwardPropagate(Matrix input, bool doNotUpdate)
+        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -206,17 +207,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             return backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
-        private void InitializeState()
+        public void InitializeState()
         {
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(new[] { this.hiddenLayer});
-
-            this.ConnectedPathsDeepMatrix = new DeepMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
-            this.DConnectedPathsDeepMatrix = new DeepMatrix(this.NumLayers, this.NumPaths, this.NumFeatures);
+            this.ConnectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
+            this.DConnectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
 
             // Clear intermediates
-            this.Output = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
-            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.NumFeatures, 1);
+            this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+            this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
         }
     }
 }

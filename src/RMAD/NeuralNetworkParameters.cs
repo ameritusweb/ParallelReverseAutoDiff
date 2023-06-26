@@ -15,7 +15,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the batch size.
         /// </summary>
-        public int BatchSize { get; set; } = 2;
+        public int BatchSize { get; set; } = 8;
 
         /// <summary>
         /// Gets or sets the dropout rate for the apply dropout operation.
@@ -96,6 +96,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets or sets the input sequence.
         /// </summary>
         public Matrix[] InputSequence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the deep input sequence.
+        /// </summary>
+        public DeepMatrix[] DeepInputSequence { get; set; }
 
         /// <summary>
         /// Gets or sets the rewards for policy gradient optimization.
