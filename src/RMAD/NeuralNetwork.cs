@@ -73,6 +73,10 @@ namespace ParallelReverseAutoDiff.RMAD
                         {
                             parametersList.Add(((IDeepOperation)parameters[k]).GetDeepOutput());
                         }
+                        else if (parameters[k] is IBatchOperation)
+                        {
+                            parametersList.Add(((IBatchOperation)parameters[k]).GetDeepOutput());
+                        }
                         else
                         {
                             parametersList.Add(parameters[k]);

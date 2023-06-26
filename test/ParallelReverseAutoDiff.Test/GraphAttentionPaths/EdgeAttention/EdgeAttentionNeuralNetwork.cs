@@ -236,25 +236,25 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             do
             {
                 var parameters = this.LookupParameters(op);
+                if (op.Id == "concatenated")
+                {
+                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
+                    DeepMatrix[] deepMatrixArray = new DeepMatrix[objArray.Length];
+                    for (int i = 0; i < objArray.Length; ++i)
+                    {
+                        var obj = objArray[i];
+                        if (obj is DeepMatrix m)
+                        {
+                            deepMatrixArray[i] = m;
+                        }
+                    }
+                    parameters[0] = deepMatrixArray;
+                }
+
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
-                }
-
-                if (op.Id == "concatenated")
-                {
-                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
-                    DeepMatrix deepMatrix = new DeepMatrix(objArray.Length, 1, 1);
-                    for (int i = 0; i < objArray.Length; ++i)
-                    {
-                        var obj = objArray[i];
-                        if (obj is Matrix m)
-                        {
-                            deepMatrix[i] = m;
-                        }
-                    }
-                    parameters[0] = deepMatrix;
                 }
 
                 forward.Invoke(op, parameters);

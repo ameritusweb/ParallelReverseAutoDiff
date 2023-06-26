@@ -15,8 +15,6 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchGpuMatrixMultiplyOperation : BatchOperation<GpuMatrixMultiplyOperation>
     {
-        private GpuMatrixMultiplyOperation[] operations;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BatchGpuMatrixMultiplyOperation"/> class.
         /// </summary>
@@ -24,7 +22,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private BatchGpuMatrixMultiplyOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new GpuMatrixMultiplyOperation[net.Parameters.BatchSize];
+            this.Operations = new GpuMatrixMultiplyOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -40,13 +38,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.operations, (key, oldValue) => this.operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.operations = this.IntermediateOperationArrays[id].OfType<GpuMatrixMultiplyOperation>().ToArray();
+            this.Operations = this.IntermediateOperationArrays[id].OfType<GpuMatrixMultiplyOperation>().ToArray();
         }
 
         /// <summary>
@@ -67,8 +65,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input1.Depth];
             Parallel.For(0, input2.Depth, i =>
             {
-                this.operations[i] = new GpuMatrixMultiplyOperation();
-                matrixArray[i] = this.operations[i].Forward(input1[i], input2[i]);
+                this.Operations[i] = new GpuMatrixMultiplyOperation();
+                matrixArray[i] = this.Operations[i].Forward(input1[i], input2[i]);
             });
 
             this.DeepOutput = new DeepMatrix(matrixArray);
@@ -93,8 +91,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input1.Depth];
             Parallel.For(0, input1.Depth, i =>
             {
-                this.operations[i] = new GpuMatrixMultiplyOperation();
-                matrixArray[i] = this.operations[i].Forward(input1[i], input2);
+                this.Operations[i] = new GpuMatrixMultiplyOperation();
+                matrixArray[i] = this.Operations[i].Forward(input1[i], input2);
             });
 
             this.DeepOutput = new DeepMatrix(matrixArray);
@@ -119,8 +117,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input2.Depth];
             Parallel.For(0, input2.Depth, i =>
             {
-                this.operations[i] = new GpuMatrixMultiplyOperation();
-                matrixArray[i] = this.operations[i].Forward(input1, input2[i]);
+                this.Operations[i] = new GpuMatrixMultiplyOperation();
+                matrixArray[i] = this.Operations[i].Forward(input1, input2[i]);
             });
 
             this.DeepOutput = new DeepMatrix(matrixArray);
@@ -138,7 +136,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[dOutput.Depth];
             Parallel.For(0, dOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(dOutput[i]);
+                result[i] = this.Operations[i].Backward(dOutput[i]);
             });
             return result;
         }

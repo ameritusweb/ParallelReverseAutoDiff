@@ -14,12 +14,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchMatrixMultiplyScalarOperation : BatchOperation<MatrixMultiplyScalarOperation>
     {
-        private MatrixMultiplyScalarOperation[] operations;
-
         private BatchMatrixMultiplyScalarOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new MatrixMultiplyScalarOperation[net.Parameters.BatchSize];
+            this.Operations = new MatrixMultiplyScalarOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -35,13 +33,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.operations, (key, oldValue) => this.operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.operations = this.IntermediateOperationArrays[id].OfType<MatrixMultiplyScalarOperation>().ToArray();
+            this.Operations = this.IntermediateOperationArrays[id].OfType<MatrixMultiplyScalarOperation>().ToArray();
         }
 
         /// <summary>
@@ -56,8 +54,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {
-                this.operations[i] = new MatrixMultiplyScalarOperation();
-                matrixArray[i] = this.operations[i].Forward(input[i], scalar);
+                this.Operations[i] = new MatrixMultiplyScalarOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i], scalar);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -75,8 +73,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {
-                this.operations[i] = new MatrixMultiplyScalarOperation();
-                matrixArray[i] = this.operations[i].Forward(input[i], scalar[i][0]);
+                this.Operations[i] = new MatrixMultiplyScalarOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i], scalar[i][0]);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -88,7 +86,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[dLdOutput.Depth];
             Parallel.For(0, dLdOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(dLdOutput[i]);
+                result[i] = this.Operations[i].Backward(dLdOutput[i]);
             });
             return result;
         }

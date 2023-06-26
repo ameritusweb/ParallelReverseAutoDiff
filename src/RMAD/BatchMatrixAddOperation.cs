@@ -12,12 +12,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchMatrixAddOperation : BatchOperation<MatrixAddOperation>
     {
-        private MatrixAddOperation[] operations;
-
         private BatchMatrixAddOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new MatrixAddOperation[net.Parameters.BatchSize];
+            this.Operations = new MatrixAddOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -42,8 +40,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[inputA.Depth];
             Parallel.For(0, inputA.Depth, i =>
             {
-                this.operations[i] = new MatrixAddOperation();
-                matrixArray[i] = this.operations[i].Forward(inputA[i], inputB[i]);
+                this.Operations[i] = new MatrixAddOperation();
+                matrixArray[i] = this.Operations[i].Forward(inputA[i], inputB[i]);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -61,8 +59,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[inputA.Depth];
             Parallel.For(0, inputA.Depth, i =>
             {
-                this.operations[i] = new MatrixAddOperation();
-                matrixArray[i] = this.operations[i].Forward(inputA[i], inputB);
+                this.Operations[i] = new MatrixAddOperation();
+                matrixArray[i] = this.Operations[i].Forward(inputA[i], inputB);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -74,7 +72,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[dOutput.Depth];
             Parallel.For(0, dOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(dOutput[i]);
+                result[i] = this.Operations[i].Backward(dOutput[i]);
             });
             return result;
         }

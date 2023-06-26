@@ -12,12 +12,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchMatrixAddThreeOperation : BatchOperation<MatrixAddThreeOperation>
     {
-        private MatrixAddThreeOperation[] operations;
-
         private BatchMatrixAddThreeOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new MatrixAddThreeOperation[net.Parameters.BatchSize];
+            this.Operations = new MatrixAddThreeOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -43,8 +41,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[inputA.Depth];
             Parallel.For(0, inputA.Depth, i =>
             {
-                this.operations[i] = new MatrixAddThreeOperation();
-                matrixArray[i] = this.operations[i].Forward(inputA[i], inputB[i], bias[i]);
+                this.Operations[i] = new MatrixAddThreeOperation();
+                matrixArray[i] = this.Operations[i].Forward(inputA[i], inputB[i], bias[i]);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -56,7 +54,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[dOutput.Depth];
             Parallel.For(0, dOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(dOutput[i]);
+                result[i] = this.Operations[i].Backward(dOutput[i]);
             });
             return result;
         }

@@ -15,12 +15,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchCudaMatrixMultiplyOperation : BatchOperation<CudaMatrixMultiplyOperation>
     {
-        private CudaMatrixMultiplyOperation[] operations;
-
         private BatchCudaMatrixMultiplyOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new CudaMatrixMultiplyOperation[net.Parameters.BatchSize];
+            this.Operations = new CudaMatrixMultiplyOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -36,13 +34,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.operations, (key, oldValue) => this.operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.operations = this.IntermediateOperationArrays[id].OfType<CudaMatrixMultiplyOperation>().ToArray();
+            this.Operations = this.IntermediateOperationArrays[id].OfType<CudaMatrixMultiplyOperation>().ToArray();
         }
 
         /// <summary>
@@ -63,8 +61,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input1.Depth];
             for (int i = 0; i < input1.Depth; i++)
             {
-                this.operations[i] = new CudaMatrixMultiplyOperation();
-                matrixArray[i] = this.operations[i].Forward(input1[i], input2[i]);
+                this.Operations[i] = new CudaMatrixMultiplyOperation();
+                matrixArray[i] = this.Operations[i].Forward(input1[i], input2[i]);
             }
 
             this.DeepOutput = new DeepMatrix(matrixArray);
@@ -89,8 +87,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input1.Depth];
             for (int i = 0; i < input1.Depth; i++)
             {
-                this.operations[i] = new CudaMatrixMultiplyOperation();
-                matrixArray[i] = this.operations[i].Forward(input1[i], input2);
+                this.Operations[i] = new CudaMatrixMultiplyOperation();
+                matrixArray[i] = this.Operations[i].Forward(input1[i], input2);
             }
 
             this.DeepOutput = new DeepMatrix(matrixArray);
@@ -115,8 +113,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input2.Depth];
             for (int i = 0; i < input2.Depth; i++)
             {
-                this.operations[i] = new CudaMatrixMultiplyOperation();
-                matrixArray[i] = this.operations[i].Forward(input1, input2[i]);
+                this.Operations[i] = new CudaMatrixMultiplyOperation();
+                matrixArray[i] = this.Operations[i].Forward(input1, input2[i]);
             }
 
             this.DeepOutput = new DeepMatrix(matrixArray);
@@ -134,7 +132,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[dOutput.Depth];
             Parallel.For(0, dOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(dOutput[i]);
+                result[i] = this.Operations[i].Backward(dOutput[i]);
             });
             return result;
         }

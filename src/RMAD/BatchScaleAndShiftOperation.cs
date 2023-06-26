@@ -14,12 +14,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchScaleAndShiftOperation : BatchOperation<ScaleAndShiftOperation>
     {
-        private ScaleAndShiftOperation[] operations;
-
         private BatchScaleAndShiftOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new ScaleAndShiftOperation[net.Parameters.BatchSize];
+            this.Operations = new ScaleAndShiftOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -35,13 +33,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.operations, (key, oldValue) => this.operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.operations = this.IntermediateOperationArrays[id].OfType<ScaleAndShiftOperation>().ToArray();
+            this.Operations = this.IntermediateOperationArrays[id].OfType<ScaleAndShiftOperation>().ToArray();
         }
 
         /// <summary>
@@ -57,8 +55,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {
-                this.operations[i] = new ScaleAndShiftOperation();
-                matrixArray[i] = this.operations[i].Forward(input[i], beta, gamma);
+                this.Operations[i] = new ScaleAndShiftOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i], beta, gamma);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -74,7 +72,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[gradOutput.Depth];
             Parallel.For(0, gradOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(gradOutput[i]);
+                result[i] = this.Operations[i].Backward(gradOutput[i]);
             });
             return result;
         }

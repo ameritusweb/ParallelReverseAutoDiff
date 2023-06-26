@@ -25,7 +25,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Gets the array of operations.
+        /// Gets or sets the array of operations.
         /// </summary>
         public T[] Operations
         {
@@ -33,13 +33,14 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 return this.operations;
             }
+
+            set
+            {
+                this.operations = value;
+            }
         }
 
-        /// <summary>
-        /// Abstract method to perform backward pass, must be implemented by derived classes.
-        /// </summary>
-        /// <param name="dOutput">The upstream gradient.</param>
-        /// <returns>The gradients to send to the adjacent backward operations.</returns>
+        /// <inheritdoc />
         public abstract BackwardResult[] Backward(DeepMatrix dOutput);
 
         /// <summary>

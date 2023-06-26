@@ -14,12 +14,10 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchSoftmaxOperation : BatchOperation<SoftmaxOperation>
     {
-        private SoftmaxOperation[] operations;
-
         private BatchSoftmaxOperation(NeuralNetwork net)
             : base(net)
         {
-            this.operations = new SoftmaxOperation[net.Parameters.BatchSize];
+            this.Operations = new SoftmaxOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -35,13 +33,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.operations, (key, oldValue) => this.operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.operations = this.IntermediateOperationArrays[id].OfType<SoftmaxOperation>().ToArray();
+            this.Operations = this.IntermediateOperationArrays[id].OfType<SoftmaxOperation>().ToArray();
         }
 
         /// <summary>
@@ -55,8 +53,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {
-                this.operations[i] = new SoftmaxOperation();
-                matrixArray[i] = this.operations[i].Forward(input[i]);
+                this.Operations[i] = new SoftmaxOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i]);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
@@ -68,7 +66,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var result = new BackwardResult[dLdOutput.Depth];
             Parallel.For(0, dLdOutput.Depth, i =>
             {
-                result[i] = this.operations[i].Backward(dLdOutput[i]);
+                result[i] = this.Operations[i].Backward(dLdOutput[i]);
             });
             return result;
         }
