@@ -61,6 +61,24 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.DeepOutput;
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix multiply scalar function.
+        /// </summary>
+        /// <param name="input">The first input to the matrix multiply scalar operation.</param>
+        /// <param name="scalar">The second input to the matrix multiply scalar operation.</param>
+        /// <returns>The output of the matrix multiply scalar operation.</returns>
+        public DeepMatrix Forward(DeepMatrix input, Matrix scalar)
+        {
+            var matrixArray = new Matrix[input.Depth];
+            Parallel.For(0, input.Depth, i =>
+            {
+                this.operations[i] = new MatrixMultiplyScalarOperation();
+                matrixArray[i] = this.operations[i].Forward(input[i], scalar[i][0]);
+            });
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
         /// <inheritdoc />
         public override BackwardResult[] Backward(DeepMatrix dLdOutput)
         {

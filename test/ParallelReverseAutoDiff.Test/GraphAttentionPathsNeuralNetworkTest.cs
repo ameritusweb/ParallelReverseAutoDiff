@@ -105,7 +105,7 @@ namespace ParallelReverseAutoDiff.Test
                 int batchSize = 8;
 
                 GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 10, 2, 4, 0.001d, 4d);
-                Matrix gradientOfLoss = await neuralNetwork.Forward();
+                DeepMatrix gradientOfLoss = await neuralNetwork.Forward();
                 await neuralNetwork.Backward(gradientOfLoss);
             }
             finally

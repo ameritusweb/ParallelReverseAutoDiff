@@ -121,10 +121,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.computationGraph = new AttentionMessagePassingComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrix)
-                .AddScalar("connectedPathsMatrixRows", _ => this.ConnectedPathsDeepMatrix.Rows)
-                .AddScalar("connectedPathsMatrixColumns", _ => this.ConnectedPathsDeepMatrix.Cols)
-                .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrix)
+                .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrixArray)
+                .AddIntermediate("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Select(x => new double[] { x.Rows }).ToArray()))
+                .AddIntermediate("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Select(x => new double[] { x.Cols }).ToArray()))
+                .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrixArray)
                 .AddWeight("Weights", x => weights[x.Layer]).AddGradient("DWeights", x => weightsGradient[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGradient[x.Layer])
                 .AddWeight("ConnectedWeights", x => connected[x.Layer]).AddGradient("DConnectedWeights", x => connectedGradient[x.Layer])

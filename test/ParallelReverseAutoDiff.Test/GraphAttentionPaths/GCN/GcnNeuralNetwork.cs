@@ -202,12 +202,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public void InitializeState()
         {
             // Clear intermediates
-            this.Output = new Matrix[NumLayers];
+            this.Output = new DeepMatrix[NumLayers];
             int numFeatures = this.NumFeatures;
             for (int i = 0; i < NumLayers; i++)
             {
                 numFeatures *= 2;
-                this.Output[i] = CommonMatrixUtils.InitializeZeroMatrix(this.NumPaths, numFeatures);
+                this.Output[i] = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, numFeatures));
             }
             this.Adjacency = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumPaths));
             this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures, 1).Select(x => new DeepMatrix(x)).ToArray();
