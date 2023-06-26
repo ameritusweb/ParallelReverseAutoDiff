@@ -95,12 +95,12 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the input sequence.
         /// </summary>
-        public Matrix[] InputSequence { get; set; }
+        public DeepMatrix InputSequence { get; set; }
 
         /// <summary>
         /// Gets or sets the deep input sequence.
         /// </summary>
-        public DeepMatrix[] DeepInputSequence { get; set; }
+        public FourDimensionalMatrix DeepInputSequence { get; set; }
 
         /// <summary>
         /// Gets or sets the rewards for policy gradient optimization.

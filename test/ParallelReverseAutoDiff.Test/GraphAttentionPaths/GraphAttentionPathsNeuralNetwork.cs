@@ -144,9 +144,9 @@
                 {
                     var pathLength = path.Nodes.Count;
                     var input = new DeepMatrix(pathLength, numFeatures * (int)Math.Pow(2d, (double)numLayers), 1);
-                    for (int i = 0; i < pathLength; ++i)
+                    for (int i = 0; i < input.Depth; ++i)
                     {
-                        for (int j = 0; j < numFeatures; ++j)
+                        for (int j = 0; j < input.Rows; ++j)
                         {
                             input[i][j][0] = path.Nodes[i].FeatureVector[j][0];
                         }
@@ -165,10 +165,11 @@
             foreach (var length in inputsByLength.Keys)
             {
                 var batchedInput = inputsByLength[length].ToArray(); // Array of DeepMatrix where each DeepMatrix is a timestep for all sequences in the batch
+                var switched = CommonMatrixUtils.SwitchFirstTwoDimensions(batchedInput);
                 var lstmNet = this.lstmNeuralNetwork[length - 2]; // Because a path must have a length of at least two
-                lstmNet.Parameters.BatchSize = batchedInput[0].Rows;
+                lstmNet.Parameters.BatchSize = batchedInput.Length;
                 lstmNet.InitializeState();
-                await lstmNet.AutomaticForwardPropagate(batchedInput, length);
+                await lstmNet.AutomaticForwardPropagate(new FourDimensionalMatrix(switched), length);
                 var id = Guid.NewGuid();
                 this.typeToIdMap.Add(length, id);
                 lstmNet.StoreOperationIntermediates(id);

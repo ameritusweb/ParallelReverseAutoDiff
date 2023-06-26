@@ -86,7 +86,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <summary>
         /// Gets the output path features matrix.
         /// </summary>
-        public DeepMatrix[] OutputPathFeatures { get; private set; }
+        public FourDimensionalMatrix OutputPathFeatures { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -197,7 +197,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             if (!this.computationGraphs.ContainsKey(this.Parameters.NumTimeSteps))
             {
                 this.computationGraph = new LstmComputationGraph(this);
-                var zeroMatrixHiddenSize = new Matrix(this.hiddenSize, 1);
+                var zeroMatrixHiddenSize = new DeepMatrix(this.Parameters.BatchSize, this.hiddenSize, 1);
                 this.computationGraph
                     .AddIntermediate("InputNodeFeatures", x => this.Parameters.DeepInputSequence[x.TimeStep])
                     .AddIntermediate("OutputPathFeatures", x => this.OutputPathFeatures[x.TimeStep])
@@ -261,7 +261,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.computationGraph.RestoreOperationIntermediates(id);
         }
 
-        public async Task AutomaticForwardPropagate(DeepMatrix[] input, int numTimeSteps)
+        public async Task AutomaticForwardPropagate(FourDimensionalMatrix input, int numTimeSteps)
         {
             if (numTimeSteps != this.Parameters.NumTimeSteps)
             {
@@ -282,7 +282,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             do
             {
                 var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward");
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
@@ -344,20 +344,20 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             if (this.OutputPathFeatures == null)
             {
-                this.OutputPathFeatures = outputPathFeatures;
+                this.OutputPathFeatures = new FourDimensionalMatrix(outputPathFeatures);
             }
             else
             {
-                CommonMatrixUtils.SetInPlace(this.OutputPathFeatures, outputPathFeatures);
+                CommonMatrixUtils.SetInPlace(this.OutputPathFeatures, new FourDimensionalMatrix(outputPathFeatures));
             }
 
             if (this.Parameters.DeepInputSequence == null)
             {
-                this.Parameters.DeepInputSequence = deepInputSequence;
+                this.Parameters.DeepInputSequence = new FourDimensionalMatrix(deepInputSequence);
             }
             else
             {
-                CommonMatrixUtils.SetInPlace(this.Parameters.DeepInputSequence, deepInputSequence);
+                CommonMatrixUtils.SetInPlace(this.Parameters.DeepInputSequence, new FourDimensionalMatrix(deepInputSequence));
             }
 
             this.arrays4D = new Matrix[][][] { this.h, this.c };

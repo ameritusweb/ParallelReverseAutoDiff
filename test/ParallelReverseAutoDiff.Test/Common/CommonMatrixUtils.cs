@@ -437,25 +437,23 @@ namespace ParallelReverseAutoDiff.Test.Common
         }
 
         /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlace(FourDimensionalMatrix matrices, FourDimensionalMatrix value)
+        {
+            matrices.Replace(value.ToArray());
+        }
+
+        /// <summary>
         /// Sets the following deep matrix to the specified values.
         /// </summary>
         /// <param name="matrices">The matrices to replace.</param>
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(DeepMatrix matrix, DeepMatrix value)
         {
-            int numMatrices = matrix.Depth;
-            int numRows = matrix.Rows;
-            int numCols = matrix.Cols;
-            for (int i = 0; i < numMatrices; ++i)
-            {
-                for (int j = 0; j < numRows; ++j)
-                {
-                    for (int k = 0; k < numCols; ++k)
-                    {
-                        matrix[i][j][k] = value[i][j][k];
-                    }
-                }
-            }
+            matrix.Replace(value.ToArray());
         }
 
         /// <summary>
@@ -465,15 +463,7 @@ namespace ParallelReverseAutoDiff.Test.Common
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(Matrix matrix, Matrix value)
         {
-            int numRows = matrix.Rows;
-            int numCols = matrix.Cols;
-            for (int j = 0; j < numRows; ++j)
-            {
-                for (int k = 0; k < numCols; ++k)
-                {
-                    matrix[j][k] = value[j][k];
-                }
-            }
+            matrix.Replace(value.ToArray());
         }
 
         public static bool IsAllZeroes(Matrix matrix)
@@ -775,6 +765,24 @@ namespace ParallelReverseAutoDiff.Test.Common
             }
 
             return matrix;
+        }
+
+        public static DeepMatrix[] SwitchFirstTwoDimensions(DeepMatrix[] deepMatrixArray)
+        {
+            DeepMatrix[] switched = new DeepMatrix[deepMatrixArray[0].Depth];
+            for (int i = 0; i < deepMatrixArray.Length; ++i)
+            {
+                for (int j = 0; j < deepMatrixArray[0].Depth; ++j)
+                {
+                    if (switched[j] == null)
+                    {
+                        switched[j] = new DeepMatrix(deepMatrixArray.Length, 1, 1);
+                    }
+
+                    switched[j][i] = deepMatrixArray[i][j];
+                }
+            }
+            return switched;
         }
     }
 }
