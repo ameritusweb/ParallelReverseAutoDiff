@@ -412,6 +412,24 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 o = op.GetOutput();
             }
+            else if (destination is DeepMatrix deepMatrix)
+            {
+                int depth = this.DeepOutput.Depth;
+                int rows = this.DeepOutput.Rows;
+                int cols = this.DeepOutput.Cols;
+                for (int i = 0; i < depth; ++i)
+                {
+                    for (int j = 0; j < rows; ++j)
+                    {
+                        for (int k = 0; k < cols; ++k)
+                        {
+                            deepMatrix[i][j][k] = this.DeepOutput[i][j][k];
+                        }
+                    }
+                }
+
+                return;
+            }
             else
             {
                 o = (Matrix)destination;

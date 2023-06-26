@@ -249,6 +249,20 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                         }
                     }
                     parameters[0] = deepMatrixArray;
+                    DeepMatrix[] switched = new DeepMatrix[deepMatrixArray[0].Depth];
+                    for (int i = 0; i < deepMatrixArray.Length; ++i)
+                    {
+                        for (int j = 0; j < deepMatrixArray[0].Depth; ++j)
+                        {
+                            if (switched[j] == null)
+                            {
+                                switched[j] = new DeepMatrix(deepMatrixArray.Length, 1, 1);
+                            }
+
+                            switched[j][i] = deepMatrixArray[i][j];
+                        }
+                    }
+                    parameters[0] = switched;
                 }
 
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
