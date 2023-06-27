@@ -101,7 +101,7 @@
             {
               "id": "broadcasted_attention_scores",
               "type": "MatrixBroadcastOperation",
-              "inputs": [ "attention_scores", "connectedPathsMatrixRows", "connectedPathsMatrixColumns" ]
+              "inputs": [ "attention_scores_trans", "connectedPathsMatrixRows", "connectedPathsMatrixColumns" ]
             },
             {
               "id": "weighted_connected_paths_features",
