@@ -205,7 +205,7 @@
                     }
                     inputsByTypeAttention[index].Add((path.FeatureVector, connectedPathsMatrix));
 
-                    pathIndexMap[(index, inputsByTypeAttention[index].Count - 1)] = path;
+                    pathIndexMapAttention[(index, inputsByTypeAttention[index].Count - 1)] = path;
                 }
             }
 

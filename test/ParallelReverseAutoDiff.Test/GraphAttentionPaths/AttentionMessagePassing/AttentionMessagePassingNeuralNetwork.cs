@@ -122,8 +122,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrixArray)
-                .AddDynamic("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Rows).ToArray()))
-                .AddDynamic("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Cols).ToArray()))
+                .AddDynamic("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Depth).ToArray()))
+                .AddDynamic("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Rows).ToArray()))
                 .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrixArray)
                 .AddWeight("Weights", x => weights[x.Layer]).AddGradient("DWeights", x => weightsGradient[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGradient[x.Layer])
