@@ -8,7 +8,7 @@
 
     public class GraphAttentionPathsNeuralNetwork
     {
-        private const string WEIGHTSSAVEPATH = "C:\\model\\initialWeights3.json";
+        private const string WEIGHTSSAVEPATH = "D:\\models\\initialWeights2.json";
         private readonly List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
         private readonly List<LstmNeuralNetwork> lstmNeuralNetwork;
         private readonly List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
@@ -71,13 +71,20 @@
             this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
             this.readoutNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
-            // this.ApplyWeights();
+            //this.SaveWeights();
+            this.ApplyWeights();
+        }
+
+        public void SaveWeights()
+        {
+            var weightStore = new WeightStore();
+            weightStore.AddRange(this.modelLayers);
+            weightStore.Save(new FileInfo(WEIGHTSSAVEPATH));
         }
 
         public void ApplyWeights()
         {
             var weightStore = new WeightStore();    
-            weightStore.AddRange(this.modelLayers);
             weightStore.Load(new FileInfo(WEIGHTSSAVEPATH));
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {

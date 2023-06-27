@@ -34,7 +34,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             get
             {
-                return this.elements.Keys.ToList();
+                return this.elements.Keys.OrderBy(x => x).ToList();
             }
         }
 
@@ -195,9 +195,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public void ApplyGradients(List<object> gradients)
         {
+            var identifiers = this.Identifiers;
             for (int i = 0; i < gradients.Count; ++i)
             {
-                var key = this.elements.Keys.ElementAt(i);
+                var key = identifiers.ElementAt(i);
                 var tuple = this.elements[key];
                 if (tuple.Item2 is Matrix matrix)
                 {
@@ -233,9 +234,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public void ApplyWeights(List<object> weights)
         {
+            var identifiers = this.Identifiers;
             for (int i = 0; i < weights.Count; ++i)
             {
-                var key = this.elements.Keys.ElementAt(i);
+                var key = identifiers.ElementAt(i);
                 var tuple = this.elements[key];
                 if (tuple.Item1 is Matrix matrix)
                 {
