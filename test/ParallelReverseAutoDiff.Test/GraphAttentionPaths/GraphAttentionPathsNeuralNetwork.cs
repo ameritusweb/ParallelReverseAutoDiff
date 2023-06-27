@@ -217,8 +217,8 @@
                 var attentionNet = this.attentionMessagePassingNeuralNetwork[type];
                 attentionNet.Parameters.BatchSize = batchedInputs.Length;
                 attentionNet.InitializeState();
-                CommonMatrixUtils.SetInPlace(attentionNet.ConnectedPathsDeepMatrixArray, batchedConnectedPaths);
-                CommonMatrixUtils.SetInPlace(attentionNet.DConnectedPathsDeepMatrixArray, batchedConnectedPaths.Select(x => new DeepMatrix(x.Dimension)).ToArray());
+                attentionNet.ConnectedPathsDeepMatrixArray.Replace(batchedConnectedPaths);
+                attentionNet.DConnectedPathsDeepMatrixArray.Replace(batchedConnectedPaths.Select(x => new DeepMatrix(x.Dimension)).ToArray());
                 attentionNet.AutomaticForwardPropagate(new DeepMatrix(batchedInputs), true);
                 var id = Guid.NewGuid();
                 this.typeToIdMapAttention.Add(type, id);

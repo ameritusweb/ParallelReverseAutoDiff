@@ -62,6 +62,26 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.DeepOutput;
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix broadcast function.
+        /// </summary>
+        /// <param name="input">A matrix to broadcast.</param>
+        /// <param name="targetRows">The target number of rows.</param>
+        /// <param name="targetCols">The target number of columns.</param>
+        /// <returns>The output of the matrix broadcast operation.</returns>
+        public DeepMatrix Forward(DeepMatrix input, Matrix targetRows, Matrix targetCols)
+        {
+            this.ExtendOperations();
+            var matrixArray = new Matrix[input.Depth];
+            Parallel.For(0, input.Depth, i =>
+            {
+                this.Operations[i] = new MatrixBroadcastOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i], (int)targetRows[i][0], (int)targetCols[i][0]);
+            });
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
         /// <inheritdoc />
         public override BackwardResult[] Backward(DeepMatrix dOutput)
         {

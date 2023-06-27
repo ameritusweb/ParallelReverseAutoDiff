@@ -85,6 +85,10 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     parametersToReturn[j] = parametersList.ToArray();
                 }
+                else if (operationParameters[j] is DynamicParameter dyn)
+                {
+                    parametersToReturn[j] = dyn.GetValue();
+                }
                 else
                 {
                     parametersToReturn[j] = operationParameters[j];

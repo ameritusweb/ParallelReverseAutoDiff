@@ -407,6 +407,23 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Replace the matrix with the specified 1-D array vertically.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <returns>The matrix that was replaced.</returns>
+        public Matrix ReplaceVertically(double[] matrix)
+        {
+            List<double[]> list = new List<double[]>();
+            for (int i = 0; i < matrix.Length; ++i)
+            {
+                list.Add(new double[] { matrix[i] });
+            }
+
+            this.matrix = list.ToArray();
+            return this;
+        }
+
+        /// <summary>
         /// Retrieve the matrix as a 2-D array.
         /// </summary>
         /// <returns>The 2-D array.</returns>

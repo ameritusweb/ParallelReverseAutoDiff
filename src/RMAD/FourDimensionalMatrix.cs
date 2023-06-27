@@ -179,7 +179,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The enumerator for the matrix.</returns>
         public IEnumerator<DeepMatrix> GetEnumerator()
         {
-            for (int i = 0; i < this.Depth; i++)
+            for (int i = 0; i < this.Count; i++)
             {
                 yield return this.matrices[i];
             }

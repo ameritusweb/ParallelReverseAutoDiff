@@ -122,8 +122,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrixArray)
-                .AddIntermediate("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Select(x => new double[] { x.Rows }).ToArray()))
-                .AddIntermediate("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Select(x => new double[] { x.Cols }).ToArray()))
+                .AddDynamic("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Rows).ToArray()))
+                .AddDynamic("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Cols).ToArray()))
                 .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrixArray)
                 .AddWeight("Weights", x => weights[x.Layer]).AddGradient("DWeights", x => weightsGradient[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGradient[x.Layer])
@@ -166,7 +166,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             do
             {
                 var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward");
+                if (op.Id == "connected_paths_deepmatrix")
+                {
+                    parameters[0] = ((FourDimensionalMatrix)parameters[0]).ToArray();
+                }
+
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");

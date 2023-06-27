@@ -21,6 +21,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> gradients = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> intermediates = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> scalars = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
+        private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> dynamics = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, Func<LayerInfo, object>> operationFinders = new ConcurrentDictionary<string, Func<LayerInfo, object>>();
         private readonly ConcurrentDictionary<string, IOperationBase> operations = new ConcurrentDictionary<string, IOperationBase>();
         private readonly ConcurrentHashSet<string> nestedOperations = new ConcurrentHashSet<string>();
@@ -89,6 +90,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     MatrixType.Bias => this.weightsAndBiases[identifier](index),
                     MatrixType.Gradient => this.gradients[identifier](index),
                     MatrixType.Intermediate => this.intermediates[identifier](index),
+                    MatrixType.Dynamic => this.dynamics[identifier](index),
                     _ => throw new ArgumentException("Invalid matrix type."),
                 };
             }
@@ -854,6 +856,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds a dynamic to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddDynamic(string identifier, Func<LayerInfo, object> matrix)
+        {
+            this.DynamicAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a scalar to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -1056,6 +1070,16 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Lifecycle function for when a dynamic is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void DynamicAdded(string identifier, Func<LayerInfo, object> matrix)
+        {
+            this.dynamics.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
         /// Lifecycle function for when an intermediate is added to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -1235,6 +1259,11 @@ namespace ParallelReverseAutoDiff.RMAD
                     var p = this.scalars[inputName](operation.LayerInfo);
                     operation.BackwardAdjacentOperations.Add(null);
                     parameters[j] = p;
+                }
+                else if (this.dynamics.ContainsKey(inputName))
+                {
+                    operation.BackwardAdjacentOperations.Add(null);
+                    parameters[j] = new DynamicParameter(graph: this, inputName: inputName, layerInfo: operation.LayerInfo);
                 }
                 else
                 {

@@ -29,5 +29,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// An intermediate matrix.
         /// </summary>
         Intermediate,
+
+        /// <summary>
+        /// A dynamic.
+        /// </summary>
+        Dynamic,
     }
 }
