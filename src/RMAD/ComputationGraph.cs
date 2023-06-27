@@ -794,6 +794,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds a gradient to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddGradient(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
+        {
+            this.GradientAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
         /// Adds an intermediate to the computation graph.
         /// </summary>
         /// <param name="identifier">An identifier.</param>
@@ -824,6 +836,18 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="matrix">The gradient.</param>
         /// <returns>A computation graph.</returns>
         public ComputationGraph AddIntermediate(string identifier, Func<LayerInfo, DeepMatrix[]> matrix)
+        {
+            this.IntermediateAdded(identifier, matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an intermediate to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        /// <returns>A computation graph.</returns>
+        public ComputationGraph AddIntermediate(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
         {
             this.IntermediateAdded(identifier, matrix);
             return this;
@@ -986,6 +1010,16 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="identifier">An identifier.</param>
         /// <param name="matrix">The gradient.</param>
+        protected virtual void GradientAdded(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
+        {
+            this.gradients.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when a gradient is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
         protected virtual void GradientAdded(string identifier, Func<LayerInfo, DeepMatrix> matrix)
         {
             this.gradients.TryAdd(identifier, matrix);
@@ -1007,6 +1041,16 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="identifier">An identifier.</param>
         /// <param name="matrix">The gradient.</param>
         protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, Matrix> matrix)
+        {
+            this.intermediates.TryAdd(identifier, matrix);
+        }
+
+        /// <summary>
+        /// Lifecycle function for when an intermediate is added to the computation graph.
+        /// </summary>
+        /// <param name="identifier">An identifier.</param>
+        /// <param name="matrix">The gradient.</param>
+        protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
         {
             this.intermediates.TryAdd(identifier, matrix);
         }

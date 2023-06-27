@@ -59,12 +59,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// <summary>
         /// Gets the connected paths deep matrix.
         /// </summary>
-        public DeepMatrix[] ConnectedPathsDeepMatrixArray { get; set; }
+        public FourDimensionalMatrix ConnectedPathsDeepMatrixArray { get; set; }
 
         /// <summary>
         /// Gets the connected paths deep matrix.
         /// </summary>
-        public DeepMatrix[] DConnectedPathsDeepMatrixArray { get; set; }
+        public FourDimensionalMatrix DConnectedPathsDeepMatrixArray { get; set; }
 
         public IEnumerable<IModelLayer> ModelLayers
         {
@@ -209,12 +209,49 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
         public void InitializeState()
         {
-            this.ConnectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
-            this.DConnectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
+            var connectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
+            var dConnectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
 
             // Clear intermediates
-            this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
-            this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+        
+            if (this.Output == null)
+            {
+                this.Output = output;
+            }
+            else
+            {
+                this.Output.Replace(output.ToArray());
+            }
+
+            if (this.Input == null)
+            {
+                this.Input = input;
+            }
+            else
+            {
+                this.Input.Replace(input.ToArray());
+            }
+
+            if (this.ConnectedPathsDeepMatrixArray == null)
+            {
+                this.ConnectedPathsDeepMatrixArray = new FourDimensionalMatrix(connectedPathsDeepMatrixArray);
+            }
+            else
+            {
+                this.ConnectedPathsDeepMatrixArray.Replace(connectedPathsDeepMatrixArray.ToArray());
+            }
+
+            if (this.DConnectedPathsDeepMatrixArray == null)
+            {
+                this.DConnectedPathsDeepMatrixArray = new FourDimensionalMatrix(dConnectedPathsDeepMatrixArray);
+            }
+            else
+            {
+                this.DConnectedPathsDeepMatrixArray.Replace(dConnectedPathsDeepMatrixArray.ToArray());
+            }
+
         }
     }
 }
