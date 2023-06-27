@@ -22,6 +22,7 @@
         private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
         private readonly List<IModelLayer> modelLayers;
         private readonly Dictionary<int, Guid> typeToIdMap;
+        private readonly Dictionary<int, Guid> typeToIdMapLstm;
         private readonly Dictionary<int, Guid> typeToIdMapAttention;
 
         public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
@@ -35,6 +36,7 @@
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             this.typeToIdMap = new Dictionary<int, Guid>();
+            this.typeToIdMapLstm = new Dictionary<int, Guid>();
             this.typeToIdMapAttention = new Dictionary<int, Guid>();
             for (int i = 0; i < 7; ++i)
             {
@@ -171,7 +173,7 @@
                 lstmNet.InitializeState();
                 await lstmNet.AutomaticForwardPropagate(new FourDimensionalMatrix(switched), length);
                 var id = Guid.NewGuid();
-                this.typeToIdMap.Add(length, id);
+                this.typeToIdMapLstm.Add(length, id);
                 lstmNet.StoreOperationIntermediates(id);
                 var output = lstmNet.OutputPathFeatures[length - 1];
                 for (int i = 0; i < output.Depth; ++i)

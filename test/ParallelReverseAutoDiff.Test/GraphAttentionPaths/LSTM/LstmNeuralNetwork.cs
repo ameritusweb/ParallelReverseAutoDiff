@@ -24,6 +24,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private readonly IModelLayer hiddenLayer;
         private readonly IModelLayer outputLayer;
 
+        private DeepMatrix zeroMatrixHiddenSize;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LstmNeuralNetwork"/> class.
         /// </summary>
@@ -173,6 +175,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.Architecture = jsonArchitecture;
 
             this.computationGraph = new LstmComputationGraph(this);
+            this.zeroMatrixHiddenSize = new DeepMatrix(this.Parameters.BatchSize, this.hiddenSize, 1);
             this.computationGraph
                 .AddIntermediate("InputNodeFeatures", x => this.Parameters.DeepInputSequence[x.TimeStep])
                 .AddIntermediate("OutputPathFeatures", x => this.OutputPathFeatures[x.TimeStep])
@@ -199,8 +202,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddOperationFinder("embeddedInput", x => this.computationGraph[$"embeddedInput_{x.TimeStep}_0"])
                 .AddOperationFinder("hFromCurrentTimeStepAndLastLayer", x => this.computationGraph[$"h_{x.TimeStep}_{this.NumLayers - 1}"])
                 .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"embeddedInput_{x.TimeStep}_0"] : this.computationGraph[$"h_{x.TimeStep}_{x.Layer - 1}"])
-                .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? new DeepMatrix(this.Parameters.BatchSize, this.hiddenSize, 1) : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
-                .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? new DeepMatrix(this.Parameters.BatchSize, this.hiddenSize, 1) : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
+                .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? this.zeroMatrixHiddenSize : this.computationGraph[$"h_{x.TimeStep - 1}_{x.Layer}"])
+                .AddOperationFinder("previousMemoryCellState", x => x.TimeStep == 0 ? this.zeroMatrixHiddenSize : this.computationGraph[$"c_{x.TimeStep - 1}_{x.Layer}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.Parameters.NumTimeSteps, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
@@ -306,6 +309,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             else
             {
                 CommonMatrixUtils.SetInPlaceReplace(this.Parameters.DeepInputSequence, new FourDimensionalMatrix(deepInputSequence));
+            }
+
+            if (this.zeroMatrixHiddenSize != null)
+            {
+                this.zeroMatrixHiddenSize.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.hiddenSize, 1));
             }
         }
     }
