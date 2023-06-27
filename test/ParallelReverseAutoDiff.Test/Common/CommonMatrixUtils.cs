@@ -432,7 +432,7 @@ namespace ParallelReverseAutoDiff.Test.Common
             int numMatrices = matrices.Length;
             for (int i = 0; i < numMatrices; ++i)
             {
-                matrices[i].Replace(value[i].ToArray());
+                SetInPlace(matrices[i], value[i]);
             }
         }
 
@@ -443,7 +443,25 @@ namespace ParallelReverseAutoDiff.Test.Common
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(FourDimensionalMatrix matrices, FourDimensionalMatrix value)
         {
-            matrices.Replace(value.ToArray());
+            int numMatrices = matrices.Count;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                SetInPlace(matrices[i], value[i]);
+            }
+        }
+
+        /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlaceReplace(FourDimensionalMatrix matrices, FourDimensionalMatrix value)
+        {
+            int numMatrices = matrices.Count;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                matrices[i].Replace(value[i].ToArray());
+            }
         }
 
         /// <summary>
@@ -453,7 +471,19 @@ namespace ParallelReverseAutoDiff.Test.Common
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(DeepMatrix matrix, DeepMatrix value)
         {
-            matrix.Replace(value.ToArray());
+            int numMatrices = matrix.Depth;
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                for (int j = 0; j < numRows; ++j)
+                {
+                    for (int k = 0; k < numCols; ++k)
+                    {
+                        matrix[i][j][k] = value[i][j][k];
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -463,7 +493,15 @@ namespace ParallelReverseAutoDiff.Test.Common
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(Matrix matrix, Matrix value)
         {
-            matrix.Replace(value.ToArray());
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int j = 0; j < numRows; ++j)
+            {
+                for (int k = 0; k < numCols; ++k)
+                {
+                    matrix[j][k] = value[j][k];
+                }
+            }
         }
 
         public static bool IsAllZeroes(Matrix matrix)

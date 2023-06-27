@@ -47,7 +47,7 @@
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                var model = new LstmNeuralNetwork(numFeatures * (int)Math.Pow(2d, (double)numLayers), 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1, numLayers, learningRate, clipValue);
+                var model = new LstmNeuralNetwork(numFeatures * (int)Math.Pow(2d, (double)numLayers), 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, i + 2, numLayers, learningRate, clipValue);
                 this.lstmNeuralNetwork.Add(model);
                 this.lstmNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.lstmNeuralNetwork[i].ModelLayers).ToList();

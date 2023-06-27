@@ -48,6 +48,26 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.DeepOutput;
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix add three function.
+        /// </summary>
+        /// <param name="inputA">The first input to the matrix add three operation.</param>
+        /// <param name="inputB">The second input to the matrix add three operation.</param>
+        /// <param name="bias">The third input to the matrix add three operation.</param>
+        /// <returns>The output of the matrix add operation.</returns>
+        public DeepMatrix Forward(DeepMatrix inputA, DeepMatrix inputB, Matrix bias)
+        {
+            this.ExtendOperations();
+            var matrixArray = new Matrix[inputA.Depth];
+            Parallel.For(0, inputA.Depth, i =>
+            {
+                this.Operations[i] = new MatrixAddThreeOperation();
+                matrixArray[i] = this.Operations[i].Forward(inputA[i], inputB[i], bias);
+            });
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
         /// <inheritdoc />
         public override BackwardResult[] Backward(DeepMatrix dOutput)
         {

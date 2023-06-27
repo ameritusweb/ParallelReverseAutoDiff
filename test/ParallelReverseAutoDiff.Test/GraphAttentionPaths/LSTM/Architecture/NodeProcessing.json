@@ -175,8 +175,7 @@
             {
               "id": "c",
               "type": "BatchMatrixTransposeOperation",
-              "inputs": [ "newCNormalized" ],
-              "setResultTo": "c[t][layerIndex]"
+              "inputs": [ "newCNormalized" ]
             },
             {
               "id": "wo_currentInput",
@@ -280,8 +279,7 @@
             {
               "id": "h",
               "type": "BatchMatrixTransposeOperation",
-              "inputs": [ "normalizedNewH" ],
-              "setResultTo": "h[t][layerIndex]"
+              "inputs": [ "normalizedNewH" ]
             }
           ]
         }
