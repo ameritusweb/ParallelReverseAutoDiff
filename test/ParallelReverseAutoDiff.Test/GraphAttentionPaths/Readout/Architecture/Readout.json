@@ -157,9 +157,27 @@
               "inputs": [ "attention_weights_values_array" ]
             },
             {
+              "id": "fully_connected",
+              "type": "BatchGpuMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "FW" ],
+              "gradientResultTo": [ null, "DFW" ]
+            },
+            {
+              "id": "fully_connected_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected_add", "FB" ],
+              "gradientResultTo": [ null, "DFB" ]
+            },
+            {
+              "id": "fully_connected_act",
+              "type": "BatchSwigLUOperation",
+              "inputs": [ "fully_connected_add", "SW", "SV", "SB", "SC" ],
+              "gradientResultTo": [ null, "DSW", "DSV", "DSB", "DSC" ]
+            },
+            {
               "id": "reduce",
               "type": "BatchGpuMatrixMultiplyOperation",
-              "inputs": [ "concatenated", "R" ],
+              "inputs": [ "fully_connected_act", "R" ],
               "gradientResultTo": [ null, "DR" ]
             },
             {

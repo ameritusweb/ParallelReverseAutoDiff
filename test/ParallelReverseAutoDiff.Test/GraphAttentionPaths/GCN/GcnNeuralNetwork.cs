@@ -51,12 +51,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <summary>
         /// Gets the input deep matrix.
         /// </summary>
-        public DeepMatrix[] Input { get; private set; }
+        public FourDimensionalMatrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
-        public DeepMatrix[] Output { get; private set; }
+        public FourDimensionalMatrix Output { get; private set; }
 
         /// <summary>
         /// Gets the target matrix.
@@ -139,7 +139,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
 
-        public void AutomaticForwardPropagate(DeepMatrix[] input, bool doNotUpdate)
+        public void AutomaticForwardPropagate(FourDimensionalMatrix input, bool doNotUpdate)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -155,7 +155,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             do
             {
                 var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward");
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
@@ -182,9 +182,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
         public async Task<DeepMatrix[]> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
-            int traverseCount = 0;
-            IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
+            IOperationBase? backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
@@ -192,7 +190,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
-                traverseCount++;
             }
             IOperationBase? backwardEndOperation = this.computationGraph["input_0_0"];
             var matrixArray = backwardEndOperation.CalculatedGradient.OfType<DeepMatrix>().ToArray();
@@ -202,15 +199,42 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public void InitializeState()
         {
             // Clear intermediates
-            this.Output = new DeepMatrix[NumLayers];
+            var output = new DeepMatrix[NumLayers];
             int numFeatures = this.NumFeatures;
             for (int i = 0; i < NumLayers; i++)
             {
                 numFeatures *= 2;
-                this.Output[i] = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, numFeatures));
+                output[i] = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, numFeatures));
             }
-            this.Adjacency = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumPaths));
-            this.Input = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures, 1).Select(x => new DeepMatrix(x)).ToArray();
+            var adjacency = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumPaths));
+            var input = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures, 1).Select(x => new DeepMatrix(x)).ToArray();
+            
+            if (this.Output == null)
+            {
+                this.Output = new FourDimensionalMatrix(output);
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlaceReplace(this.Output, new FourDimensionalMatrix(output));
+            }
+
+            if (this.Adjacency == null)
+            {
+                this.Adjacency = adjacency;
+            }
+            else
+            {
+                this.Adjacency.Replace(adjacency.ToArray());
+            }
+
+            if (this.Input == null)
+            {
+                this.Input = new FourDimensionalMatrix(input);
+            }
+            else
+            {
+                this.Input.Replace(input);
+            }
         }
     }
 }

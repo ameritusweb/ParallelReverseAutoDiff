@@ -60,6 +60,24 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.DeepOutput;
         }
 
+        /// <summary>
+        /// Performs the forward operation for the matrix concatenate function.
+        /// </summary>
+        /// <param name="input">An array of matrices to concatenate. All matrices must have the same number of rows.</param>
+        /// <returns>The output of the matrix concatenate operation.</returns>
+        public DeepMatrix Forward(FourDimensionalMatrix input)
+        {
+            this.ExtendOperations();
+            var matrixArray = new Matrix[input.Count];
+            Parallel.For(0, input.Count, i =>
+            {
+                this.Operations[i] = new MatrixConcatenateOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i]);
+            });
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
         /// <inheritdoc />
         public override BackwardResult[] Backward(DeepMatrix dOutput)
         {

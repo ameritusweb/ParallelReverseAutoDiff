@@ -188,7 +188,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.computationGraph = new ReadoutComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddIntermediate("AV", x => this.AV[x.Layer])
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2 + x.Layer))
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])
                 .AddBias("KB", x => keysBias[x.Layer]).AddGradient("DKB", x => keysBiasGradient[x.Layer])
@@ -226,25 +225,25 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             do
             {
                 var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward");
-                if (forward == null)
-                {
-                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
-                }
-
                 if (op.Id == "concatenated")
                 {
                     var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
-                    DeepMatrix deepMatrix = new DeepMatrix(objArray.Length, 1, 1);
+                    DeepMatrix[] deepMatrixArray = new DeepMatrix[objArray.Length];
                     for (int i = 0; i < objArray.Length; ++i)
                     {
                         var obj = objArray[i];
-                        if (obj is Matrix m)
+                        if (obj is DeepMatrix m)
                         {
-                            deepMatrix[i] = m;
+                            deepMatrixArray[i] = m;
                         }
                     }
-                    parameters[0] = deepMatrix;
+                    parameters[0] = CommonMatrixUtils.SwitchFirstTwoDimensions(deepMatrixArray);
+                }
+
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
+                if (forward == null)
+                {
+                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
                 forward.Invoke(op, parameters);
@@ -286,8 +285,26 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public void InitializeState()
         {
             // Clear intermediates
-            this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
-            this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            
+            if (this.Output == null)
+            {
+                this.Output = output;
+            }
+            else
+            {
+                this.Output.Replace(output.ToArray());
+            }
+
+            if (this.Input == null)
+            {
+                this.Input = input;
+            }
+            else
+            {
+                this.Input.Replace(input.ToArray());
+            }
         }
     }
 }
