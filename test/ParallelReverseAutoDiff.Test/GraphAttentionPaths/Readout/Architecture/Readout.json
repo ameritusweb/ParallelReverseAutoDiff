@@ -165,7 +165,7 @@
             {
               "id": "fully_connected_add",
               "type": "BatchMatrixAddBroadcastingOperation",
-              "inputs": [ "fully_connected_add", "FB" ],
+              "inputs": [ "fully_connected", "FB" ],
               "gradientResultTo": [ null, "DFB" ]
             },
             {

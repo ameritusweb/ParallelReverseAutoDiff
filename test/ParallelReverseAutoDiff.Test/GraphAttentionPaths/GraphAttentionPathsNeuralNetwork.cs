@@ -280,9 +280,9 @@
             }
 
             var gcnNet = this.gcnNeuralNetwork;
-            gcnNet.Adjacency.Replace(adjacencyList.ToArray());
             gcnNet.Parameters.BatchSize = gcnInputList.Count;
             gcnNet.InitializeState();
+            gcnNet.Adjacency.Replace(adjacencyList.ToArray());
             gcnNet.AutomaticForwardPropagate(new FourDimensionalMatrix(gcnInputList.ToArray()), true);
             var gcnOutputs = new DeepMatrix(gcnNet.Output.Last().ToArray());
 
