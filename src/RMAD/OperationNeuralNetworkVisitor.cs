@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -120,9 +121,30 @@ namespace ParallelReverseAutoDiff.RMAD
                 node.VisitedFrom.Add(fromNode.NestedSpecificId);
             }
 
-            var backwardResult = (node is IDeepOperation
-                ? (node as IDeepOperation)?.Backward((DeepMatrix)node.BackwardInput)
-                : (node as IOperation)?.Backward((Matrix)node.BackwardInput)) ?? throw new InvalidOperationException("Node must be of type IDeepOperation or IOperation");
+            BackwardResult? backwardResult = null;
+            if (node is IDeepOperation)
+            {
+                backwardResult = (node as IDeepOperation)?.Backward((DeepMatrix)node.BackwardInput);
+            }
+            else if (node is IBatchOperation)
+            {
+                var backwardResults = (node as IBatchOperation)?.Backward((DeepMatrix)node.BackwardInput);
+                if (backwardResults == null)
+                {
+                    throw new InvalidOperationException("Backward results must not be null.");
+                }
+
+                backwardResult = this.CombineResults(backwardResults, node.GradientDestinations);
+            }
+            else if (node is IOperation)
+            {
+                backwardResult = (node as IOperation)?.Backward((Matrix)node.BackwardInput);
+            }
+
+            if (backwardResult == null)
+            {
+                throw new InvalidOperationException("Backward result must not be null.");
+            }
 
             var results = backwardResult.Results;
 
@@ -230,6 +252,82 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             node.IsComplete = true;
+        }
+
+        private BackwardResult CombineResults(BackwardResult[] backwardResults, object[] gradientDestinations)
+        {
+            List<object> combinedResults = new List<object>();
+            var firstResult = backwardResults[0];
+            var hasMultipleInputs = firstResult.HasMultipleInputs;
+            var resultsLength = firstResult.Results.Length;
+            if (gradientDestinations == null)
+            {
+                gradientDestinations = new object[resultsLength];
+            }
+
+            var resultTypes = firstResult.Results.Select(r => r?.GetType()).ToArray();
+            for (int i = 0; i < resultsLength; ++i)
+            {
+                var resultType = resultTypes[i];
+                var destination = gradientDestinations[i];
+                if (destination == null)
+                {
+                    List<object?> list = new List<object?>();
+                    for (int j = 0; j < backwardResults.Length; ++j)
+                    {
+                        var result = backwardResults[j].Results[i];
+                        list.Add(result);
+                    }
+
+                    if (resultType == typeof(Matrix))
+                    {
+                        combinedResults.Add(new DeepMatrix(list.OfType<Matrix>().ToArray()));
+                    }
+                    else if (resultType == typeof(DeepMatrix))
+                    {
+                        combinedResults.Add(new FourDimensionalMatrix(list.OfType<DeepMatrix>().ToArray()));
+                    }
+                }
+                else
+                {
+                    if (resultType == typeof(Matrix))
+                    {
+                        List<Matrix> averageList = new List<Matrix>();
+                        for (int j = 0; j < backwardResults.Length; ++j)
+                        {
+                            var result = backwardResults[j].Results[i];
+                            if (result is Matrix matrix)
+                            {
+                                averageList.Add(matrix);
+                            }
+                        }
+
+                        var averaged = averageList.Aggregate((a, b) => a + b) * (1d / averageList.Count);
+                        combinedResults.Add(averaged);
+                    }
+                    else if (resultType == typeof(DeepMatrix))
+                    {
+                        List<DeepMatrix> averageList = new List<DeepMatrix>();
+                        for (int j = 0; j < backwardResults.Length; ++j)
+                        {
+                            var result = backwardResults[j].Results[i];
+                            if (result is DeepMatrix matrix)
+                            {
+                                averageList.Add(matrix);
+                            }
+                        }
+
+                        var averaged = averageList.Aggregate((a, b) => a + b) * (1d / averageList.Count);
+                        combinedResults.Add(averaged);
+                    }
+                }
+            }
+
+            return new BackwardResult()
+            {
+                Results = combinedResults.ToArray(),
+                HasMultipleInputs = hasMultipleInputs,
+            };
         }
     }
 }

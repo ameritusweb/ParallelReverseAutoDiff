@@ -140,6 +140,59 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Adds two deep matrices together.
+        /// </summary>
+        /// <param name="m1">The first deep matrix.</param>
+        /// <param name="m2">The second deep matrix.</param>
+        /// <returns>The resultant deep matrix.</returns>
+        public static DeepMatrix operator +(DeepMatrix m1, DeepMatrix m2)
+        {
+            int depth = m1.Depth;
+            int numRows = m1.Rows;
+            int numCols = m1.Cols;
+            DeepMatrix result = new DeepMatrix(depth, numRows, numCols);
+            Parallel.For(0, depth, i =>
+            {
+                for (int j = 0; j < numRows; j++)
+                {
+                    for (int k = 0; k < numCols; ++k)
+                    {
+                        result[i, j, k] = m1[i, j, k] + m2[i, j, k];
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Multiplies a deep matrix with a scalar.
+        /// </summary>
+        /// <param name="m">The deep matrix to multiply.</param>
+        /// <param name="scalar">The scalar value to multiply with.</param>
+        /// <returns>The resultant deep matrix.</returns>
+        public static DeepMatrix operator *(DeepMatrix m, double scalar)
+        {
+            int depth = m.Depth;
+            int numRows = m.Rows;
+            int numCols = m.Cols;
+
+            DeepMatrix result = new DeepMatrix(depth, numRows, numCols);
+            Parallel.For(0, depth, i =>
+            {
+                for (int j = 0; j < numRows; j++)
+                {
+                    for (int k = 0; k < numCols; ++k)
+                    {
+                        result[i, j, k] = m[i, j, k] * scalar;
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Initializes an array of deep matrices.
         /// </summary>
         /// <param name="size">The size.</param>

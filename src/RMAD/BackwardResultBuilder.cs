@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -13,6 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     public class BackwardResultBuilder
     {
         private readonly List<object> backwardResults = new List<object>();
+        private readonly List<Type> resultTypes = new List<Type>();
         private int inputGradientCount;
         private int deepInputGradientCount;
 
@@ -24,6 +26,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public BackwardResultBuilder AddInputGradient(Matrix matrix)
         {
             this.inputGradientCount++;
+            this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -38,6 +41,7 @@ namespace ParallelReverseAutoDiff.RMAD
             foreach (var mat in matrix)
             {
                 this.inputGradientCount++;
+                this.resultTypes.Add(typeof(DeepMatrix));
                 this.backwardResults.Add(mat);
             }
 
@@ -52,6 +56,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public BackwardResultBuilder AddDeepInputGradient(DeepMatrix matrix)
         {
             this.deepInputGradientCount++;
+            this.resultTypes.Add(typeof(DeepMatrix));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -63,6 +68,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result builder.</returns>
         public BackwardResultBuilder AddFiltersGradient(DeepMatrix[] matrix)
         {
+            this.resultTypes.Add(typeof(DeepMatrix[]));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -74,6 +80,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result builder.</returns>
         public BackwardResultBuilder AddWeightGradient(Matrix matrix)
         {
+            this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -85,6 +92,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result builder.</returns>
         public BackwardResultBuilder AddScalingGradient(Matrix matrix)
         {
+            this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -96,6 +104,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result builder.</returns>
         public BackwardResultBuilder AddBetaGradient(Matrix matrix)
         {
+            this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -107,6 +116,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result builder.</returns>
         public BackwardResultBuilder AddGammaGradient(Matrix matrix)
         {
+            this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
             return this;
         }
@@ -118,6 +128,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The backward result builder.</returns>
         public BackwardResultBuilder AddBiasGradient(Matrix matrix)
         {
+            this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
             return this;
         }

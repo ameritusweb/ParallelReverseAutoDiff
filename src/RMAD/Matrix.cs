@@ -177,6 +177,30 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Multiplies a matrix with a scalar.
+        /// </summary>
+        /// <param name="m">The matrix to multiply.</param>
+        /// <param name="scalar">The scalar value to multiply with.</param>
+        /// <returns>The resultant matrix.</returns>
+        public static Matrix operator *(Matrix m, double scalar)
+        {
+            int numRows = m.Rows;
+            int numCols = m.Cols;
+
+            Matrix result = new Matrix(numRows, numCols);
+
+            // Parallelize the outer loop
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i, j] = m[i, j] * scalar;
+                }
+            });
+            return result;
+        }
+
+        /// <summary>
         /// Deserialize from the buffer.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
