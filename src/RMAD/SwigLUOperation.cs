@@ -81,8 +81,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < cols; j++)
                 {
                     double x = input[i, j];
-                    double swish = ((x * this.w[j, 0]) + this.b[j][0]) / (1 + Math.Exp(-this.beta * ((x * this.w[j, 0]) + this.b[j][0]))); // Swish activation function
-                    this.Output[i, j] = swish * ((x * this.v[j, 0]) + this.c[j][0]);
+                    double swish = ((x * this.w[j, 0]) + this.b[j][0]) * (1 / (1 + Math.Exp(-this.beta * ((x * this.w[j, 0]) + this.b[j][0]))));
+                    this.Output[i, j] = (swish * x * this.v[j, 0]) + this.c[j][0];
                 }
             }
 
@@ -111,20 +111,22 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int i = 0; i < rows; i++)
                 {
                     double x = this.input[i, j];
-                    double swish = ((x * this.w[j, 0]) + this.b[j][0]) / (1 + Math.Exp(-this.beta * ((x * this.w[j, 0]) + this.b[j][0]))); // Swish activation function
-                    double swishDerivative = swish + (this.beta * (1 - swish) * ((x * this.w[j, 0]) + this.b[j][0]));
+                    double f = (x * this.w[j, 0]) + this.b[j][0];
+                    double sigmoid_f = 1 / (1 + Math.Exp(-this.beta * f));
+                    double swish = f * sigmoid_f;  // Swish activation function defined as f * sigmoid(f)
+                    double swishDerivative = swish + (this.beta * sigmoid_f * (1 - swish));
 
                     double dOutputij = dOutput[i, j];
 
-                    dInput[i, j] = dOutputij * ((this.w[j, 0] * swishDerivative * ((x * this.v[j, 0]) + this.c[j][0])) + this.v[j, 0]);
+                    dInput[i, j] = dOutputij * ((swish * this.v[j, 0]) + (x * this.v[j, 0] * swishDerivative));
 
-                    sumdW += dOutputij * (x * swishDerivative * ((x * this.v[j, 0]) + this.c[j][0]));
+                    sumdW += dOutputij * (x * swishDerivative * this.v[j, 0]);
 
                     sumdV += dOutputij * (x * swish);
 
-                    sumdb += dOutputij * (swishDerivative * ((x * this.v[j, 0]) + this.c[j][0]));
+                    sumdb += dOutputij * (swishDerivative * x * this.v[j, 0]);
 
-                    sumdc += dOutputij * swish;
+                    sumdc += dOutputij * 1d;
                 }
 
                 dW[j, 0] = sumdW;

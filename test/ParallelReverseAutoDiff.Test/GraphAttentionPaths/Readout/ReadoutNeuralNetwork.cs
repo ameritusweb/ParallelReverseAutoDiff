@@ -71,8 +71,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     .AddModelElementGroup("FB", new[] { 1, outputFeaturesList[i] }, InitializationType.Zeroes)
                     .AddModelElementGroup("SW", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
                     .AddModelElementGroup("SV", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
-                    .AddModelElementGroup("SB", new[] { outputFeaturesList[i], 1 }, InitializationType.Zeroes)
-                    .AddModelElementGroup("SC", new[] { outputFeaturesList[i], 1 }, InitializationType.Zeroes)
+                    .AddModelElementGroup("SB", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
+                    .AddModelElementGroup("SC", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
                     .AddModelElementGroup("R", new[] { outputFeaturesList[i], this.NumFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
                 var outputLayer = outputLayerBuilder.Build();
