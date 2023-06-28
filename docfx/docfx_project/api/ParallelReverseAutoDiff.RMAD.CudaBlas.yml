@@ -5,6 +5,7 @@ items:
   id: CudaBlas
   parent: ParallelReverseAutoDiff.RMAD
   children:
+  - ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
   - ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
   - ParallelReverseAutoDiff.RMAD.CudaBlas.CudaThreadMethod
   - ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId
@@ -31,7 +32,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CudaBlas
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 20
+    startLine: 23
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -70,7 +71,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Instance
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 60
+    startLine: 69
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -101,7 +102,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IsInitialized
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 71
+    startLine: 80
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -132,7 +133,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AreDeviceVariablesInitialized
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 82
+    startLine: 91
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -163,7 +164,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeviceId
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 93
+    startLine: 102
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -176,6 +177,37 @@ items:
       type: System.Int32
     content.vb: Public Property DeviceId As Integer
   overload: ParallelReverseAutoDiff.RMAD.CudaBlas.DeviceId*
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  commentId: P:ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  id: Accelerator
+  parent: ParallelReverseAutoDiff.RMAD.CudaBlas
+  langs:
+  - csharp
+  - vb
+  name: Accelerator
+  nameWithType: CudaBlas.Accelerator
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/CudaBlas.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Accelerator
+    path: ../../src/RMAD/CudaBlas.cs
+    startLine: 107
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the CUDA accelerator.
+  example: []
+  syntax:
+    content: public CudaAccelerator Accelerator { get; }
+    parameters: []
+    return:
+      type: ILGPU.Runtime.Cuda.CudaAccelerator
+    content.vb: Public ReadOnly Property Accelerator As CudaAccelerator
+  overload: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator*
 - uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
   commentId: M:ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
   id: Initialize
@@ -194,7 +226,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 98
+    startLine: 118
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -222,7 +254,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Dispose
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 118
+    startLine: 141
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -252,7 +284,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeDeviceVariables
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 139
+    startLine: 164
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -302,7 +334,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DisposeDeviceVariables
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 177
+    startLine: 202
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -330,7 +362,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: MatrixMultiply
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 193
+    startLine: 218
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -377,7 +409,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: MatrixMultiply
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 246
+    startLine: 271
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -436,7 +468,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: WriteMatricesToSharedMemory
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 290
+    startLine: 315
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -483,7 +515,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CudaThreadMethod
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 326
+    startLine: 351
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -814,6 +846,49 @@ references:
   nameWithType.vb: Integer
   fullName.vb: Integer
   name.vb: Integer
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  name: Accelerator
+  nameWithType: CudaBlas.Accelerator
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+- uid: ILGPU.Runtime.Cuda.CudaAccelerator
+  commentId: T:ILGPU.Runtime.Cuda.CudaAccelerator
+  parent: ILGPU.Runtime.Cuda
+  isExternal: true
+  name: CudaAccelerator
+  nameWithType: CudaAccelerator
+  fullName: ILGPU.Runtime.Cuda.CudaAccelerator
+- uid: ILGPU.Runtime.Cuda
+  commentId: N:ILGPU.Runtime.Cuda
+  isExternal: true
+  name: ILGPU.Runtime.Cuda
+  nameWithType: ILGPU.Runtime.Cuda
+  fullName: ILGPU.Runtime.Cuda
+  spec.csharp:
+  - uid: ILGPU
+    name: ILGPU
+    isExternal: true
+  - name: .
+  - uid: ILGPU.Runtime
+    name: Runtime
+    isExternal: true
+  - name: .
+  - uid: ILGPU.Runtime.Cuda
+    name: Cuda
+    isExternal: true
+  spec.vb:
+  - uid: ILGPU
+    name: ILGPU
+    isExternal: true
+  - name: .
+  - uid: ILGPU.Runtime
+    name: Runtime
+    isExternal: true
+  - name: .
+  - uid: ILGPU.Runtime.Cuda
+    name: Cuda
+    isExternal: true
 - uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize
   href: ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff.RMAD.CudaBlas.Initialize

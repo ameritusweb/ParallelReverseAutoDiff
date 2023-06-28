@@ -141,6 +141,9 @@ public class GradientStore : StoreBase</code></pre>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff_RMAD_StoreBase_Save_System_IO_FileInfo_">StoreBase.Save(FileInfo)</a>
     </div>
     <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff_RMAD_StoreBase_InternalClear">StoreBase.InternalClear()</a>
+    </div>
+    <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff_RMAD_StoreBase_InternalLoad_System_IO_FileInfo_">StoreBase.InternalLoad(FileInfo)</a>
     </div>
     <div>
@@ -188,7 +191,7 @@ public class GradientStore : StoreBase</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_GradientStore_Add_ParallelReverseAutoDiff_RMAD_IModelLayer_" data-uid="ParallelReverseAutoDiff.RMAD.GradientStore.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)">
   Add(IModelLayer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/GradientStore.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/GradientStore.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a model layer.</p>
@@ -260,6 +263,39 @@ public class GradientStore : StoreBase</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_GradientStore_Load_System_IO_FileInfo_" data-uid="ParallelReverseAutoDiff.RMAD.GradientStore.Load(System.IO.FileInfo)">
   Load(FileInfo)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/GradientStore.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Loads a gradient store from a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Load(FileInfo fileInfo)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>fileInfo</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a></dt>
+    <dd><p>The file info.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_GradientStore_LoadNew_" data-uid="ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_GradientStore_LoadNew_System_IO_FileInfo_" data-uid="ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)">
+  LoadNew(FileInfo)
   <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/GradientStore.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -268,7 +304,7 @@ public class GradientStore : StoreBase</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static GradientStore Load(FileInfo fileInfo)</code></pre>
+    <pre><code class="lang-csharp hljs">public static GradientStore LoadNew(FileInfo fileInfo)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -299,7 +335,7 @@ public class GradientStore : StoreBase</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_GradientStore_ToModelLayerGradients_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients(System.Int32)">
   ToModelLayerGradients(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/GradientStore.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/GradientStore.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieves the gradients for a model layer.</p>

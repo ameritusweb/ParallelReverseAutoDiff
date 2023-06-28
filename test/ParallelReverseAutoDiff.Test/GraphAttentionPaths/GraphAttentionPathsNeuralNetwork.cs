@@ -72,7 +72,7 @@
             this.readoutNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
             //this.SaveWeights();
-            this.ApplyWeights();
+            //this.ApplyWeights();
         }
 
         public void SaveWeights()

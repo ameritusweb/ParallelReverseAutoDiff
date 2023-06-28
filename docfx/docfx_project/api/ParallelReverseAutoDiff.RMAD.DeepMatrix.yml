@@ -49,9 +49,13 @@ items:
     content: >-
       [Serializable]
 
+      [JsonConverter(typeof(DeepMatrixJsonConverter))]
+
       public class DeepMatrix : IEnumerable<Matrix>, IEnumerable, ICloneable
     content.vb: >-
       <Serializable>
+
+      <JsonConverter(GetType(DeepMatrixJsonConverter))>
 
       Public Class DeepMatrix Implements IEnumerable(Of Matrix), IEnumerable, ICloneable
   inheritance:
@@ -72,6 +76,11 @@ items:
   - type: System.SerializableAttribute
     ctor: System.SerializableAttribute.#ctor
     arguments: []
+  - type: Newtonsoft.Json.JsonConverterAttribute
+    ctor: Newtonsoft.Json.JsonConverterAttribute.#ctor(System.Type)
+    arguments:
+    - type: System.Type
+      value: ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor
   id: '#ctor'
@@ -90,7 +99,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 26
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -131,7 +140,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 37
+    startLine: 38
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -172,7 +181,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 52
+    startLine: 53
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -207,7 +216,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 67
+    startLine: 68
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -242,7 +251,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 78
+    startLine: 79
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -280,7 +289,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: UniqueId
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 87
+    startLine: 88
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -321,7 +330,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Rows
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 93
+    startLine: 94
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -352,7 +361,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Cols
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 98
+    startLine: 99
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -383,7 +392,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Depth
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 103
+    startLine: 104
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -414,7 +423,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Dimension
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 108
+    startLine: 109
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -445,7 +454,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 123
+    startLine: 124
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -489,7 +498,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 134
+    startLine: 135
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -527,7 +536,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 148
+    startLine: 149
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -574,7 +583,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeDoubleArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 168
+    startLine: 169
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -624,7 +633,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 188
+    startLine: 189
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -659,7 +668,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 215
+    startLine: 216
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -690,7 +699,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 224
+    startLine: 225
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -725,7 +734,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 233
+    startLine: 234
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -758,7 +767,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 242
+    startLine: 243
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -790,7 +799,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 263
+    startLine: 264
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

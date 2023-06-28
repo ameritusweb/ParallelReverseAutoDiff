@@ -74,6 +74,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.DeepOutput
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
@@ -615,6 +616,13 @@ references:
   name: IntermediateDeepMatrices
   nameWithType: OperationBase.IntermediateDeepMatrices
   fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  name: IntermediateOperationArrays
+  nameWithType: OperationBase.IntermediateOperationArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
   commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
   parent: ParallelReverseAutoDiff.RMAD.OperationBase

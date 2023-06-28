@@ -214,6 +214,9 @@
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateDeepMatrices">OperationBase.IntermediateDeepMatrices</a>
     </div>
     <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateOperationArrays">OperationBase.IntermediateOperationArrays</a>
+    </div>
+    <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateMatrixArrays">OperationBase.IntermediateMatrixArrays</a>
     </div>
     <div>
@@ -227,12 +230,6 @@
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Reset">OperationBase.Reset()</a>
-    </div>
-    <div>
-      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Store_System_Guid_">OperationBase.Store(Guid)</a>
-    </div>
-    <div>
-      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Restore_System_Guid_">OperationBase.Restore(Guid)</a>
     </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_GetOutput">OperationBase.GetOutput()</a>
@@ -300,7 +297,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Backward_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
   Backward(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/CudaMatrixMultiplyOperation.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/CudaMatrixMultiplyOperation.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Abstract method to perform backward pass, must be implemented by derived classes.</p>
@@ -339,7 +336,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
   Forward(Matrix, Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/CudaMatrixMultiplyOperation.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/CudaMatrixMultiplyOperation.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs the forward operation for the matrix multiply function.</p>
@@ -405,6 +402,72 @@
     <dd><p>The instantiated operation.</p>
 </dd>
   </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Restore_" data-uid="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Restore_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore(System.Guid)">
+  Restore(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/CudaMatrixMultiplyOperation.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Restores the intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Restore(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Store_" data-uid="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Store_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store(System.Guid)">
+  Store(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/CudaMatrixMultiplyOperation.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Stores the intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Store(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
+
 
 
 

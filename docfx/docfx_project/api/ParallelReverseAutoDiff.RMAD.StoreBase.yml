@@ -14,6 +14,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrices
   - ParallelReverseAutoDiff.RMAD.StoreBase.DeepMatrixArrays
   - ParallelReverseAutoDiff.RMAD.StoreBase.Ids
+  - ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
   - ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.StoreBase.Matrices
   - ParallelReverseAutoDiff.RMAD.StoreBase.ModelLayerIndices
@@ -375,6 +376,34 @@ items:
       description: The file info.
     content.vb: Public Sub Save(fileInfo As FileInfo)
   overload: ParallelReverseAutoDiff.RMAD.StoreBase.Save*
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  id: InternalClear
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  langs:
+  - csharp
+  - vb
+  name: InternalClear()
+  nameWithType: StoreBase.InternalClear()
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/StoreBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: InternalClear
+    path: ../../src/RMAD/StoreBase.cs
+    startLine: 197
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Clears the store.
+  example: []
+  syntax:
+    content: protected void InternalClear()
+    content.vb: Protected Sub InternalClear()
+  overload: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear*
 - uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
   commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
   id: InternalLoad(System.IO.FileInfo)
@@ -393,7 +422,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InternalLoad
     path: ../../src/RMAD/StoreBase.cs
-    startLine: 180
+    startLine: 211
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -425,7 +454,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Add
     path: ../../src/RMAD/StoreBase.cs
-    startLine: 263
+    startLine: 295
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -457,7 +486,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Add
     path: ../../src/RMAD/StoreBase.cs
-    startLine: 275
+    startLine: 307
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -489,7 +518,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Add
     path: ../../src/RMAD/StoreBase.cs
-    startLine: 287
+    startLine: 319
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1332,6 +1361,12 @@ references:
     name: IO
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  name: InternalClear
+  nameWithType: StoreBase.InternalClear
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
 - uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad
   href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)

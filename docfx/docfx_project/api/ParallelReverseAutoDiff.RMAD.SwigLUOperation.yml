@@ -25,7 +25,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SwigLUOperation
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 13
+    startLine: 12
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -73,6 +73,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.DeepOutput
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrices
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+  - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrixArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
@@ -113,7 +114,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 26
+    startLine: 25
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -148,7 +149,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Instantiate
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 36
+    startLine: 35
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -183,7 +184,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Store
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 42
+    startLine: 41
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -218,7 +219,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Restore
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 48
+    startLine: 47
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -253,7 +254,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Forward
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 67
+    startLine: 66
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -300,7 +301,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Backward
     path: ../../src/RMAD/SwigLUOperation.cs
-    startLine: 93
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -599,6 +600,13 @@ references:
   name: IntermediateDeepMatrices
   nameWithType: OperationBase.IntermediateDeepMatrices
   fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateDeepMatrices
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  name: IntermediateOperationArrays
+  nameWithType: OperationBase.IntermediateOperationArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
   commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateMatrixArrays
   parent: ParallelReverseAutoDiff.RMAD.OperationBase

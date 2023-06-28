@@ -671,6 +671,1030 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.Build
   nameWithType: BackwardResultBuilder.Build
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation
+  name: BatchAmplifiedSigmoidOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation
+  nameWithType: BatchAmplifiedSigmoidOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchAmplifiedSigmoidOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Backward
+  nameWithType: BatchAmplifiedSigmoidOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchAmplifiedSigmoidOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Forward
+  nameWithType: BatchAmplifiedSigmoidOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchAmplifiedSigmoidOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Instantiate
+  nameWithType: BatchAmplifiedSigmoidOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Restore(System.Guid)
+  nameWithType: BatchAmplifiedSigmoidOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Restore
+  nameWithType: BatchAmplifiedSigmoidOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Store(System.Guid)
+  nameWithType: BatchAmplifiedSigmoidOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html#ParallelReverseAutoDiff_RMAD_BatchAmplifiedSigmoidOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.Store
+  nameWithType: BatchAmplifiedSigmoidOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation
+  name: BatchCudaMatrixMultiplyOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation
+  nameWithType: BatchCudaMatrixMultiplyOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Backward
+  nameWithType: BatchCudaMatrixMultiplyOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Forward(DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Forward(DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(Matrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Forward(Matrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Forward
+  nameWithType: BatchCudaMatrixMultiplyOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Instantiate
+  nameWithType: BatchCudaMatrixMultiplyOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Restore(System.Guid)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Restore
+  nameWithType: BatchCudaMatrixMultiplyOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Store(System.Guid)
+  nameWithType: BatchCudaMatrixMultiplyOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchCudaMatrixMultiplyOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.Store
+  nameWithType: BatchCudaMatrixMultiplyOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation
+  name: BatchGpuMatrixMultiplyOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation
+  nameWithType: BatchGpuMatrixMultiplyOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Backward
+  nameWithType: BatchGpuMatrixMultiplyOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Forward(DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Forward(DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(Matrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Forward(Matrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Forward
+  nameWithType: BatchGpuMatrixMultiplyOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Instantiate
+  nameWithType: BatchGpuMatrixMultiplyOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Restore(System.Guid)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Restore
+  nameWithType: BatchGpuMatrixMultiplyOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Store(System.Guid)
+  nameWithType: BatchGpuMatrixMultiplyOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchGpuMatrixMultiplyOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.Store
+  nameWithType: BatchGpuMatrixMultiplyOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation
+  name: BatchHadamardProductOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation
+  nameWithType: BatchHadamardProductOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchHadamardProductOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Backward
+  nameWithType: BatchHadamardProductOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchHadamardProductOperation.Forward(DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Forward
+  nameWithType: BatchHadamardProductOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchHadamardProductOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Instantiate
+  nameWithType: BatchHadamardProductOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Restore(System.Guid)
+  nameWithType: BatchHadamardProductOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Restore
+  nameWithType: BatchHadamardProductOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Store(System.Guid)
+  nameWithType: BatchHadamardProductOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html#ParallelReverseAutoDiff_RMAD_BatchHadamardProductOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.Store
+  nameWithType: BatchHadamardProductOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation
+  name: BatchLayerNormalizationOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation
+  nameWithType: BatchLayerNormalizationOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchLayerNormalizationOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Backward
+  nameWithType: BatchLayerNormalizationOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchLayerNormalizationOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Forward
+  nameWithType: BatchLayerNormalizationOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchLayerNormalizationOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Instantiate
+  nameWithType: BatchLayerNormalizationOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Restore(System.Guid)
+  nameWithType: BatchLayerNormalizationOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Restore
+  nameWithType: BatchLayerNormalizationOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Store(System.Guid)
+  nameWithType: BatchLayerNormalizationOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html#ParallelReverseAutoDiff_RMAD_BatchLayerNormalizationOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.Store
+  nameWithType: BatchLayerNormalizationOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation
+  name: BatchLeakyReLUOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation
+  nameWithType: BatchLeakyReLUOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchLeakyReLUOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Backward
+  nameWithType: BatchLeakyReLUOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchLeakyReLUOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Forward
+  nameWithType: BatchLeakyReLUOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchLeakyReLUOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Instantiate
+  nameWithType: BatchLeakyReLUOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Restore(System.Guid)
+  nameWithType: BatchLeakyReLUOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Restore
+  nameWithType: BatchLeakyReLUOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Store(System.Guid)
+  nameWithType: BatchLeakyReLUOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchLeakyReLUOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.Store
+  nameWithType: BatchLeakyReLUOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation
+  name: BatchMatrixAddBroadcastingOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation
+  nameWithType: BatchMatrixAddBroadcastingOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddBroadcastingOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAddBroadcastingOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddBroadcastingOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Backward
+  nameWithType: BatchMatrixAddBroadcastingOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddBroadcastingOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchMatrixAddBroadcastingOperation.Forward(DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddBroadcastingOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Forward
+  nameWithType: BatchMatrixAddBroadcastingOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddBroadcastingOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixAddBroadcastingOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddBroadcastingOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.Instantiate
+  nameWithType: BatchMatrixAddBroadcastingOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation
+  name: BatchMatrixAddOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation
+  nameWithType: BatchMatrixAddOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAddOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Backward
+  nameWithType: BatchMatrixAddOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAddOperation.Forward(DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchMatrixAddOperation.Forward(DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Forward
+  nameWithType: BatchMatrixAddOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixAddOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.Instantiate
+  nameWithType: BatchMatrixAddOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation
+  name: BatchMatrixAddThreeOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation
+  nameWithType: BatchMatrixAddThreeOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAddThreeOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Backward
+  nameWithType: BatchMatrixAddThreeOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix, DeepMatrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAddThreeOperation.Forward(DeepMatrix, DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchMatrixAddThreeOperation.Forward(DeepMatrix, DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Forward
+  nameWithType: BatchMatrixAddThreeOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixAddThreeOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAddThreeOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.Instantiate
+  nameWithType: BatchMatrixAddThreeOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation
+  name: BatchMatrixAverageOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation
+  nameWithType: BatchMatrixAverageOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAverageOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Backward
+  nameWithType: BatchMatrixAverageOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixAverageOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Forward
+  nameWithType: BatchMatrixAverageOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixAverageOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Instantiate
+  nameWithType: BatchMatrixAverageOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Restore(System.Guid)
+  nameWithType: BatchMatrixAverageOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Restore
+  nameWithType: BatchMatrixAverageOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Store(System.Guid)
+  nameWithType: BatchMatrixAverageOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixAverageOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.Store
+  nameWithType: BatchMatrixAverageOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation
+  name: BatchMatrixBroadcastOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation
+  nameWithType: BatchMatrixBroadcastOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixBroadcastOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Backward
+  nameWithType: BatchMatrixBroadcastOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchMatrixBroadcastOperation.Forward(DeepMatrix, Matrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Int32[],System.Int32[])
+  name: Forward(DeepMatrix, int[], int[])
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_System_Int32___System_Int32___
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Int32[],System.Int32[])
+  name.vb: Forward(DeepMatrix, Integer(), Integer())
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, int[], int[])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, Integer(), Integer())
+  nameWithType: BatchMatrixBroadcastOperation.Forward(DeepMatrix, int[], int[])
+  nameWithType.vb: BatchMatrixBroadcastOperation.Forward(DeepMatrix, Integer(), Integer())
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Forward
+  nameWithType: BatchMatrixBroadcastOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixBroadcastOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Instantiate
+  nameWithType: BatchMatrixBroadcastOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Restore(System.Guid)
+  nameWithType: BatchMatrixBroadcastOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Restore
+  nameWithType: BatchMatrixBroadcastOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Store(System.Guid)
+  nameWithType: BatchMatrixBroadcastOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixBroadcastOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.Store
+  nameWithType: BatchMatrixBroadcastOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation
+  name: BatchMatrixConcatenateOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation
+  nameWithType: BatchMatrixConcatenateOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixConcatenateOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Backward
+  nameWithType: BatchMatrixConcatenateOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name: Forward(DeepMatrix[])
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix___
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name.vb: Forward(DeepMatrix())
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  nameWithType: BatchMatrixConcatenateOperation.Forward(DeepMatrix[])
+  nameWithType.vb: BatchMatrixConcatenateOperation.Forward(DeepMatrix())
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)
+  name: Forward(FourDimensionalMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Forward_ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)
+  nameWithType: BatchMatrixConcatenateOperation.Forward(FourDimensionalMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Forward
+  nameWithType: BatchMatrixConcatenateOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixConcatenateOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Instantiate
+  nameWithType: BatchMatrixConcatenateOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Restore(System.Guid)
+  nameWithType: BatchMatrixConcatenateOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Restore
+  nameWithType: BatchMatrixConcatenateOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store(System.Guid)
+  nameWithType: BatchMatrixConcatenateOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixConcatenateOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store
+  nameWithType: BatchMatrixConcatenateOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
+  name: BatchMatrixMultiplyScalarOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
+  nameWithType: BatchMatrixMultiplyScalarOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixMultiplyScalarOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Backward
+  nameWithType: BatchMatrixMultiplyScalarOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchMatrixMultiplyScalarOperation.Forward(DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
+  name: Forward(DeepMatrix, double)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
+  name.vb: Forward(DeepMatrix, Double)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, Double)
+  nameWithType: BatchMatrixMultiplyScalarOperation.Forward(DeepMatrix, double)
+  nameWithType.vb: BatchMatrixMultiplyScalarOperation.Forward(DeepMatrix, Double)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Forward
+  nameWithType: BatchMatrixMultiplyScalarOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixMultiplyScalarOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Instantiate
+  nameWithType: BatchMatrixMultiplyScalarOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Restore(System.Guid)
+  nameWithType: BatchMatrixMultiplyScalarOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Restore
+  nameWithType: BatchMatrixMultiplyScalarOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Store(System.Guid)
+  nameWithType: BatchMatrixMultiplyScalarOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyScalarOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.Store
+  nameWithType: BatchMatrixMultiplyScalarOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation
+  name: BatchMatrixSumOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation
+  nameWithType: BatchMatrixSumOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixSumOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Backward
+  nameWithType: BatchMatrixSumOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixSumOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Forward
+  nameWithType: BatchMatrixSumOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixSumOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Instantiate
+  nameWithType: BatchMatrixSumOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Restore(System.Guid)
+  nameWithType: BatchMatrixSumOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Restore
+  nameWithType: BatchMatrixSumOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Store(System.Guid)
+  nameWithType: BatchMatrixSumOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixSumOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.Store
+  nameWithType: BatchMatrixSumOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation
+  name: BatchMatrixTransposeOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation
+  nameWithType: BatchMatrixTransposeOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixTransposeOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixTransposeOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixTransposeOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Backward
+  nameWithType: BatchMatrixTransposeOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixTransposeOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixTransposeOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixTransposeOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Forward
+  nameWithType: BatchMatrixTransposeOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixTransposeOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixTransposeOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixTransposeOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.Instantiate
+  nameWithType: BatchMatrixTransposeOperation.Instantiate
 - uid: ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation
   name: BatchNormalizationOperation
   href: api/ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.html
@@ -742,6 +1766,369 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.Store
   nameWithType: BatchNormalizationOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+  name: BatchOperation<T>
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchOperation`1
+  name.vb: BatchOperation(Of T)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T)
+  nameWithType: BatchOperation<T>
+  nameWithType.vb: BatchOperation(Of T)
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: BatchOperation(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1__ctor_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name.vb: New(NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.BatchOperation(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).New(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchOperation<T>.BatchOperation(NeuralNetwork)
+  nameWithType.vb: BatchOperation(Of T).New(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor*
+  name: BatchOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.BatchOperation
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).New
+  nameWithType: BatchOperation<T>.BatchOperation
+  nameWithType.vb: BatchOperation(Of T).New
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchOperation<T>.Backward(DeepMatrix)
+  nameWithType.vb: BatchOperation(Of T).Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Backward
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Backward
+  nameWithType: BatchOperation<T>.Backward
+  nameWithType.vb: BatchOperation(Of T).Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  name: ExtendOperations()
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_ExtendOperations
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.ExtendOperations()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).ExtendOperations()
+  nameWithType: BatchOperation<T>.ExtendOperations()
+  nameWithType.vb: BatchOperation(Of T).ExtendOperations()
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations*
+  name: ExtendOperations
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_ExtendOperations_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.ExtendOperations
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).ExtendOperations
+  nameWithType: BatchOperation<T>.ExtendOperations
+  nameWithType.vb: BatchOperation(Of T).ExtendOperations
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  name: Operations
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_Operations
+  commentId: P:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Operations
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Operations
+  nameWithType: BatchOperation<T>.Operations
+  nameWithType.vb: BatchOperation(Of T).Operations
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations*
+  name: Operations
+  href: api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_Operations_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Operations
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Operations
+  nameWithType: BatchOperation<T>.Operations
+  nameWithType.vb: BatchOperation(Of T).Operations
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
+  name: BatchScaleAndShiftOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
+  nameWithType: BatchScaleAndShiftOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchScaleAndShiftOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Backward
+  nameWithType: BatchScaleAndShiftOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchScaleAndShiftOperation.Forward(DeepMatrix, Matrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Forward
+  nameWithType: BatchScaleAndShiftOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchScaleAndShiftOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Instantiate
+  nameWithType: BatchScaleAndShiftOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Restore(System.Guid)
+  nameWithType: BatchScaleAndShiftOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Restore
+  nameWithType: BatchScaleAndShiftOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Store(System.Guid)
+  nameWithType: BatchScaleAndShiftOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html#ParallelReverseAutoDiff_RMAD_BatchScaleAndShiftOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.Store
+  nameWithType: BatchScaleAndShiftOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
+  name: BatchSoftmaxOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
+  nameWithType: BatchSoftmaxOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchSoftmaxOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Backward
+  nameWithType: BatchSoftmaxOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchSoftmaxOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Forward
+  nameWithType: BatchSoftmaxOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchSoftmaxOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Instantiate
+  nameWithType: BatchSoftmaxOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Restore(System.Guid)
+  nameWithType: BatchSoftmaxOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Restore
+  nameWithType: BatchSoftmaxOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Store(System.Guid)
+  nameWithType: BatchSoftmaxOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html#ParallelReverseAutoDiff_RMAD_BatchSoftmaxOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.Store
+  nameWithType: BatchSoftmaxOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
+  name: BatchSwigLUOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
+  nameWithType: BatchSwigLUOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchSwigLUOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Backward
+  nameWithType: BatchSwigLUOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix, Matrix, Matrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchSwigLUOperation.Forward(DeepMatrix, Matrix, Matrix, Matrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Forward
+  nameWithType: BatchSwigLUOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchSwigLUOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Instantiate
+  nameWithType: BatchSwigLUOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Restore(System.Guid)
+  nameWithType: BatchSwigLUOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Restore
+  nameWithType: BatchSwigLUOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Store(System.Guid)
+  nameWithType: BatchSwigLUOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html#ParallelReverseAutoDiff_RMAD_BatchSwigLUOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.Store
+  nameWithType: BatchSwigLUOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation
+  name: BatchTanhOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchTanhOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation
+  nameWithType: BatchTanhOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchTanhOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Backward
+  nameWithType: BatchTanhOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchTanhOperation.Forward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Forward
+  nameWithType: BatchTanhOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchTanhOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Instantiate
+  nameWithType: BatchTanhOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Restore(System.Guid)
+  nameWithType: BatchTanhOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Restore
+  nameWithType: BatchTanhOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Store(System.Guid)
+  nameWithType: BatchTanhOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html#ParallelReverseAutoDiff_RMAD_BatchTanhOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.Store
+  nameWithType: BatchTanhOperation.Store
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph
   name: ComputationGraph
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html
@@ -783,6 +2170,22 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddBias
   nameWithType: ComputationGraph.AddBias
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  name: AddDynamic(string, Func<LayerInfo, object>)
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddDynamic_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object__
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  name.vb: AddDynamic(String, Func(Of LayerInfo, Object))
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object))
+  nameWithType: ComputationGraph.AddDynamic(string, Func<LayerInfo, object>)
+  nameWithType.vb: ComputationGraph.AddDynamic(String, Func(Of LayerInfo, Object))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic*
+  name: AddDynamic
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddDynamic_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic
+  nameWithType: ComputationGraph.AddDynamic
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})
   name: AddGradient(string, Func<LayerInfo, DeepMatrix[]>)
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddGradient_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_DeepMatrix____
@@ -801,6 +2204,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.DeepMatrix))
   nameWithType: ComputationGraph.AddGradient(string, Func<LayerInfo, DeepMatrix>)
   nameWithType.vb: ComputationGraph.AddGradient(String, Func(Of LayerInfo, DeepMatrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name: AddGradient(string, Func<LayerInfo, FourDimensionalMatrix>)
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddGradient_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name.vb: AddGradient(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  nameWithType: ComputationGraph.AddGradient(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType.vb: ComputationGraph.AddGradient(String, Func(Of LayerInfo, FourDimensionalMatrix))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   name: AddGradient(string, Func<LayerInfo, Matrix>)
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddGradient_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__
@@ -835,6 +2247,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.DeepMatrix))
   nameWithType: ComputationGraph.AddIntermediate(string, Func<LayerInfo, DeepMatrix>)
   nameWithType.vb: ComputationGraph.AddIntermediate(String, Func(Of LayerInfo, DeepMatrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name: AddIntermediate(string, Func<LayerInfo, FourDimensionalMatrix>)
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name.vb: AddIntermediate(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  nameWithType: ComputationGraph.AddIntermediate(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType.vb: ComputationGraph.AddIntermediate(String, Func(Of LayerInfo, FourDimensionalMatrix))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   name: AddIntermediate(string, Func<LayerInfo, Matrix>)
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_AddIntermediate_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__
@@ -1070,6 +2491,22 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup
   nameWithType: ComputationGraph.DependenciesSetup
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  name: DynamicAdded(string, Func<LayerInfo, object>)
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_DynamicAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_System_Object__
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  name.vb: DynamicAdded(String, Func(Of LayerInfo, Object))
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object))
+  nameWithType: ComputationGraph.DynamicAdded(string, Func<LayerInfo, object>)
+  nameWithType.vb: ComputationGraph.DynamicAdded(String, Func(Of LayerInfo, Object))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded*
+  name: DynamicAdded
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_DynamicAdded_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded
+  nameWithType: ComputationGraph.DynamicAdded
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.GetTypeFrom(System.String)
   name: GetTypeFrom(string)
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_GetTypeFrom_System_String_
@@ -1104,6 +2541,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.DeepMatrix))
   nameWithType: ComputationGraph.GradientAdded(string, Func<LayerInfo, DeepMatrix>)
   nameWithType.vb: ComputationGraph.GradientAdded(String, Func(Of LayerInfo, DeepMatrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name: GradientAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_GradientAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name.vb: GradientAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  nameWithType: ComputationGraph.GradientAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType.vb: ComputationGraph.GradientAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   name: GradientAdded(string, Func<LayerInfo, Matrix>)
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_GradientAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__
@@ -1151,6 +2597,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.DeepMatrix))
   nameWithType: ComputationGraph.IntermediateAdded(string, Func<LayerInfo, DeepMatrix>)
   nameWithType.vb: ComputationGraph.IntermediateAdded(String, Func(Of LayerInfo, DeepMatrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name: IntermediateAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  name.vb: IntermediateAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  nameWithType: ComputationGraph.IntermediateAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType.vb: ComputationGraph.IntermediateAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   name: IntermediateAdded(string, Func<LayerInfo, Matrix>)
   href: api/ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff_RMAD_ComputationGraph_IntermediateAdded_System_String_System_Func_ParallelReverseAutoDiff_RMAD_LayerInfo_ParallelReverseAutoDiff_RMAD_Matrix__
@@ -1386,6 +2841,19 @@ references:
   commentId: T:ParallelReverseAutoDiff.RMAD.CudaBlas
   fullName: ParallelReverseAutoDiff.RMAD.CudaBlas
   nameWithType: CudaBlas
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  name: Accelerator
+  href: api/ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff_RMAD_CudaBlas_Accelerator
+  commentId: P:ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  nameWithType: CudaBlas.Accelerator
+- uid: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator*
+  name: Accelerator
+  href: api/ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff_RMAD_CudaBlas_Accelerator_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.CudaBlas.Accelerator
+  nameWithType: CudaBlas.Accelerator
 - uid: ParallelReverseAutoDiff.RMAD.CudaBlas.AreDeviceVariablesInitialized
   name: AreDeviceVariablesInitialized
   href: api/ParallelReverseAutoDiff.RMAD.CudaBlas.html#ParallelReverseAutoDiff_RMAD_CudaBlas_AreDeviceVariablesInitialized
@@ -1592,6 +3060,32 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Instantiate
   nameWithType: CudaMatrixMultiplyOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore(System.Guid)
+  nameWithType: CudaMatrixMultiplyOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Restore
+  nameWithType: CudaMatrixMultiplyOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store(System.Guid)
+  nameWithType: CudaMatrixMultiplyOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_CudaMatrixMultiplyOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation.Store
+  nameWithType: CudaMatrixMultiplyOperation.Store
 - uid: ParallelReverseAutoDiff.RMAD.DeepBatchNormalizationOperation
   name: DeepBatchNormalizationOperation
   href: api/ParallelReverseAutoDiff.RMAD.DeepBatchNormalizationOperation.html
@@ -2614,6 +4108,50 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep.StartOperations
   nameWithType: DualLayersTimeStep.StartOperations
+- uid: ParallelReverseAutoDiff.RMAD.DynamicParameter
+  name: DynamicParameter
+  href: api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.DynamicParameter
+  fullName: ParallelReverseAutoDiff.RMAD.DynamicParameter
+  nameWithType: DynamicParameter
+- uid: ParallelReverseAutoDiff.RMAD.DynamicParameter.#ctor(ParallelReverseAutoDiff.RMAD.ComputationGraph,System.String,ParallelReverseAutoDiff.RMAD.LayerInfo)
+  name: DynamicParameter(ComputationGraph, string, LayerInfo)
+  href: api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html#ParallelReverseAutoDiff_RMAD_DynamicParameter__ctor_ParallelReverseAutoDiff_RMAD_ComputationGraph_System_String_ParallelReverseAutoDiff_RMAD_LayerInfo_
+  commentId: M:ParallelReverseAutoDiff.RMAD.DynamicParameter.#ctor(ParallelReverseAutoDiff.RMAD.ComputationGraph,System.String,ParallelReverseAutoDiff.RMAD.LayerInfo)
+  name.vb: New(ComputationGraph, String, LayerInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.DynamicParameter.DynamicParameter(ParallelReverseAutoDiff.RMAD.ComputationGraph, string, ParallelReverseAutoDiff.RMAD.LayerInfo)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DynamicParameter.New(ParallelReverseAutoDiff.RMAD.ComputationGraph, String, ParallelReverseAutoDiff.RMAD.LayerInfo)
+  nameWithType: DynamicParameter.DynamicParameter(ComputationGraph, string, LayerInfo)
+  nameWithType.vb: DynamicParameter.New(ComputationGraph, String, LayerInfo)
+- uid: ParallelReverseAutoDiff.RMAD.DynamicParameter.#ctor*
+  name: DynamicParameter
+  href: api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html#ParallelReverseAutoDiff_RMAD_DynamicParameter__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DynamicParameter.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.RMAD.DynamicParameter.DynamicParameter
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DynamicParameter.New
+  nameWithType: DynamicParameter.DynamicParameter
+  nameWithType.vb: DynamicParameter.New
+- uid: ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue
+  name: GetValue()
+  href: api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html#ParallelReverseAutoDiff_RMAD_DynamicParameter_GetValue
+  commentId: M:ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue
+  fullName: ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue()
+  nameWithType: DynamicParameter.GetValue()
+- uid: ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  name: GetValue(ComputationGraph)
+  href: api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html#ParallelReverseAutoDiff_RMAD_DynamicParameter_GetValue_ParallelReverseAutoDiff_RMAD_ComputationGraph_
+  commentId: M:ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  fullName: ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue(ParallelReverseAutoDiff.RMAD.ComputationGraph)
+  nameWithType: DynamicParameter.GetValue(ComputationGraph)
+- uid: ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue*
+  name: GetValue
+  href: api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html#ParallelReverseAutoDiff_RMAD_DynamicParameter_GetValue_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.DynamicParameter.GetValue
+  nameWithType: DynamicParameter.GetValue
 - uid: ParallelReverseAutoDiff.RMAD.FlattenOperation
   name: FlattenOperation
   href: api/ParallelReverseAutoDiff.RMAD.FlattenOperation.html
@@ -2685,6 +4223,279 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.FlattenOperation.Store
   nameWithType: FlattenOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+  name: FourDimensionalMatrix
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+  nameWithType: FourDimensionalMatrix
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor
+  name: FourDimensionalMatrix()
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__ctor
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor
+  name.vb: New()
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.FourDimensionalMatrix()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.New()
+  nameWithType: FourDimensionalMatrix.FourDimensionalMatrix()
+  nameWithType.vb: FourDimensionalMatrix.New()
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name: FourDimensionalMatrix(DeepMatrix[])
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__ctor_ParallelReverseAutoDiff_RMAD_DeepMatrix___
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name.vb: New(DeepMatrix())
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.FourDimensionalMatrix(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.New(ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  nameWithType: FourDimensionalMatrix.FourDimensionalMatrix(DeepMatrix[])
+  nameWithType.vb: FourDimensionalMatrix.New(DeepMatrix())
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name: FourDimensionalMatrix(int, DeepMatrix[])
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__ctor_System_Int32_ParallelReverseAutoDiff_RMAD_DeepMatrix___
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name.vb: New(Integer, DeepMatrix())
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.FourDimensionalMatrix(int, ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.New(Integer, ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  nameWithType: FourDimensionalMatrix.FourDimensionalMatrix(int, DeepMatrix[])
+  nameWithType.vb: FourDimensionalMatrix.New(Integer, DeepMatrix())
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Dimension)
+  name: FourDimensionalMatrix(int, Dimension)
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__ctor_System_Int32_ParallelReverseAutoDiff_RMAD_Dimension_
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Dimension)
+  name.vb: New(Integer, Dimension)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.FourDimensionalMatrix(int, ParallelReverseAutoDiff.RMAD.Dimension)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.New(Integer, ParallelReverseAutoDiff.RMAD.Dimension)
+  nameWithType: FourDimensionalMatrix.FourDimensionalMatrix(int, Dimension)
+  nameWithType.vb: FourDimensionalMatrix.New(Integer, Dimension)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)
+  name: FourDimensionalMatrix(int, int, int, int)
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__ctor_System_Int32_System_Int32_System_Int32_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)
+  name.vb: New(Integer, Integer, Integer, Integer)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.FourDimensionalMatrix(int, int, int, int)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.New(Integer, Integer, Integer, Integer)
+  nameWithType: FourDimensionalMatrix.FourDimensionalMatrix(int, int, int, int)
+  nameWithType.vb: FourDimensionalMatrix.New(Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor*
+  name: FourDimensionalMatrix
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.FourDimensionalMatrix
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.New
+  nameWithType: FourDimensionalMatrix.FourDimensionalMatrix
+  nameWithType.vb: FourDimensionalMatrix.New
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone
+  name: Clone()
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Clone
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone()
+  nameWithType: FourDimensionalMatrix.Clone()
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone*
+  name: Clone
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Clone_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone
+  nameWithType: FourDimensionalMatrix.Clone
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols
+  name: Cols
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Cols
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols
+  nameWithType: FourDimensionalMatrix.Cols
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols*
+  name: Cols
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Cols_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols
+  nameWithType: FourDimensionalMatrix.Cols
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
+  name: Count
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Count
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
+  nameWithType: FourDimensionalMatrix.Count
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count*
+  name: Count
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Count_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
+  nameWithType: FourDimensionalMatrix.Count
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Depth
+  name: Depth
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Depth
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Depth
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Depth
+  nameWithType: FourDimensionalMatrix.Depth
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Depth*
+  name: Depth
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Depth_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Depth
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Depth
+  nameWithType: FourDimensionalMatrix.Depth
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
+  name: Dimension
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Dimension
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
+  nameWithType: FourDimensionalMatrix.Dimension
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension*
+  name: Dimension
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Dimension_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
+  nameWithType: FourDimensionalMatrix.Dimension
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.GetEnumerator
+  name: GetEnumerator()
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_GetEnumerator
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.GetEnumerator
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.GetEnumerator()
+  nameWithType: FourDimensionalMatrix.GetEnumerator()
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.GetEnumerator*
+  name: GetEnumerator
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_GetEnumerator_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.GetEnumerator
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.GetEnumerator
+  nameWithType: FourDimensionalMatrix.GetEnumerator
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Item(System.Int32,System.Int32,System.Int32,System.Int32)
+  name: this[int, int, int, int]
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Item_System_Int32_System_Int32_System_Int32_System_Int32_
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Item(System.Int32,System.Int32,System.Int32,System.Int32)
+  name.vb: this[](Integer, Integer, Integer, Integer)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this[int, int, int, int]
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this[](Integer, Integer, Integer, Integer)
+  nameWithType: FourDimensionalMatrix.this[int, int, int, int]
+  nameWithType.vb: FourDimensionalMatrix.this[](Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Item(System.Int32)
+  name: this[int]
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Item_System_Int32_
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Item(System.Int32)
+  name.vb: this[](Integer)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this[int]
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this[](Integer)
+  nameWithType: FourDimensionalMatrix.this[int]
+  nameWithType.vb: FourDimensionalMatrix.this[](Integer)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Item*
+  name: this
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Item_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Item
+  isSpec: "True"
+  name.vb: this[]
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this[]
+  nameWithType: FourDimensionalMatrix.this
+  nameWithType.vb: FourDimensionalMatrix.this[]
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name: Replace(DeepMatrix[])
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Replace_ParallelReverseAutoDiff_RMAD_DeepMatrix___
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name.vb: Replace(DeepMatrix())
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace(ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  nameWithType: FourDimensionalMatrix.Replace(DeepMatrix[])
+  nameWithType.vb: FourDimensionalMatrix.Replace(DeepMatrix())
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace*
+  name: Replace
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Replace_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Replace
+  nameWithType: FourDimensionalMatrix.Replace
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Rows
+  name: Rows
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Rows
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Rows
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Rows
+  nameWithType: FourDimensionalMatrix.Rows
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Rows*
+  name: Rows
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_Rows_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Rows
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Rows
+  nameWithType: FourDimensionalMatrix.Rows
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
+  name: ToArray()
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_ToArray
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray()
+  nameWithType: FourDimensionalMatrix.ToArray()
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray*
+  name: ToArray
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_ToArray_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
+  nameWithType: FourDimensionalMatrix.ToArray
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.UniqueId
+  name: UniqueId
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_UniqueId
+  commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.UniqueId
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.UniqueId
+  nameWithType: FourDimensionalMatrix.UniqueId
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.UniqueId*
+  name: UniqueId
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrix_UniqueId_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.UniqueId
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.UniqueId
+  nameWithType: FourDimensionalMatrix.UniqueId
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter
+  name: FourDimensionalMatrixJsonConverter
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter
+  nameWithType: FourDimensionalMatrixJsonConverter
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.CanConvert(System.Type)
+  name: CanConvert(Type)
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrixJsonConverter_CanConvert_System_Type_
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.CanConvert(System.Type)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.CanConvert(System.Type)
+  nameWithType: FourDimensionalMatrixJsonConverter.CanConvert(Type)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.CanConvert*
+  name: CanConvert
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrixJsonConverter_CanConvert_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.CanConvert
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.CanConvert
+  nameWithType: FourDimensionalMatrixJsonConverter.CanConvert
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, object?, JsonSerializer)
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrixJsonConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name.vb: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, object?, Newtonsoft.Json.JsonSerializer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: FourDimensionalMatrixJsonConverter.ReadJson(JsonReader, Type, object?, JsonSerializer)
+  nameWithType.vb: FourDimensionalMatrixJsonConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson*
+  name: ReadJson
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrixJsonConverter_ReadJson_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.ReadJson
+  nameWithType: FourDimensionalMatrixJsonConverter.ReadJson
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, object?, JsonSerializer)
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrixJsonConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name.vb: WriteJson(JsonWriter, Object, JsonSerializer)
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter, object?, Newtonsoft.Json.JsonSerializer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: FourDimensionalMatrixJsonConverter.WriteJson(JsonWriter, object?, JsonSerializer)
+  nameWithType.vb: FourDimensionalMatrixJsonConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson*
+  name: WriteJson
+  href: api/ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.html#ParallelReverseAutoDiff_RMAD_FourDimensionalMatrixJsonConverter_WriteJson_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter.WriteJson
+  nameWithType: FourDimensionalMatrixJsonConverter.WriteJson
 - uid: ParallelReverseAutoDiff.RMAD.GELUOperation
   name: GELUOperation
   href: api/ParallelReverseAutoDiff.RMAD.GELUOperation.html
@@ -2756,6 +4567,141 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.GELUOperation.Store
   nameWithType: GELUOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation
+  name: GpuMatrixMultiplyOperation
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation
+  nameWithType: GpuMatrixMultiplyOperation
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Backward(Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Backward_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: GpuMatrixMultiplyOperation.Backward(Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Backward
+  nameWithType: GpuMatrixMultiplyOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(Matrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: GpuMatrixMultiplyOperation.Forward(Matrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Forward
+  nameWithType: GpuMatrixMultiplyOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: GpuMatrixMultiplyOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Instantiate
+  nameWithType: GpuMatrixMultiplyOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled(ILGPU.Runtime.Accelerator,System.Double[0:,0:],System.Double[0:,0:])
+  name: MatrixMultiplyTiled(Accelerator, double[,], double[,])
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_MatrixMultiplyTiled_ILGPU_Runtime_Accelerator_System_Double_0__0___System_Double_0__0___
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled(ILGPU.Runtime.Accelerator,System.Double[0:,0:],System.Double[0:,0:])
+  name.vb: MatrixMultiplyTiled(Accelerator, Double(,), Double(,))
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled(ILGPU.Runtime.Accelerator, double[,], double[,])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled(ILGPU.Runtime.Accelerator, Double(,), Double(,))
+  nameWithType: GpuMatrixMultiplyOperation.MatrixMultiplyTiled(Accelerator, double[,], double[,])
+  nameWithType.vb: GpuMatrixMultiplyOperation.MatrixMultiplyTiled(Accelerator, Double(,), Double(,))
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled*
+  name: MatrixMultiplyTiled
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_MatrixMultiplyTiled_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiled
+  nameWithType: GpuMatrixMultiplyOperation.MatrixMultiplyTiled
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel(ILGPU.Runtime.ArrayView2D{System.Double,ILGPU.Stride2D.DenseX},ILGPU.Runtime.ArrayView2D{System.Double,ILGPU.Stride2D.DenseX},ILGPU.Runtime.ArrayView2D{System.Double,ILGPU.Stride2D.DenseX})
+  name: MatrixMultiplyTiledKernel(ArrayView2D<double, DenseX>, ArrayView2D<double, DenseX>, ArrayView2D<double, DenseX>)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_MatrixMultiplyTiledKernel_ILGPU_Runtime_ArrayView2D_System_Double_ILGPU_Stride2D_DenseX__ILGPU_Runtime_ArrayView2D_System_Double_ILGPU_Stride2D_DenseX__ILGPU_Runtime_ArrayView2D_System_Double_ILGPU_Stride2D_DenseX__
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel(ILGPU.Runtime.ArrayView2D{System.Double,ILGPU.Stride2D.DenseX},ILGPU.Runtime.ArrayView2D{System.Double,ILGPU.Stride2D.DenseX},ILGPU.Runtime.ArrayView2D{System.Double,ILGPU.Stride2D.DenseX})
+  name.vb: MatrixMultiplyTiledKernel(ArrayView2D(Of Double, DenseX), ArrayView2D(Of Double, DenseX), ArrayView2D(Of Double, DenseX))
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel(ILGPU.Runtime.ArrayView2D<double, ILGPU.Stride2D.DenseX>, ILGPU.Runtime.ArrayView2D<double, ILGPU.Stride2D.DenseX>, ILGPU.Runtime.ArrayView2D<double, ILGPU.Stride2D.DenseX>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel(ILGPU.Runtime.ArrayView2D(Of Double, ILGPU.Stride2D.DenseX), ILGPU.Runtime.ArrayView2D(Of Double, ILGPU.Stride2D.DenseX), ILGPU.Runtime.ArrayView2D(Of Double, ILGPU.Stride2D.DenseX))
+  nameWithType: GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel(ArrayView2D<double, Stride2D.DenseX>, ArrayView2D<double, Stride2D.DenseX>, ArrayView2D<double, Stride2D.DenseX>)
+  nameWithType.vb: GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel(ArrayView2D(Of Double, Stride2D.DenseX), ArrayView2D(Of Double, Stride2D.DenseX), ArrayView2D(Of Double, Stride2D.DenseX))
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel*
+  name: MatrixMultiplyTiledKernel
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_MatrixMultiplyTiledKernel_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel
+  nameWithType: GpuMatrixMultiplyOperation.MatrixMultiplyTiledKernel
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Restore(System.Guid)
+  nameWithType: GpuMatrixMultiplyOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Restore
+  nameWithType: GpuMatrixMultiplyOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Store(System.Guid)
+  nameWithType: GpuMatrixMultiplyOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.Store
+  nameWithType: GpuMatrixMultiplyOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D(System.Double[][],System.Boolean)
+  name: To2D(double[][], bool)
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_To2D_System_Double_____System_Boolean_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D(System.Double[][],System.Boolean)
+  name.vb: To2D(Double()(), Boolean)
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D(double[][], bool)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D(Double()(), Boolean)
+  nameWithType: GpuMatrixMultiplyOperation.To2D(double[][], bool)
+  nameWithType.vb: GpuMatrixMultiplyOperation.To2D(Double()(), Boolean)
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D*
+  name: To2D
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_To2D_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.To2D
+  nameWithType: GpuMatrixMultiplyOperation.To2D
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged(System.Double[0:,0:])
+  name: ToJagged(double[,])
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_ToJagged_System_Double_0__0___
+  commentId: M:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged(System.Double[0:,0:])
+  name.vb: ToJagged(Double(,))
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged(double[,])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged(Double(,))
+  nameWithType: GpuMatrixMultiplyOperation.ToJagged(double[,])
+  nameWithType.vb: GpuMatrixMultiplyOperation.ToJagged(Double(,))
+- uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged*
+  name: ToJagged
+  href: api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_GpuMatrixMultiplyOperation_ToJagged_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation.ToJagged
+  nameWithType: GpuMatrixMultiplyOperation.ToJagged
 - uid: ParallelReverseAutoDiff.RMAD.GradientClearer
   name: GradientClearer
   href: api/ParallelReverseAutoDiff.RMAD.GradientClearer.html
@@ -2867,6 +4813,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.GradientStore.Load
   nameWithType: GradientStore.Load
+- uid: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  name: LoadNew(FileInfo)
+  href: api/ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff_RMAD_GradientStore_LoadNew_System_IO_FileInfo_
+  commentId: M:ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  nameWithType: GradientStore.LoadNew(FileInfo)
+- uid: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew*
+  name: LoadNew
+  href: api/ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff_RMAD_GradientStore_LoadNew_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew
+  nameWithType: GradientStore.LoadNew
 - uid: ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients(System.Int32)
   name: ToModelLayerGradients(int)
   href: api/ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff_RMAD_GradientStore_ToModelLayerGradients_System_Int32_
@@ -3001,6 +4960,25 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.HadamardProductOperation.Store
   nameWithType: HadamardProductOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.IBatchOperation
+  name: IBatchOperation
+  href: api/ParallelReverseAutoDiff.RMAD.IBatchOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.IBatchOperation
+  fullName: ParallelReverseAutoDiff.RMAD.IBatchOperation
+  nameWithType: IBatchOperation
+- uid: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.IBatchOperation.html#ParallelReverseAutoDiff_RMAD_IBatchOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: IBatchOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.IBatchOperation.html#ParallelReverseAutoDiff_RMAD_IBatchOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward
+  nameWithType: IBatchOperation.Backward
 - uid: ParallelReverseAutoDiff.RMAD.IDeepOperation
   name: IDeepOperation
   href: api/ParallelReverseAutoDiff.RMAD.IDeepOperation.html
@@ -4503,6 +6481,22 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.Matrix.Replace
   nameWithType: Matrix.Replace
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
+  name: ReplaceVertically(double[])
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_ReplaceVertically_System_Double___
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
+  name.vb: ReplaceVertically(Double())
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(double[])
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(Double())
+  nameWithType: Matrix.ReplaceVertically(double[])
+  nameWithType.vb: Matrix.ReplaceVertically(Double())
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically*
+  name: ReplaceVertically
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_ReplaceVertically_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically
+  nameWithType: Matrix.ReplaceVertically
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.Rows
   name: Rows
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Rows
@@ -5249,6 +7243,12 @@ references:
   commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Bias
   fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Bias
   nameWithType: MatrixType.Bias
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
+  name: Dynamic
+  href: api/ParallelReverseAutoDiff.RMAD.MatrixType.html#ParallelReverseAutoDiff_RMAD_MatrixType_Dynamic
+  commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
+  nameWithType: MatrixType.Dynamic
 - uid: ParallelReverseAutoDiff.RMAD.MatrixType.Gradient
   name: Gradient
   href: api/ParallelReverseAutoDiff.RMAD.MatrixType.html#ParallelReverseAutoDiff_RMAD_MatrixType_Gradient
@@ -5608,6 +7608,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamIteration
   nameWithType: NeuralNetworkParameters.AdamIteration
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  name: BatchSize
+  href: api/ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_BatchSize
+  commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  nameWithType: NeuralNetworkParameters.BatchSize
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize*
+  name: BatchSize
+  href: api/ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_BatchSize_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  nameWithType: NeuralNetworkParameters.BatchSize
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ChosenActions
   name: ChosenActions
   href: api/ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_ChosenActions
@@ -5647,6 +7660,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding
   nameWithType: NeuralNetworkParameters.ConvolutionPadding
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  name: DeepInputSequence
+  href: api/ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_DeepInputSequence
+  commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  nameWithType: NeuralNetworkParameters.DeepInputSequence
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence*
+  name: DeepInputSequence
+  href: api/ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_DeepInputSequence_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  nameWithType: NeuralNetworkParameters.DeepInputSequence
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DiscountFactor
   name: DiscountFactor
   href: api/ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff_RMAD_NeuralNetworkParameters_DiscountFactor
@@ -6209,6 +8235,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
   nameWithType: OperationBase.IntermediateObjectArrays
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  name: IntermediateOperationArrays
+  href: api/ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateOperationArrays
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  nameWithType: OperationBase.IntermediateOperationArrays
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays*
+  name: IntermediateOperationArrays
+  href: api/ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IntermediateOperationArrays_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateOperationArrays
+  nameWithType: OperationBase.IntermediateOperationArrays
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.IsComplete
   name: IsComplete
   href: api/ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IsComplete
@@ -7239,6 +9278,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.StoreBase.Ids
   nameWithType: StoreBase.Ids
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  name: InternalClear()
+  href: api/ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff_RMAD_StoreBase_InternalClear
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear()
+  nameWithType: StoreBase.InternalClear()
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear*
+  name: InternalClear
+  href: api/ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff_RMAD_StoreBase_InternalClear_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  nameWithType: StoreBase.InternalClear
 - uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
   name: InternalLoad(FileInfo)
   href: api/ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff_RMAD_StoreBase_InternalLoad_System_IO_FileInfo_
@@ -7800,6 +9852,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.WeightStore.Load
   nameWithType: WeightStore.Load
+- uid: ParallelReverseAutoDiff.RMAD.WeightStore.LoadNew(System.IO.FileInfo)
+  name: LoadNew(FileInfo)
+  href: api/ParallelReverseAutoDiff.RMAD.WeightStore.html#ParallelReverseAutoDiff_RMAD_WeightStore_LoadNew_System_IO_FileInfo_
+  commentId: M:ParallelReverseAutoDiff.RMAD.WeightStore.LoadNew(System.IO.FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.WeightStore.LoadNew(System.IO.FileInfo)
+  nameWithType: WeightStore.LoadNew(FileInfo)
+- uid: ParallelReverseAutoDiff.RMAD.WeightStore.LoadNew*
+  name: LoadNew
+  href: api/ParallelReverseAutoDiff.RMAD.WeightStore.html#ParallelReverseAutoDiff_RMAD_WeightStore_LoadNew_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.WeightStore.LoadNew
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.WeightStore.LoadNew
+  nameWithType: WeightStore.LoadNew
 - uid: ParallelReverseAutoDiff.RMAD.WeightStore.ToModelLayerWeights(System.Int32)
   name: ToModelLayerWeights(int)
   href: api/ParallelReverseAutoDiff.RMAD.WeightStore.html#ParallelReverseAutoDiff_RMAD_WeightStore_ToModelLayerWeights_System_Int32_

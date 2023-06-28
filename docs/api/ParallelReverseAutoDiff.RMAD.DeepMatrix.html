@@ -93,6 +93,7 @@
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
+[JsonConverter(typeof(DeepMatrixJsonConverter))]
 public class DeepMatrix : IEnumerable&lt;Matrix&gt;, IEnumerable, ICloneable</code></pre>
   </div>
 
@@ -156,7 +157,7 @@ public class DeepMatrix : IEnumerable&lt;Matrix&gt;, IEnumerable, ICloneable</co
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix__ctor" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor">
   DeepMatrix()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a> class.</p>
@@ -184,7 +185,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix__ctor_ParallelReverseAutoDiff_RMAD_Dimension_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Dimension)">
   DeepMatrix(Dimension)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a> class.</p>
@@ -217,7 +218,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix__ctor_ParallelReverseAutoDiff_RMAD_Matrix___" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])">
   DeepMatrix(Matrix[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a> class.</p>
@@ -250,7 +251,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix__ctor_System_Int32_ParallelReverseAutoDiff_RMAD_Matrix___" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])">
   DeepMatrix(int, Matrix[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a> class.</p>
@@ -286,7 +287,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix__ctor_System_Int32_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)">
   DeepMatrix(int, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a> class.</p>
@@ -329,7 +330,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Cols" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols">
   Cols
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of columns.</p>
@@ -361,7 +362,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Depth" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth">
   Depth
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the depth of the matrix.</p>
@@ -393,7 +394,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Dimension" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension">
   Dimension
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the dimension of the matrix.</p>
@@ -425,7 +426,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Item_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)">
   this[int]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the matrix at the specified index.</p>
@@ -464,7 +465,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Item_System_Int32_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)">
   this[int, int, int]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L125"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the value at the specified row and column and depth.</p>
@@ -509,7 +510,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Rows" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows">
   Rows
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of rows.</p>
@@ -541,7 +542,7 @@ public DeepMatrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_UniqueId" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId">
   UniqueId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the unique ID of the matrix.</p>
@@ -578,7 +579,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Average_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
   Average(DeepMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L189"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L190"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the element-wise average of this deep matrix and another deep matrix.</p>
@@ -617,7 +618,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Clone" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L234"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L235"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Clones the matrix.</p>
@@ -650,7 +651,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_GetEnumerator" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator">
   GetEnumerator()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L265"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the enumerator for the matrix.</p>
@@ -683,7 +684,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Initialize_ParallelReverseAutoDiff_RMAD_InitializationType_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)">
   Initialize(InitializationType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L243"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L244"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the matrix with He or Xavier initialization.</p>
@@ -716,7 +717,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_InitializeArray_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)">
   InitializeArray(int, int, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L150"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes an array of deep matrices.</p>
@@ -764,7 +765,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_InitializeDoubleArray_System_Int32_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
   InitializeDoubleArray(int, int, int, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L169"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a double array of deep matrices.</p>
@@ -815,7 +816,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_Replace_ParallelReverseAutoDiff_RMAD_Matrix___" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])">
   Replace(Matrix[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L226"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replace the matrices with the specified matrices.</p>
@@ -848,7 +849,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_DeepMatrix_ToArray" data-uid="ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray">
   ToArray()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/DeepMatrix.cs/#L217"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the deep matrix as an array of matrices.</p>

@@ -27,8 +27,48 @@ items:
     name: BackwardResult
   - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
     name: BackwardResultBuilder
+  - uid: ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation
+    name: BatchAmplifiedSigmoidOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation
+    name: BatchCudaMatrixMultiplyOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation
+    name: BatchGpuMatrixMultiplyOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation
+    name: BatchHadamardProductOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation
+    name: BatchLayerNormalizationOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation
+    name: BatchLeakyReLUOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation
+    name: BatchMatrixAddBroadcastingOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation
+    name: BatchMatrixAddOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation
+    name: BatchMatrixAddThreeOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation
+    name: BatchMatrixAverageOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation
+    name: BatchMatrixBroadcastOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation
+    name: BatchMatrixConcatenateOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
+    name: BatchMatrixMultiplyScalarOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation
+    name: BatchMatrixSumOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation
+    name: BatchMatrixTransposeOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation
     name: BatchNormalizationOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+    name: BatchOperation<T>
+  - uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
+    name: BatchScaleAndShiftOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
+    name: BatchSoftmaxOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
+    name: BatchSwigLUOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation
+    name: BatchTanhOperation
   - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph
     name: ComputationGraph
   - uid: ParallelReverseAutoDiff.RMAD.CudaBlas
@@ -59,10 +99,18 @@ items:
     name: DualLayersJsonArchitecture
   - uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
     name: DualLayersTimeStep
+  - uid: ParallelReverseAutoDiff.RMAD.DynamicParameter
+    name: DynamicParameter
   - uid: ParallelReverseAutoDiff.RMAD.FlattenOperation
     name: FlattenOperation
+  - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+    name: FourDimensionalMatrix
+  - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrixJsonConverter
+    name: FourDimensionalMatrixJsonConverter
   - uid: ParallelReverseAutoDiff.RMAD.GELUOperation
     name: GELUOperation
+  - uid: ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation
+    name: GpuMatrixMultiplyOperation
   - uid: ParallelReverseAutoDiff.RMAD.GradientClearer
     name: GradientClearer
   - uid: ParallelReverseAutoDiff.RMAD.GradientClipper
@@ -73,6 +121,8 @@ items:
     name: GradientUtils
   - uid: ParallelReverseAutoDiff.RMAD.HadamardProductOperation
     name: HadamardProductOperation
+  - uid: ParallelReverseAutoDiff.RMAD.IBatchOperation
+    name: IBatchOperation
   - uid: ParallelReverseAutoDiff.RMAD.IDeepOperation
     name: IDeepOperation
   - uid: ParallelReverseAutoDiff.RMAD.IModelLayer

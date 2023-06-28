@@ -8,6 +8,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.GradientStore.Add(ParallelReverseAutoDiff.RMAD.IModelLayer)
   - ParallelReverseAutoDiff.RMAD.GradientStore.AverageGradients(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.GradientStore})
   - ParallelReverseAutoDiff.RMAD.GradientStore.Load(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients(System.Int32)
   langs:
   - csharp
@@ -51,6 +52,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.StoreBase.AddRange(System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.IModelLayer})
   - ParallelReverseAutoDiff.RMAD.StoreBase.Combine(ParallelReverseAutoDiff.RMAD.StoreBase)
   - ParallelReverseAutoDiff.RMAD.StoreBase.Save(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
   - ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.StoreBase.Add(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -104,6 +106,41 @@ items:
   nameWithType.vb: GradientStore.AverageGradients(IEnumerable(Of GradientStore))
   fullName.vb: ParallelReverseAutoDiff.RMAD.GradientStore.AverageGradients(System.Collections.Generic.IEnumerable(Of ParallelReverseAutoDiff.RMAD.GradientStore))
   name.vb: AverageGradients(IEnumerable(Of GradientStore))
+- uid: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  id: LoadNew(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.GradientStore
+  langs:
+  - csharp
+  - vb
+  name: LoadNew(FileInfo)
+  nameWithType: GradientStore.LoadNew(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/GradientStore.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: LoadNew
+    path: ../../src/RMAD/GradientStore.cs
+    startLine: 110
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Loads a gradient store from a file.
+  example: []
+  syntax:
+    content: public static GradientStore LoadNew(FileInfo fileInfo)
+    parameters:
+    - id: fileInfo
+      type: System.IO.FileInfo
+      description: The file info.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.GradientStore
+      description: The gradient store.
+    content.vb: Public Shared Function LoadNew(fileInfo As FileInfo) As GradientStore
+  overload: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew*
 - uid: ParallelReverseAutoDiff.RMAD.GradientStore.Load(System.IO.FileInfo)
   commentId: M:ParallelReverseAutoDiff.RMAD.GradientStore.Load(System.IO.FileInfo)
   id: Load(System.IO.FileInfo)
@@ -122,22 +159,19 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Load
     path: ../../src/RMAD/GradientStore.cs
-    startLine: 110
+    startLine: 121
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: Loads a gradient store from a file.
   example: []
   syntax:
-    content: public static GradientStore Load(FileInfo fileInfo)
+    content: public void Load(FileInfo fileInfo)
     parameters:
     - id: fileInfo
       type: System.IO.FileInfo
       description: The file info.
-    return:
-      type: ParallelReverseAutoDiff.RMAD.GradientStore
-      description: The gradient store.
-    content.vb: Public Shared Function Load(fileInfo As FileInfo) As GradientStore
+    content.vb: Public Sub Load(fileInfo As FileInfo)
   overload: ParallelReverseAutoDiff.RMAD.GradientStore.Load*
 - uid: ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients(System.Int32)
   commentId: M:ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients(System.Int32)
@@ -157,7 +191,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToModelLayerGradients
     path: ../../src/RMAD/GradientStore.cs
-    startLine: 122
+    startLine: 132
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -195,7 +229,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Add
     path: ../../src/RMAD/GradientStore.cs
-    startLine: 155
+    startLine: 165
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -388,6 +422,25 @@ references:
     name: FileInfo
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.io.fileinfo
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  parent: ParallelReverseAutoDiff.RMAD.StoreBase
+  href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  name: InternalClear()
+  nameWithType: StoreBase.InternalClear()
+  fullName: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+    name: InternalClear
+    href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+    name: InternalClear
+    href: ParallelReverseAutoDiff.RMAD.StoreBase.html#ParallelReverseAutoDiff.RMAD.StoreBase.InternalClear
+  - name: (
   - name: )
 - uid: ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
   commentId: M:ParallelReverseAutoDiff.RMAD.StoreBase.InternalLoad(System.IO.FileInfo)
@@ -836,12 +889,12 @@ references:
     name: Generic
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.collections.generic
-- uid: ParallelReverseAutoDiff.RMAD.GradientStore.Load*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.GradientStore.Load
-  href: ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff.RMAD.GradientStore.Load(System.IO.FileInfo)
-  name: Load
-  nameWithType: GradientStore.Load
-  fullName: ParallelReverseAutoDiff.RMAD.GradientStore.Load
+- uid: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew
+  href: ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew(System.IO.FileInfo)
+  name: LoadNew
+  nameWithType: GradientStore.LoadNew
+  fullName: ParallelReverseAutoDiff.RMAD.GradientStore.LoadNew
 - uid: System.IO.FileInfo
   commentId: T:System.IO.FileInfo
   parent: System.IO
@@ -877,6 +930,12 @@ references:
     name: IO
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: ParallelReverseAutoDiff.RMAD.GradientStore.Load*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.GradientStore.Load
+  href: ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff.RMAD.GradientStore.Load(System.IO.FileInfo)
+  name: Load
+  nameWithType: GradientStore.Load
+  fullName: ParallelReverseAutoDiff.RMAD.GradientStore.Load
 - uid: ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients
   href: ParallelReverseAutoDiff.RMAD.GradientStore.html#ParallelReverseAutoDiff.RMAD.GradientStore.ToModelLayerGradients(System.Int32)

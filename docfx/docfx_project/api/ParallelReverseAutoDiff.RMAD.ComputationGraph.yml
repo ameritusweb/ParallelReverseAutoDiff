@@ -7,11 +7,14 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddBias(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
+  - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
+  - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
+  - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperation(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationByType(System.Type,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)
@@ -32,13 +35,16 @@ items:
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.ConstructFromArchitecture(ParallelReverseAutoDiff.RMAD.TripleLayersJsonArchitecture,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.CurrentOperation
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)
+  - ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.GetTypeFrom(System.String)
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
+  - ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.InitializeOperation(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix[]})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
+  - ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(ParallelReverseAutoDiff.RMAD.MatrixType,System.String,ParallelReverseAutoDiff.RMAD.LayerInfo)
   - ParallelReverseAutoDiff.RMAD.ComputationGraph.Item(System.String)
@@ -107,7 +113,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 34
+    startLine: 35
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -142,7 +148,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: StartOperation
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 42
+    startLine: 43
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -173,7 +179,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CurrentOperation
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 53
+    startLine: 54
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -204,7 +210,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 66
+    startLine: 67
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -242,7 +248,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 81
+    startLine: 82
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -286,7 +292,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToOperationArray
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 103
+    startLine: 105
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -330,7 +336,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: StoreOperationIntermediates
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 159
+    startLine: 161
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -362,7 +368,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: RestoreOperationIntermediates
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 172
+    startLine: 174
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -394,7 +400,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 186
+    startLine: 188
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -429,7 +435,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 217
+    startLine: 219
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -470,7 +476,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 263
+    startLine: 265
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -514,7 +520,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 335
+    startLine: 337
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -555,7 +561,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 402
+    startLine: 404
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -596,7 +602,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 492
+    startLine: 494
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -640,7 +646,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 564
+    startLine: 566
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -684,7 +690,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConstructFromArchitecture
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 658
+    startLine: 660
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -728,7 +734,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetTypeFrom
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 706
+    startLine: 708
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -766,7 +772,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddWeight
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 717
+    startLine: 719
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -807,7 +813,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddWeight
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 729
+    startLine: 731
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -848,7 +854,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddWeight
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 741
+    startLine: 743
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -889,7 +895,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBias
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 753
+    startLine: 755
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -930,7 +936,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddGradient
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 765
+    startLine: 767
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -971,7 +977,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddGradient
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 777
+    startLine: 779
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1012,7 +1018,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddGradient
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 789
+    startLine: 791
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1035,6 +1041,47 @@ items:
   nameWithType.vb: ComputationGraph.AddGradient(String, Func(Of LayerInfo, DeepMatrix()))
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.DeepMatrix()))
   name.vb: AddGradient(String, Func(Of LayerInfo, DeepMatrix()))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  id: AddGradient(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  parent: ParallelReverseAutoDiff.RMAD.ComputationGraph
+  langs:
+  - csharp
+  - vb
+  name: AddGradient(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType: ComputationGraph.AddGradient(string, Func<LayerInfo, FourDimensionalMatrix>)
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ComputationGraph.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddGradient
+    path: ../../src/RMAD/ComputationGraph.cs
+    startLine: 803
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a gradient to the computation graph.
+  example: []
+  syntax:
+    content: public ComputationGraph AddGradient(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: An identifier.
+    - id: matrix
+      type: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix}
+      description: The gradient.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ComputationGraph
+      description: A computation graph.
+    content.vb: Public Function AddGradient(identifier As String, matrix As Func(Of LayerInfo, FourDimensionalMatrix)) As ComputationGraph
+  overload: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient*
+  nameWithType.vb: ComputationGraph.AddGradient(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  name.vb: AddGradient(String, Func(Of LayerInfo, FourDimensionalMatrix))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   id: AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
@@ -1053,7 +1100,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddIntermediate
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 801
+    startLine: 815
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1094,7 +1141,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddIntermediate
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 813
+    startLine: 827
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1135,7 +1182,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddIntermediate
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 825
+    startLine: 839
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1158,6 +1205,88 @@ items:
   nameWithType.vb: ComputationGraph.AddIntermediate(String, Func(Of LayerInfo, DeepMatrix()))
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.DeepMatrix()))
   name.vb: AddIntermediate(String, Func(Of LayerInfo, DeepMatrix()))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  id: AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  parent: ParallelReverseAutoDiff.RMAD.ComputationGraph
+  langs:
+  - csharp
+  - vb
+  name: AddIntermediate(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType: ComputationGraph.AddIntermediate(string, Func<LayerInfo, FourDimensionalMatrix>)
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ComputationGraph.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddIntermediate
+    path: ../../src/RMAD/ComputationGraph.cs
+    startLine: 851
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds an intermediate to the computation graph.
+  example: []
+  syntax:
+    content: public ComputationGraph AddIntermediate(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: An identifier.
+    - id: matrix
+      type: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix}
+      description: The gradient.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ComputationGraph
+      description: A computation graph.
+    content.vb: Public Function AddIntermediate(identifier As String, matrix As Func(Of LayerInfo, FourDimensionalMatrix)) As ComputationGraph
+  overload: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate*
+  nameWithType.vb: ComputationGraph.AddIntermediate(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  name.vb: AddIntermediate(String, Func(Of LayerInfo, FourDimensionalMatrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  id: AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  parent: ParallelReverseAutoDiff.RMAD.ComputationGraph
+  langs:
+  - csharp
+  - vb
+  name: AddDynamic(string, Func<LayerInfo, object>)
+  nameWithType: ComputationGraph.AddDynamic(string, Func<LayerInfo, object>)
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ComputationGraph.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddDynamic
+    path: ../../src/RMAD/ComputationGraph.cs
+    startLine: 863
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds a dynamic to the computation graph.
+  example: []
+  syntax:
+    content: public ComputationGraph AddDynamic(string identifier, Func<LayerInfo, object> matrix)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: An identifier.
+    - id: matrix
+      type: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}
+      description: The gradient.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ComputationGraph
+      description: A computation graph.
+    content.vb: Public Function AddDynamic(identifier As String, matrix As Func(Of LayerInfo, Object)) As ComputationGraph
+  overload: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic*
+  nameWithType.vb: ComputationGraph.AddDynamic(String, Func(Of LayerInfo, Object))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object))
+  name.vb: AddDynamic(String, Func(Of LayerInfo, Object))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})
   commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})
   id: AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})
@@ -1176,7 +1305,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddScalar
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 837
+    startLine: 875
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1217,7 +1346,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddScalar
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 849
+    startLine: 887
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1258,7 +1387,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddOperationFinder
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 861
+    startLine: 899
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1299,7 +1428,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddOperationByType
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 874
+    startLine: 912
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1340,7 +1469,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddOperation
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 894
+    startLine: 932
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1381,7 +1510,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeOperation
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 918
+    startLine: 956
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1419,7 +1548,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: TypeRetrieved
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 928
+    startLine: 966
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1457,7 +1586,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: WeightAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 938
+    startLine: 976
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1495,7 +1624,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: WeightAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 948
+    startLine: 986
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1533,7 +1662,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: WeightAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 958
+    startLine: 996
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1571,7 +1700,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BiasAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 968
+    startLine: 1006
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1609,7 +1738,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 978
+    startLine: 1016
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1629,6 +1758,44 @@ items:
   nameWithType.vb: ComputationGraph.GradientAdded(String, Func(Of LayerInfo, Matrix))
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.Matrix))
   name.vb: GradientAdded(String, Func(Of LayerInfo, Matrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  id: GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  parent: ParallelReverseAutoDiff.RMAD.ComputationGraph
+  langs:
+  - csharp
+  - vb
+  name: GradientAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType: ComputationGraph.GradientAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ComputationGraph.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GradientAdded
+    path: ../../src/RMAD/ComputationGraph.cs
+    startLine: 1026
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Lifecycle function for when a gradient is added to the computation graph.
+  example: []
+  syntax:
+    content: protected virtual void GradientAdded(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: An identifier.
+    - id: matrix
+      type: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix}
+      description: The gradient.
+    content.vb: Protected Overridable Sub GradientAdded(identifier As String, matrix As Func(Of LayerInfo, FourDimensionalMatrix))
+  overload: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded*
+  nameWithType.vb: ComputationGraph.GradientAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  name.vb: GradientAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
   commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
   id: GradientAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
@@ -1647,7 +1814,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 988
+    startLine: 1036
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1685,7 +1852,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 998
+    startLine: 1046
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1723,7 +1890,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1008
+    startLine: 1056
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1743,6 +1910,82 @@ items:
   nameWithType.vb: ComputationGraph.IntermediateAdded(String, Func(Of LayerInfo, Matrix))
   fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.Matrix))
   name.vb: IntermediateAdded(String, Func(Of LayerInfo, Matrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  id: IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix})
+  parent: ParallelReverseAutoDiff.RMAD.ComputationGraph
+  langs:
+  - csharp
+  - vb
+  name: IntermediateAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  nameWithType: ComputationGraph.IntermediateAdded(string, Func<LayerInfo, FourDimensionalMatrix>)
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ComputationGraph.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IntermediateAdded
+    path: ../../src/RMAD/ComputationGraph.cs
+    startLine: 1066
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Lifecycle function for when an intermediate is added to the computation graph.
+  example: []
+  syntax:
+    content: protected virtual void IntermediateAdded(string identifier, Func<LayerInfo, FourDimensionalMatrix> matrix)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: An identifier.
+    - id: matrix
+      type: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix}
+      description: The gradient.
+    content.vb: Protected Overridable Sub IntermediateAdded(identifier As String, matrix As Func(Of LayerInfo, FourDimensionalMatrix))
+  overload: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded*
+  nameWithType.vb: ComputationGraph.IntermediateAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix))
+  name.vb: IntermediateAdded(String, Func(Of LayerInfo, FourDimensionalMatrix))
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  id: DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  parent: ParallelReverseAutoDiff.RMAD.ComputationGraph
+  langs:
+  - csharp
+  - vb
+  name: DynamicAdded(string, Func<LayerInfo, object>)
+  nameWithType: ComputationGraph.DynamicAdded(string, Func<LayerInfo, object>)
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(string, System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ComputationGraph.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DynamicAdded
+    path: ../../src/RMAD/ComputationGraph.cs
+    startLine: 1076
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Lifecycle function for when a dynamic is added to the computation graph.
+  example: []
+  syntax:
+    content: protected virtual void DynamicAdded(string identifier, Func<LayerInfo, object> matrix)
+    parameters:
+    - id: identifier
+      type: System.String
+      description: An identifier.
+    - id: matrix
+      type: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}
+      description: The gradient.
+    content.vb: Protected Overridable Sub DynamicAdded(identifier As String, matrix As Func(Of LayerInfo, Object))
+  overload: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded*
+  nameWithType.vb: ComputationGraph.DynamicAdded(String, Func(Of LayerInfo, Object))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(String, System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object))
+  name.vb: DynamicAdded(String, Func(Of LayerInfo, Object))
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
   commentId: M:ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
   id: IntermediateAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.DeepMatrix})
@@ -1761,7 +2004,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1018
+    startLine: 1086
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1799,7 +2042,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1028
+    startLine: 1096
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1837,7 +2080,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ScalarAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1038
+    startLine: 1106
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1875,7 +2118,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ScalarAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1049
+    startLine: 1117
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1913,7 +2156,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationFinderAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1060
+    startLine: 1128
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1951,7 +2194,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationAdded
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1070
+    startLine: 1138
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1986,7 +2229,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationInitialized
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1094
+    startLine: 1162
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -2024,7 +2267,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SetupDependencies
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1104
+    startLine: 1172
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -2059,7 +2302,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DependenciesSetup
     path: ../../src/RMAD/ComputationGraph.cs
-    startLine: 1114
+    startLine: 1182
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -2703,12 +2946,106 @@ references:
   name: AddGradient
   nameWithType: ComputationGraph.AddGradient
   fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddGradient
+- uid: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix}
+  commentId: T:System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<LayerInfo, FourDimensionalMatrix>
+  nameWithType: Func<LayerInfo, FourDimensionalMatrix>
+  fullName: System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix>
+  nameWithType.vb: Func(Of LayerInfo, FourDimensionalMatrix)
+  fullName.vb: System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)
+  name.vb: Func(Of LayerInfo, FourDimensionalMatrix)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+    name: FourDimensionalMatrix
+    href: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+    name: FourDimensionalMatrix
+    href: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate
   href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,ParallelReverseAutoDiff.RMAD.Matrix})
   name: AddIntermediate
   nameWithType: ComputationGraph.AddIntermediate
   fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddIntermediate
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic
+  href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  name: AddDynamic
+  nameWithType: ComputationGraph.AddDynamic
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddDynamic
+- uid: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}
+  commentId: T:System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<LayerInfo, object>
+  nameWithType: Func<LayerInfo, object>
+  fullName: System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>
+  nameWithType.vb: Func(Of LayerInfo, Object)
+  fullName.vb: System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object)
+  name.vb: Func(Of LayerInfo, Object)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
+    name: LayerInfo
+    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar
   href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff.RMAD.ComputationGraph.AddScalar(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})
@@ -2811,51 +3148,6 @@ references:
   name: AddOperationFinder
   nameWithType: ComputationGraph.AddOperationFinder
   fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationFinder
-- uid: System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}
-  commentId: T:System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}
-  parent: System
-  definition: System.Func`2
-  href: https://learn.microsoft.com/dotnet/api/system.func-2
-  name: Func<LayerInfo, object>
-  nameWithType: Func<LayerInfo, object>
-  fullName: System.Func<ParallelReverseAutoDiff.RMAD.LayerInfo, object>
-  nameWithType.vb: Func(Of LayerInfo, Object)
-  fullName.vb: System.Func(Of ParallelReverseAutoDiff.RMAD.LayerInfo, Object)
-  name.vb: Func(Of LayerInfo, Object)
-  spec.csharp:
-  - uid: System.Func`2
-    name: Func
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.func-2
-  - name: <
-  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
-    name: LayerInfo
-    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
-  - name: ','
-  - name: " "
-  - uid: System.Object
-    name: object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: '>'
-  spec.vb:
-  - uid: System.Func`2
-    name: Func
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.func-2
-  - name: (
-  - name: Of
-  - name: " "
-  - uid: ParallelReverseAutoDiff.RMAD.LayerInfo
-    name: LayerInfo
-    href: ParallelReverseAutoDiff.RMAD.LayerInfo.html
-  - name: ','
-  - name: " "
-  - uid: System.Object
-    name: Object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationByType*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationByType
   href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff.RMAD.ComputationGraph.AddOperationByType(System.Type,ParallelReverseAutoDiff.RMAD.OperationInfo,ParallelReverseAutoDiff.RMAD.LayerInfo)
@@ -2911,6 +3203,12 @@ references:
   name: IntermediateAdded
   nameWithType: ComputationGraph.IntermediateAdded
   fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.IntermediateAdded
+- uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded
+  href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object})
+  name: DynamicAdded
+  nameWithType: ComputationGraph.DynamicAdded
+  fullName: ParallelReverseAutoDiff.RMAD.ComputationGraph.DynamicAdded
 - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded
   href: ParallelReverseAutoDiff.RMAD.ComputationGraph.html#ParallelReverseAutoDiff.RMAD.ComputationGraph.ScalarAdded(System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Double})

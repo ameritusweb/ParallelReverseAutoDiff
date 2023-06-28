@@ -6,6 +6,7 @@ items:
   parent: ParallelReverseAutoDiff.RMAD
   children:
   - ParallelReverseAutoDiff.RMAD.MatrixType.Bias
+  - ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
   - ParallelReverseAutoDiff.RMAD.MatrixType.Gradient
   - ParallelReverseAutoDiff.RMAD.MatrixType.Intermediate
   - ParallelReverseAutoDiff.RMAD.MatrixType.Weight
@@ -142,6 +143,34 @@ items:
   example: []
   syntax:
     content: Intermediate = 3
+    return:
+      type: ParallelReverseAutoDiff.RMAD.MatrixType
+- uid: ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
+  commentId: F:ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
+  id: Dynamic
+  parent: ParallelReverseAutoDiff.RMAD.MatrixType
+  langs:
+  - csharp
+  - vb
+  name: Dynamic
+  nameWithType: MatrixType.Dynamic
+  fullName: ParallelReverseAutoDiff.RMAD.MatrixType.Dynamic
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/MatrixType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Dynamic
+    path: ../../src/RMAD/MatrixType.cs
+    startLine: 35
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: A dynamic.
+  example: []
+  syntax:
+    content: Dynamic = 4
     return:
       type: ParallelReverseAutoDiff.RMAD.MatrixType
 references:

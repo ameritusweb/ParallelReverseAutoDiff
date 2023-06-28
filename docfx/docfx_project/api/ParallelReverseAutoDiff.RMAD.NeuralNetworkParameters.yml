@@ -9,9 +9,11 @@ items:
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamBeta2
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamEpsilon
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.AdamIteration
+  - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ChosenActions
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ClipValue
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding
+  - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DiscountFactor
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate
   - ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.InputSequence
@@ -56,6 +58,37 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  id: BatchSize
+  parent: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
+  langs:
+  - csharp
+  - vb
+  name: BatchSize
+  nameWithType: NeuralNetworkParameters.BatchSize
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/NeuralNetworkParameters.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: BatchSize
+    path: ../../src/RMAD/NeuralNetworkParameters.cs
+    startLine: 17
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the batch size.
+  example: []
+  syntax:
+    content: public int BatchSize { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property BatchSize As Integer
+  overload: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize*
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate
   commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate
   id: DropoutRate
@@ -74,7 +107,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DropoutRate
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 17
+    startLine: 22
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -105,7 +138,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DiscountFactor
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 22
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -136,7 +169,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LeakyReLUAlpha
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 27
+    startLine: 32
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -167,7 +200,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LearningRate
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 32
+    startLine: 37
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -198,7 +231,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: NoiseRatio
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 37
+    startLine: 42
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -229,7 +262,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: PoolSize
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 42
+    startLine: 47
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -260,7 +293,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConvolutionPadding
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 47
+    startLine: 52
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -291,7 +324,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SwigLUBeta
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 52
+    startLine: 57
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -322,7 +355,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AdamIteration
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 57
+    startLine: 62
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -353,7 +386,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AdamBeta1
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 62
+    startLine: 67
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -384,7 +417,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AdamBeta2
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 67
+    startLine: 72
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -415,7 +448,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AdamEpsilon
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 72
+    startLine: 77
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -446,7 +479,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ClipValue
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 77
+    startLine: 82
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -477,7 +510,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: MinimumClipValue
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 82
+    startLine: 87
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -508,7 +541,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: NumTimeSteps
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 87
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -539,19 +572,50 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InputSequence
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 92
+    startLine: 97
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: Gets or sets the input sequence.
   example: []
   syntax:
-    content: public Matrix[] InputSequence { get; set; }
+    content: public DeepMatrix InputSequence { get; set; }
     parameters: []
     return:
-      type: ParallelReverseAutoDiff.RMAD.Matrix[]
-    content.vb: Public Property InputSequence As Matrix()
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    content.vb: Public Property InputSequence As DeepMatrix
   overload: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.InputSequence*
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  id: DeepInputSequence
+  parent: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters
+  langs:
+  - csharp
+  - vb
+  name: DeepInputSequence
+  nameWithType: NeuralNetworkParameters.DeepInputSequence
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/NeuralNetworkParameters.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DeepInputSequence
+    path: ../../src/RMAD/NeuralNetworkParameters.cs
+    startLine: 102
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the deep input sequence.
+  example: []
+  syntax:
+    content: public FourDimensionalMatrix DeepInputSequence { get; set; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+    content.vb: Public Property DeepInputSequence As FourDimensionalMatrix
+  overload: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence*
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards
   commentId: P:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards
   id: Rewards
@@ -570,7 +634,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Rewards
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 97
+    startLine: 107
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -601,7 +665,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ChosenActions
     path: ../../src/RMAD/NeuralNetworkParameters.cs
-    startLine: 102
+    startLine: 112
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -874,6 +938,23 @@ references:
   name: System
   nameWithType: System
   fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  href: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+  name: BatchSize
+  nameWithType: NeuralNetworkParameters.BatchSize
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.BatchSize
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate
   href: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DropoutRate
@@ -921,17 +1002,6 @@ references:
   name: PoolSize
   nameWithType: NeuralNetworkParameters.PoolSize
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.PoolSize
-- uid: System.Int32
-  commentId: T:System.Int32
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.int32
-  name: int
-  nameWithType: int
-  fullName: int
-  nameWithType.vb: Integer
-  fullName.vb: Integer
-  name.vb: Integer
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding
   href: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.ConvolutionPadding
@@ -992,27 +1062,26 @@ references:
   name: InputSequence
   nameWithType: NeuralNetworkParameters.InputSequence
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.InputSequence
-- uid: ParallelReverseAutoDiff.RMAD.Matrix[]
-  isExternal: true
-  href: ParallelReverseAutoDiff.RMAD.Matrix.html
-  name: Matrix[]
-  nameWithType: Matrix[]
-  fullName: ParallelReverseAutoDiff.RMAD.Matrix[]
-  nameWithType.vb: Matrix()
-  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix()
-  name.vb: Matrix()
-  spec.csharp:
-  - uid: ParallelReverseAutoDiff.RMAD.Matrix
-    name: Matrix
-    href: ParallelReverseAutoDiff.RMAD.Matrix.html
-  - name: '['
-  - name: ']'
-  spec.vb:
-  - uid: ParallelReverseAutoDiff.RMAD.Matrix
-    name: Matrix
-    href: ParallelReverseAutoDiff.RMAD.Matrix.html
-  - name: (
-  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix
+  nameWithType: DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  href: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+  name: DeepInputSequence
+  nameWithType: NeuralNetworkParameters.DeepInputSequence
+  fullName: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.DeepInputSequence
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html
+  name: FourDimensionalMatrix
+  nameWithType: FourDimensionalMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards
   href: ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.html#ParallelReverseAutoDiff.RMAD.NeuralNetworkParameters.Rewards

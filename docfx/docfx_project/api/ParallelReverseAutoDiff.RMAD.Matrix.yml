@@ -24,6 +24,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.Matrix.Length
   - ParallelReverseAutoDiff.RMAD.Matrix.Replace(System.Double[][])
+  - ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
   - ParallelReverseAutoDiff.RMAD.Matrix.Rows
   - ParallelReverseAutoDiff.RMAD.Matrix.Serialize(System.Span{System.Byte},System.Boolean)
   - ParallelReverseAutoDiff.RMAD.Matrix.SetColumn(System.Int32,System.Double)
@@ -55,9 +56,13 @@ items:
     content: >-
       [Serializable]
 
+      [JsonConverter(typeof(MatrixJsonConverter))]
+
       public class Matrix : IEnumerable<double[]>, IEnumerable, ICloneable
     content.vb: >-
       <Serializable>
+
+      <JsonConverter(GetType(MatrixJsonConverter))>
 
       Public Class Matrix Implements IEnumerable(Of Double()), IEnumerable, ICloneable
   inheritance:
@@ -76,6 +81,11 @@ items:
   - type: System.SerializableAttribute
     ctor: System.SerializableAttribute.#ctor
     arguments: []
+  - type: Newtonsoft.Json.JsonConverterAttribute
+    ctor: Newtonsoft.Json.JsonConverterAttribute.#ctor(System.Type)
+    arguments:
+    - type: System.Type
+      value: ParallelReverseAutoDiff.RMAD.MatrixJsonConverter
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor
   commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor
   id: '#ctor'
@@ -94,7 +104,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 26
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -135,7 +145,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 36
+    startLine: 37
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -173,7 +183,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 51
+    startLine: 52
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -208,7 +218,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 62
+    startLine: 63
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -246,7 +256,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: UniqueId
     path: ../../src/RMAD/Matrix.cs
-    startLine: 71
+    startLine: 72
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -287,7 +297,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Rows
     path: ../../src/RMAD/Matrix.cs
-    startLine: 77
+    startLine: 78
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -318,7 +328,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Cols
     path: ../../src/RMAD/Matrix.cs
-    startLine: 82
+    startLine: 83
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -349,7 +359,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Length
     path: ../../src/RMAD/Matrix.cs
-    startLine: 87
+    startLine: 88
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -380,7 +390,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/Matrix.cs
-    startLine: 101
+    startLine: 102
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -421,7 +431,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/Matrix.cs
-    startLine: 112
+    startLine: 113
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -459,7 +469,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Addition
     path: ../../src/RMAD/Matrix.cs
-    startLine: 124
+    startLine: 125
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -500,7 +510,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Multiply
     path: ../../src/RMAD/Matrix.cs
-    startLine: 146
+    startLine: 147
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -541,7 +551,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeserializeToFlatArray
     path: ../../src/RMAD/Matrix.cs
-    startLine: 182
+    startLine: 183
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -579,7 +589,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/Matrix.cs
-    startLine: 206
+    startLine: 207
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -614,7 +624,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CosineSimilarity
     path: ../../src/RMAD/Matrix.cs
-    startLine: 231
+    startLine: 232
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -649,7 +659,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientWRTCosineSimilarity
     path: ../../src/RMAD/Matrix.cs
-    startLine: 266
+    startLine: 267
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -690,7 +700,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Column
     path: ../../src/RMAD/Matrix.cs
-    startLine: 304
+    startLine: 305
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -728,7 +738,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/Matrix.cs
-    startLine: 319
+    startLine: 320
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -760,7 +770,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Serialize
     path: ../../src/RMAD/Matrix.cs
-    startLine: 341
+    startLine: 342
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -798,7 +808,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SetColumn
     path: ../../src/RMAD/Matrix.cs
-    startLine: 369
+    startLine: 370
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -836,7 +846,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/Matrix.cs
-    startLine: 381
+    startLine: 382
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -869,7 +879,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/Matrix.cs
-    startLine: 402
+    startLine: 403
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -886,6 +896,44 @@ items:
   nameWithType.vb: Matrix.Replace(Double()())
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.Replace(Double()())
   name.vb: Replace(Double()())
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
+  id: ReplaceVertically(System.Double[])
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: ReplaceVertically(double[])
+  nameWithType: Matrix.ReplaceVertically(double[])
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(double[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ReplaceVertically
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 413
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Replace the matrix with the specified 1-D array vertically.
+  example: []
+  syntax:
+    content: public Matrix ReplaceVertically(double[] matrix)
+    parameters:
+    - id: matrix
+      type: System.Double[]
+      description: The matrix.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The matrix that was replaced.
+    content.vb: Public Function ReplaceVertically(matrix As Double()) As Matrix
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically*
+  nameWithType.vb: Matrix.ReplaceVertically(Double())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(Double())
+  name.vb: ReplaceVertically(Double())
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.ToArray
   commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.ToArray
   id: ToArray
@@ -904,7 +952,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/Matrix.cs
-    startLine: 411
+    startLine: 429
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -935,7 +983,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/Matrix.cs
-    startLine: 420
+    startLine: 438
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -968,7 +1016,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Equals
     path: ../../src/RMAD/Matrix.cs
-    startLine: 442
+    startLine: 460
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1007,7 +1055,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetHashCode
     path: ../../src/RMAD/Matrix.cs
-    startLine: 477
+    startLine: 495
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1840,6 +1888,12 @@ references:
   name: Replace
   nameWithType: Matrix.Replace
   fullName: ParallelReverseAutoDiff.RMAD.Matrix.Replace
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
+  name: ReplaceVertically
+  nameWithType: Matrix.ReplaceVertically
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.ToArray*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.ToArray
   href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.ToArray
