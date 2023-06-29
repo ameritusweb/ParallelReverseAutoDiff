@@ -68,11 +68,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
                     .AddModelElementGroup("FW", new[] { outputFeaturesList[i], outputFeaturesList[i] }, InitializationType.Xavier)
-                    .AddModelElementGroup("FB", new[] { 1, outputFeaturesList[i] }, InitializationType.Zeroes)
-                    .AddModelElementGroup("SW", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
-                    .AddModelElementGroup("SV", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
-                    .AddModelElementGroup("SB", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
-                    .AddModelElementGroup("SC", new[] { outputFeaturesList[i], 1 }, InitializationType.Xavier)
+                    .AddModelElementGroup("FB", new[] { 1, outputFeaturesList[i] }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2W", new[] { outputFeaturesList[i], outputFeaturesList[i] }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2B", new[] { 1, outputFeaturesList[i] }, InitializationType.Xavier)
+                    .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He)
                     .AddModelElementGroup("R", new[] { outputFeaturesList[i], this.NumFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
                 var outputLayer = outputLayerBuilder.Build();
@@ -159,10 +158,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             List<Matrix> reduceBias = new List<Matrix>();
             List<Matrix> fully = new List<Matrix>();
             List<Matrix> fullyBias = new List<Matrix>();
-            List<Matrix> swigW = new List<Matrix>();
-            List<Matrix> swigV = new List<Matrix>();
-            List<Matrix> swigB = new List<Matrix>();
-            List<Matrix> swigC = new List<Matrix>();
+            List<Matrix> fully2 = new List<Matrix>();
+            List<Matrix> fully2Bias = new List<Matrix>();
+            List<Matrix> beta = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 keys.Add(this.inputLayers[i].WeightMatrix("Keys"));
@@ -175,10 +173,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 reduceBias.Add(this.outputLayers[i].WeightMatrix("RB"));
                 fully.Add(this.outputLayers[i].WeightMatrix("FW"));
                 fullyBias.Add(this.outputLayers[i].WeightMatrix("FB"));
-                swigW.Add(this.outputLayers[i].WeightMatrix("SW"));
-                swigV.Add(this.outputLayers[i].WeightMatrix("SV"));
-                swigB.Add(this.outputLayers[i].WeightMatrix("SB"));
-                swigC.Add(this.outputLayers[i].WeightMatrix("SC"));
+                fully2.Add(this.outputLayers[i].WeightMatrix("F2W"));
+                fully2Bias.Add(this.outputLayers[i].WeightMatrix("F2B"));
+                beta.Add(this.outputLayers[i].WeightMatrix("Beta"));
             }
 
             List<Matrix> keysGradient = new List<Matrix>();
@@ -191,10 +188,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             List<Matrix> reduceBiasGradient = new List<Matrix>();
             List<Matrix> fullyGradient = new List<Matrix>();
             List<Matrix> fullyBiasGradient = new List<Matrix>();
-            List<Matrix> swigWGradient = new List<Matrix>();
-            List<Matrix> swigVGradient = new List<Matrix>();
-            List<Matrix> swigBGradient = new List<Matrix>();
-            List<Matrix> swigCGradient = new List<Matrix>();
+            List<Matrix> fully2Gradient = new List<Matrix>();
+            List<Matrix> fully2BiasGradient = new List<Matrix>();
+            List<Matrix> betaGradient = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 keysGradient.Add(this.inputLayers[i].GradientMatrix("Keys"));
@@ -207,10 +203,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 reduceBiasGradient.Add(this.outputLayers[i].GradientMatrix("RB"));
                 fullyGradient.Add(this.outputLayers[i].GradientMatrix("FW"));
                 fullyBiasGradient.Add(this.outputLayers[i].GradientMatrix("FB"));
-                swigWGradient.Add(this.outputLayers[i].GradientMatrix("SW"));
-                swigVGradient.Add(this.outputLayers[i].GradientMatrix("SV"));
-                swigBGradient.Add(this.outputLayers[i].GradientMatrix("SB"));
-                swigCGradient.Add(this.outputLayers[i].GradientMatrix("SC"));
+                fully2Gradient.Add(this.outputLayers[i].GradientMatrix("F2W"));
+                fully2BiasGradient.Add(this.outputLayers[i].GradientMatrix("F2B"));
+                betaGradient.Add(this.outputLayers[i].GradientMatrix("Beta"));
             }
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
@@ -229,10 +224,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddBias("RB", x => reduceBias[x.Layer]).AddGradient("DRB", x => reduceBiasGradient[x.Layer])
                 .AddWeight("FW", x => fully[x.Layer]).AddGradient("DFW", x => fullyGradient[x.Layer])
                 .AddBias("FB", x => fullyBias[x.Layer]).AddGradient("DFB", x => fullyBiasGradient[x.Layer])
-                .AddWeight("SW", x => swigW[x.Layer]).AddGradient("DSW", x => swigWGradient[x.Layer])
-                .AddWeight("SV", x => swigV[x.Layer]).AddGradient("DSV", x => swigVGradient[x.Layer])
-                .AddBias("SB", x => swigB[x.Layer]).AddGradient("DSB", x => swigBGradient[x.Layer])
-                .AddBias("SC", x => swigC[x.Layer]).AddGradient("DSC", x => swigCGradient[x.Layer])
+                .AddWeight("F2W", x => fully2[x.Layer]).AddGradient("DF2W", x => fully2Gradient[x.Layer])
+                .AddBias("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
+                .AddBias("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
                 .AddOperationFinder("output_act_last", _ => this.computationGraph[$"output_act_0_{this.NumLayers - 1}"])
                 .AddOperationFinder("pathFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
                 .AddOperationFinder("attention_weights_values_array", x => this.computationGraph.ToOperationArray("attention_weights_values", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumLayers - 1)))

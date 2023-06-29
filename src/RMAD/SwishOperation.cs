@@ -48,6 +48,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix Forward(Matrix input, Matrix beta)
         {
             this.input = input;
+            this.beta = beta;
             int rows = input.Rows;
             int cols = input.Cols;
 

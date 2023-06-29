@@ -182,12 +182,13 @@
             },
             {
               "id": "fully_connected_act",
-              "type": "SwishOperation",
-              "inputs": [ "fully_connected_add" ]
+              "type": "BatchSwishOperation",
+              "inputs": [ "fully_connected_add", "Beta" ],
+              "gradientResultTo": [ null, "DBeta" ]
             },
             {
               "id": "swiglu_act",
-              "type": "HadamardProductOperation",
+              "type": "BatchHadamardProductOperation",
               "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
             },
             {
