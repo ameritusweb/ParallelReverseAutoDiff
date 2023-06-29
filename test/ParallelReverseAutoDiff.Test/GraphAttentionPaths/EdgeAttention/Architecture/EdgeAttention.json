@@ -91,7 +91,7 @@
                 },
                 {
                   "id": "attention_weights",
-                  "type": "BatchSoftmaxOperation",
+                  "type": "BatchSineSoftmaxOperation",
                   "inputs": [ "queries_keys_scale" ]
                 },
                 {

@@ -47,6 +47,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the matrix multiply scalar operation.</returns>
         public Matrix Forward(Matrix input, double scalar)
         {
+            if (scalar < 1E-6)
+            {
+            }
+
             this.scalar = scalar;
             this.input = input;
             int rows = input.Length;

@@ -213,7 +213,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.computationGraph = new ReadoutComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2 + x.Layer))
+                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumPaths, 2))
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])
                 .AddBias("KB", x => keysBias[x.Layer]).AddGradient("DKB", x => keysBiasGradient[x.Layer])
                 .AddWeight("Values", x => values[x.Layer]).AddGradient("DValues", x => valuesGradient[x.Layer])

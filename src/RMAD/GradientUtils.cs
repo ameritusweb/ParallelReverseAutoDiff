@@ -53,7 +53,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 return null;
             }
 
-            int depth = gradients.Count;
+            int depth = gradients[0].Depth;
             int numRows = gradients[0].Rows;
             int numCols = gradients[0].Cols;
 

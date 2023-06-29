@@ -90,7 +90,7 @@
             },
             {
               "id": "attention_scores",
-              "type": "BatchSoftmaxOperation",
+              "type": "BatchSineSoftmaxOperation",
               "inputs": [ "interactionScores" ]
             },
             {

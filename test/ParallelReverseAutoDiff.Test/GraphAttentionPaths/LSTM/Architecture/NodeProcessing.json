@@ -253,7 +253,7 @@
             },
             {
               "id": "attentionWeights",
-              "type": "BatchSoftmaxOperation",
+              "type": "BatchSineSoftmaxOperation",
               "inputs": [ "scaledDotProductTranspose" ]
             },
             {
@@ -299,7 +299,7 @@
         },
         {
           "id": "output_t",
-          "type": "BatchAmplifiedSigmoidOperation",
+          "type": "BatchLeakyReLUOperation",
           "inputs": [ "v_h_b" ],
           "setResultTo": "OutputPathFeatures[t]"
         }

@@ -1,17 +1,16 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SoftmaxOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="SineSoftmaxOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
-    using System.Linq;
 
     /// <summary>
-    /// Softmax operation.
+    /// Sine Softmax operation.
     /// </summary>
-    public class SoftmaxOperation : Operation
+    public class SineSoftmaxOperation : Operation
     {
         private Matrix input;
 
@@ -22,19 +21,21 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new SoftmaxOperation();
+            return new SineSoftmaxOperation();
         }
 
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateMatrices.AddOrUpdate(id, this.Output, (key, oldValue) => this.Output);
+            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input, this.Output }, (key, oldValue) => new[] { this.input, this.Output });
         }
 
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.Output = this.IntermediateMatrices[id];
+            var restored = this.IntermediateMatrixArrays[id];
+            this.input = restored[0];
+            this.Output = restored[1];
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix Forward(Matrix input)
         {
             this.input = input;
-            this.Output = this.Softmax(input);
+            this.Output = this.SineSoftmax(input);
             return this.Output;
         }
 
@@ -58,22 +59,16 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix dLdInput = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
+                double mM = 0.0;
+                for (int k = 0; k < numCols; k++)
+                {
+                    mM += Math.Exp(Math.Sin(this.input[i, k]));
+                }
+
                 for (int j = 0; j < numCols; j++)
                 {
-                    double sum = 0.0;
-                    for (int k = 0; k < numCols; k++)
-                    {
-                        if (j == k)
-                        {
-                            sum += dLdOutput[i][k] * this.Output[i][j] * (1 - this.Output[i][j]);
-                        }
-                        else
-                        {
-                            sum -= dLdOutput[i][k] * this.Output[i][j] * this.Output[i][k];
-                        }
-                    }
-
-                    dLdInput[i][j] = sum;
+                    double dSinSoftmaxj = (mM * Math.Exp(Math.Sin(this.input[i, j])) * Math.Cos(this.input[i, j])) / Math.Pow(mM + Math.Exp(Math.Sin(this.input[i, j])), 2);
+                    dLdInput[i][j] = dLdOutput[i][j] * dSinSoftmaxj;
                 }
             }
 
@@ -82,26 +77,26 @@ namespace ParallelReverseAutoDiff.RMAD
                 .Build();
         }
 
-        private Matrix Softmax(Matrix input)
+        private Matrix SineSoftmax(Matrix input)
         {
-            int numRows = input.Length;
-            int numCols = input[0].Length;
+            int numRows = input.Rows;
+            int numCols = input.Cols;
 
             Matrix output = new Matrix(numRows, numCols);
+
             for (int i = 0; i < numRows; i++)
             {
-                double max = input[i].Max();
-                double sum = 0;
+                double mM = 0.0;
+
                 for (int j = 0; j < numCols; j++)
                 {
-                    double exp = Math.Exp(input[i][j] - max);
-                    sum += exp;
-                    output[i][j] = exp;
+                    mM += Math.Exp(Math.Sin(input[i, j]));
                 }
 
                 for (int j = 0; j < numCols; j++)
                 {
-                    output[i][j] /= sum;
+                    double numerator = Math.Exp(Math.Sin(input[i, j]));
+                    output[i, j] = numerator / (mM + numerator);
                 }
             }
 
