@@ -169,15 +169,31 @@
               "gradientResultTo": [ null, "DFB" ]
             },
             {
+              "id": "fully_connected_2",
+              "type": "BatchGpuMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "F2W" ],
+              "gradientResultTo": [ null, "DF2W" ]
+            },
+            {
+              "id": "fully_connected_2_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected_2", "F2B" ],
+              "gradientResultTo": [ null, "DF2B" ]
+            },
+            {
               "id": "fully_connected_act",
-              "type": "BatchSwigLUOperation",
-              "inputs": [ "fully_connected_add", "SW", "SV", "SB", "SC" ],
-              "gradientResultTo": [ null, "DSW", "DSV", "DSB", "DSC" ]
+              "type": "SwishOperation",
+              "inputs": [ "fully_connected_add" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "HadamardProductOperation",
+              "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
             },
             {
               "id": "reduce",
               "type": "BatchGpuMatrixMultiplyOperation",
-              "inputs": [ "fully_connected_act", "R" ],
+              "inputs": [ "swiglu_act", "R" ],
               "gradientResultTo": [ null, "DR" ]
             },
             {

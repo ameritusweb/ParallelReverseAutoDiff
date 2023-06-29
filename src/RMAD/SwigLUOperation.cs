@@ -82,7 +82,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     double x = input[i, j];
                     double swish = ((x * this.w[j, 0]) + this.b[j][0]) * (1 / (1 + Math.Exp(-this.beta * ((x * this.w[j, 0]) + this.b[j][0]))));
-                    this.Output[i, j] = (swish * x * this.v[j, 0]) + this.c[j][0];
+                    this.Output[i, j] = swish * ((x * this.v[j, 0]) + this.c[j][0]);
                 }
             }
 
@@ -118,15 +118,15 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     double dOutputij = dOutput[i, j];
 
-                    dInput[i, j] = dOutputij * ((swish * this.v[j, 0]) + (x * this.v[j, 0] * swishDerivative));
+                    dInput[i, j] = dOutputij * (this.v[j, 0] * swishDerivative);
 
-                    sumdW += dOutputij * (x * swishDerivative * this.v[j, 0]);
+                    sumdW += dOutputij * ((x * swishDerivative) * ((x * this.v[j, 0]) + this.c[j, 0]));
 
-                    sumdV += dOutputij * (x * swish);
+                    sumdV += dOutputij * (swish * x);
 
-                    sumdb += dOutputij * (swishDerivative * x * this.v[j, 0]);
+                    sumdb += dOutputij * (swishDerivative * ((x * this.v[j, 0]) + this.c[j, 0]));
 
-                    sumdc += dOutputij * 1d;
+                    sumdc += dOutputij * swish;
                 }
 
                 dW[j, 0] = sumdW;
