@@ -84,7 +84,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     // Compute the gradient of loss with respect to beta
                     double sigmoid = 1 / (1 + Math.Exp(-this.beta[0][0] * x));
                     double sigmoidDerivative = sigmoid * (1 - sigmoid);
-                    double swishDerivativeWithRespectToBeta = (x * sigmoidDerivative) - ((x * x) * sigmoid * sigmoid);
+                    double swishDerivativeWithRespectToBeta = (x * sigmoidDerivative) - (Math.Pow(x, 2d) * Math.Pow(sigmoid, 2d));
                     dLdBeta[0][0] += dLdOutput[i, j] * swishDerivativeWithRespectToBeta;
                 }
             }
