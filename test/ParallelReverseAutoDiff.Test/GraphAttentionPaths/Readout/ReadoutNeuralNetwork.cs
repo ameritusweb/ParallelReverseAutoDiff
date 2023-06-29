@@ -30,7 +30,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
-            this.NumLayers = numLayers * 4;
+            this.NumLayers = numLayers;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
             this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 8;
@@ -244,7 +244,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Input, input);
+            CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {

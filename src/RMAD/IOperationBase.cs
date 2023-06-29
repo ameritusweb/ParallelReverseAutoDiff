@@ -217,8 +217,15 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Copies the result of the operation to the specified destination.
         /// </summary>
-        /// <param name="objToCopy">Either a Matrix or an Operation.</param>
+        /// <param name="objToCopy">Either a Matrix or a DeepMatrix or an Operation.</param>
         void CopyResult(object objToCopy);
+
+        /// <summary>
+        /// Replaces the result of the operation to the specified destination.
+        /// If the inner arrays are different sizes, this operation will keep the differing sizes, whereas CopyResult does not handle differing sizes.
+        /// </summary>
+        /// <param name="objToCopy">Either a Matrix or a DeepMatrix or an Operation.</param>
+        void ReplaceResult(object objToCopy);
 
         /// <summary>
         /// Initialize the operation with the specified starting point index.

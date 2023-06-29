@@ -5,6 +5,8 @@
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN;
+    using System.IO;
+    using System;
 
     public class GraphAttentionPathsNeuralNetwork
     {
@@ -328,23 +330,47 @@
             var inputGradient = await readoutNet.AutomaticBackwardPropagate(gradientOfLossWrtReadoutOutput);
             var gcnNet = this.gcnNeuralNetwork;
             var gcnInputGradient = await gcnNet.AutomaticBackwardPropagate(inputGradient);
-            //List<Matrix> attentionNetGradients = new List<Matrix>();
-            //List<DeepMatrix> attentionNetConnectedGradients = new List<DeepMatrix>();
-            //int pathIndex = 0;
-            //foreach (var path in this.gapPaths)
-            //{
-            //    var index = (int)path.GapType;
-            //    var attentionNet = this.attentionMessagePassingNeuralNetwork[index];
-            //    attentionNet.RestoreOperationIntermediates(path.Id);
-            //    var attentionGradient = await attentionNet.AutomaticBackwardPropagate(gcnInputGradient[pathIndex]);
-            //    var connectedPathsGradient = attentionNet.DConnectedPathsDeepMatrix;
-            //    attentionNetGradients.Add(attentionGradient);
-            //    attentionNetConnectedGradients.Add(connectedPathsGradient);
-            //    pathIndex++;
-            //}
+
+            int graphIndex = 0;
+            int pathIndex = 0;
+            Dictionary<int, List<Matrix>> pathGradients = new Dictionary<int, List<Matrix>>();
+            foreach (var graph in this.gapGraphs)
+            {
+                var gradient = gcnInputGradient[graphIndex];
+                pathIndex = 0;
+                foreach (var path in graph.GapPaths)
+                {
+                    var pathGradient = gradient[pathIndex];
+                    var index = (int)path.GapType;
+                    if (pathGradients.ContainsKey(index))
+                    {
+                        pathGradients[index].Add(pathGradient);
+                    }
+                    else
+                    {
+                        pathGradients.Add(index, new List<Matrix> { pathGradient });
+                    }
+                    pathIndex++;
+                }
+                graphIndex++;
+            }
+
+            List<DeepMatrix> attentionNetGradients = new List<DeepMatrix>();
+            List<FourDimensionalMatrix> attentionNetConnectedGradients = new List<FourDimensionalMatrix>();
+            foreach (var type in pathGradients.Keys)
+            {
+                var deepMatrixGradient = new DeepMatrix(pathGradients[type].ToArray());
+                var attentionNet = this.attentionMessagePassingNeuralNetwork[type];
+                attentionNet.RestoreOperationIntermediates(this.typeToIdMapAttention[type]);
+                var attentionGradient = await attentionNet.AutomaticBackwardPropagate(gcnInputGradient[pathIndex]);
+                var connectedPathsGradient = attentionNet.DConnectedPathsDeepMatrixArray;
+                attentionNetGradients.Add(attentionGradient);
+                attentionNetConnectedGradients.Add(connectedPathsGradient);
+            }
+
             //attentionNetGradients = ApplyGradients(attentionNetGradients, attentionNetConnectedGradients);
-            //List<DeepMatrix> lstmNetGradients = new List<DeepMatrix>();
-            //pathIndex = 0;
+            List<DeepMatrix> lstmNetGradients = new List<DeepMatrix>();
+            pathIndex = 0;
             //foreach (var path in this.gapPaths)
             //{
             //    var index = (int)path.GapType;
@@ -383,7 +409,7 @@
         //            var connectedPathIndex = this.gapPaths.IndexOf(connectedPath);
         //            var gradient = gradients[j];
         //            attentionNetGradients[connectedPathIndex] += gradient;
-        //        }   
+        //        }
         //    }
         //    return attentionNetGradients;
         //}

@@ -11,7 +11,6 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
 
     /// <inheritdoc />
     public abstract class OperationBase : IOperationBase
@@ -444,6 +443,27 @@ namespace ParallelReverseAutoDiff.RMAD
                     o[i][j] = this.Output[i][j];
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public void ReplaceResult(object destination)
+        {
+            Matrix o;
+            if (destination is Operation op)
+            {
+                o = op.GetOutput();
+            }
+            else if (destination is DeepMatrix deepMatrix)
+            {
+                deepMatrix.Replace(this.DeepOutput.ToArray());
+                return;
+            }
+            else
+            {
+                o = (Matrix)destination;
+            }
+
+            o.Replace(this.Output.ToArray());
         }
     }
 }

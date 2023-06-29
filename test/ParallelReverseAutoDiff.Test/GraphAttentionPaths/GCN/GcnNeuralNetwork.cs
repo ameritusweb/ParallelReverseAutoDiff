@@ -144,7 +144,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Input, input);
+            CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -166,7 +166,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 {
                     var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
                     var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
-                    op.CopyResult(oo);
+                    op.ReplaceResult(oo);
                 }
 
                 currOp = op;
