@@ -65,6 +65,8 @@ ScaleAndShiftOperation
 
 SigmoidOperation
 
+SineSoftmaxOperation - Reduces the vanishing gradient problem with traditional softmax.
+
 SoftmaxOperation
 
 StretchedSigmoidOperation
