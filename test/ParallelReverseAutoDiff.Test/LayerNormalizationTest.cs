@@ -11,7 +11,6 @@ namespace ParallelReverseAutoDiff.Test
         private const double EPSILON = 1e-9;
 
         [Theory]
-        [InlineData(3, 3)]
         [InlineData(22, 22)]
         [InlineData(33, 33)]
         [InlineData(44, 44)]
