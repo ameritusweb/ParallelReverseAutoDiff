@@ -241,6 +241,26 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Accumulates with the specified matrix array.
+        /// </summary>
+        /// <param name="matrixArray">The matrix array.</param>
+        public void Accumulate(Matrix[] matrixArray)
+        {
+            for (int i = 0; i < this.Depth; ++i)
+            {
+                int rows = this[i].Rows;
+                for (int j = 0; j < rows; ++j)
+                {
+                    int cols = this[i].Cols;
+                    for (int k = 0; k < cols; ++k)
+                    {
+                        this[i][j][k] += matrixArray[i][j][k];
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Computes the element-wise average of this deep matrix and another deep matrix.
         /// </summary>
         /// <param name="other">The other deep matrix.</param>

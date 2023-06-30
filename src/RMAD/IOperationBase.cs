@@ -192,7 +192,8 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Send the calculated gradient to the appropriate destination object.
         /// </summary>
         /// <param name="dOutput">The calculated gradients to accumulate.</param>
-        void AccumulateGradient(object?[] dOutput);
+        /// <param name="accumulateGradientsDirectly">Whether to accumulate the gradients directly.</param>
+        void AccumulateGradient(object?[] dOutput, bool accumulateGradientsDirectly);
 
         /// <summary>
         /// Copies the result of the operation to the specified destination.

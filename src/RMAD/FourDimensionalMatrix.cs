@@ -147,6 +147,30 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Accumulate with the specified deep matrix array.
+        /// </summary>
+        /// <param name="deepMatrixArray">The deep matrix array.</param>
+        public void Accumulate(DeepMatrix[] deepMatrixArray)
+        {
+            for (int i = 0; i < this.Count; ++i)
+            {
+                var depth = this[i].Depth;
+                for (int j = 0; j < depth; ++j)
+                {
+                    var rows = this[i][j].Length;
+                    for (int k = 0; k < rows; ++k)
+                    {
+                        var cols = this[i][j][k].Length;
+                        for (int l = 0; l < cols; ++l)
+                        {
+                            this[i][j][k][l] += deepMatrixArray[i][j][k][l];
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the deep matrix as an array of matrices.
         /// </summary>
         /// <returns>An array of matrices.</returns>

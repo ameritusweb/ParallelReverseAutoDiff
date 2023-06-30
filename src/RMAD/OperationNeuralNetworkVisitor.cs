@@ -122,6 +122,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             BackwardResult? backwardResult = null;
+            bool pullGradientsDirectly = false;
             if (node is IDeepOperation)
             {
                 backwardResult = (node as IDeepOperation)?.Backward((DeepMatrix)node.BackwardInput);
@@ -134,7 +135,6 @@ namespace ParallelReverseAutoDiff.RMAD
                     throw new InvalidOperationException("Backward results must not be null.");
                 }
 
-                bool pullGradientsDirectly = false;
                 if (node is BatchMatrixConcatenateOperation)
                 {
                     var param = node.Parameters[0];
@@ -224,7 +224,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
             if (node.GradientDestinations != null)
             {
-                node.AccumulateGradient(results);
+                node.AccumulateGradient(results, pullGradientsDirectly);
             }
 
             node.CalculatedGradient = results;

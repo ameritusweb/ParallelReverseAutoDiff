@@ -266,7 +266,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public virtual void AccumulateGradient(object?[] gradients)
+        public virtual void AccumulateGradient(object?[] gradients, bool accumulateGradientsDirectly)
         {
             if (this.GradientDestinations != null && this.GradientDestinations.Length > 0)
             {
@@ -300,6 +300,12 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                         else if (gradientResultTo is DeepMatrix deepMatrixGradientResult)
                         {
+                            if (accumulateGradientsDirectly)
+                            {
+                                deepMatrixGradientResult.Accumulate(gradients.OfType<Matrix>().ToArray());
+                                return;
+                            }
+
                             var output = gradients[dest] is Matrix ? new DeepMatrix(gradients.OfType<Matrix>().ToArray()) : (DeepMatrix?)gradients[dest];
                             if (output == null)
                             {
@@ -322,6 +328,12 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                         else if (gradientResultTo is DeepMatrix[] deepMatrixArrayGradientResult)
                         {
+                            if (accumulateGradientsDirectly)
+                            {
+                                new FourDimensionalMatrix(deepMatrixArrayGradientResult).Accumulate(gradients.OfType<DeepMatrix>().ToArray());
+                                return;
+                            }
+
                             var output = (DeepMatrix[]?)gradients[dest];
                             if (output == null)
                             {
@@ -346,9 +358,41 @@ namespace ParallelReverseAutoDiff.RMAD
                                 }
                             }
                         }
+                        else if (gradientResultTo is FourDimensionalMatrix fourDimensionalMatrixGradientResult)
+                        {
+                            if (accumulateGradientsDirectly)
+                            {
+                                fourDimensionalMatrixGradientResult.Accumulate(gradients.OfType<DeepMatrix>().ToArray());
+                                return;
+                            }
+
+                            var output = (FourDimensionalMatrix?)gradients[dest];
+                            if (output == null)
+                            {
+                                throw new InvalidOperationException("The output gradient must be non-null.");
+                            }
+
+                            int length = fourDimensionalMatrixGradientResult.Count;
+                            int depth = fourDimensionalMatrixGradientResult[0].Depth;
+                            int numRows = fourDimensionalMatrixGradientResult[0].Rows;
+                            int numCols = fourDimensionalMatrixGradientResult[0].Cols;
+                            for (int l = 0; l < length; ++l)
+                            {
+                                for (int d = 0; d < depth; ++d)
+                                {
+                                    for (int i = 0; i < numRows; ++i)
+                                    {
+                                        for (int j = 0; j < numCols; ++j)
+                                        {
+                                            fourDimensionalMatrixGradientResult[l][d][i][j] += output[l][d][i][j];
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         else
                         {
-                            throw new InvalidOperationException("The output gradient must be a matrix or a deep matrix.");
+                            throw new InvalidOperationException("The output gradient must be a matrix, deep matrix, deep matrix array, or four-dimensional matrix.");
                         }
                     }
                 }

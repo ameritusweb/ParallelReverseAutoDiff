@@ -21,7 +21,6 @@
         private readonly int numLayers;
         private readonly int numQueries;
         private readonly int batchSize;
-        private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
         private readonly List<IModelLayer> modelLayers;
         private readonly Dictionary<int, Guid> typeToIdMap;
         private readonly Dictionary<int, Guid> typeToIdMapLstm;
@@ -36,7 +35,6 @@
             this.batchSize = batchSize;
             this.modelLayers = new List<IModelLayer>();
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
-            this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             this.typeToIdMap = new Dictionary<int, Guid>();
             this.typeToIdMapLstm = new Dictionary<int, Guid>();
             this.typeToIdMapAttention = new Dictionary<int, Guid>();
@@ -334,6 +332,7 @@
             int graphIndex = 0;
             int pathIndex = 0;
             Dictionary<int, List<Matrix>> pathGradients = new Dictionary<int, List<Matrix>>();
+            Dictionary<(int, int), GapPath> indexesToPathMap = new Dictionary<(int, int), GapPath>();
             foreach (var graph in this.gapGraphs)
             {
                 var gradient = gcnInputGradient[graphIndex];
@@ -344,10 +343,12 @@
                     var index = (int)path.GapType;
                     if (pathGradients.ContainsKey(index))
                     {
+                        indexesToPathMap.Add((index, pathGradients[index].Count), path);
                         pathGradients[index].Add(pathGradient);
                     }
                     else
                     {
+                        indexesToPathMap.Add((index, 0), path);
                         pathGradients.Add(index, new List<Matrix> { pathGradient });
                     }
                     pathIndex++;
@@ -355,8 +356,9 @@
                 graphIndex++;
             }
 
-            List<DeepMatrix> attentionNetGradients = new List<DeepMatrix>();
-            List<FourDimensionalMatrix> attentionNetConnectedGradients = new List<FourDimensionalMatrix>();
+            //List<DeepMatrix> attentionNetGradients = new List<DeepMatrix>();
+            //List<FourDimensionalMatrix> attentionNetConnectedGradients = new List<FourDimensionalMatrix>();
+            Dictionary<GapPath, (Matrix, DeepMatrix)> pathToGradientsMap = new Dictionary<GapPath, (Matrix, DeepMatrix)>();
             foreach (var type in pathGradients.Keys)
             {
                 var deepMatrixGradient = new DeepMatrix(pathGradients[type].ToArray());
@@ -364,8 +366,13 @@
                 attentionNet.RestoreOperationIntermediates(this.typeToIdMapAttention[type]);
                 var attentionGradient = await attentionNet.AutomaticBackwardPropagate(deepMatrixGradient);
                 var connectedPathsGradient = attentionNet.DConnectedPathsDeepMatrixArray;
-                attentionNetGradients.Add(attentionGradient);
-                attentionNetConnectedGradients.Add(connectedPathsGradient);
+                for (int i = 0; i < attentionGradient.Depth; ++i)
+                {
+                    var path = indexesToPathMap[(type, i)];
+                    pathToGradientsMap.Add(path, (attentionGradient[i], connectedPathsGradient[i]));
+                }
+                //attentionNetGradients.Add(attentionGradient);
+                //attentionNetConnectedGradients.Add(connectedPathsGradient);
             }
 
             //attentionNetGradients = ApplyGradients(attentionNetGradients, attentionNetConnectedGradients);
