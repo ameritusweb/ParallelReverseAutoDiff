@@ -134,7 +134,27 @@ namespace ParallelReverseAutoDiff.RMAD
                     throw new InvalidOperationException("Backward results must not be null.");
                 }
 
-                backwardResult = this.CombineResults(backwardResults, node.GradientDestinations);
+                bool pullGradientsDirectly = false;
+                if (node is BatchMatrixConcatenateOperation)
+                {
+                    var param = node.Parameters[0];
+                    if (param is IMatrix matrix)
+                    {
+                        if (matrix.Count == backwardResults.Length)
+                        {
+                            pullGradientsDirectly = true;
+                        }
+                    }
+                    else if (param is Array array)
+                    {
+                        if (array.Length == backwardResults.Length)
+                        {
+                            pullGradientsDirectly = true;
+                        }
+                    }
+                }
+
+                backwardResult = this.CombineResults(backwardResults, node.GradientDestinations, pullGradientsDirectly);
             }
             else if (node is IOperation)
             {
@@ -254,7 +274,7 @@ namespace ParallelReverseAutoDiff.RMAD
             node.IsComplete = true;
         }
 
-        private BackwardResult CombineResults(BackwardResult[] backwardResults, object[] gradientDestinations)
+        private BackwardResult CombineResults(BackwardResult[] backwardResults, object[] gradientDestinations, bool pullGradientsDirectly)
         {
             List<object> combinedResults = new List<object>();
             var firstResult = backwardResults[0];
@@ -263,6 +283,38 @@ namespace ParallelReverseAutoDiff.RMAD
             if (gradientDestinations == null)
             {
                 gradientDestinations = new object[resultsLength];
+            }
+
+            if (pullGradientsDirectly)
+            {
+                if (firstResult.Item1 is Matrix)
+                {
+                    for (int j = 0; j < backwardResults.Length; ++j)
+                    {
+                        var result = new DeepMatrix(backwardResults[j].Results.OfType<Matrix>().ToArray());
+                        combinedResults.Add(result);
+                    }
+
+                    return new BackwardResult()
+                    {
+                        Results = combinedResults.OfType<DeepMatrix>().ToArray(),
+                        HasMultipleInputs = hasMultipleInputs,
+                    };
+                }
+                else if (firstResult.Item1 is DeepMatrix)
+                {
+                    for (int j = 0; j < backwardResults.Length; ++j)
+                    {
+                        var result = new FourDimensionalMatrix(backwardResults[j].Results.OfType<DeepMatrix>().ToArray());
+                        combinedResults.Add(result);
+                    }
+
+                    return new BackwardResult()
+                    {
+                        Results = combinedResults.OfType<FourDimensionalMatrix>().ToArray(),
+                        HasMultipleInputs = hasMultipleInputs,
+                    };
+                }
             }
 
             var resultTypes = firstResult.Results.Select(r => r?.GetType()).ToArray();
@@ -275,8 +327,15 @@ namespace ParallelReverseAutoDiff.RMAD
                     List<object?> list = new List<object?>();
                     for (int j = 0; j < backwardResults.Length; ++j)
                     {
-                        var result = backwardResults[j].Results[i];
-                        list.Add(result);
+                        if (backwardResults[j].Results.Length > i)
+                        {
+                            var result = backwardResults[j].Results[i];
+                            list.Add(result);
+                        }
+                        else
+                        {
+                            list.Add(null);
+                        }
                     }
 
                     if (resultType == typeof(Matrix))

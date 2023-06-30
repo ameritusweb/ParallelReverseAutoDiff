@@ -17,7 +17,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     [Serializable]
     [JsonConverter(typeof(FourDimensionalMatrixJsonConverter))]
-    public class FourDimensionalMatrix : IEnumerable<DeepMatrix>, ICloneable
+    public class FourDimensionalMatrix : IEnumerable<DeepMatrix>, IMatrix, ICloneable
     {
         private DeepMatrix[] matrices;
 

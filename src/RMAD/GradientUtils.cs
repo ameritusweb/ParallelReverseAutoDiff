@@ -54,12 +54,16 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             int depth = gradients[0].Depth;
-            int numRows = gradients[0].Rows;
-            int numCols = gradients[0].Cols;
 
-            DeepMatrix accumulatedGradients = new DeepMatrix(depth, numRows, numCols);
-            Parallel.For(0, depth, (d) =>
+            DeepMatrix accumulatedGradients = new DeepMatrix(depth, 1, 1);
+
+            Parallel.For(0, depth, d =>
             {
+                int numRows = gradients[0][d].Rows;
+                int numCols = gradients[0][d].Cols;
+
+                accumulatedGradients[d] = new Matrix(numRows, numCols);
+
                 for (int i = 0; i < numRows; i++)
                 {
                     for (int j = 0; j < numCols; j++)

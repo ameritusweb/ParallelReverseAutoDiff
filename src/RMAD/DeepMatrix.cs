@@ -105,6 +105,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public int Depth => this.matrices.Length;
 
         /// <summary>
+        /// Gets the count of the matrix.
+        /// </summary>
+        public int Count => this.matrices.Length;
+
+        /// <summary>
         /// Gets the dimension of the matrix.
         /// </summary>
         public Dimension Dimension => new Dimension(this.Depth, this.Rows, this.Cols);

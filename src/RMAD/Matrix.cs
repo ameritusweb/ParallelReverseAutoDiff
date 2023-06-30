@@ -18,7 +18,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     [Serializable]
     [JsonConverter(typeof(MatrixJsonConverter))]
-    public class Matrix : IEnumerable<double[]>, ICloneable
+    public class Matrix : IEnumerable<double[]>, IMatrix, ICloneable
     {
         private double[][] matrix;
 
@@ -87,6 +87,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets the length of the matrix.
         /// </summary>
         public int Length => this.matrix.Length;
+
+        /// <summary>
+        /// Gets the count of the matrix.
+        /// </summary>
+        public int Count => this.matrix.Length;
 
         /// <summary>
         /// Gets the matrix values.

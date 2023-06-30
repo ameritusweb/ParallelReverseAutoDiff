@@ -362,7 +362,7 @@
                 var deepMatrixGradient = new DeepMatrix(pathGradients[type].ToArray());
                 var attentionNet = this.attentionMessagePassingNeuralNetwork[type];
                 attentionNet.RestoreOperationIntermediates(this.typeToIdMapAttention[type]);
-                var attentionGradient = await attentionNet.AutomaticBackwardPropagate(gcnInputGradient[pathIndex]);
+                var attentionGradient = await attentionNet.AutomaticBackwardPropagate(deepMatrixGradient);
                 var connectedPathsGradient = attentionNet.DConnectedPathsDeepMatrixArray;
                 attentionNetGradients.Add(attentionGradient);
                 attentionNetConnectedGradients.Add(connectedPathsGradient);
