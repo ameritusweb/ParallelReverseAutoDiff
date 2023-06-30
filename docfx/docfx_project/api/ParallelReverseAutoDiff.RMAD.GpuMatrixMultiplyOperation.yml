@@ -92,6 +92,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeLock
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeSyncSemaphore
   - ParallelReverseAutoDiff.RMAD.OperationBase.CopyResult(System.Object)
+  - ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
   - System.Object.Equals(System.Object)
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.GetHashCode
@@ -1183,6 +1184,37 @@ references:
   - uid: ParallelReverseAutoDiff.RMAD.OperationBase.CopyResult(System.Object)
     name: CopyResult
     href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.CopyResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  name: ReplaceResult(object)
+  nameWithType: OperationBase.ReplaceResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(object)
+  nameWithType.vb: OperationBase.ReplaceResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(Object)
+  name.vb: ReplaceResult(Object)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
   - name: (
   - uid: System.Object
     name: Object

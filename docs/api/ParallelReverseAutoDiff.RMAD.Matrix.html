@@ -94,7 +94,7 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Serializable]
 [JsonConverter(typeof(MatrixJsonConverter))]
-public class Matrix : IEnumerable&lt;double[]&gt;, IEnumerable, ICloneable</code></pre>
+public class Matrix : IEnumerable&lt;double[]&gt;, IEnumerable, IMatrix, ICloneable</code></pre>
   </div>
 
 
@@ -113,6 +113,7 @@ public class Matrix : IEnumerable&lt;double[]&gt;, IEnumerable, ICloneable</code
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>[]&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.IMatrix.html">IMatrix</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
     </dd>
   </dl>
@@ -316,11 +317,43 @@ public Matrix()</code></pre>
 
 
 
+  <a id="ParallelReverseAutoDiff_RMAD_Matrix_Count_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Count*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Count" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Count">
+  Count
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the count of the matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="ParallelReverseAutoDiff_RMAD_Matrix_Item_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Item*"></a>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Item_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32)">
   this[int]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the row at the specified index.</p>
@@ -359,7 +392,7 @@ public Matrix()</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Item_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)">
   this[int, int]
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the value at the specified row and column.</p>
@@ -502,7 +535,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Average_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Average(ParallelReverseAutoDiff.RMAD.Matrix)">
   Average(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L208"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L237"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the average of two matrices element-wise.</p>
@@ -541,7 +574,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Clone" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L439"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L468"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Clones the matrix.</p>
@@ -574,7 +607,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Column_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Column(System.Int32)">
   Column(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L306"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L335"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieves the column at the specified index.</p>
@@ -613,7 +646,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_CosineSimilarity_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.CosineSimilarity(ParallelReverseAutoDiff.RMAD.Matrix)">
   CosineSimilarity(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L233"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L262"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the cosine similarity between two vectors.</p>
@@ -652,7 +685,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_DeserializeToFlatArray_System_ReadOnlySpan_System_Byte__" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.DeserializeToFlatArray(System.ReadOnlySpan{System.Byte})">
   DeserializeToFlatArray(ReadOnlySpan&lt;byte&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L213"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Deserialize from the buffer.</p>
@@ -691,7 +724,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Equals_System_Object_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Equals(System.Object)">
   Equals(object)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L461"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L490"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Overrides the equals operator.</p>
@@ -730,7 +763,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_GetEnumerator" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.GetEnumerator">
   GetEnumerator()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L383"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L412"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the enumerator for the matrix.</p>
@@ -763,7 +796,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_GetHashCode" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L496"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L525"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Overrides the hash code.</p>
@@ -796,7 +829,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_GradientWRTCosineSimilarity_ParallelReverseAutoDiff_RMAD_Matrix_System_Double_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.GradientWRTCosineSimilarity(ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
   GradientWRTCosineSimilarity(Matrix, double)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L297"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculate gradient wrt to the cosine similarity between two vectors.</p>
@@ -838,7 +871,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Initialize_ParallelReverseAutoDiff_RMAD_InitializationType_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)">
   Initialize(InitializationType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L321"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L350"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the matrix with He or Xavier initialization.</p>
@@ -871,7 +904,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Replace_System_Double_____" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Replace(System.Double[][])">
   Replace(double[][])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L404"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L433"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replace the matrix with the specified 2-D array.</p>
@@ -904,7 +937,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_ReplaceVertically_System_Double___" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])">
   ReplaceVertically(double[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L414"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L443"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replace the matrix with the specified 1-D array vertically.</p>
@@ -943,7 +976,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_Serialize_System_Span_System_Byte__System_Boolean_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.Serialize(System.Span{System.Byte},System.Boolean)">
   Serialize(Span&lt;byte&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L343"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L372"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Serialize to the buffer.</p>
@@ -979,7 +1012,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_SetColumn_System_Int32_System_Double_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.SetColumn(System.Int32,System.Double)">
   SetColumn(int, double)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L371"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L400"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Set the column at the specified index to the specified value.</p>
@@ -1015,7 +1048,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_ToArray" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.ToArray">
   ToArray()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L430"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L459"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieve the matrix as a 2-D array.</p>
@@ -1052,7 +1085,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_op_Addition_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
   operator +(Matrix, Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L131"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds two matrices together.</p>
@@ -1094,7 +1127,7 @@ public int UniqueId { get; }</code></pre>
 
   <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_op_Multiply_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.op_Multiply(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
   operator *(Matrix, Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies two matrices together.</p>
@@ -1112,6 +1145,48 @@ public int UniqueId { get; }</code></pre>
 </dd>
     <dt><code>m2</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
     <dd><p>The second matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The resultant matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_Matrix_op_Multiply_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.op_Multiply*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_Matrix_op_Multiply_ParallelReverseAutoDiff_RMAD_Matrix_System_Double_" data-uid="ParallelReverseAutoDiff.RMAD.Matrix.op_Multiply(ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
+  operator *(Matrix, double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/Matrix.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies a matrix with a scalar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Matrix operator *(Matrix m, double scalar)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>m</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The matrix to multiply.</p>
+</dd>
+    <dt><code>scalar</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd><p>The scalar value to multiply with.</p>
 </dd>
   </dl>
 

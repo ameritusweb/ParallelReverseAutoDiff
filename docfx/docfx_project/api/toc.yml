@@ -63,10 +63,14 @@ items:
     name: BatchOperation<T>
   - uid: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
     name: BatchScaleAndShiftOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation
+    name: BatchSineSoftmaxOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
     name: BatchSoftmaxOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
     name: BatchSwigLUOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchSwishOperation
+    name: BatchSwishOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation
     name: BatchTanhOperation
   - uid: ParallelReverseAutoDiff.RMAD.ComputationGraph
@@ -125,6 +129,8 @@ items:
     name: IBatchOperation
   - uid: ParallelReverseAutoDiff.RMAD.IDeepOperation
     name: IDeepOperation
+  - uid: ParallelReverseAutoDiff.RMAD.IMatrix
+    name: IMatrix
   - uid: ParallelReverseAutoDiff.RMAD.IModelLayer
     name: IModelLayer
   - uid: ParallelReverseAutoDiff.RMAD.InitializationType
@@ -205,6 +211,8 @@ items:
     name: ScaleAndShiftOperation
   - uid: ParallelReverseAutoDiff.RMAD.SigmoidOperation
     name: SigmoidOperation
+  - uid: ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation
+    name: SineSoftmaxOperation
   - uid: ParallelReverseAutoDiff.RMAD.SoftmaxOperation
     name: SoftmaxOperation
   - uid: ParallelReverseAutoDiff.RMAD.StoreBase

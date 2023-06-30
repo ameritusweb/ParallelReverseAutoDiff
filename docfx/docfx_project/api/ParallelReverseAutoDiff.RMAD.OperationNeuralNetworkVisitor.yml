@@ -24,7 +24,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationNeuralNetworkVisitor
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 15
+    startLine: 16
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -61,7 +61,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 29
+    startLine: 30
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -102,7 +102,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: RunSequentially
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 55
+    startLine: 56
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -133,7 +133,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Id
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 71
+    startLine: 72
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -164,7 +164,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: TraverseAsync
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 83
+    startLine: 84
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -195,7 +195,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Reset
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 91
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

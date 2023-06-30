@@ -68,6 +68,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock
   - ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore
@@ -743,6 +744,37 @@ references:
   - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
     name: CopyResult
     href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  name: ReplaceResult(object)
+  nameWithType: IOperationBase.ReplaceResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(object)
+  nameWithType.vb: IOperationBase.ReplaceResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(Object)
+  name.vb: ReplaceResult(Object)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
   - name: (
   - uid: System.Object
     name: Object

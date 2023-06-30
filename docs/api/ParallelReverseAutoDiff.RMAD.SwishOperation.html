@@ -262,6 +262,9 @@
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_CopyResult_System_Object_">OperationBase.CopyResult(object)</a>
     </div>
     <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_ReplaceResult_System_Object_">OperationBase.ReplaceResult(object)</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
     <div>
@@ -297,7 +300,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_SwishOperation_Backward_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
   Backward(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Abstract method to perform backward pass, must be implemented by derived classes.</p>
@@ -333,9 +336,9 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_SwishOperation_Forward_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Forward*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_SwishOperation_Forward_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)">
-  Forward(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_RMAD_SwishOperation_Forward_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+  Forward(Matrix, Matrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs the forward operation for the Swish activation function.</p>
@@ -343,13 +346,16 @@
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Matrix Forward(Matrix input)</code></pre>
+    <pre><code class="lang-csharp hljs">public Matrix Forward(Matrix input, Matrix beta)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>input</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
     <dd><p>The input to the Swish operation.</p>
+</dd>
+    <dt><code>beta</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The beta parameter.</p>
 </dd>
   </dl>
 
@@ -374,7 +380,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_SwishOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
   Instantiate(NeuralNetwork)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A common factory method for instantiating this operation.</p>
@@ -413,7 +419,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_SwishOperation_Restore_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Restore(System.Guid)">
   Restore(Guid)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Restores the intermediates.</p>
@@ -446,7 +452,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_SwishOperation_Store_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.SwishOperation.Store(System.Guid)">
   Store(Guid)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/SwishOperation.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Stores the intermediates.</p>

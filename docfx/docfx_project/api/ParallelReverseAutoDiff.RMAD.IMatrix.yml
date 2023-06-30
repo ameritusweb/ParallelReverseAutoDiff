@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.IMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.IMatrix
+  id: IMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  langs:
+  - csharp
+  - vb
+  name: IMatrix
+  nameWithType: IMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IMatrix
+  type: Interface
+  source:
+    remote:
+      path: src/RMAD/IMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: IMatrix
+    path: ../../src/RMAD/IMatrix.cs
+    startLine: 10
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Abstract base class for all matrices.
+  example: []
+  syntax:
+    content: public interface IMatrix
+    content.vb: Public Interface IMatrix
+- uid: ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  commentId: P:ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  id: Count
+  parent: ParallelReverseAutoDiff.RMAD.IMatrix
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: IMatrix.Count
+  fullName: ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/IMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Count
+    path: ../../src/RMAD/IMatrix.cs
+    startLine: 15
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the number of rows in a matrix, the depth of a deep matrix, or the count of a four-dimensional matrix.
+  example: []
+  syntax:
+    content: int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Count As Integer
+  overload: ParallelReverseAutoDiff.RMAD.IMatrix.Count*
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.RMAD.IMatrix.Count*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  href: ParallelReverseAutoDiff.RMAD.IMatrix.html#ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  name: Count
+  nameWithType: IMatrix.Count
+  fullName: ParallelReverseAutoDiff.RMAD.IMatrix.Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

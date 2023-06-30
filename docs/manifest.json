@@ -295,6 +295,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.yml",
       "output": {
         ".html": {
@@ -309,6 +319,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchSwishOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchSwishOperation.html"
         }
       },
       "version": ""
@@ -599,6 +619,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.IDeepOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.IMatrix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.IMatrix.html"
         }
       },
       "version": ""
@@ -999,6 +1029,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.SigmoidOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation.html"
         }
       },
       "version": ""

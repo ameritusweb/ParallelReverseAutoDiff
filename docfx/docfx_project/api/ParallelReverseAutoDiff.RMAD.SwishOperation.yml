@@ -6,7 +6,7 @@ items:
   parent: ParallelReverseAutoDiff.RMAD
   children:
   - ParallelReverseAutoDiff.RMAD.SwishOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
-  - ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.SwishOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
   - ParallelReverseAutoDiff.RMAD.SwishOperation.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.SwishOperation.Store(System.Guid)
@@ -88,6 +88,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeLock
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeSyncSemaphore
   - ParallelReverseAutoDiff.RMAD.OperationBase.CopyResult(System.Object)
+  - ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
   - System.Object.Equals(System.Object)
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.GetHashCode
@@ -113,7 +114,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Instantiate
     path: ../../src/RMAD/SwishOperation.cs
-    startLine: 21
+    startLine: 22
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -148,7 +149,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Store
     path: ../../src/RMAD/SwishOperation.cs
-    startLine: 27
+    startLine: 28
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -181,7 +182,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Restore
     path: ../../src/RMAD/SwishOperation.cs
-    startLine: 33
+    startLine: 34
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -196,16 +197,16 @@ items:
     content.vb: Public Overrides Sub Restore(id As Guid)
   overridden: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
   overload: ParallelReverseAutoDiff.RMAD.SwishOperation.Restore*
-- uid: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
-  commentId: M:ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
-  id: Forward(ParallelReverseAutoDiff.RMAD.Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  id: Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   parent: ParallelReverseAutoDiff.RMAD.SwishOperation
   langs:
   - csharp
   - vb
-  name: Forward(Matrix)
-  nameWithType: SwishOperation.Forward(Matrix)
-  fullName: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(Matrix, Matrix)
+  nameWithType: SwishOperation.Forward(Matrix, Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix, ParallelReverseAutoDiff.RMAD.Matrix)
   type: Method
   source:
     remote:
@@ -214,22 +215,25 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Forward
     path: ../../src/RMAD/SwishOperation.cs
-    startLine: 43
+    startLine: 47
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: Performs the forward operation for the Swish activation function.
   example: []
   syntax:
-    content: public Matrix Forward(Matrix input)
+    content: public Matrix Forward(Matrix input, Matrix beta)
     parameters:
     - id: input
       type: ParallelReverseAutoDiff.RMAD.Matrix
       description: The input to the Swish operation.
+    - id: beta
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The beta parameter.
     return:
       type: ParallelReverseAutoDiff.RMAD.Matrix
       description: The output of the Swish operation.
-    content.vb: Public Function Forward(input As Matrix) As Matrix
+    content.vb: Public Function Forward(input As Matrix, beta As Matrix) As Matrix
   overload: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward*
 - uid: ParallelReverseAutoDiff.RMAD.SwishOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.SwishOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)
@@ -249,7 +253,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Backward
     path: ../../src/RMAD/SwishOperation.cs
-    startLine: 65
+    startLine: 70
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1017,6 +1021,37 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  name: ReplaceResult(object)
+  nameWithType: OperationBase.ReplaceResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(object)
+  nameWithType.vb: OperationBase.ReplaceResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(Object)
+  name.vb: ReplaceResult(Object)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
 - uid: System.Object.Equals(System.Object)
   commentId: M:System.Object.Equals(System.Object)
   parent: System.Object
@@ -1334,7 +1369,7 @@ references:
   fullName: ParallelReverseAutoDiff.RMAD.SwishOperation.Restore
 - uid: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.SwishOperation.Forward
-  href: ParallelReverseAutoDiff.RMAD.SwishOperation.html#ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix)
+  href: ParallelReverseAutoDiff.RMAD.SwishOperation.html#ParallelReverseAutoDiff.RMAD.SwishOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   name: Forward
   nameWithType: SwishOperation.Forward
   fullName: ParallelReverseAutoDiff.RMAD.SwishOperation.Forward

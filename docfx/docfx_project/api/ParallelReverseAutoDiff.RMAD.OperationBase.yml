@@ -42,6 +42,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.OutputDependencyCount
   - ParallelReverseAutoDiff.RMAD.OperationBase.Outputs
   - ParallelReverseAutoDiff.RMAD.OperationBase.Parameters
+  - ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
   - ParallelReverseAutoDiff.RMAD.OperationBase.Reset
   - ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.OperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
@@ -69,7 +70,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationBase
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 16
+    startLine: 15
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -112,7 +113,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 28
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -143,7 +144,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IsComplete
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 42
+    startLine: 41
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -176,7 +177,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: TimeStepIndex
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 45
+    startLine: 44
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -209,7 +210,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LayerIndex
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 48
+    startLine: 47
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -242,7 +243,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationType
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 51
+    startLine: 50
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -275,7 +276,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: HasNext
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 54
+    startLine: 53
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -308,7 +309,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Next
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 63
+    startLine: 62
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -341,7 +342,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Id
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 66
+    startLine: 65
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -374,7 +375,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SpecificId
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 69
+    startLine: 68
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -407,7 +408,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: NestedSpecificId
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 72
+    startLine: 71
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -440,7 +441,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientDestinations
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 75
+    startLine: 74
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -473,7 +474,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultToName
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 78
+    startLine: 77
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -506,7 +507,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Parameters
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 81
+    startLine: 80
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -539,7 +540,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Tasks
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 84
+    startLine: 83
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -572,7 +573,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Inputs
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 87
+    startLine: 86
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -605,7 +606,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Outputs
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 90
+    startLine: 89
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -638,7 +639,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardInput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 93
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -671,7 +672,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardDependencies
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 96
+    startLine: 95
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -704,7 +705,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: VisitedFrom
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 99
+    startLine: 98
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -737,7 +738,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardAdjacentOperations
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 102
+    startLine: 101
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -770,7 +771,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardDependencyCounts
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 105
+    startLine: 104
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -803,7 +804,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulatedGradients
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 108
+    startLine: 107
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -836,7 +837,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CalculatedGradient
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 111
+    startLine: 110
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -869,7 +870,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OutputDependencyCount
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 114
+    startLine: 113
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -902,7 +903,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: VisitedCount
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 117
+    startLine: 116
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -935,7 +936,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Lock
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 120
+    startLine: 119
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -968,7 +969,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SyncSemaphore
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 123
+    startLine: 122
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1001,7 +1002,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LayerInfo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 126
+    startLine: 125
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1034,7 +1035,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Output
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 131
+    startLine: 130
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1065,7 +1066,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeepOutput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 136
+    startLine: 135
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1096,7 +1097,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateMatrices
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 141
+    startLine: 140
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1127,7 +1128,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateDeepMatrices
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 152
+    startLine: 151
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1158,7 +1159,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateOperationArrays
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 163
+    startLine: 162
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1189,7 +1190,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateMatrixArrays
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 174
+    startLine: 173
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1220,7 +1221,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateDeepMatrixArrays
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 185
+    startLine: 184
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1251,7 +1252,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IntermediateObjectArrays
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 196
+    startLine: 195
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1282,7 +1283,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeFrom
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 205
+    startLine: 204
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1325,7 +1326,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Reset
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 235
+    startLine: 234
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1355,7 +1356,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Store
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 247
+    startLine: 246
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1389,7 +1390,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Restore
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 252
+    startLine: 251
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1423,7 +1424,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetOutput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 257
+    startLine: 256
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1456,7 +1457,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetDeepOutput
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 263
+    startLine: 262
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1489,7 +1490,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulateGradient
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 269
+    startLine: 268
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1525,7 +1526,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 359
+    startLine: 358
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1565,7 +1566,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 366
+    startLine: 365
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1605,7 +1606,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ResultTo
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 373
+    startLine: 372
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1639,7 +1640,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 381
+    startLine: 380
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1676,7 +1677,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeLock
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 389
+    startLine: 388
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1706,7 +1707,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeSyncSemaphore
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 398
+    startLine: 397
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1736,7 +1737,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CopyResult
     path: ../../src/RMAD/OperationBase.cs
-    startLine: 407
+    startLine: 406
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1754,6 +1755,45 @@ items:
   nameWithType.vb: OperationBase.CopyResult(Object)
   fullName.vb: ParallelReverseAutoDiff.RMAD.OperationBase.CopyResult(Object)
   name.vb: CopyResult(Object)
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  id: ReplaceResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  langs:
+  - csharp
+  - vb
+  name: ReplaceResult(object)
+  nameWithType: OperationBase.ReplaceResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(object)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/OperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ReplaceResult
+    path: ../../src/RMAD/OperationBase.cs
+    startLine: 448
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: >-
+    Replaces the result of the operation to the specified destination.
+
+    If the inner arrays are different sizes, this operation will keep the differing sizes, whereas CopyResult does not handle differing sizes.
+  example: []
+  syntax:
+    content: public void ReplaceResult(object destination)
+    parameters:
+    - id: destination
+      type: System.Object
+    content.vb: Public Sub ReplaceResult(destination As Object)
+  overload: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult*
+  implements:
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  nameWithType.vb: OperationBase.ReplaceResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(Object)
+  name.vb: ReplaceResult(Object)
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -4047,6 +4087,43 @@ references:
   - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
     name: CopyResult
     href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult(System.Object)
+  name: ReplaceResult
+  nameWithType: OperationBase.ReplaceResult
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.ReplaceResult
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  name: ReplaceResult(object)
+  nameWithType: IOperationBase.ReplaceResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(object)
+  nameWithType.vb: IOperationBase.ReplaceResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(Object)
+  name.vb: ReplaceResult(Object)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+    name: ReplaceResult
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
   - name: (
   - uid: System.Object
     name: Object

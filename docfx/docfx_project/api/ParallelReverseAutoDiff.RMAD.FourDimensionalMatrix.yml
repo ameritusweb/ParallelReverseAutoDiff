@@ -48,18 +48,19 @@ items:
 
       [JsonConverter(typeof(FourDimensionalMatrixJsonConverter))]
 
-      public class FourDimensionalMatrix : IEnumerable<DeepMatrix>, IEnumerable, ICloneable
+      public class FourDimensionalMatrix : IEnumerable<DeepMatrix>, IEnumerable, IMatrix, ICloneable
     content.vb: >-
       <Serializable>
 
       <JsonConverter(GetType(FourDimensionalMatrixJsonConverter))>
 
-      Public Class FourDimensionalMatrix Implements IEnumerable(Of DeepMatrix), IEnumerable, ICloneable
+      Public Class FourDimensionalMatrix Implements IEnumerable(Of DeepMatrix), IEnumerable, IMatrix, ICloneable
   inheritance:
   - System.Object
   implements:
   - System.Collections.Generic.IEnumerable{ParallelReverseAutoDiff.RMAD.DeepMatrix}
   - System.Collections.IEnumerable
+  - ParallelReverseAutoDiff.RMAD.IMatrix
   - System.ICloneable
   inheritedMembers:
   - System.Object.Equals(System.Object)
@@ -439,6 +440,8 @@ items:
       type: System.Int32
     content.vb: Public ReadOnly Property Count As Integer
   overload: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count*
+  implements:
+  - ParallelReverseAutoDiff.RMAD.IMatrix.Count
 - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
   commentId: P:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
   id: Dimension
@@ -762,6 +765,13 @@ references:
   name: IEnumerable
   nameWithType: IEnumerable
   fullName: System.Collections.IEnumerable
+- uid: ParallelReverseAutoDiff.RMAD.IMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.IMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IMatrix.html
+  name: IMatrix
+  nameWithType: IMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IMatrix
 - uid: System.ICloneable
   commentId: T:System.ICloneable
   parent: System
@@ -1173,6 +1183,13 @@ references:
   name: Count
   nameWithType: FourDimensionalMatrix.Count
   fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
+- uid: ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  commentId: P:ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  parent: ParallelReverseAutoDiff.RMAD.IMatrix
+  href: ParallelReverseAutoDiff.RMAD.IMatrix.html#ParallelReverseAutoDiff.RMAD.IMatrix.Count
+  name: Count
+  nameWithType: IMatrix.Count
+  fullName: ParallelReverseAutoDiff.RMAD.IMatrix.Count
 - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension
   href: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Dimension

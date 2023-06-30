@@ -33,6 +33,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.OutputDependencyCount
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
@@ -1273,12 +1274,50 @@ items:
     parameters:
     - id: objToCopy
       type: System.Object
-      description: Either a Matrix or an Operation.
+      description: Either a Matrix or a DeepMatrix or an Operation.
     content.vb: Sub CopyResult(objToCopy As Object)
   overload: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult*
   nameWithType.vb: IOperationBase.CopyResult(Object)
   fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult(Object)
   name.vb: CopyResult(Object)
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  id: ReplaceResult(System.Object)
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  langs:
+  - csharp
+  - vb
+  name: ReplaceResult(object)
+  nameWithType: IOperationBase.ReplaceResult(object)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(object)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IOperationBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ReplaceResult
+    path: ../../src/RMAD/IOperationBase.cs
+    startLine: 227
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: >-
+    Replaces the result of the operation to the specified destination.
+
+    If the inner arrays are different sizes, this operation will keep the differing sizes, whereas CopyResult does not handle differing sizes.
+  example: []
+  syntax:
+    content: void ReplaceResult(object objToCopy)
+    parameters:
+    - id: objToCopy
+      type: System.Object
+      description: Either a Matrix or a DeepMatrix or an Operation.
+    content.vb: Sub ReplaceResult(objToCopy As Object)
+  overload: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult*
+  nameWithType.vb: IOperationBase.ReplaceResult(Object)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(Object)
+  name.vb: ReplaceResult(Object)
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
   commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)
   id: Initialize(System.Int32)
@@ -1297,7 +1336,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 226
+    startLine: 233
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1332,7 +1371,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeLock
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 231
+    startLine: 238
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1360,7 +1399,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeSyncSemaphore
     path: ../../src/RMAD/IOperationBase.cs
-    startLine: 236
+    startLine: 243
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -2391,6 +2430,12 @@ references:
   name: CopyResult
   nameWithType: IOperationBase.CopyResult
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.CopyResult
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)
+  name: ReplaceResult
+  nameWithType: IOperationBase.ReplaceResult
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize
   href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)

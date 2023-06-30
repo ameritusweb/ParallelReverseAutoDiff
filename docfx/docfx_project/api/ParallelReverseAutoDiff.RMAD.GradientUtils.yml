@@ -135,7 +135,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AccumulateBackwardGradients
     path: ../../src/RMAD/GradientUtils.cs
-    startLine: 79
+    startLine: 83
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

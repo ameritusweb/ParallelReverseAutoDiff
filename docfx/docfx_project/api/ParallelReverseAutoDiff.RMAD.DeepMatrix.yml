@@ -13,6 +13,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
@@ -25,6 +26,8 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
   langs:
   - csharp
   - vb
@@ -405,6 +408,37 @@ items:
       type: System.Int32
     content.vb: Public ReadOnly Property Depth As Integer
   overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
+  id: Count
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: DeepMatrix.Count
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Count
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 109
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the count of the matrix.
+  example: []
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count*
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   id: Dimension
@@ -423,7 +457,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Dimension
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 109
+    startLine: 114
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -454,7 +488,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 124
+    startLine: 129
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -498,7 +532,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 135
+    startLine: 140
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -518,6 +552,88 @@ items:
   nameWithType.vb: DeepMatrix.this[](Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.this[](Integer)
   name.vb: this[](Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  id: op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: operator +(DeepMatrix, DeepMatrix)
+  nameWithType: DeepMatrix.operator +(DeepMatrix, DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.operator +(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  type: Operator
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Addition
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 152
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Adds two deep matrices together.
+  example: []
+  syntax:
+    content: public static DeepMatrix operator +(DeepMatrix m1, DeepMatrix m2)
+    parameters:
+    - id: m1
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The first deep matrix.
+    - id: m2
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The second deep matrix.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The resultant deep matrix.
+    content.vb: Public Shared Operator +(m1 As DeepMatrix, m2 As DeepMatrix) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition*
+  nameWithType.vb: DeepMatrix.+(DeepMatrix, DeepMatrix)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.+(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name.vb: +(DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
+  id: op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: operator *(DeepMatrix, double)
+  nameWithType: DeepMatrix.operator *(DeepMatrix, double)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.operator *(ParallelReverseAutoDiff.RMAD.DeepMatrix, double)
+  type: Operator
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Multiply
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 178
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Multiplies a deep matrix with a scalar.
+  example: []
+  syntax:
+    content: public static DeepMatrix operator *(DeepMatrix m, double scalar)
+    parameters:
+    - id: m
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The deep matrix to multiply.
+    - id: scalar
+      type: System.Double
+      description: The scalar value to multiply with.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The resultant deep matrix.
+    content.vb: Public Shared Operator *(m As DeepMatrix, scalar As Double) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply*
+  nameWithType.vb: DeepMatrix.*(DeepMatrix, Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.*(ParallelReverseAutoDiff.RMAD.DeepMatrix, Double)
+  name.vb: '*(DeepMatrix, Double)'
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
   id: InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
@@ -536,7 +652,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 149
+    startLine: 207
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -583,7 +699,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeDoubleArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 169
+    startLine: 227
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -633,7 +749,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 189
+    startLine: 247
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -668,7 +784,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 216
+    startLine: 274
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -699,7 +815,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 225
+    startLine: 283
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -734,7 +850,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 234
+    startLine: 292
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -767,7 +883,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 243
+    startLine: 301
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -799,7 +915,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 264
+    startLine: 322
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1294,6 +1410,12 @@ references:
   name: Depth
   nameWithType: DeepMatrix.Depth
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Depth
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
+  name: Count
+  nameWithType: DeepMatrix.Count
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
@@ -1327,6 +1449,36 @@ references:
   name: Matrix
   nameWithType: Matrix
   fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: operator +
+  nameWithType: DeepMatrix.operator +
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.operator +
+  nameWithType.vb: DeepMatrix.+
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.+
+  name.vb: +
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition*
+    name: +
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
+  name: operator *
+  nameWithType: DeepMatrix.operator *
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.operator *
+  nameWithType.vb: DeepMatrix.*
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.*
+  name.vb: '*'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply*
+    name: '*'
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)

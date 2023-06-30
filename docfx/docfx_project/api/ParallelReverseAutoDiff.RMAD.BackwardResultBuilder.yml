@@ -29,7 +29,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardResultBuilder
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 12
+    startLine: 13
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -66,7 +66,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddInputGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 23
+    startLine: 25
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -101,7 +101,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddInputGradientArray
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 35
+    startLine: 38
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -136,7 +136,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddDeepInputGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 51
+    startLine: 55
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -171,7 +171,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddFiltersGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 63
+    startLine: 68
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -209,7 +209,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddWeightGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 74
+    startLine: 80
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -244,7 +244,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddScalingGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 85
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -279,7 +279,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBetaGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 96
+    startLine: 104
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -314,7 +314,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddGammaGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 107
+    startLine: 116
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -349,7 +349,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBiasGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 118
+    startLine: 128
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -384,7 +384,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Build
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 128
+    startLine: 139
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

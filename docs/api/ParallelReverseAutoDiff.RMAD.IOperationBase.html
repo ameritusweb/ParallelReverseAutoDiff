@@ -1030,7 +1030,7 @@
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>objToCopy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd><p>Either a Matrix or an Operation.</p>
+    <dd><p>Either a Matrix or a DeepMatrix or an Operation.</p>
 </dd>
   </dl>
 
@@ -1115,7 +1115,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_Initialize_System_Int32_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.Initialize(System.Int32)">
   Initialize(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L234"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the operation with the specified starting point index.</p>
@@ -1187,7 +1187,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_InitializeLock" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeLock">
   InitializeLock()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L232"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L239"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the lock object.</p>
@@ -1214,7 +1214,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_InitializeSyncSemaphore" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.InitializeSyncSemaphore">
   InitializeSyncSemaphore()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L237"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L244"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initialize the synchronization semaphore.</p>
@@ -1225,6 +1225,40 @@
     <pre><code class="lang-csharp hljs">void InitializeSyncSemaphore()</code></pre>
   </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_IOperationBase_ReplaceResult_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_IOperationBase_ReplaceResult_System_Object_" data-uid="ParallelReverseAutoDiff.RMAD.IOperationBase.ReplaceResult(System.Object)">
+  ReplaceResult(object)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/IOperationBase.cs/#L228"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replaces the result of the operation to the specified destination.
+If the inner arrays are different sizes, this operation will keep the differing sizes, whereas CopyResult does not handle differing sizes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ReplaceResult(object objToCopy)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>objToCopy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>Either a Matrix or a DeepMatrix or an Operation.</p>
+</dd>
+  </dl>
 
 
 

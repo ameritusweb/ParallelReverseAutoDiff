@@ -28,8 +28,10 @@ items:
   - ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation
   - ParallelReverseAutoDiff.RMAD.BatchOperation`1
   - ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
+  - ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
+  - ParallelReverseAutoDiff.RMAD.BatchSwishOperation
   - ParallelReverseAutoDiff.RMAD.BatchTanhOperation
   - ParallelReverseAutoDiff.RMAD.ComputationGraph
   - ParallelReverseAutoDiff.RMAD.CudaBlas
@@ -59,6 +61,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.HadamardProductOperation
   - ParallelReverseAutoDiff.RMAD.IBatchOperation
   - ParallelReverseAutoDiff.RMAD.IDeepOperation
+  - ParallelReverseAutoDiff.RMAD.IMatrix
   - ParallelReverseAutoDiff.RMAD.IModelLayer
   - ParallelReverseAutoDiff.RMAD.IOperation
   - ParallelReverseAutoDiff.RMAD.IOperationBase
@@ -99,6 +102,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.ReLUOperation
   - ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
   - ParallelReverseAutoDiff.RMAD.SigmoidOperation
+  - ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.SoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.StoreBase
   - ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation
@@ -285,6 +289,12 @@ references:
   name: BatchScaleAndShiftOperation
   nameWithType: BatchScaleAndShiftOperation
   fullName: ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation
+  href: ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation.html
+  name: BatchSineSoftmaxOperation
+  nameWithType: BatchSineSoftmaxOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation
 - uid: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
   href: ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html
@@ -297,6 +307,12 @@ references:
   name: BatchSwigLUOperation
   nameWithType: BatchSwigLUOperation
   fullName: ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchSwishOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchSwishOperation
+  href: ParallelReverseAutoDiff.RMAD.BatchSwishOperation.html
+  name: BatchSwishOperation
+  nameWithType: BatchSwishOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchSwishOperation
 - uid: ParallelReverseAutoDiff.RMAD.BatchTanhOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.BatchTanhOperation
   href: ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html
@@ -484,6 +500,13 @@ references:
   name: IDeepOperation
   nameWithType: IDeepOperation
   fullName: ParallelReverseAutoDiff.RMAD.IDeepOperation
+- uid: ParallelReverseAutoDiff.RMAD.IMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.IMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.IMatrix.html
+  name: IMatrix
+  nameWithType: IMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.IMatrix
 - uid: ParallelReverseAutoDiff.RMAD.IModelLayer
   commentId: T:ParallelReverseAutoDiff.RMAD.IModelLayer
   parent: ParallelReverseAutoDiff.RMAD
@@ -743,6 +766,12 @@ references:
   name: SigmoidOperation
   nameWithType: SigmoidOperation
   fullName: ParallelReverseAutoDiff.RMAD.SigmoidOperation
+- uid: ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation
+  href: ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation.html
+  name: SineSoftmaxOperation
+  nameWithType: SineSoftmaxOperation
+  fullName: ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation
 - uid: ParallelReverseAutoDiff.RMAD.SoftmaxOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.SoftmaxOperation
   href: ParallelReverseAutoDiff.RMAD.SoftmaxOperation.html
