@@ -7,7 +7,15 @@ Parallel Reverse Mode Automatic Differentiation in C#
 ![Nuget](https://img.shields.io/nuget/dt/parallelreverseautodiff?style=flat-square)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7f9f69794dd74a97aeaac17ebd1580ec)](https://app.codacy.com/gh/ameritusweb/ParallelReverseAutoDiff/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
-ParallelReverseAutoDiff is a thread-safe C# library for reverse mode automatic differentiation, optimized for parallel computation. It leverages semaphores and locks to coordinate between threads, ensuring accuracy during gradient accumulation. Each operation in the library is implemented as a node with a forward and a backward function, facilitating efficient calculation of derivatives. A unique aspect of this library is its use of the visitor pattern: it includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is responsible for gradient accumulation on nodes shared across multiple threads. This design allows for parallelized computations while maintaining consistency and avoiding race conditions. The result is an efficient, scalable automatic differentiation solution, ideal for machine learning applications and neural network training.
+ParallelReverseAutoDiff (PRAD) is a thread-safe C# library designed for reverse mode automatic differentiation, optimized for parallel computation and primed for the demands of modern machine learning applications and neural network training. It leverages semaphores and locks to orchestrate between threads, ensuring precision during gradient accumulation.
+
+Each operation in PRAD is embodied as a node with forward and backward functions, facilitating the efficient calculation of derivatives. This design is particularly beneficial for large-scale problems and complex neural network architectures, where computational efficiency is paramount.
+
+A standout feature of PRAD is its innovative use of the visitor pattern. The library includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is tasked with gradient accumulation on nodes shared across multiple threads, allowing for parallelized computations while maintaining consistency and avoiding race conditions.
+
+Moreover, PRAD introduces a data-driven approach to neural network architecture design, allowing for rapid prototyping and experimentation. The library leverages the power of ILGPU, a high-performance GPU-accelerated library for .NET programs, to perform complex computations on the GPU, further enhancing its performance and scalability.
+
+PRAD's dynamic computational graph, constructed from JSON architecture, allows for the efficient computation of gradients, a crucial aspect of the backpropagation process used in training neural networks. This unique blend of features makes PRAD an efficient, scalable, and groundbreaking automatic differentiation solution.
 
 [API Documentation](https://ameritusweb.github.io/ParallelReverseAutoDiff/api/index.html)
 
