@@ -61,7 +61,7 @@ namespace ParallelReverseAutoDiff.Test
                     var typeInt = rand.Next() % 7;
                     node.GapType = (GapType)typeInt;
                     gapNodes.Add(node);
-                    for (int l = 0; l < 5; ++l)
+                    for (int l = 0; l < (rand.NextDouble() < 0.5d ? 4 : 5); ++l)
                     {
                         var edge = new GapEdge();
                         edge.Node = node;

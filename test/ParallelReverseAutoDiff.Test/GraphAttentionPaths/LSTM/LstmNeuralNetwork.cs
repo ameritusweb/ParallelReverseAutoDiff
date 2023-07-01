@@ -267,7 +267,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
-        public async Task<DeepMatrix> AutomaticBackwardPropagate(Matrix gradient)
+        public async Task<FourDimensionalMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
             IOperationBase? backwardStartOperation = this.computationGraph[$"output_t_{this.Parameters.NumTimeSteps - 1}_0"];
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
@@ -278,11 +278,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
             }
-            DeepMatrix output = new DeepMatrix(this.Parameters.NumTimeSteps, this.outputSize, 1);
+            FourDimensionalMatrix output = new FourDimensionalMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1);
             for (int i = 0; i < this.Parameters.NumTimeSteps; ++i)
             {
                 IOperationBase? backwardEndOperation = this.computationGraph[$"projectedInput_{i}_0"];
-                output[i] = backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+                output[i] = backwardEndOperation.CalculatedGradient[1] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
             }
             return output;
         }

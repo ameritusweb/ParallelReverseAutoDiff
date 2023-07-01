@@ -8,7 +8,6 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.Interprocess;
@@ -227,6 +226,22 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return flatMatrix;
+        }
+
+        /// <summary>
+        /// Accumulates with the specified double array.
+        /// </summary>
+        /// <param name="doubleArray">The double array.</param>
+        public void Accumulate(double[][] doubleArray)
+        {
+            for (int i = 0; i < this.Rows; ++i)
+            {
+                int cols = this[i].Length;
+                for (int j = 0; j < cols; ++j)
+                {
+                    this[i][j] += doubleArray[i][j];
+                }
+            }
         }
 
         /// <summary>

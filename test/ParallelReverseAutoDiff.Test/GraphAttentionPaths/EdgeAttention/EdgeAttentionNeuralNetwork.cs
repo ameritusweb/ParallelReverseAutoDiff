@@ -225,7 +225,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
-            CommonMatrixUtils.SetInPlace(this.Input, input);
+            CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -274,7 +274,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             while (currOp.Next != null);
         }
 
-        public async Task AutomaticBackwardPropagate(Matrix gradient)
+        public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_avg_0_0"];
@@ -286,6 +286,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
             }
+            IOperationBase? backwardEndOperation = this.computationGraph["keys_edgeFeatures_0_0"];
+            return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
         public void InitializeState()

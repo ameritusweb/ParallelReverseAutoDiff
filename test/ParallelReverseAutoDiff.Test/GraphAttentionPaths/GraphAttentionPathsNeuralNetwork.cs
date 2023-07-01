@@ -25,6 +25,7 @@
         private readonly Dictionary<int, Guid> typeToIdMap;
         private readonly Dictionary<int, Guid> typeToIdMapLstm;
         private readonly Dictionary<int, Guid> typeToIdMapAttention;
+        private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
 
         public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
         {
@@ -38,6 +39,7 @@
             this.typeToIdMap = new Dictionary<int, Guid>();
             this.typeToIdMapLstm = new Dictionary<int, Guid>();
             this.typeToIdMapAttention = new Dictionary<int, Guid>();
+            this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
@@ -199,6 +201,7 @@
                 {
                     var index = (int)path.GapType;
                     var connectedPaths = graph.GapPaths.Where(x => IsConnected(path, x, graph.AdjacencyMatrix)).ToList();
+                    this.connectedPathsMap.Add(path, connectedPaths);
                     DeepMatrix connectedPathsMatrix = new DeepMatrix(connectedPaths.Count, numFeatures, 1);
                     for (int i = 0; i < connectedPaths.Count; ++i)
                     {
@@ -356,8 +359,6 @@
                 graphIndex++;
             }
 
-            //List<DeepMatrix> attentionNetGradients = new List<DeepMatrix>();
-            //List<FourDimensionalMatrix> attentionNetConnectedGradients = new List<FourDimensionalMatrix>();
             Dictionary<GapPath, (Matrix, DeepMatrix)> pathToGradientsMap = new Dictionary<GapPath, (Matrix, DeepMatrix)>();
             foreach (var type in pathGradients.Keys)
             {
@@ -371,55 +372,103 @@
                     var path = indexesToPathMap[(type, i)];
                     pathToGradientsMap.Add(path, (attentionGradient[i], connectedPathsGradient[i]));
                 }
-                //attentionNetGradients.Add(attentionGradient);
-                //attentionNetConnectedGradients.Add(connectedPathsGradient);
             }
 
-            //attentionNetGradients = ApplyGradients(attentionNetGradients, attentionNetConnectedGradients);
-            List<DeepMatrix> lstmNetGradients = new List<DeepMatrix>();
-            pathIndex = 0;
-            //foreach (var path in this.gapPaths)
-            //{
-            //    var index = (int)path.GapType;
-            //    var lstmNet = this.lstmNeuralNetwork[index];
-            //    lstmNet.RestoreOperationIntermediates(path.Id);
-            //    var lstmGradient = await lstmNet.AutomaticBackwardPropagate(attentionNetGradients[pathIndex]);
-            //    lstmNetGradients.Add(lstmGradient);
-            //    pathIndex++;
-            //}
-            //pathIndex = 0;
-            //foreach (var path in this.gapPaths)
-            //{
-            //    var nodeIndex = 0;
-            //    foreach (var node in path.Nodes)
-            //    {
-            //        var index = (int)node.GapType;
-            //        var edgeAttentionNet = this.edgeAttentionNeuralNetwork[index];
-            //        edgeAttentionNet.RestoreOperationIntermediates(node.Id);
-            //        await edgeAttentionNet.AutomaticBackwardPropagate(lstmNetGradients[pathIndex][nodeIndex]);
-            //        nodeIndex++;
-            //    }
-            //    pathIndex++;
-            //}
+            ApplyGradients(pathToGradientsMap);
+
+            Dictionary<int, List<Matrix>> pathLengthToGradientMap = new Dictionary<int, List<Matrix>>();
+            Dictionary<(int, int), GapPath> indexesToPathMapLstm = new Dictionary<(int, int), GapPath>();
+            foreach (var graph in gapGraphs)
+            {
+                foreach (var path in graph.GapPaths)
+                {
+                    var pathLength = path.Nodes.Count;
+                    var gradient = pathToGradientsMap[path].Item1;
+                    if (pathLengthToGradientMap.ContainsKey(pathLength))
+                    {
+                        indexesToPathMapLstm.Add((pathLength, pathLengthToGradientMap[pathLength].Count), path);
+                        pathLengthToGradientMap[pathLength].Add(gradient);
+                    }
+                    else
+                    {
+                        indexesToPathMapLstm.Add((pathLength, 0), path);
+                        pathLengthToGradientMap.Add(pathLength, new List<Matrix> { gradient });
+                    }
+                }
+            }
+
+            Dictionary<GapNode, Matrix> nodeToGradientMap = new Dictionary<GapNode, Matrix>();
+            foreach (var key in pathLengthToGradientMap.Keys)
+            {
+                var lstmNet = this.lstmNeuralNetwork[key - 2];
+                lstmNet.RestoreOperationIntermediates(this.typeToIdMapLstm[key]);
+                var lstmGradient = CommonMatrixUtils.SwitchFirstTwoDimensions((await lstmNet.AutomaticBackwardPropagate(new DeepMatrix(pathLengthToGradientMap[key].ToArray()))).ToArray());
+                
+                for (int i = 0; i < lstmGradient.Length; ++i)
+                {
+                    var path = indexesToPathMapLstm[(key, i)];
+                    var nodeCount = path.Nodes.Count;
+                    for (int j = 0; j < nodeCount; ++j)
+                    {
+                        var node = path.Nodes[j];
+                        if (!nodeToGradientMap.ContainsKey(node))
+                        {
+                            nodeToGradientMap.Add(node, lstmGradient[i][j]);
+                        }
+                        else
+                        {
+                            nodeToGradientMap[node].Accumulate(lstmGradient[i][j].ToArray());
+                        }
+                    }
+                }
+            }
+
+            Dictionary<int, List<Matrix>> nodeTypeToGradientMap = new Dictionary<int, List<Matrix>>();
+            foreach (var graph in gapGraphs)
+            {
+                foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
+                {
+                    var type = (int)node.GapType;
+                    var gradient = nodeToGradientMap[node];
+                    if (nodeTypeToGradientMap.ContainsKey(type))
+                    {
+                        nodeTypeToGradientMap[type].Add(gradient);
+                    }
+                    else
+                    {
+                        nodeTypeToGradientMap.Add(type, new List<Matrix> { gradient });
+                    }
+                }
+            }
+
+            List<DeepMatrix> edgeGradients = new List<DeepMatrix>();
+            foreach (var key in nodeTypeToGradientMap.Keys)
+            {
+                var edgeAttentionNet = this.edgeAttentionNeuralNetwork[key];
+                edgeAttentionNet.RestoreOperationIntermediates(this.typeToIdMap[key]);
+                var edgeAttentionGradient = await edgeAttentionNet.AutomaticBackwardPropagate(new DeepMatrix(nodeTypeToGradientMap[key].ToArray()));
+                edgeGradients.Add(edgeAttentionGradient);
+            }
         }
 
-        //private List<Matrix> ApplyGradients(List<Matrix> attentionNetGradients, List<DeepMatrix> attentionNetConnectedGradients)
-        //{
-        //    for (int i = 0; i < this.gapPaths.Count; ++i)
-        //    {
-        //        var path = this.gapPaths[i];
-        //        var connectedPaths = this.connectedPathsMap[path];
-        //        var gradients = attentionNetConnectedGradients[i];
-        //        for (int j = 0; j < connectedPaths.Count; ++j)
-        //        {
-        //            var connectedPath = connectedPaths[j];
-        //            var connectedPathIndex = this.gapPaths.IndexOf(connectedPath);
-        //            var gradient = gradients[j];
-        //            attentionNetGradients[connectedPathIndex] += gradient;
-        //        }
-        //    }
-        //    return attentionNetGradients;
-        //}
+        private void ApplyGradients(Dictionary<GapPath, (Matrix, DeepMatrix)> pathToGradientsMap)
+        {
+            foreach (var graph in this.gapGraphs)
+            {
+                foreach (var path in graph.GapPaths)
+                {
+                    var (gradient, connectedPathsGradient) = pathToGradientsMap[path];
+                    var connectedPaths = this.connectedPathsMap[path];
+                    for (int i = 0; i < connectedPaths.Count; ++i)
+                    {
+                        var connectedPath = connectedPaths[i];
+                        var connectedGradient = connectedPathsGradient[i];
+                        var grad = pathToGradientsMap[connectedPath].Item1;
+                        grad.Accumulate(connectedGradient.ToArray());
+                    }
+                }
+            }
+        }
 
         private bool IsConnected(GapPath path1, GapPath path2, Matrix adjacency)
         {
