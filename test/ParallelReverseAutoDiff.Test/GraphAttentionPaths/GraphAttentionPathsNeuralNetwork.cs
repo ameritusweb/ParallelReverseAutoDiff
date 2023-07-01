@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
+﻿//------------------------------------------------------------------------------
+// <copyright file="GraphAttentionPathsNeuralNetwork.cs" author="ameritusweb" date="7/1/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.Test.Common;
@@ -8,6 +13,9 @@
     using System.IO;
     using System;
 
+    /// <summary>
+    /// Graph Attention Paths Neural Network.
+    /// </summary>
     public class GraphAttentionPathsNeuralNetwork
     {
         private const string WEIGHTSSAVEPATH = "D:\\models\\initialWeights2.json";
@@ -27,6 +35,16 @@
         private readonly Dictionary<int, Guid> typeToIdMapAttention;
         private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GraphAttentionPathsNeuralNetwork"/> class.
+        /// </summary>
+        /// <param name="graphs">The graphs.</param>
+        /// <param name="batchSize">The batch size.</param>
+        /// <param name="numFeatures">The number of features.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numQueries">The number of queries.</param>
+        /// <param name="learningRate">The learning rate.</param>
+        /// <param name="clipValue">The clip Value.</param>
         public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
         {
             this.gapGraphs = graphs;
@@ -77,6 +95,9 @@
             //this.ApplyWeights();
         }
 
+        /// <summary>
+        /// Save the weights to the save path.
+        /// </summary>
         public void SaveWeights()
         {
             var weightStore = new WeightStore();
@@ -84,6 +105,9 @@
             weightStore.Save(new FileInfo(WEIGHTSSAVEPATH));
         }
 
+        /// <summary>
+        /// Apply the weights from the save path.
+        /// </summary>
         public void ApplyWeights()
         {
             var weightStore = new WeightStore();    
@@ -98,6 +122,10 @@
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
 
+        /// <summary>
+        /// Make a forward pass through the computation graph.
+        /// </summary>
+        /// <returns>The gradient of the loss wrt the output.</returns>
         public async Task<DeepMatrix> Forward()
         {
             Dictionary<int, List<Matrix>> inputsByType = new Dictionary<int, List<Matrix>>();
@@ -325,6 +353,11 @@
             return new DeepMatrix(outputGradients.ToArray());
         }
 
+        /// <summary>
+        /// The backward pass through the computation graph.
+        /// </summary>
+        /// <param name="gradientOfLossWrtReadoutOutput">The gradient of the loss wrt the output.</param>
+        /// <returns>A task.</returns>
         public async Task Backward(DeepMatrix gradientOfLossWrtReadoutOutput)
         {
             var readoutNet = this.readoutNeuralNetwork;

@@ -35,6 +35,8 @@ BatchNormalizationOperation
 
 CudaMatrixMultiplyOperation - Leverages NVIDIA GPUs for fast computation.
 
+DualWeightedOperation
+
 GELUOperation
 
 GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, and Intel GPUs for fast computation.
