@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/ameritusweb/ParallelReverseAutoDiff</projectUrl>
     <icon>logo.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A library for parallelized reverse mode automatic differentiation in C# for neural network development.</description>
+    <description>A library for parallelized reverse mode automatic differentiation in C# for custom neural network development.</description>
 	<repository type="git" url="https://github.com/ameritusweb/ParallelReverseAutoDiff.git" commit="4d44743578e6a5de29a67daedc63428381ce7f9b" />
     <releaseNotes>Add Accumulate function.</releaseNotes>
     <copyright>ameritusweb, 2023</copyright>
