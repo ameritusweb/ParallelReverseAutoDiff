@@ -14,15 +14,43 @@ namespace ParallelReverseAutoDiff.Test
             try
             {
                 GpuMatrixMultiplyOperation op = new GpuMatrixMultiplyOperation();
+                MatrixMultiplyOperation mmop = new MatrixMultiplyOperation();
                 Matrix? c = null;
-                DeepMatrix? f = null;
+                Matrix? d = null;
+                Matrix? f = null;
+                Matrix? g = null;
+                Matrix? h = null;
+                Matrix? i = null;
                 Matrix a = new Matrix(1000, 1000);
                 a.Initialize(InitializationType.Xavier);
                 Matrix b = new Matrix(1000, 1);
                 b.Initialize(InitializationType.Xavier);
+                Matrix gradient = new Matrix(1000, 1);
+                gradient.Initialize(InitializationType.Xavier);
+                int precision = 10;
                 await Task.Run(() =>
                 {
                     c = op.Forward(a, b);
+                    d = mmop.Forward(a, b);
+                    for (int j = 0; j < 1000; ++j)
+                    {
+                        Assert.Equal(Math.Round(c[j][0], precision), Math.Round(d[j][0], precision));
+                    }
+                    f = op.Backward(gradient).Item1 as Matrix;
+                    g = op.Backward(gradient).Item2 as Matrix;
+                    h = mmop.Backward(gradient).Item1 as Matrix;
+                    i = mmop.Backward(gradient).Item2 as Matrix;
+                    for (int j = 0; j < 1000; ++j)
+                    {
+                        for (int k = 0; k < 1000; ++k)
+                        {
+                            Assert.Equal(Math.Round(f[j][k], precision), Math.Round(h[j][k], precision));
+                        }
+                    }
+                    for (int j = 0; j < 1000; ++j)
+                    {
+                        Assert.Equal(Math.Round(g[j][0], precision), Math.Round(i[j][0], precision));
+                    }
                 });
                 Assert.NotNull(c);
             }
