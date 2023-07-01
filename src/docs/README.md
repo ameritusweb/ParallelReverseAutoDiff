@@ -9,6 +9,39 @@ Parallel Reverse Mode Automatic Differentiation in C#
 
 ParallelReverseAutoDiff (PRAD) is a thread-safe C# library designed for reverse mode automatic differentiation, optimized for parallel computation and primed for the demands of modern machine learning applications and neural network training. It leverages semaphores and locks to orchestrate between threads, ensuring precision during gradient accumulation.
 
+Upon the realm of code, a gem does shine,
+
+PRAD, a library so divine.
+
+In C# it's crafted, threads align,
+
+Parallel tasks in order, by design.
+
+
+Reverse mode diff, its core decree,
+
+For neural nets, the key to see.
+
+With batch operations, swift and free,
+
+And ILGPU's might, a sight to be.
+
+
+From JSON springs architecture grand,
+
+A computational graph, complex and planned.
+
+In the realm of AI, it takes a stand,
+
+A tool of power, in your hand.
+
+
+So sing we now of PRAD's great glory,
+
+Etched forever in code's vast story.
+
+[API Documentation](https://ameritusweb.github.io/ParallelReverseAutoDiff/api/index.html)
+
 Each operation in PRAD is embodied as a node with forward and backward functions, facilitating the efficient calculation of derivatives. This design is particularly beneficial for large-scale problems and complex neural network architectures, where computational efficiency is paramount.
 
 A standout feature of PRAD is its innovative use of the visitor pattern. The library includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is tasked with gradient accumulation on nodes shared across multiple threads, allowing for parallelized computations while maintaining consistency and avoiding race conditions.
@@ -16,8 +49,6 @@ A standout feature of PRAD is its innovative use of the visitor pattern. The lib
 Moreover, PRAD introduces a data-driven approach to neural network architecture design, allowing for rapid prototyping and experimentation. The library leverages the power of ILGPU, a high-performance GPU-accelerated library for .NET programs, to perform complex computations on the GPU, further enhancing its performance and scalability.
 
 PRAD's dynamic computational graph, constructed from JSON architecture, allows for the efficient computation of gradients, a crucial aspect of the backpropagation process used in training neural networks. This unique blend of features makes PRAD an efficient, scalable, and groundbreaking automatic differentiation solution.
-
-[API Documentation](https://ameritusweb.github.io/ParallelReverseAutoDiff/api/index.html)
 
 ## Prerequisites
 Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
