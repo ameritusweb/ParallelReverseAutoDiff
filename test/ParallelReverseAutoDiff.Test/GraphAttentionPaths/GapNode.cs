@@ -5,12 +5,13 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
+    using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A node in a graph attention path.
     /// </summary>
-    public class GapNode
+    public class GapNode : IPopulate
     {
         /// <summary>
         /// The node identifier.
@@ -46,5 +47,28 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// The edges.
         /// </summary>
         public List<GapEdge> Edges { get; set; }
+
+        private List<Guid> edgeIds;
+        public List<Guid> EdgeIds
+        {
+            get { return (Edges?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
+            set { edgeIds = value; }  // Setter for deserialization
+        }
+
+        public void Populate(GapGraph graph)
+        {
+            var edges = edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
+            foreach (var edge in edges)
+            {
+                if (edge != null)
+                {
+                    Edges.Add(edge);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Edge not found.");
+                }
+            }
+        }
     }
 }

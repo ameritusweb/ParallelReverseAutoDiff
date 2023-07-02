@@ -208,7 +208,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 var lstmNet = this.lstmNeuralNetwork[length - 2]; // Because a path must have a length of at least two
                 lstmNet.Parameters.BatchSize = batchedInput.Length;
                 lstmNet.InitializeState();
-                await lstmNet.AutomaticForwardPropagate(new FourDimensionalMatrix(switched), length);
+                await lstmNet.AutomaticForwardPropagate(new FourDimensionalMatrix(switched));
                 var id = Guid.NewGuid();
                 this.typeToIdMapLstm.Add(length, id);
                 lstmNet.StoreOperationIntermediates(id);
@@ -257,7 +257,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 attentionNet.InitializeState();
                 attentionNet.ConnectedPathsDeepMatrixArray.Replace(batchedConnectedPaths);
                 attentionNet.DConnectedPathsDeepMatrixArray.Replace(batchedConnectedPaths.Select(x => new DeepMatrix(x.Dimension)).ToArray());
-                attentionNet.AutomaticForwardPropagate(new DeepMatrix(batchedInputs), true);
+                attentionNet.AutomaticForwardPropagate(new DeepMatrix(batchedInputs));
                 var id = Guid.NewGuid();
                 this.typeToIdMapAttention.Add(type, id);
                 attentionNet.StoreOperationIntermediates(id);
@@ -321,14 +321,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             gcnNet.Parameters.BatchSize = gcnInputList.Count;
             gcnNet.InitializeState();
             gcnNet.Adjacency.Replace(adjacencyList.ToArray());
-            gcnNet.AutomaticForwardPropagate(new FourDimensionalMatrix(gcnInputList.ToArray()), true);
+            gcnNet.AutomaticForwardPropagate(new FourDimensionalMatrix(gcnInputList.ToArray()));
             var gcnOutputs = new DeepMatrix(gcnNet.Output.Last().ToArray());
 
             var readoutInput = gcnOutputs;
             var readoutNet = this.readoutNeuralNetwork;
             readoutNet.Parameters.BatchSize = readoutInput.Depth;
             readoutNet.InitializeState();
-            readoutNet.AutomaticForwardPropagate(readoutInput, true);
+            readoutNet.AutomaticForwardPropagate(readoutInput);
             var readoutOutput = readoutNet.Output;
 
             List<Matrix> outputGradients = new List<Matrix>();
