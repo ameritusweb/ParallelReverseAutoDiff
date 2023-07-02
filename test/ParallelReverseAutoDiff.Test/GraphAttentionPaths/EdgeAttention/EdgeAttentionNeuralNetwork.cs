@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json;
-using ParallelReverseAutoDiff.RMAD;
-using ParallelReverseAutoDiff.Test.Common;
-using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
-using System.Diagnostics;
-
+﻿// ------------------------------------------------------------------------------
+// <copyright file="EdgeAttentionNeuralNetwork.cs" author="ameritusweb" date="6/18/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
 {
+    using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.Test.Common;
+
     /// <summary>
     /// An edge attention neural network.
     /// </summary>
@@ -97,6 +100,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         /// </summary>
         public Matrix Target { get; private set; }
 
+        /// <summary>
+        /// Gets the model layers.
+        /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
         {
             get
@@ -134,6 +140,130 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             await this.InitializeComputationGraph();
         }
 
+        /// <summary>
+        /// Store the operation intermediates.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void StoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.StoreOperationIntermediates(id);
+        }
+
+        /// <summary>
+        /// Restore the operation intermediates.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.RestoreOperationIntermediates(id);
+        }
+
+        /// <summary>
+        /// The forward pass of the edge attention neural network.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        public void AutomaticForwardPropagate(DeepMatrix input)
+        {
+            // Initialize hidden state, gradients, biases, and intermediates
+            this.ClearState();
+
+            CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
+            var op = this.computationGraph.StartOperation;
+            if (op == null)
+            {
+                throw new Exception("Start operation should not be null.");
+            }
+
+            IOperationBase? currOp = null;
+            do
+            {
+                var parameters = this.LookupParameters(op);
+                if (op.Id == "concatenated")
+                {
+                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
+                    DeepMatrix[] deepMatrixArray = new DeepMatrix[objArray.Length];
+                    for (int i = 0; i < objArray.Length; ++i)
+                    {
+                        var obj = objArray[i];
+                        if (obj is DeepMatrix m)
+                        {
+                            deepMatrixArray[i] = m;
+                        }
+                    }
+                    parameters[0] = CommonMatrixUtils.SwitchFirstTwoDimensions(deepMatrixArray);
+                }
+
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
+                if (forward == null)
+                {
+                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
+                }
+
+                forward.Invoke(op, parameters);
+                if (op.ResultToName != null)
+                {
+                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+                    op.CopyResult(oo);
+                }
+
+                currOp = op;
+                if (op.HasNext)
+                {
+                    op = op.Next;
+                }
+            }
+            while (currOp.Next != null);
+        }
+
+        /// <summary>
+        /// The backward pass of the edge attention neural network.
+        /// </summary>
+        /// <param name="gradient">The gradient of the loss.</param>
+        /// <returns>The gradient.</returns>
+        public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
+        {
+            IOperationBase? backwardStartOperation = null;
+            backwardStartOperation = this.computationGraph["output_avg_0_0"];
+            if (!CommonMatrixUtils.IsAllZeroes(gradient))
+            {
+                backwardStartOperation.BackwardInput = gradient;
+                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+                opVisitor.RunSequentially = true;
+                await opVisitor.TraverseAsync();
+                opVisitor.Reset();
+            }
+            IOperationBase? backwardEndOperation = this.computationGraph["keys_edgeFeatures_0_0"];
+            return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+        }
+
+        /// <summary>
+        /// Initialize the state of the edge attention neural network.
+        /// </summary>
+        public void InitializeState()
+        {
+            if (this.Output == null)
+            {
+                this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * this.NumQueries, 1));
+            }
+            else
+            {
+                this.Output.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * this.NumQueries, 1));
+            }
+
+            if (this.Input == null)
+            {
+                this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            }
+            else
+            {
+                this.Input.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            }
+        }
+
+        /// <summary>
+        /// Clear the state of the edge attention neural network.
+        /// </summary>
         private void ClearState()
         {
             GradientClearer clearer = new GradientClearer();
@@ -142,6 +272,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             clearer.Clear(this.outputLayers.ToArray());
         }
 
+        /// <summary>
+        /// Initialize the computation graph of the edge attention neural network.
+        /// </summary>
+        /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
             List<Matrix> keys = new List<Matrix>();
@@ -208,107 +342,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
-        }
-
-        public void StoreOperationIntermediates(Guid id)
-        {
-            this.computationGraph.StoreOperationIntermediates(id);
-        }
-
-        public void RestoreOperationIntermediates(Guid id)
-        {
-            this.computationGraph.RestoreOperationIntermediates(id);
-        }
-
-        public void AutomaticForwardPropagate(DeepMatrix input)
-        {
-            // Initialize hidden state, gradients, biases, and intermediates
-            this.ClearState();
-
-            CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
-            var op = this.computationGraph.StartOperation;
-            if (op == null)
-            {
-                throw new Exception("Start operation should not be null.");
-            }
-
-            IOperationBase? currOp = null;
-            do
-            {
-                var parameters = this.LookupParameters(op);
-                if (op.Id == "concatenated")
-                {
-                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
-                    DeepMatrix[] deepMatrixArray = new DeepMatrix[objArray.Length];
-                    for (int i = 0; i < objArray.Length; ++i)
-                    {
-                        var obj = objArray[i];
-                        if (obj is DeepMatrix m)
-                        {
-                            deepMatrixArray[i] = m;
-                        }
-                    }
-                    parameters[0] = CommonMatrixUtils.SwitchFirstTwoDimensions(deepMatrixArray);
-                }
-
-                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
-                if (forward == null)
-                {
-                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
-                }
-
-                forward.Invoke(op, parameters);
-                if (op.ResultToName != null)
-                {
-                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
-                    op.CopyResult(oo);
-                }
-
-                currOp = op;
-                if (op.HasNext)
-                {
-                    op = op.Next;
-                }
-            }
-            while (currOp.Next != null);
-        }
-
-        public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
-        {
-            IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_avg_0_0"];
-            if (!CommonMatrixUtils.IsAllZeroes(gradient))
-            {
-                backwardStartOperation.BackwardInput = gradient;
-                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-                opVisitor.RunSequentially = true;
-                await opVisitor.TraverseAsync();
-                opVisitor.Reset();
-            }
-            IOperationBase? backwardEndOperation = this.computationGraph["keys_edgeFeatures_0_0"];
-            return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
-        }
-
-        public void InitializeState()
-        {
-            if (this.Output == null)
-            {
-                this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * this.NumQueries, 1));
-            }
-            else
-            {
-                this.Output.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * this.NumQueries, 1));
-            }
-
-            if (this.Input == null)
-            {
-                this.Input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
-            }
-            else
-            {
-                this.Input.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
-            }
         }
     }
 }

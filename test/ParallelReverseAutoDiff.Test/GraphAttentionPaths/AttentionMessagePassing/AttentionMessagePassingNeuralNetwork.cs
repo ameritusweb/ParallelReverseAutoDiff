@@ -1,10 +1,14 @@
-﻿using Newtonsoft.Json;
-using ParallelReverseAutoDiff.RMAD;
-using ParallelReverseAutoDiff.Test.Common;
-using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
-
+﻿// ------------------------------------------------------------------------------
+// <copyright file="AttentionMessagePassingNeuralNetwork.cs" author="ameritusweb" date="6/18/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing
 {
+    using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.Test.Common;
+
     /// <summary>
     /// An attention message passing neural network.
     /// </summary>
@@ -66,6 +70,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// </summary>
         public FourDimensionalMatrix DConnectedPathsDeepMatrixArray { get; set; }
 
+        /// <summary>
+        /// Gets the model layers.
+        /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
         {
             get
@@ -98,59 +105,29 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             await this.InitializeComputationGraph();
         }
 
-        private void ClearState()
-        {
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(new[] { this.hiddenLayer });
-        }
-
-        private async Task InitializeComputationGraph()
-        {
-            var weights = this.hiddenLayer.WeightDeepMatrix("Weights");
-            var b = this.hiddenLayer.WeightDeepMatrix("B");
-            var connected = this.hiddenLayer.WeightDeepMatrix("ConnectedWeights");
-            var cb = this.hiddenLayer.WeightDeepMatrix("CB");
-
-            var weightsGradient = this.hiddenLayer.GradientDeepMatrix("Weights");
-            var bGradient = this.hiddenLayer.GradientDeepMatrix("B");
-            var connectedGradient = this.hiddenLayer.GradientDeepMatrix("ConnectedWeights");
-            var cbGradient = this.hiddenLayer.GradientDeepMatrix("CB");
-
-            string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.computationGraph = new AttentionMessagePassingComputationGraph(this);
-            this.computationGraph
-                .AddIntermediate("Output", _ => this.Output)
-                .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrixArray)
-                .AddDynamic("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Depth).ToArray()))
-                .AddDynamic("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Rows).ToArray()))
-                .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrixArray)
-                .AddWeight("Weights", x => weights[x.Layer]).AddGradient("DWeights", x => weightsGradient[x.Layer])
-                .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGradient[x.Layer])
-                .AddWeight("ConnectedWeights", x => connected[x.Layer]).AddGradient("DConnectedWeights", x => connectedGradient[x.Layer])
-                .AddBias("CB", x => cb[x.Layer]).AddGradient("DCB", x => cbGradient[x.Layer])
-                .AddOperationFinder("CurrentPathFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"current_path_features_0_{x.Layer - 1}"])
-                .AddOperationFinder("connected_paths_matrix_trans_find", _ => this.computationGraph["connected_paths_matrix_trans_0_0"])
-                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
-
-            IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph[$"current_path_features_0_{this.NumLayers - 1}"];
-            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-            await opVisitor.TraverseAsync();
-            await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
-        }
-
+        /// <summary>
+        /// Stores the operation intermediates.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
         public void StoreOperationIntermediates(Guid id)
         {
             this.computationGraph.StoreOperationIntermediates(id);
         }
 
+        /// <summary>
+        /// Restores the operation intermediates.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
         public void RestoreOperationIntermediates(Guid id)
         {
             this.computationGraph.RestoreOperationIntermediates(id);
         }
 
-        public void AutomaticForwardPropagate(DeepMatrix input, bool doNotUpdate)
+        /// <summary>
+        /// The forward pass of the attention message passing neural network.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        public void AutomaticForwardPropagate(DeepMatrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -192,10 +169,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
                 }
             }
             while (currOp.Next != null);
-
-            //await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
+        /// <summary>
+        /// The backward pass of the attention message passing neural network.
+        /// </summary>
+        /// <param name="gradient">The gradient of the loss.</param>
+        /// <returns>The gradient.</returns>
         public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
             IOperationBase? backwardStartOperation = null;
@@ -212,6 +192,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             return backwardEndOperation.CalculatedGradient[1] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
+        /// <summary>
+        /// Initializes the state of the attention message passing neural network.
+        /// </summary>
         public void InitializeState()
         {
             var connectedPathsDeepMatrixArray = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumLayers, this.NumPaths, this.NumFeatures).Select(x => new DeepMatrix(x)).ToArray();
@@ -257,6 +240,55 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
                 this.DConnectedPathsDeepMatrixArray.Replace(dConnectedPathsDeepMatrixArray.ToArray());
             }
 
+        }
+
+        /// <summary>
+        /// Clears the state of the attention message passing neural network.
+        /// </summary>
+        private void ClearState()
+        {
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(new[] { this.hiddenLayer });
+        }
+
+        /// <summary>
+        /// Initializes the computation graph of the attention message passing neural network.
+        /// </summary>
+        /// <returns>The task.</returns>
+        private async Task InitializeComputationGraph()
+        {
+            var weights = this.hiddenLayer.WeightDeepMatrix("Weights");
+            var b = this.hiddenLayer.WeightDeepMatrix("B");
+            var connected = this.hiddenLayer.WeightDeepMatrix("ConnectedWeights");
+            var cb = this.hiddenLayer.WeightDeepMatrix("CB");
+
+            var weightsGradient = this.hiddenLayer.GradientDeepMatrix("Weights");
+            var bGradient = this.hiddenLayer.GradientDeepMatrix("B");
+            var connectedGradient = this.hiddenLayer.GradientDeepMatrix("ConnectedWeights");
+            var cbGradient = this.hiddenLayer.GradientDeepMatrix("CB");
+
+            string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.computationGraph = new AttentionMessagePassingComputationGraph(this);
+            this.computationGraph
+                .AddIntermediate("Output", _ => this.Output)
+                .AddIntermediate("ConnectedPathsDeepMatrix", _ => this.ConnectedPathsDeepMatrixArray)
+                .AddDynamic("connectedPathsMatrixRows", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Depth).ToArray()))
+                .AddDynamic("connectedPathsMatrixColumns", _ => new Matrix(this.ConnectedPathsDeepMatrixArray.Count, 1).ReplaceVertically(this.ConnectedPathsDeepMatrixArray.Select(x => (double)x.Rows).ToArray()))
+                .AddGradient("DConnectedPathsDeepMatrix", x => this.DConnectedPathsDeepMatrixArray)
+                .AddWeight("Weights", x => weights[x.Layer]).AddGradient("DWeights", x => weightsGradient[x.Layer])
+                .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGradient[x.Layer])
+                .AddWeight("ConnectedWeights", x => connected[x.Layer]).AddGradient("DConnectedWeights", x => connectedGradient[x.Layer])
+                .AddBias("CB", x => cb[x.Layer]).AddGradient("DCB", x => cbGradient[x.Layer])
+                .AddOperationFinder("CurrentPathFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"current_path_features_0_{x.Layer - 1}"])
+                .AddOperationFinder("connected_paths_matrix_trans_find", _ => this.computationGraph["connected_paths_matrix_trans_0_0"])
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
+
+            IOperationBase? backwardStartOperation = null;
+            backwardStartOperation = this.computationGraph[$"current_path_features_0_{this.NumLayers - 1}"];
+            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+            await opVisitor.TraverseAsync();
+            await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
     }
 }
