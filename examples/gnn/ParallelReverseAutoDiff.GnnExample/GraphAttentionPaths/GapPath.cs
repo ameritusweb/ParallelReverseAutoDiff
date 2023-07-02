@@ -1,13 +1,12 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="GapType.cs" author="ameritusweb" date="7/1/2023">
+// <copyright file="GapPath.cs" author="ameritusweb" date="7/1/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
-    using ManagedCuda.BasicTypes;
-    using ParallelReverseAutoDiff.RMAD;
     using System.Text.Json.Serialization;
+    using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// The GAP path.
@@ -15,37 +14,61 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
     [Serializable]
     public class GapPath
     {
+        private List<Guid> nodeIds;
+
         /// <summary>
-        /// An identifier for the path.
+        /// Gets or sets an identifier for the path.
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// An indicator of whether the path is the target.
+        /// Gets or sets a value indicating whether the path is the target.
         /// </summary>
         public bool IsTarget { get; set; }
 
         /// <summary>
-        /// The index of the adjacency matrix.
+        /// Gets or sets the index of the adjacency matrix.
         /// </summary>
         public int AdjacencyIndex { get; set; }
 
         /// <summary>
-        /// The nodes of the path.
+        /// Gets or sets the nodes of the path.
         /// </summary>
         [JsonIgnore]
         public List<GapNode> Nodes { get; set; }
 
-        private List<Guid> nodeIds;
+        /// <summary>
+        /// Gets or sets the node IDs of the path.
+        /// </summary>
         public List<Guid> NodeIds
         {
-            get { return (Nodes?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
-            set { nodeIds = value; }  // Setter for deserialization
+            get { return (this.Nodes?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
+            set { this.nodeIds = value; } // Setter for deserialization
         }
 
+        /// <summary>
+        /// Gets or sets the feature vector of the path.
+        /// </summary>
+        public Matrix FeatureVector { get; set; }
+
+        /// <summary>
+        /// Gets the type of the path.
+        /// </summary>
+        public GapType GapType
+        {
+            get
+            {
+                return this.Nodes[0].GapType;
+            }
+        }
+
+        /// <summary>
+        /// Populates the nodes of the path based on the node IDs.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
         public void Populate(GapGraph graph)
         {
-            var nodes = nodeIds.Select(id => graph.GapNodes.FirstOrDefault(n => n.Id == id)).ToList();
+            var nodes = this.nodeIds.Select(id => graph.GapNodes.FirstOrDefault(n => n.Id == id)).ToList();
             foreach (var node in nodes)
             {
                 if (node != null)
@@ -60,11 +83,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         }
 
         /// <summary>
-        /// The feature vector of the path.
-        /// </summary>
-        public Matrix FeatureVector { get; set; }
-
-        /// <summary>
         /// Add a node to the path.
         /// </summary>
         /// <param name="node">The added node.</param>
@@ -72,17 +90,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         {
             this.Nodes.Add(node);
             node.IsInPath = true;
-        }
-
-        /// <summary>
-        /// The type of the path.
-        /// </summary>
-        public GapType GapType
-        {
-            get
-            {
-                return this.Nodes[0].GapType;
-            }
         }
     }
 }

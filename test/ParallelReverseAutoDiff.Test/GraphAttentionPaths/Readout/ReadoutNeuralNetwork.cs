@@ -17,17 +17,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.Readout.Architecture";
         private const string ARCHITECTURE = "Readout";
 
-        private ReadoutComputationGraph computationGraph;
-
         private readonly List<IModelLayer> inputLayers;
         private readonly List<IModelLayer> nestedLayers;
         private readonly List<IModelLayer> outputLayers;
+
+        private ReadoutComputationGraph computationGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadoutNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="numQueries">The number of queries.</param>
+        /// <param name="numPaths">The number of paths.</param>
+        /// <param name="numFeatures">The number of features.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
         public ReadoutNeuralNetwork(int numLayers, int numQueries, int numPaths, int numFeatures, double learningRate, double clipValue)
@@ -106,6 +108,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public Matrix[] AV { get; private set; }
 
         /// <summary>
+        /// Gets the model layers of the neural network.
+        /// </summary>
+        public IEnumerable<IModelLayer> ModelLayers
+        {
+            get
+            {
+                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
+            }
+        }
+
+        /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
@@ -124,17 +137,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// Gets the number of paths of the neural network.
         /// </summary>
         internal int NumPaths { get; private set; }
-
-        /// <summary>
-        /// Gets the model layers of the neural network.
-        /// </summary>
-        public IEnumerable<IModelLayer> ModelLayers
-        {
-            get
-            {
-                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
-            }
-        }
 
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.
@@ -177,6 +179,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                             deepMatrixArray[i] = m;
                         }
                     }
+
                     parameters[0] = CommonMatrixUtils.SwitchFirstTwoDimensions(deepMatrixArray);
                 }
 
@@ -221,6 +224,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 opVisitor.Reset();
                 traverseCount++;
             }
+
             IOperationBase? backwardEndOperation = this.computationGraph["keys_pathFeatures_0_0"];
             return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
@@ -233,7 +237,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // Clear intermediates
             var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
             var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
-            
+
             if (this.Output == null)
             {
                 this.Output = output;

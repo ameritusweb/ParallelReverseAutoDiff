@@ -37,6 +37,288 @@
             <param name="skip">How many files to skip.</param>
             <returns>The chess board list of moves.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils">
+            <summary>
+            A collection of matrix utilities for neural network development.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.Random">
+            <summary>
+            Gets a random number generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numLayers">The number of lauers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.DeepMatrix[][],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.DeepMatrix[],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix[],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.StandardizedMatrix(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Creates a standardized matrix using the mean and standard deviation.
+            </summary>
+            <param name="deepMatrix">The matrix to process.</param>
+            <returns>The standardized matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.StandardizedMatrix(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Creates a standardized matrix using the mean and standard deviation.
+            </summary>
+            <param name="matrix">The matrix to process.</param>
+            <returns>The standardized matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.To2DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 2-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 2-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.To1DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 1-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 1-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.Matrix[],ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Sets the following deep matrix to the specified values.
+            </summary>
+            <param name="matrix">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Sets the following matrix to the specified values.
+            </summary>
+            <param name="matrix">The matrix to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.IsAllZeroes(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Calculates whether the deep matrix is all zeroes.
+            </summary>
+            <param name="matrix">The deep matrix.</param>
+            <returns>A value.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.IsAllZeroes(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Calculates whether the matrix is all zeroes.
+            </summary>
+            <param name="matrix">The matrix.</param>
+            <returns>A value.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Clears the following 2-D matrices.
+            </summary>
+            <param name="matrices">The 2-D matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.DeepMatrix[][])">
+            <summary>
+            Clears the following 5-D deep matrices.
+            </summary>
+            <param name="matrices">The 5-D deep matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.DeepMatrix[])">
+            <summary>
+            Clears the following 4-D deep matrices.
+            </summary>
+            <param name="matrices">The 4-D deep matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.FrobeniusNorm(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The Frobenius norm of a matrix: the square root of the sum of the absolute squares of its elements.
+            </summary>
+            <param name="weightMatrix">The weight matrix to calculate.</param>
+            <returns>The frobenius norm.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.LearningRateReductionFactor(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the reduction factor for the learning rate.
+            </summary>
+            <param name="frobeniusNorm">The frobenius norm of a matrix.</param>
+            <param name="maxNorm">The max norm.</param>
+            <param name="minFactor">The minimum learning rate reduction factor.</param>
+            <returns>The learning rate reduction factor.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The element-wise Hadamard product of two matrices.
+            </summary>
+            <param name="matrixA">The first matrix.</param>
+            <param name="matrixB">The second matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add two matrices together.
+            </summary>
+            <param name="a">Matrix A.</param>
+            <param name="b">Matrix B.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Multiply a matrix by a scalar.
+            </summary>
+            <param name="scalar">The scalar to multiply.</param>
+            <param name="matrix">The matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numFilters">The number of filters.</param>
+            <param name="depth">The depth.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numFilters">The number of filters.</param>
+            <param name="depth">The depth.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SwitchFirstTwoDimensions(ParallelReverseAutoDiff.RMAD.DeepMatrix[])">
+            <summary>
+            Switch the first two dimensions of the deep matrix array.
+            </summary>
+            <param name="deepMatrixArray">The deep matrix array.</param>
+            <returns>The deep matrix array switched.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlaceReplace(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlaceReplace(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.Common.EmbeddedResource">
+            <summary>
+            Helper class to read embedded resources.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.EmbeddedResource.ReadAllJson(System.String,System.String)">
+            <summary>
+            Reads a JSON file from the embedded resources.
+            </summary>
+            <param name="name">The namespace.</param>
+            <param name="file">The file to read.</param>
+            <returns>The text of the file.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.GameGenerator">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
@@ -569,6 +851,865 @@
             </summary>
             <param name="gameState">The game state.</param>
             <returns>The move and the next move.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingComputationGraph">
+            <summary>
+            An attention message passing computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork">
+            <summary>
+            An attention message passing neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork"/> class.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numPaths">The number of paths.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.ConnectedPathsDeepMatrixArray">
+            <summary>
+            Gets or sets the connected paths deep matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.DConnectedPathsDeepMatrixArray">
+            <summary>
+            Gets or sets the connected paths deep matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.NumPaths">
+            <summary>
+            Gets the number of paths of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.NumFeatures">
+            <summary>
+            Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Stores the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restores the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The forward pass of the attention message passing neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass of the attention message passing neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.InitializeState">
+            <summary>
+            Initializes the state of the attention message passing neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.ClearState">
+            <summary>
+            Clears the state of the attention message passing neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initializes the computation graph of the attention message passing neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionComputationGraph">
+            <summary>
+            An edge attention computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork">
+            <summary>
+            An edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork"/> class.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numQueries">The number of queries.</param>
+            <param name="numPaths">The number of paths.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.NumQueries">
+            <summary>
+            Gets the number of queries of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.NumFeatures">
+            <summary>
+            Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.NumPaths">
+            <summary>
+            Gets the number of paths of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Store the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restore the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The forward pass of the edge attention neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass of the edge attention neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.InitializeState">
+            <summary>
+            Initialize the state of the edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.ClearState">
+            <summary>
+            Clear the state of the edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initialize the computation graph of the edge attention neural network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge">
+            <summary>
+            An edge of the GAP graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Id">
+            <summary>
+            Gets or sets the unique identifier of the edge.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Node">
+            <summary>
+            Gets or sets the node that the edge connects to.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.NodeId">
+            <summary>
+            Gets or sets the node ID.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.FeatureVector">
+            <summary>
+            Gets or sets the feature vector of the edge.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
+            <summary>
+            Populates the node with the node ID.
+            </summary>
+            <param name="graph">The graph.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph">
+            <summary>
+            A graph attention paths graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.GapEdges">
+            <summary>
+            Gets or sets the edges of the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.GapNodes">
+            <summary>
+            Gets or sets the nodes of the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.GapPaths">
+            <summary>
+            Gets or sets the paths of the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.AdjacencyMatrix">
+            <summary>
+            Gets or sets the adjacency matrix of the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.NormalizedAdjacency">
+            <summary>
+            Gets or sets the normalized adjacency matrix of the graph.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode">
+            <summary>
+            A node in a graph attention path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.Id">
+            <summary>
+            Gets or sets the node identifier.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.PositionX">
+            <summary>
+            Gets or sets the node position X in the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.PositionY">
+            <summary>
+            Gets or sets the node position Y in the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.IsInPath">
+            <summary>
+            Gets or sets a value indicating whether the node is in the path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.GapType">
+            <summary>
+            Gets or sets the type of node.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.FeatureVector">
+            <summary>
+            Gets or sets the feature vector of the node.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.Edges">
+            <summary>
+            Gets or sets the edges.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.EdgeIds">
+            <summary>
+            Gets or sets the edge identifiers.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
+            <summary>
+            Populate the edges of the node.
+            </summary>
+            <param name="graph">The graph.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath">
+            <summary>
+            The GAP path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.Id">
+            <summary>
+            Gets or sets an identifier for the path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.IsTarget">
+            <summary>
+            Gets or sets a value indicating whether the path is the target.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.AdjacencyIndex">
+            <summary>
+            Gets or sets the index of the adjacency matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.Nodes">
+            <summary>
+            Gets or sets the nodes of the path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.NodeIds">
+            <summary>
+            Gets or sets the node IDs of the path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.FeatureVector">
+            <summary>
+            Gets or sets the feature vector of the path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.GapType">
+            <summary>
+            Gets the type of the path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
+            <summary>
+            Populates the nodes of the path based on the node IDs.
+            </summary>
+            <param name="graph">The graph.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.AddNode(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode)">
+            <summary>
+            Add a node to the path.
+            </summary>
+            <param name="node">The added node.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType">
+            <summary>
+            The type of piece on the square.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.Empty">
+            <summary>
+            An empty square.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.Queen">
+            <summary>
+            The queen.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.King">
+            <summary>
+            The king.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.Knight">
+            <summary>
+            The knight.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.Bishop">
+            <summary>
+            The bishop.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.Rook">
+            <summary>
+            The rook.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapType.Pawn">
+            <summary>
+            The pawn.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnComputationGraph">
+            <summary>
+            A GCN computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork">
+            <summary>
+            A GCN neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork"/> class.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numPaths">The number of paths.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.Input">
+            <summary>
+            Gets the input deep matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.Adjacency">
+            <summary>
+            Gets or sets the adjacency matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers for the GCN neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.NumPaths">
+            <summary>
+            Gets the number of paths of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.NumFeatures">
+            <summary>
+            Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)">
+            <summary>
+            The forward pass of the GCN neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass of the GCN neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.InitializeState">
+            <summary>
+            Initializes the state of the GCN neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.ClearState">
+            <summary>
+            Clears the state of the GCN neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.GcnNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initializes the computation graph of the GCN neural network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmComputationGraph">
+            <summary>
+            An LSTM computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork">
+            <summary>
+            An LSTM neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork"/> class.
+            </summary>
+            <param name="inputSize">The input size.</param>
+            <param name="hiddenSize">The hidden size.</param>
+            <param name="outputSize">The output size.</param>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.OutputPathFeatures">
+            <summary>
+            Gets the output path features matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.Architecture">
+            <summary>
+            Gets the JSON architecture.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers of the LSTM neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Stores the intermediate values of the computation graph for the given operation.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restores the intermediate values of the computation graph for the given operation.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)">
+            <summary>
+            The forward pass for the LSTM neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass for the LSTM neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.InitializeState">
+            <summary>
+            Initialize the state of the LSTM neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.ClearState">
+            <summary>
+            Clears the state of the LSTM neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.LstmNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initializes the computation graph of the LSTM neural network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutComputationGraph">
+            <summary>
+            A readout computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork">
+            <summary>
+            A readout neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork"/> class.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numQueries">The number of queries.</param>
+            <param name="numPaths">The number of paths.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.AV">
+            <summary>
+            Gets the AV matrix array.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.NumQueries">
+            <summary>
+            Gets the number of queries of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.NumFeatures">
+            <summary>
+            Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.NumPaths">
+            <summary>
+            Gets the number of paths of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The forward pass of the readout neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass of the readout neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.InitializeState">
+            <summary>
+            Initializes the state of the readout neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.ClearState">
+            <summary>
+            Clears the state of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.ReadoutNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initializes the computation graph of the neural network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork">
+            <summary>
+            Graph Attention Paths Neural Network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork"/> class.
+            </summary>
+            <param name="graphs">The graphs.</param>
+            <param name="batchSize">The batch size.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numQueries">The number of queries.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip Value.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Initialize">
+            <summary>
+            Initializes the model layers.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.SaveWeights">
+            <summary>
+            Save the weights to the save path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.ApplyWeights">
+            <summary>
+            Apply the weights from the save path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Forward">
+            <summary>
+            Make a forward pass through the computation graph.
+            </summary>
+            <returns>The gradient of the loss wrt the output.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass through the computation graph.
+            </summary>
+            <param name="gradientOfLossWrtReadoutOutput">The gradient of the loss wrt the output.</param>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.IPopulate">
+            <summary>
+            The public interface for populating after deserialization.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.IPopulate.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
+            <summary>
+            Populates the graph after deserialization.
+            </summary>
+            <param name="graph">The graph.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation">
+            <summary>
+            Cosine distance loss operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+            <summary>
+            A common method for instantiating an operation.
+            </summary>
+            <param name="net">The neural network.</param>
+            <returns>The instantiated operation.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation for the cosine distance loss function.
+            </summary>
+            <param name="superpath">The superpath matrix.</param>
+            <param name="targetPath">The target path matrix.</param>
+            <returns>The scalar loss value.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <inheritdoc />
         </member>
     </members>
 </doc>

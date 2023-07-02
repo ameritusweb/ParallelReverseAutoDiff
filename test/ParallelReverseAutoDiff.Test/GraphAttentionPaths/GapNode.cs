@@ -13,56 +13,64 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
     /// </summary>
     public class GapNode : IPopulate
     {
+        private List<Guid> edgeIds;
+
         /// <summary>
-        /// The node identifier.
+        /// Gets or sets the node identifier.
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The node position X in the graph.
+        /// Gets or sets the node position X in the graph.
         /// </summary>
         public int PositionX { get; set; }
 
         /// <summary>
-        /// The node position Y in the graph.
+        /// Gets or sets the node position Y in the graph.
         /// </summary>
         public int PositionY { get; set; }
 
         /// <summary>
-        /// A value indicating whether the node is in the path.
+        /// Gets or sets a value indicating whether the node is in the path.
         /// </summary>
         public bool IsInPath { get; set; }
 
         /// <summary>
-        /// The type of node.
+        /// Gets or sets the type of node.
         /// </summary>
         public GapType GapType { get; set; }
 
         /// <summary>
-        /// The feature vector of the node.
+        /// Gets or sets the feature vector of the node.
         /// </summary>
         public Matrix FeatureVector { get; set; }
 
         /// <summary>
-        /// The edges.
+        /// Gets or sets the edges.
         /// </summary>
         public List<GapEdge> Edges { get; set; }
 
-        private List<Guid> edgeIds;
+        /// <summary>
+        /// Gets or sets the edge identifiers.
+        /// </summary>
         public List<Guid> EdgeIds
         {
-            get { return (Edges?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
-            set { edgeIds = value; }  // Setter for deserialization
+            get { return (this.Edges?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
+            set { this.edgeIds = value; } // Setter for deserialization
         }
 
+        /// <summary>
+        /// Populate the edges of the node.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
         public void Populate(GapGraph graph)
         {
-            var edges = edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
+            var edges = this.edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
             foreach (var edge in edges)
             {
                 if (edge != null)
                 {
-                    Edges.Add(edge);
+                    this.Edges.Add(edge);
                 }
                 else
                 {

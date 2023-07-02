@@ -17,8 +17,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.LSTM.Architecture";
         private const string ARCHITECTURE = "NodeProcessing";
 
-        private LstmComputationGraph computationGraph;
-
         private readonly int hiddenSize;
         private readonly int originalInputSize;
         private readonly int inputSize;
@@ -28,11 +26,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private readonly IModelLayer hiddenLayer;
         private readonly IModelLayer outputLayer;
 
+        private LstmComputationGraph computationGraph;
+
         private DeepMatrix zeroMatrixHiddenSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LstmNeuralNetwork"/> class.
         /// </summary>
+        /// <param name="inputSize">The input size.</param>
+        /// <param name="hiddenSize">The hidden size.</param>
+        /// <param name="outputSize">The output size.</param>
+        /// <param name="numTimeSteps">The number of time steps.</param>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
@@ -95,7 +99,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public JsonArchitecture Architecture { get; private set; }
 
         /// <summary>
-        /// The model layers of the LSTM neural network.
+        /// Gets the model layers of the LSTM neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
         {
@@ -141,8 +145,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// The forward pass for the LSTM neural network.
         /// </summary>
         /// <param name="input">The input.</param>
-        /// <returns>A task.</returns>
-        public async Task AutomaticForwardPropagate(FourDimensionalMatrix input)
+        public void AutomaticForwardPropagate(FourDimensionalMatrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -197,12 +200,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
             }
+
             FourDimensionalMatrix output = new FourDimensionalMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1);
             for (int i = 0; i < this.Parameters.NumTimeSteps; ++i)
             {
                 IOperationBase? backwardEndOperation = this.computationGraph[$"projectedInput_{i}_0"];
                 output[i] = backwardEndOperation.CalculatedGradient[1] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
             }
+
             return output;
         }
 

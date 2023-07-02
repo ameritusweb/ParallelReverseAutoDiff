@@ -13,27 +13,27 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
     public class GapGraph
     {
         /// <summary>
-        /// The edges of the graph.
+        /// Gets or sets the edges of the graph.
         /// </summary>
         public List<GapEdge> GapEdges { get; set; }
 
         /// <summary>
-        /// The nodes of the graph.
+        /// Gets or sets the nodes of the graph.
         /// </summary>
         public List<GapNode> GapNodes { get; set; }
 
         /// <summary>
-        /// The paths of the graph.
+        /// Gets or sets the paths of the graph.
         /// </summary>
         public List<GapPath> GapPaths { get; set; }
 
         /// <summary>
-        /// The adjacency matrix of the graph.
+        /// Gets or sets the adjacency matrix of the graph.
         /// </summary>
         public Matrix AdjacencyMatrix { get; set; }
 
         /// <summary>
-        /// The normalized adjacency matrix of the graph.
+        /// Gets or sets the normalized adjacency matrix of the graph.
         /// </summary>
         public Matrix NormalizedAdjacency { get; set; }
     }

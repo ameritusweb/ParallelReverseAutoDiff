@@ -5,20 +5,44 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
+    /// <summary>
+    /// The type of piece on the square.
+    /// </summary>
     public enum GapType
     {
+        /// <summary>
+        /// An empty square.
+        /// </summary>
         Empty,
 
+        /// <summary>
+        /// The queen.
+        /// </summary>
         Queen,
 
+        /// <summary>
+        /// The king.
+        /// </summary>
         King,
 
+        /// <summary>
+        /// The knight.
+        /// </summary>
         Knight,
 
+        /// <summary>
+        /// The bishop.
+        /// </summary>
         Bishop,
 
+        /// <summary>
+        /// The rook.
+        /// </summary>
         Rook,
 
-        Pawn
+        /// <summary>
+        /// The pawn.
+        /// </summary>
+        Pawn,
     }
 }

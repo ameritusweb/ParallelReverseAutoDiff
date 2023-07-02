@@ -455,6 +455,20 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         }
 
         /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlace(FourDimensionalMatrix matrices, FourDimensionalMatrix value)
+        {
+            int numMatrices = matrices.Count;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                SetInPlace(matrices[i], value[i]);
+            }
+        }
+
+        /// <summary>
         /// Sets the following matrix to the specified values.
         /// </summary>
         /// <param name="matrix">The matrix to replace.</param>

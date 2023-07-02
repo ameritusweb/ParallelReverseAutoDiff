@@ -141,7 +141,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public async Task<DeepMatrix> Forward()
+        public DeepMatrix Forward()
         {
             Dictionary<int, List<Matrix>> inputsByType = new Dictionary<int, List<Matrix>>();
             Dictionary<(int Type, int Index), GapNode> nodeIndexMap = new Dictionary<(int Type, int Index), GapNode>();
@@ -225,7 +225,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 var lstmNet = this.lstmNeuralNetwork[length - 2]; // Because a path must have a length of at least two
                 lstmNet.Parameters.BatchSize = batchedInput.Length;
                 lstmNet.InitializeState();
-                await lstmNet.AutomaticForwardPropagate(new FourDimensionalMatrix(switched));
+                lstmNet.AutomaticForwardPropagate(new FourDimensionalMatrix(switched));
                 var id = Guid.NewGuid();
                 this.typeToIdMapLstm.Add(length, id);
                 lstmNet.StoreOperationIntermediates(id);

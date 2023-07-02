@@ -53,7 +53,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public override BackwardResult Backward(Matrix dOutput)
         {
             double dLoss = -1d;
-            Matrix dSuperpath = superpath.GradientWRTCosineSimilarity(targetPath, dLoss);
+            Matrix dSuperpath = this.superpath.GradientWRTCosineSimilarity(this.targetPath, dLoss);
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dSuperpath)
