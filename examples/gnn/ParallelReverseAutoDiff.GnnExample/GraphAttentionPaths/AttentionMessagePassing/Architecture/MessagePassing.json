@@ -4,13 +4,13 @@
       "startOperations": [
         {
           "id": "connected_paths_deepmatrix",
-          "type": "MatrixConcatenateOperation",
+          "type": "BatchMatrixConcatenateOperation",
           "inputs": [ "ConnectedPathsDeepMatrix" ],
           "gradientResultTo": [ "DConnectedPathsDeepMatrix" ]
         },
         {
           "id": "connected_paths_matrix_trans",
-          "type": "MatrixTransposeOperation",
+          "type": "BatchMatrixTransposeOperation",
           "inputs": [ "connected_paths_deepmatrix" ]
         }
       ],
@@ -19,7 +19,7 @@
           "operations": [
             {
               "id": "weighted_currentPathFeatures",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Weights", "CurrentPathFeatures" ],
               "gradientResultTo": [ "DWeights", null ],
               "initializations": [
@@ -33,7 +33,7 @@
             },
             {
               "id": "currentPathFeatures_add",
-              "type": "MatrixAddOperation",
+              "type": "BatchMatrixAddOperation",
               "inputs": [ "weighted_currentPathFeatures", "B" ],
               "gradientResultTo": [ null, "DB" ],
               "initializations": [
@@ -47,7 +47,7 @@
             },
             {
               "id": "weighted_connectedPathFeatures",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "connected_paths_matrix_trans_find", "ConnectedWeights" ],
               "gradientResultTo": [ null, "DConnectedWeights" ],
               "initializations": [
@@ -61,7 +61,7 @@
             },
             {
               "id": "connectedPathFeatures_add",
-              "type": "MatrixAddBroadcastingOperation",
+              "type": "BatchMatrixAddBroadcastingOperation",
               "inputs": [ "weighted_connectedPathFeatures", "CB" ],
               "gradientResultTo": [ null, "DCB" ],
               "initializations": [
@@ -75,47 +75,47 @@
             },
             {
               "id": "currentPathFeatures_add_trans",
-              "type": "MatrixTransposeOperation",
+              "type": "BatchMatrixTransposeOperation",
               "inputs": [ "currentPathFeatures_add" ]
             },
             {
               "id": "connectedPathFeatures_add_trans",
-              "type": "MatrixTransposeOperation",
+              "type": "BatchMatrixTransposeOperation",
               "inputs": [ "connectedPathFeatures_add" ]
             },
             {
               "id": "interactionScores",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "currentPathFeatures_add_trans", "connectedPathFeatures_add_trans" ]
             },
             {
               "id": "attention_scores",
-              "type": "SoftmaxOperation",
+              "type": "BatchSineSoftmaxOperation",
               "inputs": [ "interactionScores" ]
             },
             {
               "id": "attention_scores_trans",
-              "type": "MatrixTransposeOperation",
+              "type": "BatchMatrixTransposeOperation",
               "inputs": [ "attention_scores" ]
             },
             {
               "id": "broadcasted_attention_scores",
-              "type": "MatrixBroadcastOperation",
+              "type": "BatchMatrixBroadcastOperation",
               "inputs": [ "attention_scores_trans", "connectedPathsMatrixRows", "connectedPathsMatrixColumns" ]
             },
             {
               "id": "weighted_connected_paths_features",
-              "type": "HadamardProductOperation",
+              "type": "BatchHadamardProductOperation",
               "inputs": [ "broadcasted_attention_scores", "connected_paths_matrix_trans_find" ],
             },
             {
               "id": "current_path_features_trans",
-              "type": "MatrixTransposeOperation",
+              "type": "BatchMatrixTransposeOperation",
               "inputs": [ "weighted_connected_paths_features" ]
             },
             {
               "id": "current_path_features",
-              "type": "MatrixSumOperation",
+              "type": "BatchMatrixSumOperation",
               "inputs": [ "current_path_features_trans" ],
               "setResultTo": "Output"
             }

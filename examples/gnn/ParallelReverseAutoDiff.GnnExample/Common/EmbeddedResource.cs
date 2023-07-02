@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//------------------------------------------------------------------------------
+// <copyright file="EmbeddedResource.cs" author="ameritusweb" date="5/21/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample.Common
 {
+    using System.Reflection;
+
     /// <summary>
     /// Helper class to read embedded resources.
     /// </summary>

@@ -1,18 +1,26 @@
-﻿using ParallelReverseAutoDiff.RMAD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//------------------------------------------------------------------------------
+// <copyright file="CommonMatrixUtils.cs" author="ameritusweb" date="5/21/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample.Common
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// A collection of matrix utilities for neural network development.
     /// </summary>
     public static class CommonMatrixUtils
     {
-        private static readonly double MinClipValue = 1E-6;
+        private static readonly double MinClipValue = 1E-15;
+
+        [ThreadStatic]
+        private static Random random;
+
+        /// <summary>
+        /// Gets a random number generator.
+        /// </summary>
+        public static Random Random => random ?? (random = new Random((int)((1 + Thread.CurrentThread.ManagedThreadId) * DateTime.UtcNow.Ticks)));
 
         /// <summary>
         /// Creates an empty matrix of the given size.
@@ -86,6 +94,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
                     gradients[i][j] = ClipGradients(gradients[i][j], clipValue, minValue);
                 }
             }
+
             return gradients;
         }
 
@@ -103,6 +112,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
             {
                 gradients[d] = ClipGradients(gradients[d], clipValue, minValue);
             }
+
             return gradients;
         }
 
@@ -263,7 +273,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         /// <summary>
         /// Creates a standardized matrix using the mean and standard deviation.
         /// </summary>
-        /// <param name="matrix">The matrix to process.</param>
+        /// <param name="deepMatrix">The matrix to process.</param>
         /// <returns>The standardized matrix.</returns>
         public static DeepMatrix StandardizedMatrix(DeepMatrix deepMatrix)
         {
@@ -425,7 +435,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         /// <summary>
         /// Sets the following deep matrix to the specified values.
         /// </summary>
-        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="matrix">The matrices to replace.</param>
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlace(DeepMatrix matrix, DeepMatrix value)
         {
@@ -462,6 +472,11 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
             }
         }
 
+        /// <summary>
+        /// Calculates whether the matrix is all zeroes.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <returns>A value.</returns>
         public static bool IsAllZeroes(Matrix matrix)
         {
             int numRows = matrix.Rows;
@@ -476,6 +491,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
                     }
                 }
             }
+
             return true;
         }
 
@@ -643,11 +659,6 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
             return result;
         }
 
-        [ThreadStatic]
-        private static Random __random;
-
-        public static Random Random => __random ?? (__random = new Random((int)((1 + Thread.CurrentThread.ManagedThreadId) * DateTime.UtcNow.Ticks)));
-
         /// <summary>
         /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
         /// </summary>
@@ -662,7 +673,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    matrix[i][j] = (Random.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                    matrix[i][j] = ((Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                 }
             });
 
@@ -687,7 +698,7 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
                 {
                     for (int j = 0; j < numCols; j++)
                     {
-                        matrix[layerIndex][i][j] = (Random.NextDouble() * 2 - 1) * Math.Sqrt(6.0 / (numRows + numCols));
+                        matrix[layerIndex][i][j] = ((Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (numRows + numCols));
                     }
                 }
             });
@@ -699,8 +710,8 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
-        /// <param name="depth">The depth.</param>
         /// <param name="numFilters">The number of filters.</param>
+        /// <param name="depth">The depth.</param>
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>The initialized random matrix.</returns>
@@ -724,9 +735,8 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         /// <summary>
         /// Initialize random matrix with Xavier initialization using the appropriate dimensions.
         /// </summary>
-        /// <param name="numLayers">The number of layers.</param>
-        /// <param name="depth">The depth.</param>
         /// <param name="numFilters">The number of filters.</param>
+        /// <param name="depth">The depth.</param>
         /// <param name="numRows">The number of rows.</param>
         /// <param name="numCols">The number of columns.</param>
         /// <returns>The initialized random matrix.</returns>

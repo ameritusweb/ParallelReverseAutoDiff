@@ -4,12 +4,12 @@
       "startOperations": [
         {
           "id": "input",
-          "type": "MatrixConcatenateOperation",
+          "type": "BatchMatrixConcatenateOperation",
           "inputs": [ "Input" ]
         },
         {
           "id": "input_trans",
-          "type": "MatrixTransposeOperation",
+          "type": "BatchMatrixTransposeOperation",
           "inputs": [ "input" ]
         }
       ],
@@ -18,12 +18,12 @@
           "operations": [
             {
               "id": "ah",
-              "type": "MatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "Adjacency", "CurrentH" ]
             },
             {
               "id": "ah_w",
-              "type": "MatrixMultiplyOperation",
+              "type": "BatchGpuMatrixMultiplyOperation",
               "inputs": [ "ah", "W" ],
               "gradientResultTo": [ null, "DW[layerIndex]" ],
               "initializations": [
@@ -37,7 +37,7 @@
             },
             {
               "id": "ah_w_broadcasting",
-              "type": "MatrixAddBroadcastingOperation",
+              "type": "BatchMatrixAddBroadcastingOperation",
               "inputs": [ "ah_w", "B" ],
               "gradientResultTo": [ null, "DB[layerIndex]" ],
               "initializations": [
@@ -51,7 +51,7 @@
             },
             {
               "id": "ah_w_act",
-              "type": "LeakyReLUOperation",
+              "type": "BatchLeakyReLUOperation",
               "inputs": [ "ah_w_broadcasting" ],
               "setResultTo": "Output"
             }

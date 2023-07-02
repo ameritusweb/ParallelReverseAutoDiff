@@ -25,6 +25,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// Initializes a new instance of the <see cref="AttentionMessagePassingNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numPaths">The number of paths.</param>
+        /// <param name="numFeatures">The number of features.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
         public AttentionMessagePassingNeuralNetwork(int numLayers, int numPaths, int numFeatures, double learningRate, double clipValue)
@@ -61,12 +63,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         public Matrix Target { get; private set; }
 
         /// <summary>
-        /// Gets the connected paths deep matrix.
+        /// Gets or sets the connected paths deep matrix.
         /// </summary>
         public FourDimensionalMatrix ConnectedPathsDeepMatrixArray { get; set; }
 
         /// <summary>
-        /// Gets the connected paths deep matrix.
+        /// Gets or sets the connected paths deep matrix.
         /// </summary>
         public FourDimensionalMatrix DConnectedPathsDeepMatrixArray { get; set; }
 
@@ -188,6 +190,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
             }
+
             IOperationBase? backwardEndOperation = this.computationGraph["weighted_currentPathFeatures_0_0"];
             return backwardEndOperation.CalculatedGradient[1] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
@@ -203,7 +206,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             // Clear intermediates
             var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
             var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
-        
+
             if (this.Output == null)
             {
                 this.Output = output;
@@ -239,7 +242,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             {
                 this.DConnectedPathsDeepMatrixArray.Replace(dConnectedPathsDeepMatrixArray.ToArray());
             }
-
         }
 
         /// <summary>

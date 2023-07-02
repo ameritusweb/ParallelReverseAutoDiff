@@ -17,14 +17,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.Architecture";
         private const string ARCHITECTURE = "MessagePassing";
 
-        private GcnComputationGraph computationGraph;
-
         private readonly List<IModelLayer> hiddenLayers;
+
+        private GcnComputationGraph computationGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GcnNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numPaths">The number of paths.</param>
+        /// <param name="numFeatures">The number of features.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
         public GcnNeuralNetwork(int numLayers, int numPaths, int numFeatures, double learningRate, double clipValue)
@@ -68,12 +70,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public Matrix Target { get; private set; }
 
         /// <summary>
-        /// Gets the adjacency matrix.
+        /// Gets or sets the adjacency matrix.
         /// </summary>
         public DeepMatrix Adjacency { get; set; }
 
         /// <summary>
-        /// The model layers for the GCN neural network.
+        /// Gets the model layers for the GCN neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
         {
@@ -166,6 +168,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
             }
+
             IOperationBase? backwardEndOperation = this.computationGraph["input_0_0"];
             var matrixArray = backwardEndOperation.CalculatedGradient.OfType<DeepMatrix>().ToArray();
             return matrixArray;
@@ -177,16 +180,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new DeepMatrix[NumLayers];
+            var output = new DeepMatrix[this.NumLayers];
             int numFeatures = this.NumFeatures;
-            for (int i = 0; i < NumLayers; i++)
+            for (int i = 0; i < this.NumLayers; i++)
             {
                 numFeatures *= 2;
                 output[i] = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, numFeatures));
             }
+
             var adjacency = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumPaths));
             var input = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures, 1).Select(x => new DeepMatrix(x)).ToArray();
-            
+
             if (this.Output == null)
             {
                 this.Output = new FourDimensionalMatrix(output);
@@ -250,7 +254,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddIntermediate("Output", x => this.Output[x.Layer])
                 .AddWeight("W", x => w[x.Layer]).AddGradient("DW", x => wGrad[x.Layer])
                 .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGrad[x.Layer])
-                .AddOperationFinder("Adjacency", _ => Adjacency)
+                .AddOperationFinder("Adjacency", _ => this.Adjacency)
                 .AddOperationFinder("CurrentH", x => x.Layer == 0 ? this.computationGraph["input_trans_0_0"] : this.computationGraph[$"ah_w_act_0_{x.Layer - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 

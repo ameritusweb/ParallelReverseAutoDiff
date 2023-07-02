@@ -17,16 +17,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.Architecture";
         private const string ARCHITECTURE = "EdgeAttention";
 
-        private EdgeAttentionComputationGraph computationGraph;
-
         private readonly List<IModelLayer> inputLayers;
         private readonly List<IModelLayer> nestedLayers;
         private readonly List<IModelLayer> outputLayers;
+
+        private EdgeAttentionComputationGraph computationGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdgeAttentionNeuralNetwork"/> class.
         /// </summary>
         /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numQueries">The number of queries.</param>
+        /// <param name="numPaths">The number of paths.</param>
+        /// <param name="numFeatures">The number of features.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
         public EdgeAttentionNeuralNetwork(int numLayers, int numQueries, int numPaths, int numFeatures, double learningRate, double clipValue)
@@ -190,6 +193,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                             deepMatrixArray[i] = m;
                         }
                     }
+
                     parameters[0] = CommonMatrixUtils.SwitchFirstTwoDimensions(deepMatrixArray);
                 }
 
@@ -233,6 +237,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
             }
+
             IOperationBase? backwardEndOperation = this.computationGraph["keys_edgeFeatures_0_0"];
             return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }

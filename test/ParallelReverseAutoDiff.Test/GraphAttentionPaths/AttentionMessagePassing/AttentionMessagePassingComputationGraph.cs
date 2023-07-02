@@ -25,6 +25,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
         /// Lifecycle method to setup the dependencies of the computation graph.
         /// </summary>
         /// <param name="operation">The operation.</param>
+        /// <param name="layerInfo">The layer information.</param>
         protected override void DependenciesSetup(IOperationBase operation, LayerInfo layerInfo)
         {
             base.DependenciesSetup(operation, layerInfo);

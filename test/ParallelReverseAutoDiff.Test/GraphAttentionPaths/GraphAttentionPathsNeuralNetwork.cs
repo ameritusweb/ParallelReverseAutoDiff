@@ -5,13 +5,13 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
+    using System;
+    using System.IO;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.Test.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN;
-    using System.IO;
-    using System;
 
     /// <summary>
     /// Graph Attention Paths Neural Network.
@@ -29,11 +29,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         private readonly int numLayers;
         private readonly int numQueries;
         private readonly int batchSize;
-        private readonly List<IModelLayer> modelLayers;
+        private readonly double learningRate;
+        private readonly double clipValue;
         private readonly Dictionary<int, Guid> typeToIdMap;
         private readonly Dictionary<int, Guid> typeToIdMapLstm;
         private readonly Dictionary<int, Guid> typeToIdMapAttention;
         private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
+
+        private List<IModelLayer> modelLayers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphAttentionPathsNeuralNetwork"/> class.
@@ -52,47 +55,58 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             this.numLayers = numLayers;
             this.numQueries = numQueries;
             this.batchSize = batchSize;
+            this.learningRate = learningRate;
+            this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
             this.typeToIdMap = new Dictionary<int, Guid>();
             this.typeToIdMapLstm = new Dictionary<int, Guid>();
             this.typeToIdMapAttention = new Dictionary<int, Guid>();
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
+            this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
+            this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
+            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
+            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+        }
+
+        /// <summary>
+        /// Initializes the model layers.
+        /// </summary>
+        /// <returns>The task.</returns>
+        public async Task Initialize()
+        {
             for (int i = 0; i < 7; ++i)
             {
-                var model = new EdgeAttentionNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+                var model = new EdgeAttentionNeuralNetwork(this.numLayers, this.numQueries, 4, this.numFeatures, this.learningRate, this.clipValue);
                 this.edgeAttentionNeuralNetwork.Add(model);
-                this.edgeAttentionNeuralNetwork[i].Initialize();
+                await this.edgeAttentionNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.edgeAttentionNeuralNetwork[i].ModelLayers).ToList();
             }
 
-            this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                var model = new LstmNeuralNetwork(numFeatures * (int)Math.Pow(2d, (double)numLayers), 500, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, i + 2, numLayers, learningRate, clipValue);
+                var model = new LstmNeuralNetwork(this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), 500, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers) * 2, i + 2, this.numLayers, this.learningRate, this.clipValue);
                 this.lstmNeuralNetwork.Add(model);
-                this.lstmNeuralNetwork[i].Initialize();
+                await this.lstmNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.lstmNeuralNetwork[i].ModelLayers).ToList();
             }
 
-            this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
             for (int i = 0; i < 7; ++i)
             {
-                var model = new AttentionMessagePassingNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
+                var model = new AttentionMessagePassingNeuralNetwork(this.numLayers, 4, this.numFeatures, this.learningRate, this.clipValue);
                 this.attentionMessagePassingNeuralNetwork.Add(model);
-                this.attentionMessagePassingNeuralNetwork[i].Initialize();
+                await this.attentionMessagePassingNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.attentionMessagePassingNeuralNetwork[i].ModelLayers).ToList();
             }
 
-            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
-            this.gcnNeuralNetwork.Initialize();
+            await this.gcnNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.gcnNeuralNetwork.ModelLayers).ToList();
 
-            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
-            this.readoutNeuralNetwork.Initialize();
+            await this.readoutNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
-            //this.SaveWeights();
-            //this.ApplyWeights();
+
+            // this.SaveWeights();
+            // this.ApplyWeights();
         }
 
         /// <summary>
@@ -110,7 +124,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var weightStore = new WeightStore();    
+            var weightStore = new WeightStore();
             weightStore.Load(new FileInfo(WEIGHTSSAVEPATH));
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -118,6 +132,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 var weights = weightStore.ToModelLayerWeights(i);
                 modelLayer.ApplyWeights(weights);
             }
+
             weightStore = null;
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
@@ -129,17 +144,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public async Task<DeepMatrix> Forward()
         {
             Dictionary<int, List<Matrix>> inputsByType = new Dictionary<int, List<Matrix>>();
-            Dictionary<(int type, int index), GapNode> nodeIndexMap = new Dictionary<(int type, int index), GapNode>();
+            Dictionary<(int Type, int Index), GapNode> nodeIndexMap = new Dictionary<(int Type, int Index), GapNode>();
 
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
                     var edgeCount = node.Edges.Count;
-                    var input = new Matrix(edgeCount, numFeatures);
+                    var input = new Matrix(edgeCount, this.numFeatures);
                     for (int i = 0; i < edgeCount; ++i)
                     {
-                        for (int j = 0; j < numFeatures; ++j)
+                        for (int j = 0; j < this.numFeatures; ++j)
                         {
                             input[i][j] = node.Edges[i].FeatureVector[j][0];
                         }
@@ -150,6 +165,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         inputsByType[index] = new List<Matrix>();
                     }
+
                     inputsByType[index].Add(input);
 
                     nodeIndexMap[(index, inputsByType[index].Count - 1)] = node;
@@ -175,14 +191,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             Dictionary<int, List<DeepMatrix>> inputsByLength = new Dictionary<int, List<DeepMatrix>>();
-            Dictionary<(int length, int index), GapPath> pathIndexMap = new Dictionary<(int length, int index), GapPath>();
+            Dictionary<(int Length, int Index), GapPath> pathIndexMap = new Dictionary<(int Length, int Index), GapPath>();
 
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 foreach (var path in graph.GapPaths)
                 {
                     var pathLength = path.Nodes.Count;
-                    var input = new DeepMatrix(pathLength, numFeatures * (int)Math.Pow(2d, (double)numLayers), 1);
+                    var input = new DeepMatrix(pathLength, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), 1);
                     for (int i = 0; i < input.Depth; ++i)
                     {
                         for (int j = 0; j < input.Rows; ++j)
@@ -195,6 +211,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         inputsByLength[pathLength] = new List<DeepMatrix>();
                     }
+
                     inputsByLength[pathLength].Add(input);
 
                     pathIndexMap[(pathLength, inputsByLength[pathLength].Count - 1)] = path;
@@ -221,16 +238,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             Dictionary<int, List<(Matrix, DeepMatrix)>> inputsByTypeAttention = new Dictionary<int, List<(Matrix, DeepMatrix)>>();
-            Dictionary<(int type, int index), GapPath> pathIndexMapAttention = new Dictionary<(int type, int index), GapPath>();
+            Dictionary<(int Type, int Index), GapPath> pathIndexMapAttention = new Dictionary<(int Type, int Index), GapPath>();
 
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 foreach (var path in graph.GapPaths)
                 {
                     var index = (int)path.GapType;
-                    var connectedPaths = graph.GapPaths.Where(x => IsConnected(path, x, graph.AdjacencyMatrix)).ToList();
+                    var connectedPaths = graph.GapPaths.Where(x => this.IsConnected(path, x, graph.AdjacencyMatrix)).ToList();
                     this.connectedPathsMap.Add(path, connectedPaths);
-                    DeepMatrix connectedPathsMatrix = new DeepMatrix(connectedPaths.Count, numFeatures, 1);
+                    DeepMatrix connectedPathsMatrix = new DeepMatrix(connectedPaths.Count, this.numFeatures, 1);
                     for (int i = 0; i < connectedPaths.Count; ++i)
                     {
                         var connectedPath = connectedPaths[i];
@@ -241,6 +258,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         inputsByTypeAttention[index] = new List<(Matrix, DeepMatrix)>();
                     }
+
                     inputsByTypeAttention[index].Add((path.FeatureVector, connectedPathsMatrix));
 
                     pathIndexMapAttention[(index, inputsByTypeAttention[index].Count - 1)] = path;
@@ -268,7 +286,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 }
             }
 
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 var gapPaths = graph.GapPaths;
                 Matrix adjacency = new Matrix(gapPaths.Count, gapPaths.Count);
@@ -278,7 +296,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     for (int j = 0; j < gapPaths.Count; ++j)
                     {
                         var path2 = gapPaths[j];
-                        if (IsConnected(path1, path2, graph.AdjacencyMatrix))
+                        if (this.IsConnected(path1, path2, graph.AdjacencyMatrix))
                         {
                             var cosineSimilarity = path1.FeatureVector.CosineSimilarity(path2.FeatureVector);
                             var sigmoid = 1.0 / (1.0 + Math.Exp(-cosineSimilarity));
@@ -293,6 +311,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     int degree = (int)adjacency[i].Sum();
                     degreeMatrix[i, i] = degree != 0 ? Math.Pow(degree, -0.5) : 0;  // Step 2
                 }
+
                 Matrix normalizedAdjacency = degreeMatrix * adjacency * degreeMatrix;  // Step 3
                 graph.NormalizedAdjacency = normalizedAdjacency;
             }
@@ -300,10 +319,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             List<DeepMatrix> gcnInputList = new List<DeepMatrix>();
             List<Matrix> adjacencyList = new List<Matrix>();
 
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 // GCN Input
-                DeepMatrix gcnInput = new DeepMatrix(graph.GapPaths.Count, numFeatures * (int)Math.Pow(2d, (double)numLayers) * 2, 1);
+                DeepMatrix gcnInput = new DeepMatrix(graph.GapPaths.Count, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers) * 2, 1);
                 for (int i = 0; i < gcnInput.Depth; ++i)
                 {
                     for (int j = 0; j < gcnInput.Rows; ++j)
@@ -311,6 +330,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         gcnInput[i][j][0] = graph.GapPaths[i].FeatureVector[j][0];
                     }
                 }
+
                 gcnInputList.Add(gcnInput);
 
                 // Normalized Adjacency
@@ -332,9 +352,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             var readoutOutput = readoutNet.Output;
 
             List<Matrix> outputGradients = new List<Matrix>();
-            for (int i = 0; i < gapGraphs.Count; ++i)
+            for (int i = 0; i < this.gapGraphs.Count; ++i)
             {
-                var graph = gapGraphs[i];
+                var graph = this.gapGraphs[i];
                 var targetFeatures = gcnOutputs[i][0].Length;
                 var gapPathTarget = graph.GapPaths.Single(x => x.IsTarget);
                 var targetPathIndex = graph.GapPaths.IndexOf(gapPathTarget);
@@ -350,6 +370,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { -1.0d } }));
                 outputGradients.Add(gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value."));
             }
+
             return new DeepMatrix(outputGradients.ToArray());
         }
 
@@ -387,8 +408,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         indexesToPathMap.Add((index, 0), path);
                         pathGradients.Add(index, new List<Matrix> { pathGradient });
                     }
+
                     pathIndex++;
                 }
+
                 graphIndex++;
             }
 
@@ -407,11 +430,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 }
             }
 
-            ApplyGradients(pathToGradientsMap);
+            this.ApplyGradients(pathToGradientsMap);
 
             Dictionary<int, List<Matrix>> pathLengthToGradientMap = new Dictionary<int, List<Matrix>>();
             Dictionary<(int, int), GapPath> indexesToPathMapLstm = new Dictionary<(int, int), GapPath>();
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 foreach (var path in graph.GapPaths)
                 {
@@ -436,7 +459,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 var lstmNet = this.lstmNeuralNetwork[key - 2];
                 lstmNet.RestoreOperationIntermediates(this.typeToIdMapLstm[key]);
                 var lstmGradient = CommonMatrixUtils.SwitchFirstTwoDimensions((await lstmNet.AutomaticBackwardPropagate(new DeepMatrix(pathLengthToGradientMap[key].ToArray()))).ToArray());
-                
+
                 for (int i = 0; i < lstmGradient.Length; ++i)
                 {
                     var path = indexesToPathMapLstm[(key, i)];
@@ -457,7 +480,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             Dictionary<int, List<Matrix>> nodeTypeToGradientMap = new Dictionary<int, List<Matrix>>();
-            foreach (var graph in gapGraphs)
+            foreach (var graph in this.gapGraphs)
             {
                 foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
@@ -484,7 +507,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
         }
 
-        private void ApplyGradients(Dictionary<GapPath, (Matrix, DeepMatrix)> pathToGradientsMap)
+        private void ApplyGradients(Dictionary<GapPath, (Matrix Gradient, DeepMatrix ConnectedPathsGradient)> pathToGradientsMap)
         {
             foreach (var graph in this.gapGraphs)
             {
@@ -496,7 +519,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         var connectedPath = connectedPaths[i];
                         var connectedGradient = connectedPathsGradient[i];
-                        var grad = pathToGradientsMap[connectedPath].Item1;
+                        var grad = pathToGradientsMap[connectedPath].Gradient;
                         grad.Accumulate(connectedGradient.ToArray());
                     }
                 }
