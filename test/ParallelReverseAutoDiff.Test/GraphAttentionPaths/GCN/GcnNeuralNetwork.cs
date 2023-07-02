@@ -1,10 +1,14 @@
-﻿using Newtonsoft.Json;
-using ParallelReverseAutoDiff.RMAD;
-using ParallelReverseAutoDiff.Test.Common;
-using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
-
+﻿// ------------------------------------------------------------------------------
+// <copyright file="GcnNeuralNetwork.cs" author="ameritusweb" date="6/18/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 {
+    using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.Test.Common;
+
     /// <summary>
     /// A GCN neural network.
     /// </summary>
@@ -68,6 +72,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// </summary>
         public DeepMatrix Adjacency { get; set; }
 
+        /// <summary>
+        /// The model layers for the GCN neural network.
+        /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
         {
             get
@@ -100,46 +107,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await this.InitializeComputationGraph();
         }
 
-        private void ClearState()
-        {
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(this.hiddenLayers.ToArray());
-        }
-
-        private async Task InitializeComputationGraph()
-        {
-            List<Matrix> w = new List<Matrix>();
-            List<Matrix> b = new List<Matrix>();
-            List<Matrix> wGrad = new List<Matrix>();
-            List<Matrix> bGrad = new List<Matrix>();
-            for (int i = 0; i < this.NumLayers; ++i)
-            {
-                w.Add(this.hiddenLayers[i].WeightMatrix("W"));
-                b.Add(this.hiddenLayers[i].WeightMatrix("B"));
-                wGrad.Add(this.hiddenLayers[i].GradientMatrix("W"));
-                bGrad.Add(this.hiddenLayers[i].GradientMatrix("B"));
-            }
-
-            string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.computationGraph = new GcnComputationGraph(this);
-            this.computationGraph
-                .AddIntermediate("Input", _ => this.Input)
-                .AddIntermediate("Output", x => this.Output[x.Layer])
-                .AddWeight("W", x => w[x.Layer]).AddGradient("DW", x => wGrad[x.Layer])
-                .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGrad[x.Layer])
-                .AddOperationFinder("Adjacency", _ => Adjacency)
-                .AddOperationFinder("CurrentH", x => x.Layer == 0 ? this.computationGraph["input_trans_0_0"] : this.computationGraph[$"ah_w_act_0_{x.Layer - 1}"])
-                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
-
-            IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
-            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-            await opVisitor.TraverseAsync();
-            await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
-        }
-
-        public void AutomaticForwardPropagate(FourDimensionalMatrix input, bool doNotUpdate)
+        /// <summary>
+        /// The forward pass of the GCN neural network.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        public void AutomaticForwardPropagate(FourDimensionalMatrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -176,10 +148,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 }
             }
             while (currOp.Next != null);
-
-            // await this.AutomaticBackwardPropagate(doNotUpdate);
         }
 
+        /// <summary>
+        /// The backward pass of the GCN neural network.
+        /// </summary>
+        /// <param name="gradient">The gradient of the loss.</param>
+        /// <returns>The gradient.</returns>
         public async Task<DeepMatrix[]> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
             IOperationBase? backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
@@ -196,6 +171,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             return matrixArray;
         }
 
+        /// <summary>
+        /// Initializes the state of the GCN neural network.
+        /// </summary>
         public void InitializeState()
         {
             // Clear intermediates
@@ -235,6 +213,52 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             {
                 this.Input.Replace(input);
             }
+        }
+
+        /// <summary>
+        /// Clears the state of the GCN neural network.
+        /// </summary>
+        private void ClearState()
+        {
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.hiddenLayers.ToArray());
+        }
+
+        /// <summary>
+        /// Initializes the computation graph of the GCN neural network.
+        /// </summary>
+        /// <returns>A task.</returns>
+        private async Task InitializeComputationGraph()
+        {
+            List<Matrix> w = new List<Matrix>();
+            List<Matrix> b = new List<Matrix>();
+            List<Matrix> wGrad = new List<Matrix>();
+            List<Matrix> bGrad = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                w.Add(this.hiddenLayers[i].WeightMatrix("W"));
+                b.Add(this.hiddenLayers[i].WeightMatrix("B"));
+                wGrad.Add(this.hiddenLayers[i].GradientMatrix("W"));
+                bGrad.Add(this.hiddenLayers[i].GradientMatrix("B"));
+            }
+
+            string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            this.computationGraph = new GcnComputationGraph(this);
+            this.computationGraph
+                .AddIntermediate("Input", _ => this.Input)
+                .AddIntermediate("Output", x => this.Output[x.Layer])
+                .AddWeight("W", x => w[x.Layer]).AddGradient("DW", x => wGrad[x.Layer])
+                .AddBias("B", x => b[x.Layer]).AddGradient("DB", x => bGrad[x.Layer])
+                .AddOperationFinder("Adjacency", _ => Adjacency)
+                .AddOperationFinder("CurrentH", x => x.Layer == 0 ? this.computationGraph["input_trans_0_0"] : this.computationGraph[$"ah_w_act_0_{x.Layer - 1}"])
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
+
+            IOperationBase? backwardStartOperation = null;
+            backwardStartOperation = this.computationGraph[$"ah_w_act_0_{this.NumLayers - 1}"];
+            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+            await opVisitor.TraverseAsync();
+            await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }
     }
 }

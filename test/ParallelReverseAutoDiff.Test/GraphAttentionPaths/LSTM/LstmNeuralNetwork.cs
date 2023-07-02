@@ -1,10 +1,14 @@
-﻿using Newtonsoft.Json;
-using ParallelReverseAutoDiff.RMAD;
-using ParallelReverseAutoDiff.Test.Common;
-using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
-
+﻿// ------------------------------------------------------------------------------
+// <copyright file="LstmNeuralNetwork.cs" author="ameritusweb" date="6/18/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 {
+    using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.Test.Common;
+
     /// <summary>
     /// An LSTM neural network.
     /// </summary>
@@ -90,6 +94,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// </summary>
         public JsonArchitecture Architecture { get; private set; }
 
+        /// <summary>
+        /// The model layers of the LSTM neural network.
+        /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
         {
             get
@@ -112,12 +119,139 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             await this.InitializeComputationGraph();
         }
 
+        /// <summary>
+        /// Stores the intermediate values of the computation graph for the given operation.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void StoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.StoreOperationIntermediates(id);
+        }
+
+        /// <summary>
+        /// Restores the intermediate values of the computation graph for the given operation.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.RestoreOperationIntermediates(id);
+        }
+
+        /// <summary>
+        /// The forward pass for the LSTM neural network.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>A task.</returns>
+        public async Task AutomaticForwardPropagate(FourDimensionalMatrix input)
+        {
+            // Initialize hidden state, gradients, biases, and intermediates
+            this.ClearState();
+
+            CommonMatrixUtils.SetInPlace(this.Parameters.DeepInputSequence, input);
+            var op = this.computationGraph.StartOperation;
+            if (op == null)
+            {
+                throw new Exception("Start operation should not be null.");
+            }
+
+            IOperationBase? currOp = null;
+            do
+            {
+                var parameters = this.LookupParameters(op);
+                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
+                if (forward == null)
+                {
+                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
+                }
+
+                forward.Invoke(op, parameters);
+                if (op.ResultToName != null)
+                {
+                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
+                    op.CopyResult(oo);
+                }
+
+                currOp = op;
+                if (op.HasNext)
+                {
+                    op = op.Next;
+                }
+            }
+            while (currOp.Next != null);
+        }
+
+        /// <summary>
+        /// The backward pass for the LSTM neural network.
+        /// </summary>
+        /// <param name="gradient">The gradient of the loss.</param>
+        /// <returns>The gradient.</returns>
+        public async Task<FourDimensionalMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
+        {
+            IOperationBase? backwardStartOperation = this.computationGraph[$"output_t_{this.Parameters.NumTimeSteps - 1}_0"];
+            if (!CommonMatrixUtils.IsAllZeroes(gradient))
+            {
+                backwardStartOperation.BackwardInput = gradient;
+                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, this.Parameters.NumTimeSteps - 1);
+                opVisitor.RunSequentially = true;
+                await opVisitor.TraverseAsync();
+                opVisitor.Reset();
+            }
+            FourDimensionalMatrix output = new FourDimensionalMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1);
+            for (int i = 0; i < this.Parameters.NumTimeSteps; ++i)
+            {
+                IOperationBase? backwardEndOperation = this.computationGraph[$"projectedInput_{i}_0"];
+                output[i] = backwardEndOperation.CalculatedGradient[1] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Initialize the state of the LSTM neural network.
+        /// </summary>
+        public void InitializeState()
+        {
+            // Clear intermediates
+            var outputPathFeatures = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1).Select(x => new DeepMatrix(x)).ToArray();
+            var deepInputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.originalInputSize, 1).Select(x => new DeepMatrix(x)).ToArray();
+
+            if (this.OutputPathFeatures == null)
+            {
+                this.OutputPathFeatures = new FourDimensionalMatrix(outputPathFeatures);
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlaceReplace(this.OutputPathFeatures, new FourDimensionalMatrix(outputPathFeatures));
+            }
+
+            if (this.Parameters.DeepInputSequence == null)
+            {
+                this.Parameters.DeepInputSequence = new FourDimensionalMatrix(deepInputSequence);
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlaceReplace(this.Parameters.DeepInputSequence, new FourDimensionalMatrix(deepInputSequence));
+            }
+
+            if (this.zeroMatrixHiddenSize != null)
+            {
+                this.zeroMatrixHiddenSize.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.hiddenSize, 1));
+            }
+        }
+
+        /// <summary>
+        /// Clears the state of the LSTM neural network.
+        /// </summary>
         private void ClearState()
         {
             GradientClearer clearer = new GradientClearer();
             clearer.Clear(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
         }
 
+        /// <summary>
+        /// Initializes the computation graph of the LSTM neural network.
+        /// </summary>
+        /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
             var we = this.embeddingLayer.WeightMatrix("We");
@@ -213,107 +347,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, t);
                 await opVisitor.TraverseAsync();
                 await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
-            }
-        }
-
-        public void StoreOperationIntermediates(Guid id)
-        {
-            this.computationGraph.StoreOperationIntermediates(id);
-        }
-
-        public void RestoreOperationIntermediates(Guid id)
-        {
-            this.computationGraph.RestoreOperationIntermediates(id);
-        }
-
-        public async Task AutomaticForwardPropagate(FourDimensionalMatrix input, int numTimeSteps)
-        {
-            // Initialize hidden state, gradients, biases, and intermediates
-            this.ClearState();
-
-            CommonMatrixUtils.SetInPlace(this.Parameters.DeepInputSequence, input);
-            var op = this.computationGraph.StartOperation;
-            if (op == null)
-            {
-                throw new Exception("Start operation should not be null.");
-            }
-
-            IOperationBase? currOp = null;
-            do
-            {
-                var parameters = this.LookupParameters(op);
-                var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
-                if (forward == null)
-                {
-                    throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
-                }
-
-                forward.Invoke(op, parameters);
-                if (op.ResultToName != null)
-                {
-                    var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                    var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
-                    op.CopyResult(oo);
-                }
-
-                currOp = op;
-                if (op.HasNext)
-                {
-                    op = op.Next;
-                }
-            }
-            while (currOp.Next != null);
-
-            // await this.AutomaticBackwardPropagate(doNotUpdate);
-        }
-
-        public async Task<FourDimensionalMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
-        {
-            IOperationBase? backwardStartOperation = this.computationGraph[$"output_t_{this.Parameters.NumTimeSteps - 1}_0"];
-            if (!CommonMatrixUtils.IsAllZeroes(gradient))
-            {
-                backwardStartOperation.BackwardInput = gradient;
-                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, this.Parameters.NumTimeSteps - 1);
-                opVisitor.RunSequentially = true;
-                await opVisitor.TraverseAsync();
-                opVisitor.Reset();
-            }
-            FourDimensionalMatrix output = new FourDimensionalMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1);
-            for (int i = 0; i < this.Parameters.NumTimeSteps; ++i)
-            {
-                IOperationBase? backwardEndOperation = this.computationGraph[$"projectedInput_{i}_0"];
-                output[i] = backwardEndOperation.CalculatedGradient[1] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
-            }
-            return output;
-        }
-
-        public void InitializeState()
-        {
-            // Clear intermediates
-            var outputPathFeatures = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.outputSize, 1).Select(x => new DeepMatrix(x)).ToArray();
-            var deepInputSequence = CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.Parameters.BatchSize, this.originalInputSize, 1).Select(x => new DeepMatrix(x)).ToArray();
-
-            if (this.OutputPathFeatures == null)
-            {
-                this.OutputPathFeatures = new FourDimensionalMatrix(outputPathFeatures);
-            }
-            else
-            {
-                CommonMatrixUtils.SetInPlaceReplace(this.OutputPathFeatures, new FourDimensionalMatrix(outputPathFeatures));
-            }
-
-            if (this.Parameters.DeepInputSequence == null)
-            {
-                this.Parameters.DeepInputSequence = new FourDimensionalMatrix(deepInputSequence);
-            }
-            else
-            {
-                CommonMatrixUtils.SetInPlaceReplace(this.Parameters.DeepInputSequence, new FourDimensionalMatrix(deepInputSequence));
-            }
-
-            if (this.zeroMatrixHiddenSize != null)
-            {
-                this.zeroMatrixHiddenSize.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.hiddenSize, 1));
             }
         }
     }

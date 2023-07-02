@@ -1,4 +1,9 @@
-﻿namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
+﻿// ------------------------------------------------------------------------------
+// <copyright file="ReadoutComputationGraph.cs" author="ameritusweb" date="6/18/2023">
+// Copyright (c) 2023 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 {
     using ParallelReverseAutoDiff.RMAD;
 
