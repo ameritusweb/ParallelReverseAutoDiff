@@ -25,6 +25,9 @@
     <None Remove="Leela\mimalloc-redirect.dll" />
     <None Remove="Rebel\Rebel-14.2-avx2.exe" />
     <None Remove="Rebel\rebeluci.exe" />
+    <None Remove="Statistics\actualmove_frequencies_2773067.json" />
+    <None Remove="Statistics\edge_frequencies_2773067.json" />
+    <None Remove="Statistics\move_frequencies_2773067.json" />
     <None Remove="Stockfish15\stockfish-windows-2022-x86-64-avx2.exe" />
     <None Remove="stylecop.json" />
   </ItemGroup>
@@ -63,6 +66,9 @@
     <EmbeddedResource Include="Rebel\Rebel-14.2-avx2.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Statistics\actualmove_frequencies_2773067.json" />
+    <EmbeddedResource Include="Statistics\edge_frequencies_2773067.json" />
+    <EmbeddedResource Include="Statistics\move_frequencies_2773067.json" />
     <EmbeddedResource Include="Stockfish15\stockfish-windows-2022-x86-64-avx2.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

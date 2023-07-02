@@ -36,6 +36,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public bool IsInPath { get; set; }
 
         /// <summary>
+        /// Gets or sets a tag.
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
         /// Gets or sets the type of node.
         /// </summary>
         public GapType GapType { get; set; }

@@ -10,7 +10,9 @@ namespace ParallelReverseAutoDiff.GnnExample
     using System.Collections.Generic;
     using System.Linq;
     using Chess;
+    using ManagedCuda;
     using ParallelReverseAutoDiff.GnnExample.GNN;
+    using ParallelReverseAutoDiff.Test.GraphAttentionPaths;
 
     /// <summary>
     /// The chess game state.
@@ -62,6 +64,43 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// Gets or sets the board size.
         /// </summary>
         public int BoardSize { get; set; } = 8;
+
+        /// <summary>
+        /// Gets the GAP path from the move.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="move">The move.</param>
+        /// <returns>The GAP path.</returns>
+        public static GapPath GetGapPath(GapGraph graph, string move)
+        {
+            Piece piece = new Piece(move.Substring(0, 2));
+            Position originalPosition = new Position(move.Substring(2, 2));
+            Position endPosition = new Position(move.Substring(4, 2));
+            Piece? capturedPiece = null;
+            if (move.Length > 6)
+            {
+                capturedPiece = new Piece(move.Substring(6, 2));
+            }
+
+            Move m = new Move(originalPosition, endPosition, piece, capturedPiece);
+            List<Position> path = GetPath(m);
+            List<GapNode> nodes = new List<GapNode>();
+            foreach (var position in path)
+            {
+                var node = graph.GapNodes.FirstOrDefault(n => n.PositionX == position.RankValue && n.PositionY == position.FileValue);
+                if (node != null)
+                {
+                    nodes.Add(node);
+                }
+            }
+
+            GapPath gapPath = new GapPath()
+            {
+                Id = Guid.NewGuid(),
+                Nodes = nodes,
+            };
+            return gapPath;
+        }
 
         /// <summary>
         /// Gets the path from a move.
@@ -127,6 +166,25 @@ namespace ParallelReverseAutoDiff.GnnExample
             }
 
             return path;
+        }
+
+        /// <summary>
+        /// Gets the positions on the board.
+        /// </summary>
+        /// <returns>The positions.</returns>
+        public Position[][] GetPositionsOnBoard()
+        {
+            Position[][] positions = new Position[8][];
+            for (int i = 0; i < 8; ++i)
+            {
+                positions[i] = new Position[8];
+                for (int j = 0; j < 8; ++j)
+                {
+                    positions[i][j] = new Position(j, i);
+                }
+            }
+
+            return positions;
         }
 
         /// <summary>
@@ -683,6 +741,59 @@ namespace ParallelReverseAutoDiff.GnnExample
             this.graph.Edges.Add(edge);
             nodeFrom.Edges.Add(edge);
             nodeTo.Edges.Add(edge);
+        }
+
+        /// <summary>
+        /// Populate the nodes.
+        /// </summary>
+        /// <param name="graph">The graph to populate.</param>
+        /// <returns>The graph.</returns>
+        public GapGraph PopulateNodes(GapGraph graph)
+        {
+            foreach (var node in graph.GapNodes)
+            {
+                var position = new Position((short)node.PositionX, (short)node.PositionY);
+                var piece = this.Board[position];
+                if (piece != null)
+                {
+                    node.Tag = piece.ToString();
+                    switch (piece.ToString())
+                    {
+                        case "wp":
+                        case "bp":
+                            node.GapType = GapType.Pawn;
+                            break;
+                        case "wn":
+                        case "bn":
+                            node.GapType = GapType.Knight;
+                            break;
+                        case "wb":
+                        case "bb":
+                            node.GapType = GapType.Bishop;
+                            break;
+                        case "wr":
+                        case "br":
+                            node.GapType = GapType.Rook;
+                            break;
+                        case "wq":
+                        case "bq":
+                            node.GapType = GapType.Queen;
+                            break;
+                        case "wk":
+                        case "bk":
+                            node.GapType = GapType.King;
+                            break;
+                        default:
+                            throw new InvalidOperationException("Invalid piece type");
+                    }
+                }
+                else
+                {
+                    node.GapType = GapType.Empty;
+                }
+            }
+
+            return graph;
         }
 
         private void BuildMap()

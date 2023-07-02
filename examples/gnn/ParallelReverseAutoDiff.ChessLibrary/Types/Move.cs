@@ -94,6 +94,17 @@ namespace Chess
         }
 
         /// <summary>
+        /// Initializes new Move object by given positions and piece
+        /// </summary>
+        public Move(Position originalPosition, Position newPosition, Piece piece, Piece? capturedPiece)
+        {
+            OriginalPosition = originalPosition;
+            NewPosition = newPosition;
+            Piece = piece;
+            CapturedPiece = capturedPiece;
+        }
+
+        /// <summary>
         /// Initializes new Move from long move notation
         /// </summary>
         /// <param name="move">

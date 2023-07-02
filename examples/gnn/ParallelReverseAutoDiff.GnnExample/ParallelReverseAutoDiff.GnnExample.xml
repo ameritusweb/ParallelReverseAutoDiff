@@ -852,6 +852,21 @@
             <param name="gameState">The game state.</param>
             <returns>The move and the next move.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator">
+            <summary>
+            A training set generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.LoadData">
+            <summary>
+            Loads the data.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingComputationGraph">
             <summary>
             An attention message passing computation graph.
