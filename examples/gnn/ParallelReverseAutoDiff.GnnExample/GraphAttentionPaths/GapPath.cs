@@ -17,6 +17,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         private List<Guid> nodeIds;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="GapPath"/> class.
+        /// </summary>
+        public GapPath()
+        {
+            this.FeatureVector = new Matrix(1, 1);
+            this.Nodes = new List<GapNode>();
+        }
+
+        /// <summary>
         /// Gets or sets an identifier for the path.
         /// </summary>
         public Guid Id { get; set; }
@@ -68,16 +77,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <param name="graph">The graph.</param>
         public void Populate(GapGraph graph)
         {
-            var nodes = this.nodeIds.Select(id => graph.GapNodes.FirstOrDefault(n => n.Id == id)).ToList();
-            foreach (var node in nodes)
+            if (this.nodeIds != null)
             {
-                if (node != null)
+                var nodes = this.nodeIds.Select(id => graph.GapNodes.FirstOrDefault(n => n.Id == id)).ToList();
+                foreach (var node in nodes)
                 {
-                    this.Nodes.Add(node);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Node not found in graph.");
+                    if (node != null)
+                    {
+                        this.Nodes.Add(node);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Node not found in graph.");
+                    }
                 }
             }
         }

@@ -17,6 +17,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         private Guid nodeId;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="GapEdge"/> class.
+        /// </summary>
+        public GapEdge()
+        {
+            this.FeatureVector = new Matrix(1, 1);
+        }
+
+        /// <summary>
         /// Gets or sets the unique identifier of the edge.
         /// </summary>
         public Guid Id { get; set; }
@@ -35,6 +43,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             get { return this.Node?.Id ?? Guid.Empty; }
             set { this.nodeId = value; } // Setter for deserialization
         }
+
+        /// <summary>
+        /// Gets or sets a tag.
+        /// </summary>
+        public object Tag { get; set; }
 
         /// <summary>
         /// Gets or sets the feature vector of the edge.

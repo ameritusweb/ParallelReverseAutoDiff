@@ -66,12 +66,49 @@ namespace ParallelReverseAutoDiff.GnnExample
         public int BoardSize { get; set; } = 8;
 
         /// <summary>
+        /// Gets the GAP edge from the move.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="move">The move.</param>
+        /// <returns>The gap edge.</returns>
+        public static (GapEdge Edge1, GapEdge Edge2) GetGapEdge(GapGraph graph, Move move)
+        {
+            Piece piece = move.Piece;
+            Position originalPosition = move.OriginalPosition;
+            Position endPosition = move.NewPosition;
+            Piece? capturedPiece = null;
+            if (move.CapturedPiece != null)
+            {
+                capturedPiece = move.CapturedPiece;
+            }
+
+            var node1 = graph.GapNodes.FirstOrDefault(n => n.PositionX == originalPosition.FileValue && n.PositionY == originalPosition.RankValue) ?? throw new InvalidOperationException("Position not found.");
+            var node2 = graph.GapNodes.FirstOrDefault(n => n.PositionX == endPosition.FileValue && n.PositionY == endPosition.RankValue) ?? throw new InvalidOperationException("Position not found.");
+            GapEdge gapEdge1 = new GapEdge()
+            {
+                Id = Guid.NewGuid(),
+                Node = node1,
+                Tag = new { Start = true, Move = move },
+            };
+
+            GapEdge gapEdge2 = new GapEdge()
+            {
+                Id = Guid.NewGuid(),
+                Node = node2,
+                Tag = new { Start = false, Move = move },
+            };
+
+            return (gapEdge1, gapEdge2);
+        }
+
+        /// <summary>
         /// Gets the GAP path from the move.
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="move">The move.</param>
+        /// <param name="nextmove">The next move.</param>
         /// <returns>The GAP path.</returns>
-        public static GapPath GetGapPath(GapGraph graph, string move)
+        public static GapPath GetGapPath(GapGraph graph, string move, Move nextmove)
         {
             Piece piece = new Piece(move.Substring(0, 2));
             Position originalPosition = new Position(move.Substring(2, 2));
@@ -82,23 +119,40 @@ namespace ParallelReverseAutoDiff.GnnExample
                 capturedPiece = new Piece(move.Substring(6, 2));
             }
 
-            Move m = new Move(originalPosition, endPosition, piece, capturedPiece);
-            List<Position> path = GetPath(m);
-            List<GapNode> nodes = new List<GapNode>();
-            foreach (var position in path)
+            bool isTargetMove = false;
+            if (nextmove.Piece.ToString() == piece.ToString()
+                &&
+                nextmove.OriginalPosition.ToString() == originalPosition.ToString()
+                &&
+                nextmove.NewPosition.ToString() == endPosition.ToString())
             {
-                var node = graph.GapNodes.FirstOrDefault(n => n.PositionX == position.RankValue && n.PositionY == position.FileValue);
-                if (node != null)
+                if (capturedPiece == null && nextmove.CapturedPiece == null)
                 {
-                    nodes.Add(node);
+                    isTargetMove = true;
+                }
+                else if (capturedPiece != null && nextmove.CapturedPiece != null && capturedPiece.ToString() == nextmove.CapturedPiece.ToString())
+                {
+                    isTargetMove = true;
                 }
             }
 
             GapPath gapPath = new GapPath()
             {
                 Id = Guid.NewGuid(),
-                Nodes = nodes,
+                IsTarget = isTargetMove,
             };
+
+            Move m = new Move(originalPosition, endPosition, piece, capturedPiece);
+            List<Position> path = GetPath(m);
+            foreach (var position in path)
+            {
+                var node = graph.GapNodes.FirstOrDefault(n => n.PositionX == position.FileValue && n.PositionY == position.RankValue);
+                if (node != null)
+                {
+                    gapPath.AddNode(node);
+                }
+            }
+
             return gapPath;
         }
 

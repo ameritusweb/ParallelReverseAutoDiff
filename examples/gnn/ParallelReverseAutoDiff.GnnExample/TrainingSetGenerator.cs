@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample
 {
+    using Chess;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths;
@@ -71,19 +72,30 @@ namespace ParallelReverseAutoDiff.GnnExample
             var graphJson = JsonConvert.SerializeObject(gapGraph);
 
             var moves = this.loader.LoadMoves(0);
-            foreach (var move in moves)
+            foreach ((Move move, Move? nextmove) in moves.WithNext())
             {
                 this.gameState.Board.Move(move);
-                var gamePhase = this.gameState.GetGamePhase();
-                var allmoves = this.gameState.GetMoves();
-                var legalmoves = this.gameState.GetAllMoves();
-                var graph = JsonConvert.DeserializeObject<GapGraph>(graphJson) ?? throw new InvalidOperationException("Failed to deserialize.");
-                graph = this.gameState.PopulateNodes(graph);
-
-                foreach (var allmove in allmoves)
+                if (nextmove != null)
                 {
-                    var path = GameState.GetGapPath(graph, allmove);
-                    graph.GapPaths.Add(path);
+                    var gamePhase = this.gameState.GetGamePhase();
+                    var allmoves = this.gameState.GetMoves();
+                    var legalmoves = this.gameState.GetAllMoves();
+                    var graph = JsonConvert.DeserializeObject<GapGraph>(graphJson) ?? throw new InvalidOperationException("Failed to deserialize.");
+                    graph.Populate();
+                    graph = this.gameState.PopulateNodes(graph);
+
+                    foreach (var allmove in allmoves)
+                    {
+                        var path = GameState.GetGapPath(graph, allmove, nextmove);
+                        graph.GapPaths.Add(path);
+                    }
+
+                    foreach (var legalmove in legalmoves)
+                    {
+                        var edges = GameState.GetGapEdge(graph, legalmove);
+                        graph.GapEdges.Add(edges.Edge1);
+                        graph.GapEdges.Add(edges.Edge2);
+                    }
                 }
             }
         }

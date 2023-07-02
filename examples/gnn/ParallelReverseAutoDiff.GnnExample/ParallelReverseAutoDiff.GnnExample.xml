@@ -319,6 +319,19 @@
             <param name="file">The file to read.</param>
             <returns>The text of the file.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.Common.IEnumerableExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.IEnumerableExtensions.WithIndex``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns the item and its index.
+            </summary>
+            <typeparam name="T">The type of item.</typeparam>
+            <param name="source">The source enumerable.</param>
+            <returns>The target enumerable.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.GameGenerator">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
@@ -434,12 +447,34 @@
             Gets or sets the board size.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGapEdge(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph,Chess.Move)">
+            <summary>
+            Gets the GAP edge from the move.
+            </summary>
+            <param name="graph">The graph.</param>
+            <param name="move">The move.</param>
+            <returns>The gap edge.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGapPath(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph,System.String)">
+            <summary>
+            Gets the GAP path from the move.
+            </summary>
+            <param name="graph">The graph.</param>
+            <param name="move">The move.</param>
+            <returns>The GAP path.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPath(Chess.Move)">
             <summary>
             Gets the path from a move.
             </summary>
             <param name="move">A move.</param>
             <returns>The list of positions.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPositionsOnBoard">
+            <summary>
+            Gets the positions on the board.
+            </summary>
+            <returns>The positions.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGamePhase">
             <summary>
@@ -626,6 +661,13 @@
             </summary>
             <param name="startPos">The start position.</param>
             <param name="moveInfo">The move info.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.PopulateNodes(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
+            <summary>
+            Populate the nodes.
+            </summary>
+            <param name="graph">The graph to populate.</param>
+            <returns>The graph.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.GNN.GNNEdge">
             <summary>
@@ -1118,6 +1160,11 @@
             An edge of the GAP graph.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge"/> class.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Id">
             <summary>
             Gets or sets the unique identifier of the edge.
@@ -1131,6 +1178,11 @@
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.NodeId">
             <summary>
             Gets or sets the node ID.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Tag">
+            <summary>
+            Gets or sets a tag.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.FeatureVector">
@@ -1147,6 +1199,11 @@
         <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph">
             <summary>
             A graph attention paths graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph"/> class.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.GapEdges">
@@ -1174,9 +1231,19 @@
             Gets or sets the normalized adjacency matrix of the graph.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.Populate">
+            <summary>
+            Populate after deserialization.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode">
             <summary>
             A node in a graph attention path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode"/> class.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.Id">
@@ -1197,6 +1264,11 @@
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.IsInPath">
             <summary>
             Gets or sets a value indicating whether the node is in the path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.Tag">
+            <summary>
+            Gets or sets a tag.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapNode.GapType">
@@ -1228,6 +1300,11 @@
         <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath">
             <summary>
             The GAP path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath"/> class.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.Id">

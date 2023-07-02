@@ -5,15 +5,25 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
-    using ManagedCuda.BasicTypes;
+    using System.Text.Json.Serialization;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A node in a graph attention path.
     /// </summary>
+    [Serializable]
     public class GapNode : IPopulate
     {
         private List<Guid> edgeIds;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GapNode"/> class.
+        /// </summary>
+        public GapNode()
+        {
+            this.FeatureVector = new Matrix(1, 1);
+            this.Edges = new List<GapEdge>();
+        }
 
         /// <summary>
         /// Gets or sets the node identifier.
@@ -53,6 +63,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <summary>
         /// Gets or sets the edges.
         /// </summary>
+        [JsonIgnore]
         public List<GapEdge> Edges { get; set; }
 
         /// <summary>
@@ -70,16 +81,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <param name="graph">The graph.</param>
         public void Populate(GapGraph graph)
         {
-            var edges = this.edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
-            foreach (var edge in edges)
+            if (this.edgeIds != null)
             {
-                if (edge != null)
+                var edges = this.edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
+                foreach (var edge in edges)
                 {
-                    this.Edges.Add(edge);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Edge not found.");
+                    if (edge != null)
+                    {
+                        this.Edges.Add(edge);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Edge not found.");
+                    }
                 }
             }
         }
