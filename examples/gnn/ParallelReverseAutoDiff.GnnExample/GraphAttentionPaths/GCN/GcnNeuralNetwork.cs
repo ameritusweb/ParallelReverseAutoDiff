@@ -6,8 +6,8 @@
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 {
     using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.RMAD;
-    using ParallelReverseAutoDiff.Test.Common;
 
     /// <summary>
     /// A GCN neural network.

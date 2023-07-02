@@ -7,8 +7,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     using System;
     using System.IO;
+    using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.RMAD;
-    using ParallelReverseAutoDiff.Test.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN;

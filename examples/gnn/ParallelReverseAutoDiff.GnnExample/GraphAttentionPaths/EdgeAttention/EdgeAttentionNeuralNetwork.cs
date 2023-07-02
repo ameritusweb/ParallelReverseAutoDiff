@@ -6,8 +6,8 @@
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
 {
     using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.RMAD;
-    using ParallelReverseAutoDiff.Test.Common;
 
     /// <summary>
     /// An edge attention neural network.

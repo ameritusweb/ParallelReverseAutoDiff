@@ -473,6 +473,33 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         }
 
         /// <summary>
+        /// Calculates whether the deep matrix is all zeroes.
+        /// </summary>
+        /// <param name="matrix">The deep matrix.</param>
+        /// <returns>A value.</returns>
+        public static bool IsAllZeroes(DeepMatrix matrix)
+        {
+            int numDepth = matrix.Depth;
+            int numRows = matrix.Rows;
+            int numCols = matrix.Cols;
+            for (int i = 0; i < numDepth; ++i)
+            {
+                for (int j = 0; j < numRows; ++j)
+                {
+                    for (int k = 0; k < numCols; ++k)
+                    {
+                        if (matrix[i][j][k] != 0.0d)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Calculates whether the matrix is all zeroes.
         /// </summary>
         /// <param name="matrix">The matrix.</param>
@@ -750,6 +777,54 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
             }
 
             return matrix;
+        }
+
+        /// <summary>
+        /// Switch the first two dimensions of the deep matrix array.
+        /// </summary>
+        /// <param name="deepMatrixArray">The deep matrix array.</param>
+        /// <returns>The deep matrix array switched.</returns>
+        public static DeepMatrix[] SwitchFirstTwoDimensions(DeepMatrix[] deepMatrixArray)
+        {
+            DeepMatrix[] switched = new DeepMatrix[deepMatrixArray[0].Depth];
+            for (int i = 0; i < deepMatrixArray.Length; ++i)
+            {
+                for (int j = 0; j < deepMatrixArray[0].Depth; ++j)
+                {
+                    if (switched[j] == null)
+                    {
+                        switched[j] = new DeepMatrix(deepMatrixArray.Length, 1, 1);
+                    }
+
+                    switched[j][i] = deepMatrixArray[i][j];
+                }
+            }
+
+            return switched;
+        }
+
+        /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlaceReplace(FourDimensionalMatrix matrices, FourDimensionalMatrix value)
+        {
+            int numMatrices = matrices.Count;
+            for (int i = 0; i < numMatrices; ++i)
+            {
+                matrices[i].Replace(value[i].ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Sets the following matrices to the specified values.
+        /// </summary>
+        /// <param name="matrices">The matrices to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlaceReplace(DeepMatrix matrices, DeepMatrix value)
+        {
+            matrices.Replace(value.ToArray());
         }
     }
 }

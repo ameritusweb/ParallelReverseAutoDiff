@@ -6,8 +6,8 @@
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing
 {
     using Newtonsoft.Json;
+    using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.RMAD;
-    using ParallelReverseAutoDiff.Test.Common;
 
     /// <summary>
     /// An attention message passing neural network.
