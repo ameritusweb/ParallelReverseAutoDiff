@@ -51,7 +51,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public List<Guid> NodeIds
         {
-            get { return (this.Nodes?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
+            get { return (this.Nodes?.Select(e => e.Id) ?? this.nodeIds).ToList(); }
             set { this.nodeIds = value; } // Setter for deserialization
         }
 

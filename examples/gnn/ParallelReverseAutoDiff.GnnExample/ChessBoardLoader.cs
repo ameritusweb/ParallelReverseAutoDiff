@@ -32,6 +32,18 @@ namespace ParallelReverseAutoDiff.GnnExample
         }
 
         /// <summary>
+        /// Get the file name.
+        /// </summary>
+        /// <param name="skip">How many files to skip.</param>
+        /// <returns>The file name.</returns>
+        public string GetFileName(int skip)
+        {
+            string file = this.files.Skip(skip).First();
+            FileInfo fileInfo = new FileInfo(file);
+            return fileInfo.Name;
+        }
+
+        /// <summary>
         /// Load the chess board.
         /// </summary>
         /// <param name="skip">How many files to skip.</param>

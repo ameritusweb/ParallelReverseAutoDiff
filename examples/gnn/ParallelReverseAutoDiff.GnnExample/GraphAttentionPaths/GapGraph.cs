@@ -10,6 +10,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
     /// <summary>
     /// A graph attention paths graph.
     /// </summary>
+    [Serializable]
     public class GapGraph
     {
         /// <summary>
@@ -49,6 +50,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <summary>
         /// Gets the target paths.
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public List<GapPath> TargetPaths
         {
             get
@@ -58,45 +60,122 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         }
 
         /// <summary>
-        /// Add features by piece and edge.
+        /// Update the feature indices.
         /// </summary>
-        /// <param name="piece">The piece.</param>
-        /// <param name="edge">The edge.</param>
-        public void AddFeaturesByPiece(string piece, GapEdge edge)
+        /// <param name="artifacts">The artifacts.</param>
+        /// <param name="fen">The fen.</param>
+        /// <param name="lastMove">The last move.</param>
+        public void UpdateFeatureIndices(Dictionary<string, int> artifacts, string fen, string lastMove)
         {
-            string[] pieces = new[] { "wq", "wr", "wb", "wn", "wp", "wk", "bq", "br", "bb", "bn", "bp", "bk" };
-            foreach (var pieceExample in pieces)
+            lastMove = lastMove.ToLowerInvariant().Replace("o-o", "o2").Replace("o-o-o", "o3");
+            foreach (var edge in this.GapEdges)
             {
-                if (piece.ToLower() == pieceExample)
+                dynamic tag = edge.Tag;
+                bool start = tag.Start;
+                string move = tag.Move;
+                var fens = fen.Split(' ').ToList();
+                for (int i = 1; i < fens.Count; i++)
                 {
-                    edge.Features.Add(1.0d);
+                    if (artifacts.ContainsKey(fens[i]))
+                    {
+                        edge.FeatureIndices.Add(artifacts[fens[i]]);
+                    }
+                    else
+                    {
+                        edge.FeatureIndices.Add(artifacts[string.Empty]);
+                    }
+                }
+
+                lastMove = lastMove.Trim(new[] { '{', '}' });
+                string[] lastmoves = lastMove.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                edge.FeatureIndices.Add(artifacts[lastmoves[0].Trim()]);
+                edge.FeatureIndices.Add(artifacts[lastmoves[1].Trim()]);
+                edge.FeatureIndices.Add(artifacts[lastmoves[2].Trim()]);
+                if (lastmoves.Length > 3)
+                {
+                    edge.FeatureIndices.Add(artifacts[lastmoves[3].Trim()]);
                 }
                 else
                 {
-                    edge.Features.Add(0.0d);
+                    edge.FeatureIndices.Add(artifacts["nocapture"]);
+                }
+
+                if (lastmoves.Length > 4)
+                {
+                    edge.FeatureIndices.Add(artifacts[lastmoves[4].Trim()]);
+                }
+                else
+                {
+                    edge.FeatureIndices.Add(artifacts["noparameter"]);
+                }
+
+                if (move.StartsWith("{"))
+                {
+                    move = move.Trim(new[] { '{', '}' });
+                    string[] moves = move.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                    edge.FeatureIndices.Add(start ? artifacts["start"] : artifacts["nonstart"]);
+                    edge.FeatureIndices.Add(artifacts[moves[0].Trim()]);
+                    edge.FeatureIndices.Add(artifacts[moves[1].Trim()]);
+                    edge.FeatureIndices.Add(artifacts[moves[2].Trim()]);
+                    if (moves.Length > 3)
+                    {
+                        edge.FeatureIndices.Add(artifacts[moves[3].Trim()]);
+                    }
+                    else
+                    {
+                        edge.FeatureIndices.Add(artifacts["nocapture"]);
+                    }
+
+                    if (moves.Length > 4)
+                    {
+                        edge.FeatureIndices.Add(artifacts[moves[4].Trim()]);
+                    }
+                    else
+                    {
+                        edge.FeatureIndices.Add(artifacts["noparameter"]);
+                    }
+                }
+                else
+                {
+                    edge.FeatureIndices.Add(start ? artifacts["start"] : artifacts["nonstart"]);
+                    edge.FeatureIndices.Add(artifacts[move.Substring(0, 2).ToLowerInvariant()]);
+                    edge.FeatureIndices.Add(artifacts[move.Substring(2, 2).ToLowerInvariant()]);
+                    edge.FeatureIndices.Add(artifacts[move.Substring(4, 2).ToLowerInvariant()]);
+                    edge.FeatureIndices.Add(artifacts[move.Length < 8 ? "nocapture" : move.Substring(6, 2).ToLowerInvariant()]);
+                    edge.FeatureIndices.Add(artifacts["noparameter"]);
+                    if (move.Length >= 8)
+                    {
+                        if (move.Substring(0, 1) == move.Substring(6, 1))
+                        {
+                            edge.FeatureIndices.Add(artifacts["defense"]);
+                        }
+                        else
+                        {
+                            edge.FeatureIndices.Add(artifacts["nodefense"]);
+                        }
+                    }
+                    else
+                    {
+                        edge.FeatureIndices.Add(artifacts["nodefense"]);
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Add features by square and edge.
+        /// Update feature vectors.
         /// </summary>
-        /// <param name="square">The square.</param>
-        /// <param name="edge">The edge.</param>
-        public void AddFeaturesBySquare(string square, GapEdge edge)
+        public void UpdateFeatureVectors()
         {
-            string[] squares = new[]
+            foreach (var edge in this.GapEdges)
             {
-                "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8",
-                "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8",
-                "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
-                "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8",
-                "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8",
-                "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8",
-                "g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8",
-                "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8",
-            };
-    }
+                edge.FeatureVector = new Matrix(edge.FeatureIndices.Count, 1);
+                for (int i = 0; i < edge.FeatureIndices.Count; i++)
+                {
+                    edge.FeatureVector[i, 0] = edge.FeatureIndices[i];
+                }
+            }
+        }
 
         /// <summary>
         /// Update the feature vectors.
@@ -108,13 +187,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             foreach (var edge in this.GapEdges)
             {
                 dynamic tag = edge.Tag;
-                bool start = tag.Start;
                 string move = tag.Move;
-                this.AddFeaturesByPiece(move.Substring(0, 2), edge);
-                this.AddFeaturesBySquare(move.Substring(2, 2), edge);
-                this.AddFeaturesBySquare(move.Substring(4, 2), edge);
-                this.AddFeaturesByPiece(move.Length < 8 ? string.Empty : move.Substring(6, 2), edge);
-                edge.Features.Add(start ? 1.0d : 0.0d);
                 if (map.ContainsKey(move))
                 {
                     var stat = (double)map[move];
@@ -122,7 +195,54 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 }
                 else
                 {
-                    edge.Features.Add(0d);
+                    if (move.StartsWith("{"))
+                    {
+                        move = move.Trim(new[] { '{', '}' });
+                        string[] moves = move.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                        move = string.Join(string.Empty, moves.Select(x => x.Trim()));
+
+                        if (map.ContainsKey(move))
+                        {
+                            var stat = (double)map[move];
+                            edge.Features.Add(stat / totalStats);
+                            continue;
+                        }
+                        else
+                        {
+                            edge.Features.Add(0d);
+                        }
+                    }
+                    else
+                    {
+                        var keys = map.Keys.ToList();
+                        if (move.Length == 6)
+                        {
+                            move = "{" + move.Substring(0, 2) + " - " + move.Substring(2, 2) + " - " + move.Substring(4, 2);
+                            if (keys.Any(x => x.StartsWith(move)))
+                            {
+                                var stats = map.Where(x => x.Key.StartsWith(move, StringComparison.OrdinalIgnoreCase)).ToList();
+                                var stat = stats.Sum(x => x.Value);
+                                edge.Features.Add(stat / totalStats);
+                                continue;
+                            }
+                        }
+                        else if (move.Length == 8)
+                        {
+                            move = "{" + move.Substring(0, 2) + " - " + move.Substring(2, 2) + " - " + move.Substring(4, 2) + " - " + move.Substring(6, 2);
+                            if (keys.Any(x => x.StartsWith(move)))
+                            {
+                                var stats = map.Where(x => x.Key.StartsWith(move, StringComparison.OrdinalIgnoreCase)).ToList();
+                                var stat = stats.Sum(x => x.Value);
+                                edge.Features.Add(stat / totalStats);
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                        }
+
+                        edge.Features.Add(0d);
+                    }
                 }
             }
         }

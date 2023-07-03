@@ -40,6 +40,13 @@
             </summary>
             <returns>The total.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.GetFileName(System.Int32)">
+            <summary>
+            Get the file name.
+            </summary>
+            <param name="skip">How many files to skip.</param>
+            <returns>The file name.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader.LoadMoves(System.Int32)">
             <summary>
             Load the chess board.
@@ -1215,6 +1222,11 @@
             Gets or sets the features.
             </summary>
         </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.FeatureIndices">
+            <summary>
+            Gets or sets the feature indices.
+            </summary>
+        </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
             <summary>
             Populates the node with the node ID.
@@ -1261,19 +1273,18 @@
             Gets the target paths.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.AddFeaturesByPiece(System.String,ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge)">
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureIndices(System.Collections.Generic.Dictionary{System.String,System.Int32},System.String,System.String)">
             <summary>
-            Add features by piece and edge.
+            Update the feature indices.
             </summary>
-            <param name="piece">The piece.</param>
-            <param name="edge">The edge.</param>
+            <param name="artifacts">The artifacts.</param>
+            <param name="fen">The fen.</param>
+            <param name="lastMove">The last move.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.AddFeaturesBySquare(System.String,ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge)">
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureVectors">
             <summary>
-            Add features by square and edge.
+            Update feature vectors.
             </summary>
-            <param name="square">The square.</param>
-            <param name="edge">The edge.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureVectors(System.Collections.Generic.Dictionary{System.String,System.Int32},System.Double)">
             <summary>

@@ -40,7 +40,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public Guid NodeId
         {
-            get { return this.Node?.Id ?? Guid.Empty; }
+            get { return this.Node?.Id ?? this.nodeId; }
             set { this.nodeId = value; } // Setter for deserialization
         }
 
@@ -58,6 +58,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Gets or sets the features.
         /// </summary>
         public List<double> Features { get; set; } = new List<double>();
+
+        /// <summary>
+        /// Gets or sets the feature indices.
+        /// </summary>
+        public List<int> FeatureIndices { get; set; } = new List<int>();
 
         /// <summary>
         /// Populates the node with the node ID.
