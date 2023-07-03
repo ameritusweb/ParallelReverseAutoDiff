@@ -32,7 +32,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <summary>
         /// Gets or sets the node that the edge connects to.
         /// </summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public GapNode Node { get; set; }
 
         /// <summary>
@@ -53,6 +53,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Gets or sets the feature vector of the edge.
         /// </summary>
         public Matrix FeatureVector { get; set; }
+
+        /// <summary>
+        /// Gets or sets the features.
+        /// </summary>
+        public List<double> Features { get; set; } = new List<double>();
 
         /// <summary>
         /// Populates the node with the node ID.

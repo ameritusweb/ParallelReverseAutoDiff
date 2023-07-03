@@ -82,23 +82,9 @@ namespace ParallelReverseAutoDiff.GnnExample
                 capturedPiece = move.CapturedPiece;
             }
 
-            var node1 = graph.GapNodes.FirstOrDefault(n => n.PositionX == originalPosition.FileValue && n.PositionY == originalPosition.RankValue) ?? throw new InvalidOperationException("Position not found.");
-            var node2 = graph.GapNodes.FirstOrDefault(n => n.PositionX == endPosition.FileValue && n.PositionY == endPosition.RankValue) ?? throw new InvalidOperationException("Position not found.");
-            GapEdge gapEdge1 = new GapEdge()
-            {
-                Id = Guid.NewGuid(),
-                Node = node1,
-                Tag = new { Start = true, Move = move },
-            };
-
-            GapEdge gapEdge2 = new GapEdge()
-            {
-                Id = Guid.NewGuid(),
-                Node = node2,
-                Tag = new { Start = false, Move = move },
-            };
-
-            return (gapEdge1, gapEdge2);
+            var node1 = graph.GapNodes.FirstOrDefault(n => n.PositionX == originalPosition.X && n.PositionY == originalPosition.Y) ?? throw new InvalidOperationException("Position not found.");
+            var node2 = graph.GapNodes.FirstOrDefault(n => n.PositionX == endPosition.X && n.PositionY == endPosition.Y) ?? throw new InvalidOperationException("Position not found.");
+            return GetEdges(node1, node2, move.ToString());
         }
 
         /// <summary>
@@ -107,8 +93,9 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <param name="graph">The graph.</param>
         /// <param name="move">The move.</param>
         /// <param name="nextmove">The next move.</param>
+        /// <param name="legalMoves">The legal moves.</param>
         /// <returns>The GAP path.</returns>
-        public static GapPath GetGapPath(GapGraph graph, string move, Move nextmove)
+        public static GapPath GetGapPath(GapGraph graph, string move, Move nextmove, List<Move> legalMoves)
         {
             Piece piece = new Piece(move.Substring(0, 2));
             Position originalPosition = new Position(move.Substring(2, 2));
@@ -134,6 +121,15 @@ namespace ParallelReverseAutoDiff.GnnExample
                 {
                     isTargetMove = true;
                 }
+            }
+
+            if (!legalMoves.Any(x => x.Piece.ToString() == piece.ToString() && x.OriginalPosition.ToString() == originalPosition.ToString() && x.NewPosition.ToString() == endPosition.ToString()))
+            {
+                var node1 = graph.GapNodes.FirstOrDefault(x => x.PositionX == originalPosition.X && x.PositionY == originalPosition.Y) ?? throw new InvalidOperationException("Node should not be null.");
+                var node2 = graph.GapNodes.FirstOrDefault(x => x.PositionX == endPosition.X && x.PositionY == endPosition.Y) ?? throw new InvalidOperationException("Node should not be null.");
+                var edges = GetEdges(node1, node2, move);
+                graph.GapEdges.Add(edges.Edge1);
+                graph.GapEdges.Add(edges.Edge2);
             }
 
             GapPath gapPath = new GapPath()
@@ -848,6 +844,26 @@ namespace ParallelReverseAutoDiff.GnnExample
             }
 
             return graph;
+        }
+
+        private static (GapEdge Edge1, GapEdge Edge2) GetEdges(GapNode node1, GapNode node2, string move)
+        {
+            GapEdge gapEdge1 = new GapEdge()
+            {
+                Id = Guid.NewGuid(),
+                Node = node1,
+                Tag = new { Start = true, Move = move },
+            };
+            node1.Edges.Add(gapEdge1);
+            GapEdge gapEdge2 = new GapEdge()
+            {
+                Id = Guid.NewGuid(),
+                Node = node2,
+                Tag = new { Start = false, Move = move },
+            };
+            node2.Edges.Add(gapEdge2);
+
+            return (gapEdge1, gapEdge2);
         }
 
         private void BuildMap()

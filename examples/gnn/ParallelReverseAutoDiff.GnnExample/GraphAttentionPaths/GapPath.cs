@@ -43,7 +43,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <summary>
         /// Gets or sets the nodes of the path.
         /// </summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public List<GapNode> Nodes { get; set; }
 
         /// <summary>

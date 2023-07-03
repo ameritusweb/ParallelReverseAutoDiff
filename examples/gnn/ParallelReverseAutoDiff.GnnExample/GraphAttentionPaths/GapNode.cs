@@ -63,7 +63,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <summary>
         /// Gets or sets the edges.
         /// </summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public List<GapEdge> Edges { get; set; }
 
         /// <summary>
@@ -96,6 +96,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// An override of ToString.
+        /// </summary>
+        /// <returns>The string.</returns>
+        public override string ToString()
+        {
+            return this.PositionX + "," + this.PositionY;
         }
     }
 }

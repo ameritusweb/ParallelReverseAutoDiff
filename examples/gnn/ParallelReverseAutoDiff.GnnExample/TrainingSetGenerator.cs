@@ -86,7 +86,7 @@ namespace ParallelReverseAutoDiff.GnnExample
 
                     foreach (var allmove in allmoves)
                     {
-                        var path = GameState.GetGapPath(graph, allmove, nextmove);
+                        var path = GameState.GetGapPath(graph, allmove, nextmove, legalmoves);
                         graph.GapPaths.Add(path);
                     }
 
@@ -96,6 +96,19 @@ namespace ParallelReverseAutoDiff.GnnExample
                         graph.GapEdges.Add(edges.Edge1);
                         graph.GapEdges.Add(edges.Edge2);
                     }
+
+                    graph.FormAdjacencyMatrix();
+                    var totalStats = 2773067d;
+                    graph.UpdateFeatureVectors(this.edgeFrequenciesByPhase[GamePhase.Opening], totalStats);
+                    graph.UpdateFeatureVectors(this.edgeFrequenciesByPhase[GamePhase.MiddleGame], totalStats);
+                    graph.UpdateFeatureVectors(this.edgeFrequenciesByPhase[GamePhase.EndGame], totalStats);
+                    graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[GamePhase.Opening], totalStats);
+                    graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[GamePhase.MiddleGame], totalStats);
+                    graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[GamePhase.EndGame], totalStats);
+                    graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[GamePhase.Opening], totalStats);
+                    graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[GamePhase.MiddleGame], totalStats);
+                    graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[GamePhase.EndGame], totalStats);
+                    var gJson = JsonConvert.SerializeObject(graph);
                 }
             }
         }
