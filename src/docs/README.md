@@ -68,6 +68,8 @@ CudaMatrixMultiplyOperation - Leverages NVIDIA GPUs for fast computation.
 
 DualWeightedOperation
 
+EmbeddingOperation - Used for word or subword embeddings.
+
 GELUOperation
 
 GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, and Intel GPUs for fast computation.
