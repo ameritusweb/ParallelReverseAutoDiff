@@ -79,7 +79,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             var graphJson = JsonConvert.SerializeObject(gapGraph);
 
             int total = this.loader.GetTotal();
-            for (int t = 28; t < total; ++t)
+            for (int t = 0; t < total; ++t)
             {
                 var moves = this.loader.LoadMoves(t);
                 var name = this.loader.GetFileName(t).Replace(".pgn", string.Empty);
@@ -114,7 +114,7 @@ namespace ParallelReverseAutoDiff.GnnExample
 
                             graph.FormAdjacencyMatrix();
                             var totalStats = 2773067d;
-                            graph.UpdateFeatureIndices(this.artifacts, this.gameState.Board.ToPositionFen(), this.gameState.Board.ExecutedMoves.Last().ToString());
+                            graph.UpdateFeatureIndices(this.artifacts, this.gameState.Board.ToPositionFen(), this.gameState.Board.ExecutedMoves.Last().ToString(), gamePhase);
                             graph.UpdateFeatureVectors(this.edgeFrequenciesByPhase[gamePhase], totalStats);
                             graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[gamePhase], totalStats);
                             graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[gamePhase], totalStats);
@@ -135,7 +135,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                     Console.WriteLine($"Failed to process {name}");
                 }
 
-                this.SaveToZip(jsons, $"D:\\graphs\\{name}.zip");
+                this.SaveToZip(jsons, $"E:\\graphs\\{name}.zip");
             }
         }
 

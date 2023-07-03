@@ -1273,13 +1273,14 @@
             Gets the target paths.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureIndices(System.Collections.Generic.Dictionary{System.String,System.Int32},System.String,System.String)">
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureIndices(System.Collections.Generic.Dictionary{System.String,System.Int32},System.String,System.String,ParallelReverseAutoDiff.GnnExample.GamePhase)">
             <summary>
             Update the feature indices.
             </summary>
             <param name="artifacts">The artifacts.</param>
             <param name="fen">The fen.</param>
             <param name="lastMove">The last move.</param>
+            <param name="gamePhase">The game phase.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureVectors">
             <summary>

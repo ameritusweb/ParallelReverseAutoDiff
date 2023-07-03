@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
+    using ParallelReverseAutoDiff.GnnExample;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -65,11 +66,25 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <param name="artifacts">The artifacts.</param>
         /// <param name="fen">The fen.</param>
         /// <param name="lastMove">The last move.</param>
-        public void UpdateFeatureIndices(Dictionary<string, int> artifacts, string fen, string lastMove)
+        /// <param name="gamePhase">The game phase.</param>
+        public void UpdateFeatureIndices(Dictionary<string, int> artifacts, string fen, string lastMove, GamePhase gamePhase)
         {
             lastMove = lastMove.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2");
             foreach (var edge in this.GapEdges)
             {
+                if (gamePhase == GamePhase.Opening)
+                {
+                    edge.FeatureIndices.Add(artifacts["opening"]);
+                }
+                else if (gamePhase == GamePhase.MiddleGame)
+                {
+                    edge.FeatureIndices.Add(artifacts["middlegame"]);
+                }
+                else
+                {
+                    edge.FeatureIndices.Add(artifacts["endgame"]);
+                }
+
                 dynamic tag = edge.Tag;
                 bool start = tag.Start;
                 string move = tag.Move;

@@ -110,5 +110,8 @@
   "Kkq": 108,
   "Qkq": 109,
   "KQk": 110,
-  "KQq": 111
+  "KQq": 111,
+  "opening": 112,
+  "middlegame": 113,
+  "endgame": 114
 }
