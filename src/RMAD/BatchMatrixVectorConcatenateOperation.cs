@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="BatchEmbeddingOperation.cs" author="ameritusweb" date="5/8/2023">
+// <copyright file="BatchMatrixVectorConcatenateOperation.cs" author="ameritusweb" date="5/8/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -10,14 +10,14 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Batch embedding operation.
+    /// Batch matrix-vector concatenate operation.
     /// </summary>
-    public class BatchEmbeddingOperation : BatchOperation<EmbeddingOperation>
+    public class BatchMatrixVectorConcatenateOperation : BatchOperation<MatrixVectorConcatenateOperation>
     {
-        private BatchEmbeddingOperation(NeuralNetwork net)
+        private BatchMatrixVectorConcatenateOperation(NeuralNetwork net)
             : base(net)
         {
-            this.Operations = new EmbeddingOperation[net.Parameters.BatchSize];
+            this.Operations = new MatrixVectorConcatenateOperation[net.Parameters.BatchSize];
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IBatchOperation Instantiate(NeuralNetwork net)
         {
-            return new BatchEmbeddingOperation(net);
+            return new BatchMatrixVectorConcatenateOperation(net);
         }
 
         /// <inheritdoc />
@@ -39,33 +39,33 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Restore(Guid id)
         {
-            this.Operations = this.IntermediateOperationArrays[id].OfType<EmbeddingOperation>().ToArray();
+            this.Operations = this.IntermediateOperationArrays[id].OfType<MatrixVectorConcatenateOperation>().ToArray();
         }
 
         /// <summary>
-        /// The forward pass of the batch embedding operation.
+        /// The forward pass of the batch matrix-vector concatenate operation.
         /// </summary>
         /// <param name="input">The input matrix.</param>
-        /// <param name="embeddings">The input embeddings.</param>
+        /// <param name="vector">The input vector.</param>
         /// <returns>The output matrix.</returns>
-        public DeepMatrix Forward(DeepMatrix input, Matrix embeddings)
+        public DeepMatrix Forward(DeepMatrix input, Matrix vector)
         {
             this.ExtendOperations();
             var matrixArray = new Matrix[input.Depth];
             Parallel.For(0, input.Depth, i =>
             {
-                this.Operations[i] = new EmbeddingOperation();
-                matrixArray[i] = this.Operations[i].Forward(input[i], embeddings);
+                this.Operations[i] = new MatrixVectorConcatenateOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i], vector);
             });
             this.DeepOutput = new DeepMatrix(matrixArray);
             return this.DeepOutput;
         }
 
         /// <summary>
-        /// Calculates the gradient of the embedding operation with respect to the input and input embeddings.
+        /// Calculates the gradient of the matrix-vector concatenate operation.
         /// </summary>
         /// <param name="gradOutput">The gradient of the output matrix.</param>
-        /// <returns>A tuple containing the gradients for the input and input embeddings.</returns>
+        /// <returns>A tuple containing the gradients.</returns>
         public override BackwardResult[] Backward(DeepMatrix gradOutput)
         {
             var result = new BackwardResult[gradOutput.Depth];

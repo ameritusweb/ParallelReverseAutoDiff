@@ -100,6 +100,8 @@ MatrixSumOperation
 
 MatrixTransposeOperation
 
+MatrixVectorConcatenateOperation
+
 ReLUOperation
 
 RMSNormOperation
