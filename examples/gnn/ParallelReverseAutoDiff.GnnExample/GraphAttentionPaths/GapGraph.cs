@@ -67,7 +67,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <param name="lastMove">The last move.</param>
         public void UpdateFeatureIndices(Dictionary<string, int> artifacts, string fen, string lastMove)
         {
-            lastMove = lastMove.ToLowerInvariant().Replace("o-o", "o2").Replace("o-o-o", "o3");
+            lastMove = lastMove.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2");
             foreach (var edge in this.GapEdges)
             {
                 dynamic tag = edge.Tag;

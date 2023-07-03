@@ -852,14 +852,14 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 Id = Guid.NewGuid(),
                 Node = node1,
-                Tag = new { Start = true, Move = move.ToLowerInvariant().Replace("o-o", "o2").Replace("o-o-o", "o3") },
+                Tag = new { Start = true, Move = move.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2") },
             };
             node1.Edges.Add(gapEdge1);
             GapEdge gapEdge2 = new GapEdge()
             {
                 Id = Guid.NewGuid(),
                 Node = node2,
-                Tag = new { Start = false, Move = move.ToLowerInvariant().Replace("o-o", "o2").Replace("o-o-o", "o3") },
+                Tag = new { Start = false, Move = move.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2") },
             };
             node2.Edges.Add(gapEdge2);
 
