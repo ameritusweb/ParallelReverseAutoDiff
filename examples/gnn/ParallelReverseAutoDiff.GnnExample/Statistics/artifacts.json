@@ -106,5 +106,9 @@
   "noparameter": 104,
   "defense": 105,
   "nodefense": 106,
-  "":  107
+  "": 107,
+  "Kkq": 108,
+  "Qkq": 109,
+  "KQk": 110,
+  "KQq": 111
 }
