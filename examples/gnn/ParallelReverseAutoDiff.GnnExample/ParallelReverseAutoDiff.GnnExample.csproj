@@ -26,6 +26,7 @@
     <None Remove="Rebel\Rebel-14.2-avx2.exe" />
     <None Remove="Rebel\rebeluci.exe" />
     <None Remove="Statistics\actualmove_frequencies_2773067.json" />
+    <None Remove="Statistics\artifacts.json" />
     <None Remove="Statistics\edge_frequencies_2773067.json" />
     <None Remove="Statistics\move_frequencies_2773067.json" />
     <None Remove="Stockfish15\stockfish-windows-2022-x86-64-avx2.exe" />
@@ -41,22 +42,22 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\cublas64_11.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\cublasLt64_11.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\cudart64_110.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\lc0.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\mimalloc-override.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="Leela\mimalloc-redirect.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
@@ -67,6 +68,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Statistics\actualmove_frequencies_2773067.json" />
+    <EmbeddedResource Include="Statistics\artifacts.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Statistics\edge_frequencies_2773067.json" />
     <EmbeddedResource Include="Statistics\move_frequencies_2773067.json" />
     <EmbeddedResource Include="Stockfish15\stockfish-windows-2022-x86-64-avx2.exe">
@@ -76,7 +80,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="ParallelReverseAutoDiff" Version="1.0.61" />
+		<PackageReference Include="ParallelReverseAutoDiff" Version="1.1.1" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

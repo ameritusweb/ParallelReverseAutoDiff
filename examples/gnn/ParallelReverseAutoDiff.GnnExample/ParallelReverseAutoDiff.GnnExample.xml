@@ -14,6 +14,16 @@
             Generate an adjacency matrix.
             </summary>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.ArtifactDictionaryGenerator">
+            <summary>
+            An artifact dictionary generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ArtifactDictionaryGenerator.Generate">
+            <summary>
+            Generate an artifact dictionary.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.ChessBoardLoader">
             <summary>
             A chess board loader.
@@ -1250,6 +1260,20 @@
             <summary>
             Gets the target paths.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.AddFeaturesByPiece(System.String,ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge)">
+            <summary>
+            Add features by piece and edge.
+            </summary>
+            <param name="piece">The piece.</param>
+            <param name="edge">The edge.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.AddFeaturesBySquare(System.String,ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge)">
+            <summary>
+            Add features by square and edge.
+            </summary>
+            <param name="square">The square.</param>
+            <param name="edge">The edge.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.UpdateFeatureVectors(System.Collections.Generic.Dictionary{System.String,System.Int32},System.Double)">
             <summary>
