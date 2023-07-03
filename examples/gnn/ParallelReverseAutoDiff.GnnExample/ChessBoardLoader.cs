@@ -52,6 +52,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         {
             string file = this.files.Skip(skip).First();
             string text = File.ReadAllText(file);
+            text = text.Replace("\r\n", " ");
             ChessBoard.TryLoadFromPgn(text, out ChessBoard? chessBoard);
             var board = chessBoard ?? throw new InvalidOperationException("Chess Board could not be loaded.");
             return board.ExecutedMoves.ToList();

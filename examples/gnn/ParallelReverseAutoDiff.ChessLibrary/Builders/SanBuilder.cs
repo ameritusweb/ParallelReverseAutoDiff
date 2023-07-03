@@ -76,11 +76,6 @@ namespace Chess
             // If piece is not specified => Pawn
             moveOut.Piece ??= new Piece(board.Turn, PieceType.Pawn);
 
-            if (isCapture && board[moveOut.NewPosition] is not null)
-            {
-                moveOut.CapturedPiece = board[moveOut.NewPosition];
-            }
-
             if (!originalPos.HasValue)
             {
                 var (succeeded, exception) = ParseOriginalPosition(board, san, moveOut, ref originalPos);
@@ -91,6 +86,20 @@ namespace Chess
             }
 
             moveOut.OriginalPosition = originalPos;
+
+            if (isCapture && board[moveOut.NewPosition] is not null)
+            {
+                moveOut.CapturedPiece = board[moveOut.NewPosition];
+            }
+            else if (isCapture)
+            {
+                var param = IMoveParameter.FromString("e.p.");
+                if (param is MoveEnPassant ep)
+                {
+                    moveOut.Parameter = param;
+                    ep.CapturedPawnPosition = new Position(moveOut.NewPosition.X, moveOut.OriginalPosition.Y);
+                }
+            }
 
             if (resetSan)
             {
