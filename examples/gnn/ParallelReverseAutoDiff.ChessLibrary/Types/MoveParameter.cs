@@ -9,6 +9,8 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
+using System;
+
 namespace Chess
 {
     /// <summary>
@@ -36,13 +38,13 @@ namespace Chess
 
         internal void Undo(Move move, ChessBoard board);
 
-        internal static IMoveParameter FromString(string parameter)
+        internal static IMoveParameter FromString(string parameter, Position? capturedPawnPosition)
         {
             return parameter.ToLower() switch
             {
                 "o-o" => new MoveCastle(CastleType.King),
                 "o-o-o" => new MoveCastle(CastleType.Queen),
-                "e.p." => new MoveEnPassant(),
+                "e.p." => !capturedPawnPosition.HasValue ? new MoveEnPassant() : new MoveEnPassant(capturedPawnPosition.Value),
                 "=" => new MovePromotion(PromotionType.Default),
                 "=q" => new MovePromotion(PromotionType.ToQueen),
                 "=r" => new MovePromotion(PromotionType.ToRook),
@@ -135,6 +137,16 @@ namespace Chess
 
     public class MoveEnPassant : IMoveParameter
     {
+        public MoveEnPassant()
+        {
+
+        }
+
+        public MoveEnPassant(Position capturedPawnPosition)
+        {
+            this.CapturedPawnPosition = capturedPawnPosition;
+        }
+
         public Position CapturedPawnPosition { get; internal set; }
 
         public string ShortStr => "e.p.";

@@ -1,6 +1,13 @@
 {
   "timeSteps": [
     {
+      "startOperations": [
+        {
+          "id": "embeddings",
+          "type": "BatchEmbeddingOperation",
+          "inputs": [ "indices", "Embeddings" ]
+        }
+      ],
       "layers": [
         {
           "startOperations": [

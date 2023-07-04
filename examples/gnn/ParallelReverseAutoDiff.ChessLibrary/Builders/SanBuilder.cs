@@ -65,7 +65,7 @@ namespace Chess
                         moveOut.NewPosition = new Position(group.Value);
                         break;
                     case "7":
-                        moveOut.Parameter = IMoveParameter.FromString(group.Value.Trim());
+                        moveOut.Parameter = IMoveParameter.FromString(group.Value.Trim(), null);
                         break;
                     case "9":
                         ParseEndgameGroup(group, moveOut);
@@ -93,7 +93,7 @@ namespace Chess
             }
             else if (isCapture)
             {
-                var param = IMoveParameter.FromString("e.p.");
+                var param = IMoveParameter.FromString("e.p.", null);
                 if (param is MoveEnPassant ep)
                 {
                     moveOut.Parameter = param;
@@ -181,7 +181,7 @@ namespace Chess
 
         private static void ParseCastling(ChessBoard board, Group group, Move moveOut, ref Position originalPos)
         {
-            moveOut.Parameter = IMoveParameter.FromString(group.Value);
+            moveOut.Parameter = IMoveParameter.FromString(group.Value, null);
             if (board.Turn == PieceColor.White)
             {
                 originalPos = new Position("e1");

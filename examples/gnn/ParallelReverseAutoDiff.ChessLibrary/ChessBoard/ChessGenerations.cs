@@ -161,7 +161,7 @@ namespace Chess
 
         /// <summary>
         /// Generating potential positions for given piece<br/>
-        /// (!) Method doesn'adamT takes in account validation for king (may be checked after making move with returned position)
+        /// (!) Method doesn't takes in account validation for king (may be checked after making move with returned position)
         /// </summary>
         /// <param name="piecePosition">Position of piece</param>
         /// <returns>Potential positions</returns>

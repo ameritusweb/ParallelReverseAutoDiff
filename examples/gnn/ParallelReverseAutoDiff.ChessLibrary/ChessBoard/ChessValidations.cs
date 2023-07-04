@@ -98,7 +98,7 @@ namespace Chess
             move.Parameter = null;
 
             bool isValid = IsValidMove(move, board);
-            // If is not valid => don'adamT validate further
+            // If is not valid => don't validate further
             bool isChecked = !isValid || IsKingCheckedValidation(move, move.Piece.Color, board);
 
             if (!isChecked)
@@ -296,14 +296,12 @@ namespace Chess
                 // If En Passant => pass to parameters
                 else if (IsValidEnPassant(move, board, v, h))
                 {
-                    move.Parameter = new MoveEnPassant()
+                    Position capturedPawnPosition = new()
                     {
-                        CapturedPawnPosition = new()
-                        {
-                            Y = (short)(move.NewPosition.Y - v),
-                            X = move.NewPosition.X
-                        }
+                        Y = (short)(move.NewPosition.Y - v),
+                        X = move.NewPosition.X
                     };
+                    move.Parameter = new MoveEnPassant(capturedPawnPosition);
 
                     move.CapturedPiece = new Piece(move.Piece.Color.OppositeColor(), PieceType.Pawn);
 

@@ -46,7 +46,7 @@ namespace Chess
         /// <param name="fen">FEN string to load</param>
         /// <param name="autoEndgameRules">Automatic draw/endgame rules that will be used to check for endgame</param>
         /// <returns>ChessBoard with according positions</returns>
-        /// <exception cref="ChessArgumentException">Given FEN string didn'adamT match the Regex pattern</exception>
+        /// <exception cref="ChessArgumentException">Given FEN string didn't match the Regex pattern</exception>
         public static ChessBoard LoadFromFen(string fen, AutoEndgameRules autoEndgameRules = AutoEndgameRules.None)
         {
             var (succeeded, exception) = FenBoardBuilder.TryLoad(fen, out var builder);

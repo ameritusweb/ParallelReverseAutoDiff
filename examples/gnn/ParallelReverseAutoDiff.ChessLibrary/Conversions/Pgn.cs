@@ -49,8 +49,8 @@ namespace Chess
         /// <param name="pgn">PGN string to load</param>
         /// <param name="autoEndgameRules">Automatic draw/endgame rules that will be used to check for endgame</param>
         /// <returns>ChessBoard with according positions</returns>
-        /// <exception cref="ChessArgumentException">Given FEN string didn'adamT match the Regex pattern (if PGN contains FEN in header)</exception>
-        /// <exception cref="ChessArgumentException">Given San-notated move didn'adamT match the Regex pattern</exception>
+        /// <exception cref="ChessArgumentException">Given FEN string didn't match the Regex pattern (if PGN contains FEN in header)</exception>
+        /// <exception cref="ChessArgumentException">Given San-notated move didn't match the Regex pattern</exception>
         /// <exception cref="ChessSanNotFoundException">Given San-notated move is not valid for current board positions</exception>
         /// <exception cref="ChessSanTooAmbiguousException">Given San-notated move is too ambiguous between multiple moves</exception>
         public static ChessBoard LoadFromPgn(string pgn, AutoEndgameRules autoEndgameRules = AutoEndgameRules.None)

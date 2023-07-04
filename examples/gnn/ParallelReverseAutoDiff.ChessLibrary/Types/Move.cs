@@ -113,7 +113,7 @@ namespace Chess
         /// Or: {a1 - h8}<br/>
         /// See: move.ToString()
         /// </param>
-        /// <exception cref="ChessArgumentException">Move didn'adamT match regex pattern</exception>
+        /// <exception cref="ChessArgumentException">Move didn't match regex pattern</exception>
         public Move(string move)
         {
             move = move.ToLower();
@@ -147,7 +147,7 @@ namespace Chess
                         CapturedPiece = new(group.Value);
                         break;
                     case "8":
-                        Parameter = IMoveParameter.FromString(group.Value);
+                        Parameter = IMoveParameter.FromString(group.Value, null);
                         break;
                     case "10":
                         if (group.Value == "+")
@@ -206,7 +206,14 @@ namespace Chess
 
             if (source.Parameter is not null)
             {
-                Parameter = IMoveParameter.FromString(source.Parameter.ShortStr);
+                if (source.Parameter is MoveEnPassant enPassant)
+                {
+                    Parameter = IMoveParameter.FromString(source.Parameter.ShortStr, enPassant.CapturedPawnPosition);
+                }
+                else
+                {
+                    Parameter = IMoveParameter.FromString(source.Parameter.ShortStr, null);
+                }
             }
 
             IsCheck = source.IsCheck;

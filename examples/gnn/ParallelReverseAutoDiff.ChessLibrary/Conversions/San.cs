@@ -34,7 +34,7 @@ namespace Chess
         /// <param name="san">San-notated move to parse</param>
         /// <param name="resetSan">Whether SAN needs to be regenerated</param>
         /// <returns>Parsed Move object</returns>
-        /// <exception cref="ChessArgumentException">Given San-notated move didn'adamT match the Regex pattern</exception>
+        /// <exception cref="ChessArgumentException">Given San-notated move didn't match the Regex pattern</exception>
         /// <exception cref="ChessSanNotFoundException">Given San-notated move is not valid for current board positions</exception>
         /// <exception cref="ChessSanTooAmbiguousException">Given San-notated move is too ambiguous between multiple moves</exception>
         public Move ParseFromSan(string san, bool resetSan = false)
@@ -66,7 +66,7 @@ namespace Chess
         /// </summary>
         /// <param name="move">Move to parse</param>
         /// <returns>Parsed Move in SAN</returns>
-        /// <exception cref="ArgumentNullException">Given move was null or didn'adamT have valid positions values</exception>
+        /// <exception cref="ArgumentNullException">Given move was null or didn't have valid positions values</exception>
         public string ParseToSan(Move move)
         {
             var (succeeded, exception) = SanBuilder.TryParse(this, move, out var san);
