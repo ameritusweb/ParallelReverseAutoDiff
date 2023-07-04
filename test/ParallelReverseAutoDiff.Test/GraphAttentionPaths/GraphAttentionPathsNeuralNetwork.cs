@@ -7,10 +7,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     using System;
     using System.IO;
+    using ILGPU.Runtime.Cuda;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.Test.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
+    using ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN;
 
     /// <summary>
@@ -19,6 +21,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
     public class GraphAttentionPathsNeuralNetwork
     {
         private const string WEIGHTSSAVEPATH = "D:\\models\\initialWeights2.json";
+        private readonly List<EmbeddingNeuralNetwork> embeddingNeuralNetwork;
         private readonly List<EdgeAttentionNeuralNetwork> edgeAttentionNeuralNetwork;
         private readonly List<LstmNeuralNetwork> lstmNeuralNetwork;
         private readonly List<AttentionMessagePassingNeuralNetwork> attentionMessagePassingNeuralNetwork;
@@ -26,14 +29,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         private readonly ReadoutNeuralNetwork readoutNeuralNetwork;
         private readonly List<GapGraph> gapGraphs = new List<GapGraph>();
         private readonly int numFeatures;
+        private readonly int numIndices;
         private readonly int numLayers;
         private readonly int numQueries;
+        private readonly int alphabetSize;
+        private readonly int embeddingSize;
         private readonly int batchSize;
         private readonly double learningRate;
         private readonly double clipValue;
         private readonly Dictionary<int, Guid> typeToIdMap;
         private readonly Dictionary<int, Guid> typeToIdMapLstm;
         private readonly Dictionary<int, Guid> typeToIdMapAttention;
+        private readonly Dictionary<int, Guid> typeToIdMapEmbeddings;
         private readonly Dictionary<GapPath, List<GapPath>> connectedPathsMap;
 
         private List<IModelLayer> modelLayers;
@@ -43,25 +50,32 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         /// <param name="graphs">The graphs.</param>
         /// <param name="batchSize">The batch size.</param>
-        /// <param name="numFeatures">The number of features.</param>
+        /// <param name="numIndices">The number of indices.</param>
+        /// <param name="alphabetSize">The alphabet size.</param>
+        /// <param name="embeddingSize">The embedding size.</param>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="numQueries">The number of queries.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip Value.</param>
-        public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numFeatures, int numLayers, int numQueries, double learningRate, double clipValue)
+        public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numIndices, int alphabetSize, int embeddingSize, int numLayers, int numQueries, double learningRate, double clipValue)
         {
             this.gapGraphs = graphs;
-            this.numFeatures = numFeatures;
+            this.numFeatures = (numIndices * embeddingSize) + 3;
+            this.alphabetSize = alphabetSize;
+            this.embeddingSize = embeddingSize;
+            this.numIndices = numIndices;
             this.numLayers = numLayers;
             this.numQueries = numQueries;
             this.batchSize = batchSize;
             this.learningRate = learningRate;
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
+            this.embeddingNeuralNetwork = new List<EmbeddingNeuralNetwork>();
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
             this.typeToIdMap = new Dictionary<int, Guid>();
             this.typeToIdMapLstm = new Dictionary<int, Guid>();
             this.typeToIdMapAttention = new Dictionary<int, Guid>();
+            this.typeToIdMapEmbeddings = new Dictionary<int, Guid>();
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             this.lstmNeuralNetwork = new List<LstmNeuralNetwork>();
             this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
@@ -75,6 +89,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
+            for (int i = 0; i < 7; ++i)
+            {
+                var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
+                this.embeddingNeuralNetwork.Add(model);
+                await this.embeddingNeuralNetwork[i].Initialize();
+                this.modelLayers = this.modelLayers.Concat(this.embeddingNeuralNetwork[i].ModelLayers).ToList();
+            }
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EdgeAttentionNeuralNetwork(this.numLayers, this.numQueries, 4, this.numFeatures, this.learningRate, this.clipValue);
@@ -143,6 +164,66 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The gradient of the loss wrt the output.</returns>
         public async Task<DeepMatrix> Forward()
         {
+            Dictionary<int, List<Matrix>> indicesByType = new Dictionary<int, List<Matrix>>();
+            Dictionary<int, List<Matrix>> featuresByType = new Dictionary<int, List<Matrix>>();
+            Dictionary<(int Type, int Index), GapEdge> edgeIndexMap = new Dictionary<(int Type, int Index), GapEdge>();
+            foreach (var graph in this.gapGraphs)
+            {
+                foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
+                {
+                    var edges = node.Edges;
+                    for (int i = 0; i < edges.Count; ++i)
+                    {
+                        var edge = edges[i];
+                        Matrix indices = new Matrix(edge.FeatureIndices.Count, 1);
+                        for (int j = 0; j < edge.FeatureIndices.Count; ++j)
+                        {
+                            indices[j, 0] = edge.FeatureIndices[j];
+                        }
+                        Matrix features = new Matrix(1, edge.Features.Count);
+                        for (int j = 0; j < edge.Features.Count; ++j)
+                        {
+                            features[0, j] = edge.Features[j];
+                        }
+                        var type = (int)node.GapType;
+                        if (!indicesByType.ContainsKey(type))
+                        {
+                            indicesByType[type] = new List<Matrix>();
+                        }
+
+                        indicesByType[type].Add(indices);
+
+                        edgeIndexMap[(type, indicesByType[type].Count - 1)] = edge;
+
+                        if (!featuresByType.ContainsKey(type))
+                        {
+                            featuresByType[type] = new List<Matrix>();
+                        }
+
+                        featuresByType[type].Add(indices);
+                    }
+                }
+            }
+
+            foreach (var type in indicesByType.Keys)
+            {
+                var batchedIndices = new DeepMatrix(indicesByType[type].ToArray());
+                var embeddingNet = this.embeddingNeuralNetwork[type];
+                embeddingNet.Parameters.BatchSize = batchedIndices.Depth;
+                embeddingNet.InitializeState();
+                embeddingNet.HandPickedFeatures.Replace(featuresByType[type].ToArray());
+                embeddingNet.AutomaticForwardPropagate(batchedIndices);
+                var id = Guid.NewGuid();
+                this.typeToIdMapEmbeddings.Add(type, id);
+                embeddingNet.StoreOperationIntermediates(id);
+                var output = embeddingNet.Output;
+                for (int i = 0; i < output.Depth; ++i)
+                {
+                    var edge = edgeIndexMap[(type, i)];
+                    edge.FeatureVector = output[i];
+                }
+            }
+
             Dictionary<int, List<Matrix>> inputsByType = new Dictionary<int, List<Matrix>>();
             Dictionary<(int Type, int Index), GapNode> nodeIndexMap = new Dictionary<(int Type, int Index), GapNode>();
 

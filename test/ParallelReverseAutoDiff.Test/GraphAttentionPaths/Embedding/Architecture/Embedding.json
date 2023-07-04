@@ -1,0 +1,26 @@
+{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "batch_embeddings",
+          "type": "BatchEmbeddingOperation",
+          "inputs": [ "Input", "Embeddings" ],
+          "gradientResultTo": [ null, "DEmbeddings" ]
+        }
+      ],
+      "endOperations": [
+        {
+          "id": "vector_concatenate",
+          "type": "BatchMatrixVectorConcatenateOperation",
+          "inputs": [ "batch_embeddings", "HandPickedFeatures" ]
+        },
+        {
+          "id": "vector_concatenate_trans",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "vector_concatenate" ]
+        }
+      ]
+    }
+  ]
+}

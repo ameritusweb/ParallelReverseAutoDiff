@@ -42,6 +42,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public Matrix FeatureVector { get; set; }
 
         /// <summary>
+        /// Gets or sets the features.
+        /// </summary>
+        public List<double> Features { get; set; } = new List<double>();
+
+        /// <summary>
+        /// Gets or sets the feature indices.
+        /// </summary>
+        public List<int> FeatureIndices { get; set; } = new List<int>();
+
+        /// <summary>
         /// Populates the node with the node ID.
         /// </summary>
         /// <param name="graph">The graph.</param>

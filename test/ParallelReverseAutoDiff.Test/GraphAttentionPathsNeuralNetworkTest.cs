@@ -32,7 +32,7 @@ namespace ParallelReverseAutoDiff.Test
 
                 int batchSize = 8;
 
-                GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 10, 2, 4, 0.001d, 4d);
+                GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 10, 100, 5, 2, 4, 0.001d, 4d);
                 await neuralNetwork.Initialize();
                 DeepMatrix gradientOfLoss = await neuralNetwork.Forward();
                 await neuralNetwork.Backward(gradientOfLoss);
@@ -49,6 +49,7 @@ namespace ParallelReverseAutoDiff.Test
             List<GapEdge> gapEdges = new List<GapEdge>();
             List<GapPath> gapPaths = new List<GapPath>();
             int numFeatures = 10;
+            int vocabularySize = 100;
             for (int i = 0; i < 8; ++i)
             {
                 for (int j = 0; j < 8; j++)
@@ -68,6 +69,17 @@ namespace ParallelReverseAutoDiff.Test
                         edge.Node = node;
                         edge.FeatureVector = new Matrix(numFeatures, 1);
                         edge.FeatureVector.Initialize(InitializationType.Xavier);
+
+                        for (int m = 0; m < numFeatures; ++m)
+                        {
+                            edge.FeatureIndices.Add(rand.Next() % vocabularySize);
+                        }
+
+                        for (int m = 0; m < 3; ++m)
+                        {
+                            edge.Features.Add(edge.FeatureVector[m][0]);
+                        }
+
                         node.Edges.Add(edge);
                         gapEdges.Add(edge);
                     }

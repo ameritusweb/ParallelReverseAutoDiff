@@ -13,6 +13,7 @@
     <None Remove="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
     <None Remove="FeedForward\Architecture\FeedForwardArchitecture.json" />
+    <None Remove="GraphAttentionPaths\Embedding\Architecture\Embedding.json" />
     <None Remove="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
@@ -29,6 +30,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="FeedForward\Architecture\FeedForwardArchitecture.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GraphAttentionPaths\Embedding\Architecture\Embedding.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="GraphAttentionPaths\GCN\Architecture\MessagePassing.json">
