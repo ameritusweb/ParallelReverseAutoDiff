@@ -62,6 +62,25 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// The forward pass of the batch matrix-vector concatenate operation.
+        /// </summary>
+        /// <param name="input">The input matrix.</param>
+        /// <param name="vector">The input vector.</param>
+        /// <returns>The output matrix.</returns>
+        public DeepMatrix Forward(DeepMatrix input, DeepMatrix vector)
+        {
+            this.ExtendOperations();
+            var matrixArray = new Matrix[input.Depth];
+            Parallel.For(0, input.Depth, i =>
+            {
+                this.Operations[i] = new MatrixVectorConcatenateOperation();
+                matrixArray[i] = this.Operations[i].Forward(input[i], vector[i]);
+            });
+            this.DeepOutput = new DeepMatrix(matrixArray);
+            return this.DeepOutput;
+        }
+
+        /// <summary>
         /// Calculates the gradient of the matrix-vector concatenate operation.
         /// </summary>
         /// <param name="gradOutput">The gradient of the output matrix.</param>

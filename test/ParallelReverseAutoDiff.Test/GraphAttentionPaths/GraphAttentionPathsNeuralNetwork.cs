@@ -200,7 +200,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                             featuresByType[type] = new List<Matrix>();
                         }
 
-                        featuresByType[type].Add(indices);
+                        featuresByType[type].Add(features);
                     }
                 }
             }
@@ -560,6 +560,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 }
             }
 
+            Dictionary<(int type, int index), GapNode> typeIndexNodeMap = new Dictionary<(int type, int index), GapNode>();
             Dictionary<int, List<Matrix>> nodeTypeToGradientMap = new Dictionary<int, List<Matrix>>();
             foreach (var graph in this.gapGraphs)
             {
@@ -575,16 +576,62 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         nodeTypeToGradientMap.Add(type, new List<Matrix> { gradient });
                     }
+
+                    typeIndexNodeMap.Add((type, nodeTypeToGradientMap[type].Count - 1), node);
                 }
             }
 
-            List<DeepMatrix> edgeGradients = new List<DeepMatrix>();
+            Dictionary<GapEdge, Matrix> edgeGradientMap = new Dictionary<GapEdge, Matrix>();
             foreach (var key in nodeTypeToGradientMap.Keys)
             {
                 var edgeAttentionNet = this.edgeAttentionNeuralNetwork[key];
                 edgeAttentionNet.RestoreOperationIntermediates(this.typeToIdMap[key]);
                 var edgeAttentionGradient = await edgeAttentionNet.AutomaticBackwardPropagate(new DeepMatrix(nodeTypeToGradientMap[key].ToArray()));
-                edgeGradients.Add(edgeAttentionGradient);
+                for (int i = 0; i < edgeAttentionGradient.Depth; ++i)
+                {
+                    var node = typeIndexNodeMap[(key, i)];
+                    var gradient = edgeAttentionGradient[i];
+                    for (int j = 0; j < node.Edges.Count; ++j)
+                    {
+                        var edge = node.Edges[j];
+                        var featureVector = gradient[j];
+                        Matrix edgeGradient = new Matrix(featureVector.Length, 1);
+                        for (int k = 0; k < featureVector.Length; ++k)
+                        {
+                            edgeGradient[k][0] = featureVector[k];
+                        }
+                        edgeGradientMap[edge] = edgeGradient;
+                    }
+                }
+            }
+
+            Dictionary<int, List<GapEdge>> edgesByType = new Dictionary<int, List<GapEdge>>();
+            foreach (var graph in this.gapGraphs)
+            {
+                foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
+                {
+                    var edges = node.Edges;
+                    for (int i = 0; i < edges.Count; ++i)
+                    {
+                        var edge = edges[i];
+                        var type = (int)node.GapType;
+                        if (!edgesByType.ContainsKey(type))
+                        {
+                            edgesByType[type] = new List<GapEdge>();
+                        }
+
+                        edgesByType[type].Add(edge);
+                    }
+                }
+            }
+
+            foreach (var key in edgesByType.Keys)
+            {
+                var edges = edgesByType[key];
+                DeepMatrix gradients = new DeepMatrix(edges.Select(x => edgeGradientMap[x]).ToArray());
+                var embeddingsNet = this.embeddingNeuralNetwork[key];
+                embeddingsNet.RestoreOperationIntermediates(this.typeToIdMapEmbeddings[key]);
+                var embeddingsGradient = await embeddingsNet.AutomaticBackwardPropagate(gradients);
             }
         }
 

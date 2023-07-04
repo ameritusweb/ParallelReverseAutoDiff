@@ -189,11 +189,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
         {
             if (this.Output == null)
             {
-                this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, 1, (this.NumIndices * this.EmbeddingSize) + 3));
+                this.Output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, (this.NumIndices * this.EmbeddingSize) + 3, 1));
             }
             else
             {
-                this.Output.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, 1, (this.NumIndices * this.EmbeddingSize) + 3));
+                this.Output.Replace(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, (this.NumIndices * this.EmbeddingSize) + 3, 1));
             }
 
             if (this.HandPickedFeatures == null)
@@ -237,6 +237,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new EmbeddingComputationGraph(this);
             this.computationGraph
+                .AddIntermediate("Input", _ => this.Input)
+                .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("HandPickedFeatures", _ => this.HandPickedFeatures)
                 .AddWeight("Embeddings", _ => weightMatrix).AddGradient("DEmbeddings", _ => gradientMatrix)
                 .ConstructFromArchitecture(jsonArchitecture);

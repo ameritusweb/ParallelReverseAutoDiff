@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.NumLayers = numLayers;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 8;
+            this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 2;
 
             this.inputLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;

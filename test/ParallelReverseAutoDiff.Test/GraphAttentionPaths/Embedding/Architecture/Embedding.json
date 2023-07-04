@@ -17,8 +17,9 @@
         },
         {
           "id": "vector_concatenate_trans",
-          "type": "MatrixTransposeOperation",
-          "inputs": [ "vector_concatenate" ]
+          "type": "BatchMatrixTransposeOperation",
+          "inputs": [ "vector_concatenate" ],
+          "setResultTo": "Output"
         }
       ]
     }
