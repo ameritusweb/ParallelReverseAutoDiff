@@ -149,6 +149,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         edge.FeatureIndices.Add(artifacts["noparameter"]);
                     }
+
+                    edge.FeatureIndices.Add(artifacts["nodefense"]);
                 }
                 else
                 {
@@ -173,6 +175,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         edge.FeatureIndices.Add(artifacts["nodefense"]);
                     }
+                }
+
+                if (edge.FeatureIndices.Count != 16)
+                {
                 }
             }
         }
@@ -272,7 +278,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             {
                 for (int j = 0; j < this.GapPaths.Count; j++)
                 {
-                    var intersection = this.GapPaths[i].Nodes.Select(x => x.ToString()).Intersect(this.GapPaths[j].Nodes.Select(x => x.ToString()));
+                    var path1 = this.GapPaths[i];
+                    var path2 = this.GapPaths[j];
+                    path1.AdjacencyIndex = i;
+                    path2.AdjacencyIndex = j;
+                    var intersection = path1.Nodes.Select(x => x.ToString()).Intersect(path2.Nodes.Select(x => x.ToString()));
                     if (intersection.Any())
                     {
                         this.AdjacencyMatrix[i, j] = 1d;
