@@ -39,11 +39,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.NumLayers = numLayers;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 8;
+            this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 2;
 
             this.inputLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
-            int numInputOutputFeatures = this.NumFeatures * 2;
+            int numInputOutputFeatures = this.NumFeatures;
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var inputLayerBuilder = new ModelLayerBuilder(this)
@@ -57,7 +57,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             this.nestedLayers = new List<IModelLayer>();
             int numNestedFeatures = this.NumFeatures;
-            int numNestedOutputFeatures = this.NumFeatures * 2;
+            int numNestedOutputFeatures = this.NumFeatures;
             List<int> outputFeaturesList = new List<int>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
@@ -73,12 +73,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("FW", new[] { outputFeaturesList[i], outputFeaturesList[i] }, InitializationType.Xavier)
-                    .AddModelElementGroup("FB", new[] { 1, outputFeaturesList[i] }, InitializationType.Xavier)
-                    .AddModelElementGroup("F2W", new[] { outputFeaturesList[i], outputFeaturesList[i] }, InitializationType.Xavier)
-                    .AddModelElementGroup("F2B", new[] { 1, outputFeaturesList[i] }, InitializationType.Xavier)
+                    .AddModelElementGroup("FW", new[] { outputFeaturesList[i], (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
+                    .AddModelElementGroup("FB", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2W", new[] { outputFeaturesList[i], (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2B", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
                     .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He)
-                    .AddModelElementGroup("R", new[] { outputFeaturesList[i], this.NumFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);

@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Remove="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
+    <None Remove="GraphAttentionPaths\Embedding\Architecture\Embedding.json" />
     <None Remove="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
@@ -61,6 +62,7 @@
     </Content>
     <EmbeddedResource Include="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\Embedding\Architecture\Embedding.json" />
     <EmbeddedResource Include="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\Readout\Architecture\Readout.json" />

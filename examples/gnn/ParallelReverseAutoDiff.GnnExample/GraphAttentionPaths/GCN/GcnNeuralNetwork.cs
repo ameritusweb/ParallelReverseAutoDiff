@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             this.hiddenLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
-            int numInputOutputFeatures = this.NumFeatures * 2;
+            int numInputOutputFeatures = this.NumFeatures;
             for (int i = 0; i < numLayers; ++i)
             {
                 var hiddenLayerBuilder = new ModelLayerBuilder(this)
@@ -48,7 +48,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 var hiddenLayer = hiddenLayerBuilder.Build();
                 this.hiddenLayers.Add(hiddenLayer);
                 numInputFeatures = numInputOutputFeatures;
-                numInputOutputFeatures = numInputFeatures * 2;
+                numInputOutputFeatures = numInputFeatures;
             }
 
             this.InitializeState();

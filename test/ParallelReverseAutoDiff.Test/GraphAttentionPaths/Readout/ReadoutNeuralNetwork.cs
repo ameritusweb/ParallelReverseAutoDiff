@@ -43,7 +43,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             this.inputLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
-            int numInputOutputFeatures = this.NumFeatures * 2;
+            int numInputOutputFeatures = this.NumFeatures;
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var inputLayerBuilder = new ModelLayerBuilder(this)
@@ -57,7 +57,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             this.nestedLayers = new List<IModelLayer>();
             int numNestedFeatures = this.NumFeatures;
-            int numNestedOutputFeatures = this.NumFeatures * 2;
+            int numNestedOutputFeatures = this.NumFeatures;
             List<int> outputFeaturesList = new List<int>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
