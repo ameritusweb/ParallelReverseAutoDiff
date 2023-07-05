@@ -22,7 +22,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public GapNode()
         {
             this.FeatureVector = new Matrix(1, 1);
-            this.Edges = new List<GapEdge>();
         }
 
         /// <summary>
@@ -64,15 +63,30 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Gets or sets the edges.
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public List<GapEdge> Edges { get; set; }
+        public List<GapEdge> Edges { get; set; } = new List<GapEdge>();
 
         /// <summary>
         /// Gets or sets the edge identifiers.
         /// </summary>
+        [Newtonsoft.Json.JsonProperty]
         public List<Guid> EdgeIds
         {
-            get { return (this.Edges?.Select(e => e.Id) ?? this.edgeIds).ToList(); }
-            set { this.edgeIds = value; } // Setter for deserialization
+            get
+            {
+                if (this.Edges == null || !this.Edges.Any())
+                {
+                    return this.edgeIds;
+                }
+                else
+                {
+                    return this.Edges.Select(e => e.Id).ToList();
+                }
+            }
+
+            set
+            {
+                this.edgeIds = value;
+            } // Setter for deserialization
         }
 
         /// <summary>

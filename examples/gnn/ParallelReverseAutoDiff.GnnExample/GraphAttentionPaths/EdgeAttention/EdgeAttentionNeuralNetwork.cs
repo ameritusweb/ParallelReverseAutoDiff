@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention
     /// </summary>
     public class EdgeAttentionNeuralNetwork : NeuralNetwork
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.Architecture";
+        private const string NAMESPACE = "ParallelReverseAutoDiff.GnnExample.GraphAttentionPaths.EdgeAttention.Architecture";
         private const string ARCHITECTURE = "EdgeAttention";
 
         private readonly List<IModelLayer> inputLayers;

@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
     /// </summary>
     public class LstmNeuralNetwork : NeuralNetwork
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.LSTM.Architecture";
+        private const string NAMESPACE = "ParallelReverseAutoDiff.GnnExample.GraphAttentionPaths.LSTM.Architecture";
         private const string ARCHITECTURE = "NodeProcessing";
 
         private readonly int hiddenSize;

@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
     /// </summary>
     public class GcnNeuralNetwork : NeuralNetwork
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN.Architecture";
+        private const string NAMESPACE = "ParallelReverseAutoDiff.GnnExample.GraphAttentionPaths.GCN.Architecture";
         private const string ARCHITECTURE = "MessagePassing";
 
         private readonly List<IModelLayer> hiddenLayers;

@@ -936,6 +936,22 @@
             Loads the data.
             </summary>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader">
+            <summary>
+            A training set loader.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.LoadMiniBatch">
+            <summary>
+            Loads a mini-batch of training data.
+            </summary>
+            <returns>A task.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.AttentionMessagePassingComputationGraph">
             <summary>
             An attention message passing computation graph.
@@ -1177,6 +1193,126 @@
             </summary>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention.EdgeAttentionNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initialize the computation graph of the edge attention neural network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingComputationGraph">
+            <summary>
+            An embedding computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork">
+            <summary>
+            An embedding neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork"/> class.
+            </summary>
+            <param name="numIndices">The number of indices.</param>
+            <param name="alphabetSize">The alphabet size.</param>
+            <param name="embeddingSize">The embedding size.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.HandPickedFeatures">
+            <summary>
+            Gets the hand picked features.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.AlphabetSize">
+            <summary>
+            Gets the alphabet size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.NumIndices">
+            <summary>
+            Gets the number of indices of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.EmbeddingSize">
+            <summary>
+            Gets the embedding size of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Store the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restore the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The forward pass of the edge attention neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass of the edge attention neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.InitializeState">
+            <summary>
+            Initialize the state of the edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.ClearState">
+            <summary>
+            Clear the state of the edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.EmbeddingNeuralNetwork.InitializeComputationGraph">
             <summary>
             Initialize the computation graph of the edge attention neural network.
             </summary>
@@ -1802,13 +1938,15 @@
             Graph Attention Paths Neural Network.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork"/> class.
             </summary>
             <param name="graphs">The graphs.</param>
             <param name="batchSize">The batch size.</param>
-            <param name="numFeatures">The number of features.</param>
+            <param name="numIndices">The number of indices.</param>
+            <param name="alphabetSize">The alphabet size.</param>
+            <param name="embeddingSize">The embedding size.</param>
             <param name="numLayers">The number of layers.</param>
             <param name="numQueries">The number of queries.</param>
             <param name="learningRate">The learning rate.</param>

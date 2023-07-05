@@ -8,10 +8,14 @@ using ParallelReverseAutoDiff.GnnExample;
 
 Console.WriteLine("Hello, World!");
 
+TrainingSetLoader loader = new TrainingSetLoader();
+await loader.LoadMiniBatch();
+
 // ArtifactDictionaryGenerator artifactDictionaryGenerator = new ArtifactDictionaryGenerator();
 // artifactDictionaryGenerator.Generate();
-TrainingSetGenerator generator = new TrainingSetGenerator();
-generator.LoadData();
+
+// TrainingSetGenerator generator = new TrainingSetGenerator();
+// generator.LoadData();
 
 // AdjacencyMatrixGenerator matrix = new AdjacencyMatrixGenerator();
 // matrix.Generate();

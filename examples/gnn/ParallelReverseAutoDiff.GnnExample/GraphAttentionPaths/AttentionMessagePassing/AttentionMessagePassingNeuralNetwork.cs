@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
     /// </summary>
     public class AttentionMessagePassingNeuralNetwork : NeuralNetwork
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing.Architecture";
+        private const string NAMESPACE = "ParallelReverseAutoDiff.GnnExample.GraphAttentionPaths.AttentionMessagePassing.Architecture";
         private const string ARCHITECTURE = "MessagePassing";
 
         private AttentionMessagePassingComputationGraph computationGraph;

@@ -286,11 +286,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void Populate()
         {
-            foreach (var node in this.GapNodes)
-            {
-                node.Populate(this);
-            }
-
             foreach (var edge in this.GapEdges)
             {
                 edge.Populate(this);
@@ -299,6 +294,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             foreach (var path in this.GapPaths)
             {
                 path.Populate(this);
+            }
+
+            foreach (var node in this.GapNodes)
+            {
+                node.Populate(this);
             }
         }
     }

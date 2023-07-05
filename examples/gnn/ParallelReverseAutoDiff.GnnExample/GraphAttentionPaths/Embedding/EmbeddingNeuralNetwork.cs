@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
     /// </summary>
     public class EmbeddingNeuralNetwork : NeuralNetwork
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding.Architecture";
+        private const string NAMESPACE = "ParallelReverseAutoDiff.GnnExample.GraphAttentionPaths.Embedding.Architecture";
         private const string ARCHITECTURE = "Embedding";
 
         private readonly IModelLayer embeddingLayer;
@@ -144,7 +144,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
-                forward.Invoke(op, parameters);
+                var result = forward.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
                     var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
