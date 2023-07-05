@@ -893,3 +893,15 @@ public class MatrixAverageOperation : Operation
 In this example, the Forward method calculates the average of the features for each path, while the Backward method spreads the gradient evenly across the features.
 
 This level of customization allows PRAD to be a versatile tool in the field of machine learning, capable of being tailored to a wide range of tasks, datasets, and innovative architectures.
+
+## Like the project?
+
+Give it a :star: Star!
+
+## Found a bug?
+
+Drop to [Issues](https://github.com/ameritusweb/ParallelReverseAutoDiff/issues)
+
+Or: ameritusweb@gmail.com
+
+Thanks in advance!
