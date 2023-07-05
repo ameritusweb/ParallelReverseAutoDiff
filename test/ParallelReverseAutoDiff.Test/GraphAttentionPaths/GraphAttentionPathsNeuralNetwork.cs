@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     using System;
     using System.IO;
+    using System.Runtime.InteropServices;
     using ILGPU.Runtime.Cuda;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.Test.Common;
@@ -127,7 +128,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
 
             // this.SaveWeights();
-            // this.ApplyWeights();
+            this.ApplyWeights();
         }
 
         /// <summary>
@@ -135,9 +136,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void SaveWeights()
         {
-            var weightStore = new WeightStore();
-            weightStore.AddRange(this.modelLayers);
-            weightStore.Save(new FileInfo(WEIGHTSSAVEPATH));
+            Guid guid = Guid.NewGuid();
+            var dir = $"E:\\store\\{guid}";
+            Directory.CreateDirectory(dir);
+            int index = 0;
+            foreach (var modelLayer in this.modelLayers)
+            {
+                modelLayer.SaveWeightsAndMoments(new FileInfo($"{dir}\\layer{index}.json"));
+                index++;
+            }
         }
 
         /// <summary>
@@ -145,17 +152,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var weightStore = new WeightStore();
-            weightStore.Load(new FileInfo(WEIGHTSSAVEPATH));
+            var guid = "b93e5314-3a40-4353-8b44-0795cbfe0d4e";
+            var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
                 var modelLayer = this.modelLayers[i];
-                var weights = weightStore.ToModelLayerWeights(i);
-                modelLayer.ApplyWeights(weights);
+                var file = new FileInfo($"{dir}\\layer{i}.json");
+                modelLayer.LoadWeightsAndMoments(file);
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
             }
-
-            weightStore = null;
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
 
         /// <summary>

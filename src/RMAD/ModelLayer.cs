@@ -11,6 +11,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.IO;
     using System.Linq;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// A model layer for a neural network.
@@ -180,14 +181,60 @@ namespace ParallelReverseAutoDiff.RMAD
             var json = File.ReadAllText(file.FullName);
 
             // Deserialize JSON string to a dictionary
-            var weights = JsonConvert.DeserializeObject<Dictionary<string, object>>(json) ?? throw new InvalidOperationException("Weights must not be null.");
+            var weights = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(json) ?? throw new InvalidOperationException("Weights must not be null.");
 
             // Update the weights in the elements dictionary
             foreach (var element in weights)
             {
                 if (this.elements.TryGetValue(element.Key, out var value))
                 {
-                    this.elements[element.Key] = (element.Value, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6);
+                    var weightType = value.Item1.GetType();
+                    var weight = element.Value.ToObject(weightType) ?? throw new InvalidOperationException("Weight cannot be null.");
+                    this.elements[element.Key] = (weight, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public void SaveWeightsAndMoments(FileInfo file)
+        {
+            // Create a new dictionary with only weights
+            var weights = this.elements.ToDictionary(e => e.Key, e => e.Value.Item1);
+
+            var firstMoments = this.elements.ToDictionary(e => e.Key, e => e.Value.Item3);
+
+            var secondMoments = this.elements.ToDictionary(e => e.Key, e => e.Value.Item4);
+
+            // Serialize the weights dictionary to JSON
+            var json = JsonConvert.SerializeObject((weights, firstMoments, secondMoments), Formatting.Indented);
+
+            // Write JSON string to file
+            File.WriteAllText(file.FullName, json);
+        }
+
+        /// <inheritdoc />
+        public void LoadWeightsAndMoments(FileInfo file)
+        {
+            // Read JSON string from file
+            var json = File.ReadAllText(file.FullName);
+
+            // Deserialize JSON string to a dictionary
+            var weightsAndMoments = JsonConvert.DeserializeObject<(Dictionary<string, JObject>, Dictionary<string, JObject>, Dictionary<string, JObject>)>(json);
+
+            // Update the weights in the elements dictionary
+            foreach (var element in weightsAndMoments.Item1)
+            {
+                if (this.elements.TryGetValue(element.Key, out var value))
+                {
+                    var moment1Obj = weightsAndMoments.Item2[element.Key];
+                    var moment2Obj = weightsAndMoments.Item3[element.Key];
+                    var weightType = value.Item1.GetType();
+                    var moment1Type = value.Item3.GetType();
+                    var moment2Type = value.Item4.GetType();
+                    var weight = element.Value.ToObject(weightType) ?? throw new InvalidOperationException("Weight cannot be null.");
+                    var moment1 = moment1Obj.ToObject(moment1Type) ?? throw new InvalidOperationException("First moment cannot be null.");
+                    var moment2 = moment2Obj.ToObject(moment2Type) ?? throw new InvalidOperationException("Second moment cannot be null.");
+                    this.elements[element.Key] = (weight, value.Item2, moment1, moment2, value.Item5, value.Item6);
                 }
             }
         }
