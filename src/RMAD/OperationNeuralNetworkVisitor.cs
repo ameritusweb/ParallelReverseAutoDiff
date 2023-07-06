@@ -122,6 +122,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             BackwardResult? backwardResult = null;
+            BackwardResult[]? initialBackwardResults = null;
             bool pullGradientsDirectly = false;
             if (node is IDeepOperation)
             {
@@ -129,8 +130,8 @@ namespace ParallelReverseAutoDiff.RMAD
             }
             else if (node is IBatchOperation)
             {
-                var backwardResults = (node as IBatchOperation)?.Backward((DeepMatrix)node.BackwardInput);
-                if (backwardResults == null)
+                initialBackwardResults = (node as IBatchOperation)?.Backward((DeepMatrix)node.BackwardInput);
+                if (initialBackwardResults == null)
                 {
                     throw new InvalidOperationException("Backward results must not be null.");
                 }
@@ -140,21 +141,21 @@ namespace ParallelReverseAutoDiff.RMAD
                     var param = node.Parameters[0];
                     if (param is IMatrix matrix)
                     {
-                        if (matrix.Count == backwardResults.Length)
+                        if (matrix.Count == initialBackwardResults.Length)
                         {
                             pullGradientsDirectly = true;
                         }
                     }
                     else if (param is Array array)
                     {
-                        if (array.Length == backwardResults.Length)
+                        if (array.Length == initialBackwardResults.Length)
                         {
                             pullGradientsDirectly = true;
                         }
                     }
                 }
 
-                backwardResult = this.CombineResults(backwardResults, node.GradientDestinations, pullGradientsDirectly);
+                backwardResult = this.CombineResults(initialBackwardResults, node.GradientDestinations, pullGradientsDirectly, node.SwitchFirstTwoDimensions);
             }
             else if (node is IOperation)
             {
@@ -274,7 +275,7 @@ namespace ParallelReverseAutoDiff.RMAD
             node.IsComplete = true;
         }
 
-        private BackwardResult CombineResults(BackwardResult[] backwardResults, object[] gradientDestinations, bool pullGradientsDirectly)
+        private BackwardResult CombineResults(BackwardResult[] backwardResults, object[] gradientDestinations, bool pullGradientsDirectly, bool switchFirstTwoDimensions)
         {
             List<object> combinedResults = new List<object>();
             var firstResult = backwardResults[0];
@@ -287,33 +288,68 @@ namespace ParallelReverseAutoDiff.RMAD
 
             if (pullGradientsDirectly)
             {
-                if (firstResult.Item1 is Matrix)
+                if (switchFirstTwoDimensions)
                 {
-                    for (int j = 0; j < backwardResults.Length; ++j)
+                    if (firstResult.Item1 is Matrix)
                     {
-                        var result = new DeepMatrix(backwardResults[j].Results.OfType<Matrix>().ToArray());
-                        combinedResults.Add(result);
-                    }
+                        for (int j = 0; j < resultsLength; ++j)
+                        {
+                            List<Matrix> matrices = new List<Matrix>();
+                            DeepMatrix deepMatrix = new DeepMatrix(backwardResults.Select(x => x.Results[j]).OfType<Matrix>().ToArray());
+                            combinedResults.Add(deepMatrix);
+                        }
 
-                    return new BackwardResult()
+                        return new BackwardResult()
+                        {
+                            Results = combinedResults.OfType<DeepMatrix>().ToArray(),
+                            HasMultipleInputs = hasMultipleInputs,
+                        };
+                    }
+                    else if (firstResult.Item1 is DeepMatrix)
                     {
-                        Results = combinedResults.OfType<DeepMatrix>().ToArray(),
-                        HasMultipleInputs = hasMultipleInputs,
-                    };
+                        for (int j = 0; j < resultsLength; ++j)
+                        {
+                            FourDimensionalMatrix deepMatrix = new FourDimensionalMatrix(backwardResults.Select(x => x.Results[j]).OfType<DeepMatrix>().ToArray());
+                            combinedResults.Add(deepMatrix);
+                        }
+
+                        return new BackwardResult()
+                        {
+                            Results = combinedResults.OfType<FourDimensionalMatrix>().ToArray(),
+                            HasMultipleInputs = hasMultipleInputs,
+                        };
+                    }
                 }
-                else if (firstResult.Item1 is DeepMatrix)
+                else
                 {
-                    for (int j = 0; j < backwardResults.Length; ++j)
+                    if (firstResult.Item1 is Matrix)
                     {
-                        var result = new FourDimensionalMatrix(backwardResults[j].Results.OfType<DeepMatrix>().ToArray());
-                        combinedResults.Add(result);
-                    }
+                        for (int j = 0; j < backwardResults.Length; ++j)
+                        {
+                            var result = new DeepMatrix(backwardResults[j].Results.OfType<Matrix>().ToArray());
+                            combinedResults.Add(result);
+                        }
 
-                    return new BackwardResult()
+                        return new BackwardResult()
+                        {
+                            Results = combinedResults.OfType<DeepMatrix>().ToArray(),
+                            HasMultipleInputs = hasMultipleInputs,
+                        };
+                    }
+                    else if (firstResult.Item1 is DeepMatrix)
                     {
-                        Results = combinedResults.OfType<FourDimensionalMatrix>().ToArray(),
-                        HasMultipleInputs = hasMultipleInputs,
-                    };
+                        for (int j = 0; j < backwardResults.Length; ++j)
+                        {
+                            var result = new FourDimensionalMatrix(backwardResults[j].Results.OfType<DeepMatrix>().ToArray());
+                            combinedResults.Add(result);
+                        }
+
+                        return new BackwardResult()
+                        {
+                            Results = combinedResults.OfType<FourDimensionalMatrix>().ToArray(),
+                            HasMultipleInputs = hasMultipleInputs,
+                        };
+                    }
                 }
             }
 

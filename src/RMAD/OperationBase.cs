@@ -87,6 +87,9 @@ namespace ParallelReverseAutoDiff.RMAD
         public List<string> Inputs { get; set; }
 
         /// <inheritdoc />
+        public bool SwitchFirstTwoDimensions { get; set; }
+
+        /// <inheritdoc />
         public List<string> Outputs { get; set; }
 
         /// <inheritdoc />
@@ -210,6 +213,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.LayerInfo = layerInfo;
             this.OperationType = this.GetType();
             this.Inputs = info.Inputs.ToList();
+            this.SwitchFirstTwoDimensions = info.SwitchFirstTwoDimensions;
             string resultTo = info.SetResultTo;
             if (resultTo != null)
             {

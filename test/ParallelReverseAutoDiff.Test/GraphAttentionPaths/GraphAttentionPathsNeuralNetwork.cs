@@ -107,7 +107,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
             for (int i = 0; i < 7; ++i)
             {
-                var model = new LstmNeuralNetwork(this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), 500, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers) * 2, i + 2, this.numLayers, this.learningRate, this.clipValue);
+                var model = new LstmNeuralNetwork(this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), this.numFeatures, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers) * 2, i + 2, this.numLayers, this.learningRate, this.clipValue);
                 this.lstmNeuralNetwork.Add(model);
                 await this.lstmNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.lstmNeuralNetwork[i].ModelLayers).ToList();
@@ -128,7 +128,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
 
             // this.SaveWeights();
-            this.ApplyWeights();
+            // this.ApplyWeights();
         }
 
         /// <summary>
@@ -237,6 +237,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
                     var edgeCount = node.Edges.Count;
+                    if (edgeCount == 0)
+                    {
+                        node.FeatureVector = new Matrix(this.numFeatures * 4, 1);
+                        continue;
+                    }
+
                     var input = new Matrix(edgeCount, this.numFeatures);
                     for (int i = 0; i < edgeCount; ++i)
                     {
@@ -571,6 +577,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             {
                 foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
+                    if (node.Edges.Count == 0)
+                    {
+                        continue;
+                    }
+
                     var type = (int)node.GapType;
                     var gradient = nodeToGradientMap[node];
                     if (nodeTypeToGradientMap.ContainsKey(type))

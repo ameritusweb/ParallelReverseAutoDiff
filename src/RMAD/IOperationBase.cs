@@ -77,6 +77,11 @@ namespace ParallelReverseAutoDiff.RMAD
         List<string> Inputs { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to switch the first two dimensions of the input.
+        /// </summary>
+        bool SwitchFirstTwoDimensions { get; set; }
+
+        /// <summary>
         /// Gets or sets the specific ID of the operations who take in this operation's output as input.
         /// </summary>
         List<string> Outputs { get; set; }

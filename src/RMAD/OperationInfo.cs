@@ -39,5 +39,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets or sets where to place the gradient result.
         /// </summary>
         public string[] GradientResultTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to switch the first two dimensions.
+        /// </summary>
+        public bool SwitchFirstTwoDimensions { get; set; }
     }
 }

@@ -1,4 +1,6 @@
+using Newtonsoft.Json;
 using ParallelReverseAutoDiff.RMAD;
+using ParallelReverseAutoDiff.Test.Common;
 using ParallelReverseAutoDiff.Test.GraphAttentionPaths;
 using Xunit;
 
@@ -6,6 +8,33 @@ namespace ParallelReverseAutoDiff.Test
 {
     public class GraphAttentionPathsNeuralNetworkTest
     {
+        [Fact]
+        public async Task GivenGraphAttentionPathsNeuralNetworkMiniBatch_ProcessesMiniBatchAndUsesCudaOperationsSuccessfully()
+        {
+            CudaBlas.Instance.Initialize();
+            try
+            {
+                var json = EmbeddedResource.ReadAllJson("ParallelReverseAutoDiff.Test.GraphAttentionPaths", "minibatch");
+                var graphs = JsonConvert.DeserializeObject<List<GapGraph>>(json);
+
+                for (int i = 0; i < graphs.Count; ++i)
+                {
+                    graphs[i].Populate();
+                }
+
+                int batchSize = 4;
+
+                GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 16, 115, 10, 2, 4, 0.001d, 4d);
+                await neuralNetwork.Initialize();
+                DeepMatrix gradientOfLoss = await neuralNetwork.Forward();
+                await neuralNetwork.Backward(gradientOfLoss);
+            }
+            finally
+            {
+                CudaBlas.Instance.Dispose();
+            }
+        }
+
         [Fact]
         public async Task GivenGraphAttentionPathsNeuralNetwork_UsesCudaOperationsSuccessfully()
         {

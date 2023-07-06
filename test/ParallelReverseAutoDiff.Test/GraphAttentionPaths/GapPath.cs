@@ -35,15 +35,29 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Gets or sets the nodes of the path.
         /// </summary>
         [JsonIgnore]
-        public List<GapNode> Nodes { get; set; }
+        public List<GapNode> Nodes { get; set; } = new List<GapNode>();
 
         /// <summary>
         /// Gets or sets the node IDs of the path.
         /// </summary>
         public List<Guid> NodeIds
         {
-            get { return (this.Nodes?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
-            set { this.nodeIds = value; } // Setter for deserialization
+            get
+            {
+                if (this.Nodes == null || !this.Nodes.Any())
+                {
+                    return this.nodeIds;
+                }
+                else
+                {
+                    return this.Nodes.Select(e => e.Id).ToList();
+                }
+            }
+
+            set
+            {
+                this.nodeIds = value;
+            } // Setter for deserialization
         }
 
         /// <summary>

@@ -31,8 +31,8 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>A task.</returns>
         public async Task LoadMiniBatch()
         {
-            var graphFiles = Directory.GetFiles("E:\\graphs", "*.zip").ToList();
-            var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).Take(8).ToList();
+            var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs", "*.zip").ToList();
+            var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).Take(4).ToList();
             List<GapGraph> graphs = new List<GapGraph>();
             for (int i = 0; i < randomGraphFiles.Count; ++i)
             {
@@ -44,7 +44,10 @@ namespace ParallelReverseAutoDiff.GnnExample
                 graphs.Add(graph);
             }
 
-            int batchSize = 8;
+            var json = JsonConvert.SerializeObject(graphs);
+            File.WriteAllText("minibatch.json", json);
+
+            int batchSize = 4;
             try
             {
                 CudaBlas.Instance.Initialize();

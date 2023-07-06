@@ -5,12 +5,12 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
-    using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A node in a graph attention path.
     /// </summary>
+    [Serializable]
     public class GapNode : IPopulate
     {
         private List<Guid> edgeIds;
@@ -48,15 +48,29 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <summary>
         /// Gets or sets the edges.
         /// </summary>
-        public List<GapEdge> Edges { get; set; }
+        public List<GapEdge> Edges { get; set; } = new List<GapEdge>();
 
         /// <summary>
         /// Gets or sets the edge identifiers.
         /// </summary>
         public List<Guid> EdgeIds
         {
-            get { return (this.Edges?.Select(e => e.Id) ?? new List<Guid>()).ToList(); }
-            set { this.edgeIds = value; } // Setter for deserialization
+            get
+            {
+                if (this.Edges == null || !this.Edges.Any())
+                {
+                    return this.edgeIds;
+                }
+                else
+                {
+                    return this.Edges.Select(e => e.Id).ToList();
+                }
+            }
+
+            set
+            {
+                this.edgeIds = value;
+            } // Setter for deserialization
         }
 
         /// <summary>
@@ -65,16 +79,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <param name="graph">The graph.</param>
         public void Populate(GapGraph graph)
         {
-            var edges = this.edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
-            foreach (var edge in edges)
+            if (this.edgeIds != null)
             {
-                if (edge != null)
+                var edges = this.edgeIds.Select(id => graph.GapEdges.FirstOrDefault(e => e.Id == id)).ToList();
+                foreach (var edge in edges)
                 {
-                    this.Edges.Add(edge);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Edge not found.");
+                    if (edge != null)
+                    {
+                        this.Edges.Add(edge);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Edge not found.");
+                    }
                 }
             }
         }

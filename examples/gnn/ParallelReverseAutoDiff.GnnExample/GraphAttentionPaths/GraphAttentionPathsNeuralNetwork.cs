@@ -234,6 +234,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
                     var edgeCount = node.Edges.Count;
+                    if (edgeCount == 0)
+                    {
+                        node.FeatureVector = new Matrix(this.numFeatures * 4, 1);
+                        continue;
+                    }
+
                     var input = new Matrix(edgeCount, this.numFeatures);
                     for (int i = 0; i < edgeCount; ++i)
                     {
@@ -568,6 +574,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             {
                 foreach (var node in graph.GapNodes.Where(x => x.IsInPath == true))
                 {
+                    if (node.Edges.Count == 0)
+                    {
+                        continue;
+                    }
+
                     var type = (int)node.GapType;
                     var gradient = nodeToGradientMap[node];
                     if (nodeTypeToGradientMap.ContainsKey(type))

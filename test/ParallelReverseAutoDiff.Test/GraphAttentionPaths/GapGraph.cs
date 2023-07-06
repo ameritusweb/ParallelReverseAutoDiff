@@ -36,5 +36,26 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Gets or sets the normalized adjacency matrix of the graph.
         /// </summary>
         public Matrix NormalizedAdjacency { get; set; }
+
+        /// <summary>
+        /// Populate after deserialization.
+        /// </summary>
+        public void Populate()
+        {
+            foreach (var edge in this.GapEdges)
+            {
+                edge.Populate(this);
+            }
+
+            foreach (var path in this.GapPaths)
+            {
+                path.Populate(this);
+            }
+
+            foreach (var node in this.GapNodes)
+            {
+                node.Populate(this);
+            }
+        }
     }
 }
