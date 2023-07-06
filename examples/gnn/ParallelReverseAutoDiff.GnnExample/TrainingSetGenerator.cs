@@ -79,7 +79,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             var graphJson = JsonConvert.SerializeObject(gapGraph);
 
             int total = this.loader.GetTotal();
-            for (int t = 17631; t < total; ++t)
+            for (int t = 17747; t < total; ++t)
             {
                 var moves = this.loader.LoadMoves(t);
                 var name = this.loader.GetFileName(t).Replace(".pgn", string.Empty);
