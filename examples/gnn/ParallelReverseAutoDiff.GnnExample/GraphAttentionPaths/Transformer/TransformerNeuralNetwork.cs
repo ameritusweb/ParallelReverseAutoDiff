@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
     /// </summary>
     public class TransformerNeuralNetwork : NeuralNetwork
     {
-        private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.Architecture";
+        private const string NAMESPACE = "ParallelReverseAutoDiff.GnnExample.GraphAttentionPaths.Transformer.Architecture";
         private const string ARCHITECTURE = "Transformer";
 
         private readonly IModelLayer embeddingLayer;

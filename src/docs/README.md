@@ -894,6 +894,9 @@ In this example, the Forward method calculates the average of the features for e
 
 This level of customization allows PRAD to be a versatile tool in the field of machine learning, capable of being tailored to a wide range of tasks, datasets, and innovative architectures.
 
+## Support developer
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ameritusweb)
+
 ## Like the project?
 
 Give it a :star: Star!
