@@ -172,7 +172,7 @@
             },
             {
               "id": "fully_connected",
-              "type": "BatchGpuMatrixMultiplyOperation",
+              "type": "BatchMatrixMultiplyOperation",
               "inputs": [ "concatenated", "FW" ],
               "gradientResultTo": [ null, "DFW" ]
             },
@@ -184,7 +184,7 @@
             },
             {
               "id": "fully_connected_2",
-              "type": "BatchGpuMatrixMultiplyOperation",
+              "type": "BatchMatrixMultiplyOperation",
               "inputs": [ "concatenated", "F2W" ],
               "gradientResultTo": [ null, "DF2W" ]
             },
