@@ -107,7 +107,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
             for (int i = 0; i < 7; ++i)
             {
-                var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), 7, this.learningRate, this.clipValue);
+                var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), i + 2, this.learningRate, this.clipValue);
                 this.transformerNeuralNetwork.Add(model);
                 await this.transformerNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.transformerNeuralNetwork[i].ModelLayers).ToList();
@@ -524,7 +524,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             this.ApplyGradients(pathToGradientsMap);
 
             Dictionary<int, List<Matrix>> pathLengthToGradientMap = new Dictionary<int, List<Matrix>>();
-            Dictionary<(int, int), GapPath> indexesToPathMapLstm = new Dictionary<(int, int), GapPath>();
+            Dictionary<(int, int), GapPath> indexesToPathMapTransformer = new Dictionary<(int, int), GapPath>();
             foreach (var graph in this.gapGraphs)
             {
                 foreach (var path in graph.GapPaths)
@@ -533,12 +533,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     var gradient = pathToGradientsMap[path].Item1;
                     if (pathLengthToGradientMap.ContainsKey(pathLength))
                     {
-                        indexesToPathMapLstm.Add((pathLength, pathLengthToGradientMap[pathLength].Count), path);
+                        indexesToPathMapTransformer.Add((pathLength, pathLengthToGradientMap[pathLength].Count), path);
                         pathLengthToGradientMap[pathLength].Add(gradient);
                     }
                     else
                     {
-                        indexesToPathMapLstm.Add((pathLength, 0), path);
+                        indexesToPathMapTransformer.Add((pathLength, 0), path);
                         pathLengthToGradientMap.Add(pathLength, new List<Matrix> { gradient });
                     }
                 }
@@ -549,25 +549,25 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             {
                 var transformerNet = this.transformerNeuralNetwork[key - 2];
                 transformerNet.RestoreOperationIntermediates(this.typeToIdMapTransformer[key]);
-                //var lstmGradient = CommonMatrixUtils.SwitchFirstTwoDimensions((await transformerNet.AutomaticBackwardPropagate(new DeepMatrix(pathLengthToGradientMap[key].ToArray()))).ToArray());
+                var transformerGradient = await transformerNet.AutomaticBackwardPropagate(new DeepMatrix(pathLengthToGradientMap[key].ToArray()));
 
-                //for (int i = 0; i < lstmGradient.Length; ++i)
-                //{
-                //    var path = indexesToPathMapLstm[(key, i)];
-                //    var nodeCount = path.Nodes.Count;
-                //    for (int j = 0; j < nodeCount; ++j)
-                //    {
-                //        var node = path.Nodes[j];
-                //        if (!nodeToGradientMap.ContainsKey(node))
-                //        {
-                //            nodeToGradientMap.Add(node, lstmGradient[i][j]);
-                //        }
-                //        else
-                //        {
-                //            nodeToGradientMap[node].Accumulate(lstmGradient[i][j].ToArray());
-                //        }
-                //    }
-                //}
+                for (int i = 0; i < transformerGradient.Depth; ++i)
+                {
+                    var path = indexesToPathMapTransformer[(key, i)];
+                    var nodeCount = path.Nodes.Count;
+                    for (int j = 0; j < nodeCount; ++j)
+                    {
+                        var node = path.Nodes[j];
+                        if (!nodeToGradientMap.ContainsKey(node))
+                        {
+                            nodeToGradientMap.Add(node, new Matrix(transformerGradient[i][j]).Transpose());
+                        }
+                        else
+                        {
+                            nodeToGradientMap[node].Accumulate(new Matrix(transformerGradient[i][j]).Transpose().ToArray());
+                        }
+                    }
+                }
             }
 
             Dictionary<(int type, int index), GapNode> typeIndexNodeMap = new Dictionary<(int type, int index), GapNode>();

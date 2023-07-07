@@ -94,8 +94,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                 else
                 {
                     outputLayerBuilder
-                        .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures * (int)Math.Pow(2d, (int)numLayers) }, InitializationType.Xavier)
-                        .AddModelElementGroup("RB", new[] { 1, this.NumFeatures * (int)Math.Pow(2d, (int)numLayers) }, InitializationType.Zeroes);
+                        .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures * 2 }, InitializationType.Xavier)
+                        .AddModelElementGroup("RB", new[] { 1, this.NumFeatures * 2 }, InitializationType.Zeroes);
                 }
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
@@ -275,7 +275,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
+            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * 2, 1));
             var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
             var positionIndices = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.AlphabetSize, 1));
 
