@@ -107,7 +107,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
             for (int i = 0; i < 7; ++i)
             {
-                var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), i + 2, this.learningRate, this.clipValue);
+                var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries / 2, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), i + 2, this.learningRate, this.clipValue);
                 this.transformerNeuralNetwork.Add(model);
                 await this.transformerNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.transformerNeuralNetwork[i].ModelLayers).ToList();
