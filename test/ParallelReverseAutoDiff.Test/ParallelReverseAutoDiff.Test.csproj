@@ -17,6 +17,7 @@
     <None Remove="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <None Remove="GraphAttentionPaths\minibatch.json" />
+    <None Remove="GraphAttentionPaths\minibatch2.json" />
     <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
     <None Remove="GraphAttentionPaths\Transformer\Architecture\Transformer.json" />
   </ItemGroup>
@@ -44,6 +45,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="GraphAttentionPaths\minibatch.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\minibatch2.json" />
     <EmbeddedResource Include="GraphAttentionPaths\Readout\Architecture\Readout.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
