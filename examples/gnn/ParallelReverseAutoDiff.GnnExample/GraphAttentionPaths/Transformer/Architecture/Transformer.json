@@ -1,0 +1,248 @@
+{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "position_embeddings",
+          "type": "BatchEmbeddingOperation",
+          "inputs": [ "PositionIndices", "Embeddings" ],
+          "gradientResultTo": [ null, "DEmbeddings" ]
+        },
+        {
+          "id": "position_embeddings_add",
+          "type": "BatchMatrixAddOperation",
+          "inputs": [ "position_embeddings", "Input" ],
+        }
+      ],
+      "layers": [
+        {
+          "startOperations": [
+            {
+              "id": "keys_pathFeatures",
+              "type": "BatchGpuMatrixMultiplyOperation",
+              "inputs": [ "pathFeatures", "Keys" ],
+              "gradientResultTo": [ null, "DKeys" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "keypath_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "keys_pathFeatures", "KB" ],
+              "gradientResultTo": [ null, "DKB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "layernorm_keys",
+              "type": "BatchLayerNormalizationOperation",
+              "inputs": [ "keypath_add" ]
+            },
+            {
+              "id": "keys_act",
+              "type": "BatchLeakyReLUOperation",
+              "inputs": [ "layernorm_keys" ]
+            },
+            {
+              "id": "values_pathFeatures",
+              "type": "BatchGpuMatrixMultiplyOperation",
+              "inputs": [ "pathFeatures", "Values" ],
+              "gradientResultTo": [ null, "DValues" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "valuepath_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "values_pathFeatures", "VB" ],
+              "gradientResultTo": [ null, "DVB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "layernorm_values",
+              "type": "BatchLayerNormalizationOperation",
+              "inputs": [ "valuepath_add" ]
+            },
+            {
+              "id": "values_act",
+              "type": "BatchLeakyReLUOperation",
+              "inputs": [ "layernorm_values" ]
+            }
+          ],
+          "layers": [
+            {
+              "operations": [
+                {
+                  "id": "queries_pathFeatures",
+                  "type": "BatchGpuMatrixMultiplyOperation",
+                  "inputs": [ "pathFeatures", "Queries[layerIndex]" ],
+                  "gradientResultTo": [ null, "DQueries[layerIndex]" ],
+                  "initializations": [
+                    null,
+                    {
+                      "type": "Xavier",
+                      "rows": "numFeatures",
+                      "columns": "numFeatures"
+                    }
+                  ]
+                },
+                {
+                  "id": "querypath_add",
+                  "type": "BatchMatrixAddBroadcastingOperation",
+                  "inputs": [ "queries_pathFeatures", "QB" ],
+                  "gradientResultTo": [ null, "DQB" ],
+                  "initializations": [
+                    null,
+                    {
+                      "type": "Zeroes",
+                      "rows": "1",
+                      "columns": "numFeatures"
+                    }
+                  ]
+                },
+                {
+                  "id": "layernorm_queries",
+                  "type": "BatchLayerNormalizationOperation",
+                  "inputs": [ "querypath_add" ]
+                },
+                {
+                  "id": "queries_act",
+                  "type": "BatchLeakyReLUOperation",
+                  "inputs": [ "layernorm_queries" ]
+                },
+                {
+                  "id": "keys_transpose",
+                  "type": "BatchMatrixTransposeOperation",
+                  "inputs": [ "keys_act" ]
+                },
+                {
+                  "id": "queries_keys_transpose",
+                  "type": "BatchGpuMatrixMultiplyOperation",
+                  "inputs": [ "queries_act", "keys_transpose" ]
+                },
+                {
+                  "id": "queries_keys_scale",
+                  "type": "BatchMatrixMultiplyScalarOperation",
+                  "inputs": [ "queries_keys_transpose", "Divisor" ]
+                },
+                {
+                  "id": "attention_weights",
+                  "type": "BatchSineSoftmaxOperation",
+                  "inputs": [ "queries_keys_scale" ]
+                },
+                {
+                  "id": "attention_weights_values",
+                  "type": "BatchGpuMatrixMultiplyOperation",
+                  "inputs": [ "attention_weights", "values_act" ]
+                }
+              ]
+            }
+          ],
+          "endOperations": [
+            {
+              "id": "concatenated",
+              "type": "BatchMatrixConcatenateOperation",
+              "inputs": [ "attention_weights_values_array" ],
+              "switchFirstTwoDimensions": true
+            },
+            {
+              "id": "fully_connected",
+              "type": "BatchMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "FW" ],
+              "gradientResultTo": [ null, "DFW" ]
+            },
+            {
+              "id": "fully_connected_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected", "FB" ],
+              "gradientResultTo": [ null, "DFB" ]
+            },
+            {
+              "id": "fully_connected_2",
+              "type": "BatchMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "F2W" ],
+              "gradientResultTo": [ null, "DF2W" ]
+            },
+            {
+              "id": "fully_connected_2_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected_2", "F2B" ],
+              "gradientResultTo": [ null, "DF2B" ]
+            },
+            {
+              "id": "fully_connected_act",
+              "type": "BatchSwishOperation",
+              "inputs": [ "fully_connected_add", "Beta" ],
+              "gradientResultTo": [ null, "DBeta" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "BatchHadamardProductOperation",
+              "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+            },
+            {
+              "id": "reduce",
+              "type": "BatchGpuMatrixMultiplyOperation",
+              "inputs": [ "swiglu_act", "R" ],
+              "gradientResultTo": [ null, "DR" ]
+            },
+            {
+              "id": "reduce_add",
+              "type": "BatchMatrixAddBroadcastingOperation",
+              "inputs": [ "reduce", "RB" ],
+              "gradientResultTo": [ null, "DRB" ]
+            },
+            {
+              "id": "layernorm_reduce",
+              "type": "BatchLayerNormalizationOperation",
+              "inputs": [ "reduce_add" ]
+            },
+            {
+              "id": "output_act",
+              "type": "BatchLeakyReLUOperation",
+              "inputs": [ "layernorm_reduce" ]
+            }
+          ]
+        }
+      ],
+      "endoperations": [
+        {
+          "id": "pre_output",
+          "type": "BatchMatrixTransposeOperation",
+          "inputs": [ "output_act_last" ]
+        },
+        {
+          "id": "output_avg",
+          "type": "BatchMatrixAverageOperation",
+          "inputs": [ "pre_output" ],
+          "setResultTo": "Output"
+        }
+      ]
+    }
+  ]
+}

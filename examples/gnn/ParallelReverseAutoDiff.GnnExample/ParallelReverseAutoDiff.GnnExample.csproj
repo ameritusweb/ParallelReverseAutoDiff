@@ -17,6 +17,7 @@
     <None Remove="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
+    <None Remove="GraphAttentionPaths\Transformer\Architecture\Transformer.json" />
     <None Remove="Leela\791556.pb.gz" />
     <None Remove="Leela\cublas64_11.dll" />
     <None Remove="Leela\cublasLt64_11.dll" />
@@ -66,6 +67,7 @@
     <EmbeddedResource Include="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\Readout\Architecture\Readout.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\Transformer\Architecture\Transformer.json" />
     <EmbeddedResource Include="Rebel\Rebel-14.2-avx2.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
