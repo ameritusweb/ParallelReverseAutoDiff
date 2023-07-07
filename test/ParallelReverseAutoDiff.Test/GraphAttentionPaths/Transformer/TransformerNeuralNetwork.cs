@@ -3,7 +3,7 @@
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
+namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
 {
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.RMAD;
@@ -17,6 +17,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private const string NAMESPACE = "ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.Architecture";
         private const string ARCHITECTURE = "Transformer";
 
+        private readonly IModelLayer embeddingLayer;
         private readonly List<IModelLayer> inputLayers;
         private readonly List<IModelLayer> nestedLayers;
         private readonly List<IModelLayer> outputLayers;
@@ -30,20 +31,26 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <param name="numQueries">The number of queries.</param>
         /// <param name="numPaths">The number of paths.</param>
         /// <param name="numFeatures">The number of features.</param>
+        /// <param name="alphabetSize">The alphabet size.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public TransformerNeuralNetwork(int numLayers, int numQueries, int numPaths, int numFeatures, double learningRate, double clipValue)
+        public TransformerNeuralNetwork(int numLayers, int numQueries, int numPaths, int numFeatures, int alphabetSize, double learningRate, double clipValue)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures * (int)Math.Pow(2, numLayers) * 2;
+            this.NumFeatures = numFeatures;
+            this.AlphabetSize = alphabetSize;
+
+            this.embeddingLayer = new ModelLayerBuilder(this)
+                .AddModelElementGroup("Embeddings", new[] { alphabetSize, numFeatures }, InitializationType.Xavier)
+                .Build();
 
             this.inputLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
-            int numInputOutputFeatures = this.NumFeatures;
+            int numInputOutputFeatures = this.NumFeatures * 2;
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var inputLayerBuilder = new ModelLayerBuilder(this)
@@ -57,7 +64,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
 
             this.nestedLayers = new List<IModelLayer>();
             int numNestedFeatures = this.NumFeatures;
-            int numNestedOutputFeatures = this.NumFeatures;
+            int numNestedOutputFeatures = this.NumFeatures * 2;
             List<int> outputFeaturesList = new List<int>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
@@ -77,9 +84,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     .AddModelElementGroup("FB", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
                     .AddModelElementGroup("F2W", new[] { outputFeaturesList[i], (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
                     .AddModelElementGroup("F2B", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
-                    .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He)
-                    .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
+                    .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He);
+                if (i < (this.NumLayers - 1))
+                {
+                    outputLayerBuilder
+                        .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures }, InitializationType.Xavier)
+                        .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
+                }
+                else
+                {
+                    outputLayerBuilder
+                        .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures * (int)Math.Pow(2d, (int)numLayers) }, InitializationType.Xavier)
+                        .AddModelElementGroup("RB", new[] { 1, this.NumFeatures * (int)Math.Pow(2d, (int)numLayers) }, InitializationType.Zeroes);
+                }
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
             }
@@ -103,9 +120,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public Matrix Target { get; private set; }
 
         /// <summary>
-        /// Gets the AV matrix array.
+        /// Gets the position indices matrix.
         /// </summary>
-        public Matrix[] AV { get; private set; }
+        public DeepMatrix PositionIndices { get; private set; }
 
         /// <summary>
         /// Gets the model layers of the neural network.
@@ -114,7 +131,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         {
             get
             {
-                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
+                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers).Append(this.embeddingLayer);
             }
         }
 
@@ -134,6 +151,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         internal int NumFeatures { get; private set; }
 
         /// <summary>
+        /// Gets the alphabet size of the neural network.
+        /// </summary>
+        internal int AlphabetSize { get; private set; }
+
+        /// <summary>
         /// Gets the number of paths of the neural network.
         /// </summary>
         internal int NumPaths { get; private set; }
@@ -145,6 +167,24 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         public async Task Initialize()
         {
             await this.InitializeComputationGraph();
+        }
+
+        /// <summary>
+        /// Store the operation intermediates.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void StoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.StoreOperationIntermediates(id);
+        }
+
+        /// <summary>
+        /// Restore the operation intermediates.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void RestoreOperationIntermediates(Guid id)
+        {
+            this.computationGraph.RestoreOperationIntermediates(id);
         }
 
         /// <summary>
@@ -237,6 +277,24 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             // Clear intermediates
             var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures, 1));
             var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
+            var positionIndices = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.AlphabetSize, 1));
+
+            for (int i = 0; i < this.Parameters.BatchSize; ++i)
+            {
+                for (int j = 0; j < this.AlphabetSize; ++j)
+                {
+                    positionIndices[i][j][0] = j;
+                }
+            }
+
+            if (this.PositionIndices == null)
+            {
+                this.PositionIndices = positionIndices;
+            }
+            else
+            {
+                this.PositionIndices.Replace(positionIndices.ToArray());
+            }
 
             if (this.Output == null)
             {
@@ -263,9 +321,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         private void ClearState()
         {
             GradientClearer clearer = new GradientClearer();
-            clearer.Clear(this.inputLayers.ToArray());
-            clearer.Clear(this.nestedLayers.ToArray());
-            clearer.Clear(this.outputLayers.ToArray());
+            clearer.Clear(this.ModelLayers.ToArray());
         }
 
         /// <summary>
@@ -274,6 +330,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
+            var weightMatrix = this.embeddingLayer.WeightMatrix("Embeddings");
+            var gradientMatrix = this.embeddingLayer.GradientMatrix("Embeddings");
+
             List<Matrix> keys = new List<Matrix>();
             List<Matrix> keysBias = new List<Matrix>();
             List<Matrix> values = new List<Matrix>();
@@ -339,7 +398,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.computationGraph = new TransformerComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
+                .AddIntermediate("Input", _ => this.Input)
+                .AddIntermediate("PositionIndices", _ => this.PositionIndices)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumPaths, 2))
+                .AddWeight("Embeddings", _ => weightMatrix).AddGradient("DEmbeddings", _ => gradientMatrix)
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])
                 .AddBias("KB", x => keysBias[x.Layer]).AddGradient("DKB", x => keysBiasGradient[x.Layer])
                 .AddWeight("Values", x => values[x.Layer]).AddGradient("DValues", x => valuesGradient[x.Layer])
@@ -354,7 +416,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 .AddBias("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
                 .AddBias("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
                 .AddOperationFinder("output_act_last", _ => this.computationGraph[$"output_act_0_{this.NumLayers - 1}"])
-                .AddOperationFinder("pathFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
+                .AddOperationFinder("pathFeatures", x => x.Layer == 0 ? this.computationGraph["position_embeddings_add_0_0"] : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
                 .AddOperationFinder("attention_weights_values_array", x => this.computationGraph.ToOperationArray("attention_weights_values", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumLayers - 1)))
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 

@@ -3,7 +3,7 @@
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
+namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Readout
 {
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.RMAD;
