@@ -10,6 +10,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
@@ -731,6 +732,41 @@ items:
   nameWithType.vb: DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
   name.vb: InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  id: Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Accumulate(Matrix[])
+  nameWithType: DeepMatrix.Accumulate(Matrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Accumulate
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 246
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Accumulates with the specified matrix array.
+  example: []
+  syntax:
+    content: public void Accumulate(Matrix[] matrixArray)
+    parameters:
+    - id: matrixArray
+      type: ParallelReverseAutoDiff.RMAD.Matrix[]
+      description: The matrix array.
+    content.vb: Public Sub Accumulate(matrixArray As Matrix())
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate*
+  nameWithType.vb: DeepMatrix.Accumulate(Matrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix())
+  name.vb: Accumulate(Matrix())
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   id: Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -749,7 +785,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 247
+    startLine: 267
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -784,7 +820,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 274
+    startLine: 294
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -815,7 +851,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 283
+    startLine: 303
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -850,7 +886,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 292
+    startLine: 312
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -883,7 +919,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 301
+    startLine: 321
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -915,7 +951,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 322
+    startLine: 342
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1537,6 +1573,12 @@ references:
   - name: )
   - name: (
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  name: Accumulate
+  nameWithType: DeepMatrix.Accumulate
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Average
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)

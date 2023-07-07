@@ -10,6 +10,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.DeepMatrix[])
   - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Dimension)
   - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
   - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Clone
   - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Cols
   - ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Count
@@ -558,6 +559,41 @@ items:
   nameWithType.vb: FourDimensionalMatrix.this[](Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.this[](Integer)
   name.vb: this[](Integer)
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  id: Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  parent: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
+  langs:
+  - csharp
+  - vb
+  name: Accumulate(DeepMatrix[])
+  nameWithType: FourDimensionalMatrix.Accumulate(DeepMatrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/FourDimensionalMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Accumulate
+    path: ../../src/RMAD/FourDimensionalMatrix.cs
+    startLine: 152
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Accumulate with the specified deep matrix array.
+  example: []
+  syntax:
+    content: public void Accumulate(DeepMatrix[] deepMatrixArray)
+    parameters:
+    - id: deepMatrixArray
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix[]
+      description: The deep matrix array.
+    content.vb: Public Sub Accumulate(deepMatrixArray As DeepMatrix())
+  overload: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate*
+  nameWithType.vb: FourDimensionalMatrix.Accumulate(DeepMatrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix())
+  name.vb: Accumulate(DeepMatrix())
 - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
   commentId: M:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
   id: ToArray
@@ -576,7 +612,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/FourDimensionalMatrix.cs
-    startLine: 152
+    startLine: 176
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -607,7 +643,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/FourDimensionalMatrix.cs
-    startLine: 161
+    startLine: 185
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -642,7 +678,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/FourDimensionalMatrix.cs
-    startLine: 170
+    startLine: 194
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -675,7 +711,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/FourDimensionalMatrix.cs
-    startLine: 179
+    startLine: 203
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1223,6 +1259,12 @@ references:
   name: DeepMatrix
   nameWithType: DeepMatrix
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate
+  href: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
+  name: Accumulate
+  nameWithType: FourDimensionalMatrix.Accumulate
+  fullName: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.Accumulate
 - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray
   href: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.html#ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix.ToArray

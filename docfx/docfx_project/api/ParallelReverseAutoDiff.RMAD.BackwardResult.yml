@@ -7,6 +7,7 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
   - ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
+  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
   - ParallelReverseAutoDiff.RMAD.BackwardResult.Results
   langs:
   - csharp
@@ -134,6 +135,37 @@ items:
       type: System.Object
     content.vb: Public ReadOnly Property Item1 As Object
   overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
+  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
+  id: Item2
+  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
+  langs:
+  - csharp
+  - vb
+  name: Item2
+  nameWithType: BackwardResult.Item2
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/BackwardResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Item2
+    path: ../../src/RMAD/BackwardResult.cs
+    startLine: 36
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the second item.
+  example: []
+  syntax:
+    content: public object? Item2 { get; }
+    parameters: []
+    return:
+      type: System.Object
+    content.vb: Public ReadOnly Property Item2 As Object
+  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -446,3 +478,9 @@ references:
   name: Item1
   nameWithType: BackwardResult.Item1
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
+  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
+  name: Item2
+  nameWithType: BackwardResult.Item2
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2

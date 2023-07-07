@@ -56,6 +56,18 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class with a 1xN matrix using a provided array.
+        /// </summary>
+        /// <param name="array">The array to initialize the matrix with.</param>
+        public Matrix(double[] array)
+        {
+            this.matrix = new double[1][];
+            this.matrix[0] = new double[array.Length];
+            Array.Copy(array, this.matrix[0], array.Length);
+            this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
         /// <param name="uniqueId">The unique ID.</param>
@@ -226,6 +238,27 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return flatMatrix;
+        }
+
+        /// <summary>
+        /// Returns the transpose of this matrix.
+        /// </summary>
+        /// <returns>The transpose of this matrix.</returns>
+        public Matrix Transpose()
+        {
+            int numRows = this.Cols;
+            int numCols = this.Rows;
+            Matrix result = new Matrix(numRows, numCols);
+
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i, j] = this[j, i];
+                }
+            });
+
+            return result;
         }
 
         /// <summary>

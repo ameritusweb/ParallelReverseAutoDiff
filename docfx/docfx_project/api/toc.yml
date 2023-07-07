@@ -31,6 +31,8 @@ items:
     name: BatchAmplifiedSigmoidOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation
     name: BatchCudaMatrixMultiplyOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation
+    name: BatchEmbeddingOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation
     name: BatchGpuMatrixMultiplyOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation
@@ -57,6 +59,8 @@ items:
     name: BatchMatrixSumOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation
     name: BatchMatrixTransposeOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixVectorConcatenateOperation
+    name: BatchMatrixVectorConcatenateOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation
     name: BatchNormalizationOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1
@@ -103,8 +107,12 @@ items:
     name: DualLayersJsonArchitecture
   - uid: ParallelReverseAutoDiff.RMAD.DualLayersTimeStep
     name: DualLayersTimeStep
+  - uid: ParallelReverseAutoDiff.RMAD.DualWeightedOperation
+    name: DualWeightedOperation
   - uid: ParallelReverseAutoDiff.RMAD.DynamicParameter
     name: DynamicParameter
+  - uid: ParallelReverseAutoDiff.RMAD.EmbeddingOperation
+    name: EmbeddingOperation
   - uid: ParallelReverseAutoDiff.RMAD.FlattenOperation
     name: FlattenOperation
   - uid: ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix
@@ -179,6 +187,8 @@ items:
     name: MatrixType
   - uid: ParallelReverseAutoDiff.RMAD.MatrixUtils
     name: MatrixUtils
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixVectorConcatenateOperation
+    name: MatrixVectorConcatenateOperation
   - uid: ParallelReverseAutoDiff.RMAD.ModelElementType
     name: ModelElementType
   - uid: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder

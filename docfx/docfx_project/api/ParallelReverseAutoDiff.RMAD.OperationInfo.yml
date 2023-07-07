@@ -10,6 +10,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationInfo.Id
   - ParallelReverseAutoDiff.RMAD.OperationInfo.Inputs
   - ParallelReverseAutoDiff.RMAD.OperationInfo.SetResultTo
+  - ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
   - ParallelReverseAutoDiff.RMAD.OperationInfo.Type
   langs:
   - csharp
@@ -230,6 +231,37 @@ items:
       type: System.String[]
     content.vb: Public Property GradientResultTo As String()
   overload: ParallelReverseAutoDiff.RMAD.OperationInfo.GradientResultTo*
+- uid: ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
+  id: SwitchFirstTwoDimensions
+  parent: ParallelReverseAutoDiff.RMAD.OperationInfo
+  langs:
+  - csharp
+  - vb
+  name: SwitchFirstTwoDimensions
+  nameWithType: OperationInfo.SwitchFirstTwoDimensions
+  fullName: ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationInfo.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SwitchFirstTwoDimensions
+    path: ../../src/RMAD/OperationInfo.cs
+    startLine: 45
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets a value indicating whether to switch the first two dimensions.
+  example: []
+  syntax:
+    content: public bool SwitchFirstTwoDimensions { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property SwitchFirstTwoDimensions As Boolean
+  overload: ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions*
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -560,3 +592,20 @@ references:
   name: GradientResultTo
   nameWithType: OperationInfo.GradientResultTo
   fullName: ParallelReverseAutoDiff.RMAD.OperationInfo.GradientResultTo
+- uid: ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
+  href: ParallelReverseAutoDiff.RMAD.OperationInfo.html#ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
+  name: SwitchFirstTwoDimensions
+  nameWithType: OperationInfo.SwitchFirstTwoDimensions
+  fullName: ParallelReverseAutoDiff.RMAD.OperationInfo.SwitchFirstTwoDimensions
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

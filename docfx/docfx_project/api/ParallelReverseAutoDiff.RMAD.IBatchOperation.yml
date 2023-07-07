@@ -42,6 +42,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Parameters
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Tasks
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.SwitchFirstTwoDimensions
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
   - ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardInput
   - ParallelReverseAutoDiff.RMAD.IOperationBase.BackwardAdjacentOperations
@@ -63,7 +64,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Reset
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Store(System.Guid)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.Restore(System.Guid)
-  - ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  - ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Int32,System.Object})
   - ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(ParallelReverseAutoDiff.RMAD.ComputationGraph)
@@ -214,6 +215,13 @@ references:
   name: Inputs
   nameWithType: IOperationBase.Inputs
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.Inputs
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.SwitchFirstTwoDimensions
+  commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.SwitchFirstTwoDimensions
+  parent: ParallelReverseAutoDiff.RMAD.IOperationBase
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.SwitchFirstTwoDimensions
+  name: SwitchFirstTwoDimensions
+  nameWithType: IOperationBase.SwitchFirstTwoDimensions
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.SwitchFirstTwoDimensions
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
   commentId: P:ParallelReverseAutoDiff.RMAD.IOperationBase.Outputs
   parent: ParallelReverseAutoDiff.RMAD.IOperationBase
@@ -533,21 +541,21 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.guid
   - name: )
-- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
-  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+- uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
   parent: ParallelReverseAutoDiff.RMAD.IOperationBase
   isExternal: true
-  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
-  name: AccumulateGradient(object[])
-  nameWithType: IOperationBase.AccumulateGradient(object[])
-  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(object[])
-  nameWithType.vb: IOperationBase.AccumulateGradient(Object())
-  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(Object())
-  name.vb: AccumulateGradient(Object())
+  href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
+  name: AccumulateGradient(object[], bool)
+  nameWithType: IOperationBase.AccumulateGradient(object[], bool)
+  fullName: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(object[], bool)
+  nameWithType.vb: IOperationBase.AccumulateGradient(Object(), Boolean)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(Object(), Boolean)
+  name.vb: AccumulateGradient(Object(), Boolean)
   spec.csharp:
-  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
     name: AccumulateGradient
-    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
   - name: (
   - uid: System.Object
     name: object
@@ -555,11 +563,17 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object
   - name: '['
   - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
   - name: )
   spec.vb:
-  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+  - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
     name: AccumulateGradient
-    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[])
+    href: ParallelReverseAutoDiff.RMAD.IOperationBase.html#ParallelReverseAutoDiff.RMAD.IOperationBase.AccumulateGradient(System.Object[],System.Boolean)
   - name: (
   - uid: System.Object
     name: Object
@@ -567,6 +581,12 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object
   - name: (
   - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
   - name: )
 - uid: ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
   commentId: M:ParallelReverseAutoDiff.RMAD.IOperationBase.ResultTo(System.Func{System.Int32,System.Object})
