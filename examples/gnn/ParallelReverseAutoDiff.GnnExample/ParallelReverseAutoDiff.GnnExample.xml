@@ -1938,12 +1938,11 @@
             Graph Attention Paths Neural Network.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork"/> class.
             </summary>
             <param name="graphs">The graphs.</param>
-            <param name="batchSize">The batch size.</param>
             <param name="numIndices">The number of indices.</param>
             <param name="alphabetSize">The alphabet size.</param>
             <param name="embeddingSize">The embedding size.</param>
@@ -1951,6 +1950,12 @@
             <param name="numQueries">The number of queries.</param>
             <param name="learningRate">The learning rate.</param>
             <param name="clipValue">The clip Value.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Reset">
+            <summary>
+            Reset the network.
+            </summary>
+            <returns>A task.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Initialize">
             <summary>
@@ -1966,6 +1971,11 @@
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.ApplyWeights">
             <summary>
             Apply the weights from the save path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.ApplyGradients">
+            <summary>
+            Apply the gradients to update the weights.
             </summary>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Forward">

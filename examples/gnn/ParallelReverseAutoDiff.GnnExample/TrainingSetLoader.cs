@@ -16,6 +16,7 @@ namespace ParallelReverseAutoDiff.GnnExample
     public class TrainingSetLoader
     {
         private Random rand;
+        private GraphAttentionPathsNeuralNetwork neuralNetwork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrainingSetLoader"/> class.
@@ -32,29 +33,51 @@ namespace ParallelReverseAutoDiff.GnnExample
         public async Task LoadMiniBatch()
         {
             var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs", "*.zip").ToList();
-            var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).Take(4).ToList();
-            List<GapGraph> graphs = new List<GapGraph>();
-            for (int i = 0; i < randomGraphFiles.Count; ++i)
+
+            for (int i = 0; i < 10; ++i)
             {
-                var file = randomGraphFiles[i];
-                var jsons = this.ExtractFromZip(file);
-                var randomJson = jsons.OrderBy(x => this.rand.Next()).First();
-                var graph = JsonConvert.DeserializeObject<GapGraph>(randomJson) ?? throw new InvalidOperationException("Could not deserialize to graph.");
-                graph.Populate();
-                graphs.Add(graph);
+                var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).Take(4).ToList();
+                List<GapGraph> graphs = new List<GapGraph>();
+                for (int j = 0; j < randomGraphFiles.Count; ++j)
+                {
+                    var file = randomGraphFiles[j];
+                    var jsons = this.ExtractFromZip(file);
+                    var randomJson = jsons.OrderBy(x => this.rand.Next()).First();
+                    var graph = JsonConvert.DeserializeObject<GapGraph>(randomJson) ?? throw new InvalidOperationException("Could not deserialize to graph.");
+                    graph.Populate();
+                    graphs.Add(graph);
+                }
+
+                var json = JsonConvert.SerializeObject(graphs);
+                File.WriteAllText("minibatch.json", json);
+
+                await this.ProcessMiniBatch(graphs);
+                Thread.Sleep(5000);
             }
 
-            var json = JsonConvert.SerializeObject(graphs);
-            File.WriteAllText("minibatch.json", json);
+            this.neuralNetwork.SaveWeights();
+        }
 
-            int batchSize = 4;
+        private async Task ProcessMiniBatch(List<GapGraph> graphs)
+        {
             try
             {
                 CudaBlas.Instance.Initialize();
-                GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 16, 115, 5, 2, 4, 0.001d, 4d);
-                await neuralNetwork.Initialize();
-                DeepMatrix gradientOfLoss = neuralNetwork.Forward();
-                await neuralNetwork.Backward(gradientOfLoss);
+                if (this.neuralNetwork == null)
+                {
+                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 16, 115, 7, 2, 4, 0.001d, 4d);
+                    await this.neuralNetwork.Initialize();
+                    this.neuralNetwork.ApplyWeights();
+                }
+                else
+                {
+                    this.neuralNetwork.Reinitialize(graphs);
+                }
+
+                DeepMatrix gradientOfLoss = this.neuralNetwork.Forward();
+                await this.neuralNetwork.Backward(gradientOfLoss);
+                this.neuralNetwork.ApplyGradients();
+                await this.neuralNetwork.Reset();
             }
             finally
             {

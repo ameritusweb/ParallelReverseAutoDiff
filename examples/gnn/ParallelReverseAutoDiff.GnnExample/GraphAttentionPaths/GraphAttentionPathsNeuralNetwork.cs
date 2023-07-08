@@ -33,7 +33,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         private readonly int numQueries;
         private readonly int alphabetSize;
         private readonly int embeddingSize;
-        private readonly int batchSize;
         private readonly double learningRate;
         private readonly double clipValue;
         private readonly Dictionary<int, Guid> typeToIdMap;
@@ -48,7 +47,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// Initializes a new instance of the <see cref="GraphAttentionPathsNeuralNetwork"/> class.
         /// </summary>
         /// <param name="graphs">The graphs.</param>
-        /// <param name="batchSize">The batch size.</param>
         /// <param name="numIndices">The number of indices.</param>
         /// <param name="alphabetSize">The alphabet size.</param>
         /// <param name="embeddingSize">The embedding size.</param>
@@ -56,7 +54,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <param name="numQueries">The number of queries.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip Value.</param>
-        public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int batchSize, int numIndices, int alphabetSize, int embeddingSize, int numLayers, int numQueries, double learningRate, double clipValue)
+        public GraphAttentionPathsNeuralNetwork(List<GapGraph> graphs, int numIndices, int alphabetSize, int embeddingSize, int numLayers, int numQueries, double learningRate, double clipValue)
         {
             this.gapGraphs = graphs;
             this.numFeatures = (numIndices * embeddingSize) + 3;
@@ -65,21 +63,75 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             this.numIndices = numIndices;
             this.numLayers = numLayers;
             this.numQueries = numQueries;
-            this.batchSize = batchSize;
             this.learningRate = learningRate;
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
             this.embeddingNeuralNetwork = new List<EmbeddingNeuralNetwork>();
             this.edgeAttentionNeuralNetwork = new List<EdgeAttentionNeuralNetwork>();
+            this.transformerNeuralNetwork = new List<TransformerNeuralNetwork>();
+            this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
+            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, this.numFeatures, learningRate, clipValue);
+            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, this.numFeatures, learningRate, clipValue);
             this.typeToIdMap = new Dictionary<int, Guid>();
             this.typeToIdMapTransformer = new Dictionary<int, Guid>();
             this.typeToIdMapAttention = new Dictionary<int, Guid>();
             this.typeToIdMapEmbeddings = new Dictionary<int, Guid>();
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
-            this.transformerNeuralNetwork = new List<TransformerNeuralNetwork>();
-            this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
-            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, this.numFeatures, learningRate, clipValue);
-            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, this.numFeatures, learningRate, clipValue);
+        }
+
+        /// <summary>
+        /// Reset the network.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async Task Reset()
+        {
+            this.typeToIdMap.Clear();
+            this.typeToIdMapTransformer.Clear();
+            this.typeToIdMapAttention.Clear();
+            this.typeToIdMapEmbeddings.Clear();
+            this.connectedPathsMap.Clear();
+
+            for (int i = 0; i < 7; ++i)
+            {
+                await this.embeddingNeuralNetwork[i].Initialize();
+                this.embeddingNeuralNetwork[i].Parameters.AdamIteration++;
+            }
+
+            for (int i = 0; i < 7; ++i)
+            {
+                await this.edgeAttentionNeuralNetwork[i].Initialize();
+                this.edgeAttentionNeuralNetwork[i].Parameters.AdamIteration++;
+            }
+
+            for (int i = 0; i < 7; ++i)
+            {
+                await this.transformerNeuralNetwork[i].Initialize();
+                this.transformerNeuralNetwork[i].Parameters.AdamIteration++;
+            }
+
+            for (int i = 0; i < 7; ++i)
+            {
+                await this.attentionMessagePassingNeuralNetwork[i].Initialize();
+                this.attentionMessagePassingNeuralNetwork[i].Parameters.AdamIteration++;
+            }
+
+            await this.gcnNeuralNetwork.Initialize();
+            this.gcnNeuralNetwork.Parameters.AdamIteration++;
+
+            await this.readoutNeuralNetwork.Initialize();
+            this.readoutNeuralNetwork.Parameters.AdamIteration++;
+
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+        }
+
+        /// <summary>
+        /// Reinitialize with new graphs.
+        /// </summary>
+        /// <param name="graphs">The graphs.</param>
+        public void Reinitialize(List<GapGraph> graphs)
+        {
+            this.gapGraphs.Clear();
+            this.gapGraphs.AddRange(graphs);
         }
 
         /// <summary>
@@ -136,7 +188,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public void SaveWeights()
         {
             Guid guid = Guid.NewGuid();
-            var dir = $"E:\\store\\{guid}";
+            var dir = $"E:\\store\\{guid}_{this.readoutNeuralNetwork.Parameters.AdamIteration}";
             Directory.CreateDirectory(dir);
             int index = 0;
             foreach (var modelLayer in this.modelLayers)
@@ -151,7 +203,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "b93e5314-3a40-4353-8b44-0795cbfe0d4e";
+            var guid = "78362272-3112-49ab-8e7f-a95bcccc4f1f";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -160,6 +212,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 modelLayer.LoadWeightsAndMoments(file);
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
             }
+        }
+
+        /// <summary>
+        /// Apply the gradients to update the weights.
+        /// </summary>
+        public void ApplyGradients()
+        {
+            var clipper = this.readoutNeuralNetwork.Utilities.GradientClipper;
+            clipper.Clip(this.modelLayers.ToArray());
+            var adamOptimizer = this.readoutNeuralNetwork.Utilities.AdamOptimizer;
+            adamOptimizer.Optimize(this.modelLayers.ToArray());
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.modelLayers.ToArray());
         }
 
         /// <summary>
