@@ -165,6 +165,19 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         }
 
         /// <summary>
+        /// Apply the gradients to update the weights.
+        /// </summary>
+        public void ApplyGradients()
+        {
+            var clipper = this.readoutNeuralNetwork.Utilities.GradientClipper;
+            clipper.Clip(this.modelLayers.ToArray());
+            var adamOptimizer = this.readoutNeuralNetwork.Utilities.AdamOptimizer;
+            adamOptimizer.Optimize(this.modelLayers.ToArray());
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.modelLayers.ToArray());
+        }
+
+        /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
