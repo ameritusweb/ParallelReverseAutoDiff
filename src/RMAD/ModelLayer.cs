@@ -167,11 +167,13 @@ namespace ParallelReverseAutoDiff.RMAD
             // Create a new dictionary with only weights
             var weights = this.elements.ToDictionary(e => e.Key, e => e.Value.Item1);
 
-            // Serialize the weights dictionary to JSON
-            var json = JsonConvert.SerializeObject(weights, Formatting.Indented);
-
-            // Write JSON string to file
-            File.WriteAllText(file.FullName, json);
+            using (StreamWriter fileStream = File.CreateText(file.FullName))
+            using (JsonTextWriter writer = new JsonTextWriter(fileStream))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(writer, weights);
+            }
         }
 
         /// <inheritdoc />
@@ -205,11 +207,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
             var secondMoments = this.elements.ToDictionary(e => e.Key, e => e.Value.Item4);
 
-            // Serialize the weights dictionary to JSON
-            var json = JsonConvert.SerializeObject((weights, firstMoments, secondMoments), Formatting.Indented);
-
-            // Write JSON string to file
-            File.WriteAllText(file.FullName, json);
+            using (StreamWriter fileStream = File.CreateText(file.FullName))
+            using (JsonTextWriter writer = new JsonTextWriter(fileStream))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(writer, (weights, firstMoments, secondMoments));
+            }
         }
 
         /// <inheritdoc />

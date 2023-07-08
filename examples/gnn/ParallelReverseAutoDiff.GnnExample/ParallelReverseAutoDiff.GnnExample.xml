@@ -1957,6 +1957,12 @@
             </summary>
             <returns>A task.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Reinitialize(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph})">
+            <summary>
+            Reinitialize with new graphs.
+            </summary>
+            <param name="graphs">The graphs.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Initialize">
             <summary>
             Initializes the model layers.

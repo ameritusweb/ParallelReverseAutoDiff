@@ -32,37 +32,65 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>A task.</returns>
         public async Task LoadMiniBatch()
         {
-            var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs", "*.zip").ToList();
-
-            for (int i = 0; i < 10; ++i)
+            CudaBlas.Instance.Initialize();
+            try
             {
-                var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).Take(4).ToList();
-                List<GapGraph> graphs = new List<GapGraph>();
-                for (int j = 0; j < randomGraphFiles.Count; ++j)
+                var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs", "*.zip").ToList();
+
+                for (int i = 0; i < 100; ++i)
                 {
-                    var file = randomGraphFiles[j];
-                    var jsons = this.ExtractFromZip(file);
-                    var randomJson = jsons.OrderBy(x => this.rand.Next()).First();
-                    var graph = JsonConvert.DeserializeObject<GapGraph>(randomJson) ?? throw new InvalidOperationException("Could not deserialize to graph.");
-                    graph.Populate();
-                    graphs.Add(graph);
+                    var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).ToList();
+                    List<GapGraph> graphs = new List<GapGraph>();
+                    for (int j = 0; j < randomGraphFiles.Count; ++j)
+                    {
+                        var file = randomGraphFiles[j];
+                        var jsons = this.ExtractFromZip(file);
+                        var randomJson = jsons.OrderBy(x => this.rand.Next()).First();
+                        var graph = JsonConvert.DeserializeObject<GapGraph>(randomJson) ?? throw new InvalidOperationException("Could not deserialize to graph.");
+                        graph.Populate();
+                        if (!graph.GapPaths.Any(x => x.IsTarget))
+                        {
+                            j--;
+                            continue;
+                        }
+
+                        graphs.Add(graph);
+
+                        if (graphs.Count == 4)
+                        {
+                            break;
+                        }
+                    }
+
+                    var json = JsonConvert.SerializeObject(graphs);
+                    File.WriteAllText("minibatch.json", json);
+
+                    await this.ProcessMiniBatch(graphs);
+                    Thread.Sleep(5000);
+
+                    if (i % 10 == 9)
+                    {
+                        try
+                        {
+                            this.neuralNetwork.SaveWeights();
+                        }
+                        catch (OutOfMemoryException ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
                 }
-
-                var json = JsonConvert.SerializeObject(graphs);
-                File.WriteAllText("minibatch.json", json);
-
-                await this.ProcessMiniBatch(graphs);
-                Thread.Sleep(5000);
             }
-
-            this.neuralNetwork.SaveWeights();
+            finally
+            {
+                CudaBlas.Instance.Dispose();
+            }
         }
 
         private async Task ProcessMiniBatch(List<GapGraph> graphs)
         {
             try
             {
-                CudaBlas.Instance.Initialize();
                 if (this.neuralNetwork == null)
                 {
                     this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 16, 115, 7, 2, 4, 0.001d, 4d);
@@ -79,9 +107,9 @@ namespace ParallelReverseAutoDiff.GnnExample
                 this.neuralNetwork.ApplyGradients();
                 await this.neuralNetwork.Reset();
             }
-            finally
+            catch (Exception ex)
             {
-                CudaBlas.Instance.Dispose();
+                Console.WriteLine(ex);
             }
         }
 
