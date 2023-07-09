@@ -9,6 +9,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 
 ## Table of Contents
 - [Overview](#overview)
+- [Building your Neural Network Model](#building-your-neural-network-model)
 - [Understanding the JSON Architecture](#understanding-the-json-architecture)
 - [Instantiating the Architecture](#instantiating-the-architecture)
 - [Instantiating the Computational Graph](#instantiating-the-computational-graph)
@@ -24,7 +25,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 - [Support Developer](#support-developer)
 - [Star the Project](#star-the-project)
 - [Reporting Bugs](#reporting-bugs)
-- 
+
 ParallelReverseAutoDiff (PRAD) is a thread-safe C# library designed for reverse mode automatic differentiation, optimized for parallel computation and primed for the demands of modern machine learning applications and neural network training. It leverages semaphores and locks to orchestrate between threads, ensuring precision during gradient accumulation.
 
 Upon the realm of code, a gem does shine,
@@ -60,6 +61,8 @@ Etched forever in code's vast story.
 
 [API Documentation](https://ameritusweb.github.io/ParallelReverseAutoDiff/api/index.html)
 
+## Overview
+
 Each operation in PRAD is embodied as a node with forward and backward functions, facilitating the efficient calculation of derivatives. This design is particularly beneficial for large-scale problems and complex neural network architectures, where computational efficiency is paramount.
 
 A standout feature of PRAD is its innovative use of the visitor pattern. The library includes a specialized 'Neural Network Visitor' which traverses neural network nodes across different threads. This visitor is tasked with gradient accumulation on nodes shared across multiple threads, allowing for parallelized computations while maintaining consistency and avoiding race conditions.
@@ -68,10 +71,8 @@ Moreover, PRAD introduces a data-driven approach to neural network architecture 
 
 PRAD's dynamic computational graph, constructed from JSON architecture, allows for the efficient computation of gradients, a crucial aspect of the backpropagation process used in training neural networks. This unique blend of features makes PRAD an efficient, scalable, and groundbreaking automatic differentiation solution.
 
-## Prerequisites
+### Prerequisites
 Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
-
-## Supported Operations
 
 ### Regular Operations
 AddGaussianNoiseOperation
@@ -158,7 +159,7 @@ DeepScaleAndShiftOperation
 
 FlattenOperation
 
-## Neural Network Parameters
+### Neural Network Parameters
 
 Each neural network base class has a set of parameters that can be used to configure the neural network. They are as follows:
 
@@ -261,7 +262,7 @@ public List<Matrix> ChosenActions { get; set; }
 
 ## Usage
 
-### Build out your neural network model
+### Building your Neural Network Model
 
 ```csharp
 var embeddingLayerBuilder = new ModelLayerBuilder(this)
@@ -305,7 +306,7 @@ The model element group's elements are stored in a matrix whose size is specifie
 
 In this example, for the hidden layer, the first dimension is the number of layers and the second and third dimensions are the row and column sizes respectively.
 
-### Create an architecture JSON file
+### Understanding the JSON Architecture
 
 Here is an example:
 ```json
@@ -654,7 +655,7 @@ The JSON defines the steps in a machine learning model's forward pass and also s
 
 By defining the operations and their connections in a JSON file, the graph can be easily constructed and modified, and the computations can be automatically differentiated and parallelized. This representation makes it possible to define a wide variety of models in a modular way, using the building blocks provided by the library.
 
-### Instantiate the architecture
+### Instantiating the Architecture
 
 Use a JSON serialization library like Newtonsoft.JSON to deserialize the JSON file to a JsonArchitecture object.
 
@@ -662,7 +663,7 @@ There are other JSON architectures available as well.
 
 These include the 'NestedLayersJsonArchitecture', 'DualLayersJsonArchitecture', and 'TripleLayersJsonArchitecture'.
 
-### Instantiate the computational graph
+### Instantiating the Computational Graph
 
 ```c#
 // Retrieve the matrices from the model layers created by the model layer builder.
@@ -758,7 +759,7 @@ this.computationGraph
 
 Operation finders are a key component used to define and locate different operations in a neural network's computational graph. They're essentially functions that link to specific operations at different layers or time steps within the network. This is achieved by mapping string identifiers (IDs) to these operations, which are then used within a JSON architecture to establish the network's structure and sequence of computations. For example, an operation finder could link to a matrix multiplication operation in a specific layer of the network. By using these operation finders, developers can effectively manage complex computational graphs.
 
-### Populate the backward dependency counts
+### Populating the Backward Dependency Counts
 
 Then populate the backward dependency counts by running the following code. It only has to be run once to set up the backward dependency counts.
 ```c#
@@ -772,7 +773,7 @@ for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 }
 ```
 
-### Run the forward pass
+### Running the Forward Pass
 ```c#
 var op = this.computationGraph.StartOperation ?? throw new Exception("Start operation should not be null.");
 IOperationBase? currOp = null;
@@ -797,14 +798,14 @@ do
 while (currOp.Next != null);
 ```
 
-### Create a loss function
+### Creating a Loss Function
 Create a loss function like mean squared error, cross-entropy loss or using policy gradient methods.
 
 Then calculate the gradient of the loss with respect to the output.
 
 Plug the result in as the backward input for the backward start operation.
 
-### Run the backward pass utilizing inherent parallelization
+### Running the Backward Pass
 ```c#
 IOperationBase? backwardStartOperation = null;
 for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
@@ -823,19 +824,19 @@ for (int t = this.Parameters.NumTimeSteps - 1; t >= 0; t--)
 }
 ```
 
-### Clip the gradients
+### Clipping the Gradients
 ```c#
 GradientClipper clipper = new GradientClipper(this);
 clipper.Clip(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
 ```
 
-### Update the weights
+### Updating the Weights
 ```c#
 AdamOptimizer optimizer = new AdamOptimizer(this);
 optimizer.Optimize(new[] { this.embeddingLayer, this.hiddenLayer, this.outputLayer });
 ```
 
-### Using CUDA operations
+### Using CUDA Operations
 ```c#
 Cudablas.Instance.DeviceId = 0; // set the GPU to use, defaults to 0
 Cudablas.Instance.Initialize(); // initialize the CUDA library
@@ -912,10 +913,10 @@ In this example, the Forward method calculates the average of the features for e
 
 This level of customization allows PRAD to be a versatile tool in the field of machine learning, capable of being tailored to a wide range of tasks, datasets, and innovative architectures.
 
-## Support developer
+## Support Developer
 [!["Buy Me A Coffee"](https://raw.githubusercontent.com/ameritusweb/ParallelReverseAutoDiff/main/docs/orange_img.png)](https://www.buymeacoffee.com/ameritusweb)
 
-## Like the project?
+## Star the Project
 
 Give it a :star: Star!
 
