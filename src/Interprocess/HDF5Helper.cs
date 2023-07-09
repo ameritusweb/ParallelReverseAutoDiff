@@ -176,7 +176,7 @@ namespace ParallelReverseAutoDiff.Interprocess
             int n = 0;
             for (int m = 0; m < matrices.Count; m++)
             {
-                var matrix = matrices[0];
+                var matrix = matrices[m];
                 for (int i = 0; i < matrix.Rows; i++)
                 {
                     // Create a dataspace for each row.

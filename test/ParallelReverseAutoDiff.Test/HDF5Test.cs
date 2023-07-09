@@ -1,11 +1,27 @@
 using ParallelReverseAutoDiff.Interprocess;
 using ParallelReverseAutoDiff.RMAD;
+using ParallelReverseAutoDiff.Test.Common;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace ParallelReverseAutoDiff.Test
 {
     public class HDF5Test
     {
+        [Fact]
+        public void GivenABinaryFile_DeserializesProperly()
+        {
+            string path = GetTestFilePath();
+            Dictionary<string, (object, object, object)> elements = new Dictionary<string, (object, object, object)>();
+            var dirName = Path.GetDirectoryName(path) + "\\GraphAttentionPaths\\layer112";
+            string directory = dirName ?? throw new InvalidOperationException(string.Empty);
+            HDF5Helper.Deserialize(new FileInfo(directory), elements, new Func<(object, object, object), object>[] { x => x.Item1, x => x.Item2, x => x.Item3 });
+        }
+
+        private string GetTestFilePath([CallerFilePath] string path = "")
+        {
+            return path;
+        }
 
         [Fact]
         public void GivenADictionaryOfMatrices_SerializesProperly()

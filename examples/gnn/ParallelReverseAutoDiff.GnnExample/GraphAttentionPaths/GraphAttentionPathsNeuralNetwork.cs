@@ -140,7 +140,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 101;
+            var initialAdamIteration = 102;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -210,13 +210,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "48da52f4-6b2b-4333-9b0d-624a2e441dab_101";
+            var guid = "64d85bc6-c071-4c38-9df7-ec2fd77b121e_102";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
                 var modelLayer = this.modelLayers[i];
-                var file = new FileInfo($"{dir}\\layer{i}.json");
-                modelLayer.LoadWeightsAndMoments(file);
+                var file = new FileInfo($"{dir}\\layer{i}");
+                modelLayer.LoadWeightsAndMomentsBinary(file);
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
             }
         }
