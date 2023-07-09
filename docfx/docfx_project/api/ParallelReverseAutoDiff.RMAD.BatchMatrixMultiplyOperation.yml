@@ -1,71 +1,49 @@
 ### YamlMime:ManagedReference
 items:
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1
-  commentId: T:ParallelReverseAutoDiff.RMAD.BatchOperation`1
-  id: BatchOperation`1
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  id: BatchMatrixMultiplyOperation
   parent: ParallelReverseAutoDiff.RMAD
   children:
-  - ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
-  - ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  - ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
-  - ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
   langs:
   - csharp
   - vb
-  name: BatchOperation<T>
-  nameWithType: BatchOperation<T>
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>
+  name: BatchMatrixMultiplyOperation
+  nameWithType: BatchMatrixMultiplyOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
   type: Class
   source:
     remote:
-      path: src/RMAD/BatchOperation.cs
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: BatchOperation
-    path: ../../src/RMAD/BatchOperation.cs
-    startLine: 10
+    id: BatchMatrixMultiplyOperation
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 14
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
-  summary: Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.
+  summary: Batch matrix multiply operation.
   example: []
   syntax:
-    content: 'public abstract class BatchOperation<T> : OperationBase, IBatchOperation, IOperationBase where T : IOperationBase'
-    typeParameters:
-    - id: T
-    content.vb: Public MustInherit Class BatchOperation(Of T As IOperationBase) Inherits OperationBase Implements IBatchOperation, IOperationBase
+    content: 'public class BatchMatrixMultiplyOperation : BatchOperation<MatrixMultiplyOperation>, IBatchOperation, IOperationBase'
+    content.vb: Public Class BatchMatrixMultiplyOperation Inherits BatchOperation(Of MatrixMultiplyOperation) Implements IBatchOperation, IOperationBase
   inheritance:
   - System.Object
   - ParallelReverseAutoDiff.RMAD.OperationBase
-  derivedClasses:
-  - ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation
-  - ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation
-  - ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation
-  - ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation
-  - ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation
-  - ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation
-  - ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation
-  - ParallelReverseAutoDiff.RMAD.BatchMatrixVectorConcatenateOperation
-  - ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation
-  - ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation
-  - ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation
-  - ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation
-  - ParallelReverseAutoDiff.RMAD.BatchSwishOperation
-  - ParallelReverseAutoDiff.RMAD.BatchTanhOperation
+  - ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}
   implements:
   - ParallelReverseAutoDiff.RMAD.IBatchOperation
   - ParallelReverseAutoDiff.RMAD.IOperationBase
   inheritedMembers:
+  - ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Operations
+  - ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
   - ParallelReverseAutoDiff.RMAD.OperationBase.IsComplete
   - ParallelReverseAutoDiff.RMAD.OperationBase.TimeStepIndex
   - ParallelReverseAutoDiff.RMAD.OperationBase.LayerIndex
@@ -104,8 +82,6 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase.IntermediateObjectArrays
   - ParallelReverseAutoDiff.RMAD.OperationBase.InitializeFrom(ParallelReverseAutoDiff.RMAD.OperationInfo,System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Func{ParallelReverseAutoDiff.RMAD.LayerInfo,System.Object}},ParallelReverseAutoDiff.RMAD.LayerInfo)
   - ParallelReverseAutoDiff.RMAD.OperationBase.Reset
-  - ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  - ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
   - ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput
   - ParallelReverseAutoDiff.RMAD.OperationBase.GetDeepOutput
   - ParallelReverseAutoDiff.RMAD.OperationBase.AccumulateGradient(System.Object[],System.Boolean)
@@ -124,103 +100,209 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-  nameWithType.vb: BatchOperation(Of T)
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T)
-  name.vb: BatchOperation(Of T)
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
-  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
-  id: '#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)'
-  parent: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  id: Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  parent: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
   langs:
   - csharp
   - vb
-  name: BatchOperation(NeuralNetwork)
-  nameWithType: BatchOperation<T>.BatchOperation(NeuralNetwork)
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.BatchOperation(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
-  type: Constructor
+  name: Instantiate(NeuralNetwork)
+  nameWithType: BatchMatrixMultiplyOperation.Instantiate(NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  type: Method
   source:
     remote:
-      path: src/RMAD/BatchOperation.cs
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: .ctor
-    path: ../../src/RMAD/BatchOperation.cs
-    startLine: 20
+    id: Instantiate
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
-  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.BatchOperation%601" data-throw-if-not-resolved="false"></xref> class.
+  summary: A common method for instantiating an operation.
   example: []
   syntax:
-    content: public BatchOperation(NeuralNetwork net)
+    content: public static IBatchOperation Instantiate(NeuralNetwork net)
     parameters:
     - id: net
       type: ParallelReverseAutoDiff.RMAD.NeuralNetwork
       description: The neural network.
-    content.vb: Public Sub New(net As NeuralNetwork)
-  overload: ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor*
-  nameWithType.vb: BatchOperation(Of T).New(NeuralNetwork)
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).New(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
-  name.vb: New(NeuralNetwork)
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
-  commentId: P:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
-  id: Operations
-  parent: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+    return:
+      type: ParallelReverseAutoDiff.RMAD.IBatchOperation
+      description: The instantiated operation.
+    content.vb: Public Shared Function Instantiate(net As NeuralNetwork) As IBatchOperation
+  overload: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate*
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  id: Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
   langs:
   - csharp
   - vb
-  name: Operations
-  nameWithType: BatchOperation<T>.Operations
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Operations
-  type: Property
+  name: Store(Guid)
+  nameWithType: BatchMatrixMultiplyOperation.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  type: Method
   source:
     remote:
-      path: src/RMAD/BatchOperation.cs
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Operations
-    path: ../../src/RMAD/BatchOperation.cs
-    startLine: 29
+    id: Store
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 33
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets the array of operations.
+  summary: Stores the intermediates.
   example: []
   syntax:
-    content: public T[] Operations { get; set; }
-    parameters: []
+    content: public override void Store(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Public Overrides Sub Store(id As Guid)
+  overridden: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  overload: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store*
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  id: Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  langs:
+  - csharp
+  - vb
+  name: Restore(Guid)
+  nameWithType: BatchMatrixMultiplyOperation.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Restore
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 39
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Restores the intermediates.
+  example: []
+  syntax:
+    content: public override void Restore(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+      description: The ID.
+    content.vb: Public Overrides Sub Restore(id As Guid)
+  overridden: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  overload: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore*
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  id: Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  parent: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  langs:
+  - csharp
+  - vb
+  name: Forward(DeepMatrix, DeepMatrix)
+  nameWithType: BatchMatrixMultiplyOperation.Forward(DeepMatrix, DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Forward
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 50
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Performs the forward operation for the matrix multiply function.
+  example: []
+  syntax:
+    content: public DeepMatrix Forward(DeepMatrix input1, DeepMatrix input2)
+    parameters:
+    - id: input1
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The first input to the matrix multiply operation.
+    - id: input2
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The second input to the matrix multiply operation.
     return:
-      type: '{T}[]'
-    content.vb: Public Property Operations As T()
-  overload: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations*
-  nameWithType.vb: BatchOperation(Of T).Operations
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Operations
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The output of the Hadamard product operation.
+    content.vb: Public Function Forward(input1 As DeepMatrix, input2 As DeepMatrix) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward*
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  id: Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  parent: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  langs:
+  - csharp
+  - vb
+  name: Forward(DeepMatrix, Matrix)
+  nameWithType: BatchMatrixMultiplyOperation.Forward(DeepMatrix, Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Forward
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 70
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Performs the forward operation for the matrix multiply function.
+  example: []
+  syntax:
+    content: public DeepMatrix Forward(DeepMatrix input1, Matrix input2)
+    parameters:
+    - id: input1
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The first input to the matrix multiply operation.
+    - id: input2
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: The second input to the matrix multiply operation.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The output of the Hadamard product operation.
+    content.vb: Public Function Forward(input1 As DeepMatrix, input2 As Matrix) As DeepMatrix
+  overload: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward*
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   id: Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  parent: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+  parent: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
   langs:
   - csharp
   - vb
   name: Backward(DeepMatrix)
-  nameWithType: BatchOperation<T>.Backward(DeepMatrix)
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixMultiplyOperation.Backward(DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   type: Method
   source:
     remote:
-      path: src/RMAD/BatchOperation.cs
+      path: src/RMAD/BatchMatrixMultiplyOperation.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Backward
-    path: ../../src/RMAD/BatchOperation.cs
-    startLine: 43
+    path: ../../src/RMAD/BatchMatrixMultiplyOperation.cs
+    startLine: 85
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: Abstract method to perform backward pass, must be implemented by derived classes.
   example: []
   syntax:
-    content: public abstract BackwardResult[] Backward(DeepMatrix dOutput)
+    content: public override BackwardResult[] Backward(DeepMatrix dOutput)
     parameters:
     - id: dOutput
       type: ParallelReverseAutoDiff.RMAD.DeepMatrix
@@ -228,42 +310,9 @@ items:
     return:
       type: ParallelReverseAutoDiff.RMAD.BackwardResult[]
       description: The gradients to send to the adjacent backward operations.
-    content.vb: Public MustOverride Function Backward(dOutput As DeepMatrix) As BackwardResult()
-  overload: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward*
-  implements:
-  - ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  nameWithType.vb: BatchOperation(Of T).Backward(DeepMatrix)
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
-  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
-  id: ExtendOperations
-  parent: ParallelReverseAutoDiff.RMAD.BatchOperation`1
-  langs:
-  - csharp
-  - vb
-  name: ExtendOperations()
-  nameWithType: BatchOperation<T>.ExtendOperations()
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.ExtendOperations()
-  type: Method
-  source:
-    remote:
-      path: src/RMAD/BatchOperation.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: ExtendOperations
-    path: ../../src/RMAD/BatchOperation.cs
-    startLine: 48
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Extends the operations by the current batch size.
-  example: []
-  syntax:
-    content: protected virtual void ExtendOperations()
-    content.vb: Protected Overridable Sub ExtendOperations()
-  overload: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations*
-  nameWithType.vb: BatchOperation(Of T).ExtendOperations()
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).ExtendOperations()
+    content.vb: Public Overrides Function Backward(dOutput As DeepMatrix) As BackwardResult()
+  overridden: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  overload: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward*
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -305,6 +354,37 @@ references:
   name: OperationBase
   nameWithType: OperationBase
   fullName: ParallelReverseAutoDiff.RMAD.OperationBase
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}
+  parent: ParallelReverseAutoDiff.RMAD
+  definition: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html
+  name: BatchOperation<MatrixMultiplyOperation>
+  nameWithType: BatchOperation<MatrixMultiplyOperation>
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation>
+  nameWithType.vb: BatchOperation(Of MatrixMultiplyOperation)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation)
+  name.vb: BatchOperation(Of MatrixMultiplyOperation)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+    name: BatchOperation
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html
+  - name: <
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
+    name: MatrixMultiplyOperation
+    href: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.html
+  - name: '>'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1
+    name: BatchOperation
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
+    name: MatrixMultiplyOperation
+    href: ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.html
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.IBatchOperation
   commentId: T:ParallelReverseAutoDiff.RMAD.IBatchOperation
   parent: ParallelReverseAutoDiff.RMAD
@@ -319,6 +399,38 @@ references:
   name: IOperationBase
   nameWithType: IOperationBase
   fullName: ParallelReverseAutoDiff.RMAD.IOperationBase
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Operations
+  commentId: P:ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Operations
+  parent: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}
+  definition: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Operations
+  name: Operations
+  nameWithType: BatchOperation<MatrixMultiplyOperation>.Operations
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation>.Operations
+  nameWithType.vb: BatchOperation(Of MatrixMultiplyOperation).Operations
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation).Operations
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+  parent: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}
+  definition: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+  name: ExtendOperations()
+  nameWithType: BatchOperation<MatrixMultiplyOperation>.ExtendOperations()
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation>.ExtendOperations()
+  nameWithType.vb: BatchOperation(Of MatrixMultiplyOperation).ExtendOperations()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation).ExtendOperations()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+    name: ExtendOperations
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+    name: ExtendOperations
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.ExtendOperations
+  - name: (
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.IsComplete
   commentId: P:ParallelReverseAutoDiff.RMAD.OperationBase.IsComplete
   parent: ParallelReverseAutoDiff.RMAD.OperationBase
@@ -690,62 +802,6 @@ references:
     name: Reset
     href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Reset
   - name: (
-  - name: )
-- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  parent: ParallelReverseAutoDiff.RMAD.OperationBase
-  isExternal: true
-  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  name: Store(Guid)
-  nameWithType: OperationBase.Store(Guid)
-  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  spec.csharp:
-  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-    name: Store
-    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  - name: (
-  - uid: System.Guid
-    name: Guid
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.guid
-  - name: )
-  spec.vb:
-  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-    name: Store
-    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
-  - name: (
-  - uid: System.Guid
-    name: Guid
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.guid
-  - name: )
-- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-  parent: ParallelReverseAutoDiff.RMAD.OperationBase
-  isExternal: true
-  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-  name: Restore(Guid)
-  nameWithType: OperationBase.Restore(Guid)
-  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-  spec.csharp:
-  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-    name: Restore
-    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-  - name: (
-  - uid: System.Guid
-    name: Guid
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.guid
-  - name: )
-  spec.vb:
-  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-    name: Restore
-    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
-  - name: (
-  - uid: System.Guid
-    name: Guid
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.guid
   - name: )
 - uid: ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput
   commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.GetOutput
@@ -1365,15 +1421,40 @@ references:
   - name: " "
   - name: T
   - name: )
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor
-  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
-  name: BatchOperation
-  nameWithType: BatchOperation<T>.BatchOperation
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.BatchOperation
-  nameWithType.vb: BatchOperation(Of T).New
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).New
-  name.vb: New
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  commentId: P:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
+  name: Operations
+  nameWithType: BatchOperation<T>.Operations
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Operations
+  nameWithType.vb: BatchOperation(Of T).Operations
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Operations
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  name: ExtendOperations()
+  nameWithType: BatchOperation<T>.ExtendOperations()
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.ExtendOperations()
+  nameWithType.vb: BatchOperation(Of T).ExtendOperations()
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).ExtendOperations()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+    name: ExtendOperations
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+    name: ExtendOperations
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate
+  href: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate
+  nameWithType: BatchMatrixMultiplyOperation.Instantiate
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate
 - uid: ParallelReverseAutoDiff.RMAD.NeuralNetwork
   commentId: T:ParallelReverseAutoDiff.RMAD.NeuralNetwork
   parent: ParallelReverseAutoDiff.RMAD
@@ -1381,63 +1462,88 @@ references:
   name: NeuralNetwork
   nameWithType: NeuralNetwork
   fullName: ParallelReverseAutoDiff.RMAD.NeuralNetwork
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
-  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations
-  name: Operations
-  nameWithType: BatchOperation<T>.Operations
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Operations
-  nameWithType.vb: BatchOperation(Of T).Operations
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Operations
-- uid: '{T}[]'
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
   isExternal: true
-  name: T[]
-  nameWithType: T[]
-  fullName: T[]
-  nameWithType.vb: T()
-  fullName.vb: T()
-  name.vb: T()
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+  name: Store(Guid)
+  nameWithType: OperationBase.Store(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
   spec.csharp:
-  - name: T
-  - name: '['
-  - name: ']'
-  spec.vb:
-  - name: T
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
   - name: (
-  - name: )
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward
-  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  name: Backward
-  nameWithType: BatchOperation<T>.Backward
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Backward
-  nameWithType.vb: BatchOperation(Of T).Backward
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Backward
-- uid: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  commentId: M:ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  parent: ParallelReverseAutoDiff.RMAD.IBatchOperation
-  href: ParallelReverseAutoDiff.RMAD.IBatchOperation.html#ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  name: Backward(DeepMatrix)
-  nameWithType: IBatchOperation.Backward(DeepMatrix)
-  fullName: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  spec.csharp:
-  - uid: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-    name: Backward
-    href: ParallelReverseAutoDiff.RMAD.IBatchOperation.html#ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-  - name: (
-  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
-    name: DeepMatrix
-    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
   - name: )
   spec.vb:
-  - uid: ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
-    name: Backward
-    href: ParallelReverseAutoDiff.RMAD.IBatchOperation.html#ParallelReverseAutoDiff.RMAD.IBatchOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
+    name: Store
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Store(System.Guid)
   - name: (
-  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
-    name: DeepMatrix
-    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store
+  href: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  name: Store
+  nameWithType: BatchMatrixMultiplyOperation.Store
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.guid
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  commentId: M:ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  parent: ParallelReverseAutoDiff.RMAD.OperationBase
+  isExternal: true
+  href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  name: Restore(Guid)
+  nameWithType: OperationBase.Restore(Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+    name: Restore
+    href: ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff.RMAD.OperationBase.Restore(System.Guid)
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.guid
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore
+  href: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  name: Restore
+  nameWithType: BatchMatrixMultiplyOperation.Restore
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward
+  href: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward
+  nameWithType: BatchMatrixMultiplyOperation.Forward
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
   commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
   parent: ParallelReverseAutoDiff.RMAD
@@ -1445,6 +1551,47 @@ references:
   name: DeepMatrix
   nameWithType: DeepMatrix
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  parent: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}
+  definition: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  nameWithType: BatchOperation<MatrixMultiplyOperation>.Backward(DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation>.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType.vb: BatchOperation(Of MatrixMultiplyOperation).Backward(DeepMatrix)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation).Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+    name: Backward
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+    name: Backward
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.html#ParallelReverseAutoDiff.RMAD.BatchOperation{ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation}.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: )
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward
+  href: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward
+  nameWithType: BatchMatrixMultiplyOperation.Backward
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResult[]
   isExternal: true
   href: ParallelReverseAutoDiff.RMAD.BackwardResult.html
@@ -1466,11 +1613,29 @@ references:
     href: ParallelReverseAutoDiff.RMAD.BackwardResult.html
   - name: (
   - name: )
-- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
-  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations
-  name: ExtendOperations
-  nameWithType: BatchOperation<T>.ExtendOperations
-  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.ExtendOperations
-  nameWithType.vb: BatchOperation(Of T).ExtendOperations
-  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).ExtendOperations
+- uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  nameWithType: BatchOperation<T>.Backward(DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchOperation<T>.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType.vb: BatchOperation(Of T).Backward(DeepMatrix)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.BatchOperation(Of T).Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+    name: Backward
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: )
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+    name: Backward
+    href: ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  - name: (
+  - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+    name: DeepMatrix
+    href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  - name: )

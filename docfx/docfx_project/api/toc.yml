@@ -10,6 +10,12 @@ items:
   items:
   - uid: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
     name: ConcurrentHashSet<T>
+  - uid: ParallelReverseAutoDiff.Interprocess.DataSet
+    name: DataSet
+  - uid: ParallelReverseAutoDiff.Interprocess.DataSetItem
+    name: DataSetItem
+  - uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper
+    name: HDF5Helper
   - uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
     name: PseudoUniqueIDGenerator
 - uid: ParallelReverseAutoDiff.RMAD
@@ -53,6 +59,8 @@ items:
     name: BatchMatrixBroadcastOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation
     name: BatchMatrixConcatenateOperation
+  - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+    name: BatchMatrixMultiplyOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
     name: BatchMatrixMultiplyScalarOperation
   - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation

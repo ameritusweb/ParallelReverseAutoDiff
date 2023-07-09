@@ -118,6 +118,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public void LoadWeights(FileInfo file);
 
         /// <summary>
+        /// Save the weights and moments to a binary file.
+        /// </summary>
+        /// <param name="file">The file info.</param>
+        public void SaveWeightsAndMomentsBinary(FileInfo file);
+
+        /// <summary>
+        /// Load the weights and moments from a binary file.
+        /// </summary>
+        /// <param name="file">The file info.</param>
+        public void LoadWeightsAndMomentsBinary(FileInfo file);
+
+        /// <summary>
         /// Save the weights and moments to a file.
         /// </summary>
         /// <param name="file">The file info.</param>

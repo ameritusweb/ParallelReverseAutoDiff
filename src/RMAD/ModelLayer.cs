@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Linq;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using ParallelReverseAutoDiff.Interprocess;
 
     /// <summary>
     /// A model layer for a neural network.
@@ -195,6 +196,18 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.elements[element.Key] = (weight, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6);
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public void SaveWeightsAndMomentsBinary(FileInfo file)
+        {
+            HDF5Helper.Serialize(file, this.elements, new Func<(object, object, object, object, int[], InitializationType), object>[] { x => x.Item1, x => x.Item3, x => x.Item4 });
+        }
+
+        /// <inheritdoc />
+        public void LoadWeightsAndMomentsBinary(FileInfo file)
+        {
+            HDF5Helper.Deserialize(file, this.elements, new Func<(object, object, object, object, int[], InitializationType), object>[] { x => x.Item1, x => x.Item3, x => x.Item4 });
         }
 
         /// <inheritdoc />

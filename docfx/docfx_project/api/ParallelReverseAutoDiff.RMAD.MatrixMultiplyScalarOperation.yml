@@ -257,7 +257,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Backward
     path: ../../src/RMAD/MatrixMultiplyScalarOperation.cs
-    startLine: 72
+    startLine: 68
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
