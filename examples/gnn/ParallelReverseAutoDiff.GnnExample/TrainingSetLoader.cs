@@ -37,7 +37,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs", "*.zip").ToList();
 
-                for (int i = 0; i < 100; ++i)
+                for (int i = 0; i < 501; ++i)
                 {
                     var randomGraphFiles = graphFiles.OrderBy(x => this.rand.Next()).ToList();
                     List<GapGraph> graphs = new List<GapGraph>();
@@ -68,7 +68,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                     await this.ProcessMiniBatch(graphs);
                     Thread.Sleep(5000);
 
-                    if (i % 10 == 9)
+                    if (i % 10 == 0)
                     {
                         try
                         {

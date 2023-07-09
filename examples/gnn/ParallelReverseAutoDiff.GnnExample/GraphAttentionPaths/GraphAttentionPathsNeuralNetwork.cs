@@ -140,9 +140,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
+            var initialAdamIteration = 101;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
+                model.Parameters.AdamIteration = initialAdamIteration;
                 this.embeddingNeuralNetwork.Add(model);
                 await this.embeddingNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.embeddingNeuralNetwork[i].ModelLayers).ToList();
@@ -151,6 +153,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EdgeAttentionNeuralNetwork(this.numLayers, this.numQueries, 4, this.numFeatures, this.learningRate, this.clipValue);
+                model.Parameters.AdamIteration = initialAdamIteration;
                 this.edgeAttentionNeuralNetwork.Add(model);
                 await this.edgeAttentionNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.edgeAttentionNeuralNetwork[i].ModelLayers).ToList();
@@ -159,6 +162,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             for (int i = 0; i < 7; ++i)
             {
                 var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries / 2, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), i + 2, this.learningRate, this.clipValue);
+                model.Parameters.AdamIteration = initialAdamIteration;
                 this.transformerNeuralNetwork.Add(model);
                 await this.transformerNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.transformerNeuralNetwork[i].ModelLayers).ToList();
@@ -167,14 +171,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             for (int i = 0; i < 7; ++i)
             {
                 var model = new AttentionMessagePassingNeuralNetwork(this.numLayers, 4, this.numFeatures, this.learningRate, this.clipValue);
+                model.Parameters.AdamIteration = initialAdamIteration;
                 this.attentionMessagePassingNeuralNetwork.Add(model);
                 await this.attentionMessagePassingNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.attentionMessagePassingNeuralNetwork[i].ModelLayers).ToList();
             }
 
+            this.gcnNeuralNetwork.Parameters.AdamIteration = initialAdamIteration;
             await this.gcnNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.gcnNeuralNetwork.ModelLayers).ToList();
 
+            this.readoutNeuralNetwork.Parameters.AdamIteration = initialAdamIteration;
             await this.readoutNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.readoutNeuralNetwork.ModelLayers).ToList();
 
@@ -193,7 +200,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             int index = 0;
             foreach (var modelLayer in this.modelLayers)
             {
-                modelLayer.SaveWeightsAndMoments(new FileInfo($"{dir}\\layer{index}.json"));
+                modelLayer.SaveWeightsAndMomentsBinary(new FileInfo($"{dir}\\layer{index}"));
                 index++;
             }
         }
@@ -203,7 +210,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "78362272-3112-49ab-8e7f-a95bcccc4f1f";
+            var guid = "48da52f4-6b2b-4333-9b0d-624a2e441dab_101";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {

@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Linq;
     using Newtonsoft.Json;
@@ -180,11 +181,14 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public void LoadWeights(FileInfo file)
         {
-            // Read JSON string from file
-            var json = File.ReadAllText(file.FullName);
+            Dictionary<string, JObject> weights;
 
-            // Deserialize JSON string to a dictionary
-            var weights = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(json) ?? throw new InvalidOperationException("Weights must not be null.");
+            using (StreamReader fileStream = File.OpenText(file.FullName))
+            using (JsonTextReader reader = new JsonTextReader(fileStream))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                weights = serializer.Deserialize<Dictionary<string, JObject>>(reader) ?? throw new InvalidOperationException("Weights must not be null.");
+            }
 
             // Update the weights in the elements dictionary
             foreach (var element in weights)
@@ -232,11 +236,14 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public void LoadWeightsAndMoments(FileInfo file)
         {
-            // Read JSON string from file
-            var json = File.ReadAllText(file.FullName);
+            (Dictionary<string, JObject>, Dictionary<string, JObject>, Dictionary<string, JObject>) weightsAndMoments;
 
-            // Deserialize JSON string to a dictionary
-            var weightsAndMoments = JsonConvert.DeserializeObject<(Dictionary<string, JObject>, Dictionary<string, JObject>, Dictionary<string, JObject>)>(json);
+            using (StreamReader fileStream = File.OpenText(file.FullName))
+            using (JsonTextReader reader = new JsonTextReader(fileStream))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                weightsAndMoments = serializer.Deserialize<(Dictionary<string, JObject>, Dictionary<string, JObject>, Dictionary<string, JObject>)>(reader);
+            }
 
             // Update the weights in the elements dictionary
             foreach (var element in weightsAndMoments.Item1)
