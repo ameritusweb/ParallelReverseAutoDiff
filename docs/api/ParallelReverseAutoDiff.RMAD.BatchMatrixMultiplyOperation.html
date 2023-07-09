@@ -2,10 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class BatchOperation&lt;T&gt;
+      <title>Class BatchMatrixMultiplyOperation
  </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class BatchOperation&lt;T&gt;
+      <meta name="title" content="Class BatchMatrixMultiplyOperation
  ">
       
       <link rel="icon" href="../favicon.ico">
@@ -17,7 +17,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_BatchOperation_1.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.BatchOperation%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
   </head>
 
   <script type="module">
@@ -73,13 +73,13 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1">
+        <article data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation">
 
 
 
-  <h1 id="ParallelReverseAutoDiff_RMAD_BatchOperation_1" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1" class="text-break">
-    Class BatchOperation&lt;T&gt;
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchOperation.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <h1 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation" class="text-break">
+    Class BatchMatrixMultiplyOperation
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,28 +87,24 @@
   <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+  <div class="markdown summary"><p>Batch matrix multiply operation.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class BatchOperation&lt;T&gt; : OperationBase, IBatchOperation, IOperationBase where T : IOperationBase</code></pre>
+    <pre><code class="lang-csharp hljs">public class BatchMatrixMultiplyOperation : BatchOperation&lt;MatrixMultiplyOperation&gt;, IBatchOperation, IOperationBase</code></pre>
   </div>
 
 
 
-  <h4 class="section">Type Parameters</h4>
-  <dl class="parameters">
-    <dt><code>T</code></dt>
-    <dd></dd>
-  </dl>
 
   <dl class="typelist inheritance">
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
       <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html">OperationBase</a></div>
-      <div><span class="xref">BatchOperation&lt;T&gt;</span></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchOperation-1.html">BatchOperation</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation.html">MatrixMultiplyOperation</a>&gt;</div>
+      <div><span class="xref">BatchMatrixMultiplyOperation</span></div>
     </dd>
   </dl>
 
@@ -120,39 +116,16 @@
     </dd>
   </dl>
 
-  <dl class="typelist derived">
-    <dt>Derived</dt>
-    <dd>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchAmplifiedSigmoidOperation.html">BatchAmplifiedSigmoidOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html">BatchCudaMatrixMultiplyOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation.html">BatchEmbeddingOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyOperation.html">BatchGpuMatrixMultiplyOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchHadamardProductOperation.html">BatchHadamardProductOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchLayerNormalizationOperation.html">BatchLayerNormalizationOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchLeakyReLUOperation.html">BatchLeakyReLUOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixAddBroadcastingOperation.html">BatchMatrixAddBroadcastingOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixAddOperation.html">BatchMatrixAddOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixAddThreeOperation.html">BatchMatrixAddThreeOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixAverageOperation.html">BatchMatrixAverageOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixBroadcastOperation.html">BatchMatrixBroadcastOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.html">BatchMatrixConcatenateOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html">BatchMatrixMultiplyOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html">BatchMatrixMultiplyScalarOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixSumOperation.html">BatchMatrixSumOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html">BatchMatrixTransposeOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchMatrixVectorConcatenateOperation.html">BatchMatrixVectorConcatenateOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchScaleAndShiftOperation.html">BatchScaleAndShiftOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchSineSoftmaxOperation.html">BatchSineSoftmaxOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchSoftmaxOperation.html">BatchSoftmaxOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchSwigLUOperation.html">BatchSwigLUOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchSwishOperation.html">BatchSwishOperation</a></div>
-      <div><a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchTanhOperation.html">BatchTanhOperation</a></div>
-    </dd>
-  </dl>
 
   <dl class="typelist derived">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_Operations">BatchOperation&lt;MatrixMultiplyOperation&gt;.Operations</a>
+    </div>
+    <div>
+      <a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchOperation-1.html#ParallelReverseAutoDiff_RMAD_BatchOperation_1_ExtendOperations">BatchOperation&lt;MatrixMultiplyOperation&gt;.ExtendOperations()</a>
+    </div>
     <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_IsComplete">OperationBase.IsComplete</a>
     </div>
@@ -268,12 +241,6 @@
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Reset">OperationBase.Reset()</a>
     </div>
     <div>
-      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Store_System_Guid_">OperationBase.Store(Guid)</a>
-    </div>
-    <div>
-      <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_Restore_System_Guid_">OperationBase.Restore(Guid)</a>
-    </div>
-    <div>
       <a class="xref" href="ParallelReverseAutoDiff.RMAD.OperationBase.html#ParallelReverseAutoDiff_RMAD_OperationBase_GetOutput">OperationBase.GetOutput()</a>
     </div>
     <div>
@@ -334,88 +301,15 @@
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="ParallelReverseAutoDiff_RMAD_BatchOperation_1__ctor_" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor*"></a>
-
-  <h3 id="ParallelReverseAutoDiff_RMAD_BatchOperation_1__ctor_ParallelReverseAutoDiff_RMAD_NeuralNetwork_" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
-  BatchOperation(NeuralNetwork)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchOperation.cs/#L21"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.RMAD.BatchOperation-1.html">BatchOperation&lt;T&gt;</a> class.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BatchOperation(NeuralNetwork net)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>net</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.NeuralNetwork.html">NeuralNetwork</a></dt>
-    <dd><p>The neural network.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="properties">Properties
-</h2>
-
-
-  <a id="ParallelReverseAutoDiff_RMAD_BatchOperation_1_Operations_" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations*"></a>
-
-  <h3 id="ParallelReverseAutoDiff_RMAD_BatchOperation_1_Operations" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.Operations">
-  Operations
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchOperation.cs/#L30"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets or sets the array of operations.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T[] Operations { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt>T[]</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <h2 class="section" id="methods">Methods
 </h2>
 
 
-  <a id="ParallelReverseAutoDiff_RMAD_BatchOperation_1_Backward_" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward*"></a>
+  <a id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Backward_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_BatchOperation_1_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+  <h3 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
   Backward(DeepMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchOperation.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L86"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Abstract method to perform backward pass, must be implemented by derived classes.</p>
@@ -423,7 +317,7 @@
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract BackwardResult[] Backward(DeepMatrix dOutput)</code></pre>
+    <pre><code class="lang-csharp hljs">public override BackwardResult[] Backward(DeepMatrix dOutput)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -450,21 +344,183 @@
 
 
 
-  <a id="ParallelReverseAutoDiff_RMAD_BatchOperation_1_ExtendOperations_" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations*"></a>
+  <a id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_BatchOperation_1_ExtendOperations" data-uid="ParallelReverseAutoDiff.RMAD.BatchOperation`1.ExtendOperations">
-  ExtendOperations()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchOperation.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+  Forward(DeepMatrix, DeepMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Extends the operations by the current batch size.</p>
+  <div class="markdown level1 summary"><p>Performs the forward operation for the matrix multiply function.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void ExtendOperations()</code></pre>
+    <pre><code class="lang-csharp hljs">public DeepMatrix Forward(DeepMatrix input1, DeepMatrix input2)</code></pre>
   </div>
 
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>input1</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The first input to the matrix multiply operation.</p>
+</dd>
+    <dt><code>input2</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The second input to the matrix multiply operation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The output of the Hadamard product operation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+  Forward(DeepMatrix, Matrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs the forward operation for the matrix multiply function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DeepMatrix Forward(DeepMatrix input1, Matrix input2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>input1</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The first input to the matrix multiply operation.</p>
+</dd>
+    <dt><code>input2</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>The second input to the matrix multiply operation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The output of the Hadamard product operation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Instantiate_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)">
+  Instantiate(NeuralNetwork)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A common method for instantiating an operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IBatchOperation Instantiate(NeuralNetwork net)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>net</code> <a class="xref" href="ParallelReverseAutoDiff.RMAD.NeuralNetwork.html">NeuralNetwork</a></dt>
+    <dd><p>The neural network.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.IBatchOperation.html">IBatchOperation</a></dt>
+    <dd><p>The instantiated operation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Restore_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Restore_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)">
+  Restore(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Restores the intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Restore(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Store_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Store_System_Guid_" data-uid="ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)">
+  Store(Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Stores the intermediates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Store(Guid id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The ID.</p>
+</dd>
+  </dl>
 
 
 
@@ -481,7 +537,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchOperation.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BatchMatrixMultiplyOperation.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
         

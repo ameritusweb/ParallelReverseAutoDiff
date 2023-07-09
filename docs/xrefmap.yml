@@ -183,6 +183,158 @@ references:
   fullName.vb: ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet(Of T).Remove
   nameWithType: ConcurrentHashSet<T>.Remove
   nameWithType.vb: ConcurrentHashSet(Of T).Remove
+- uid: ParallelReverseAutoDiff.Interprocess.DataSet
+  name: DataSet
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSet.html
+  commentId: T:ParallelReverseAutoDiff.Interprocess.DataSet
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSet
+  nameWithType: DataSet
+- uid: ParallelReverseAutoDiff.Interprocess.DataSet.Items
+  name: Items
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSet.html#ParallelReverseAutoDiff_Interprocess_DataSet_Items
+  commentId: P:ParallelReverseAutoDiff.Interprocess.DataSet.Items
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSet.Items
+  nameWithType: DataSet.Items
+- uid: ParallelReverseAutoDiff.Interprocess.DataSet.Items*
+  name: Items
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSet.html#ParallelReverseAutoDiff_Interprocess_DataSet_Items_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.DataSet.Items
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSet.Items
+  nameWithType: DataSet.Items
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem
+  name: DataSetItem
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html
+  commentId: T:ParallelReverseAutoDiff.Interprocess.DataSetItem
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem
+  nameWithType: DataSetItem
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.DeserializeKey
+  name: DeserializeKey
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_DeserializeKey
+  commentId: P:ParallelReverseAutoDiff.Interprocess.DataSetItem.DeserializeKey
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.DeserializeKey
+  nameWithType: DataSetItem.DeserializeKey
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.DeserializeKey*
+  name: DeserializeKey
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_DeserializeKey_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.DataSetItem.DeserializeKey
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.DeserializeKey
+  nameWithType: DataSetItem.DeserializeKey
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.Rows
+  name: Rows
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_Rows
+  commentId: P:ParallelReverseAutoDiff.Interprocess.DataSetItem.Rows
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.Rows
+  nameWithType: DataSetItem.Rows
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.Rows*
+  name: Rows
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_Rows_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.DataSetItem.Rows
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.Rows
+  nameWithType: DataSetItem.Rows
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.StartIndex
+  name: StartIndex
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_StartIndex
+  commentId: P:ParallelReverseAutoDiff.Interprocess.DataSetItem.StartIndex
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.StartIndex
+  nameWithType: DataSetItem.StartIndex
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.StartIndex*
+  name: StartIndex
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_StartIndex_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.DataSetItem.StartIndex
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.StartIndex
+  nameWithType: DataSetItem.StartIndex
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.TypeName
+  name: TypeName
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_TypeName
+  commentId: P:ParallelReverseAutoDiff.Interprocess.DataSetItem.TypeName
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.TypeName
+  nameWithType: DataSetItem.TypeName
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem.TypeName*
+  name: TypeName
+  href: api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html#ParallelReverseAutoDiff_Interprocess_DataSetItem_TypeName_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.DataSetItem.TypeName
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem.TypeName
+  nameWithType: DataSetItem.TypeName
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper
+  name: HDF5Helper
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html
+  commentId: T:ParallelReverseAutoDiff.Interprocess.HDF5Helper
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper
+  nameWithType: HDF5Helper
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize(System.IO.FileInfo)
+  name: Deserialize(FileInfo)
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Deserialize_System_IO_FileInfo_
+  commentId: M:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize(System.IO.FileInfo)
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize(System.IO.FileInfo)
+  nameWithType: HDF5Helper.Deserialize(FileInfo)
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize*
+  name: Deserialize
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Deserialize_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize
+  nameWithType: HDF5Helper.Deserialize
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize``1(System.IO.FileInfo,System.Collections.Generic.IDictionary{System.String,``0},System.Func{``0,System.Object}[])
+  name: Deserialize<T>(FileInfo, IDictionary<string, T>, Func<T, object>[])
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Deserialize__1_System_IO_FileInfo_System_Collections_Generic_IDictionary_System_String___0__System_Func___0_System_Object____
+  commentId: M:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize``1(System.IO.FileInfo,System.Collections.Generic.IDictionary{System.String,``0},System.Func{``0,System.Object}[])
+  name.vb: Deserialize(Of T)(FileInfo, IDictionary(Of String, T), Func(Of T, Object)())
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize<T>(System.IO.FileInfo, System.Collections.Generic.IDictionary<string, T>, System.Func<T, object>[])
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Deserialize(Of T)(System.IO.FileInfo, System.Collections.Generic.IDictionary(Of String, T), System.Func(Of T, Object)())
+  nameWithType: HDF5Helper.Deserialize<T>(FileInfo, IDictionary<string, T>, Func<T, object>[])
+  nameWithType.vb: HDF5Helper.Deserialize(Of T)(FileInfo, IDictionary(Of String, T), Func(Of T, Object)())
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject(System.Object)
+  name: ParseObject(object)
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_ParseObject_System_Object_
+  commentId: M:ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject(System.Object)
+  name.vb: ParseObject(Object)
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject(object)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject(Object)
+  nameWithType: HDF5Helper.ParseObject(object)
+  nameWithType.vb: HDF5Helper.ParseObject(Object)
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject*
+  name: ParseObject
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_ParseObject_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.ParseObject
+  nameWithType: HDF5Helper.ParseObject
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Serialize(FileInfo, Matrix)
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Serialize_System_IO_FileInfo_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: HDF5Helper.Serialize(FileInfo, Matrix)
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo,System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Matrix})
+  name: Serialize(FileInfo, List<Matrix>)
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Serialize_System_IO_FileInfo_System_Collections_Generic_List_ParallelReverseAutoDiff_RMAD_Matrix__
+  commentId: M:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo,System.Collections.Generic.List{ParallelReverseAutoDiff.RMAD.Matrix})
+  name.vb: Serialize(FileInfo, List(Of Matrix))
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo, System.Collections.Generic.List<ParallelReverseAutoDiff.RMAD.Matrix>)
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(System.IO.FileInfo, System.Collections.Generic.List(Of ParallelReverseAutoDiff.RMAD.Matrix))
+  nameWithType: HDF5Helper.Serialize(FileInfo, List<Matrix>)
+  nameWithType.vb: HDF5Helper.Serialize(FileInfo, List(Of Matrix))
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize*
+  name: Serialize
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Serialize_
+  commentId: Overload:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize
+  nameWithType: HDF5Helper.Serialize
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize``1(System.IO.FileInfo,System.Collections.Generic.IDictionary{System.String,``0},System.Func{``0,System.Object}[])
+  name: Serialize<T>(FileInfo, IDictionary<string, T>, Func<T, object>[])
+  href: api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html#ParallelReverseAutoDiff_Interprocess_HDF5Helper_Serialize__1_System_IO_FileInfo_System_Collections_Generic_IDictionary_System_String___0__System_Func___0_System_Object____
+  commentId: M:ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize``1(System.IO.FileInfo,System.Collections.Generic.IDictionary{System.String,``0},System.Func{``0,System.Object}[])
+  name.vb: Serialize(Of T)(FileInfo, IDictionary(Of String, T), Func(Of T, Object)())
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize<T>(System.IO.FileInfo, System.Collections.Generic.IDictionary<string, T>, System.Func<T, object>[])
+  fullName.vb: ParallelReverseAutoDiff.Interprocess.HDF5Helper.Serialize(Of T)(System.IO.FileInfo, System.Collections.Generic.IDictionary(Of String, T), System.Func(Of T, Object)())
+  nameWithType: HDF5Helper.Serialize<T>(FileInfo, IDictionary<string, T>, Func<T, object>[])
+  nameWithType.vb: HDF5Helper.Serialize(Of T)(FileInfo, IDictionary(Of String, T), Func(Of T, Object)())
 - uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   name: PseudoUniqueIDGenerator
   href: api/ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.html
@@ -1583,6 +1735,83 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixConcatenateOperation.Store
   nameWithType: BatchMatrixConcatenateOperation.Store
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  name: BatchMatrixMultiplyOperation
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation
+  nameWithType: BatchMatrixMultiplyOperation
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Backward(DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Backward_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward(ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixMultiplyOperation.Backward(DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward*
+  name: Backward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Backward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Backward
+  nameWithType: BatchMatrixMultiplyOperation.Backward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  name: Forward(DeepMatrix, DeepMatrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_DeepMatrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.DeepMatrix)
+  nameWithType: BatchMatrixMultiplyOperation.Forward(DeepMatrix, DeepMatrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  name: Forward(DeepMatrix, Matrix)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_ParallelReverseAutoDiff_RMAD_DeepMatrix_ParallelReverseAutoDiff_RMAD_Matrix_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.Matrix)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward(ParallelReverseAutoDiff.RMAD.DeepMatrix, ParallelReverseAutoDiff.RMAD.Matrix)
+  nameWithType: BatchMatrixMultiplyOperation.Forward(DeepMatrix, Matrix)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward*
+  name: Forward
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Forward_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Forward
+  nameWithType: BatchMatrixMultiplyOperation.Forward
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  name: Instantiate(NeuralNetwork)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Instantiate_ParallelReverseAutoDiff_RMAD_NeuralNetwork_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
+  nameWithType: BatchMatrixMultiplyOperation.Instantiate(NeuralNetwork)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate*
+  name: Instantiate
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Instantiate_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Instantiate
+  nameWithType: BatchMatrixMultiplyOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  name: Restore(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Restore_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore(System.Guid)
+  nameWithType: BatchMatrixMultiplyOperation.Restore(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore*
+  name: Restore
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Restore_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Restore
+  nameWithType: BatchMatrixMultiplyOperation.Restore
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  name: Store(Guid)
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Store_System_Guid_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store(System.Guid)
+  nameWithType: BatchMatrixMultiplyOperation.Store(Guid)
+- uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store*
+  name: Store
+  href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html#ParallelReverseAutoDiff_RMAD_BatchMatrixMultiplyOperation_Store_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.Store
+  nameWithType: BatchMatrixMultiplyOperation.Store
 - uid: ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation
   name: BatchMatrixMultiplyScalarOperation
   href: api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html
@@ -3931,6 +4160,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix())
   nameWithType: DeepMatrix.Replace(Matrix[])
   nameWithType.vb: DeepMatrix.Replace(Matrix())
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List{System.Double[]})
+  name: Replace(List<double[]>)
+  href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_Replace_System_Collections_Generic_List_System_Double____
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List{System.Double[]})
+  name.vb: Replace(List(Of Double()))
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List<double[]>)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List(Of Double()))
+  nameWithType: DeepMatrix.Replace(List<double[]>)
+  nameWithType.vb: DeepMatrix.Replace(List(Of Double()))
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace*
   name: Replace
   href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_Replace_
@@ -3964,6 +4202,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
   nameWithType: DeepMatrix.ToArray
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  name: TotalRows
+  href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_TotalRows
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  nameWithType: DeepMatrix.TotalRows
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows*
+  name: TotalRows
+  href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_TotalRows_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  nameWithType: DeepMatrix.TotalRows
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
   name: UniqueId
   href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_UniqueId
@@ -5718,6 +5969,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments
   nameWithType: IModelLayer.LoadWeightsAndMoments
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  name: LoadWeightsAndMomentsBinary(FileInfo)
+  href: api/ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff_RMAD_IModelLayer_LoadWeightsAndMomentsBinary_System_IO_FileInfo_
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  nameWithType: IModelLayer.LoadWeightsAndMomentsBinary(FileInfo)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary*
+  name: LoadWeightsAndMomentsBinary
+  href: api/ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff_RMAD_IModelLayer_LoadWeightsAndMomentsBinary_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary
+  nameWithType: IModelLayer.LoadWeightsAndMomentsBinary
 - uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
   name: SaveWeights(FileInfo)
   href: api/ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff_RMAD_IModelLayer_SaveWeights_System_IO_FileInfo_
@@ -5744,6 +6008,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments
   nameWithType: IModelLayer.SaveWeightsAndMoments
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  name: SaveWeightsAndMomentsBinary(FileInfo)
+  href: api/ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff_RMAD_IModelLayer_SaveWeightsAndMomentsBinary_System_IO_FileInfo_
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  nameWithType: IModelLayer.SaveWeightsAndMomentsBinary(FileInfo)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary*
+  name: SaveWeightsAndMomentsBinary
+  href: api/ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff_RMAD_IModelLayer_SaveWeightsAndMomentsBinary_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary
+  nameWithType: IModelLayer.SaveWeightsAndMomentsBinary
 - uid: ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(System.String)
   name: WeightDeepMatrix(string)
   href: api/ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff_RMAD_IModelLayer_WeightDeepMatrix_System_String_
