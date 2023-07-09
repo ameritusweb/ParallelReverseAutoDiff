@@ -7,6 +7,24 @@ Parallel Reverse Mode Automatic Differentiation in C#
 ![Nuget](https://img.shields.io/nuget/dt/parallelreverseautodiff?style=flat-square)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7f9f69794dd74a97aeaac17ebd1580ec)](https://app.codacy.com/gh/ameritusweb/ParallelReverseAutoDiff/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
+## Table of Contents
+- [Overview](#overview)
+- [Understanding the JSON Architecture](#understanding-the-json-architecture)
+- [Instantiating the Architecture](#instantiating-the-architecture)
+- [Instantiating the Computational Graph](#instantiating-the-computational-graph)
+- [Populating the Backward Dependency Counts](#populating-the-backward-dependency-counts)
+- [Running the Forward Pass](#running-the-forward-pass)
+- [Creating a Loss Function](#creating-a-loss-function)
+- [Running the Backward Pass](#running-the-backward-pass)
+- [Clipping the Gradients](#clipping-the-gradients)
+- [Updating the Weights](#updating-the-weights)
+- [Using CUDA Operations](#using-cuda-operations)
+- [Customization](#customization)
+  - [Custom Neural Network Operations](#custom-neural-network-operations)
+- [Support Developer](#support-developer)
+- [Star the Project](#star-the-project)
+- [Reporting Bugs](#reporting-bugs)
+- 
 ParallelReverseAutoDiff (PRAD) is a thread-safe C# library designed for reverse mode automatic differentiation, optimized for parallel computation and primed for the demands of modern machine learning applications and neural network training. It leverages semaphores and locks to orchestrate between threads, ensuring precision during gradient accumulation.
 
 Upon the realm of code, a gem does shine,
@@ -901,7 +919,7 @@ This level of customization allows PRAD to be a versatile tool in the field of m
 
 Give it a :star: Star!
 
-## Found a bug?
+## Reporting Bugs
 
 Drop to [Issues](https://github.com/ameritusweb/ParallelReverseAutoDiff/issues)
 
