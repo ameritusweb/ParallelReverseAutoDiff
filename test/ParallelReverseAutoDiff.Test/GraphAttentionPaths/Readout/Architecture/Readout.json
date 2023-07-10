@@ -235,7 +235,7 @@
         },
         {
           "id": "output_avg_trans",
-          "type": "MatrixTransposeOperation",
+          "type": "BatchMatrixTransposeOperation",
           "inputs": [ "output_avg" ]
         },
         {
@@ -245,7 +245,7 @@
         },
         {
           "id": "output_avg_softmax_trans",
-          "type": "MatrixTransposeOperation",
+          "type": "BatchMatrixTransposeOperation",
           "inputs": [ "output_avg_softmax" ],
           "setResultTo": "Output"
         }
