@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -20,7 +21,10 @@ namespace ParallelReverseAutoDiff.RMAD
         private readonly IOperationBase startNode;
         private readonly int startingPointIndex;
         private readonly List<IOperationBase> operations;
+        private readonly ConcurrentDictionary<IOperationBase, (int, bool)> waiting;
+        private readonly ConcurrentQueue<Exception> exceptions;
         private bool runInParallel = true;
+        private double timeoutInMinutes = 5d;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationNeuralNetworkVisitor"/> class.
@@ -49,6 +53,8 @@ namespace ParallelReverseAutoDiff.RMAD
             this.startNode = startNode;
             this.startingPointIndex = startingPointIndex;
             this.operations = new List<IOperationBase>();
+            this.waiting = new ConcurrentDictionary<IOperationBase, (int, bool)>();
+            this.exceptions = new ConcurrentQueue<Exception>();
         }
 
         /// <summary>
@@ -64,6 +70,38 @@ namespace ParallelReverseAutoDiff.RMAD
             set
             {
                 this.runInParallel = !value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the exceptions that occurred during the traversal.
+        /// </summary>
+        public AggregateException? AggregateException
+        {
+            get
+            {
+                if (this.exceptions.Count == 0)
+                {
+                    return default;
+                }
+
+                return new AggregateException(this.exceptions);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the timeout in minutes.
+        /// </summary>
+        public double TimeoutInMinutes
+        {
+            get
+            {
+                return this.timeoutInMinutes;
+            }
+
+            set
+            {
+                this.timeoutInMinutes = value;
             }
         }
 
@@ -193,11 +231,13 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     try
                     {
+                        this.ReleaseWaiting(node);
                         node.SyncSemaphore.Release(node.OutputDependencyCount - 1);
                     }
-                    catch (SemaphoreFullException)
+                    catch (SemaphoreFullException sfe)
                     {
                         Console.WriteLine("Semaphore full exception");
+                        this.exceptions.Enqueue(sfe);
                     }
                 }
             }
@@ -206,7 +246,14 @@ namespace ParallelReverseAutoDiff.RMAD
 
             if (!shouldContinue)
             {
-                await node.SyncSemaphore.WaitAsync();
+                this.IncrementWaiting(node);
+                var semaphoreResult = await node.SyncSemaphore.WaitAsync(TimeSpan.FromMinutes(this.TimeoutInMinutes));
+                if (!semaphoreResult)
+                {
+                    var incrementCount = this.waiting[node].Item1;
+                    var isReleased = this.waiting[node].Item2;
+                    this.exceptions.Enqueue(new InvalidOperationException($"Semaphore should not exceed timeout. ({incrementCount}, {isReleased}) TimeoutInMinutes is a public property of the visitor that can be changed as needed."));
+                }
 
                 return;
             }
@@ -423,6 +470,23 @@ namespace ParallelReverseAutoDiff.RMAD
                 Results = combinedResults.ToArray(),
                 HasMultipleInputs = hasMultipleInputs,
             };
+        }
+
+        private void IncrementWaiting(IOperationBase operationBase)
+        {
+            try
+            {
+                this.waiting.AddOrUpdate(operationBase, (1, false), (k, v) => v.Item2 ? throw new InvalidOperationException("Increment should not be called on released semaphore.") : (v.Item1 + 1, v.Item2));
+            }
+            catch (InvalidOperationException ioe)
+            {
+                this.exceptions.Enqueue(ioe);
+            }
+        }
+
+        private void ReleaseWaiting(IOperationBase operationBase)
+        {
+            this.waiting.AddOrUpdate(operationBase, (0, true), (k, v) => (v.Item1, true));
         }
     }
 }

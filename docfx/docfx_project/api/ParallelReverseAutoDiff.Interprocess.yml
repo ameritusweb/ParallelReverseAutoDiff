@@ -5,6 +5,9 @@ items:
   id: ParallelReverseAutoDiff.Interprocess
   children:
   - ParallelReverseAutoDiff.Interprocess.ConcurrentHashSet`1
+  - ParallelReverseAutoDiff.Interprocess.DataSet
+  - ParallelReverseAutoDiff.Interprocess.DataSetItem
+  - ParallelReverseAutoDiff.Interprocess.HDF5Helper
   - ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   langs:
   - csharp
@@ -41,6 +44,24 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: ParallelReverseAutoDiff.Interprocess.DataSet
+  commentId: T:ParallelReverseAutoDiff.Interprocess.DataSet
+  href: ParallelReverseAutoDiff.Interprocess.DataSet.html
+  name: DataSet
+  nameWithType: DataSet
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSet
+- uid: ParallelReverseAutoDiff.Interprocess.DataSetItem
+  commentId: T:ParallelReverseAutoDiff.Interprocess.DataSetItem
+  href: ParallelReverseAutoDiff.Interprocess.DataSetItem.html
+  name: DataSetItem
+  nameWithType: DataSetItem
+  fullName: ParallelReverseAutoDiff.Interprocess.DataSetItem
+- uid: ParallelReverseAutoDiff.Interprocess.HDF5Helper
+  commentId: T:ParallelReverseAutoDiff.Interprocess.HDF5Helper
+  href: ParallelReverseAutoDiff.Interprocess.HDF5Helper.html
+  name: HDF5Helper
+  nameWithType: HDF5Helper
+  fullName: ParallelReverseAutoDiff.Interprocess.HDF5Helper
 - uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   commentId: T:ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
   parent: ParallelReverseAutoDiff.Interprocess

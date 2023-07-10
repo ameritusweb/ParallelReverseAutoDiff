@@ -1938,12 +1938,11 @@
             Graph Attention Paths Neural Network.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.#ctor(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork"/> class.
             </summary>
             <param name="graphs">The graphs.</param>
-            <param name="batchSize">The batch size.</param>
             <param name="numIndices">The number of indices.</param>
             <param name="alphabetSize">The alphabet size.</param>
             <param name="embeddingSize">The embedding size.</param>
@@ -1951,6 +1950,18 @@
             <param name="numQueries">The number of queries.</param>
             <param name="learningRate">The learning rate.</param>
             <param name="clipValue">The clip Value.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Reset">
+            <summary>
+            Reset the network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Reinitialize(System.Collections.Generic.List{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph})">
+            <summary>
+            Reinitialize with new graphs.
+            </summary>
+            <param name="graphs">The graphs.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Initialize">
             <summary>
@@ -1966,6 +1977,11 @@
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.ApplyWeights">
             <summary>
             Apply the weights from the save path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.ApplyGradients">
+            <summary>
+            Apply the gradients to update the weights.
             </summary>
         </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GraphAttentionPathsNeuralNetwork.Forward">
@@ -1991,6 +2007,138 @@
             Populates the graph after deserialization.
             </summary>
             <param name="graph">The graph.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerComputationGraph">
+            <summary>
+            A transformer computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork">
+            <summary>
+            A transformer neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork"/> class.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numQueries">The number of queries.</param>
+            <param name="numPaths">The number of paths.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="alphabetSize">The alphabet size.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.PositionIndices">
+            <summary>
+            Gets the position indices matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.NumQueries">
+            <summary>
+            Gets the number of queries of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.NumFeatures">
+            <summary>
+            Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.AlphabetSize">
+            <summary>
+            Gets the alphabet size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.NumPaths">
+            <summary>
+            Gets the number of paths of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Store the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restore the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The forward pass of the readout neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass of the readout neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.InitializeState">
+            <summary>
+            Initializes the state of the readout neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.ClearState">
+            <summary>
+            Clears the state of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initializes the computation graph of the neural network.
+            </summary>
+            <returns>A task.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation">
             <summary>

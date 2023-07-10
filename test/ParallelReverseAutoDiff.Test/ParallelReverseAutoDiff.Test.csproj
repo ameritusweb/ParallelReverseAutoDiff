@@ -15,8 +15,10 @@
     <None Remove="FeedForward\Architecture\FeedForwardArchitecture.json" />
     <None Remove="GraphAttentionPaths\Embedding\Architecture\Embedding.json" />
     <None Remove="GraphAttentionPaths\GCN\Architecture\MessagePassing.json" />
+    <None Remove="GraphAttentionPaths\layer112.bin" />
     <None Remove="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json" />
     <None Remove="GraphAttentionPaths\minibatch.json" />
+    <None Remove="GraphAttentionPaths\minibatch2.json" />
     <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
     <None Remove="GraphAttentionPaths\Transformer\Architecture\Transformer.json" />
   </ItemGroup>
@@ -40,10 +42,12 @@
     <EmbeddedResource Include="GraphAttentionPaths\GCN\Architecture\MessagePassing.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="GraphAttentionPaths\layer112.bin" />
     <EmbeddedResource Include="GraphAttentionPaths\LSTM\Architecture\NodeProcessing.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="GraphAttentionPaths\minibatch.json" />
+    <EmbeddedResource Include="GraphAttentionPaths\minibatch2.json" />
     <EmbeddedResource Include="GraphAttentionPaths\Readout\Architecture\Readout.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

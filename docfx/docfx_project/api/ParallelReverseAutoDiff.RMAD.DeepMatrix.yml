@@ -10,6 +10,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.#ctor(System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Cols
@@ -23,8 +24,10 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix[])
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List{System.Double[]})
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Rows
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.ToArray
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Addition(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.op_Multiply(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double)
@@ -439,6 +442,37 @@ items:
       type: System.Int32
     content.vb: Public ReadOnly Property Count As Integer
   overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  id: TotalRows
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: TotalRows
+  nameWithType: DeepMatrix.TotalRows
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: TotalRows
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 114
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the total count of rows for all matrices.
+  example: []
+  syntax:
+    content: public int TotalRows { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property TotalRows As Integer
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows*
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   commentId: P:ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   id: Dimension
@@ -457,7 +491,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Dimension
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 114
+    startLine: 119
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -488,7 +522,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 129
+    startLine: 134
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -532,7 +566,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 140
+    startLine: 145
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -570,7 +604,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Addition
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 152
+    startLine: 157
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -611,7 +645,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Multiply
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 178
+    startLine: 183
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -652,7 +686,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 207
+    startLine: 212
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -699,7 +733,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeDoubleArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 227
+    startLine: 232
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -731,6 +765,41 @@ items:
   nameWithType.vb: DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
   name.vb: InitializeDoubleArray(Integer, Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  id: Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Accumulate(Matrix[])
+  nameWithType: DeepMatrix.Accumulate(Matrix[])
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Accumulate
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 251
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Accumulates with the specified matrix array.
+  example: []
+  syntax:
+    content: public void Accumulate(Matrix[] matrixArray)
+    parameters:
+    - id: matrixArray
+      type: ParallelReverseAutoDiff.RMAD.Matrix[]
+      description: The matrix array.
+    content.vb: Public Sub Accumulate(matrixArray As Matrix())
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate*
+  nameWithType.vb: DeepMatrix.Accumulate(Matrix())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix())
+  name.vb: Accumulate(Matrix())
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   id: Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -749,7 +818,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 247
+    startLine: 272
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -784,7 +853,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 274
+    startLine: 299
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -815,7 +884,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 283
+    startLine: 308
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -832,6 +901,41 @@ items:
   nameWithType.vb: DeepMatrix.Replace(Matrix())
   fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(ParallelReverseAutoDiff.RMAD.Matrix())
   name.vb: Replace(Matrix())
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List{System.Double[]})
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List{System.Double[]})
+  id: Replace(System.Collections.Generic.List{System.Double[]})
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Replace(List<double[]>)
+  nameWithType: DeepMatrix.Replace(List<double[]>)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List<double[]>)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Replace
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 317
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Replaces the deep matrix with the specified rows.
+  example: []
+  syntax:
+    content: public void Replace(List<double[]> rows)
+    parameters:
+    - id: rows
+      type: System.Collections.Generic.List{System.Double[]}
+      description: The rows.
+    content.vb: Public Sub Replace(rows As List(Of Double()))
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace*
+  nameWithType.vb: DeepMatrix.Replace(List(Of Double()))
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace(System.Collections.Generic.List(Of Double()))
+  name.vb: Replace(List(Of Double()))
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   id: Clone
@@ -850,7 +954,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 292
+    startLine: 332
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -883,7 +987,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 301
+    startLine: 341
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -915,7 +1019,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 322
+    startLine: 362
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1416,6 +1520,12 @@ references:
   name: Count
   nameWithType: DeepMatrix.Count
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Count
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
+  name: TotalRows
+  nameWithType: DeepMatrix.TotalRows
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
@@ -1537,6 +1647,12 @@ references:
   - name: )
   - name: (
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate(ParallelReverseAutoDiff.RMAD.Matrix[])
+  name: Accumulate
+  nameWithType: DeepMatrix.Accumulate
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Accumulate
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Average*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Average
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Average(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -1555,6 +1671,73 @@ references:
   name: Replace
   nameWithType: DeepMatrix.Replace
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Replace
+- uid: System.Collections.Generic.List{System.Double[]}
+  commentId: T:System.Collections.Generic.List{System.Double[]}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<double[]>
+  nameWithType: List<double[]>
+  fullName: System.Collections.Generic.List<double[]>
+  nameWithType.vb: List(Of Double())
+  fullName.vb: System.Collections.Generic.List(Of Double())
+  name.vb: List(Of Double())
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: '['
+  - name: ']'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone
   href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff.RMAD.DeepMatrix.Clone

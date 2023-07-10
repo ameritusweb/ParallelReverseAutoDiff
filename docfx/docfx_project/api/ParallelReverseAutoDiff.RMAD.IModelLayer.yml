@@ -17,7 +17,11 @@ items:
   - ParallelReverseAutoDiff.RMAD.IModelLayer.Identifiers
   - ParallelReverseAutoDiff.RMAD.IModelLayer.Item(System.String,ParallelReverseAutoDiff.RMAD.ModelElementType)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrix(System.String)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.WeightDeepMatrixArray(System.String)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.WeightMatrix(System.String)
@@ -611,6 +615,134 @@ items:
       description: The file info.
     content.vb: Sub LoadWeights(file As FileInfo)
   overload: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  id: SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: SaveWeightsAndMomentsBinary(FileInfo)
+  nameWithType: IModelLayer.SaveWeightsAndMomentsBinary(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SaveWeightsAndMomentsBinary
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 123
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Save the weights and moments to a binary file.
+  example: []
+  syntax:
+    content: void SaveWeightsAndMomentsBinary(FileInfo file)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Sub SaveWeightsAndMomentsBinary(file As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  id: LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: LoadWeightsAndMomentsBinary(FileInfo)
+  nameWithType: IModelLayer.LoadWeightsAndMomentsBinary(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: LoadWeightsAndMomentsBinary
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 129
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Load the weights and moments from a binary file.
+  example: []
+  syntax:
+    content: void LoadWeightsAndMomentsBinary(FileInfo file)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Sub LoadWeightsAndMomentsBinary(file As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments(System.IO.FileInfo)
+  id: SaveWeightsAndMoments(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: SaveWeightsAndMoments(FileInfo)
+  nameWithType: IModelLayer.SaveWeightsAndMoments(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SaveWeightsAndMoments
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 135
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Save the weights and moments to a file.
+  example: []
+  syntax:
+    content: void SaveWeightsAndMoments(FileInfo file)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Sub SaveWeightsAndMoments(file As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments*
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments(System.IO.FileInfo)
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments(System.IO.FileInfo)
+  id: LoadWeightsAndMoments(System.IO.FileInfo)
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: LoadWeightsAndMoments(FileInfo)
+  nameWithType: IModelLayer.LoadWeightsAndMoments(FileInfo)
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments(System.IO.FileInfo)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: LoadWeightsAndMoments
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 141
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Load the weights and moments from a file.
+  example: []
+  syntax:
+    content: void LoadWeightsAndMoments(FileInfo file)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: The file info.
+    content.vb: Sub LoadWeightsAndMoments(file As FileInfo)
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments*
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -1004,3 +1136,27 @@ references:
   name: LoadWeights
   nameWithType: IModelLayer.LoadWeights
   fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
+  name: SaveWeightsAndMomentsBinary
+  nameWithType: IModelLayer.SaveWeightsAndMomentsBinary
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  name: LoadWeightsAndMomentsBinary
+  nameWithType: IModelLayer.LoadWeightsAndMomentsBinary
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments(System.IO.FileInfo)
+  name: SaveWeightsAndMoments
+  nameWithType: IModelLayer.SaveWeightsAndMoments
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments(System.IO.FileInfo)
+  name: LoadWeightsAndMoments
+  nameWithType: IModelLayer.LoadWeightsAndMoments
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments

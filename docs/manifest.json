@@ -35,6 +35,36 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.Interprocess.DataSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.Interprocess.DataSet.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.Interprocess.DataSetItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.Interprocess.DataSetItem.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.Interprocess.HDF5Helper.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.yml",
       "output": {
         ".html": {
@@ -129,6 +159,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchCudaMatrixMultiplyOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation.html"
         }
       },
       "version": ""
@@ -235,6 +275,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.yml",
       "output": {
         ".html": {
@@ -259,6 +309,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixTransposeOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixVectorConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixVectorConcatenateOperation.html"
         }
       },
       "version": ""
@@ -495,10 +555,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DualWeightedOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.DualWeightedOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DynamicParameter.yml",
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.DynamicParameter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.EmbeddingOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.EmbeddingOperation.html"
         }
       },
       "version": ""
@@ -869,6 +949,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixUtils.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixVectorConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixVectorConcatenateOperation.html"
         }
       },
       "version": ""

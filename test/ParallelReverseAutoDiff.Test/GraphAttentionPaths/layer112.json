@@ -1,0 +1,193 @@
+{
+  "Items": [
+    {
+      "StartIndex": 0,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "F2B",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 1,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "F2B",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 2,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "F2B",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 3,
+      "Rows": 3680,
+      "DeserializeKey": {
+        "Item1": "FW",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 3683,
+      "Rows": 3680,
+      "DeserializeKey": {
+        "Item1": "FW",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 7363,
+      "Rows": 3680,
+      "DeserializeKey": {
+        "Item1": "FW",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 11043,
+      "Rows": 3680,
+      "DeserializeKey": {
+        "Item1": "F2W",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 14723,
+      "Rows": 3680,
+      "DeserializeKey": {
+        "Item1": "F2W",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 18403,
+      "Rows": 3680,
+      "DeserializeKey": {
+        "Item1": "F2W",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 22083,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "RB",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 22084,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "RB",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 22085,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "RB",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 22086,
+      "Rows": 1840,
+      "DeserializeKey": {
+        "Item1": "R",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 23926,
+      "Rows": 1840,
+      "DeserializeKey": {
+        "Item1": "R",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 25766,
+      "Rows": 1840,
+      "DeserializeKey": {
+        "Item1": "R",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 27606,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "Beta",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 27607,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "Beta",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 27608,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "Beta",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 27609,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "FB",
+        "Item2": 0
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 27610,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "FB",
+        "Item2": 1
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    },
+    {
+      "StartIndex": 27611,
+      "Rows": 1,
+      "DeserializeKey": {
+        "Item1": "FB",
+        "Item2": 2
+      },
+      "TypeName": "ParallelReverseAutoDiff.RMAD.Matrix"
+    }
+  ]
+}

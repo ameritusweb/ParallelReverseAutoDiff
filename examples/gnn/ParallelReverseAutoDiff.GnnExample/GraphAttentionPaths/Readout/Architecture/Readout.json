@@ -154,7 +154,8 @@
             {
               "id": "concatenated",
               "type": "BatchMatrixConcatenateOperation",
-              "inputs": [ "attention_weights_values_array" ]
+              "inputs": [ "attention_weights_values_array" ],
+              "switchFirstTwoDimensions": true
             },
             {
               "id": "fully_connected",

@@ -80,8 +80,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             this.connectedPathsMap = new Dictionary<GapPath, List<GapPath>>();
             this.transformerNeuralNetwork = new List<TransformerNeuralNetwork>();
             this.attentionMessagePassingNeuralNetwork = new List<AttentionMessagePassingNeuralNetwork>();
-            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, numFeatures, learningRate, clipValue);
-            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, numFeatures, learningRate, clipValue);
+            this.gcnNeuralNetwork = new GcnNeuralNetwork(numLayers, 4, this.numFeatures, learningRate, clipValue);
+            this.readoutNeuralNetwork = new ReadoutNeuralNetwork(numLayers, numQueries, 4, this.numFeatures, learningRate, clipValue);
         }
 
         /// <summary>
@@ -97,6 +97,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 await this.embeddingNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.embeddingNeuralNetwork[i].ModelLayers).ToList();
             }
+
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EdgeAttentionNeuralNetwork(this.numLayers, this.numQueries, 4, this.numFeatures, this.learningRate, this.clipValue);
@@ -107,7 +108,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
             for (int i = 0; i < 7; ++i)
             {
-                var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), i + 2, this.learningRate, this.clipValue);
+                var model = new TransformerNeuralNetwork(this.numLayers, this.numQueries / 2, i + 2, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers), i + 2, this.learningRate, this.clipValue);
                 this.transformerNeuralNetwork.Add(model);
                 await this.transformerNeuralNetwork[i].Initialize();
                 this.modelLayers = this.modelLayers.Concat(this.transformerNeuralNetwork[i].ModelLayers).ToList();
@@ -164,10 +165,23 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         }
 
         /// <summary>
+        /// Apply the gradients to update the weights.
+        /// </summary>
+        public void ApplyGradients()
+        {
+            var clipper = this.readoutNeuralNetwork.Utilities.GradientClipper;
+            clipper.Clip(this.modelLayers.ToArray());
+            var adamOptimizer = this.readoutNeuralNetwork.Utilities.AdamOptimizer;
+            adamOptimizer.Optimize(this.modelLayers.ToArray());
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.modelLayers.ToArray());
+        }
+
+        /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public async Task<DeepMatrix> Forward()
+        public DeepMatrix Forward()
         {
             Dictionary<int, List<Matrix>> indicesByType = new Dictionary<int, List<Matrix>>();
             Dictionary<int, List<Matrix>> featuresByType = new Dictionary<int, List<Matrix>>();
@@ -185,11 +199,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         {
                             indices[j, 0] = edge.FeatureIndices[j];
                         }
+
                         Matrix features = new Matrix(1, edge.Features.Count);
                         for (int j = 0; j < edge.Features.Count; ++j)
                         {
                             features[0, j] = edge.Features[j];
                         }
+
                         var type = (int)node.GapType;
                         if (!indicesByType.ContainsKey(type))
                         {
@@ -570,7 +586,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 }
             }
 
-            Dictionary<(int type, int index), GapNode> typeIndexNodeMap = new Dictionary<(int type, int index), GapNode>();
+            Dictionary<(int Type, int Index), GapNode> typeIndexNodeMap = new Dictionary<(int Type, int Index), GapNode>();
             Dictionary<int, List<Matrix>> nodeTypeToGradientMap = new Dictionary<int, List<Matrix>>();
             foreach (var graph in this.gapGraphs)
             {
@@ -615,6 +631,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         {
                             edgeGradient[k][0] = featureVector[k];
                         }
+
                         edgeGradientMap[edge] = edgeGradient;
                     }
                 }

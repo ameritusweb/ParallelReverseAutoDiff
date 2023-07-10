@@ -6,7 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
-    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -93,16 +93,16 @@ namespace ParallelReverseAutoDiff.RMAD
         private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon)
         {
             // Update biased first moment estimate
-            mW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
+            var firstMoment = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
 
             // Update biased second raw moment estimate
-            vW = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta2, vW), MatrixUtils.ScalarMultiply(1 - beta2, MatrixUtils.HadamardProduct(gradient, gradient)));
+            var secondMoment = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta2, vW), MatrixUtils.ScalarMultiply(1 - beta2, MatrixUtils.HadamardProduct(gradient, gradient)));
 
             // Compute bias-corrected first moment estimate
-            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.network.Parameters.AdamIteration)), mW);
+            Matrix mW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta1, this.network.Parameters.AdamIteration)), firstMoment);
 
             // Compute bias-corrected second raw moment estimate
-            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.network.Parameters.AdamIteration)), vW);
+            Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.network.Parameters.AdamIteration)), secondMoment);
 
             // Update weights
             for (int i = 0; i < w.Length; i++)
@@ -110,7 +110,28 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < w[0].Length; j++)
                 {
                     double weightReductionValue = this.network.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
+#if DEBUG
+                    Debug.WriteLine(weightReductionValue + " vs gradient: " + gradient[i][j]);
+#endif
                     w[i][j] -= weightReductionValue;
+                }
+            }
+
+            // Update first moment
+            for (int i = 0; i < mW.Length; i++)
+            {
+                for (int j = 0; j < mW[0].Length; j++)
+                {
+                    mW[i][j] = firstMoment[i][j];
+                }
+            }
+
+            // Update second moment
+            for (int i = 0; i < vW.Length; i++)
+            {
+                for (int j = 0; j < vW[0].Length; j++)
+                {
+                    vW[i][j] = secondMoment[i][j];
                 }
             }
         }

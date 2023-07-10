@@ -110,6 +110,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public int Count => this.matrices.Length;
 
         /// <summary>
+        /// Gets the total count of rows for all matrices.
+        /// </summary>
+        public int TotalRows => this.matrices.Sum(m => m.Rows);
+
+        /// <summary>
         /// Gets the dimension of the matrix.
         /// </summary>
         public Dimension Dimension => new Dimension(this.Depth, this.Rows, this.Cols);
@@ -304,6 +309,21 @@ namespace ParallelReverseAutoDiff.RMAD
         public void Replace(Matrix[] matrices)
         {
             this.matrices = matrices;
+        }
+
+        /// <summary>
+        /// Replaces the deep matrix with the specified rows.
+        /// </summary>
+        /// <param name="rows">The rows.</param>
+        public void Replace(List<double[]> rows)
+        {
+            int skip = 0;
+            for (int i = 0; i < this.Depth; ++i)
+            {
+                var mrows = this[i].Rows;
+                this[i].Replace(rows.Skip(skip).Take(mrows).ToArray());
+                skip += mrows;
+            }
         }
 
         /// <summary>

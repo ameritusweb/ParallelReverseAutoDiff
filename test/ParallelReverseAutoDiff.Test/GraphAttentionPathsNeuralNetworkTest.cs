@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.Test
             CudaBlas.Instance.Initialize();
             try
             {
-                var json = EmbeddedResource.ReadAllJson("ParallelReverseAutoDiff.Test.GraphAttentionPaths", "minibatch");
+                var json = EmbeddedResource.ReadAllJson("ParallelReverseAutoDiff.Test.GraphAttentionPaths", "minibatch2");
                 var graphs = JsonConvert.DeserializeObject<List<GapGraph>>(json);
 
                 for (int i = 0; i < graphs.Count; ++i)
@@ -24,10 +24,11 @@ namespace ParallelReverseAutoDiff.Test
 
                 int batchSize = 4;
 
-                GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 16, 115, 10, 2, 4, 0.001d, 4d);
+                GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 16, 115, 3, 2, 4, 0.001d, 4d);
                 await neuralNetwork.Initialize();
-                DeepMatrix gradientOfLoss = await neuralNetwork.Forward();
+                DeepMatrix gradientOfLoss = neuralNetwork.Forward();
                 await neuralNetwork.Backward(gradientOfLoss);
+                neuralNetwork.ApplyGradients();
             }
             finally
             {
@@ -63,7 +64,7 @@ namespace ParallelReverseAutoDiff.Test
 
                 GraphAttentionPathsNeuralNetwork neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, batchSize, 10, 100, 10, 2, 4, 0.001d, 4d);
                 await neuralNetwork.Initialize();
-                DeepMatrix gradientOfLoss = await neuralNetwork.Forward();
+                DeepMatrix gradientOfLoss = neuralNetwork.Forward();
                 await neuralNetwork.Backward(gradientOfLoss);
             }
             finally
