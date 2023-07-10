@@ -219,7 +219,7 @@
             },
             {
               "id": "reduce_add_skip",
-              "type": "MatrixAddThreeOperation",
+              "type": "BatchMatrixAddThreeOperation",
               "inputs": [ "reduce_add", "keys_pathFeatures", "values_pathFeatures" ]
             },
             {

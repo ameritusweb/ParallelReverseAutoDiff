@@ -123,7 +123,7 @@
             },
             {
               "id": "reduce_add_skip",
-              "type": "BatchAddThreeOperation",
+              "type": "BatchMatrixAddThreeOperation",
               "inputs": [ "reduce_add", "keys_edgeFeatures", "values_edgeFeatures" ]
             },
             {
