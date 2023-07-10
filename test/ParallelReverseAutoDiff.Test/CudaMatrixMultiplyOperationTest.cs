@@ -16,7 +16,9 @@ namespace ParallelReverseAutoDiff.Test
                 CudaMatrixMultiplyOperation op = new CudaMatrixMultiplyOperation();
                 Matrix? c = null;
                 Matrix a = new Matrix(100, 100);
+                a.Initialize(InitializationType.Xavier);
                 Matrix b = new Matrix(100, 1);
+                b.Initialize(InitializationType.He);
                 await Task.Run(() =>
                 {
                     c = op.Forward(a, b);
