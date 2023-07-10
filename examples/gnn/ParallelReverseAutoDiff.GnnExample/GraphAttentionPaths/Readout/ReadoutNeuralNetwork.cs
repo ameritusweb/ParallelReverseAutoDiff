@@ -219,7 +219,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             {
                 backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-                opVisitor.RunSequentially = true;
+                opVisitor.RunSequentially = false;
                 await opVisitor.TraverseAsync();
                 opVisitor.Reset();
                 traverseCount++;

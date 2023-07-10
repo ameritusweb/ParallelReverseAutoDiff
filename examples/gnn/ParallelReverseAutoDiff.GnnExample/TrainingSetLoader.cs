@@ -54,6 +54,12 @@ namespace ParallelReverseAutoDiff.GnnExample
                             continue;
                         }
 
+                        if (graph.GapPaths.Where(x => x.IsTarget).Count() > 1)
+                        {
+                            j--;
+                            continue;
+                        }
+
                         graphs.Add(graph);
 
                         if (graphs.Count == 4)
