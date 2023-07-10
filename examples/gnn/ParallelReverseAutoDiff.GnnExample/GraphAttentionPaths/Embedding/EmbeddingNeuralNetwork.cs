@@ -176,6 +176,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = false;
                 await opVisitor.TraverseAsync();
+                if (opVisitor.AggregateException != null)
+                {
+                    throw opVisitor.AggregateException;
+                }
+
                 opVisitor.Reset();
             }
 

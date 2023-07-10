@@ -71,18 +71,21 @@ namespace ParallelReverseAutoDiff.GnnExample
                     var json = JsonConvert.SerializeObject(graphs);
                     File.WriteAllText("minibatch.json", json);
 
-                    await this.ProcessMiniBatch(graphs);
+                    var result = await this.ProcessMiniBatch(graphs);
                     Thread.Sleep(5000);
 
-                    if (i % 10 == 0 || i % 10 == 5)
+                    if (result)
                     {
-                        try
+                        if (i % 10 == 0 || i % 10 == 5)
                         {
-                            this.neuralNetwork.SaveWeights();
-                        }
-                        catch (OutOfMemoryException ex)
-                        {
-                            Console.WriteLine(ex);
+                            try
+                            {
+                                this.neuralNetwork.SaveWeights();
+                            }
+                            catch (OutOfMemoryException ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
                         }
                     }
                 }
@@ -93,7 +96,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             }
         }
 
-        private async Task ProcessMiniBatch(List<GapGraph> graphs)
+        private async Task<bool> ProcessMiniBatch(List<GapGraph> graphs)
         {
             try
             {
@@ -112,10 +115,19 @@ namespace ParallelReverseAutoDiff.GnnExample
                 await this.neuralNetwork.Backward(gradientOfLoss);
                 this.neuralNetwork.ApplyGradients();
                 await this.neuralNetwork.Reset();
+                return true;
+            }
+            catch (AggregateException ae)
+            {
+                Console.WriteLine(ae);
+                await this.neuralNetwork.Reset();
+                return false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                await this.neuralNetwork.Reset();
+                return false;
             }
         }
 

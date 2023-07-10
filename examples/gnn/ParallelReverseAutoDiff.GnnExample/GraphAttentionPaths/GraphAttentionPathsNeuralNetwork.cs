@@ -85,6 +85,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>A task.</returns>
         public async Task Reset()
         {
+            GradientClearer clearer = new GradientClearer();
+            clearer.Clear(this.modelLayers.ToArray());
+
             this.typeToIdMap.Clear();
             this.typeToIdMapTransformer.Clear();
             this.typeToIdMapAttention.Clear();
@@ -140,7 +143,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 306;
+            var initialAdamIteration = 317;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -210,7 +213,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "eba54a35-fa8c-4b70-8af2-ddc31f422d5d_306";
+            var guid = "98420e29-64cc-4b3a-bbfa-ce6ccb89758b_317";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -230,8 +233,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             clipper.Clip(this.modelLayers.ToArray());
             var adamOptimizer = this.readoutNeuralNetwork.Utilities.AdamOptimizer;
             adamOptimizer.Optimize(this.modelLayers.ToArray());
-            GradientClearer clearer = new GradientClearer();
-            clearer.Clear(this.modelLayers.ToArray());
         }
 
         /// <summary>

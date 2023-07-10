@@ -213,7 +213,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         /// <returns>The gradient.</returns>
         public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
-            int traverseCount = 0;
             IOperationBase? backwardStartOperation = this.computationGraph["output_avg_0_0"];
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
@@ -221,8 +220,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = false;
                 await opVisitor.TraverseAsync();
+                if (opVisitor.AggregateException != null)
+                {
+                    throw opVisitor.AggregateException;
+                }
+
                 opVisitor.Reset();
-                traverseCount++;
             }
 
             IOperationBase? backwardEndOperation = this.computationGraph["keys_pathFeatures_0_0"];
