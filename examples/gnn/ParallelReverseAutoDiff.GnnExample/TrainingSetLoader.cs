@@ -74,7 +74,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                     await this.ProcessMiniBatch(graphs);
                     Thread.Sleep(5000);
 
-                    if (i % 10 == 0)
+                    if (i % 10 == 0 || i % 10 == 5)
                     {
                         try
                         {

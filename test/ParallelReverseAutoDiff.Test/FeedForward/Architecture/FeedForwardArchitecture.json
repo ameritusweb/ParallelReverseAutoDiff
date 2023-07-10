@@ -5,7 +5,7 @@
         {
           "id": "projectedInput",
           "description": "Multiply the input with the weight matrix",
-          "type": "CudaMatrixMultiplyOperation",
+          "type": "GpuMatrixMultiplyOperation",
           "inputs": [ "We", "Input" ],
           "gradientResultTo": [ "DWe", null ]
         },
@@ -22,7 +22,7 @@
           "operations": [
             {
               "id": "w1_currentInput",
-              "type": "CudaMatrixMultiplyOperation",
+              "type": "GpuMatrixMultiplyOperation",
               "inputs": [ "W[layerIndex]", "currentInput" ],
               "gradientResultTo": [ "DW[layerIndex]", null ]
             },
@@ -59,7 +59,7 @@
       "endOperations": [
         {
           "id": "v_h",
-          "type": "CudaMatrixMultiplyOperation",
+          "type": "GpuMatrixMultiplyOperation",
           "inputs": [ "V", "HFromLastLayer" ],
           "gradientResultTo": [ "DV", null ]
         },
