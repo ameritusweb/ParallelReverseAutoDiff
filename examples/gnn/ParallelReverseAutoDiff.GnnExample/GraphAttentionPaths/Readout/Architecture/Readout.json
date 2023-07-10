@@ -205,9 +205,14 @@
               "gradientResultTo": [ null, "DRB" ]
             },
             {
+              "id": "reduce_add_skip",
+              "type": "BatchMatrixAddThreeOperation",
+              "inputs": [ "reduce_add", "keys_pathFeatures", "values_pathFeatures" ]
+            },
+            {
               "id": "layernorm_reduce",
               "type": "BatchLayerNormalizationOperation",
-              "inputs": [ "reduce_add" ]
+              "inputs": [ "reduce_add_skip" ]
             },
             {
               "id": "output_act",
@@ -226,7 +231,22 @@
         {
           "id": "output_avg",
           "type": "BatchMatrixAverageOperation",
-          "inputs": [ "pre_output" ],
+          "inputs": [ "pre_output" ]
+        },
+        {
+          "id": "output_avg_trans",
+          "type": "BatchMatrixTransposeOperation",
+          "inputs": [ "output_avg" ]
+        },
+        {
+          "id": "output_avg_softmax",
+          "type": "BatchSineSoftmaxOperation",
+          "inputs": [ "output_avg_trans" ]
+        },
+        {
+          "id": "output_avg_softmax_trans",
+          "type": "BatchMatrixTransposeOperation",
+          "inputs": [ "output_avg_softmax" ],
           "setResultTo": "Output"
         }
       ]

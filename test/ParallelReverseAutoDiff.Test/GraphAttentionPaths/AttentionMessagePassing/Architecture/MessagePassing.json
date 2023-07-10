@@ -106,7 +106,7 @@
             {
               "id": "weighted_connected_paths_features",
               "type": "BatchHadamardProductOperation",
-              "inputs": [ "broadcasted_attention_scores", "connected_paths_matrix_trans_find" ],
+              "inputs": [ "broadcasted_attention_scores", "connected_paths_matrix_trans_find" ]
             },
             {
               "id": "current_path_features_trans",

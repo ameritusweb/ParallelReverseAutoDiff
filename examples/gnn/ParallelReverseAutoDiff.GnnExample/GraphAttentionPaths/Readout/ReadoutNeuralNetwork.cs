@@ -222,7 +222,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 await opVisitor.TraverseAsync();
                 if (opVisitor.AggregateException != null)
                 {
-                    throw opVisitor.AggregateException;
+                    if (opVisitor.AggregateException.InnerExceptions.Count > 1)
+                    {
+                        throw opVisitor.AggregateException;
+                    }
+                    else
+                    {
+                        Console.WriteLine(opVisitor.AggregateException.InnerExceptions[0].Message);
+                    }
                 }
 
                 opVisitor.Reset();

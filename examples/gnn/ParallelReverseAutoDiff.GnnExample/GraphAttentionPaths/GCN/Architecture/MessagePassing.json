@@ -52,7 +52,12 @@
             {
               "id": "ah_w_act",
               "type": "BatchLeakyReLUOperation",
-              "inputs": [ "ah_w_broadcasting" ],
+              "inputs": [ "ah_w_broadcasting" ]
+            },
+            {
+              "id": "ah_w_act_softmax",
+              "type": "BatchSineSoftmaxOperation",
+              "inputs": [ "ah_w_act" ],
               "setResultTo": "Output"
             }
           ]

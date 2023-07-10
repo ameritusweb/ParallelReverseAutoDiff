@@ -102,7 +102,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 if (this.neuralNetwork == null)
                 {
-                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 16, 115, 7, 2, 4, 0.001d, 4d);
+                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 16, 115, 7, 2, 4, 0.01d, 4d);
                     await this.neuralNetwork.Initialize();
                     this.neuralNetwork.ApplyWeights();
                 }
