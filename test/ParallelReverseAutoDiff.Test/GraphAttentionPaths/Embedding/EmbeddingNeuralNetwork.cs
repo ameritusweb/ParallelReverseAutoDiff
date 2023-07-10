@@ -165,7 +165,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
         /// </summary>
         /// <param name="gradient">The gradient of the loss.</param>
         /// <returns>The gradient.</returns>
-        public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
+        public async Task<Matrix> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["vector_concatenate_trans_0_0"];
@@ -179,7 +179,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
             }
 
             IOperationBase? backwardEndOperation = this.computationGraph["batch_embeddings_0_0"];
-            return backwardEndOperation.CalculatedGradient[0] as DeepMatrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+            return backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
         /// <summary>

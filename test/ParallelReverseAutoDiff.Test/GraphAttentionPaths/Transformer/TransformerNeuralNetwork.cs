@@ -60,6 +60,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                     .AddModelElementGroup("VB", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes);
                 var inputLayer = inputLayerBuilder.Build();
                 this.inputLayers.Add(inputLayer);
+                numInputFeatures = numInputOutputFeatures;
             }
 
             this.nestedLayers = new List<IModelLayer>();
@@ -73,6 +74,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                     .AddModelElementGroup("QB", new[] { numQueries, 1, numNestedOutputFeatures }, InitializationType.Zeroes);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
+                numNestedFeatures = numNestedOutputFeatures;
                 outputFeaturesList.Add(numNestedOutputFeatures * numQueries);
             }
 
@@ -85,18 +87,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                     .AddModelElementGroup("F2W", new[] { outputFeaturesList[i], (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
                     .AddModelElementGroup("F2B", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
                     .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He);
-                if (i < (this.NumLayers - 1))
-                {
-                    outputLayerBuilder
-                        .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures }, InitializationType.Xavier)
-                        .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
-                }
-                else
-                {
+
                     outputLayerBuilder
                         .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures * 2 }, InitializationType.Xavier)
                         .AddModelElementGroup("RB", new[] { 1, this.NumFeatures * 2 }, InitializationType.Zeroes);
-                }
+
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
             }
