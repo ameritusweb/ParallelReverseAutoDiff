@@ -11,7 +11,7 @@
         {
           "id": "position_embeddings_add",
           "type": "BatchMatrixAddOperation",
-          "inputs": [ "position_embeddings", "Input" ],
+          "inputs": [ "position_embeddings", "Input" ]
         }
       ],
       "layers": [
