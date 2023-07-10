@@ -122,9 +122,14 @@
               "gradientResultTo": [ null, "DRB" ]
             },
             {
+              "id": "reduce_add_skip",
+              "type": "BatchAddThreeOperation",
+              "inputs": [ "reduce_add", "keys_edgeFeatures", "values_edgeFeatures" ]
+            },
+            {
               "id": "layernorm_reduce",
               "type": "BatchLayerNormalizationOperation",
-              "inputs": [ "reduce_add" ]
+              "inputs": [ "reduce_add_skip" ]
             },
             {
               "id": "output_act",
