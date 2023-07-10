@@ -187,24 +187,26 @@ namespace Chess
                 originalPos = new Position("e1");
                 if (group.Value == "O-O")
                 {
-                    moveOut.NewPosition = new Position("h1");
+                    moveOut.NewPosition = new Position("g1");
                 }
                 else if (group.Value == "O-O-O")
                 {
-                    moveOut.NewPosition = new Position("a1");
+                    moveOut.NewPosition = new Position("c1");
                 }
+                moveOut.Piece = new Piece("wk");
             }
             else if (board.Turn == PieceColor.Black)
             {
                 originalPos = new Position("e8");
                 if (group.Value == "O-O")
                 {
-                    moveOut.NewPosition = new Position("h8");
+                    moveOut.NewPosition = new Position("g8");
                 }
                 else if (group.Value == "O-O-O")
                 {
-                    moveOut.NewPosition = new Position("a8");
+                    moveOut.NewPosition = new Position("c8");
                 }
+                moveOut.Piece = new Piece("bk");
             }
         }
 

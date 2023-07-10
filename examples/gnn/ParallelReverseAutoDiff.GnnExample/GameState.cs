@@ -263,7 +263,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>All moves.</returns>
         public List<string> GetMoves()
         {
-            List<string> moves = new List<string>();
+            HashSet<string> moves = new HashSet<string>();
             for (int rank = 0; rank < 8; ++rank)
             {
                 for (int file = 0; file < 8; ++file)
@@ -288,7 +288,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                 }
             }
 
-            return moves;
+            return moves.ToList();
         }
 
         /// <summary>
