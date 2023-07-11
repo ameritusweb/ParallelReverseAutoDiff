@@ -531,7 +531,26 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 }
 
                 CosineDistanceLossOperation cosineDistanceLossOperation = new CosineDistanceLossOperation();
-                cosineDistanceLossOperation.Forward(readoutOutput[i], targetMatrix);
+                var loss = cosineDistanceLossOperation.Forward(readoutOutput[i], targetMatrix);
+
+                List<(GapPath, double)> losses = new List<(GapPath, double)>();
+                for (int j = 0; j < gcnOutputs[i].Rows; ++j)
+                {
+                    var path = gcnOutputs[i][j];
+                    var gPath = graph.GapPaths[j];
+                    Matrix matrix = new Matrix(path.Length, 1);
+                    for (int k = 0; k < path.Length; ++k)
+                    {
+                        matrix[k][0] = path[k];
+                    }
+
+                    CosineDistanceLossOperation operation = new CosineDistanceLossOperation();
+                    var result = operation.Forward(readoutOutput[i], matrix);
+                    losses.Add((gPath, result[0][0]));
+                }
+
+                var avgloss = losses.Average(x => x.Item2);
+
                 var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { -1.0d } }));
                 outputGradients.Add(gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value."));
             }

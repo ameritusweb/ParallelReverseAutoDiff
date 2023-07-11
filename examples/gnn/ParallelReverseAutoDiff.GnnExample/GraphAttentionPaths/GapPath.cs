@@ -85,6 +85,17 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         }
 
         /// <summary>
+        /// Gets the move.
+        /// </summary>
+        /// <returns>The move.</returns>
+        public string Move()
+        {
+            var firstNode = this.Nodes[0];
+            var lastNode = this.Nodes[this.Nodes.Count - 1];
+            return $"{this.GapType.ToString()} {this.File(firstNode)}{firstNode.PositionY + 1} - {this.File(lastNode)}{lastNode.PositionY + 1}";
+        }
+
+        /// <summary>
         /// Populates the nodes of the path based on the node IDs.
         /// </summary>
         /// <param name="graph">The graph.</param>
@@ -117,6 +128,31 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         {
             this.Nodes.Add(node);
             node.IsInPath = true;
+        }
+
+        private string File(GapNode node)
+        {
+            switch (node.PositionX)
+            {
+                case 0:
+                    return "A";
+                case 1:
+                    return "B";
+                case 2:
+                    return "C";
+                case 3:
+                    return "D";
+                case 4:
+                    return "E";
+                case 5:
+                    return "F";
+                case 6:
+                    return "G";
+                case 7:
+                    return "H";
+                default:
+                    return string.Empty;
+            }
         }
     }
 }
