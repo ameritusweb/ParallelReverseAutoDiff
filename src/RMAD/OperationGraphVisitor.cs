@@ -128,8 +128,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 return;
             }
 
-            Console.WriteLine($"Visitor {this.Id} visiting node {node.SpecificId}");
-
             node.InitializeLock();
             node.VisitedCount++;
 
