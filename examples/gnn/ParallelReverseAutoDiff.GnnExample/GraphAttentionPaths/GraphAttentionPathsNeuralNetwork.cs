@@ -143,7 +143,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 555;
+            var initialAdamIteration = 633;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -213,7 +213,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "91ce2e92-27d7-43db-8773-5ea45eb2b6ca_555";
+            var guid = "23c09054-6103-4e31-aa03-df30a5eccafc_633";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -533,23 +533,28 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 CosineDistanceLossOperation cosineDistanceLossOperation = new CosineDistanceLossOperation();
                 var loss = cosineDistanceLossOperation.Forward(readoutOutput[i], targetMatrix);
 
-                List<(GapPath, double)> losses = new List<(GapPath, double)>();
-                for (int j = 0; j < gcnOutputs[i].Rows; ++j)
+                if (i == 0)
                 {
-                    var path = gcnOutputs[i][j];
-                    var gPath = graph.GapPaths[j];
-                    Matrix matrix = new Matrix(path.Length, 1);
-                    for (int k = 0; k < path.Length; ++k)
+                    List<(GapPath, string, double)> losses = new List<(GapPath, string, double)>();
+                    for (int j = 0; j < gcnOutputs[i].Rows; ++j)
                     {
-                        matrix[k][0] = path[k];
+                        var path = gcnOutputs[i][j];
+                        var gPath = graph.GapPaths[j];
+                        Matrix matrix = new Matrix(path.Length, 1);
+                        for (int k = 0; k < path.Length; ++k)
+                        {
+                            matrix[k][0] = path[k];
+                        }
+
+                        CosineDistanceLossOperation operation = new CosineDistanceLossOperation();
+                        var result = operation.Forward(readoutOutput[i], matrix);
+                        losses.Add((gPath, gPath.Move(), result[0][0]));
                     }
 
-                    CosineDistanceLossOperation operation = new CosineDistanceLossOperation();
-                    var result = operation.Forward(readoutOutput[i], matrix);
-                    losses.Add((gPath, result[0][0]));
+                    var orderedlosses = losses.OrderBy(x => x.Item3).ToList();
+                    var avgloss = losses.Average(x => x.Item3);
+                    this.PrintGraph(graph, orderedlosses.First().Item2, gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.First().Item3);
                 }
-
-                var avgloss = losses.Average(x => x.Item2);
 
                 var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { -1.0d } }));
                 outputGradients.Add(gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value."));
@@ -766,6 +771,41 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         private bool IsConnected(GapPath path1, GapPath path2, Matrix adjacency)
         {
             return (int)adjacency[path1.AdjacencyIndex][path2.AdjacencyIndex] == 1;
+        }
+
+        private void PrintGraph(GapGraph graph, string move, string target, double targetLoss, double avgloss, double lowestloss)
+        {
+            // Initialize empty 8x8 board
+            string[,] board = new string[8, 8];
+
+            // Fill board spots based on node x/y and piece
+            foreach (GapNode node in graph.GapNodes)
+            {
+                board[node.PositionY, node.PositionX] = node.GapType == GapType.Knight ? "N" : (node.GapType == GapType.Empty ? "." : node.GapType.ToString().Substring(0, 1));
+            }
+
+            // Print top border
+            Console.WriteLine("  a b c d e f g h");
+
+            // Print board contents
+            for (int y = 7; y >= 0; y--)
+            {
+                Console.Write(" " + (y + 1));
+                for (int x = 0; x < 8; x++)
+                {
+                    Console.Write(board[y, x] + " "); // Print piece or empty
+                }
+
+                Console.WriteLine();
+            }
+
+            // Print bottom border
+            Console.WriteLine("  a b c d e f g h");
+            Console.WriteLine("Move: " + move);
+            Console.WriteLine("Target:" + target);
+            Console.WriteLine("Target Loss: " + targetLoss);
+            Console.WriteLine("Avg Loss: " + avgloss);
+            Console.WriteLine("Lowest Loss: " + lowestloss);
         }
     }
 }

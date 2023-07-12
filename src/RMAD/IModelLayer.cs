@@ -119,6 +119,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
         /// <summary>
         /// Save the weights and moments to a binary file.
+        /// If binary serialization is unsuccessful, it will fall back to JSON serialization.
         /// </summary>
         /// <param name="file">The file info.</param>
         public void SaveWeightsAndMomentsBinary(FileInfo file);

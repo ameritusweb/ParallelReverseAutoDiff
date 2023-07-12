@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.Interprocess
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -43,6 +44,9 @@ namespace ParallelReverseAutoDiff.Interprocess
 
                 // Write the data to the dataset.
                 H5D.write(datasetId, H5T.NATIVE_DOUBLE, H5S.ALL, H5S.ALL, H5P.DEFAULT, ptr);
+
+                // Free the GCHandle when done
+                hnd.Free();
 
                 // Close the dataset and dataspace.
                 H5D.close(datasetId);
@@ -95,6 +99,9 @@ namespace ParallelReverseAutoDiff.Interprocess
                 // Add the data to the list.
                 data.Add(buffer);
 
+                // Free the GCHandle when done
+                hnd.Free();
+
                 // Close the dataset and dataspace.
                 H5D.close(datasetId);
                 H5S.close(dataspaceId);
@@ -104,6 +111,64 @@ namespace ParallelReverseAutoDiff.Interprocess
             H5F.close(fileId);
 
             return data;
+        }
+
+        /// <summary>
+        /// Validate a file.
+        /// </summary>
+        /// <param name="fileInfo">The file info.</param>
+        /// <param name="sizes">The sizes.</param>
+        /// <returns>The validation result.</returns>
+        public static bool Validate(FileInfo fileInfo, List<int> sizes)
+        {
+            bool isValid = true;
+
+            // Open the HDF5 file.
+            long fileId = H5F.open(fileInfo.FullName, H5F.ACC_RDONLY, H5P.DEFAULT);
+
+            // Get the group info.
+            H5G.info_t groupInfo = default(H5G.info_t);
+            _ = H5G.get_info(fileId, ginfo: ref groupInfo);
+
+            // Get the number of datasets in the file.
+            ulong numDatasets = groupInfo.nlinks;
+
+            if (numDatasets < (ulong)sizes.Count)
+            {
+                isValid = false;
+            }
+
+            // Loop over the datasets.
+            for (int i = 0; i < sizes.Count; i++)
+            {
+                // Open each dataset.
+                long datasetId = H5D.open(fileId, $"row{i}");
+
+                // Get the dataspace and dimensions of the dataset.
+                long dataspaceId = H5D.get_space(datasetId);
+                ulong[] dimensions = new ulong[1];
+                H5S.get_simple_extent_dims(dataspaceId, dimensions, null);
+
+                // Check if the row size is what you expect it to be
+                if (dimensions[0] != (ulong)sizes[i])
+                {
+                    isValid = false;
+
+                    // Close the dataset and dataspace.
+                    H5D.close(datasetId);
+                    H5S.close(dataspaceId);
+                    break;
+                }
+
+                // Close the dataset and dataspace.
+                H5D.close(datasetId);
+                H5S.close(dataspaceId);
+            }
+
+            // Close the HDF5 file.
+            H5F.close(fileId);
+
+            return isValid;
         }
 
         /// <summary>
@@ -125,7 +190,7 @@ namespace ParallelReverseAutoDiff.Interprocess
             }
 
             // Deserialize raw data
-            var matrices = Deserialize(new FileInfo(fileInfo.FullName + ".bin"));
+            var matrices = Deserialize(new FileInfo(fileInfo.FullName + ".hdf5"));
 
             // Now, build the dictionary using the metadata
             foreach (var item in dataSet.Items)
@@ -192,6 +257,9 @@ namespace ParallelReverseAutoDiff.Interprocess
                     // Write the data to the dataset.
                     H5D.write(datasetId, H5T.NATIVE_DOUBLE, H5S.ALL, H5S.ALL, H5P.DEFAULT, ptr);
 
+                    // Free the GCHandle when done
+                    hnd.Free();
+
                     // Close the dataset and dataspace.
                     H5D.close(datasetId);
                     H5S.close(dataspaceId);
@@ -210,7 +278,8 @@ namespace ParallelReverseAutoDiff.Interprocess
         /// <param name="fileInfo">The file info.</param>
         /// <param name="elements">The elements dictionary.</param>
         /// <param name="gets">The array of get functions.</param>
-        public static void Serialize<T>(FileInfo fileInfo, IDictionary<string, T> elements, Func<T, object>[] gets)
+        /// <returns>True if the serialization was successful.</returns>
+        public static bool Serialize<T>(FileInfo fileInfo, IDictionary<string, T> elements, Func<T, object>[] gets)
         {
             List<Matrix> matrices = new List<Matrix>();
             DataSet dataSet = new DataSet();
@@ -250,7 +319,10 @@ namespace ParallelReverseAutoDiff.Interprocess
                 serializer.Serialize(writer, dataSet);
             }
 
-            Serialize(new FileInfo(fileInfo.FullName + ".bin"), matrices);
+            var binaryFile = new FileInfo(fileInfo.FullName + ".hdf5");
+            Serialize(binaryFile, matrices);
+
+            return Validate(binaryFile, matrices.SelectMany(matrix => matrix.Select(row => row.Length)).ToList());
         }
 
         /// <summary>

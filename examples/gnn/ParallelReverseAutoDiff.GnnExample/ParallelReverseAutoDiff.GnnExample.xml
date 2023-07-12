@@ -1552,6 +1552,12 @@
             Gets the type of the path.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.Move">
+            <summary>
+            Gets the move.
+            </summary>
+            <returns>The move.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
             <summary>
             Populates the nodes of the path based on the node IDs.

@@ -205,7 +205,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public void SaveWeightsAndMomentsBinary(FileInfo file)
         {
-            HDF5Helper.Serialize(file, this.elements, new Func<(object, object, object, object, int[], InitializationType), object>[] { x => x.Item1, x => x.Item3, x => x.Item4 });
+            bool result = HDF5Helper.Serialize(file, this.elements, new Func<(object, object, object, object, int[], InitializationType), object>[] { x => x.Item1, x => x.Item3, x => x.Item4 });
+            if (!result)
+            {
+                this.SaveWeightsAndMoments(new FileInfo(file.FullName + ".json"));
+            }
         }
 
         /// <inheritdoc />
