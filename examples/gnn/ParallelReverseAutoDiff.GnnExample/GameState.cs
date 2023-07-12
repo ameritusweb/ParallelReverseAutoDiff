@@ -70,8 +70,10 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="move">The move.</param>
+        /// <param name="legalMoves">The legal moves.</param>
+        /// <param name="turn">The turn.</param>
         /// <returns>The gap edge.</returns>
-        public static (GapEdge Edge1, GapEdge Edge2) GetGapEdge(GapGraph graph, Move move)
+        public static (GapEdge Edge1, GapEdge Edge2) GetGapEdge(GapGraph graph, Move move, List<Move> legalMoves, PieceColor turn)
         {
             Piece piece = move.Piece;
             Position originalPosition = move.OriginalPosition;
@@ -82,9 +84,15 @@ namespace ParallelReverseAutoDiff.GnnExample
                 capturedPiece = move.CapturedPiece;
             }
 
+            bool isLegal = legalMoves.Any(x => x.OriginalPosition.ToString() == originalPosition.ToString()
+                           &&
+                           x.NewPosition.ToString() == endPosition.ToString()
+                           &&
+                           x.Piece.ToString() == piece.ToString());
+
             var node1 = graph.GapNodes.FirstOrDefault(n => n.PositionX == originalPosition.X && n.PositionY == originalPosition.Y) ?? throw new InvalidOperationException("Position not found.");
             var node2 = graph.GapNodes.FirstOrDefault(n => n.PositionX == endPosition.X && n.PositionY == endPosition.Y) ?? throw new InvalidOperationException("Position not found.");
-            return GetEdges(node1, node2, move.ToString());
+            return GetEdges(node1, node2, move.ToString(), isLegal, piece.Color.ToString() == turn.ToString());
         }
 
         /// <summary>
@@ -93,9 +101,11 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <param name="graph">The graph.</param>
         /// <param name="move">The move.</param>
         /// <param name="nextmove">The next move.</param>
+        /// <param name="legalBothMoves">The legal both moves.</param>
         /// <param name="legalMoves">The legal moves.</param>
+        /// <param name="turn">The turn.</param>
         /// <returns>The GAP path.</returns>
-        public static GapPath GetGapPath(GapGraph graph, string move, Move nextmove, List<Move> legalMoves)
+        public static GapPath GetGapPath(GapGraph graph, string move, Move nextmove, List<Move> legalBothMoves, List<Move> legalMoves, PieceColor turn)
         {
             Piece piece = new Piece(move.Substring(0, 2));
             Position originalPosition = new Position(move.Substring(2, 2));
@@ -104,6 +114,22 @@ namespace ParallelReverseAutoDiff.GnnExample
             if (move.Length > 6)
             {
                 capturedPiece = new Piece(move.Substring(6, 2));
+            }
+
+            bool isYourTurn = false;
+            if (piece.Color.ToString() == turn.ToString())
+            {
+                isYourTurn = true;
+            }
+
+            bool isLegal = false;
+            if (legalMoves.Any(x => x.OriginalPosition.ToString() == originalPosition.ToString()
+                &&
+                x.NewPosition.ToString() == endPosition.ToString()
+                &&
+                x.Piece.ToString() == piece.ToString()))
+            {
+                isLegal = true;
             }
 
             bool isTargetMove = false;
@@ -123,11 +149,11 @@ namespace ParallelReverseAutoDiff.GnnExample
                 }
             }
 
-            if (!legalMoves.Any(x => x.Piece.ToString() == piece.ToString() && x.OriginalPosition.ToString() == originalPosition.ToString() && x.NewPosition.ToString() == endPosition.ToString()))
+            if (!legalBothMoves.Any(x => x.Piece.ToString() == piece.ToString() && x.OriginalPosition.ToString() == originalPosition.ToString() && x.NewPosition.ToString() == endPosition.ToString()))
             {
                 var node1 = graph.GapNodes.FirstOrDefault(x => x.PositionX == originalPosition.X && x.PositionY == originalPosition.Y) ?? throw new InvalidOperationException("Node should not be null.");
                 var node2 = graph.GapNodes.FirstOrDefault(x => x.PositionX == endPosition.X && x.PositionY == endPosition.Y) ?? throw new InvalidOperationException("Node should not be null.");
-                var edges = GetEdges(node1, node2, move);
+                var edges = GetEdges(node1, node2, move, false, isYourTurn);
                 graph.GapEdges.Add(edges.Edge1);
                 graph.GapEdges.Add(edges.Edge2);
             }
@@ -136,6 +162,9 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 Id = Guid.NewGuid(),
                 IsTarget = isTargetMove,
+                IsLegal = isLegal,
+                IsYourTurn = isYourTurn,
+                MoveString = move,
             };
 
             Move m = new Move(originalPosition, endPosition, piece, capturedPiece);
@@ -846,20 +875,21 @@ namespace ParallelReverseAutoDiff.GnnExample
             return graph;
         }
 
-        private static (GapEdge Edge1, GapEdge Edge2) GetEdges(GapNode node1, GapNode node2, string move)
+        private static (GapEdge Edge1, GapEdge Edge2) GetEdges(GapNode node1, GapNode node2, string move, bool isLegal, bool yourTurn)
         {
+            move = move.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2").Replace("{", string.Empty).Replace("}", string.Empty).Replace(" ", string.Empty).Replace("-", string.Empty);
             GapEdge gapEdge1 = new GapEdge()
             {
                 Id = Guid.NewGuid(),
                 Node = node1,
-                Tag = new { Start = true, Move = move.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2") },
+                Tag = new { Start = true, IsLegal = isLegal, YourTurn = yourTurn, Move = move },
             };
             node1.Edges.Add(gapEdge1);
             GapEdge gapEdge2 = new GapEdge()
             {
                 Id = Guid.NewGuid(),
                 Node = node2,
-                Tag = new { Start = false, Move = move.ToLowerInvariant().Replace("o-o-o", "o3").Replace("o-o", "o2") },
+                Tag = new { Start = false, IsLegal = isLegal, YourTurn = yourTurn, Move = move },
             };
             node2.Edges.Add(gapEdge2);
 

@@ -34,6 +34,26 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public bool IsTarget { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the path is legal.
+        /// </summary>
+        public bool IsLegal { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the path is your turn.
+        /// </summary>
+        public bool IsYourTurn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the move.
+        /// </summary>
+        public string MoveString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the edge ID.
+        /// </summary>
+        public Guid EdgeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the index of the adjacency matrix.
         /// </summary>
         public int AdjacencyIndex { get; set; }

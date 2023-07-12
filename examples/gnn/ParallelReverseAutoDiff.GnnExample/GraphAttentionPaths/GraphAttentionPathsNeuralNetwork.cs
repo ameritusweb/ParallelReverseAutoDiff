@@ -143,7 +143,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 633;
+            var initialAdamIteration = 801;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -213,7 +213,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "23c09054-6103-4e31-aa03-df30a5eccafc_633";
+            var guid = "7770b06f-f3f7-4357-a0ef-24db36159504_801";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -535,6 +535,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
                 if (i == 0)
                 {
+                    List<string> legalMoves = new List<string>();
+                    var edges = this.gapGraphs[0].GapEdges.Select(x => x.Tag).ToList();
+                    foreach (var edge in edges)
+                    {
+                        dynamic tag = edge;
+                        string move = tag.Move;
+                        legalMoves.Add(move);
+                    }
+
                     List<(GapPath, string, double)> losses = new List<(GapPath, string, double)>();
                     for (int j = 0; j < gcnOutputs[i].Rows; ++j)
                     {
@@ -553,7 +562,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
                     var orderedlosses = losses.OrderBy(x => x.Item3).ToList();
                     var avgloss = losses.Average(x => x.Item3);
-                    this.PrintGraph(graph, orderedlosses.First().Item2, gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.First().Item3);
+                    this.PrintGraph(graph, orderedlosses.Last().Item2, gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3);
                 }
 
                 var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { -1.0d } }));
@@ -785,12 +794,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             // Print top border
-            Console.WriteLine("  a b c d e f g h");
+            Console.WriteLine("   a b c d e f g h");
 
             // Print board contents
             for (int y = 7; y >= 0; y--)
             {
-                Console.Write(" " + (y + 1));
+                Console.Write(" " + (y + 1) + " ");
                 for (int x = 0; x < 8; x++)
                 {
                     Console.Write(board[y, x] + " "); // Print piece or empty
@@ -800,12 +809,12 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             // Print bottom border
-            Console.WriteLine("  a b c d e f g h");
+            Console.WriteLine("   a b c d e f g h");
             Console.WriteLine("Move: " + move);
             Console.WriteLine("Target:" + target);
             Console.WriteLine("Target Loss: " + targetLoss);
             Console.WriteLine("Avg Loss: " + avgloss);
-            Console.WriteLine("Lowest Loss: " + lowestloss);
+            Console.WriteLine("Highest Loss: " + lowestloss);
         }
     }
 }

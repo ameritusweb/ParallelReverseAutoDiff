@@ -113,5 +113,9 @@
   "KQq": 111,
   "opening": 112,
   "middlegame": 113,
-  "endgame": 114
+  "endgame": 114,
+  "legal": 115,
+  "illegal": 116,
+  "yourturn": 117,
+  "notyourturn": 118
 }

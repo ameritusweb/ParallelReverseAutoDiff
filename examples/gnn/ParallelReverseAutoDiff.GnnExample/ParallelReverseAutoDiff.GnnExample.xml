@@ -357,6 +357,21 @@
             <param name="source">The source enumerable.</param>
             <returns>The target enumerable.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.FenGenerator">
+            <summary>
+            A FEN generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.FenGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.FenGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.FenGenerator.LoadData">
+            <summary>
+            Loads the data.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.GameGenerator">
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GameGenerator"/> class.
@@ -472,22 +487,26 @@
             Gets or sets the board size.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGapEdge(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph,Chess.Move)">
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGapEdge(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph,Chess.Move,System.Collections.Generic.List{Chess.Move},Chess.PieceColor)">
             <summary>
             Gets the GAP edge from the move.
             </summary>
             <param name="graph">The graph.</param>
             <param name="move">The move.</param>
+            <param name="legalMoves">The legal moves.</param>
+            <param name="turn">The turn.</param>
             <returns>The gap edge.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGapPath(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph,System.String,Chess.Move,System.Collections.Generic.List{Chess.Move})">
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGapPath(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph,System.String,Chess.Move,System.Collections.Generic.List{Chess.Move},System.Collections.Generic.List{Chess.Move},Chess.PieceColor)">
             <summary>
             Gets the GAP path from the move.
             </summary>
             <param name="graph">The graph.</param>
             <param name="move">The move.</param>
             <param name="nextmove">The next move.</param>
+            <param name="legalBothMoves">The legal both moves.</param>
             <param name="legalMoves">The legal moves.</param>
+            <param name="turn">The turn.</param>
             <returns>The GAP path.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPath(Chess.Move)">
@@ -1363,6 +1382,12 @@
             Gets or sets the feature indices.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Move">
+            <summary>
+            Gets the move.
+            </summary>
+            <returns>The move.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapEdge.Populate(ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph)">
             <summary>
             Populates the node with the node ID.
@@ -1392,6 +1417,11 @@
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.GapPaths">
             <summary>
             Gets or sets the paths of the graph.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.FenString">
+            <summary>
+            Gets or sets the fen string.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.AdjacencyMatrix">
@@ -1525,6 +1555,26 @@
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.IsTarget">
             <summary>
             Gets or sets a value indicating whether the path is the target.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.IsLegal">
+            <summary>
+            Gets or sets a value indicating whether the path is legal.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.IsYourTurn">
+            <summary>
+            Gets or sets a value indicating whether the path is your turn.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.MoveString">
+            <summary>
+            Gets or sets the move.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.EdgeId">
+            <summary>
+            Gets or sets the edge ID.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.AdjacencyIndex">

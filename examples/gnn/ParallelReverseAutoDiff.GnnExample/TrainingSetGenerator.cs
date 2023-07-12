@@ -79,7 +79,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             var graphJson = JsonConvert.SerializeObject(gapGraph);
 
             int total = this.loader.GetTotal();
-            for (int t = 5156; t < total; ++t)
+            for (int t = 0; t < total; ++t)
             {
                 var moves = this.loader.LoadMoves(t);
                 var name = this.loader.GetFileName(t).Replace(".pgn", string.Empty);
@@ -94,20 +94,24 @@ namespace ParallelReverseAutoDiff.GnnExample
                         {
                             var gamePhase = this.gameState.GetGamePhase();
                             var allmoves = this.gameState.GetMoves();
-                            var legalmoves = this.gameState.GetAllMoves();
+                            var legalbothmoves = this.gameState.GetAllMoves();
+                            var legalmoves = this.gameState.Board.Moves().ToList();
+                            var turn = this.gameState.Board.Turn;
+                            var fen = this.gameState.Board.ToFen();
                             var graph = JsonConvert.DeserializeObject<GapGraph>(graphJson) ?? throw new InvalidOperationException("Failed to deserialize.");
                             graph.Populate();
                             graph = this.gameState.PopulateNodes(graph);
+                            graph.FenString = fen;
 
                             foreach (var allmove in allmoves)
                             {
-                                var path = GameState.GetGapPath(graph, allmove, nextmove, legalmoves);
+                                var path = GameState.GetGapPath(graph, allmove, nextmove, legalbothmoves, legalmoves, turn);
                                 graph.GapPaths.Add(path);
                             }
 
-                            foreach (var legalmove in legalmoves)
+                            foreach (var legalmove in legalbothmoves)
                             {
-                                var edges = GameState.GetGapEdge(graph, legalmove);
+                                var edges = GameState.GetGapEdge(graph, legalmove, legalmoves, turn);
                                 graph.GapEdges.Add(edges.Edge1);
                                 graph.GapEdges.Add(edges.Edge2);
                             }
@@ -119,6 +123,13 @@ namespace ParallelReverseAutoDiff.GnnExample
                             graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[gamePhase], totalStats);
                             graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[gamePhase], totalStats);
                             graph.UpdateFeatureVectors();
+
+                            foreach (var path in graph.GapPaths)
+                            {
+                                var firstNode = path.Nodes.First();
+                                var associatedEdge = firstNode.Edges.First(x => x.Move().StartsWith(path.MoveString));
+                                path.EdgeId = associatedEdge.Id;
+                            }
 
                             if (graph.GapPaths.Count(x => x.IsTarget) > 1
                                 ||
@@ -144,7 +155,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                     Console.WriteLine($"Failed to process {name}");
                 }
 
-                this.SaveToZip(jsons, $"D:\\graphs\\{name}.zip");
+                this.SaveToZip(jsons, $"E:\\graphs\\{name}.zip");
             }
         }
 

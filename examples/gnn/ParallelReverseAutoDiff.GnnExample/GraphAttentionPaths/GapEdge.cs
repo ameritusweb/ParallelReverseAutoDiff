@@ -65,6 +65,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public List<int> FeatureIndices { get; set; } = new List<int>();
 
         /// <summary>
+        /// Gets the move.
+        /// </summary>
+        /// <returns>The move.</returns>
+        public string Move()
+        {
+            dynamic tag = this.Tag;
+            return tag.Move;
+        }
+
+        /// <summary>
         /// Populates the node with the node ID.
         /// </summary>
         /// <param name="graph">The graph.</param>

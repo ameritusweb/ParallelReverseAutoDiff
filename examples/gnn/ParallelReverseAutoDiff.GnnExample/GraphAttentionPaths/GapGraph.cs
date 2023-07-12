@@ -39,6 +39,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public List<GapPath> GapPaths { get; set; }
 
         /// <summary>
+        /// Gets or sets the fen string.
+        /// </summary>
+        public string FenString { get; set; }
+
+        /// <summary>
         /// Gets or sets the adjacency matrix of the graph.
         /// </summary>
         public Matrix AdjacencyMatrix { get; set; }
@@ -88,6 +93,27 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 dynamic tag = edge.Tag;
                 bool start = tag.Start;
                 string move = tag.Move;
+                bool isLegal = tag.IsLegal;
+                bool yourTurn = tag.YourTurn;
+
+                if (isLegal)
+                {
+                    edge.FeatureIndices.Add(artifacts["legal"]);
+                }
+                else
+                {
+                    edge.FeatureIndices.Add(artifacts["illegal"]);
+                }
+
+                if (yourTurn)
+                {
+                    edge.FeatureIndices.Add(artifacts["yourturn"]);
+                }
+                else
+                {
+                    edge.FeatureIndices.Add(artifacts["notyourturn"]);
+                }
+
                 var fens = fen.Split(' ').ToList();
                 for (int i = 1; i < fens.Count; i++)
                 {
@@ -175,10 +201,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     {
                         edge.FeatureIndices.Add(artifacts["nodefense"]);
                     }
-                }
-
-                if (edge.FeatureIndices.Count != 16)
-                {
                 }
             }
         }
