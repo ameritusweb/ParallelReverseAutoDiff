@@ -35,7 +35,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             CudaBlas.Instance.Initialize();
             try
             {
-                var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs", "*.zip").ToList();
+                var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs2", "*.zip").ToList();
 
                 for (int i = 0; i < 1001; ++i)
                 {
@@ -102,7 +102,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 if (this.neuralNetwork == null)
                 {
-                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 16, 115, 7, 2, 4, 0.01d, 4d);
+                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 18, 119, 5, 2, 4, 0.01d, 4d);
                     await this.neuralNetwork.Initialize();
                     this.neuralNetwork.ApplyWeights();
                 }

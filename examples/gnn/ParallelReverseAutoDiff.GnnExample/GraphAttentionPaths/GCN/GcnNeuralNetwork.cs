@@ -35,7 +35,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures * (int)Math.Pow(2d, numLayers) * 2;
+            this.NumFeatures = (numFeatures * (int)Math.Pow(2d, numLayers) * 2) + numFeatures;
 
             this.hiddenLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
@@ -135,7 +135,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
-                forward.Invoke(op, parameters);
+                try
+                {
+                    forward.Invoke(op, parameters);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
                 if (op.ResultToName != null)
                 {
                     var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);

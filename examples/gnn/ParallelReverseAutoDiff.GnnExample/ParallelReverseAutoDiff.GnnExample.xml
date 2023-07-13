@@ -1404,6 +1404,11 @@
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph"/> class.
             </summary>
         </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.Id">
+            <summary>
+            Gets or sets the unique identifier of the graph.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph.GapEdges">
             <summary>
             Gets or sets the edges of the graph.
@@ -1575,6 +1580,11 @@
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.EdgeId">
             <summary>
             Gets or sets the edge ID.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.GraphId">
+            <summary>
+            Gets or sets the graph index.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapPath.AdjacencyIndex">
@@ -2119,6 +2129,16 @@
             Gets the position indices matrix.
             </summary>
         </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.EdgeFeatureVector">
+            <summary>
+            Gets the edge feature vector.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.DEdgeFeatureVector">
+            <summary>
+            Gets the derivative of the edge feature vector.
+            </summary>
+        </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.ModelLayers">
             <summary>
             Gets the model layers of the neural network.
@@ -2137,6 +2157,11 @@
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.NumFeatures">
             <summary>
             Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.EdgeLength">
+            <summary>
+            Gets the edge length of the neural network.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer.TransformerNeuralNetwork.AlphabetSize">

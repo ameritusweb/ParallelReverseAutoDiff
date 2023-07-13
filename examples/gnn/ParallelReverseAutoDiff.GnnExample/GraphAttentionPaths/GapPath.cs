@@ -54,6 +54,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         public Guid EdgeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the graph index.
+        /// </summary>
+        public Guid GraphId { get; set; }
+
+        /// <summary>
         /// Gets or sets the index of the adjacency matrix.
         /// </summary>
         public int AdjacencyIndex { get; set; }

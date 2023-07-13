@@ -42,6 +42,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
             this.NumFeatures = numFeatures;
+            this.EdgeLength = numFeatures / (int)Math.Pow(2d, numLayers);
             this.AlphabetSize = alphabetSize;
 
             this.embeddingLayer = new ModelLayerBuilder(this)
@@ -120,6 +121,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
         public DeepMatrix PositionIndices { get; private set; }
 
         /// <summary>
+        /// Gets the edge feature vector.
+        /// </summary>
+        public DeepMatrix EdgeFeatureVector { get; private set; }
+
+        /// <summary>
+        /// Gets the derivative of the edge feature vector.
+        /// </summary>
+        public DeepMatrix DEdgeFeatureVector { get; private set; }
+
+        /// <summary>
         /// Gets the model layers of the neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
@@ -144,6 +155,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
         /// Gets the number of features of the neural network.
         /// </summary>
         internal int NumFeatures { get; private set; }
+
+        /// <summary>
+        /// Gets the edge length of the neural network.
+        /// </summary>
+        internal int EdgeLength { get; private set; }
 
         /// <summary>
         /// Gets the alphabet size of the neural network.
@@ -229,7 +245,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                 {
                     var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
                     var oo = this.computationGraph[MatrixType.Intermediate, split[0], op.LayerInfo];
-                    op.CopyResult(oo);
+                    try
+                    {
+                        op.CopyResult(oo);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
 
                 currOp = op;
@@ -280,9 +303,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumFeatures * 2, 1));
+            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, (this.NumFeatures * 2) + this.EdgeLength, 1));
             var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
             var positionIndices = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.AlphabetSize, 1));
+            var edgeFeatureVector = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, 1, this.EdgeLength));
+            var dEdgeFeatureVector = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, 1, this.EdgeLength));
 
             for (int i = 0; i < this.Parameters.BatchSize; ++i)
             {
@@ -299,6 +324,24 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
             else
             {
                 this.PositionIndices.Replace(positionIndices.ToArray());
+            }
+
+            if (this.DEdgeFeatureVector == null)
+            {
+                this.DEdgeFeatureVector = dEdgeFeatureVector;
+            }
+            else
+            {
+                this.DEdgeFeatureVector.Replace(dEdgeFeatureVector.ToArray());
+            }
+
+            if (this.EdgeFeatureVector == null)
+            {
+                this.EdgeFeatureVector = edgeFeatureVector;
+            }
+            else
+            {
+                this.EdgeFeatureVector.Replace(edgeFeatureVector.ToArray());
             }
 
             if (this.Output == null)
@@ -405,6 +448,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
                 .AddIntermediate("PositionIndices", _ => this.PositionIndices)
+                .AddIntermediate("EdgeFeatureVector", _ => this.EdgeFeatureVector)
+                .AddGradient("DEdgeFeatureVector", _ => this.DEdgeFeatureVector)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumPaths, 2))
                 .AddWeight("Embeddings", _ => weightMatrix).AddGradient("DEmbeddings", _ => gradientMatrix)
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])

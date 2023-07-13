@@ -143,7 +143,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 801;
+            var initialAdamIteration = 1;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -213,15 +213,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "7770b06f-f3f7-4357-a0ef-24db36159504_801";
-            var dir = $"E:\\store\\{guid}";
-            for (int i = 0; i < this.modelLayers.Count; ++i)
-            {
-                var modelLayer = this.modelLayers[i];
-                var file = new FileInfo($"{dir}\\layer{i}");
-                modelLayer.LoadWeightsAndMomentsBinary(file);
-                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            }
+            // var guid = "7770b06f-f3f7-4357-a0ef-24db36159504_801";
+            // var dir = $"E:\\store\\{guid}";
+            // for (int i = 0; i < this.modelLayers.Count; ++i)
+            // {
+            //    var modelLayer = this.modelLayers[i];
+            //    var file = new FileInfo($"{dir}\\layer{i}");
+            //    modelLayer.LoadWeightsAndMomentsBinary(file);
+            //    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+            // }
         }
 
         /// <summary>
@@ -357,6 +357,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             Dictionary<int, List<Matrix>> inputsByLength = new Dictionary<int, List<Matrix>>();
+            Dictionary<int, List<Matrix>> edgesByLength = new Dictionary<int, List<Matrix>>();
             Dictionary<(int Length, int Index), GapPath> pathIndexMap = new Dictionary<(int Length, int Index), GapPath>();
 
             foreach (var graph in this.gapGraphs)
@@ -364,6 +365,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 foreach (var path in graph.GapPaths)
                 {
                     var pathLength = path.Nodes.Count;
+                    path.GraphId = graph.Id;
+                    var edgeId = path.EdgeId;
+                    var edge = graph.GapEdges.First(x => x.Id == edgeId);
+                    var edgeFeatureVector = edge.FeatureVector.Transpose();
                     var input = new Matrix(pathLength, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers));
                     for (int i = 0; i < input.Rows; ++i)
                     {
@@ -372,6 +377,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                             input[i][j] = path.Nodes[i].FeatureVector[j][0];
                         }
                     }
+
+                    if (!edgesByLength.ContainsKey(pathLength))
+                    {
+                        edgesByLength[pathLength] = new List<Matrix>();
+                    }
+
+                    edgesByLength[pathLength].Add(edgeFeatureVector);
 
                     if (!inputsByLength.ContainsKey(pathLength))
                     {
@@ -387,9 +399,11 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             foreach (var length in inputsByLength.Keys)
             {
                 var batchedInput = inputsByLength[length].ToArray(); // Array of DeepMatrix where each DeepMatrix is a timestep for all sequences in the batch
+                var batchedEdges = edgesByLength[length].ToArray();
                 var transformerNet = this.transformerNeuralNetwork[length - 2]; // Because a path must have a length of at least two
                 transformerNet.Parameters.BatchSize = batchedInput.Length;
                 transformerNet.InitializeState();
+                transformerNet.EdgeFeatureVector.Replace(batchedEdges);
                 transformerNet.AutomaticForwardPropagate(new DeepMatrix(batchedInput));
                 var id = Guid.NewGuid();
                 this.typeToIdMapTransformer.Add(length, id);
@@ -652,15 +666,20 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             }
 
             Dictionary<GapNode, Matrix> nodeToGradientMap = new Dictionary<GapNode, Matrix>();
+            Dictionary<GapEdge, Matrix> edgeToGradientMap = new Dictionary<GapEdge, Matrix>();
             foreach (var key in pathLengthToGradientMap.Keys)
             {
                 var transformerNet = this.transformerNeuralNetwork[key - 2];
                 transformerNet.RestoreOperationIntermediates(this.typeToIdMapTransformer[key]);
                 var transformerGradient = await transformerNet.AutomaticBackwardPropagate(new DeepMatrix(pathLengthToGradientMap[key].ToArray()));
+                var dEdgeFeatureVector = transformerNet.DEdgeFeatureVector;
 
                 for (int i = 0; i < transformerGradient.Depth; ++i)
                 {
                     var path = indexesToPathMapTransformer[(key, i)];
+                    var edgeId = path.EdgeId;
+                    var edge = this.gapGraphs.First(x => x.Id == path.GraphId).GapEdges.First(x => x.Id == edgeId);
+                    edgeToGradientMap.Add(edge, dEdgeFeatureVector[i].Transpose());
                     var nodeCount = path.Nodes.Count;
                     for (int j = 0; j < nodeCount; ++j)
                     {
@@ -718,6 +737,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         var edge = node.Edges[j];
                         var featureVector = gradient[j];
                         Matrix edgeGradient = new Matrix(featureVector.Length, 1);
+                        var otherEdgeGradient = edgeToGradientMap[edge];
                         for (int k = 0; k < featureVector.Length; ++k)
                         {
                             edgeGradient[k][0] = featureVector[k];

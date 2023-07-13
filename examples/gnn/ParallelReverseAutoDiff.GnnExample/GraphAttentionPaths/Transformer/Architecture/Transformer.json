@@ -244,7 +244,18 @@
         {
           "id": "output_avg",
           "type": "BatchMatrixAverageOperation",
-          "inputs": [ "pre_output" ],
+          "inputs": [ "pre_output" ]
+        },
+        {
+          "id": "vector_concatenate",
+          "type": "BatchMatrixVectorConcatenateOperation",
+          "inputs": [ "output_avg", "EdgeFeatureVector" ],
+          "gradientResultTo": [ null, "DEdgeFeatureVector" ]
+        },
+        {
+          "id": "vector_trans",
+          "type": "BatchMatrixTransposeOperation",
+          "inputs": [ "vector_concatenate" ],
           "setResultTo": "Output"
         }
       ]

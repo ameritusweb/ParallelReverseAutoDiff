@@ -35,7 +35,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumPaths = numPaths;
-            this.NumFeatures = numFeatures * (int)Math.Pow(2d, (int)numLayers) * 2;
+            this.NumFeatures = (numFeatures * (int)Math.Pow(2d, (int)numLayers) * 2) + numFeatures;
 
             var hiddenLayerBuilder = new ModelLayerBuilder(this)
                 .AddModelElementGroup("Weights", new[] { numLayers, this.NumFeatures, this.NumFeatures }, InitializationType.Xavier) // one weight per piece type

@@ -21,7 +21,13 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         {
             this.AdjacencyMatrix = new Matrix(1, 1);
             this.NormalizedAdjacency = new Matrix(1, 1);
+            this.Id = Guid.NewGuid();
         }
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the graph.
+        /// </summary>
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets the edges of the graph.
