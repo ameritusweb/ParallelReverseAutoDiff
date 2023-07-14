@@ -128,7 +128,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
         /// <summary>
         /// Gets the derivative of the edge feature vector.
         /// </summary>
-        public DeepMatrix DEdgeFeatureVector { get; private set; }
+        public Matrix DEdgeFeatureVector { get; private set; }
 
         /// <summary>
         /// Gets the model layers of the neural network.
@@ -271,7 +271,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
         /// <returns>The gradient.</returns>
         public async Task<DeepMatrix> AutomaticBackwardPropagate(DeepMatrix gradient)
         {
-            IOperationBase? backwardStartOperation = this.computationGraph["output_avg_0_0"];
+            IOperationBase? backwardStartOperation = this.computationGraph["vector_trans_0_0"];
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
@@ -307,7 +307,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
             var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.NumPaths, this.NumFeatures));
             var positionIndices = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, this.AlphabetSize, 1));
             var edgeFeatureVector = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, 1, this.EdgeLength));
-            var dEdgeFeatureVector = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.BatchSize, 1, this.EdgeLength));
+            var dEdgeFeatureVector = CommonMatrixUtils.InitializeZeroMatrix(1, this.EdgeLength);
 
             for (int i = 0; i < this.Parameters.BatchSize; ++i)
             {
@@ -471,7 +471,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Transformer
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_avg_0_0"];
+            backwardStartOperation = this.computationGraph["vector_trans_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);

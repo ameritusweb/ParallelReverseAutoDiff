@@ -5,11 +5,14 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample
 {
+    using System.Collections.Concurrent;
     using System.IO.Compression;
+    using System.Xml.Linq;
     using Chess;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths;
+    using static ILGPU.IR.Transformations.CodePlacement;
 
     /// <summary>
     /// A training set generator.
@@ -28,6 +31,8 @@ namespace ParallelReverseAutoDiff.GnnExample
 
         private Dictionary<string, int> artifacts;
 
+        private string graphJson;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrainingSetGenerator"/> class.
         /// </summary>
@@ -42,9 +47,9 @@ namespace ParallelReverseAutoDiff.GnnExample
         }
 
         /// <summary>
-        /// Loads the data.
+        /// Initialize the training set generator.
         /// </summary>
-        public void LoadData()
+        public void Initialize()
         {
             var edgejson = EmbeddedResource.ReadAllJson("ParallelReverseAutoDiff.GnnExample.Statistics", "edge_frequencies_2773067");
             this.edgeFrequenciesByPhase = JsonConvert.DeserializeObject<Dictionary<GamePhase, Dictionary<string, int>>>(edgejson) ?? throw new InvalidOperationException("Could not parse edge JSON");
@@ -76,87 +81,125 @@ namespace ParallelReverseAutoDiff.GnnExample
                 }
             }
 
-            var graphJson = JsonConvert.SerializeObject(gapGraph);
+            this.graphJson = JsonConvert.SerializeObject(gapGraph);
+        }
+
+        /// <summary>
+        /// Add to bag of graphs.
+        /// </summary>
+        /// <param name="bagOfGraphs">The graphs.</param>
+        /// <param name="rand">The random.</param>
+        /// <returns>The task.</returns>
+        public async Task AddToBag(ConcurrentBag<GapGraph> bagOfGraphs, Random rand)
+        {
+            await Task.Run(() =>
+            {
+                int total = this.loader.GetTotal();
+                var r = rand.Next(total);
+                var moves = this.loader.LoadMoves(r);
+                var name = this.loader.GetFileName(r).Replace(".pgn", string.Empty);
+                var graphs = this.ProcessMoves(moves, name);
+                var randomGraphs = graphs.OrderBy(x => rand.Next());
+                randomGraphs.ToList().ForEach(x => bagOfGraphs.Add(x));
+            });
+        }
+
+        /// <summary>
+        /// Loads the data.
+        /// </summary>
+        public void LoadData()
+        {
+            this.Initialize();
 
             int total = this.loader.GetTotal();
             for (int t = 0; t < total; ++t)
             {
                 var moves = this.loader.LoadMoves(t);
                 var name = this.loader.GetFileName(t).Replace(".pgn", string.Empty);
-                this.gameState = new GameState();
-                List<string> jsons = new List<string>();
-                try
-                {
-                    foreach ((Move move, Move? nextmove) in moves.WithNext())
-                    {
-                        this.gameState.Board.Move(move);
-                        if (nextmove != null)
-                        {
-                            var gamePhase = this.gameState.GetGamePhase();
-                            var allmoves = this.gameState.GetMoves();
-                            var legalbothmoves = this.gameState.GetAllMoves();
-                            var legalmoves = this.gameState.Board.Moves().ToList();
-                            var turn = this.gameState.Board.Turn;
-                            var fen = this.gameState.Board.ToFen();
-                            var graph = JsonConvert.DeserializeObject<GapGraph>(graphJson) ?? throw new InvalidOperationException("Failed to deserialize.");
-                            graph.Populate();
-                            graph = this.gameState.PopulateNodes(graph);
-                            graph.FenString = fen;
-
-                            foreach (var allmove in allmoves)
-                            {
-                                var path = GameState.GetGapPath(graph, allmove, nextmove, legalbothmoves, legalmoves, turn);
-                                graph.GapPaths.Add(path);
-                            }
-
-                            foreach (var legalmove in legalbothmoves)
-                            {
-                                var edges = GameState.GetGapEdge(graph, legalmove, legalmoves, turn);
-                                graph.GapEdges.Add(edges.Edge1);
-                                graph.GapEdges.Add(edges.Edge2);
-                            }
-
-                            graph.FormAdjacencyMatrix();
-                            var totalStats = 2773067d;
-                            graph.UpdateFeatureIndices(this.artifacts, this.gameState.Board.ToPositionFen(), this.gameState.Board.ExecutedMoves.Last().ToString(), gamePhase);
-                            graph.UpdateFeatureVectors(this.edgeFrequenciesByPhase[gamePhase], totalStats);
-                            graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[gamePhase], totalStats);
-                            graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[gamePhase], totalStats);
-                            graph.UpdateFeatureVectors();
-
-                            foreach (var path in graph.GapPaths)
-                            {
-                                var firstNode = path.Nodes.First();
-                                var associatedEdge = firstNode.Edges.First(x => x.Move().StartsWith(path.MoveString));
-                                path.EdgeId = associatedEdge.Id;
-                            }
-
-                            if (graph.GapPaths.Count(x => x.IsTarget) > 1
-                                ||
-                                !graph.GapPaths.Any(x => x.IsTarget))
-                            {
-                                var graphTargets = graph.GapPaths.Count(x => x.IsTarget);
-                                continue;
-                            }
-
-                            var gJson = JsonConvert.SerializeObject(graph);
-                            jsons.Add(gJson);
-                        }
-                    } // end foreach
-                }
-                catch (ChessGameEndedException)
-                {
-                    // ignore
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
-                    Console.WriteLine($"Failed to process {name}");
-                }
-
-                this.SaveToZip(jsons, $"E:\\graphs\\{name}.zip");
+                this.ProcessMoves(moves, name);
             }
+        }
+
+        private List<GapGraph> ProcessMoves(List<Move> moves, string name)
+        {
+            this.gameState = new GameState();
+            List<string> jsons = new List<string>();
+            List<GapGraph> graphs = new List<GapGraph>();
+            try
+            {
+                foreach ((Move move, Move? nextmove) in moves.WithNext())
+                {
+                    this.gameState.Board.Move(move);
+                    if (nextmove != null)
+                    {
+                        var gamePhase = this.gameState.GetGamePhase();
+                        var allmoves = this.gameState.GetMoves();
+                        var legalbothmoves = this.gameState.GetAllMoves();
+                        var legalmoves = this.gameState.Board.Moves().ToList();
+                        var turn = this.gameState.Board.Turn;
+                        var fen = this.gameState.Board.ToFen();
+                        var graph = JsonConvert.DeserializeObject<GapGraph>(this.graphJson) ?? throw new InvalidOperationException("Failed to deserialize.");
+                        graph.Id = Guid.NewGuid();
+                        graph.Populate();
+                        graph = this.gameState.PopulateNodes(graph);
+                        graph.FenString = fen;
+
+                        foreach (var allmove in allmoves)
+                        {
+                            var path = GameState.GetGapPath(graph, allmove, nextmove, legalbothmoves, legalmoves, turn);
+                            graph.GapPaths.Add(path);
+                        }
+
+                        foreach (var legalmove in legalbothmoves)
+                        {
+                            var edges = GameState.GetGapEdge(graph, legalmove, legalmoves, turn);
+                            graph.GapEdges.Add(edges.Edge1);
+                            graph.GapEdges.Add(edges.Edge2);
+                        }
+
+                        graph.FormAdjacencyMatrix();
+                        var totalStats = 2773067d;
+                        graph.UpdateFeatureIndices(this.artifacts, this.gameState.Board.ToPositionFen(), this.gameState.Board.ExecutedMoves.Last().ToString(), gamePhase);
+                        graph.UpdateFeatureVectors(this.edgeFrequenciesByPhase[gamePhase], totalStats);
+                        graph.UpdateFeatureVectors(this.moveFrequenciesByPhase[gamePhase], totalStats);
+                        graph.UpdateFeatureVectors(this.actualMoveFrequenciesByPhase[gamePhase], totalStats);
+                        graph.UpdateFeatureVectors();
+
+                        foreach (var path in graph.GapPaths)
+                        {
+                            var firstNode = path.Nodes.First();
+                            var associatedEdge = firstNode.Edges.First(x => x.Move().StartsWith(path.MoveString));
+                            path.EdgeId = associatedEdge.Id;
+                        }
+
+                        if (graph.GapPaths.Count(x => x.IsTarget) > 1
+                            ||
+                            !graph.GapPaths.Any(x => x.IsTarget))
+                        {
+                            var graphTargets = graph.GapPaths.Count(x => x.IsTarget);
+                            continue;
+                        }
+
+                        graphs.Add(graph);
+                        var gJson = JsonConvert.SerializeObject(graph);
+                        jsons.Add(gJson);
+                    }
+                } // end foreach
+            }
+            catch (ChessGameEndedException)
+            {
+                // ignore
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine($"Failed to process {name}");
+            }
+
+            this.SaveToZip(jsons, $"E:\\graphs\\{name}.zip");
+
+            return graphs;
         }
 
         private void SaveToZip(List<string> jsons, string zipName)

@@ -9,7 +9,7 @@ using ParallelReverseAutoDiff.GnnExample;
 Console.WriteLine("Hello, World!");
 
 TrainingSetLoader loader = new TrainingSetLoader();
-await loader.LoadMiniBatch();
+await loader.LoadMiniBatchFromBag();
 
 // ArtifactDictionaryGenerator artifactDictionaryGenerator = new ArtifactDictionaryGenerator();
 // artifactDictionaryGenerator.Generate();

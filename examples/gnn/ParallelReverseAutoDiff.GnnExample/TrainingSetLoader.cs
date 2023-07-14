@@ -5,7 +5,9 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.GnnExample
 {
+    using System.Collections.Concurrent;
     using System.IO.Compression;
+    using ManagedCuda.BasicTypes;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths;
@@ -17,6 +19,8 @@ namespace ParallelReverseAutoDiff.GnnExample
     {
         private Random rand;
         private GraphAttentionPathsNeuralNetwork neuralNetwork;
+        private ConcurrentBag<GapGraph> bagOfGraphs;
+        private TrainingSetGenerator generator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrainingSetLoader"/> class.
@@ -24,6 +28,74 @@ namespace ParallelReverseAutoDiff.GnnExample
         public TrainingSetLoader()
         {
             this.rand = new Random(Guid.NewGuid().GetHashCode());
+            this.bagOfGraphs = new ConcurrentBag<GapGraph>();
+            this.generator = new TrainingSetGenerator();
+        }
+
+        /// <summary>
+        /// Loads a mini-batch of training data from bag.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async Task LoadMiniBatchFromBag()
+        {
+            CudaBlas.Instance.Initialize();
+            this.generator.Initialize();
+            await this.generator.AddToBag(this.bagOfGraphs, this.rand);
+
+            try
+            {
+                for (int i = 0; i < 1001; ++i)
+                {
+                    List<GapGraph> graphs = new List<GapGraph>();
+
+                    while (graphs.Count < 4)
+                    {
+                        bool gresult = this.bagOfGraphs.TryTake(out var g);
+                        if (g != null && gresult)
+                        {
+                            if (!g.GapPaths.Any(x => x.IsTarget))
+                            {
+                                continue;
+                            }
+
+                            if (g.GapPaths.Where(x => x.IsTarget).Count() > 1)
+                            {
+                                continue;
+                            }
+
+                            graphs.Add(g);
+                        }
+                    }
+
+                    var json = JsonConvert.SerializeObject(graphs);
+                    File.WriteAllText("minibatch.json", json);
+
+                    var bagTask = this.generator.AddToBag(this.bagOfGraphs, this.rand);
+                    var miniBatchTask = this.ProcessMiniBatch(graphs);
+                    await Task.WhenAll(bagTask, miniBatchTask);
+                    var result = miniBatchTask.Result;
+                    Thread.Sleep(5000);
+
+                    if (result)
+                    {
+                        if (i % 10 == 0 || i % 10 == 5)
+                        {
+                            try
+                            {
+                                this.neuralNetwork.SaveWeights();
+                            }
+                            catch (OutOfMemoryException ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                CudaBlas.Instance.Dispose();
+            }
         }
 
         /// <summary>
@@ -33,6 +105,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         public async Task LoadMiniBatch()
         {
             CudaBlas.Instance.Initialize();
+            this.generator.Initialize();
             try
             {
                 var graphFiles = Directory.GetFiles("G:\\My Drive\\graphs2", "*.zip").ToList();

@@ -36,7 +36,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
-            this.NumLayers = numLayers;
+            this.NumLayers = numLayers * 2;
             this.NumQueries = numQueries;
             this.NumPaths = numPaths;
             this.NumFeatures = (numFeatures * (int)Math.Pow(2, numLayers) * 2) + numFeatures;
@@ -222,7 +222,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.GCN
                 await opVisitor.TraverseAsync();
                 if (opVisitor.AggregateException != null)
                 {
-                    if (opVisitor.AggregateException.InnerExceptions.Count > 1)
+                    if (opVisitor.AggregateException.InnerExceptions.Count > 2)
                     {
                         throw opVisitor.AggregateException;
                     }

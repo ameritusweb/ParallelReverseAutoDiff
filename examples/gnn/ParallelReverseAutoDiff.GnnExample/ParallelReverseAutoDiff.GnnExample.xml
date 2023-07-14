@@ -950,6 +950,19 @@
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator"/> class.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.Initialize">
+            <summary>
+            Initialize the training set generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.AddToBag(System.Collections.Concurrent.ConcurrentBag{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Random)">
+            <summary>
+            Add to bag of graphs.
+            </summary>
+            <param name="bagOfGraphs">The graphs.</param>
+            <param name="rand">The random.</param>
+            <returns>The task.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.LoadData">
             <summary>
             Loads the data.
@@ -964,6 +977,12 @@
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader"/> class.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.LoadMiniBatchFromBag">
+            <summary>
+            Loads a mini-batch of training data from bag.
+            </summary>
+            <returns>A task.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.LoadMiniBatch">
             <summary>

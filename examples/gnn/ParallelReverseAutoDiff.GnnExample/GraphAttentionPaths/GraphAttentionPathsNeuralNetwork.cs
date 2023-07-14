@@ -143,7 +143,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1;
+            var initialAdamIteration = 221;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -213,15 +213,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            // var guid = "7770b06f-f3f7-4357-a0ef-24db36159504_801";
-            // var dir = $"E:\\store\\{guid}";
-            // for (int i = 0; i < this.modelLayers.Count; ++i)
-            // {
-            //    var modelLayer = this.modelLayers[i];
-            //    var file = new FileInfo($"{dir}\\layer{i}");
-            //    modelLayer.LoadWeightsAndMomentsBinary(file);
-            //    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            // }
+            var guid = "ebf64cae-d8d0-4a2b-bd72-49921ef083e1_221";
+            var dir = $"E:\\store\\{guid}";
+            for (int i = 0; i < this.modelLayers.Count; ++i)
+            {
+                var modelLayer = this.modelLayers[i];
+                var file = new FileInfo($"{dir}\\layer{i}");
+                modelLayer.LoadWeightsAndMomentsBinary(file);
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+            }
         }
 
         /// <summary>
@@ -501,7 +501,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             foreach (var graph in this.gapGraphs)
             {
                 // GCN Input
-                DeepMatrix gcnInput = new DeepMatrix(graph.GapPaths.Count, this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers) * 2, 1);
+                DeepMatrix gcnInput = new DeepMatrix(graph.GapPaths.Count, this.numFeatures + (this.numFeatures * (int)Math.Pow(2d, (double)this.numLayers) * 2), 1);
                 for (int i = 0; i < gcnInput.Depth; ++i)
                 {
                     for (int j = 0; j < gcnInput.Rows; ++j)
@@ -571,15 +571,18 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
                         CosineDistanceLossOperation operation = new CosineDistanceLossOperation();
                         var result = operation.Forward(readoutOutput[i], matrix);
-                        losses.Add((gPath, gPath.Move(), result[0][0]));
+                        if (gPath.IsLegal && gPath.IsYourTurn)
+                        {
+                            losses.Add((gPath, gPath.Move(), result[0][0]));
+                        }
                     }
 
                     var orderedlosses = losses.OrderBy(x => x.Item3).ToList();
                     var avgloss = losses.Average(x => x.Item3);
-                    this.PrintGraph(graph, orderedlosses.Last().Item2, gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3);
+                    this.PrintGraph(graph, orderedlosses.Last().Item2, gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.First().Item3, orderedlosses.Last().Item3);
                 }
 
-                var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { -1.0d } }));
+                var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { 1.0d } }));
                 outputGradients.Add(gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value."));
             }
 
@@ -678,8 +681,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 {
                     var path = indexesToPathMapTransformer[(key, i)];
                     var edgeId = path.EdgeId;
-                    var edge = this.gapGraphs.First(x => x.Id == path.GraphId).GapEdges.First(x => x.Id == edgeId);
-                    edgeToGradientMap.Add(edge, dEdgeFeatureVector[i].Transpose());
+                    try
+                    {
+                        var edge = this.gapGraphs.First(x => x.Id == path.GraphId).GapEdges.First(x => x.Id == edgeId);
+                        edgeToGradientMap.Add(edge, dEdgeFeatureVector);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
                     var nodeCount = path.Nodes.Count;
                     for (int j = 0; j < nodeCount; ++j)
                     {
@@ -737,10 +748,10 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         var edge = node.Edges[j];
                         var featureVector = gradient[j];
                         Matrix edgeGradient = new Matrix(featureVector.Length, 1);
-                        var otherEdgeGradient = edgeToGradientMap[edge];
+                        var otherEdgeGradient = edgeToGradientMap.ContainsKey(edge) ? edgeToGradientMap[edge] : new Matrix(1, featureVector.Length);
                         for (int k = 0; k < featureVector.Length; ++k)
                         {
-                            edgeGradient[k][0] = featureVector[k];
+                            edgeGradient[k][0] = featureVector[k] + otherEdgeGradient[0][k];
                         }
 
                         edgeGradientMap[edge] = edgeGradient;
@@ -802,7 +813,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             return (int)adjacency[path1.AdjacencyIndex][path2.AdjacencyIndex] == 1;
         }
 
-        private void PrintGraph(GapGraph graph, string move, string target, double targetLoss, double avgloss, double lowestloss)
+        private void PrintGraph(GapGraph graph, string move, string target, double targetLoss, double avgloss, double lowestloss, double highestloss)
         {
             // Initialize empty 8x8 board
             string[,] board = new string[8, 8];
@@ -810,7 +821,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             // Fill board spots based on node x/y and piece
             foreach (GapNode node in graph.GapNodes)
             {
-                board[node.PositionY, node.PositionX] = node.GapType == GapType.Knight ? "N" : (node.GapType == GapType.Empty ? "." : node.GapType.ToString().Substring(0, 1));
+                var edge = node.Edges.FirstOrDefault(x => x.Move().ToLowerInvariant().StartsWith("w"));
+                if (edge != null)
+                {
+                    board[node.PositionY, node.PositionX] = node.GapType == GapType.Knight ? "N" : (node.GapType == GapType.Empty ? "." : node.GapType.ToString().Substring(0, 1));
+                }
+                else
+                {
+                    board[node.PositionY, node.PositionX] = node.GapType == GapType.Knight ? "n" : (node.GapType == GapType.Empty ? "." : node.GapType.ToString().Substring(0, 1).ToLowerInvariant());
+                }
             }
 
             // Print top border
@@ -834,7 +853,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             Console.WriteLine("Target:" + target);
             Console.WriteLine("Target Loss: " + targetLoss);
             Console.WriteLine("Avg Loss: " + avgloss);
-            Console.WriteLine("Highest Loss: " + lowestloss);
+            Console.WriteLine("Lowest Loss: " + lowestloss);
+            Console.WriteLine("Highest Loss: " + highestloss);
         }
     }
 }
