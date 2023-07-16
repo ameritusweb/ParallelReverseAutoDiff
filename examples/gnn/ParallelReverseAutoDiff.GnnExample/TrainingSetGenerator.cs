@@ -89,8 +89,9 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// </summary>
         /// <param name="bagOfGraphs">The graphs.</param>
         /// <param name="rand">The random.</param>
+        /// <param name="numberOfMoves">The number of moves.</param>
         /// <returns>The task.</returns>
-        public async Task AddToBag(ConcurrentBag<GapGraph> bagOfGraphs, Random rand)
+        public async Task AddToBag(ConcurrentBag<GapGraph> bagOfGraphs, Random rand, int numberOfMoves)
         {
             await Task.Run(() =>
             {
@@ -98,7 +99,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                 var r = rand.Next(total);
                 var moves = this.loader.LoadMoves(r);
                 var name = this.loader.GetFileName(r).Replace(".pgn", string.Empty);
-                var graphs = this.ProcessMoves(moves, name);
+                var graphs = this.ProcessMoves(moves.Take(numberOfMoves).ToList(), name, false);
                 var randomGraphs = graphs.OrderBy(x => rand.Next());
                 randomGraphs.ToList().ForEach(x => bagOfGraphs.Add(x));
             });
@@ -116,11 +117,11 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 var moves = this.loader.LoadMoves(t);
                 var name = this.loader.GetFileName(t).Replace(".pgn", string.Empty);
-                this.ProcessMoves(moves, name);
+                this.ProcessMoves(moves, name, true);
             }
         }
 
-        private List<GapGraph> ProcessMoves(List<Move> moves, string name)
+        private List<GapGraph> ProcessMoves(List<Move> moves, string name, bool shouldSave)
         {
             this.gameState = new GameState();
             List<string> jsons = new List<string>();
@@ -197,7 +198,10 @@ namespace ParallelReverseAutoDiff.GnnExample
                 Console.WriteLine($"Failed to process {name}");
             }
 
-            this.SaveToZip(jsons, $"E:\\graphs\\{name}.zip");
+            if (shouldSave)
+            {
+                this.SaveToZip(jsons, $"E:\\graphs\\{name}.zip");
+            }
 
             return graphs;
         }

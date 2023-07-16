@@ -38,9 +38,10 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>A task.</returns>
         public async Task LoadMiniBatchFromBag()
         {
+            int numberOfMoves = 20;
             CudaBlas.Instance.Initialize();
             this.generator.Initialize();
-            await this.generator.AddToBag(this.bagOfGraphs, this.rand);
+            await this.generator.AddToBag(this.bagOfGraphs, this.rand, numberOfMoves);
 
             try
             {
@@ -70,7 +71,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                     var json = JsonConvert.SerializeObject(graphs);
                     File.WriteAllText("minibatch.json", json);
 
-                    var bagTask = this.generator.AddToBag(this.bagOfGraphs, this.rand);
+                    var bagTask = this.generator.AddToBag(this.bagOfGraphs, this.rand, numberOfMoves);
                     var miniBatchTask = this.ProcessMiniBatch(graphs);
                     await Task.WhenAll(bagTask, miniBatchTask);
                     var result = miniBatchTask.Result;

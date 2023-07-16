@@ -37,7 +37,8 @@ namespace ParallelReverseAutoDiff.GnnExample
             this.positionToNodeMap = new ConcurrentDictionary<Position, GNNNode>();
             this.idToEdgeMap = new ConcurrentDictionary<int, GNNEdge>();
             this.graph = new GNNGraph();
-            this.BuildMap();
+
+            // this.BuildMap();
         }
 
         /// <summary>
@@ -52,7 +53,8 @@ namespace ParallelReverseAutoDiff.GnnExample
             this.positionToPossibleMoveMap = new ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>>();
             this.idToEdgeMap = new ConcurrentDictionary<int, GNNEdge>();
             this.graph = new GNNGraph();
-            this.BuildMap();
+
+            // this.BuildMap();
         }
 
         /// <summary>

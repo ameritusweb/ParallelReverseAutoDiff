@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Cosine distance loss operation.
     /// </summary>
-    public class CosineDistanceLossOperation : Operation
+    public class CosineDistanceLossOperation
     {
         private Matrix superpath;
         private Matrix targetPath;
@@ -21,7 +21,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="net">The neural network.</param>
         /// <returns>The instantiated operation.</returns>
-        public static IOperation Instantiate(NeuralNetwork net)
+        public static CosineDistanceLossOperation Instantiate(NeuralNetwork net)
         {
             return new CosineDistanceLossOperation();
         }
@@ -43,17 +43,22 @@ namespace ParallelReverseAutoDiff.RMAD
             // Calculate loss as 1 - cosine similarity (i.e., cosine distance)
             double loss = 1 - cosineSimilarity;
 
-            this.Output = new Matrix(1, 1);
-            this.Output[0][0] = loss;
+            var output = new Matrix(1, 1);
+            output[0][0] = loss;
 
-            return this.Output;
+            return output;
         }
 
-        /// <inheritdoc />
-        public override BackwardResult Backward(Matrix dOutput)
+        /// <summary>
+        /// Runs the backward operation for the cosine distance loss function.
+        /// </summary>
+        /// <param name="dOutput">The gradient of the output.</param>
+        /// <param name="targetMatrix">The target matrix.</param>
+        /// <returns>The backward result.</returns>
+        public BackwardResult Backward(Matrix dOutput, Matrix? targetMatrix)
         {
-            double dLoss = 1d;
-            Matrix dSuperpath = this.superpath.GradientWRTCosineSimilarity(this.targetPath, dLoss);
+            double dLoss = targetMatrix == null ? 1d : -1d;
+            Matrix dSuperpath = this.superpath.GradientWRTCosineSimilarity(targetMatrix == null ? this.targetPath : targetMatrix, dLoss);
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dSuperpath)

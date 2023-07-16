@@ -66,6 +66,11 @@ namespace Chess
         public bool LoadedFromFen => FenBuilder is not null;
 
         /// <summary>
+        /// Gets the board size.
+        /// </summary>
+        public int BoardSize => 8;
+
+        /// <summary>
         /// Determinize whose player turn is it now
         /// </summary>
         public PieceColor Turn
@@ -111,6 +116,26 @@ namespace Chess
         public bool IsValid(Position position)
         {
             return position.X >= 0 && position.X <= 7 && position.Y >= 0 && position.Y <= 7;
+        }
+
+        public IEnumerable<Position> GetPositions(PieceColor color)
+        {
+            List<Position> positions = new List<Position>();
+            for (int i = 0; i < BoardSize; i++)
+            {
+                for (int j = 0; j < BoardSize; ++j)
+                {
+                    if (this.pieces[i, j]?.Color == color)
+                    {
+                        var piece = this.pieces[i, j];
+                        if (piece != null)
+                        {
+                            positions.Add(new Position(i, j));
+                        }
+                    }
+                }
+            }
+            return positions;
         }
 
         private bool whiteKingChecked = false;
@@ -637,6 +662,51 @@ namespace Chess
             }
 
             EndGame = new EndGameInfo(EndgameType.DrawDeclared, null);
+        }
+
+        public bool IsSquareEmpty(Position position)
+        {
+            return pieces[position.X, position.Y] == null;
+        }
+
+        public IEnumerable<Piece> GetPieces()
+        {
+            List<Piece> pieces = new List<Piece>();
+            for (int i = 0; i < BoardSize; i++)
+            {
+                for (int j = 0; j < BoardSize; ++j)
+                {
+                    if (this.pieces[i, j] != null)
+                    {
+                        var piece = this.pieces[i, j];
+                        if (piece != null)
+                        {
+                            pieces.Add(piece);
+                        }
+                    }
+                }
+            }
+            return pieces;
+        }
+
+        public IEnumerable<Piece> GetPieces(PieceColor color)
+        {
+            List<Piece> pieces = new List<Piece>();
+            for (int i = 0; i < BoardSize; i++)
+            {
+                for (int j = 0; j < BoardSize; ++j)
+                {
+                    if (this.pieces[i, j]?.Color == color)
+                    {
+                        var piece = this.pieces[i, j];
+                        if (piece != null)
+                        {
+                            pieces.Add(piece);
+                        }
+                    }
+                }
+            }
+            return pieces;
         }
 
         public object Clone()

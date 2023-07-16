@@ -150,6 +150,22 @@ namespace Chess
             return moves;
         }
 
+        public List<Tuple<Move, Piece?>> GetSquareControl(ChessBoard board, Position position)
+        {
+            List<Tuple<Move, Piece?>> moves = new List<Tuple<Move, Piece?>>();
+            var potential = board.GeneratePositions(position, true);
+            foreach (var p in potential)
+            {
+                var piece = board.pieces[p.Y, p.X];
+                if (Type == PieceType.Pawn && position.X == p.X)
+                {
+                    continue;
+                }
+                moves.Add(new Tuple<Move, Piece?>(new Move(position, p), piece));
+            }
+            return moves;
+        }
+
         public List<(Move move, Piece? piece)> GetAvailableMovesToAnyColor(ChessBoard board, Position position)
         {
             List<(Move, Piece?)> moves = new List<(Move, Piece?)>();

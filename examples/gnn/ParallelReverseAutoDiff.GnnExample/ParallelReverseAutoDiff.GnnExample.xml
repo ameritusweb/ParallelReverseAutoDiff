@@ -54,6 +54,77 @@
             <param name="skip">How many files to skip.</param>
             <returns>The chess board list of moves.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator">
+            <summary>
+            Chess game evaluator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator"/> class.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.Random">
+            <summary>
+            Gets a random number generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.ComputeReward(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor,Chess.Move)">
+            <summary>
+            Compute the reward.
+            </summary>
+            <param name="state">The game state.</param>
+            <param name="color">The piece color.</param>
+            <param name="move">The move.</param>
+            <returns>The computed reward.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetMoveScore(Chess.Move)">
+            <summary>
+            Gets the score of a move.
+            </summary>
+            <param name="move">The move.</param>
+            <returns>The move score.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetFeatureValues(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
+            <summary>
+            Gets the feature values of a game state.
+            </summary>
+            <param name="state">The game state.</param>
+            <param name="color">The piece color.</param>
+            <returns>The feature values.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetTacticScore(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
+            <summary>
+            Gets a score for tactical advantage.
+            </summary>
+            <param name="state">The game state.</param>
+            <param name="color">The piece color.</param>
+            <returns>The tactic score.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetPieceDevelopment(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
+            <summary>
+            Get a score for piece development.
+            </summary>
+            <param name="state">The game state.</param>
+            <param name="color">The piece color.</param>
+            <returns>The piece development score.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetPawnStructureScore(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
+            <summary>
+            Gets the pawn structure score.
+            </summary>
+            <param name="state">The game state.</param>
+            <param name="color">The piece color.</param>
+            <returns>The pawn structure score.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.ComputeReward(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
+            <summary>
+            Compute the reward.
+            </summary>
+            <param name="state">The game state.</param>
+            <param name="color">The piece color.</param>
+            <returns>The rwward.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils">
             <summary>
             A collection of matrix utilities for neural network development.
@@ -955,12 +1026,13 @@
             Initialize the training set generator.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.AddToBag(System.Collections.Concurrent.ConcurrentBag{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Random)">
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.AddToBag(System.Collections.Concurrent.ConcurrentBag{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Random,System.Int32)">
             <summary>
             Add to bag of graphs.
             </summary>
             <param name="bagOfGraphs">The graphs.</param>
             <param name="rand">The random.</param>
+            <param name="numberOfMoves">The number of moves.</param>
             <returns>The task.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.LoadData">
@@ -2260,8 +2332,13 @@
             <param name="targetPath">The target path matrix.</param>
             <returns>The scalar loss value.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
-            <inheritdoc />
+        <member name="M:ParallelReverseAutoDiff.RMAD.CosineDistanceLossOperation.Backward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Runs the backward operation for the cosine distance loss function.
+            </summary>
+            <param name="dOutput">The gradient of the output.</param>
+            <param name="targetMatrix">The target matrix.</param>
+            <returns>The backward result.</returns>
         </member>
     </members>
 </doc>

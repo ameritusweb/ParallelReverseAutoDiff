@@ -7,6 +7,9 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 {
     using System;
     using System.IO;
+    using System.Reflection.Metadata;
+    using Chess;
+    using ParallelReverseAutoDiff.GnnExample;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassing;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths.EdgeAttention;
@@ -143,7 +146,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 221;
+            var initialAdamIteration = 888;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -213,7 +216,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "ebf64cae-d8d0-4a2b-bd72-49921ef083e1_221";
+            var guid = "4f601b11-12fe-4f84-97c2-32c7173bf602_888";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -531,6 +534,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             var readoutOutput = readoutNet.Output;
 
             List<Matrix> outputGradients = new List<Matrix>();
+            BackwardResult? gradientOfLoss = null;
+            int iteration = -1;
             for (int i = 0; i < this.gapGraphs.Count; ++i)
             {
                 var graph = this.gapGraphs[i];
@@ -547,8 +552,15 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                 CosineDistanceLossOperation cosineDistanceLossOperation = new CosineDistanceLossOperation();
                 var loss = cosineDistanceLossOperation.Forward(readoutOutput[i], targetMatrix);
 
-                if (i == 0)
+                if (gradientOfLoss == null && iteration == -1)
                 {
+                    var fen = graph.FenString;
+                    ChessBoard board = ChessBoard.LoadFromFen(fen);
+                    GameState gameState = new GameState(board);
+                    var turn = board.Turn;
+                    ChessMoveEvaluator evaluator = new ChessMoveEvaluator();
+                    var moves = board.Moves().ToList();
+
                     List<string> legalMoves = new List<string>();
                     var edges = this.gapGraphs[0].GapEdges.Select(x => x.Tag).ToList();
                     foreach (var edge in edges)
@@ -577,13 +589,77 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         }
                     }
 
-                    var orderedlosses = losses.OrderBy(x => x.Item3).ToList();
-                    var avgloss = losses.Average(x => x.Item3);
-                    this.PrintGraph(graph, orderedlosses.Last().Item2, gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.First().Item3, orderedlosses.Last().Item3);
+                    var orderedlosses = losses.OrderByDescending(x => x.Item3).ToList();
+                    var oppositeOrderedLosses = losses.OrderBy(x => x.Item3).ToList();
+
+                    List<double> rewards = new List<double>();
+                    for (int j = 0; j < Math.Min(5, orderedlosses.Count); ++j)
+                    {
+                        var path = orderedlosses[j].Item1;
+                        var move = moves.FirstOrDefault(x => orderedlosses[j].Item2.ToLowerInvariant().Contains(x.OriginalPosition.ToString().ToLowerInvariant() + " - " + x.NewPosition.ToString().ToLowerInvariant()));
+                        if (path.IsTarget)
+                        {
+                            rewards.Add(double.MaxValue);
+                        }
+                        else
+                        {
+                            if (move != null)
+                            {
+                                rewards.Add(evaluator.ComputeReward(gameState, turn, move));
+                            }
+                            else
+                            {
+                                rewards.Add(0d);
+                            }
+                        }
+                    }
+
+                    var rewardIndex = rewards.IndexOf(rewards.Min());
+                    (GapPath, string, double)? minloss = rewards.Count == 5 ? orderedlosses[rewardIndex] : null;
+
+                    if (minloss.HasValue)
+                    {
+                        if (rewards.Min() <= -1d)
+                        {
+                            var tPathIndex = graph.GapPaths.IndexOf(minloss.Value.Item1);
+                            var tPath = gcnOutputs[i][tPathIndex];
+                            Matrix tMatrix = new Matrix(targetFeatures, 1);
+                            for (int j = 0; j < targetFeatures; ++j)
+                            {
+                                tMatrix[j][0] = tPath[j];
+                            }
+
+                            gradientOfLoss = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { 1.0d } }), tMatrix);
+                            iteration = i;
+                        }
+                    }
+
+                    if (gradientOfLoss != null || (minloss.HasValue && i == 0))
+                    {
+                        var avgloss = losses.Average(x => x.Item3);
+                        var ordered = orderedlosses.TakeWhile(x => !x.Item1.IsTarget).ToList();
+                        ordered = ordered.Concat(orderedlosses.SkipWhile(x => !x.Item1.IsTarget).Take(1)).ToList();
+
+                        var orderedOpposite = oppositeOrderedLosses.SkipWhile(x => x.Item3 <= avgloss).ToList();
+
+                        // var orderedOpposite2 = orderedOpposite.TakeWhile(x => !x.Item1.IsTarget).ToList();
+                        // orderedOpposite2 = orderedOpposite2.Concat(orderedOpposite.SkipWhile(x => !x.Item1.IsTarget).Take(1)).ToList();
+                        this.PrintGraph(graph, string.Join(" ", ordered.Select(x => x.Item2)), string.Join(" ", orderedOpposite.Select(x => x.Item2 + " " + x.Item3 + "|")), gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3, orderedlosses.First().Item3, minloss?.Item2 ?? default(string)!, rewards.Min());
+                    }
+                }
+                else
+                {
+                    gradientOfLoss = null;
                 }
 
-                var gradientOfLossWrtReadoutOutput = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { 1.0d } }));
-                outputGradients.Add(gradientOfLossWrtReadoutOutput.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value."));
+                var gloss = iteration == i ? gradientOfLoss : null;
+
+                if (gloss == null)
+                {
+                    gloss = cosineDistanceLossOperation.Backward(new Matrix(new[] { new[] { 1.0d } }), null);
+                }
+
+                outputGradients.Add(gloss.Item1 as Matrix ?? throw new InvalidOperationException("Gradient should have a value."));
             }
 
             return new DeepMatrix(outputGradients.ToArray());
@@ -813,7 +889,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             return (int)adjacency[path1.AdjacencyIndex][path2.AdjacencyIndex] == 1;
         }
 
-        private void PrintGraph(GapGraph graph, string move, string target, double targetLoss, double avgloss, double lowestloss, double highestloss)
+        private void PrintGraph(GapGraph graph, string move, string oppositemove, string target, double targetLoss, double avgloss, double lowestloss, double highestloss, string minloss, double minreward)
         {
             // Initialize empty 8x8 board
             string[,] board = new string[8, 8];
@@ -849,12 +925,16 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
             // Print bottom border
             Console.WriteLine("   a b c d e f g h");
-            Console.WriteLine("Move: " + move);
+            Console.WriteLine("Moves: " + move);
+            Console.WriteLine("Opposite Moves: " + oppositemove);
             Console.WriteLine("Target:" + target);
             Console.WriteLine("Target Loss: " + targetLoss);
             Console.WriteLine("Avg Loss: " + avgloss);
             Console.WriteLine("Lowest Loss: " + lowestloss);
             Console.WriteLine("Highest Loss: " + highestloss);
+            Console.WriteLine("Min Loss: " + minloss);
+            Console.WriteLine("Min Reward: " + minreward);
+            Console.WriteLine("FEN: " + graph.FenString);
         }
     }
 }
