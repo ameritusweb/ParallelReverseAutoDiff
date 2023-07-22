@@ -185,9 +185,8 @@ namespace Chess
             return moves;
         }
 
-        public bool CanAttack(Position square, ChessBoard board)
+        public bool CanAttack(Position square, ChessBoard board, Move[] allMoves)
         {
-            var allMoves = board.Moves(false, true, false);
             foreach (var move in allMoves)
             {
                 if (move.Piece == this)

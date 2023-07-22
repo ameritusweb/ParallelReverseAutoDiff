@@ -7,12 +7,10 @@ namespace ParallelReverseAutoDiff.GnnExample
 {
     using System.Collections.Concurrent;
     using System.IO.Compression;
-    using System.Xml.Linq;
     using Chess;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.GnnExample.Common;
     using ParallelReverseAutoDiff.Test.GraphAttentionPaths;
-    using static ILGPU.IR.Transformations.CodePlacement;
 
     /// <summary>
     /// A training set generator.
@@ -89,9 +87,8 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// </summary>
         /// <param name="bagOfGraphs">The graphs.</param>
         /// <param name="rand">The random.</param>
-        /// <param name="numberOfMoves">The number of moves.</param>
         /// <returns>The task.</returns>
-        public async Task AddToBag(ConcurrentBag<GapGraph> bagOfGraphs, Random rand, int numberOfMoves)
+        public async Task AddToBag(ConcurrentBag<GapGraph> bagOfGraphs, Random rand)
         {
             await Task.Run(() =>
             {
@@ -99,7 +96,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                 var r = rand.Next(total);
                 var moves = this.loader.LoadMoves(r);
                 var name = this.loader.GetFileName(r).Replace(".pgn", string.Empty);
-                var graphs = this.ProcessMoves(moves.Take(numberOfMoves).ToList(), name, false);
+                var graphs = this.ProcessMoves(moves.ToList(), name, true);
                 var randomGraphs = graphs.OrderBy(x => rand.Next());
                 randomGraphs.ToList().ForEach(x => bagOfGraphs.Add(x));
             });

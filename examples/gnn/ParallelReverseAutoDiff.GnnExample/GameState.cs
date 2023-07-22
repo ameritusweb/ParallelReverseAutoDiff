@@ -141,7 +141,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                 &&
                 nextmove.NewPosition.ToString() == endPosition.ToString())
             {
-                if (capturedPiece == null && nextmove.CapturedPiece == null)
+                if (capturedPiece == null && (nextmove.CapturedPiece == null || (nextmove.Parameter != null && nextmove.Parameter.GetType() == typeof(MoveEnPassant))))
                 {
                     isTargetMove = true;
                 }
@@ -269,6 +269,33 @@ namespace ParallelReverseAutoDiff.GnnExample
         }
 
         /// <summary>
+        /// Gets pieces and their positions.
+        /// </summary>
+        /// <returns>Pieces and their positions.</returns>
+        public IEnumerable<(Piece? Piece, Position Position)> GetPiecesAndTheirPositions()
+        {
+            List<(Piece?, Position)> pieces = new List<(Piece?, Position)>();
+            for (int i = 0; i < this.BoardSize; i++)
+            {
+                for (int j = 0; j < this.BoardSize; ++j)
+                {
+                    var pos = new Position(i, j);
+                    if (this.Board[pos] != null)
+                    {
+                        var piece = this.Board[pos];
+                        pieces.Add((piece, pos));
+                    }
+                    else
+                    {
+                        pieces.Add((default(Piece), pos));
+                    }
+                }
+            }
+
+            return pieces;
+        }
+
+        /// <summary>
         /// Gets the game phase.
         /// </summary>
         /// <returns>The game phase.</returns>
@@ -365,10 +392,11 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// Get all moves for a piece color.
         /// </summary>
         /// <param name="color">The color.</param>
+        /// <param name="allMoves">The list of all moves.</param>
         /// <returns>The list of moves.</returns>
-        public List<Move> GetAllMovesForColor(PieceColor color)
+        public List<Move> GetAllMovesForColor(PieceColor color, List<Move> allMoves)
         {
-            return this.Board.Moves(false, true, false)
+            return allMoves
                 .Where(x => x.Piece.Color == color)
                 .ToList();
         }
@@ -427,6 +455,18 @@ namespace ParallelReverseAutoDiff.GnnExample
         public List<Move> GetAllMovesForPositionAndColor(Position position, PieceColor color)
         {
             return this.Board.Moves(false, true, false).Where(x => x.OriginalPosition == position && x.Piece.Color == color).ToList();
+        }
+
+        /// <summary>
+        /// Gets all possible moves for the position and color.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="allMoves">All possible moves.</param>
+        /// <returns>The list of moves.</returns>
+        public List<Move> GetAllMovesForPositionAndColor(Position position, PieceColor color, List<Move> allMoves)
+        {
+            return allMoves.Where(x => x.OriginalPosition == position && x.Piece.Color == color).ToList();
         }
 
         /// <summary>

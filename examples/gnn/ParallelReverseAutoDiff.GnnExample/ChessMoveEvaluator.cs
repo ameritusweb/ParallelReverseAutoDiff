@@ -105,22 +105,40 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>The feature values.</returns>
         public double[] GetFeatureValues(GameState state, PieceColor color)
         {
-            double[] featureValues = new double[13];
-            short[][] squareControl = this.CalculateSquareControl(state, color);
+            double[] featureValues = new double[16];
+            EvaluationTable evaluationTable = new EvaluationTable();
+            evaluationTable.SetTable(state);
+            evaluationTable.PassMessages();
+            short[][] squareControl = this.CalculateSquareControl(state, color, evaluationTable);
+            var lastmove = state.Board.ExecutedMoves.LastOrDefault();
+            var lastOpponentMove = state.Board.ExecutedMoves.SkipLast(1).LastOrDefault();
+            var allMoves = state.GetAllMoves();
             featureValues[0] = this.GetControlOfCenter(state, color);
             featureValues[1] = this.GetOpponentControlOfCenter(state, color);
-            featureValues[2] = this.GetMaterialAdvantage(state, color);
-            featureValues[3] = this.GetMobility(state, color);
-            featureValues[4] = this.GetKingSafetyScore(state, color);
+            featureValues[4] = this.GetKingSafetyScore(state, color, allMoves);
             featureValues[5] = this.CountDefendingPieces(state, color);
             featureValues[6] = this.CountDefendedPieces(state, color);
             featureValues[7] = this.CountCheckmate(state, color);
-            featureValues[8] = this.GetPieceSafety(state, color, squareControl);
-            featureValues[9] = this.GetCheckmateSafety(state, color);
+            featureValues[8] = this.GetPieceSafety(state, color, squareControl, lastmove, allMoves);
+            featureValues[9] = this.GetCheckmateSafety(state, color, allMoves);
             featureValues[10] = this.GetPawnStructureScore(state, color);
             featureValues[11] = this.GetPieceDevelopment(state, color);
-            featureValues[12] = this.GetTacticScore(state, color);
+            if (featureValues[8] >= 0d)
+            {
+                featureValues[12] = this.GetTacticScore(state, color, allMoves);
+                featureValues[3] = this.GetMobility(state, color, allMoves);
+                featureValues[2] = this.GetMaterialAdvantage(state, color);
+            }
+            else
+            {
+                featureValues[12] = 0d;
+                featureValues[3] = 0d;
+                featureValues[2] = 0d;
+            }
 
+            featureValues[13] = this.GetCaptureScore(lastmove, lastOpponentMove, squareControl, featureValues[2] >= 0d);
+            featureValues[14] = evaluationTable.GetStackedScore(color);
+            featureValues[15] = this.GetTacticScore(state, color.OppositeColor(), allMoves) * -1 / 2d;
             return featureValues;
         }
 
@@ -129,8 +147,9 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// </summary>
         /// <param name="state">The game state.</param>
         /// <param name="color">The piece color.</param>
+        /// <param name="allMoves">All moves.</param>
         /// <returns>The tactic score.</returns>
-        public double GetTacticScore(GameState state, PieceColor color)
+        public double GetTacticScore(GameState state, PieceColor color, List<Move> allMoves)
         {
             double tacticScore = 0.0d;
             double attackScore = 0.0d;
@@ -157,13 +176,13 @@ namespace ParallelReverseAutoDiff.GnnExample
                 }
 
                 // Check for forks
-                if (this.IsPieceForking(state, position, color))
+                if (this.IsPieceForking(state, position, color, allMoves))
                 {
                     tacticScore += ForkWeight;
                 }
 
                 // Check for attacks
-                if (this.IsPieceAttacking(state, position, color))
+                if (this.IsPieceAttacking(state, position, color, allMoves))
                 {
                     attackScore += AttackWeight;
                 }
@@ -309,7 +328,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             return reward;
         }
 
-        private short[][] CalculateSquareControl(GameState state, PieceColor color)
+        private short[][] CalculateSquareControl(GameState state, PieceColor color, EvaluationTable table)
         {
             short[][] squareControl = new short[8][];
             for (int i = 0; i < squareControl.Length; ++i)
@@ -338,6 +357,21 @@ namespace ParallelReverseAutoDiff.GnnExample
                 {
                     var endPosition = move.Item1.NewPosition;
                     squareControl[endPosition.Y][endPosition.X]--;
+                }
+            }
+
+            for (int i = 0; i < 8; ++i)
+            {
+                for (int j = 0; j < 8; ++j)
+                {
+                    var position = new Position(i, j);
+                    var control = (short)table.GetSquareControl(position, color);
+
+                    squareControl[position.Y][position.X] += control;
+
+                    var ocontrol = (short)table.GetSquareControl(position, color.OppositeColor());
+
+                    squareControl[position.Y][position.X] -= ocontrol;
                 }
             }
 
@@ -432,7 +466,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             return 1 + maxChainLength;
         }
 
-        private bool IsPieceForking(GameState gameState, Position piecePosition, PieceColor color)
+        private bool IsPieceForking(GameState gameState, Position piecePosition, PieceColor color, List<Move> allMoves)
         {
             Piece? piece = gameState.Board[piecePosition];
             if (piece == null || piece.Color != color)
@@ -441,7 +475,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             }
 
             var opponentColor = color == PieceColor.White ? PieceColor.Black : PieceColor.White;
-            var moves = gameState.GetAllMovesForPositionAndColor(piecePosition, color);
+            var moves = gameState.GetAllMovesForPositionAndColor(piecePosition, color, allMoves);
 
             int attackedKingCount = 0;
             int attackedPieceCount = 0;
@@ -467,7 +501,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             return attackedKingCount >= 1 && attackedPieceCount >= 1;
         }
 
-        private bool IsPieceAttacking(GameState gameState, Position piecePosition, PieceColor color)
+        private bool IsPieceAttacking(GameState gameState, Position piecePosition, PieceColor color, List<Move> allMoves)
         {
             Piece? piece = gameState.Board[piecePosition];
             if (piece == null || piece.Color != color)
@@ -476,7 +510,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             }
 
             var opponentColor = color == PieceColor.White ? PieceColor.Black : PieceColor.White;
-            var moves = gameState.GetAllMovesForPositionAndColor(piecePosition, color);
+            var moves = gameState.GetAllMovesForPositionAndColor(piecePosition, color, allMoves);
 
             int attackedPieceCount = 0;
 
@@ -725,30 +759,56 @@ namespace ParallelReverseAutoDiff.GnnExample
             return -1d * Math.Tanh(control);
         }
 
-        private double GetPieceSafety(GameState state, PieceColor color, short[][] squareControl)
+        private double GetPieceSafety(GameState state, PieceColor color, short[][] squareControl, Move? lastMove, List<Move> allMoves)
         {
             double safetyScore = 0d;
-            var movesForOpponent = state.GetAllMovesForColor(color.OppositeColor());
+            var movesForOpponent = state.GetAllMovesForColor(color.OppositeColor(), allMoves);
             foreach (var move in movesForOpponent.Where(x => x.CapturedPiece != null))
             {
                 var piece = move.Piece.MaterialValue;
                 if (move.CapturedPiece!.MaterialValue > piece)
                 {
-                    safetyScore -= move.CapturedPiece!.MaterialValue - piece;
+                    if (lastMove != null
+                        &&
+                        lastMove.CapturedPiece != null
+                        &&
+                        lastMove.NewPosition.ToString() == move.NewPosition.ToString()
+                        &&
+                        lastMove.CapturedPiece.MaterialValue >= move.CapturedPiece.MaterialValue)
+                    {
+                        safetyScore -= 0d;
+                    }
+                    else
+                    {
+                        safetyScore -= move.CapturedPiece!.MaterialValue - piece;
+                    }
                 }
                 else if (squareControl[move.NewPosition.Y][move.NewPosition.X] < 0)
                 {
-                    safetyScore -= move.CapturedPiece.MaterialValue;
+                    if (lastMove != null
+                        &&
+                        lastMove.CapturedPiece != null
+                        &&
+                        lastMove.NewPosition.ToString() == move.NewPosition.ToString()
+                        &&
+                        lastMove.CapturedPiece.MaterialValue >= move.CapturedPiece.MaterialValue)
+                    {
+                        safetyScore -= move.Piece.MaterialValue / 9d;
+                    }
+                    else
+                    {
+                        safetyScore -= move.CapturedPiece.MaterialValue;
+                    }
                 }
             }
 
             return safetyScore;
         }
 
-        private double GetCheckmateSafety(GameState state, PieceColor color)
+        private double GetCheckmateSafety(GameState state, PieceColor color, List<Move> allMoves)
         {
             double safetyScore = 0d;
-            var movesForOpponent = state.GetAllMovesForColor(color.OppositeColor());
+            var movesForOpponent = state.GetAllMovesForColor(color.OppositeColor(), allMoves);
             foreach (var move in movesForOpponent.Where(x => x.IsMate))
             {
                 safetyScore -= 4d;
@@ -779,10 +839,9 @@ namespace ParallelReverseAutoDiff.GnnExample
             return Math.Tanh(materialDifference / 20.0) * 2d * Math.Abs(materialDifference);
         }
 
-        private double GetMobility(GameState state, PieceColor color)
+        private double GetMobility(GameState state, PieceColor color, List<Move> allMoves)
         {
             // Count the number of legal moves for both colors
-            var allMoves = state.GetAllMoves();
             int playerLegalMoves = allMoves.Count(move => move.Piece.Color == color);
             int opponentLegalMoves = allMoves.Count(move => move.Piece.Color != color);
 
@@ -795,7 +854,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             return 10d * (normalizedPlayerLegalMoves - normalizedOpponentLegalMoves);
         }
 
-        private double GetKingSafetyScore(GameState state, PieceColor color)
+        private double GetKingSafetyScore(GameState state, PieceColor color, List<Move> allMoves)
         {
             // Calculate the number of safe squares around the player's king
             int safeSquares = 0;
@@ -818,7 +877,7 @@ namespace ParallelReverseAutoDiff.GnnExample
                     bool squareUnderAttack = false;
                     foreach (Piece piece in state.Board.GetPieces(opponentColor))
                     {
-                        if (piece.CanAttack(square, state.Board))
+                        if (piece.CanAttack(square, state.Board, allMoves.ToArray()))
                         {
                             squareUnderAttack = true;
                             break;
@@ -842,6 +901,43 @@ namespace ParallelReverseAutoDiff.GnnExample
             }
 
             return kingSafety;
+        }
+
+        private double GetCaptureScore(Move? lastMove, Move? lastOpponentMove, short[][] squareControl, bool hasMaterialAdvantage)
+        {
+            var captureScore = 0d;
+            var wasCapture = lastOpponentMove != null && lastOpponentMove.CapturedPiece != null;
+            if (lastMove != null && lastMove.CapturedPiece != null)
+            {
+                var value = lastMove.CapturedPiece.MaterialValue;
+                var endPosition = lastMove.NewPosition;
+                var control = squareControl[endPosition.Y][endPosition.X];
+                if (control > 0)
+                {
+                    captureScore = value;
+                }
+                else if (control == 0)
+                {
+                    if (lastMove.Piece.MaterialValue < lastMove.CapturedPiece.MaterialValue)
+                    {
+                        captureScore = value;
+                    }
+                    else if (lastMove.Piece.MaterialValue == lastMove.CapturedPiece.MaterialValue)
+                    {
+                        if (hasMaterialAdvantage)
+                        {
+                            captureScore = 1d;
+                        }
+                    }
+                }
+
+                if (wasCapture && lastOpponentMove != null && lastOpponentMove.NewPosition.ToString() == lastMove.NewPosition.ToString() && lastMove.CapturedPiece.MaterialValue >= lastMove.Piece.MaterialValue)
+                {
+                    captureScore += value;
+                }
+            }
+
+            return captureScore;
         }
     }
 }

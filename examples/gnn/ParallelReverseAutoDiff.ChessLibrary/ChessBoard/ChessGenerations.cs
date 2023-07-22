@@ -195,17 +195,17 @@ namespace Chess
                     break;
                 case var e when e == PieceType.Queen:
                     GenerateRookPositions(piecePosition, board, positions, ignoreStop);
-                    GenerateBishopPositions(piecePosition, board, positions);
+                    GenerateBishopPositions(piecePosition, board, positions, ignoreStop);
                     break;
                 case var e when e == PieceType.King:
-                    GenerateKingPositions(piecePosition, board, positions);
+                    GenerateKingPositions(piecePosition, board, positions, ignoreStop);
                     break;
             }
 
             return positions.ToArray();
         }
 
-        private static void GenerateKingPositions(Position piecePosition, ChessBoard board, List<Position> positions)
+        private static void GenerateKingPositions(Position piecePosition, ChessBoard board, List<Position> positions, bool ignoreStop = false)
         {
             for (short x = (short)Math.Max(0, piecePosition.X - 1); x <= Math.Min(7, piecePosition.X + 1); x++)
             {
@@ -213,9 +213,16 @@ namespace Chess
                 {
                     if (x != piecePosition.X || y != piecePosition.Y)
                     {
-                        if (board[x, y] == null || board[x, y].Color != board[piecePosition].Color)
+                        if (ignoreStop)
                         {
                             positions.Add(new Position(x, y));
+                        }
+                        else
+                        {
+                            if (board[x, y] == null || board[x, y].Color != board[piecePosition].Color)
+                            {
+                                positions.Add(new Position(x, y));
+                            }
                         }
                     }
                 }

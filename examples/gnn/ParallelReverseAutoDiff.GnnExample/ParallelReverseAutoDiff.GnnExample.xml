@@ -1026,13 +1026,12 @@
             Initialize the training set generator.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.AddToBag(System.Collections.Concurrent.ConcurrentBag{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Random,System.Int32)">
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.AddToBag(System.Collections.Concurrent.ConcurrentBag{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.Random)">
             <summary>
             Add to bag of graphs.
             </summary>
             <param name="bagOfGraphs">The graphs.</param>
             <param name="rand">The random.</param>
-            <param name="numberOfMoves">The number of moves.</param>
             <returns>The task.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.LoadData">
