@@ -912,6 +912,8 @@ namespace ParallelReverseAutoDiff.GnnExample
                 var value = lastMove.CapturedPiece.MaterialValue;
                 var endPosition = lastMove.NewPosition;
                 var control = squareControl[endPosition.Y][endPosition.X];
+                var startPosition = lastMove.OriginalPosition;
+                var startControl = squareControl[startPosition.Y][startPosition.X];
                 if (control > 0)
                 {
                     captureScore = value;
@@ -930,8 +932,22 @@ namespace ParallelReverseAutoDiff.GnnExample
                         }
                     }
                 }
+                else
+                {
+                    if (lastMove.Piece.MaterialValue < lastMove.CapturedPiece.MaterialValue)
+                    {
+                        if (startControl <= 0)
+                        {
+                            captureScore = value * 2d;
+                        }
+                        else
+                        {
+                            captureScore = value;
+                        }
+                    }
+                }
 
-                if (wasCapture && lastOpponentMove != null && lastOpponentMove.NewPosition.ToString() == lastMove.NewPosition.ToString() && lastMove.CapturedPiece.MaterialValue >= lastMove.Piece.MaterialValue)
+                if (wasCapture && captureScore == 0d && lastOpponentMove != null && lastOpponentMove.NewPosition.ToString() == lastMove.NewPosition.ToString() && lastMove.CapturedPiece.MaterialValue >= lastMove.Piece.MaterialValue)
                 {
                     captureScore += value;
                 }

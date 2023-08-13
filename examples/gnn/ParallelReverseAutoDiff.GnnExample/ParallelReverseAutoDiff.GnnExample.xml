@@ -93,12 +93,13 @@
             <param name="color">The piece color.</param>
             <returns>The feature values.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetTacticScore(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetTacticScore(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor,System.Collections.Generic.List{Chess.Move})">
             <summary>
             Gets a score for tactical advantage.
             </summary>
             <param name="state">The game state.</param>
             <param name="color">The piece color.</param>
+            <param name="allMoves">All moves.</param>
             <returns>The tactic score.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.ChessMoveEvaluator.GetPieceDevelopment(ParallelReverseAutoDiff.GnnExample.GameState,Chess.PieceColor)">
@@ -428,6 +429,247 @@
             <param name="source">The source enumerable.</param>
             <returns>The target enumerable.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.EvaluationSquare">
+            <summary>
+            The evaluation square.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.Left">
+            <summary>
+            Gets or sets the left neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.TopLeft">
+            <summary>
+            Gets or sets the top left neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.Top">
+            <summary>
+            Gets or sets the top neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.Right">
+            <summary>
+            Gets or sets the right neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.TopRight">
+            <summary>
+            Gets or sets the top right neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.Bottom">
+            <summary>
+            Gets or sets the bottom neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.BottomLeft">
+            <summary>
+            Gets or sets the bottom left neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.BottomRight">
+            <summary>
+            Gets or sets the bottom right neighbor.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.Position">
+            <summary>
+            Gets or sets the position.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.Piece">
+            <summary>
+            Gets or sets the piece.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.ReceivedMessages">
+            <summary>
+            Gets or sets the received messages.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.WhiteMessages">
+            <summary>
+            Gets the white messages.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.BlackMessages">
+            <summary>
+            Gets the black messages.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.WhiteEnumCounts">
+            <summary>
+            Gets the white enum counts.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.BlackEnumCounts">
+            <summary>
+            Gets the black enum counts.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.MaxWhiteEnumCount">
+            <summary>
+            Gets the max white enum count.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.MaxBlackEnumCount">
+            <summary>
+            Gets the max black enum count.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.SetNeighbors(ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare,ParallelReverseAutoDiff.GnnExample.EvaluationSquare)">
+            <summary>
+            Set the neighbors.
+            </summary>
+            <param name="top">The top neighbor.</param>
+            <param name="left">The left neighbor.</param>
+            <param name="bottom">The bottom neighbor.</param>
+            <param name="right">The right neighbor.</param>
+            <param name="topLeft">The top left neighbor.</param>
+            <param name="topRight">The top right neighbor.</param>
+            <param name="bottomLeft">The bottom left neighbor.</param>
+            <param name="bottomRight">The bottom right neigbor.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.ReceiveMessage(ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage)">
+            <summary>
+            Receive the message.
+            </summary>
+            <param name="message">The message to receive.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.PassMessage(ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType,System.Boolean,ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage)">
+            <summary>
+            Pass a message to a neighbor.
+            </summary>
+            <param name="messageType">The message type.</param>
+            <param name="passAlong">A value indicating whether to pass the message along.</param>
+            <param name="message">The message to pass.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationSquare.PassMessages">
+            <summary>
+            Pass the messages along.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage">
+            <summary>
+            The evaluation square message.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage.SourcePiece">
+            <summary>
+            Gets or sets the source piece.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage.SourcePosition">
+            <summary>
+            Gets or sets the source position.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage.Type">
+            <summary>
+            Gets or sets the type of the message.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage.FromDirection">
+            <summary>
+            Gets the from direction of the message.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessage.PassAlong">
+            <summary>
+            Gets or sets a value indicating whether to pass along the message.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType">
+            <summary>
+            The evaluation square message type.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.Top">
+            <summary>
+            Moving the piece to the top.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.Left">
+            <summary>
+            Moving the piece to the left.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.Bottom">
+            <summary>
+            Moving the piece to the bottom.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.Right">
+            <summary>
+            Moving the piece to the right.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.TopLeft">
+            <summary>
+            Moving the piece to the top left.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.TopRight">
+            <summary>
+            Moving the piece to the top right.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.BottomLeft">
+            <summary>
+            Moving the piece to the bottom left.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.GnnExample.EvaluationSquareMessageType.BottomRight">
+            <summary>
+            Moving the piece to the bottom right.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.EvaluationTable">
+            <summary>
+            The evaluation table.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.EvaluationTable.Squares">
+            <summary>
+            Gets or sets the evaluation squares.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationTable.SetTable(ParallelReverseAutoDiff.GnnExample.GameState)">
+            <summary>
+            Sets the table.
+            </summary>
+            <param name="state">The game state.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationTable.ToSquare(System.Int32,System.Int32)">
+            <summary>
+            Get the to square.
+            </summary>
+            <param name="rank">The rank.</param>
+            <param name="file">The file.</param>
+            <returns>The evaluation square.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationTable.PassMessages">
+            <summary>
+            Pass the messages.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationTable.GetSquareControl(Chess.Position,Chess.PieceColor)">
+            <summary>
+            Get the square control.
+            </summary>
+            <param name="position">The position.</param>
+            <param name="color">The color.</param>
+            <returns>The square control.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.EvaluationTable.GetStackedScore(Chess.PieceColor)">
+            <summary>
+            Gets the stacked score.
+            </summary>
+            <param name="color">The piece color.</param>
+            <returns>The stacked score.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.FenGenerator">
             <summary>
             A FEN generator.
@@ -593,6 +835,12 @@
             </summary>
             <returns>The positions.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetPiecesAndTheirPositions">
+            <summary>
+            Gets pieces and their positions.
+            </summary>
+            <returns>Pieces and their positions.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetGamePhase">
             <summary>
             Gets the game phase.
@@ -632,11 +880,12 @@
             </summary>
             <returns>The list of moves.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForColor(Chess.PieceColor)">
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForColor(Chess.PieceColor,System.Collections.Generic.List{Chess.Move})">
             <summary>
             Get all moves for a piece color.
             </summary>
             <param name="color">The color.</param>
+            <param name="allMoves">The list of all moves.</param>
             <returns>The list of moves.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForColorAndType(Chess.PieceColor,Chess.PieceType)">
@@ -675,6 +924,15 @@
             </summary>
             <param name="position">The position.</param>
             <param name="color">The color.</param>
+            <returns>The list of moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.GetAllMovesForPositionAndColor(Chess.Position,Chess.PieceColor,System.Collections.Generic.List{Chess.Move})">
+            <summary>
+            Gets all possible moves for the position and color.
+            </summary>
+            <param name="position">The position.</param>
+            <param name="color">The color.</param>
+            <param name="allMoves">All possible moves.</param>
             <returns>The list of moves.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.GameState.MoveRandomly">

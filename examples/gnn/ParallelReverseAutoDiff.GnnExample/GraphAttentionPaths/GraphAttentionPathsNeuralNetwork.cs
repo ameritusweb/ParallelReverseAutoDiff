@@ -146,7 +146,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1623;
+            var initialAdamIteration = 3339;
             for (int i = 0; i < 7; ++i)
             {
                 var model = new EmbeddingNeuralNetwork(this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
@@ -216,7 +216,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "60f0e198-b513-4009-abb6-8d3cd325c0a9_1623";
+            var guid = "7f1678d1-128c-4678-9a68-474d72187fb0_3339";
             var dir = $"E:\\store\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -570,6 +570,8 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         legalMoves.Add(move);
                     }
 
+                    Dictionary<GapPath, double> evaluationMap = new Dictionary<GapPath, double>();
+
                     List<(GapPath, string, double)> losses = new List<(GapPath, string, double)>();
                     for (int j = 0; j < gcnOutputs[i].Rows; ++j)
                     {
@@ -614,8 +616,28 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                         }
                     }
 
+                    List<double> maxRewards = new List<double>();
+                    for (int j = 0; j < orderedlosses.Count; ++j)
+                    {
+                        var path = orderedlosses[j].Item1;
+                        var move = moves.FirstOrDefault(x => orderedlosses[j].Item2.ToLowerInvariant().Contains(x.OriginalPosition.ToString().ToLowerInvariant() + " - " + x.NewPosition.ToString().ToLowerInvariant()));
+                        if (move != null)
+                        {
+                            var eval = evaluator.ComputeReward(gameState, turn, move);
+                            evaluationMap.Add(path, eval);
+                            maxRewards.Add(eval);
+                        }
+                        else
+                        {
+                            maxRewards.Add(0d);
+                        }
+                    }
+
                     var rewardIndex = rewards.IndexOf(rewards.Min());
                     (GapPath, string, double)? minloss = rewards.Count == 5 ? orderedlosses[rewardIndex] : null;
+
+                    var maxRewardIndex = maxRewards.IndexOf(maxRewards.Max());
+                    (GapPath, string, double)? maxloss = maxRewards.Any() ? orderedlosses[maxRewardIndex] : null;
 
                     if (minloss.HasValue)
                     {
@@ -642,9 +664,25 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
                         var orderedOpposite = oppositeOrderedLosses.SkipWhile(x => x.Item3 <= avgloss).ToList();
 
+                        var evalLosses = string.Join(" ", losses.OrderByDescending(x => evaluationMap[x.Item1]).Select(x => x.Item2 + " " + evaluationMap[x.Item1]));
+
                         // var orderedOpposite2 = orderedOpposite.TakeWhile(x => !x.Item1.IsTarget).ToList();
                         // orderedOpposite2 = orderedOpposite2.Concat(orderedOpposite.SkipWhile(x => !x.Item1.IsTarget).Take(1)).ToList();
-                        this.PrintGraph(graph, string.Join(" ", ordered.Select(x => x.Item2)), string.Join(" ", orderedOpposite.Select(x => x.Item2 + " " + x.Item3 + "|")), gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3, orderedlosses.First().Item3, minloss?.Item2 ?? default(string)!, rewards.Min());
+                        this.PrintGraph(graph, evalLosses, string.Join(" ", ordered.Select(x => x.Item2)), string.Join(" ", orderedOpposite.Select(x => x.Item2 + " " + x.Item3 + "|")), gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3, orderedlosses.First().Item3, minloss?.Item2 ?? default(string)!, rewards.Min(), maxloss, maxRewards.Max());
+                    }
+                    else if (i > 0)
+                    {
+                        var avgloss = losses.Average(x => x.Item3);
+                        var ordered = orderedlosses.TakeWhile(x => !x.Item1.IsTarget).ToList();
+                        ordered = ordered.Concat(orderedlosses.SkipWhile(x => !x.Item1.IsTarget).Take(1)).ToList();
+
+                        var orderedOpposite = oppositeOrderedLosses.SkipWhile(x => x.Item3 <= avgloss).ToList();
+
+                        var evalLosses = string.Join(" ", losses.OrderByDescending(x => evaluationMap[x.Item1]).Select(x => x.Item2 + " " + evaluationMap[x.Item1]));
+
+                        // var orderedOpposite2 = orderedOpposite.TakeWhile(x => !x.Item1.IsTarget).ToList();
+                        // orderedOpposite2 = orderedOpposite2.Concat(orderedOpposite.SkipWhile(x => !x.Item1.IsTarget).Take(1)).ToList();
+                        this.PrintGraph(graph, evalLosses, string.Join(" ", ordered.Select(x => x.Item2)), string.Join(" ", orderedOpposite.Select(x => x.Item2 + " " + x.Item3 + "|")), gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3, orderedlosses.First().Item3, minloss?.Item2 ?? default(string)!, rewards.Min(), maxloss, maxRewards.Max());
                     }
                 }
                 else
@@ -889,7 +927,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             return (int)adjacency[path1.AdjacencyIndex][path2.AdjacencyIndex] == 1;
         }
 
-        private void PrintGraph(GapGraph graph, string move, string oppositemove, string target, double targetLoss, double avgloss, double lowestloss, double highestloss, string minloss, double minreward)
+        private void PrintGraph(GapGraph graph, string evalLosses, string move, string oppositemove, string target, double targetLoss, double avgloss, double lowestloss, double highestloss, string minloss, double minreward, (GapPath, string, double)? maxreward, double maxr)
         {
             // Initialize empty 8x8 board
             string[,] board = new string[8, 8];
@@ -927,6 +965,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             Console.WriteLine("   a b c d e f g h");
             Console.WriteLine("Moves: " + move);
             Console.WriteLine("Opposite Moves: " + oppositemove);
+            Console.WriteLine("Eval Losses: " + evalLosses);
             Console.WriteLine("Target:" + target);
             Console.WriteLine("Target Loss: " + targetLoss);
             Console.WriteLine("Avg Loss: " + avgloss);
@@ -934,6 +973,14 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
             Console.WriteLine("Highest Loss: " + highestloss);
             Console.WriteLine("Min Loss: " + minloss);
             Console.WriteLine("Min Reward: " + minreward);
+            if (maxreward.HasValue)
+            {
+                Console.WriteLine("Max Heuristic Reward: " + maxr);
+                Console.WriteLine("Max Reward: " + maxreward.Value.Item3);
+                Console.WriteLine("Max Reward Path: " + maxreward.Value.Item1.ToString());
+                Console.WriteLine("Max Reward Move: " + maxreward.Value.Item2);
+            }
+
             Console.WriteLine("FEN: " + graph.FenString);
         }
     }
