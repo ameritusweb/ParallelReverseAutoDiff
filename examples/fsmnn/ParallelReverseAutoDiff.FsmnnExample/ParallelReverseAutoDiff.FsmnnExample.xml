@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParallelReverseAutoDiff.FsmnnExample</name>
+    </assembly>
+    <members>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils">
+            <summary>
+            A collection of matrix utilities for neural network development.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.Random">
+            <summary>
+            Gets a random number generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numLayers">The number of lauers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeZeroMatrix(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an empty matrix of the given size.
+            </summary>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>An empty matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.DeepMatrix[][],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.DeepMatrix[],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.DeepMatrix,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClipGradients(ParallelReverseAutoDiff.RMAD.Matrix[],System.Double,System.Nullable{System.Double})">
+            <summary>
+            Clips gradients to within a certain clip value and applies a minimum threshold value.
+            </summary>
+            <param name="gradients">The gradients to clip.</param>
+            <param name="clipValue">The maximum clipValue in either the positive or negative direction.</param>
+            <param name="minValue">The minimum threshold value.</param>
+            <returns>The clipped gradients.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.StandardizedMatrix(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Creates a standardized matrix using the mean and standard deviation.
+            </summary>
+            <param name="deepMatrix">The matrix to process.</param>
+            <returns>The standardized matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.StandardizedMatrix(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Creates a standardized matrix using the mean and standard deviation.
+            </summary>
+            <param name="matrix">The matrix to process.</param>
+            <returns>The standardized matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.To2DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 2-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 2-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.To1DArray(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Creates a 1-D array from the specified matrices.
+            </summary>
+            <param name="matrices">The matrices.</param>
+            <returns>The 1-D array.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.Matrix[],ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Sets the following deep matrix to the specified values.
+            </summary>
+            <param name="matrix">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlace(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Sets the following matrix to the specified values.
+            </summary>
+            <param name="matrix">The matrix to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.IsAllZeroes(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Calculates whether the deep matrix is all zeroes.
+            </summary>
+            <param name="matrix">The deep matrix.</param>
+            <returns>A value.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.IsAllZeroes(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Calculates whether the matrix is all zeroes.
+            </summary>
+            <param name="matrix">The matrix.</param>
+            <returns>A value.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.Matrix[])">
+            <summary>
+            Clears the following 2-D matrices.
+            </summary>
+            <param name="matrices">The 2-D matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.DeepMatrix[][])">
+            <summary>
+            Clears the following 5-D deep matrices.
+            </summary>
+            <param name="matrices">The 5-D deep matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ClearMatrices(ParallelReverseAutoDiff.RMAD.DeepMatrix[])">
+            <summary>
+            Clears the following 4-D deep matrices.
+            </summary>
+            <param name="matrices">The 4-D deep matrices to clear.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.FrobeniusNorm(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The Frobenius norm of a matrix: the square root of the sum of the absolute squares of its elements.
+            </summary>
+            <param name="weightMatrix">The weight matrix to calculate.</param>
+            <returns>The frobenius norm.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.LearningRateReductionFactor(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the reduction factor for the learning rate.
+            </summary>
+            <param name="frobeniusNorm">The frobenius norm of a matrix.</param>
+            <param name="maxNorm">The max norm.</param>
+            <param name="minFactor">The minimum learning rate reduction factor.</param>
+            <returns>The learning rate reduction factor.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.HadamardProduct(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The element-wise Hadamard product of two matrices.
+            </summary>
+            <param name="matrixA">The first matrix.</param>
+            <param name="matrixB">The second matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.MatrixAdd(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Add two matrices together.
+            </summary>
+            <param name="a">Matrix A.</param>
+            <param name="b">Matrix B.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.ScalarMultiply(System.Double,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Multiply a matrix by a scalar.
+            </summary>
+            <param name="scalar">The scalar to multiply.</param>
+            <param name="matrix">The matrix.</param>
+            <returns>The resultant matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numFilters">The number of filters.</param>
+            <param name="depth">The depth.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.InitializeRandomMatrixWithXavierInitialization(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initialize random matrix with Xavier initialization using the appropriate dimensions.
+            </summary>
+            <param name="numFilters">The number of filters.</param>
+            <param name="depth">The depth.</param>
+            <param name="numRows">The number of rows.</param>
+            <param name="numCols">The number of columns.</param>
+            <returns>The initialized random matrix.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SwitchFirstTwoDimensions(ParallelReverseAutoDiff.RMAD.DeepMatrix[])">
+            <summary>
+            Switch the first two dimensions of the deep matrix array.
+            </summary>
+            <param name="deepMatrixArray">The deep matrix array.</param>
+            <returns>The deep matrix array switched.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlaceReplace(ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix,ParallelReverseAutoDiff.RMAD.FourDimensionalMatrix)">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlaceReplace(ParallelReverseAutoDiff.RMAD.DeepMatrix,ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            Sets the following matrices to the specified values.
+            </summary>
+            <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.Common.EmbeddedResource">
+            <summary>
+            Helper class to read embedded resources.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.EmbeddedResource.ReadAllJson(System.String,System.String)">
+            <summary>
+            Reads a JSON file from the embedded resources.
+            </summary>
+            <param name="name">The namespace.</param>
+            <param name="file">The file to read.</param>
+            <returns>The text of the file.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.Common.IEnumerableExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.IEnumerableExtensions.WithIndex``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns the item and its index.
+            </summary>
+            <typeparam name="T">The type of item.</typeparam>
+            <param name="source">The source enumerable.</param>
+            <returns>The target enumerable.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.IEnumerableExtensions.WithNext``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns the item and the next item.
+            </summary>
+            <typeparam name="T">The type of the item.</typeparam>
+            <param name="source">The source enumerable.</param>
+            <returns>The target enumerable.</returns>
+        </member>
+    </members>
+</doc>
