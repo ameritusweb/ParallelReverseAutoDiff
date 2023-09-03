@@ -1292,6 +1292,15 @@
             <param name="rand">The random.</param>
             <returns>The task.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.AddToBag(System.Collections.Concurrent.ConcurrentBag{ParallelReverseAutoDiff.Test.GraphAttentionPaths.GapGraph},System.String,Chess.Move,Chess.Move)">
+            <summary>
+            Add to bag of graphs.
+            </summary>
+            <param name="bagOfGraphs">The bag of graphs.</param>
+            <param name="fen">The FEN string.</param>
+            <param name="targetMove">The target move.</param>
+            <param name="lastMove">The last move.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator.LoadData">
             <summary>
             Loads the data.
@@ -1306,6 +1315,12 @@
             <summary>
             Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader"/> class.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.LoadMiniBatchFromFen">
+            <summary>
+            Loads mini-batch from FEN string.
+            </summary>
+            <returns>The task.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.LoadMiniBatchFromBag">
             <summary>

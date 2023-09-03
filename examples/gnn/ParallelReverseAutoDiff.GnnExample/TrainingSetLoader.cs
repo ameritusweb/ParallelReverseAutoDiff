@@ -33,6 +33,49 @@ namespace ParallelReverseAutoDiff.GnnExample
         }
 
         /// <summary>
+        /// Loads mini-batch from FEN string.
+        /// </summary>
+        /// <returns>The task.</returns>
+        public async Task LoadMiniBatchFromFen()
+        {
+            CudaBlas.Instance.Initialize();
+            this.generator.Initialize();
+            this.generator.AddToBag(
+                this.bagOfGraphs,
+                "4r1k1/1p1r1p2/p1p1qb1p/2Pp1b2/2nP4/PQB2pP1/4PPBP/3RR1K1 w - - 0 26",
+                new Chess.Move(new Chess.Position("e2"), new Chess.Position("f3"), new Chess.Piece('P'), new Chess.Piece('p')),
+                new Chess.Move(new Chess.Position("g4"), new Chess.Position("f3"), new Chess.Piece('p'), new Chess.Piece('N')));
+            bool gresult = this.bagOfGraphs.TryTake(out var g);
+            if (g != null && gresult)
+            {
+                bool result = false;
+                for (int i = 0; i < 10; ++i)
+                {
+                    var miniBatchTask = this.ProcessMiniBatch(new GapGraph[] { g }.ToList());
+                    await miniBatchTask;
+                    result = miniBatchTask.Result;
+                    Thread.Sleep(5000);
+                    if (i == 2)
+                    {
+                        break;
+                    }
+                }
+
+                if (result)
+                {
+                    try
+                    {
+                        this.neuralNetwork.SaveWeights();
+                    }
+                    catch (OutOfMemoryException ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Loads a mini-batch of training data from bag.
         /// </summary>
         /// <returns>A task.</returns>
@@ -175,7 +218,7 @@ namespace ParallelReverseAutoDiff.GnnExample
             {
                 if (this.neuralNetwork == null)
                 {
-                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 18, 119, 5, 2, 4, 0.01d, 4d);
+                    this.neuralNetwork = new GraphAttentionPathsNeuralNetwork(graphs, 18, 119, 5, 2, 4, 0.001d, 4d);
                     await this.neuralNetwork.Initialize();
                     this.neuralNetwork.ApplyWeights();
                 }
