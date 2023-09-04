@@ -123,6 +123,8 @@ MatrixRowConcatenateOperation
 
 MatrixVectorConcatenateOperation
 
+MatrixVerticalConcatenateOperation
+
 ReLUOperation
 
 RMSNormOperation
