@@ -93,7 +93,9 @@ EmbeddingOperation - Used for word or subword embeddings.
 
 GELUOperation
 
-GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, and Intel GPUs for fast computation.
+GpuMatrixMultiplyAndSumOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast computation.
+
+GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast computation.
 
 HadamardProductOperation
 
@@ -114,6 +116,8 @@ MatrixBroadcastOperation
 MatrixConcatenateOperation
 
 MatrixMultiplyOperation
+
+MatrixMultiplyAndSumOperation
 
 MatrixMultiplyScalarOperation
 
