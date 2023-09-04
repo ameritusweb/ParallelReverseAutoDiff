@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Remove="Embeddings\mazeartifacts.json" />
+    <None Remove="FiniteStateMachine\Embedding\Architecture\embedding.json" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -21,6 +22,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Embeddings\mazeartifacts.json" />
+    <EmbeddedResource Include="FiniteStateMachine\Embedding\Architecture\Embedding.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,10 +32,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FiniteStateMachine\" />
   </ItemGroup>
 
 </Project>

@@ -119,6 +119,8 @@ MatrixSumOperation
 
 MatrixTransposeOperation
 
+MatrixRowConcatenateOperation
+
 MatrixVectorConcatenateOperation
 
 ReLUOperation

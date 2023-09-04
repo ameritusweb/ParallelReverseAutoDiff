@@ -49,7 +49,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample
                             }
                         }
 
-                        maze.MazeNodes[x, y, z] = new MazeNode { AvailableDirections = types.ToArray() };
+                        maze.MazeNodes[x, y, z] = new MazeNode { PositionX = x, PositionY = y, PositionZ = z, AvailableDirections = types.ToArray() };
                     }
                 }
             }

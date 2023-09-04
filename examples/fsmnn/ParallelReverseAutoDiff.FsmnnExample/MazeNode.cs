@@ -15,5 +15,20 @@ namespace ParallelReverseAutoDiff.FsmnnExample
         /// Gets or sets the available directions.
         /// </summary>
         public MazeDirectionType[] AvailableDirections { get; set; }
+
+        /// <summary>
+        /// Gets or sets the position X.
+        /// </summary>
+        public int PositionX { get; set; }
+
+        /// <summary>
+        /// Gets or sets the position Y.
+        /// </summary>
+        public int PositionY { get; set; }
+
+        /// <summary>
+        /// Gets or sets the position Z.
+        /// </summary>
+        public int PositionZ { get; set; }
     }
 }
