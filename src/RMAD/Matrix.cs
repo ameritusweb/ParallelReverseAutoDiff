@@ -278,6 +278,50 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Sums all the elements of the matrix.
+        /// </summary>
+        /// <returns>The sum of all the elements in the matrix.</returns>
+        public double Sum()
+        {
+            double sum = 0;
+            int numRows = this.Rows;
+            int numCols = this.Cols;
+
+            // Loop through all the rows
+            for (int i = 0; i < numRows; ++i)
+            {
+                // Loop through all the columns in each row
+                for (int j = 0; j < numCols; ++j)
+                {
+                    sum += this[i, j];  // Add each element to the sum
+                }
+            }
+
+            return sum;
+        }
+
+        /// <summary>
+        /// Performs an element-wise multiplication of two matrices.
+        /// </summary>
+        /// <param name="other">The other matrix.</param>
+        /// <returns>The resultant matrix.</returns>
+        public Matrix ElementwiseMultiply(Matrix other)
+        {
+            int numRows = other.Rows;
+            int numCols = other.Cols;
+            Matrix result = new Matrix(numRows, numCols);
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i, j] = this[i, j] * other[i, j];
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Calculates the average of two matrices element-wise.
         /// </summary>
         /// <param name="other">The other matrix.</param>
