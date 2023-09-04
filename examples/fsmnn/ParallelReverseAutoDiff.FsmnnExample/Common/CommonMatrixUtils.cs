@@ -840,5 +840,15 @@ namespace ParallelReverseAutoDiff.GnnExample.Common
         {
             matrices.Replace(value.ToArray());
         }
+
+        /// <summary>
+        /// Sets the following matrix to the specified values.
+        /// </summary>
+        /// <param name="matrix">The matrix to replace.</param>
+        /// <param name="value">The values to replace the matrix values with.</param>
+        public static void SetInPlaceReplace(Matrix matrix, Matrix value)
+        {
+            matrix.Replace(value.ToArray());
+        }
     }
 }

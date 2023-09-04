@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <None Remove="Embeddings\mazeartifacts.json" />
-    <None Remove="FiniteStateMachine\Embedding\Architecture\embedding.json" />
+    <None Remove="FiniteStateMachine\TraversalNetwork\Embedding\Architecture\embedding.json" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -22,12 +22,12 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Embeddings\mazeartifacts.json" />
-    <EmbeddedResource Include="FiniteStateMachine\Embedding\Architecture\Embedding.json" />
+    <EmbeddedResource Include="FiniteStateMachine\TraversalNetwork\Embedding\Architecture\Embedding.json" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="ParallelReverseAutoDiff" Version="1.1.14" />
+    <PackageReference Include="ParallelReverseAutoDiff" Version="1.1.15" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

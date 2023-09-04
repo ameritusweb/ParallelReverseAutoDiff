@@ -4,21 +4,21 @@
       "startOperations": [
         {
           "id": "batch_embeddings",
-          "type": "BatchEmbeddingOperation",
+          "type": "EmbeddingOperation",
           "inputs": [ "Input", "Embeddings" ],
           "gradientResultTo": [ null, "DEmbeddings" ]
         }
       ],
       "endOperations": [
         {
-          "id": "vector_concatenate",
-          "type": "BatchMatrixVectorConcatenateOperation",
-          "inputs": [ "batch_embeddings", "HandPickedFeatures" ]
+          "id": "row_concatenate",
+          "type": "MatrixRowConcatenateOperation",
+          "inputs": [ "batch_embeddings" ]
         },
         {
-          "id": "vector_concatenate_trans",
-          "type": "BatchMatrixTransposeOperation",
-          "inputs": [ "vector_concatenate" ],
+          "id": "row_concatenate_trans",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "row_concatenate" ],
           "setResultTo": "Output"
         }
       ]
