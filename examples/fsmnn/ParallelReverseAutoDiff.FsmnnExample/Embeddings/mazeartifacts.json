@@ -1,0 +1,11 @@
+﻿{
+  "left": 0,
+  "right": 1,
+  "up": 2,
+  "down": 3,
+  "above": 4,
+  "below": 5,
+  "leftoright": 6,
+  "upordown": 7,
+  "leftrightupordown": 8,
+}
