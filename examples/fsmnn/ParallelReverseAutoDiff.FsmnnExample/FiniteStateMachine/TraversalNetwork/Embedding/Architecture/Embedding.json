@@ -244,12 +244,27 @@
         {
           "id": "pre_output",
           "type": "MatrixMultiplyAndSumOperation",
-          "inputs": [ "output_act_last" ]
+          "inputs": [ "output_act_last", "DM" ],
+          "gradientResultTo": [ null, "DDM" ]
+        },
+        {
+          "id": "pre_output_add",
+          "type": "MatrixAddOperation",
+          "inputs": [ "pre_output", "KO" ],
+          "gradientResultTo": [ null, "DKO" ],
+          "initializations": [
+            null,
+            {
+              "type": "Zeroes",
+              "rows": "1",
+              "columns": "numNodes"
+            }
+          ]
         },
         {
           "id": "output_softmax",
           "type": "SineSoftmaxOperation",
-          "inputs": [ "pre_output" ],
+          "inputs": [ "pre_output_add" ],
           "setResultTo": "Output"
         }
       ]

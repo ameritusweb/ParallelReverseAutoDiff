@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace ParallelReverseAutoDiff.FsmnnExample
+namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
 {
     /// <summary>
     /// The direction of the maze.

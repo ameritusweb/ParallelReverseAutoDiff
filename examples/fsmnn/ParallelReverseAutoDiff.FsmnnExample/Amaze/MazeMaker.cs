@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace ParallelReverseAutoDiff.FsmnnExample
+namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
 {
     /// <summary>
     /// Creates a maze.
