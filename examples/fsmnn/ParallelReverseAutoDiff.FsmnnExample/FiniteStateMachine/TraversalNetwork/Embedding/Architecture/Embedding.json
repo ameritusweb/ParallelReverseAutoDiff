@@ -4,21 +4,252 @@
       "startOperations": [
         {
           "id": "batch_embeddings",
-          "type": "EmbeddingOperation",
+          "type": "BatchEmbeddingOperation",
           "inputs": [ "Input", "Embeddings" ],
           "gradientResultTo": [ null, "DEmbeddings" ]
-        }
-      ],
-      "endOperations": [
+        },
         {
           "id": "row_concatenate",
-          "type": "MatrixRowConcatenateOperation",
+          "type": "BatchMatrixRowConcatenateOperation",
           "inputs": [ "batch_embeddings" ]
         },
         {
-          "id": "row_concatenate_trans",
-          "type": "MatrixTransposeOperation",
-          "inputs": [ "row_concatenate" ],
+          "id": "nodeFeatures_concatenate",
+          "type": "MatrixVerticalConcatenateOperation",
+          "inputs": [ "row_concatenate" ]
+        }
+      ],
+      "layers": [
+        {
+          "startOperations": [
+            {
+              "id": "keys_nodeFeatures",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "nodeFeatures", "Keys" ],
+              "gradientResultTo": [ null, "DKeys" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "keynode_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "keys_nodeFeatures", "KB" ],
+              "gradientResultTo": [ null, "DKB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "layernorm_keys",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "keynode_add" ]
+            },
+            {
+              "id": "keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "layernorm_keys" ]
+            },
+            {
+              "id": "values_nodeFeatures",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "nodeFeatures", "Values" ],
+              "gradientResultTo": [ null, "DValues" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "valuenode_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "values_nodeFeatures", "VB" ],
+              "gradientResultTo": [ null, "DVB" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "1",
+                  "columns": "numFeatures"
+                }
+              ]
+            },
+            {
+              "id": "layernorm_values",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "valuenode_add" ]
+            },
+            {
+              "id": "values_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "layernorm_values" ]
+            }
+          ],
+          "layers": [
+            {
+              "operations": [
+                {
+                  "id": "queries_nodeFeatures",
+                  "type": "GpuMatrixMultiplyOperation",
+                  "inputs": [ "nodeFeatures", "Queries[layerIndex]" ],
+                  "gradientResultTo": [ null, "DQueries[layerIndex]" ],
+                  "initializations": [
+                    null,
+                    {
+                      "type": "Xavier",
+                      "rows": "numFeatures",
+                      "columns": "numFeatures"
+                    }
+                  ]
+                },
+                {
+                  "id": "querynode_add",
+                  "type": "MatrixAddBroadcastingOperation",
+                  "inputs": [ "queries_nodeFeatures", "QB" ],
+                  "gradientResultTo": [ null, "DQB" ],
+                  "initializations": [
+                    null,
+                    {
+                      "type": "Zeroes",
+                      "rows": "1",
+                      "columns": "numFeatures"
+                    }
+                  ]
+                },
+                {
+                  "id": "layernorm_queries",
+                  "type": "LayerNormalizationOperation",
+                  "inputs": [ "querynode_add" ]
+                },
+                {
+                  "id": "queries_act",
+                  "type": "LeakyReLUOperation",
+                  "inputs": [ "layernorm_queries" ]
+                },
+                {
+                  "id": "keys_transpose",
+                  "type": "MatrixTransposeOperation",
+                  "inputs": [ "keys_act" ]
+                },
+                {
+                  "id": "queries_keys_transpose",
+                  "type": "GpuMatrixMultiplyOperation",
+                  "inputs": [ "queries_act", "keys_transpose" ]
+                },
+                {
+                  "id": "queries_keys_scale",
+                  "type": "MatrixMultiplyScalarOperation",
+                  "inputs": [ "queries_keys_transpose", "Divisor" ]
+                },
+                {
+                  "id": "attention_weights",
+                  "type": "SineSoftmaxOperation",
+                  "inputs": [ "queries_keys_scale" ]
+                },
+                {
+                  "id": "attention_weights_values",
+                  "type": "GpuMatrixMultiplyOperation",
+                  "inputs": [ "attention_weights", "values_act" ]
+                }
+              ]
+            }
+          ],
+          "endOperations": [
+            {
+              "id": "concatenated",
+              "type": "MatrixConcatenateOperation",
+              "inputs": [ "attention_weights_values_array" ],
+              "switchFirstTwoDimensions": true
+            },
+            {
+              "id": "fully_connected",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "FW" ],
+              "gradientResultTo": [ null, "DFW" ]
+            },
+            {
+              "id": "fully_connected_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected", "FB" ],
+              "gradientResultTo": [ null, "DFB" ]
+            },
+            {
+              "id": "fully_connected_2",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "concatenated", "F2W" ],
+              "gradientResultTo": [ null, "DF2W" ]
+            },
+            {
+              "id": "fully_connected_2_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected_2", "F2B" ],
+              "gradientResultTo": [ null, "DF2B" ]
+            },
+            {
+              "id": "fully_connected_act",
+              "type": "SwishOperation",
+              "inputs": [ "fully_connected_add", "Beta" ],
+              "gradientResultTo": [ null, "DBeta" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "HadamardProductOperation",
+              "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+            },
+            {
+              "id": "reduce",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "swiglu_act", "R" ],
+              "gradientResultTo": [ null, "DR" ]
+            },
+            {
+              "id": "reduce_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "reduce", "RB" ],
+              "gradientResultTo": [ null, "DRB" ]
+            },
+            {
+              "id": "reduce_add_skip",
+              "type": "MatrixAddThreeOperation",
+              "inputs": [ "reduce_add", "keys_nodeFeatures", "values_nodeFeatures" ]
+            },
+            {
+              "id": "layernorm_reduce",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "reduce_add_skip" ]
+            },
+            {
+              "id": "output_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "layernorm_reduce" ]
+            }
+          ]
+        }
+      ],
+      "endoperations": [
+        {
+          "id": "pre_output",
+          "type": "MatrixMultiplyAndSumOperation",
+          "inputs": [ "output_act_last" ]
+        },
+        {
+          "id": "output_softmax",
+          "type": "SineSoftmaxOperation",
+          "inputs": [ "pre_output" ],
           "setResultTo": "Output"
         }
       ]
