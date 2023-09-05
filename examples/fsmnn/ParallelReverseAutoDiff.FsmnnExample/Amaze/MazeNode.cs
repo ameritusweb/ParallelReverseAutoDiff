@@ -56,6 +56,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
                 index++;
             }
 
+            var quadrantIndicies = CubeSplitter.FindQuadrantIndices(new Point3d(this.PositionX, this.PositionY, this.PositionZ));
+            indices.AddRange(quadrantIndicies.Select(x => (double)(index + x)));
             return new Matrix(indices.ToArray()).Transpose();
         }
     }

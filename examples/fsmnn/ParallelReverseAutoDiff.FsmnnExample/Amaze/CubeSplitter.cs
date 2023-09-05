@@ -19,7 +19,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         /// <param name="coordinate">The coordinate.</param>
         /// <param name="depth">The depth.</param>
         /// <returns>The quadrant indices.</returns>
-        public static int[] FindQuadrantIndices(Point3d coordinate, int depth)
+        public static int[] FindQuadrantIndices(Point3d coordinate, int depth = MaxDepth)
         {
             int[] indices = new int[depth];
 

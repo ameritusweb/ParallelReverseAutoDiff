@@ -161,6 +161,8 @@ DeepConvolutionOperation
 
 DeepLeakyReLUOperation
 
+DeepMatrixElementwiseAddOperation
+
 DeepMaxPoolOperation
 
 DeepReLUOperation
