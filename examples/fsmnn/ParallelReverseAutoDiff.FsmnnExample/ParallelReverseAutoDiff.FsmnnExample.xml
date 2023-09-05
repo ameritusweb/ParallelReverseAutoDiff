@@ -4,6 +4,394 @@
         <name>ParallelReverseAutoDiff.FsmnnExample</name>
     </assembly>
     <members>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.CubeSplitter">
+            <summary>
+            Provides a cube splitter.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.CubeSplitter.FindQuadrantIndices(ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d,System.Int32)">
+            <summary>
+            Finds the quadrant indices.
+            </summary>
+            <param name="coordinate">The coordinate.</param>
+            <param name="depth">The depth.</param>
+            <returns>The quadrant indices.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze">
+            <summary>
+            Creates a maze.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.MazeNodes">
+            <summary>
+            Gets or sets the maze nodes.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.MazePath">
+            <summary>
+            Gets or sets the maze path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.Size">
+            <summary>
+            Gets or sets the maze size.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType">
+            <summary>
+            The direction of the maze.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.Left">
+            <summary>
+            Left.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.Right">
+            <summary>
+            Right.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.Up">
+            <summary>
+            Up.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.Down">
+            <summary>
+            Down.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.Above">
+            <summary>
+            Above.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.Below">
+            <summary>
+            Below.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.LeftOrRight">
+            <summary>
+            Left or right.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.UpOrDown">
+            <summary>
+            Up or down.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType.LeftOrRightOrUpOrDown">
+            <summary>
+            Left or right or up or down.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeMaker">
+            <summary>
+            Creates a maze.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeMaker.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeMaker"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeMaker.CreateMaze(System.Int32)">
+            <summary>
+            Creates a maze.
+            </summary>
+            <param name="mazeSize">The maze size.</param>
+            <returns>The maze.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode">
+            <summary>
+            A node in the maze.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.AvailableDirections">
+            <summary>
+            Gets or sets the available directions.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.PositionX">
+            <summary>
+            Gets or sets the position X.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.PositionY">
+            <summary>
+            Gets or sets the position Y.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.PositionZ">
+            <summary>
+            Gets or sets the position Z.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.ToIndices(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze)">
+            <summary>
+            Calculates the indices.
+            </summary>
+            <param name="maze">The maze.</param>
+            <returns>The matrix.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazePath">
+            <summary>
+            Creates a maze path.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazePath.MazeNodes">
+            <summary>
+            Gets or sets the maze nodes.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeStore">
+            <summary>
+            A maze store.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeStore.#ctor(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeStore"/> class.
+            </summary>
+            <param name="maze">The maze.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeStore.Size">
+            <summary>
+            Gets or sets the size.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeStore.DirectionTypes">
+            <summary>
+            Gets or sets the direction types.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeStore.ToMaze">
+            <summary>
+            Converts to a maze.
+            </summary>
+            <returns>The maze.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d">
+            <summary>
+            Provides point data.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d.#ctor(System.Double,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d"/> class.
+            </summary>
+            <param name="x">X.</param>
+            <param name="y">Y.</param>
+            <param name="z">Z.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d.X">
+            <summary>
+            Gets or sets X.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d.Y">
+            <summary>
+            Gets or sets Y.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d.Z">
+            <summary>
+            Gets or sets Z.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph">
+            <summary>
+            An embedding computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph.#ctor(ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork">
+            <summary>
+            An embedding neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork"/> class.
+            </summary>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numQueries">The number of queries.</param>
+            <param name="numNodes">The number of nodes.</param>
+            <param name="numFeatures">The number of features.</param>
+            <param name="numIndices">The number of indices.</param>
+            <param name="alphabetSize">The alphabet size.</param>
+            <param name="embeddingSize">The embedding size.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.Input">
+            <summary>
+            Gets the input matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.Output">
+            <summary>
+            Gets the output matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.AlphabetSize">
+            <summary>
+            Gets the alphabet size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.NumIndices">
+            <summary>
+            Gets the number of indices of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.EmbeddingSize">
+            <summary>
+            Gets the embedding size of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.NumQueries">
+            <summary>
+            Gets the number of queries of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.NumFeatures">
+            <summary>
+            Gets the number of features of the neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.NumNodes">
+            <summary>
+            Gets the number of nodes of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Store the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restore the operation intermediates.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The forward pass of the edge attention neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The backward pass of the edge attention neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.InitializeState">
+            <summary>
+            Initialize the state of the edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.ClearState">
+            <summary>
+            Clear the state of the edge attention neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initialize the computation graph of the edge attention neural network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork">
+            <summary>
+            Finite state machine traversal neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.#ctor(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork"/> class.
+            </summary>
+            <param name="maze">The maze.</param>
+            <param name="numNodes">The number of nodes.</param>
+            <param name="numIndices">The number of indices.</param>
+            <param name="alphabetSize">The alphabet size.</param>
+            <param name="embeddingSize">The embedding size.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="numQueries">The number of queries.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip Value.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Reset">
+            <summary>
+            Reset the network.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Reinitialize(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze)">
+            <summary>
+            Reinitialize with new maze.
+            </summary>
+            <param name="maze">The maze.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Initialize">
+            <summary>
+            Initializes the model layers.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.SaveWeights">
+            <summary>
+            Save the weights to the save path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.ApplyWeights">
+            <summary>
+            Apply the weights from the save path.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.ApplyGradients">
+            <summary>
+            Apply the gradients to update the weights.
+            </summary>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils">
             <summary>
             A collection of matrix utilities for neural network development.
@@ -271,6 +659,13 @@
             Sets the following matrices to the specified values.
             </summary>
             <param name="matrices">The matrices to replace.</param>
+            <param name="value">The values to replace the matrix values with.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils.SetInPlaceReplace(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Sets the following matrix to the specified values.
+            </summary>
+            <param name="matrix">The matrix to replace.</param>
             <param name="value">The values to replace the matrix values with.</param>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.Common.EmbeddedResource">

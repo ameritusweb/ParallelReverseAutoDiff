@@ -6,6 +6,8 @@
 
 namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// A node in the maze.
     /// </summary>
@@ -30,5 +32,31 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         /// Gets or sets the position Z.
         /// </summary>
         public int PositionZ { get; set; }
+
+        /// <summary>
+        /// Calculates the indices.
+        /// </summary>
+        /// <param name="maze">The maze.</param>
+        /// <returns>The matrix.</returns>
+        public Matrix ToIndices(Maze maze)
+        {
+            List<double> indices = new List<double>();
+            int index = 0;
+            foreach (MazeDirectionType direction in Enum.GetValues(typeof(MazeDirectionType)))
+            {
+                if (this.AvailableDirections.Contains(direction))
+                {
+                    indices.Add(index++);
+                }
+                else
+                {
+                    indices.Add(1 + index++);
+                }
+
+                index++;
+            }
+
+            return new Matrix(indices.ToArray()).Transpose();
+        }
     }
 }

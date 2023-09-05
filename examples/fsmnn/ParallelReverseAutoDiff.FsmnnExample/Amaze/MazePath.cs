@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="Maze.cs" author="ameritusweb" date="5/21/2023">
+// <copyright file="MazePath.cs" author="ameritusweb" date="5/21/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -7,23 +7,13 @@
 namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
 {
     /// <summary>
-    /// Creates a maze.
+    /// Creates a maze path.
     /// </summary>
-    public class Maze
+    public class MazePath
     {
         /// <summary>
         /// Gets or sets the maze nodes.
         /// </summary>
-        public MazeNode[,,] MazeNodes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maze path.
-        /// </summary>
-        public MazePath MazePath { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maze size.
-        /// </summary>
-        public int Size { get; set; }
+        public MazeNode[] MazeNodes { get; set; }
     }
 }

@@ -144,13 +144,14 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
+        /*
         /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
         public Matrix Forward()
         {
-            
+
 
             return new Matrix();
         }
@@ -164,5 +165,6 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         {
 
         }
+        */
     }
 }
