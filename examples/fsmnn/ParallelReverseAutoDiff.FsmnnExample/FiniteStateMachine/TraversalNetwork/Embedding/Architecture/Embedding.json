@@ -56,14 +56,9 @@
               ]
             },
             {
-              "id": "layernorm_keys",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "keynode_add" ]
-            },
-            {
               "id": "keys_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "layernorm_keys" ]
+              "inputs": [ "keynode_add" ]
             },
             {
               "id": "values_nodeFeatures",
@@ -94,14 +89,9 @@
               ]
             },
             {
-              "id": "layernorm_values",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "valuenode_add" ]
-            },
-            {
               "id": "values_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "layernorm_values" ]
+              "inputs": [ "valuenode_add" ]
             },
             {
               "id": "keys_transpose",
@@ -182,14 +172,9 @@
               "gradientResultTo": [ null, "DRB" ]
             },
             {
-              "id": "layernorm_reduce",
-              "type": "LayerNormalizationOperation",
-              "inputs": [ "reduce_add" ]
-            },
-            {
               "id": "output_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "layernorm_reduce" ]
+              "inputs": [ "reduce_add" ]
             }
           ]
         }
