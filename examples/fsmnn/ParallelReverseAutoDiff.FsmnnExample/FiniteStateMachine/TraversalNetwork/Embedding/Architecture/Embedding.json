@@ -171,9 +171,8 @@
           "endOperations": [
             {
               "id": "concatenated",
-              "type": "MatrixConcatenateOperation",
-              "inputs": [ "attention_weights_values_array" ],
-              "switchFirstTwoDimensions": true
+              "type": "DeepMatrixElementwiseAddOperation",
+              "inputs": [ "attention_weights_values_array" ]
             },
             {
               "id": "fully_connected",

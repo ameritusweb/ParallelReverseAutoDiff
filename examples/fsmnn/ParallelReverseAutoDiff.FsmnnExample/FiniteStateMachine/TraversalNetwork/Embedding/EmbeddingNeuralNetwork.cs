@@ -107,7 +107,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public Matrix Input { get; private set; }
+        public DeepMatrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
@@ -115,9 +115,9 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         public Matrix Output { get; private set; }
 
         /// <summary>
-        /// Gets the target matrix.
+        /// Gets or sets the count of the path.
         /// </summary>
-        public Matrix Target { get; private set; }
+        public int NumPath { get; set; }
 
         /// <summary>
         /// Gets the model layers of the neural network.
@@ -196,7 +196,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         /// The forward pass of the edge attention neural network.
         /// </summary>
         /// <param name="input">The input.</param>
-        public void AutomaticForwardPropagate(Matrix input)
+        public void AutomaticForwardPropagate(DeepMatrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -299,7 +299,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         {
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, this.NumNodes).ToArray());
-            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
+            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumPath, this.NumIndices, 1));
 
             if (this.Output == null)
             {

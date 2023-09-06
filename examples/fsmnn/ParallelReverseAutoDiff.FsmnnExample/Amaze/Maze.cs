@@ -6,6 +6,9 @@
 
 namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
 {
+    using ParallelReverseAutoDiff.GnnExample.Common;
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// Creates a maze.
     /// </summary>
@@ -25,5 +28,28 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         /// Gets or sets the maze size.
         /// </summary>
         public int Size { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum depth.
+        /// </summary>
+        public int MaxDepth { get; set; } = 4;
+
+        /// <summary>
+        /// To indices.
+        /// </summary>
+        /// <returns>The indices.</returns>
+        public DeepMatrix ToIndices()
+        {
+            int numMatrices = this.MazePath.MazeNodes.Length;
+            int numIndices = Enum.GetValues(typeof(MazeDirectionType)).Length + this.MaxDepth;
+            DeepMatrix dm = new DeepMatrix(numMatrices, numIndices, 1);
+            foreach (var (node, index) in this.MazePath.MazeNodes.WithIndex())
+            {
+                var indices = node.ToIndices(this);
+                dm[index] = indices;
+            }
+
+            return dm;
+        }
     }
 }

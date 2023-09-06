@@ -144,18 +144,23 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
-        /*
         /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
         public Matrix Forward()
         {
-
+            var embeddingNet = this.embeddingNeuralNetwork;
+            embeddingNet.NumPath = this.maze.MazePath.MazeNodes.Length;
+            embeddingNet.InitializeState();
+            var indices = this.maze.ToIndices();
+            embeddingNet.AutomaticForwardPropagate(indices);
+            var output = embeddingNet.Output;
 
             return new Matrix();
         }
 
+        /*
         /// <summary>
         /// The backward pass through the computation graph.
         /// </summary>
