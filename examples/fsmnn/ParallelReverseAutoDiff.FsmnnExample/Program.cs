@@ -4,6 +4,9 @@
 // </copyright>
 //------------------------------------------------------------------------------
 // See https://aka.ms/new-console-template for more information
-using ParallelReverseAutoDiff.FsmnnExample.Amaze;
+using ParallelReverseAutoDiff.FsmnnExample;
 
 Console.WriteLine("Hello, World!");
+
+FiniteStateMachineNeuralNetworkTrainer fsmTrainer = new FiniteStateMachineNeuralNetworkTrainer();
+fsmTrainer.Train();

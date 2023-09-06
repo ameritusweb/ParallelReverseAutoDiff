@@ -54,6 +54,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
                 }
             }
 
+            maze.MazePath = new MazePath { MazeNodes = new[] { maze.MazeNodes[0, 0, 0] } };
+
             return maze;
         }
     }

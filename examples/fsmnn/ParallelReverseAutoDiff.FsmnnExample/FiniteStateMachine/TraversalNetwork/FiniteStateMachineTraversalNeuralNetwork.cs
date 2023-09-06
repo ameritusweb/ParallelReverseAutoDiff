@@ -165,16 +165,14 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             return gradientOfLoss;
         }
 
-        /*
         /// <summary>
         /// The backward pass through the computation graph.
         /// </summary>
-        /// <param name="gradientOfLossWrtReadoutOutput">The gradient of the loss wrt the output.</param>
+        /// <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
         /// <returns>A task.</returns>
-        public async Task Backward(DeepMatrix gradientOfLossWrtReadoutOutput)
+        public async Task Backward(Matrix gradientOfLossWrtOutput)
         {
-
+            await this.embeddingNeuralNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput);
         }
-        */
     }
 }

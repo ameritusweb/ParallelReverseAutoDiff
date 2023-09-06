@@ -35,6 +35,11 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         public int MaxDepth { get; set; } = 4;
 
         /// <summary>
+        /// Gets or sets the number of quadrants.
+        /// </summary>
+        public int NumQuadrants { get; set; } = 8;
+
+        /// <summary>
         /// Gets the node count.
         /// </summary>
         public int NodeCount
@@ -42,6 +47,28 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
             get
             {
                 return this.Size * this.Size * this.Size;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of indices.
+        /// </summary>
+        public int NumIndices
+        {
+            get
+            {
+                return Enum.GetValues(typeof(MazeDirectionType)).Length + this.MaxDepth;
+            }
+        }
+
+        /// <summary>
+        /// Gets the alphabet size.
+        /// </summary>
+        public int AlphabetSize
+        {
+            get
+            {
+                return (Enum.GetValues(typeof(MazeDirectionType)).Length * 2) + this.NumQuadrants;
             }
         }
 
@@ -63,7 +90,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         public DeepMatrix ToIndices()
         {
             int numMatrices = this.MazePath.MazeNodes.Length;
-            int numIndices = Enum.GetValues(typeof(MazeDirectionType)).Length + this.MaxDepth;
+            int numIndices = this.NumIndices;
             DeepMatrix dm = new DeepMatrix(numMatrices, numIndices, 1);
             foreach (var (node, index) in this.MazePath.MazeNodes.WithIndex())
             {
