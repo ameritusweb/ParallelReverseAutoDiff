@@ -9,6 +9,19 @@
             Provides a cube splitter.
             </summary>
         </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.CubeSplitter.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.CubeSplitter"/> class.
+            </summary>
+            <param name="maxDepth">The max depth.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.CubeSplitter.FindQuadrantIndices(ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d)">
+            <summary>
+            Finds the quadrant indices.
+            </summary>
+            <param name="coordinate">The coordinate.</param>
+            <returns>The quadrant indices.</returns>
+        </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.CubeSplitter.FindQuadrantIndices(ParallelReverseAutoDiff.FsmnnExample.Amaze.Point3d,System.Int32)">
             <summary>
             Finds the quadrant indices.
@@ -36,6 +49,43 @@
             <summary>
             Gets or sets the maze size.
             </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.MaxDepth">
+            <summary>
+            Gets or sets the maximum depth.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.NumQuadrants">
+            <summary>
+            Gets or sets the number of quadrants.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.NodeCount">
+            <summary>
+            Gets the node count.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.NumIndices">
+            <summary>
+            Gets the number of indices.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.AlphabetSize">
+            <summary>
+            Gets the alphabet size.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.ToTrueLabel">
+            <summary>
+            To the true label.
+            </summary>
+            <returns>The true label.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.ToIndices">
+            <summary>
+            To indices.
+            </summary>
+            <returns>The indices.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeDirectionType">
             <summary>
@@ -201,6 +251,43 @@
             Gets or sets Z.
             </summary>
         </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachineNeuralNetworkTrainer">
+            <summary>
+            A finite state machine neural network trainer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachineNeuralNetworkTrainer.Train">
+            <summary>
+            Train the network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachineNeuralNetworkTrainer.RunIteration(ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork)">
+            <summary>
+            Runs an iteration of training.
+            </summary>
+            <param name="traversalNetwork">The traversal network.</param>
+            <returns>The task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalCrossEntropyLossOperation">
+            <summary>
+            Categorical cross-entropy loss operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalCrossEntropyLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            Performs the forward operation.
+            </summary>
+            <param name="predicted">1xN matrix of predicted probabilities.</param>
+            <param name="trueLabel">1xN matrix of true labels (one-hot encoded).</param>
+            <returns>The computed loss.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalCrossEntropyLossOperation.Backward">
+            <summary>
+            Computes the gradient with respect to the predicted probabilities.
+            </summary>
+            <returns>1xN matrix of gradients.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph">
             <summary>
             An embedding computation graph.
@@ -218,6 +305,13 @@
             </summary>
             <param name="operation">The operation.</param>
             <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph.TypeRetrieved(System.String)">
+            <summary>
+            Lifecycle method to retrieve the type of the operation.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The retrieved type.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork">
             <summary>
@@ -248,9 +342,9 @@
             Gets the output matrix.
             </summary>
         </member>
-        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.Target">
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.NumPath">
             <summary>
-            Gets the target matrix.
+            Gets or sets the count of the path.
             </summary>
         </member>
         <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.ModelLayers">
@@ -311,7 +405,7 @@
             </summary>
             <param name="id">The identifier.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.Matrix)">
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
             <summary>
             The forward pass of the edge attention neural network.
             </summary>
@@ -391,6 +485,19 @@
             <summary>
             Apply the gradients to update the weights.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward">
+            <summary>
+            Make a forward pass through the computation graph.
+            </summary>
+            <returns>The gradient of the loss wrt the output.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
+            <summary>
+            The backward pass through the computation graph.
+            </summary>
+            <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
+            <returns>A task.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils">
             <summary>

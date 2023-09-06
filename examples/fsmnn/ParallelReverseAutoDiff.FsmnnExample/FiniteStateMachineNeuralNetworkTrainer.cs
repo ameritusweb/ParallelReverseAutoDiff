@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample
 {
     using ParallelReverseAutoDiff.FsmnnExample.Amaze;
     using ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork;
+    using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A finite state machine neural network trainer.
@@ -20,13 +21,21 @@ namespace ParallelReverseAutoDiff.FsmnnExample
         /// <returns>The task.</returns>
         public async Task Train()
         {
-            MazeMaker makeMaker = new MazeMaker();
-            var maze = makeMaker.CreateMaze(10);
-            FiniteStateMachineTraversalNeuralNetwork traversalNetwork = new FiniteStateMachineTraversalNeuralNetwork(maze, 6, maze.NumIndices, maze.AlphabetSize, 10, 2, 2, 0.001d, 4d);
-
-            for (int i = 0; i < 100; ++i)
+            CudaBlas.Instance.Initialize();
+            try
             {
-                await this.RunIteration(traversalNetwork);
+                MazeMaker makeMaker = new MazeMaker();
+                var maze = makeMaker.CreateMaze(10);
+                FiniteStateMachineTraversalNeuralNetwork traversalNetwork = new FiniteStateMachineTraversalNeuralNetwork(maze, 6, maze.NumIndices, maze.AlphabetSize, 10, 2, 2, 0.001d, 4d);
+
+                for (int i = 0; i < 100; ++i)
+                {
+                    await this.RunIteration(traversalNetwork);
+                }
+            }
+            finally
+            {
+                CudaBlas.Instance.Dispose();
             }
         }
 

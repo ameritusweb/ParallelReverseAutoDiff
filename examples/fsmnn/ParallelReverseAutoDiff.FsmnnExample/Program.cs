@@ -9,4 +9,4 @@ using ParallelReverseAutoDiff.FsmnnExample;
 Console.WriteLine("Hello, World!");
 
 FiniteStateMachineNeuralNetworkTrainer fsmTrainer = new FiniteStateMachineNeuralNetworkTrainer();
-fsmTrainer.Train();
+await fsmTrainer.Train();

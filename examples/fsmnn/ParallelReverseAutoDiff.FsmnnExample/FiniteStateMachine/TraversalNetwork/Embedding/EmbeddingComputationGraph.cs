@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding
 {
+    using System;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -29,6 +30,17 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         protected override void DependenciesSetup(IOperationBase operation, LayerInfo layerInfo)
         {
             base.DependenciesSetup(operation, layerInfo);
+        }
+
+        /// <summary>
+        /// Lifecycle method to retrieve the type of the operation.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The retrieved type.</returns>
+        protected override Type TypeRetrieved(string type)
+        {
+            var typeRetrieved = base.TypeRetrieved(type);
+            return typeRetrieved;
         }
     }
 }
