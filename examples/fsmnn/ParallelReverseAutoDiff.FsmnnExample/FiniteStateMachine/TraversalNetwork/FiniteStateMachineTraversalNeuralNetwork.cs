@@ -157,7 +157,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var indices = this.maze.ToIndices();
             embeddingNet.AutomaticForwardPropagate(indices);
             var output = embeddingNet.Output;
-
+            Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][output.Cols - 1]);
             CategoricalCrossEntropyLossOperation lossOperation = new CategoricalCrossEntropyLossOperation();
             lossOperation.Forward(output, this.maze.ToTrueLabel(output.Cols));
             var gradientOfLoss = lossOperation.Backward();
