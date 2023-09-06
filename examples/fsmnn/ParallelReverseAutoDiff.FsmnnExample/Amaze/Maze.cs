@@ -35,6 +35,28 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         public int MaxDepth { get; set; } = 4;
 
         /// <summary>
+        /// Gets the node count.
+        /// </summary>
+        public int NodeCount
+        {
+            get
+            {
+                return this.Size * this.Size * this.Size;
+            }
+        }
+
+        /// <summary>
+        /// To the true label.
+        /// </summary>
+        /// <returns>The true label.</returns>
+        public Matrix ToTrueLabel()
+        {
+            Matrix trueLabel = new Matrix(1, this.NodeCount);
+            trueLabel[0, this.NodeCount - 1] = 1;
+            return trueLabel;
+        }
+
+        /// <summary>
         /// To indices.
         /// </summary>
         /// <returns>The indices.</returns>

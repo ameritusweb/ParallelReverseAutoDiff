@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
     using System;
     using System.IO;
     using ParallelReverseAutoDiff.FsmnnExample.Amaze;
+    using ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD;
     using ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -157,7 +158,11 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             embeddingNet.AutomaticForwardPropagate(indices);
             var output = embeddingNet.Output;
 
-            return new Matrix();
+            CategoricalCrossEntropyLossOperation lossOperation = new CategoricalCrossEntropyLossOperation();
+            lossOperation.Forward(output, this.maze.ToTrueLabel());
+            var gradientOfLoss = lossOperation.Backward();
+
+            return gradientOfLoss;
         }
 
         /*
