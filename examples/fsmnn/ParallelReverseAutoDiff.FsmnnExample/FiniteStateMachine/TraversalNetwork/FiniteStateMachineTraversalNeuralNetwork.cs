@@ -48,7 +48,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         public FiniteStateMachineTraversalNeuralNetwork(Maze maze, int numNodes, int numIndices, int alphabetSize, int embeddingSize, int numLayers, int numQueries, double learningRate, double clipValue)
         {
             this.maze = maze;
-            this.numFeatures = (numIndices * embeddingSize) + 3;
+            this.numFeatures = numIndices * embeddingSize;
             this.alphabetSize = alphabetSize;
             this.embeddingSize = embeddingSize;
             this.numNodes = numNodes;
@@ -159,7 +159,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var output = embeddingNet.Output;
 
             CategoricalCrossEntropyLossOperation lossOperation = new CategoricalCrossEntropyLossOperation();
-            lossOperation.Forward(output, this.maze.ToTrueLabel());
+            lossOperation.Forward(output, this.maze.ToTrueLabel(output.Cols));
             var gradientOfLoss = lossOperation.Backward();
 
             return gradientOfLoss;

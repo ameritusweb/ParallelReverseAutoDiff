@@ -55,13 +55,13 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
 
             this.inputLayers = new List<IModelLayer>();
             int numInputFeatures = this.NumFeatures;
-            int numInputOutputFeatures = this.NumFeatures;
+            int numInputOutputFeatures = this.NumFeatures * 2;
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var inputLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("Keys", new[] { numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("Keys", new[] { i == 0 ? 1 : numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes)
-                    .AddModelElementGroup("Values", new[] { numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("Values", new[] { i == 0 ? 1 : numInputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("VB", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes);
                 var inputLayer = inputLayerBuilder.Build();
                 this.inputLayers.Add(inputLayer);
@@ -69,28 +69,26 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
 
             this.nestedLayers = new List<IModelLayer>();
             int numNestedFeatures = this.NumFeatures;
-            int numNestedOutputFeatures = this.NumFeatures;
-            List<int> outputFeaturesList = new List<int>();
+            int numNestedOutputFeatures = this.NumFeatures * 2;
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("Queries", new[] { numQueries, numNestedFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("QB", new[] { numQueries, 1, numNestedOutputFeatures }, InitializationType.Zeroes);
+                    .AddModelElementGroup("Queries", new[] { numNestedFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("QB", new[] { 1, numNestedOutputFeatures }, InitializationType.Zeroes);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
-                outputFeaturesList.Add(numNestedOutputFeatures * numQueries);
             }
 
             this.outputLayers = new List<IModelLayer>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("FW", new[] { outputFeaturesList[i], (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
-                    .AddModelElementGroup("FB", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
-                    .AddModelElementGroup("F2W", new[] { outputFeaturesList[i], (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
-                    .AddModelElementGroup("F2B", new[] { 1, (outputFeaturesList[i] / 2) }, InitializationType.Xavier)
+                    .AddModelElementGroup("FW", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("FB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2W", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2B", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He)
-                    .AddModelElementGroup("R", new[] { (outputFeaturesList[i] / 2), this.NumFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("R", new[] { numNestedOutputFeatures, this.NumFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes);
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
@@ -212,7 +210,28 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             do
             {
                 var parameters = this.LookupParameters(op);
-                if (op.Id == "concatenated")
+
+                if (op.Id == "reduce")
+                {
+                }
+
+                if (op.Id == "keys_nodeFeatures")
+                {
+                }
+
+                if (op.Id == "queries_keys_transpose")
+                {
+                }
+
+                if (op.Id == "fully_connected")
+                {
+                }
+
+                if (op.Id == "pre_output")
+                {
+                }
+
+                if (op.Id == "output_act_summation")
                 {
                     var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
                     Matrix[] matrixArray = new Matrix[objArray.Length];
@@ -226,6 +245,10 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                     }
 
                     parameters[0] = new DeepMatrix(matrixArray);
+                }
+
+                if (op.Id == "swiglu_act_skip")
+                {
                 }
 
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
@@ -271,7 +294,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             {
                 backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
-                opVisitor.RunSequentially = false;
+                opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 if (opVisitor.AggregateException != null)
                 {
@@ -346,8 +369,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             List<Matrix> keysBias = new List<Matrix>();
             List<Matrix> values = new List<Matrix>();
             List<Matrix> valuesBias = new List<Matrix>();
-            List<DeepMatrix> queries = new List<DeepMatrix>();
-            List<DeepMatrix> queriesBias = new List<DeepMatrix>();
+            List<Matrix> queries = new List<Matrix>();
+            List<Matrix> queriesBias = new List<Matrix>();
             List<Matrix> reduce = new List<Matrix>();
             List<Matrix> reduceBias = new List<Matrix>();
             List<Matrix> fully = new List<Matrix>();
@@ -361,8 +384,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 keysBias.Add(this.inputLayers[i].WeightMatrix("KB"));
                 values.Add(this.inputLayers[i].WeightMatrix("Values"));
                 valuesBias.Add(this.inputLayers[i].WeightMatrix("VB"));
-                queries.Add(this.nestedLayers[i].WeightDeepMatrix("Queries"));
-                queriesBias.Add(this.nestedLayers[i].WeightDeepMatrix("QB"));
+                queries.Add(this.nestedLayers[i].WeightMatrix("Queries"));
+                queriesBias.Add(this.nestedLayers[i].WeightMatrix("QB"));
                 reduce.Add(this.outputLayers[i].WeightMatrix("R"));
                 reduceBias.Add(this.outputLayers[i].WeightMatrix("RB"));
                 fully.Add(this.outputLayers[i].WeightMatrix("FW"));
@@ -376,8 +399,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             List<Matrix> keysBiasGradient = new List<Matrix>();
             List<Matrix> valuesGradient = new List<Matrix>();
             List<Matrix> valuesBiasGradient = new List<Matrix>();
-            List<DeepMatrix> queriesGradient = new List<DeepMatrix>();
-            List<DeepMatrix> queriesBiasGradient = new List<DeepMatrix>();
+            List<Matrix> queriesGradient = new List<Matrix>();
+            List<Matrix> queriesBiasGradient = new List<Matrix>();
             List<Matrix> reduceGradient = new List<Matrix>();
             List<Matrix> reduceBiasGradient = new List<Matrix>();
             List<Matrix> fullyGradient = new List<Matrix>();
@@ -391,8 +414,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 keysBiasGradient.Add(this.inputLayers[i].GradientMatrix("KB"));
                 valuesGradient.Add(this.inputLayers[i].GradientMatrix("Values"));
                 valuesBiasGradient.Add(this.inputLayers[i].GradientMatrix("VB"));
-                queriesGradient.Add(this.nestedLayers[i].GradientDeepMatrix("Queries"));
-                queriesBiasGradient.Add(this.nestedLayers[i].GradientDeepMatrix("QB"));
+                queriesGradient.Add(this.nestedLayers[i].GradientMatrix("Queries"));
+                queriesBiasGradient.Add(this.nestedLayers[i].GradientMatrix("QB"));
                 reduceGradient.Add(this.outputLayers[i].GradientMatrix("R"));
                 reduceBiasGradient.Add(this.outputLayers[i].GradientMatrix("RB"));
                 fullyGradient.Add(this.outputLayers[i].GradientMatrix("FW"));
@@ -403,7 +426,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             }
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<NestedLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new EmbeddingComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
@@ -416,8 +439,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 .AddBias("KB", x => keysBias[x.Layer]).AddGradient("DKB", x => keysBiasGradient[x.Layer])
                 .AddWeight("Values", x => values[x.Layer]).AddGradient("DValues", x => valuesGradient[x.Layer])
                 .AddBias("VB", x => valuesBias[x.Layer]).AddGradient("DVB", x => valuesBiasGradient[x.Layer])
-                .AddWeight("Queries", x => queries[x.Layer][x.NestedLayer]).AddGradient("DQueries", x => queriesGradient[x.Layer][x.NestedLayer])
-                .AddBias("QB", x => queriesBias[x.Layer][x.NestedLayer]).AddGradient("DQB", x => queriesBiasGradient[x.Layer][x.NestedLayer])
+                .AddWeight("Queries", x => queries[x.Layer]).AddGradient("DQueries", x => queriesGradient[x.Layer])
+                .AddBias("QB", x => queriesBias[x.Layer]).AddGradient("DQB", x => queriesBiasGradient[x.Layer])
                 .AddWeight("R", x => reduce[x.Layer]).AddGradient("DR", x => reduceGradient[x.Layer])
                 .AddBias("RB", x => reduceBias[x.Layer]).AddGradient("DRB", x => reduceBiasGradient[x.Layer])
                 .AddWeight("FW", x => fully[x.Layer]).AddGradient("DFW", x => fullyGradient[x.Layer])
@@ -425,10 +448,9 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 .AddWeight("F2W", x => fully2[x.Layer]).AddGradient("DF2W", x => fully2Gradient[x.Layer])
                 .AddBias("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
                 .AddBias("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
-                .AddOperationFinder("output_act_last", _ => this.computationGraph[$"output_act_0_{this.NumLayers - 1}"])
                 .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.computationGraph["nodeFeatures_concatenate_0_0"] : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
-                .AddOperationFinder("attention_weights_values_array", x => this.computationGraph.ToOperationArray("attention_weights_values", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumLayers - 1)))
-                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
+                .AddOperationFinder("output_act_array", x => this.computationGraph.ToOperationArray("output_act", new LayerInfo(0, 0), new LayerInfo(0, this.NumLayers - 1)))
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_softmax_0_0"];

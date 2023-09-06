@@ -29,6 +29,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         public Maze CreateMaze(int mazeSize)
         {
             var maze = new Maze();
+            maze.Size = mazeSize;
             maze.MazeNodes = new MazeNode[mazeSize, mazeSize, mazeSize];
 
             // Cache the enum values

@@ -75,11 +75,12 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         /// <summary>
         /// To the true label.
         /// </summary>
+        /// <param name="size">The size.</param>
         /// <returns>The true label.</returns>
-        public Matrix ToTrueLabel()
+        public Matrix ToTrueLabel(int size)
         {
-            Matrix trueLabel = new Matrix(1, this.NodeCount);
-            trueLabel[0, this.NodeCount - 1] = 1;
+            Matrix trueLabel = new Matrix(1, size);
+            trueLabel[0, size - 1] = 1;
             return trueLabel;
         }
 

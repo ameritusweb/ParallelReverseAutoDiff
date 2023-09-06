@@ -75,10 +75,11 @@
             Gets the alphabet size.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.ToTrueLabel">
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.ToTrueLabel(System.Int32)">
             <summary>
             To the true label.
             </summary>
+            <param name="size">The size.</param>
             <returns>The true label.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze.ToIndices">
