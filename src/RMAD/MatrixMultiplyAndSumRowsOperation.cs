@@ -78,6 +78,8 @@ namespace ParallelReverseAutoDiff.RMAD
             for (int q = 0; q < this.b.Depth; q++)
             {
                 Matrix slice = this.b[q];
+                dB[q] = new Matrix(this.a.Cols, this.a.Cols); // Initialize to zero NxN Matrix
+                dB[q].Initialize(InitializationType.Zeroes);
                 for (int i = 0; i < this.a.Rows; i++)
                 {
                     double multiplier = dOutput[i][q]; // This is a scalar
@@ -85,12 +87,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     for (int j = 0; j < dA[i].Length; j++)
                     {
-                        dA[i][j] += scaledSlice[0][j]; // Assuming scaledSlice is a row vector in matrix form
+                        dA[i][j] += scaledSlice[0][j]; // scaledSlice is a row vector in matrix form
                     }
-                }
 
-                Matrix tempB = this.a.Transpose() * dOutput.ColumnSlice(q);  // Assuming dOutput.ColumnSlice(q) gives the q-th column as a vector
-                dB[q] = tempB;
+                    Matrix contributionToSlice = new Matrix(this.a[i]).Transpose() * new Matrix(this.a[i]) * multiplier; // a[i] gives the i-th row as a vector
+                    dB[q] += contributionToSlice; // += overloads to add matrices element-wise
+                }
             }
 
             return new BackwardResultBuilder()
