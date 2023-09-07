@@ -233,7 +233,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 {
                 }
 
-                if (op.Id == "output_act_summation")
+                if (op.Id == "output_act_summation" || op.Id == "swiglu_act_summation")
                 {
                     var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
                     Matrix[] matrixArray = new Matrix[objArray.Length];
@@ -436,7 +436,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             }
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
+            var jsonArchitecture = JsonConvert.DeserializeObject<NestedLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new EmbeddingComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
@@ -453,16 +453,18 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 .AddBias("QB", x => queriesBias[x.Layer]).AddGradient("DQB", x => queriesBiasGradient[x.Layer])
                 .AddWeight("R", x => reduce[x.Layer]).AddGradient("DR", x => reduceGradient[x.Layer])
                 .AddBias("RB", x => reduceBias[x.Layer]).AddGradient("DRB", x => reduceBiasGradient[x.Layer])
-                .AddWeight("FW", x => fully[x.Layer]).AddGradient("DFW", x => fullyGradient[x.Layer])
-                .AddWeight("FB", x => fullyBias[x.Layer]).AddGradient("DFB", x => fullyBiasGradient[x.Layer])
-                .AddWeight("F2W", x => fully2[x.Layer]).AddGradient("DF2W", x => fully2Gradient[x.Layer])
-                .AddWeight("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
+                .AddWeight("FW", x => fully[x.Layer][x.NestedLayer]).AddGradient("DFW", x => fullyGradient[x.Layer][x.NestedLayer])
+                .AddWeight("FB", x => fullyBias[x.Layer][x.NestedLayer]).AddGradient("DFB", x => fullyBiasGradient[x.Layer][x.NestedLayer])
+                .AddWeight("F2W", x => fully2[x.Layer][x.NestedLayer]).AddGradient("DF2W", x => fully2Gradient[x.Layer][x.NestedLayer])
+                .AddWeight("F2B", x => fully2Bias[x.Layer][x.NestedLayer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer][x.NestedLayer])
+                .AddWeight("Beta", x => beta[x.Layer][x.NestedLayer]).AddGradient("DBeta", x => betaGradient[x.Layer][x.NestedLayer])
                 .AddBias("G", x => g[x.Layer]).AddGradient("DG", x => gGradient[x.Layer])
                 .AddBias("CS", x => cs[x.Layer]).AddGradient("DCS", x => csGradient[x.Layer])
-                .AddWeight("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
                 .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.computationGraph["nodeFeatures_concatenate_0_0"] : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
+                .AddOperationFinder("attention_scores_swiglu", x => x.NestedLayer == 0 ? this.computationGraph[$"attention_scores_0_{x.Layer}"] : this.computationGraph[$"swiglu_act_0_{x.Layer}_{x.NestedLayer - 1}"])
                 .AddOperationFinder("output_act_array", x => this.computationGraph.ToOperationArray("output_act", new LayerInfo(0, 0), new LayerInfo(0, this.NumLayers - 1)))
-                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
+                .AddOperationFinder("swiglu_act_array", x => this.computationGraph.ToOperationArray("swiglu_act", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumQueries - 1)))
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
 
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_softmax_0_0"];
