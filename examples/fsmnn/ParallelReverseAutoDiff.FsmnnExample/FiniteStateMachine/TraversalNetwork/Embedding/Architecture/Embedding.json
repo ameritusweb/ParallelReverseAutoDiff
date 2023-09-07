@@ -21,7 +21,7 @@
       ],
       "layers": [
         {
-          "operations": [
+          "startOperations": [
             {
               "id": "nodeFeatures_trans",
               "type": "MatrixTransposeOperation",
@@ -118,46 +118,59 @@
               "id": "attention_scores",
               "type": "GpuMatrixMultiplyOperation",
               "inputs": [ "attention_weights", "values_act" ]
-            },
+            }
+          ],
+          "layers": [
             {
-              "id": "fully_connected",
-              "type": "GpuMatrixMultiplyOperation",
-              "inputs": [ "attention_scores", "FW" ],
-              "gradientResultTo": [ null, "DFW" ]
-            },
+              "operations": [
+                {
+                  "id": "fully_connected",
+                  "type": "GpuMatrixMultiplyOperation",
+                  "inputs": [ "attention_scores_swiglu", "FW" ],
+                  "gradientResultTo": [ null, "DFW" ]
+                },
+                {
+                  "id": "fully_connected_add",
+                  "type": "MatrixAddBroadcastingOperation",
+                  "inputs": [ "fully_connected", "FB" ],
+                  "gradientResultTo": [ null, "DFB" ]
+                },
+                {
+                  "id": "fully_connected_2",
+                  "type": "GpuMatrixMultiplyOperation",
+                  "inputs": [ "attention_scores_swiglu", "F2W" ],
+                  "gradientResultTo": [ null, "DF2W" ]
+                },
+                {
+                  "id": "fully_connected_2_add",
+                  "type": "MatrixAddBroadcastingOperation",
+                  "inputs": [ "fully_connected_2", "F2B" ],
+                  "gradientResultTo": [ null, "DF2B" ]
+                },
+                {
+                  "id": "fully_connected_act",
+                  "type": "SwishOperation",
+                  "inputs": [ "fully_connected_add", "Beta" ],
+                  "gradientResultTo": [ null, "DBeta" ]
+                },
+                {
+                  "id": "swiglu_act",
+                  "type": "HadamardProductOperation",
+                  "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+                }
+              ]
+            }
+          ],
+          "endOperations": [
             {
-              "id": "fully_connected_add",
-              "type": "MatrixAddBroadcastingOperation",
-              "inputs": [ "fully_connected", "FB" ],
-              "gradientResultTo": [ null, "DFB" ]
-            },
-            {
-              "id": "fully_connected_2",
-              "type": "GpuMatrixMultiplyOperation",
-              "inputs": [ "attention_scores", "F2W" ],
-              "gradientResultTo": [ null, "DF2W" ]
-            },
-            {
-              "id": "fully_connected_2_add",
-              "type": "MatrixAddBroadcastingOperation",
-              "inputs": [ "fully_connected_2", "F2B" ],
-              "gradientResultTo": [ null, "DF2B" ]
-            },
-            {
-              "id": "fully_connected_act",
-              "type": "SwishOperation",
-              "inputs": [ "fully_connected_add", "Beta" ],
-              "gradientResultTo": [ null, "DBeta" ]
-            },
-            {
-              "id": "swiglu_act",
-              "type": "HadamardProductOperation",
-              "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+              "id": "swiglu_act_summation",
+              "type": "DeepMatrixElementwiseAddOperation",
+              "inputs": [ "swiglu_act_array" ]
             },
             {
               "id": "swiglu_act_skip",
               "type": "MatrixAddThreeOperation",
-              "inputs": [ "swiglu_act", "keys_nodeFeatures", "values_nodeFeatures" ]
+              "inputs": [ "swiglu_act_summation", "keys_nodeFeatures", "values_nodeFeatures" ]
             },
             {
               "id": "reduce",
