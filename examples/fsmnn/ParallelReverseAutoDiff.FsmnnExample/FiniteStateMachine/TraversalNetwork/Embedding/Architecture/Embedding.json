@@ -178,9 +178,15 @@
               "gradientResultTo": [ null, "DG" ]
             },
             {
+              "id": "output_norm_cosine",
+              "type": "CosineScalingOperation",
+              "inputs": [ "output_norm", "CS" ],
+              "gradientResultTo": [ null, "DCS" ]
+            },
+            {
               "id": "output_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "output_norm" ]
+              "inputs": [ "output_norm_cosine" ]
             }
           ]
         }

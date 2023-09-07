@@ -50,7 +50,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.inputMatrix = inputMatrix;
             this.learnedVectors = learnedVectors;
 
-            Matrix scaledMatrix = new Matrix(inputMatrix.Rows, inputMatrix.Cols);
+            this.Output = new Matrix(inputMatrix.Rows, inputMatrix.Cols);
             for (int i = 0; i < inputMatrix.Cols; i++)
             {
                 Matrix slice = inputMatrix.ColumnSlice(i);
@@ -59,10 +59,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 double scale = 1.0 - cosineSim;
 
                 Matrix scaledSlice = slice * scale;
-                scaledMatrix.SetColumnSlice(i, scaledSlice);
+                this.Output.SetColumnSlice(i, scaledSlice);
             }
 
-            return scaledMatrix;
+            return this.Output;
         }
 
         /// <inheritdoc />

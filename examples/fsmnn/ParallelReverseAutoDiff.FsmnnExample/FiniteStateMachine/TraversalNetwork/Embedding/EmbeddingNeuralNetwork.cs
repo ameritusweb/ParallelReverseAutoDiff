@@ -90,7 +90,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                     .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He)
                     .AddModelElementGroup("R", new[] { numNestedOutputFeatures, this.NumFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes)
-                    .AddModelElementGroup("G", new[] { this.NumFeatures, this.NumFeatures }, InitializationType.Xavier);
+                    .AddModelElementGroup("G", new[] { this.NumFeatures, this.NumFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("CS", new[] { this.NumFeatures, this.NumFeatures }, InitializationType.Xavier);
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
             }
@@ -248,7 +249,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                     parameters[0] = new DeepMatrix(matrixArray);
                 }
 
-                if (op.Id == "output_norm")
+                if (op.Id == "output_norm_cosine")
                 {
                 }
 
@@ -379,6 +380,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             List<Matrix> fully2 = new List<Matrix>();
             List<Matrix> fully2Bias = new List<Matrix>();
             List<Matrix> g = new List<Matrix>();
+            List<Matrix> cs = new List<Matrix>();
             List<Matrix> beta = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
@@ -395,6 +397,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 fully2.Add(this.outputLayers[i].WeightMatrix("F2W"));
                 fully2Bias.Add(this.outputLayers[i].WeightMatrix("F2B"));
                 g.Add(this.outputLayers[i].WeightMatrix("G"));
+                cs.Add(this.outputLayers[i].WeightMatrix("CS"));
                 beta.Add(this.outputLayers[i].WeightMatrix("Beta"));
             }
 
@@ -411,6 +414,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             List<Matrix> fully2Gradient = new List<Matrix>();
             List<Matrix> fully2BiasGradient = new List<Matrix>();
             List<Matrix> gGradient = new List<Matrix>();
+            List<Matrix> csGradient = new List<Matrix>();
             List<Matrix> betaGradient = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
@@ -427,6 +431,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 fully2Gradient.Add(this.outputLayers[i].GradientMatrix("F2W"));
                 fully2BiasGradient.Add(this.outputLayers[i].GradientMatrix("F2B"));
                 gGradient.Add(this.outputLayers[i].GradientMatrix("G"));
+                csGradient.Add(this.outputLayers[i].GradientMatrix("CS"));
                 betaGradient.Add(this.outputLayers[i].GradientMatrix("Beta"));
             }
 
@@ -453,6 +458,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 .AddWeight("F2W", x => fully2[x.Layer]).AddGradient("DF2W", x => fully2Gradient[x.Layer])
                 .AddBias("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
                 .AddBias("G", x => g[x.Layer]).AddGradient("DG", x => gGradient[x.Layer])
+                .AddBias("CS", x => cs[x.Layer]).AddGradient("DCS", x => csGradient[x.Layer])
                 .AddBias("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
                 .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.computationGraph["nodeFeatures_concatenate_0_0"] : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
                 .AddOperationFinder("output_act_array", x => this.computationGraph.ToOperationArray("output_act", new LayerInfo(0, 0), new LayerInfo(0, this.NumLayers - 1)))
