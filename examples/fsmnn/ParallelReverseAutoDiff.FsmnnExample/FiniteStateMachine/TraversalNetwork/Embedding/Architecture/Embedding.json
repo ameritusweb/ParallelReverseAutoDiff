@@ -172,9 +172,15 @@
               "gradientResultTo": [ null, "DRB" ]
             },
             {
+              "id": "output_norm",
+              "type": "RMSNormOperation",
+              "inputs": [ "reduce_add", "G" ],
+              "gradientResultTo": [ null, "DG" ]
+            },
+            {
               "id": "output_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "reduce_add" ]
+              "inputs": [ "output_norm" ]
             }
           ]
         }
