@@ -121,6 +121,8 @@ MatrixMultiplyOperation
 
 MatrixMultiplyAndSumOperation
 
+MatrixMultiplyAndSumRowsOperation
+
 MatrixMultiplyScalarOperation
 
 MatrixSumOperation
