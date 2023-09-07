@@ -249,7 +249,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                     parameters[0] = new DeepMatrix(matrixArray);
                 }
 
-                if (op.Id == "output_norm_cosine")
+                if (op.Id == "output_softmax")
                 {
                 }
 
