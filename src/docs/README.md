@@ -83,6 +83,8 @@ ApplyDropoutOperation
 
 BatchNormalizationOperation
 
+CosineScalingOperation
+
 CudaMatrixMultiplyOperation - Leverages NVIDIA GPUs for fast computation.
 
 DualWeightedOperation

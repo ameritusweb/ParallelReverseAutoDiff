@@ -241,6 +241,50 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Returns a new Matrix object containing the ith column of the original Matrix.
+        /// </summary>
+        /// <param name="colIndex">The column index to slice.</param>
+        /// <returns>New Matrix containing the column slice.</returns>
+        public Matrix ColumnSlice(int colIndex)
+        {
+            if (colIndex >= this.Cols || colIndex < 0)
+            {
+                throw new IndexOutOfRangeException("Column index out of range.");
+            }
+
+            Matrix slice = new Matrix(this.Rows, 1);
+            for (int i = 0; i < this.Rows; i++)
+            {
+                slice[i, 0] = this[i, colIndex];
+            }
+
+            return slice;
+        }
+
+        /// <summary>
+        /// Sets the ith column of the Matrix to the values contained in the input Matrix.
+        /// </summary>
+        /// <param name="colIndex">The column index to set.</param>
+        /// <param name="columnMatrix">The Matrix containing the values to set.</param>
+        public void SetColumnSlice(int colIndex, Matrix columnMatrix)
+        {
+            if (colIndex >= this.Cols || colIndex < 0)
+            {
+                throw new IndexOutOfRangeException("Column index out of range.");
+            }
+
+            if (columnMatrix.Rows != this.Rows || columnMatrix.Cols != 1)
+            {
+                throw new ArgumentException("Input Matrix dimensions are not compatible.");
+            }
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                this[i, colIndex] = columnMatrix[i, 0];
+            }
+        }
+
+        /// <summary>
         /// Returns the transpose of this matrix.
         /// </summary>
         /// <returns>The transpose of this matrix.</returns>
