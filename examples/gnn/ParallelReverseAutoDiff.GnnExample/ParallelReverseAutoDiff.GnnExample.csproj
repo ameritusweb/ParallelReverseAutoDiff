@@ -11,6 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GraphAttentionLstm\Classify\Architecture\Classify.json" />
+    <None Remove="GraphAttentionLstm\LSTM\Architecture\NodeProcessing.json" />
     <None Remove="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
     <None Remove="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
     <None Remove="GraphAttentionPaths\Embedding\Architecture\Embedding.json" />
@@ -61,6 +63,8 @@
     <Content Include="Leela\mimalloc-redirect.dll">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="GraphAttentionLstm\Classify\Architecture\Classify.json" />
+    <EmbeddedResource Include="GraphAttentionLstm\LSTM\Architecture\NodeProcessing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\AttentionMessagePassing\Architecture\MessagePassing.json" />
     <EmbeddedResource Include="GraphAttentionPaths\EdgeAttention\Architecture\EdgeAttention.json" />
     <EmbeddedResource Include="GraphAttentionPaths\Embedding\Architecture\Embedding.json" />
@@ -84,8 +88,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="ParallelReverseAutoDiff" Version="1.1.14" />
-		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+		<PackageReference Include="ParallelReverseAutoDiff" Version="1.1.26" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

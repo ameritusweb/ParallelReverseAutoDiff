@@ -1,0 +1,334 @@
+{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "projectedInput",
+          "description": "Multiply the input with the weight matrix",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "We", "InputNodeFeatures[t]" ],
+          "gradientResultTo": [ "dWe", null ],
+          "initializations": [
+            {
+              "type": "Xavier",
+              "rows": "hiddenSize",
+              "columns": "inputSize"
+            },
+            null
+          ]
+        },
+        {
+          "id": "embeddedInput",
+          "description": "Add the bias",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "projectedInput", "be" ],
+          "gradientResultTo": [ null, "dbe" ],
+          "initializations": [
+            null,
+            {
+              "type": "Zeroes",
+              "rows": "1",
+              "columns": "inputSize"
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "operations": [
+            {
+              "id": "wf_currentInput",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "currentInput", "Wf[layerIndex]" ],
+              "gradientResultTo": [ null, "dWf[layerIndex]" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "inputSize",
+                  "columns": "inputSize"
+                }
+              ]
+            },
+            {
+              "id": "uf_previousHiddenState",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "previousHiddenState", "Uf[layerIndex]" ],
+              "gradientResultTo": [ null, "dUf[layerIndex]" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "inputSize",
+                  "columns": "inputSize"
+                }
+              ]
+            },
+            {
+              "id": "f_add",
+              "type": "MatrixAddThreeOperation",
+              "inputs": [ "wf_currentInput", "uf_previousHiddenState", "bf[layerIndex]" ],
+              "gradientResultTo": [ null, null, "dbf[layerIndex]" ],
+              "initializations": [
+                null,
+                null,
+                {
+                  "type": "Zeroes",
+                  "rows": "hiddenSize",
+                  "columns": "inputSize"
+                }
+              ]
+            },
+            {
+              "id": "intermediate_f",
+              "description": "Run RMS normalization",
+              "type": "RMSNormOperation",
+              "inputs": [ "f_add" ]
+            },
+            {
+              "id": "f",
+              "description": "Compute the forget gate",
+              "type": "AmplifiedSigmoidOperation",
+              "inputs": [ "intermediate_f" ]
+            },
+            {
+              "id": "wi_currentInput",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "currentInput", "Wi[layerIndex]" ],
+              "gradientResultTo": [ null, "dWi[layerIndex]" ]
+            },
+            {
+              "id": "ui_previousHiddenState",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "previousHiddenState", "Ui[layerIndex]" ],
+              "gradientResultTo": [ null, "dUi[layerIndex]" ]
+            },
+            {
+              "id": "i_add",
+              "type": "MatrixAddThreeOperation",
+              "inputs": [ "wi_currentInput", "ui_previousHiddenState", "bi[layerIndex]" ],
+              "gradientResultTo": [ null, null, "dbi[layerIndex]" ]
+            },
+            {
+              "id": "intermediate_i",
+              "description": "Perform RMS normalization",
+              "type": "RMSNormOperation",
+              "inputs": [ "i_add" ]
+            },
+            {
+              "id": "i",
+              "description": "Compute the input gate",
+              "type": "AmplifiedSigmoidOperation",
+              "inputs": [ "intermediate_i" ]
+            },
+            {
+              "id": "wc_currentInput",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "currentInput", "Wc[layerIndex]" ],
+              "gradientResultTo": [ null, "dWc[layerIndex]" ]
+            },
+            {
+              "id": "uc_previousHiddenState",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "previousHiddenState", "Uc[layerIndex]" ],
+              "gradientResultTo": [ null, "dUc[layerIndex]" ]
+            },
+            {
+              "id": "cHat_add",
+              "type": "MatrixAddThreeOperation",
+              "inputs": [ "wc_currentInput", "uc_previousHiddenState", "bc[layerIndex]" ],
+              "gradientResultTo": [ null, null, "dbc[layerIndex]" ]
+            },
+            {
+              "id": "intermediate_cHat",
+              "description": "Run the RMS normalization operation",
+              "type": "RMSNormOperation",
+              "inputs": [ "cHat_add" ]
+            },
+            {
+              "id": "cHat",
+              "description": "Compute the candidate memory cell state",
+              "type": "TanhOperation",
+              "inputs": [ "intermediate_cHat" ]
+            },
+            {
+              "id": "f_previousMemoryCellState",
+              "type": "HadamardProductOperation",
+              "inputs": [ "f[t][layerIndex]", "previousMemoryCellState" ]
+            },
+            {
+              "id": "i_cHat",
+              "type": "HadamardProductOperation",
+              "inputs": [ "i[t][layerIndex]", "cHat[t][layerIndex]" ]
+            },
+            {
+              "id": "newC",
+              "description": "Compute the memory cell state",
+              "type": "MatrixAddOperation",
+              "inputs": [ "f_previousMemoryCellState", "i_cHat" ]
+            },
+            {
+              "id": "c",
+              "type": "RMSNormOperation",
+              "inputs": [ "newC" ]
+            },
+            {
+              "id": "wo_currentInput",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "currentInput", "Wo[layerIndex]" ],
+              "gradientResultTo": [ null, "dWo[layerIndex]" ]
+            },
+            {
+              "id": "uo_previousHiddenState",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "previousHiddenState", "Uo[layerIndex]" ],
+              "gradientResultTo": [ null, "dUo[layerIndex]" ]
+            },
+            {
+              "id": "o_add",
+              "type": "MatrixAddThreeOperation",
+              "inputs": [ "wo_currentInput", "uo_previousHiddenState", "bo[layerIndex]" ],
+              "gradientResultTo": [ null, null, "dbo[layerIndex]" ]
+            },
+            {
+              "id": "o",
+              "description": "Compute the output gate",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "o_add" ]
+            },
+            {
+              "id": "c_tanh",
+              "type": "TanhOperation",
+              "inputs": [ "c" ]
+            },
+            {
+              "id": "newH",
+              "type": "HadamardProductOperation",
+              "inputs": [ "o[t][layerIndex]", "c_tanh" ]
+            },
+            {
+              "id": "keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "embeddedInput", "Wk[layerIndex]" ],
+              "gradientResultTo": [ null, "dWk[layerIndex]" ]
+            },
+            {
+              "id": "queries",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "previousHiddenState", "Wq[layerIndex]" ],
+              "gradientResultTo": [ null, "dWq[layerIndex]" ]
+            },
+            {
+              "id": "values",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "embeddedInput", "Wv[layerIndex]" ],
+              "gradientResultTo": [ null, "dWv[layerIndex]" ]
+            },
+            {
+              "id": "queriesTranspose",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "queries" ]
+            },
+            {
+              "id": "dotProduct",
+              "description": "Compute the dot product of the queries and keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "keys", "queriesTranspose" ]
+            },
+            {
+              "id": "scaledDotProduct",
+              "description": "Scale the dot product",
+              "type": "MatrixMultiplyScalarOperation",
+              "inputs": [ "dotProduct", "scaledDotProductScalar" ]
+            },
+            {
+              "id": "scaledDotProductTranspose",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "scaledDotProduct" ]
+            },
+            {
+              "id": "attentionWeights",
+              "type": "SineSoftmaxOperation",
+              "inputs": [ "scaledDotProductTranspose" ]
+            },
+            {
+              "id": "attentionOutput",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "attentionWeights", "values" ]
+            },
+            {
+              "id": "newHWithAttentionOutput",
+              "type": "MatrixAddOperation",
+              "inputs": [ "newH", "attentionOutput" ]
+            },
+            {
+              "id": "h",
+              "type": "RMSNormOperation",
+              "inputs": [ "newHWithAttentionOutput" ]
+            }
+          ]
+        }
+      ],
+      "endOperations": [
+        {
+          "id": "h_summation",
+          "type": "DeepMatrixElementwiseAddOperation",
+          "inputs": [ "h_array" ]
+        },
+        {
+          "id": "v_h",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "h_summation", "V" ],
+          "gradientResultTo": [ null, "dV" ]
+        },
+        {
+          "id": "v_h_b",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "v_h", "b" ],
+          "gradientResultTo": [ null, "db" ]
+        },
+        {
+          "id": "fully_connected",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "v_h_b", "FW" ],
+          "gradientResultTo": [ null, "DFW" ]
+        },
+        {
+          "id": "fully_connected_add",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "fully_connected", "FB" ],
+          "gradientResultTo": [ null, "DFB" ]
+        },
+        {
+          "id": "fully_connected_2",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "v_h_b", "F2W" ],
+          "gradientResultTo": [ null, "DF2W" ]
+        },
+        {
+          "id": "fully_connected_2_add",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "fully_connected_2", "F2B" ],
+          "gradientResultTo": [ null, "DF2B" ]
+        },
+        {
+          "id": "fully_connected_act",
+          "type": "SwishOperation",
+          "inputs": [ "fully_connected_add", "Beta" ],
+          "gradientResultTo": [ null, "DBeta" ]
+        },
+        {
+          "id": "swiglu_act",
+          "type": "HadamardProductOperation",
+          "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+        },
+        {
+          "id": "output_t",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "swiglu_act" ],
+          "setResultTo": "OutputFeatures[t]"
+        }
+      ]
+    }
+  ]
+}
