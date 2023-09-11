@@ -289,6 +289,45 @@
             </summary>
             <returns>1xN matrix of gradients.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceLossOperation">
+            <summary>
+            Categorical variance loss operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,System.Int32,System.Double)">
+            <summary>
+            Performs the forward operation.
+            </summary>
+            <param name="predicted">1xN matrix of predicted probabilities.</param>
+            <param name="targetIndex">The index of the target label.</param>
+            <param name="trueVariance">1xN matrix of true labels (one-hot encoded).</param>
+            <returns>The computed loss.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceLossOperation.Backward">
+            <summary>
+            Computes the gradient with respect to the predicted probabilities.
+            </summary>
+            <returns>1xN matrix of gradients.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.VarianceLossOperation">
+            <summary>
+            Variance loss operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.VarianceLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
+            <summary>
+            Performs the forward operation.
+            </summary>
+            <param name="predicted">1xN matrix of predicted probabilities.</param>
+            <param name="trueVariance">1xN matrix of true labels (one-hot encoded).</param>
+            <returns>The computed loss.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.VarianceLossOperation.Backward">
+            <summary>
+            Computes the gradient with respect to the predicted probabilities.
+            </summary>
+            <returns>1xN matrix of gradients.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.Embedding.EmbeddingComputationGraph">
             <summary>
             An embedding computation graph.
@@ -488,6 +527,12 @@
             </summary>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward">
+            <summary>
+            Make a forward pass through the computation graph.
+            </summary>
+            <returns>The gradient of the loss wrt the output.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward2">
             <summary>
             Make a forward pass through the computation graph.
             </summary>

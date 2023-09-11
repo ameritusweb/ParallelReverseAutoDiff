@@ -166,6 +166,26 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         }
 
         /// <summary>
+        /// Make a forward pass through the computation graph.
+        /// </summary>
+        /// <returns>The gradient of the loss wrt the output.</returns>
+        public Matrix Forward2()
+        {
+            var embeddingNet = this.embeddingNeuralNetwork;
+            embeddingNet.NumPath = this.maze.MazePath.MazeNodes.Length;
+            embeddingNet.InitializeState();
+            var indices = this.maze.ToIndices();
+            embeddingNet.AutomaticForwardPropagate(indices);
+            var output = embeddingNet.Output;
+            Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][output.Cols - 1]);
+            CategoricalVarianceLossOperation lossOperation = new CategoricalVarianceLossOperation();
+            lossOperation.Forward(output, 0, 0.002d);
+            var gradientOfLoss = lossOperation.Backward();
+
+            return gradientOfLoss;
+        }
+
+        /// <summary>
         /// The backward pass through the computation graph.
         /// </summary>
         /// <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
