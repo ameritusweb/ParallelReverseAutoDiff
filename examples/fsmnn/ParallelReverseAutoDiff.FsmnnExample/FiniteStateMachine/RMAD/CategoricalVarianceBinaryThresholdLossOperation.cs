@@ -64,8 +64,10 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
 
             dynamicThresholds.Add(0);  // End at 0
 
+            double gap = 0d;
+
             // Search for the optimal threshold using dynamic step sizes
-            foreach (double t in dynamicThresholds)
+            foreach (var (t, index) in dynamicThresholds.WithIndex())
             {
                 double currentLoss = 0;
                 for (int i = 0; i < predicted.Cols; i++)
@@ -79,6 +81,18 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
                 {
                     minLoss = currentLoss;
                     optimalThreshold = t;
+                    if (index == 0)
+                    {
+                        gap = Math.Abs(optimalThreshold - dynamicThresholds[index + 1]);
+                    }
+                    else if (index == dynamicThresholds.Count)
+                    {
+                        gap = Math.Abs(optimalThreshold - dynamicThresholds[index - 1]);
+                    }
+                    else
+                    {
+                        gap = Math.Max(Math.Abs(optimalThreshold - dynamicThresholds[index - 1]), Math.Abs(optimalThreshold - dynamicThresholds[index + 1]));
+                    }
                 }
             }
 
@@ -87,6 +101,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
             this.mean = mean;
             double variance = predicted[0].Select(x => (x - mean) * (x - mean)).Average();
             this.variance = variance;
+            Console.WriteLine("Variance: " + variance);
 
             // Use algorithmically determined optimal threshold
             var threshold = optimalThreshold;
@@ -125,7 +140,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
             }
 
             // If early stopping conditions are not met, set targetIndex to the closest '1'
-            if (this.targetIndex == -1 && optimalThreshold != dynamicThresholds.Max())
+            if (this.targetIndex == -1 && gap < differences.Average())
             {
                 this.targetIndex = closestIndex;
             }

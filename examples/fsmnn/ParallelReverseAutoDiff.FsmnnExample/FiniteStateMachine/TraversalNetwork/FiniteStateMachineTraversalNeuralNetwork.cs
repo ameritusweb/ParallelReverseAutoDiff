@@ -177,8 +177,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var indices = this.maze.ToIndices();
             embeddingNet.AutomaticForwardPropagate(indices);
             var output = embeddingNet.Output;
-            Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][output.Cols - 1]);
-            CategoricalVarianceBinaryLossOperation lossOperation = new CategoricalVarianceBinaryLossOperation();
+            Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][3] + " " + output[0][4] + " " + output[0][5]);
+            CategoricalVarianceBinaryThresholdLossOperation lossOperation = new CategoricalVarianceBinaryThresholdLossOperation();
             lossOperation.Forward(output, this.maze.ToTrueLabel(output.Cols), 0.004d);
             var gradientOfLoss = lossOperation.Backward();
 
