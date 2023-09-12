@@ -289,6 +289,50 @@
             </summary>
             <returns>1xN matrix of gradients.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryLossOperation">
+            <summary>
+            Categorical variance binary loss operation.
+            Uses an algothim to determine the optimal threshold.
+            Utilizes early stopping in the loss function and subsequent gradient calculation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
+            <summary>
+            Performs the forward operation.
+            </summary>
+            <param name="predicted">1xN matrix of predicted probabilities.</param>
+            <param name="targetMatrix">The target matrix of ones or zeroes.</param>
+            <param name="trueVariance">1xN matrix of true labels (one-hot encoded).</param>
+            <returns>The computed loss.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryLossOperation.Backward">
+            <summary>
+            Computes the gradient with respect to the predicted probabilities.
+            </summary>
+            <returns>1xN matrix of gradients.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryThresholdLossOperation">
+            <summary>
+            Categorical variance binary threshold loss operation.
+            Uses an algothim to determine the optimal threshold.
+            Utilizes early stopping in the loss function and subsequent gradient calculation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryThresholdLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
+            <summary>
+            Performs the forward operation.
+            </summary>
+            <param name="predicted">1xN matrix of predicted probabilities.</param>
+            <param name="targetMatrix">The target matrix of ones or zeroes.</param>
+            <param name="trueVariance">1xN matrix of true labels (one-hot encoded).</param>
+            <returns>The computed loss.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryThresholdLossOperation.Backward">
+            <summary>
+            Computes the gradient with respect to the predicted probabilities.
+            </summary>
+            <returns>1xN matrix of gradients.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceLossOperation">
             <summary>
             Categorical variance loss operation.
