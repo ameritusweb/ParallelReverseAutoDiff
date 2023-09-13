@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="CategoricalVarianceBinaryThresholdLossOperation.cs" author="ameritusweb" date="9/4/2023">
+// <copyright file="CategoricalVarianceBinaryThresholdSearchLossOperation.cs" author="ameritusweb" date="9/4/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -14,10 +14,12 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
     /// Uses an algothim to determine the optimal threshold.
     /// Utilizes early stopping in the loss function and subsequent gradient calculation.
     /// </summary>
-    public class CategoricalVarianceBinaryThresholdLossOperation
+    public class CategoricalVarianceBinaryThresholdSearchLossOperation
     {
         private const double Lambda = 50d;
         private const double Epsilon = 1E-9d;
+        private const double RefinementRatio = 0.1;
+        private const int MaxRecursionDepth = 5;
         private Matrix predicted;
         private Matrix targetMatrix;
         private double Alpha = 1d;
@@ -157,65 +159,130 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
         /// <returns>1xN matrix of gradients.</returns>
         public Matrix Backward()
         {
-            Matrix dOutput = new Matrix(1, this.predicted.Cols);
             double bestAngle = double.MaxValue;
             double bestAlpha = this.Alpha;  // Store the initial value
+            Matrix bestGradient = new Matrix(1, this.predicted.Cols);
 
-            foreach (double alphaCandidate in new double[] { 0.000000001, 0.00000001, 0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1 })
+            this.RecursiveAlphaSearch(new double[] { 0.000000001, 0.00000001, 0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1 }, ref bestAlpha, ref bestAngle, ref bestGradient, MaxRecursionDepth);
+
+            this.Alpha = bestAlpha;
+            return bestGradient;
+        }
+
+        private void RecursiveAlphaSearch(double[] alphaCandidates, ref double bestAlpha, ref double bestAngle, ref Matrix bestGradient, int recursionDepth)
+        {
+            foreach (double alphaCandidate in alphaCandidates)
             {
-                Matrix tempGradient = new Matrix(1, this.predicted.Cols);
-                List<double> hessianDiag = new List<double>();
+                (Matrix TempGradient, List<double> HessianDiag) tempGradientAndHessianDiag = this.ComputeGradient(alphaCandidate);
+                double angle = this.ComputeAngle(tempGradientAndHessianDiag.TempGradient, tempGradientAndHessianDiag.HessianDiag);
 
-                for (int i = 0; i < this.predicted.Cols; i++)
-                {
-                    // Calculate Hessian diagonal term for current prediction
-                    double hessianTerm = this.targetIndex == i ? alphaCandidate * (-2 / Math.Pow(this.predicted[0][i] + Epsilon, 3)) : 0.0;
-                    hessianDiag.Add(hessianTerm);
-
-                    // Compute gradient term with current alphaCandidate
-                    tempGradient[0][i] = (Lambda * ((4.0 / this.predicted.Cols) *
-                        (this.variance - this.trueVariance) *
-                        (this.predicted[0][i] - this.mean))) + (alphaCandidate * (this.targetIndex == i ? -1 / (this.predicted[0][i] + Epsilon) : 0d));
-                }
-
-                if (this.targetIndex > -1)
-                {
-                    // Identify the non-zero eigenvalue from the Hessian's diagonal
-                    double eigenvalue = hessianDiag[this.targetIndex];
-
-                    // Calculate the shallowest descent direction based on the eigenvalue
-                    int shallowestDescentIdx = eigenvalue < 0 ? this.targetIndex : -1;
-
-                    // Compute the angle between steepest and shallowest descent
-                    double angle = 0.0;
-                    if (shallowestDescentIdx != -1)
-                    {
-                        double dotProduct = tempGradient[0][shallowestDescentIdx];
-                        double normGradient = Math.Sqrt(tempGradient[0].Sum(val => val * val));
-                        double cosTheta = dotProduct / normGradient;
-                        angle = Math.Acos(cosTheta) * (180.0 / Math.PI);
-                    }
-
-                    // Update bestAlpha if the current angle is closer to 90 degrees
-                    if (Math.Abs(90 - angle) < Math.Abs(90 - bestAngle))
-                    {
-                        bestAlpha = alphaCandidate;
-                        bestAngle = angle;
-                        dOutput = tempGradient;
-                    }
-                }
-                else
+                if (Math.Abs(90 - angle) < Math.Abs(90 - bestAngle))
                 {
                     bestAlpha = alphaCandidate;
-                    dOutput = tempGradient;
-                    break;
+                    bestAngle = angle;
+                    bestGradient = tempGradientAndHessianDiag.TempGradient;
                 }
             }
 
-            // Set the optimal Alpha value for this backward pass
-            this.Alpha = bestAlpha;
+            int bestCandidateIndex = Array.IndexOf(alphaCandidates, bestAlpha);
 
-            return dOutput;
+            if (bestCandidateIndex == -1)
+            {
+                return;
+            }
+
+            double stepSize;
+            if (bestCandidateIndex == 0)
+            {
+                if (bestAngle > 90)
+                {
+                    stepSize = alphaCandidates[0];
+                }
+                else
+                {
+                    stepSize = alphaCandidates[1] - alphaCandidates[0];
+                }
+            }
+            else if (bestCandidateIndex == alphaCandidates.Length - 1)
+            {
+                stepSize = alphaCandidates[bestCandidateIndex] - alphaCandidates[bestCandidateIndex - 1];
+            }
+            else
+            {
+                stepSize = alphaCandidates[bestCandidateIndex + 1] - alphaCandidates[bestCandidateIndex];
+            }
+
+            if (recursionDepth > 0)
+            {
+                double newStepSize = stepSize * RefinementRatio;
+
+                // Generate new candidates centered around bestAlpha with the new step size
+                double[] newAlphaCandidates = this.GenerateAlphaCandidates(bestAlpha, newStepSize, stepSize);
+
+                this.RecursiveAlphaSearch(newAlphaCandidates, ref bestAlpha, ref bestAngle, ref bestGradient, recursionDepth - 1);
+            }
+        }
+
+        private double[] GenerateAlphaCandidates(double center, double stepSize, double range)
+        {
+            List<double> candidates = new List<double>();
+
+            double start = center - (range / 2);
+            double end = center + (range / 2);
+
+            for (double alpha = start; alpha <= end; alpha += stepSize)
+            {
+                candidates.Add(alpha);
+            }
+
+            return candidates.ToArray();
+        }
+
+        private (Matrix Gradient, List<double> HessianDiag) ComputeGradient(double alphaCandidate)
+        {
+            Matrix tempGradient = new Matrix(1, this.predicted.Cols);
+            List<double> hessianDiag = new List<double>();
+
+            for (int i = 0; i < this.predicted.Cols; i++)
+            {
+                // Calculate Hessian diagonal term for current prediction
+                double hessianTerm = this.targetIndex == i ? alphaCandidate * (-2 / Math.Pow(this.predicted[0][i] + Epsilon, 3)) : 0.0;
+                hessianDiag.Add(hessianTerm);
+
+                // Compute gradient term with current alphaCandidate
+                tempGradient[0][i] = (Lambda * ((4.0 / this.predicted.Cols) *
+                    (this.variance - this.trueVariance) *
+                    (this.predicted[0][i] - this.mean))) + (alphaCandidate * (this.targetIndex == i ? -1 / (this.predicted[0][i] + Epsilon) : 0d));
+            }
+
+            return (tempGradient, hessianDiag);
+        }
+
+        private double ComputeAngle(Matrix gradient, List<double> hessianDiag)
+        {
+            // If there's no targetIndex, return a default value
+            if (this.targetIndex == -1)
+            {
+                return double.MaxValue;
+            }
+
+            // Identify the non-zero eigenvalue from the Hessian's diagonal
+            double eigenvalue = hessianDiag[this.targetIndex];
+
+            // Calculate the shallowest descent direction based on the eigenvalue
+            int shallowestDescentIdx = eigenvalue < 0 ? this.targetIndex : -1;
+
+            // Compute the angle between steepest and shallowest descent
+            double angle = 0.0;
+            if (shallowestDescentIdx != -1)
+            {
+                double dotProduct = gradient[0][shallowestDescentIdx];
+                double normGradient = Math.Sqrt(gradient[0].Sum(val => val * val));
+                double cosTheta = dotProduct / normGradient;
+                angle = Math.Acos(cosTheta) * (180.0 / Math.PI);
+            }
+
+            return angle;
         }
     }
 }

@@ -314,6 +314,11 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             }
 
             IOperationBase? backwardEndOperation = this.computationGraph["batch_embeddings_0_0"];
+            if (backwardEndOperation.CalculatedGradient == null)
+            {
+                return gradient;
+            }
+
             return backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
