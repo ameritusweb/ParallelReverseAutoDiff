@@ -29,7 +29,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample
                 FiniteStateMachineTraversalNeuralNetwork traversalNetwork = new FiniteStateMachineTraversalNeuralNetwork(maze, 6, maze.NumIndices, maze.AlphabetSize, 40, 4, 4, 0.000000001d, 4d);
                 await traversalNetwork.Initialize();
 
-                for (int i = 0; i < 1000; ++i)
+                for (int i = 0; i < 10000; ++i)
                 {
                     await this.RunIteration(traversalNetwork);
                 }
