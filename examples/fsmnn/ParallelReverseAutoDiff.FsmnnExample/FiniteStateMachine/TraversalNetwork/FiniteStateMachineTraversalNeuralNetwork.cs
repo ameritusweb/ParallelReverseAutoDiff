@@ -88,6 +88,15 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         }
 
         /// <summary>
+        /// Adjusts the learning rate.
+        /// </summary>
+        /// <param name="learningRate">The learning rate.</param>
+        public void AdjustLearningRate(double learningRate)
+        {
+            this.embeddingNeuralNetwork.Parameters.LearningRate = learningRate;
+        }
+
+        /// <summary>
         /// Reinitialize with new maze.
         /// </summary>
         /// <param name="maze">The maze.</param>
@@ -157,6 +166,15 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         }
 
         /// <summary>
+        /// Reverts the weight update.
+        /// </summary>
+        public void RevertUpdate()
+        {
+            var adamOptimizer = this.embeddingNeuralNetwork.Utilities.AdamOptimizer;
+            adamOptimizer.Revert(this.modelLayers.ToArray());
+        }
+
+        /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
@@ -180,7 +198,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public Matrix Forward2()
+        public (Matrix Gradient, double Dist, double Diff) Forward2()
         {
             var embeddingNet = this.embeddingNeuralNetwork;
             embeddingNet.NumPath = this.maze.MazePath.MazeNodes.Length;
@@ -190,10 +208,10 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var output = embeddingNet.Output;
             Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][3] + " " + output[0][4] + " " + output[0][5]);
             VarianceAlphaSearchLossOperation lossOperation = new VarianceAlphaSearchLossOperation();
-            lossOperation.Forward(output, 0.004d, 0.2d);
+            var dist = lossOperation.Forward(output, 0.004d, 0.2d);
             var gradientOfLoss = lossOperation.Backward();
 
-            return gradientOfLoss;
+            return (gradientOfLoss, dist, Math.Abs(dist - 0.2d));
         }
 
         /// <summary>

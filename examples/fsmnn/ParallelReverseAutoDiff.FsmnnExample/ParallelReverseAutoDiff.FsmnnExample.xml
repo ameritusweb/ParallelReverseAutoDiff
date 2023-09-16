@@ -590,6 +590,12 @@
             </summary>
             <returns>A task.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.AdjustLearningRate(System.Double)">
+            <summary>
+            Adjusts the learning rate.
+            </summary>
+            <param name="learningRate">The learning rate.</param>
+        </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Reinitialize(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze)">
             <summary>
             Reinitialize with new maze.
@@ -615,6 +621,11 @@
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.ApplyGradients">
             <summary>
             Apply the gradients to update the weights.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.RevertUpdate">
+            <summary>
+            Reverts the weight update.
             </summary>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward">

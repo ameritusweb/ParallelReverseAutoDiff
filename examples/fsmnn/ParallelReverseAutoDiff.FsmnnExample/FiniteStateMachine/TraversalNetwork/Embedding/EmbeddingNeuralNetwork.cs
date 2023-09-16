@@ -260,6 +260,21 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
                 }
 
                 forward.Invoke(op, parameters);
+                var output = op.GetOutput();
+                var deepOutput = op.GetDeepOutput();
+                if (output != null)
+                {
+                    if (double.IsNaN(output[0][0]))
+                    {
+                    }
+                }
+                else if (deepOutput != null)
+                {
+                    if (double.IsNaN(deepOutput[0][0][0]))
+                    {
+                    }
+                }
+
                 if (op.ResultToName != null)
                 {
                     var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);

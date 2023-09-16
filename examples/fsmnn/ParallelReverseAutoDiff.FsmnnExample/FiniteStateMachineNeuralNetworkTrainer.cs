@@ -53,9 +53,30 @@ namespace ParallelReverseAutoDiff.FsmnnExample
         /// <returns>The task.</returns>
         public async Task RunIteration(FiniteStateMachineTraversalNeuralNetwork traversalNetwork)
         {
-            var gradient = traversalNetwork.Forward2();
+            var (gradient, dist, diff) = traversalNetwork.Forward2();
             await traversalNetwork.Backward(gradient);
+            traversalNetwork.AdjustLearningRate(0.000001d);
             traversalNetwork.ApplyGradients();
+            var (gradient1, dist1, diff1) = traversalNetwork.Forward2();
+            if (diff1 > diff)
+            {
+                traversalNetwork.RevertUpdate();
+                traversalNetwork.AdjustLearningRate(0.0000001d);
+                traversalNetwork.ApplyGradients();
+                var (gradient2, dist2, diff2) = traversalNetwork.Forward2();
+                if (diff2 > diff)
+                {
+                    traversalNetwork.RevertUpdate();
+                    traversalNetwork.AdjustLearningRate(0.00000001d);
+                    traversalNetwork.ApplyGradients();
+                    var (gradient3, dist3, diff3) = traversalNetwork.Forward2();
+                    if (diff3 > diff)
+                    {
+                        traversalNetwork.RevertUpdate();
+                    }
+                }
+            }
+
             await traversalNetwork.Reset();
         }
     }
