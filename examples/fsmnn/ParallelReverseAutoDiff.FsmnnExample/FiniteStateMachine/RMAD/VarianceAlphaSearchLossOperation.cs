@@ -15,37 +15,45 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
     {
         private const double Epsilon = 1E-9d;
         private const double RefinementRatio = 0.1;
-        private const int MaxRecursionDepth = 5;
+        private const int MaxRecursionDepth = 0;
         private Matrix predicted;
         private double Alpha = 1d;
         private int targetIndex;
         private double trueVariance;
         private double mean;
         private double variance;
+        private double maxMin;
+        private double trueMaxMin;
 
         /// <summary>
         /// Performs the forward operation.
         /// </summary>
         /// <param name="predicted">1xN matrix of predicted probabilities.</param>
         /// <param name="trueVariance">A scalar value for the true variance.</param>
+        /// <param name="trueMaxMin">A scalar value for the true max-min.</param>
         /// <returns>The computed loss.</returns>
-        public double Forward(Matrix predicted, double trueVariance)
+        public double Forward(Matrix predicted, double trueVariance, double trueMaxMin)
         {
             // Initialize member variables
             this.predicted = predicted;
             this.trueVariance = trueVariance;
+            this.trueMaxMin = trueMaxMin;
             this.targetIndex = -1;
 
             // Compute the mean and variance of the predicted probabilities
             double mean = predicted[0].Average();
+            double max = predicted[0].Max();
+            double min = predicted[0].Min();
+            double dist = max - min;
+            this.maxMin = dist;
             this.mean = mean;
             double variance = predicted[0].Select(x => (x - mean) * (x - mean)).Average();
             this.variance = variance;
-            Console.WriteLine("Variance: " + variance);
+            Console.WriteLine("Variance: " + variance + " " + dist);
 
             double maxDist = double.MinValue;
             int target = -1;
-            if (this.variance < this.trueVariance)
+            if (dist < trueMaxMin)
             {
                 for (int i = 0; i < predicted.Cols; ++i)
                 {
@@ -56,7 +64,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
                     }
                 }
             }
-            else if (this.variance > this.trueVariance)
+            else if (dist > trueMaxMin)
             {
                 for (int i = 0; i < predicted.Cols; ++i)
                 {
@@ -86,7 +94,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
             double bestAlpha = this.Alpha;  // Store the initial value
             Matrix bestGradient = new Matrix(1, this.predicted.Cols);
 
-            this.RecursiveAlphaSearch(new double[] { 0.000000001, 0.00000001, 0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1 }, ref bestAlpha, ref bestAngle, ref bestGradient, MaxRecursionDepth);
+            this.RecursiveAlphaSearch(new double[] { 50d }, ref bestAlpha, ref bestAngle, ref bestGradient, MaxRecursionDepth);
 
             this.Alpha = bestAlpha;
             return bestGradient;
@@ -174,7 +182,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
 
                 // Compute gradient term with current alphaCandidate
                 tempGradient[0][i] = ((4.0 / this.predicted.Cols) *
-                    (this.variance - this.trueVariance) *
+                    (this.maxMin - this.trueMaxMin) *
                     (this.predicted[0][i] - this.mean)) + (alphaCandidate * (this.targetIndex == i ? -1 / (this.predicted[0][i] + Epsilon) : 0d));
             }
 

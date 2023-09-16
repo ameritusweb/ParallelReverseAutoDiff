@@ -62,6 +62,17 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         }
 
         /// <summary>
+        /// Gets the maze.
+        /// </summary>
+        public Maze Maze
+        {
+            get
+            {
+                return this.maze;
+            }
+        }
+
+        /// <summary>
         /// Reset the network.
         /// </summary>
         /// <returns>A task.</returns>
@@ -179,7 +190,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var output = embeddingNet.Output;
             Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][3] + " " + output[0][4] + " " + output[0][5]);
             VarianceAlphaSearchLossOperation lossOperation = new VarianceAlphaSearchLossOperation();
-            lossOperation.Forward(output, 0.004d);
+            lossOperation.Forward(output, 0.004d, 0.2d);
             var gradientOfLoss = lossOperation.Backward();
 
             return gradientOfLoss;

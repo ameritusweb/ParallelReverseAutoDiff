@@ -26,11 +26,17 @@ namespace ParallelReverseAutoDiff.FsmnnExample
             {
                 MazeMaker makeMaker = new MazeMaker();
                 var maze = makeMaker.CreateMaze(10);
+                var maze2 = makeMaker.CreateMaze(10);
                 FiniteStateMachineTraversalNeuralNetwork traversalNetwork = new FiniteStateMachineTraversalNeuralNetwork(maze, 6, maze.NumIndices, maze.AlphabetSize, 40, 4, 4, 0.000000001d, 4d);
                 await traversalNetwork.Initialize();
 
                 for (int i = 0; i < 10000; ++i)
                 {
+                    if (i % 20 == 19)
+                    {
+                        traversalNetwork.Reinitialize(traversalNetwork.Maze == maze ? maze2 : maze);
+                    }
+
                     await this.RunIteration(traversalNetwork);
                 }
             }

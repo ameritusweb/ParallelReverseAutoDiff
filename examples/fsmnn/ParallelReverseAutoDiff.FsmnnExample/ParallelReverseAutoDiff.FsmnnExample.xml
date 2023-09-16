@@ -355,28 +355,6 @@
             </summary>
             <returns>1xN matrix of gradients.</returns>
         </member>
-        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryThresholdSearchMeanLossOperation">
-            <summary>
-            Categorical variance binary threshold loss operation.
-            Uses an algothim to determine the optimal threshold.
-            Utilizes early stopping in the loss function and subsequent gradient calculation.
-            </summary>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryThresholdSearchMeanLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix,System.Double)">
-            <summary>
-            Performs the forward operation.
-            </summary>
-            <param name="predicted">1xN matrix of predicted probabilities.</param>
-            <param name="targetMatrix">The target matrix of ones or zeroes.</param>
-            <param name="trueVariance">1xN matrix of true labels (one-hot encoded).</param>
-            <returns>The computed loss.</returns>
-        </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceBinaryThresholdSearchMeanLossOperation.Backward">
-            <summary>
-            Computes the gradient with respect to the predicted probabilities.
-            </summary>
-            <returns>1xN matrix of gradients.</returns>
-        </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceLossOperation">
             <summary>
             Categorical variance loss operation.
@@ -392,6 +370,26 @@
             <returns>The computed loss.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalVarianceLossOperation.Backward">
+            <summary>
+            Computes the gradient with respect to the predicted probabilities.
+            </summary>
+            <returns>1xN matrix of gradients.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.VarianceAlphaSearchLossOperation">
+            <summary>
+            Variance alpha search loss operation.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.VarianceAlphaSearchLossOperation.Forward(ParallelReverseAutoDiff.RMAD.Matrix,System.Double,System.Double)">
+            <summary>
+            Performs the forward operation.
+            </summary>
+            <param name="predicted">1xN matrix of predicted probabilities.</param>
+            <param name="trueVariance">A scalar value for the true variance.</param>
+            <param name="trueMaxMin">A scalar value for the true max-min.</param>
+            <returns>The computed loss.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.VarianceAlphaSearchLossOperation.Backward">
             <summary>
             Computes the gradient with respect to the predicted probabilities.
             </summary>
@@ -580,6 +578,11 @@
             <param name="numQueries">The number of queries.</param>
             <param name="learningRate">The learning rate.</param>
             <param name="clipValue">The clip Value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Maze">
+            <summary>
+            Gets the maze.
+            </summary>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Reset">
             <summary>
