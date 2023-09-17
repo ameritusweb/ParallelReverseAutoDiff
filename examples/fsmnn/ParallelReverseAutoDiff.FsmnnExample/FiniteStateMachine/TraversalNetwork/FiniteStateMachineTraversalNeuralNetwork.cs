@@ -197,8 +197,9 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
+        /// <param name="trueMaxMin">The true max min.</param>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix Gradient, double Dist, double Diff) Forward2()
+        public (Matrix Gradient, double Dist, double Diff, Matrix Output) Forward2(double trueMaxMin)
         {
             var embeddingNet = this.embeddingNeuralNetwork;
             embeddingNet.NumPath = this.maze.MazePath.MazeNodes.Length;
@@ -208,10 +209,10 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var output = embeddingNet.Output;
             Console.WriteLine(output[0][0] + " " + output[0][1] + " " + output[0][2] + " " + output[0][3] + " " + output[0][4] + " " + output[0][5]);
             VarianceAlphaSearchLossOperation lossOperation = new VarianceAlphaSearchLossOperation();
-            var dist = lossOperation.Forward(output, 0.004d, 0.2d);
+            var dist = lossOperation.Forward(output, 0.004d, trueMaxMin);
             var gradientOfLoss = lossOperation.Backward();
 
-            return (gradientOfLoss, dist, Math.Abs(dist - 0.2d));
+            return (gradientOfLoss, dist, Math.Abs(dist - trueMaxMin), new Matrix(output.ToArray()));
         }
 
         /// <summary>

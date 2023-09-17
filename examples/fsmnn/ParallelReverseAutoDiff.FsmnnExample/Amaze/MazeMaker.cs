@@ -59,5 +59,35 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
 
             return maze;
         }
+
+        /// <summary>
+        /// Change the path.
+        /// </summary>
+        /// <param name="maze">The maze.</param>
+        /// <returns>The changed maze.</returns>
+        public Maze ChangePath(Maze maze)
+        {
+            var first = maze.MazePath.MazeNodes[0].DeepClone();
+            first.PositionX = 2;
+            first.PositionY = 2;
+            first.PositionZ = 2;
+            Maze n = new Maze();
+            n.MazePath = new MazePath { MazeNodes = new[] { first } };
+            n.Size = maze.Size;
+            n.MazeNodes = new MazeNode[maze.Size, maze.Size, maze.Size];
+            for (int x = 0; x < maze.Size; x++)
+            {
+                for (int y = 0; y < maze.Size; y++)
+                {
+                    for (int z = 0; z < maze.Size; z++)
+                    {
+                        n.MazeNodes[x, y, z] = maze.MazeNodes[x, y, z].DeepClone();
+                    }
+                }
+            }
+
+            n.MazeNodes[0, 0, 0] = first;
+            return n;
+        }
     }
 }

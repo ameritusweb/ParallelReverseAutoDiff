@@ -34,6 +34,20 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
         public int PositionZ { get; set; }
 
         /// <summary>
+        /// Gets a deep clone of the maze node.
+        /// </summary>
+        /// <returns>The maze node clone.</returns>
+        public MazeNode DeepClone()
+        {
+            MazeNode node = new MazeNode();
+            node.AvailableDirections = this.AvailableDirections;
+            node.PositionX = this.PositionX;
+            node.PositionY = this.PositionY;
+            node.PositionZ = this.PositionZ;
+            return node;
+        }
+
+        /// <summary>
         /// Calculates the indices.
         /// </summary>
         /// <param name="maze">The maze.</param>

@@ -155,6 +155,13 @@
             <param name="mazeSize">The maze size.</param>
             <returns>The maze.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeMaker.ChangePath(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze)">
+            <summary>
+            Change the path.
+            </summary>
+            <param name="maze">The maze.</param>
+            <returns>The changed maze.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode">
             <summary>
             A node in the maze.
@@ -179,6 +186,12 @@
             <summary>
             Gets or sets the position Z.
             </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.DeepClone">
+            <summary>
+            Gets a deep clone of the maze node.
+            </summary>
+            <returns>The maze node clone.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.Amaze.MazeNode.ToIndices(ParallelReverseAutoDiff.FsmnnExample.Amaze.Maze)">
             <summary>
@@ -263,11 +276,12 @@
             </summary>
             <returns>The task.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachineNeuralNetworkTrainer.RunIteration(ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork)">
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachineNeuralNetworkTrainer.RunIteration(ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork,System.Double)">
             <summary>
             Runs an iteration of training.
             </summary>
             <param name="traversalNetwork">The traversal network.</param>
+            <param name="trueMaxMin">The true max min.</param>
             <returns>The task.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD.CategoricalCrossEntropyLossOperation">
@@ -634,10 +648,11 @@
             </summary>
             <returns>The gradient of the loss wrt the output.</returns>
         </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward2">
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward2(System.Double)">
             <summary>
             Make a forward pass through the computation graph.
             </summary>
+            <param name="trueMaxMin">The true max min.</param>
             <returns>The gradient of the loss wrt the output.</returns>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Backward(ParallelReverseAutoDiff.RMAD.Matrix)">
