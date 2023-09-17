@@ -632,15 +632,17 @@
             Apply the weights from the save path.
             </summary>
         </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.ApplyGradients">
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.ApplyGradients(System.Boolean)">
             <summary>
             Apply the gradients to update the weights.
             </summary>
+            <param name="switchGradients">The true max min.</param>
         </member>
-        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.RevertUpdate">
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.RevertUpdate(System.Boolean)">
             <summary>
             Reverts the weight update.
             </summary>
+            <param name="switchGradients">The true max min.</param>
         </member>
         <member name="M:ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwork.FiniteStateMachineTraversalNeuralNetwork.Forward">
             <summary>
@@ -971,6 +973,35 @@
             <typeparam name="T">The type of the item.</typeparam>
             <param name="source">The source enumerable.</param>
             <returns>The target enumerable.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.RMAD.DirectedAdamOptimizer">
+            <summary>
+            An Adam optimizer.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.DirectedAdamOptimizer.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.RMAD.DirectedAdamOptimizer"/> class.
+            </summary>
+            <param name="network">The neural network.</param>
+            <param name="switchGradients">Switch the gradients.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.RMAD.DirectedAdamOptimizer.SwitchGradients">
+            <summary>
+            Gets or sets a value indicating whether to switch the gradients.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.DirectedAdamOptimizer.Optimize(ParallelReverseAutoDiff.RMAD.IModelLayer[])">
+            <summary>
+            Optimize the layers.
+            </summary>
+            <param name="layers">The layers to optimize.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.RMAD.DirectedAdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])">
+            <summary>
+            Revert the last update. Be sure to decrement the AdamIteration before calling this function.
+            </summary>
+            <param name="layers">The model layers.</param>
         </member>
     </members>
 </doc>

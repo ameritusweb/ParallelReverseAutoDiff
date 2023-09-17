@@ -26,8 +26,9 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         private readonly int embeddingSize;
         private readonly double learningRate;
         private readonly double clipValue;
-
         private EmbeddingNeuralNetwork embeddingNeuralNetwork;
+
+        private DirectedAdamOptimizer optimizer;
 
         private Maze maze;
 
@@ -59,6 +60,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
             this.embeddingNeuralNetwork = new EmbeddingNeuralNetwork(this.numLayers, this.numQueries, this.numNodes, this.numFeatures, this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
+            this.optimizer = new DirectedAdamOptimizer(this.embeddingNeuralNetwork, false);
         }
 
         /// <summary>
@@ -115,6 +117,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             var model = new EmbeddingNeuralNetwork(this.numLayers, this.numQueries, this.numNodes, this.numFeatures, this.numIndices, this.alphabetSize, this.embeddingSize, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.embeddingNeuralNetwork = model;
+            this.optimizer = new DirectedAdamOptimizer(this.embeddingNeuralNetwork, false);
             await this.embeddingNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.embeddingNeuralNetwork.ModelLayers).ToList();
 
@@ -157,20 +160,24 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
         /// <summary>
         /// Apply the gradients to update the weights.
         /// </summary>
-        public void ApplyGradients()
+        /// <param name="switchGradients">The true max min.</param>
+        public void ApplyGradients(bool switchGradients)
         {
             var clipper = this.embeddingNeuralNetwork.Utilities.GradientClipper;
             clipper.Clip(this.modelLayers.ToArray());
-            var adamOptimizer = this.embeddingNeuralNetwork.Utilities.AdamOptimizer;
+            var adamOptimizer = this.optimizer;
+            adamOptimizer.SwitchGradients = switchGradients;
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
         /// <summary>
         /// Reverts the weight update.
         /// </summary>
-        public void RevertUpdate()
+        /// <param name="switchGradients">The true max min.</param>
+        public void RevertUpdate(bool switchGradients)
         {
-            var adamOptimizer = this.embeddingNeuralNetwork.Utilities.AdamOptimizer;
+            var adamOptimizer = this.optimizer;
+            adamOptimizer.SwitchGradients = switchGradients;
             adamOptimizer.Revert(this.modelLayers.ToArray());
         }
 

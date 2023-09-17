@@ -15,6 +15,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample
     /// </summary>
     public class FiniteStateMachineNeuralNetworkTrainer
     {
+        private bool switchGradients = false;
+
         /// <summary>
         /// Train the network.
         /// </summary>
@@ -35,6 +37,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample
                     if (i % 5 == 4)
                     {
                         traversalNetwork.Reinitialize(traversalNetwork.Maze == maze ? maze2 : maze);
+                        this.switchGradients = !this.switchGradients;
                         Console.WriteLine("Reinit");
                     }
 
@@ -72,23 +75,28 @@ namespace ParallelReverseAutoDiff.FsmnnExample
             }
 
             traversalNetwork.AdjustLearningRate(learningRate);
-            traversalNetwork.ApplyGradients();
+            traversalNetwork.ApplyGradients(this.switchGradients);
 
             var (gradient, dist, diff, output) = traversalNetwork.Forward2(trueMaxMin);
 
-            if (diff > prevDiff || !this.HaveSameOrdering(initialOutput[0], output[0]))
+            if (diff > prevDiff || !this.HaveSameOrdering(initialOutput[0], output[0], learningRate))
             {
                 // If performance didn't improve, revert the update and try again with a reduced learning rate
-                traversalNetwork.RevertUpdate();
+                traversalNetwork.RevertUpdate(this.switchGradients);
                 await this.TryUpdateWithLearningRate(traversalNetwork, prevDiff, learningRate * 0.1, trueMaxMin, initialOutput);
             }
         }
 
-        private bool HaveSameOrdering(double[] vec1, double[] vec2, int tolerance = 3)
+        private bool HaveSameOrdering(double[] vec1, double[] vec2, double learningRate, int tolerance = 3)
         {
             if (vec1.Length != vec2.Length)
             {
                 throw new ArgumentException("Vectors must be of the same length.");
+            }
+
+            if (learningRate >= 0.000001)
+            {
+                tolerance = 6;
             }
 
             // Get the sorted indices for both vectors
