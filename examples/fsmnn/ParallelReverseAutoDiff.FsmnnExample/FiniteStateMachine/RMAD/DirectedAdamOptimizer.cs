@@ -18,6 +18,9 @@ namespace ParallelReverseAutoDiff.RMAD
         private bool switchGradients;
         private ConcurrentDictionary<Matrix, HashSet<string>> matrixMap;
         private ConcurrentDictionary<Matrix, double> scalingMap;
+        private ConcurrentDictionary<Matrix, HashSet<string>> e1Map;
+        private ConcurrentDictionary<Matrix, HashSet<string>> e2Map;
+        private ConcurrentDictionary<Matrix, HashSet<string>> intersectMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedAdamOptimizer"/> class.
@@ -30,6 +33,9 @@ namespace ParallelReverseAutoDiff.RMAD
             this.switchGradients = switchGradients;
             this.matrixMap = new ConcurrentDictionary<Matrix, HashSet<string>>();
             this.scalingMap = new ConcurrentDictionary<Matrix, double>();
+            this.e1Map = new ConcurrentDictionary<Matrix, HashSet<string>>();
+            this.e2Map = new ConcurrentDictionary<Matrix, HashSet<string>>();
+            this.intersectMap = new ConcurrentDictionary<Matrix, HashSet<string>>();
         }
 
         /// <summary>
@@ -191,6 +197,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     if (critical.Contains($"{i} {j}"))
                     {
+                        gradient[i][j] = 0d; // *= scalingFactor;
+                    }
+                    else
+                    {
                         gradient[i][j] *= scalingFactor;
                     }
                 }
@@ -237,8 +247,10 @@ namespace ParallelReverseAutoDiff.RMAD
         private void UpdateWeightWithAdam(string identifier, Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, out HashSet<string> critical)
         {
             critical = new HashSet<string>();
+            var example = new HashSet<string>();
             var avg = gradient[0].Select(x => Math.Abs(x)).Average();
             var max = gradient[0].Select(x => Math.Abs(x)).Max();
+            avg = ((max - avg) / 8d) + avg;
 
             double scalingFactor = max > avg ? ((avg / max) / 1000d) : 1d;
             this.scalingMap.TryAdd(w, scalingFactor);
@@ -246,13 +258,43 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < w[0].Length; j++)
                 {
-                    if (Math.Abs(gradient[i][j]) > avg)
+                    if (Math.Abs(gradient[i][j]) < avg)
+                    {
+                        gradient[i][j] = 0d; // *= scalingFactor;
+                        critical.Add($"{i} {j}");
+                    }
+                    else
                     {
                         gradient[i][j] *= scalingFactor;
-                        critical.Add($"{i} {j}");
+                        example.Add($"{i} {j}");
                     }
                 }
             }
+
+            /*
+            if (this.SwitchGradients)
+            {
+                if (!this.e1Map.ContainsKey(w))
+                {
+                    this.e1Map.TryAdd(w, example);
+                }
+            }
+            else
+            {
+                if (!this.e2Map.ContainsKey(w))
+                {
+                    this.e2Map.TryAdd(w, example);
+                }
+            }
+
+            if (this.e1Map.ContainsKey(w) && this.e2Map.ContainsKey(w))
+            {
+                if (!this.intersectMap.ContainsKey(w))
+                {
+                    this.intersectMap.TryAdd(w, this.e1Map[w].Intersect(this.e2Map[w]).ToHashSet());
+                }
+            }
+            */
 
             // Update biased first moment estimate
             var firstMoment = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
