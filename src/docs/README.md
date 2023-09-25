@@ -83,6 +83,8 @@ ApplyDropoutOperation
 
 BatchNormalizationOperation
 
+CosineProjectionOperation
+
 CosineScalingOperation
 
 CudaMatrixMultiplyOperation - Leverages NVIDIA GPUs for fast computation.
@@ -100,6 +102,8 @@ GpuMatrixMultiplyAndSumOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast
 GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast computation.
 
 HadamardProductOperation
+
+HierarchicalScalingOperation - For increased interpretability.
 
 LayerNormalizationOperation
 

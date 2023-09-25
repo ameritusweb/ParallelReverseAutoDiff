@@ -95,6 +95,78 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Add model element group.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="dimensions">The dimensions.</param>
+        /// <param name="initialization">The type of initialization.</param>
+        /// <param name="scalingFactor">The scaling factor.</param>
+        /// <returns>The model layer builder.</returns>
+        public ModelLayerBuilder AddModelElementGroup(string id, int[] dimensions, InitializationType initialization, double scalingFactor)
+        {
+            switch (dimensions.Length)
+            {
+                case 2:
+                    {
+                        var weight = new Matrix(dimensions[0], dimensions[1]);
+                        weight.Initialize(initialization, scalingFactor);
+                        var gradient = new Matrix(dimensions[0], dimensions[1]);
+                        var firstMoment = new Matrix(dimensions[0], dimensions[1]);
+                        var secondMoment = new Matrix(dimensions[0], dimensions[1]);
+                        this.modelLayer.Elements.TryAdd(id, (weight, gradient, firstMoment, secondMoment, dimensions, initialization));
+                        break;
+                    }
+
+                case 3:
+                    {
+                        var weight = new DeepMatrix(dimensions[0], dimensions[1], dimensions[2]);
+                        weight.Initialize(initialization, scalingFactor);
+                        var gradient = new DeepMatrix(dimensions[0], dimensions[1], dimensions[2]);
+                        var firstMoment = new DeepMatrix(dimensions[0], dimensions[1], dimensions[2]);
+                        var secondMoment = new DeepMatrix(dimensions[0], dimensions[1], dimensions[2]);
+                        this.modelLayer.Elements.TryAdd(id, (weight, gradient, firstMoment, secondMoment, dimensions, initialization));
+                        break;
+                    }
+
+                case 4:
+                    {
+                        DeepMatrix[] weight = new DeepMatrix[dimensions[0]];
+                        for (int f = 0; f < dimensions[0]; ++f)
+                        {
+                            weight[f] = new DeepMatrix(dimensions[1], dimensions[2], dimensions[3]);
+                            weight[f].Initialize(initialization, scalingFactor);
+                        }
+
+                        DeepMatrix[] gradient = new DeepMatrix[dimensions[0]];
+                        for (int f = 0; f < dimensions[0]; ++f)
+                        {
+                            gradient[f] = new DeepMatrix(dimensions[1], dimensions[2], dimensions[3]);
+                        }
+
+                        DeepMatrix[] firstMoment = new DeepMatrix[dimensions[0]];
+                        for (int f = 0; f < dimensions[0]; ++f)
+                        {
+                            firstMoment[f] = new DeepMatrix(dimensions[1], dimensions[2], dimensions[3]);
+                        }
+
+                        DeepMatrix[] secondMoment = new DeepMatrix[dimensions[0]];
+                        for (int f = 0; f < dimensions[0]; ++f)
+                        {
+                            secondMoment[f] = new DeepMatrix(dimensions[1], dimensions[2], dimensions[3]);
+                        }
+
+                        this.modelLayer.Elements.TryAdd(id, (weight, gradient, firstMoment, secondMoment, dimensions, initialization));
+                        break;
+                    }
+
+                default:
+                    throw new ArgumentException("Invalid dimensions.");
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Builds the model layer.
         /// </summary>
         /// <returns>The model layer.</returns>

@@ -19,6 +19,7 @@ namespace ParallelReverseAutoDiff.RMAD
     [JsonConverter(typeof(MatrixJsonConverter))]
     public class Matrix : IEnumerable<double[]>, IMatrix, ICloneable
     {
+        private static readonly double MaxSafeValue = Math.Log(double.MaxValue);  // The maximum value for which e^x results in double.MaxValue
         private double[][] matrix;
 
         /// <summary>
@@ -366,6 +367,34 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Applies the exponential function e^x element-wise to the matrix, with overflow checks.
+        /// </summary>
+        /// <returns>The resultant matrix with e^x applied to each element.</returns>
+        public Matrix ExponentialElementwise()
+        {
+            int numRows = this.Rows;
+            int numCols = this.Cols;
+            Matrix result = new Matrix(numRows, numCols);
+
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    if (this[i, j] > MaxSafeValue)
+                    {
+                        result[i, j] = double.MaxValue;
+                    }
+                    else
+                    {
+                        result[i, j] = Math.Exp(this[i, j]);
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Calculates the average of two matrices element-wise.
         /// </summary>
         /// <param name="other">The other matrix.</param>
@@ -492,6 +521,28 @@ namespace ParallelReverseAutoDiff.RMAD
                     break;
                 case InitializationType.Xavier:
                     this.InitializeXavier();
+                    break;
+                case InitializationType.Zeroes:
+                    break;
+                default:
+                    throw new ArgumentException("Invalid initialization type.");
+            }
+        }
+
+        /// <summary>
+        /// Initializes the matrix with He or Xavier initialization.
+        /// </summary>
+        /// <param name="initializationType">The initialization type.</param>
+        /// <param name="scalingFactor">The scaling factor.</param>
+        public void Initialize(InitializationType initializationType, double scalingFactor)
+        {
+            switch (initializationType)
+            {
+                case InitializationType.He:
+                    this.InitializeHe(scalingFactor);
+                    break;
+                case InitializationType.Xavier:
+                    this.InitializeXavier(scalingFactor);
                     break;
                 case InitializationType.Zeroes:
                     break;
@@ -673,7 +724,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return hash;
         }
 
-        private void InitializeHe()
+        private void InitializeHe(double scalingFactor = 1.0)
         {
             var variance = 2.0 / this.Cols;
 
@@ -681,18 +732,18 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < this.Cols; j++)
                 {
-                    this[i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble();
+                    this[i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble() * scalingFactor;
                 }
             });
         }
 
-        private void InitializeXavier()
+        private void InitializeXavier(double scalingFactor = 1.0)
         {
             Parallel.For(0, this.Rows, i =>
             {
                 for (int j = 0; j < this.Cols; j++)
                 {
-                    this[i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols));
+                    this[i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols)) * scalingFactor;
                 }
             });
         }

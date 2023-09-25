@@ -357,6 +357,28 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Initializes the matrix with He or Xavier initialization.
+        /// </summary>
+        /// <param name="initializationType">The initialization type.</param>
+        /// <param name="scalingFactor">The scaling factor.</param>
+        public void Initialize(InitializationType initializationType, double scalingFactor)
+        {
+            switch (initializationType)
+            {
+                case InitializationType.He:
+                    this.InitializeHe(scalingFactor);
+                    break;
+                case InitializationType.Xavier:
+                    this.InitializeXavier(scalingFactor);
+                    break;
+                case InitializationType.Zeroes:
+                    break;
+                default:
+                    throw new ArgumentException("Invalid initialization type.");
+            }
+        }
+
+        /// <summary>
         /// Gets the enumerator for the matrix.
         /// </summary>
         /// <returns>The enumerator for the matrix.</returns>
@@ -377,7 +399,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.GetEnumerator();
         }
 
-        private void InitializeHe()
+        private void InitializeHe(double scalingFactor = 1.0)
         {
             var variance = 2.0 / this.Cols;
 
@@ -387,13 +409,13 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     for (int j = 0; j < this.Cols; j++)
                     {
-                        this[d, i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble();
+                        this[d, i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble() * scalingFactor;
                     }
                 }
             });
         }
 
-        private void InitializeXavier()
+        private void InitializeXavier(double scalingFactor = 1.0)
         {
             Parallel.For(0, this.Depth, d =>
             {
@@ -401,7 +423,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     for (int j = 0; j < this.Cols; j++)
                     {
-                        this[d, i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols));
+                        this[d, i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols)) * scalingFactor;
                     }
                 }
             });
