@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.Interprocess;
@@ -328,21 +329,47 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The sum of all the elements in the matrix.</returns>
         public double Sum()
         {
-            double sum = 0;
             int numRows = this.Rows;
             int numCols = this.Cols;
+            double[] rowSums = new double[numRows];
 
-            // Loop through all the rows
-            for (int i = 0; i < numRows; ++i)
+            Parallel.For(0, numRows, i =>
             {
-                // Loop through all the columns in each row
+                double localRowSum = 0;
                 for (int j = 0; j < numCols; ++j)
                 {
-                    sum += this[i, j];  // Add each element to the sum
+                    localRowSum += this[i, j];
                 }
-            }
 
-            return sum;
+                rowSums[i] = localRowSum;
+            });
+
+            return rowSums.Sum();
+        }
+
+        /// <summary>
+        /// Find the frobenius norm of the matrix.
+        /// </summary>
+        /// <returns>The frobenius norm of the matrix.</returns>
+        public double FrobeniusNorm()
+        {
+            int numRows = this.Rows;
+            int numCols = this.Cols;
+            double[] partitionSums = new double[numRows];
+
+            Parallel.For(0, numRows, i =>
+            {
+                double localSum = 0;
+                for (int j = 0; j < numCols; ++j)
+                {
+                    localSum += this[i, j] * this[i, j];
+                }
+
+                partitionSums[i] = localSum;
+            });
+
+            double totalSum = partitionSums.Sum();
+            return Math.Sqrt(totalSum);
         }
 
         /// <summary>
