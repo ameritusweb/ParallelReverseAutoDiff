@@ -10,7 +10,7 @@ namespace CSharpMath.Rendering.BackEnd {
       Typeface LoadFont(string fileName) {
         var typeface = reader.Read(
           System.Reflection.Assembly.GetExecutingAssembly()
-          .GetManifestResourceStream($"CSharpMath.Rendering.Reference_Fonts.{fileName}")
+          .GetManifestResourceStream($"GradientExplorer.LaTeX.Rendering.ReferenceFonts.{fileName}")
         );
         if (typeface == null) throw new Structures.InvalidCodePathException("Invalid predefined font!");
         typeface.UpdateAllCffGlyphBounds();

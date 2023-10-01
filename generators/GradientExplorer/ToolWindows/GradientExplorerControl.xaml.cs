@@ -86,7 +86,7 @@ namespace ToolWindow
                 var canvas = laTeXCanvas;
                 WpfMathPainter painter = new WpfMathPainter();
                 painter.LaTeX = "\\frac{1}{1 + e^{\\sin(-x)}}";
-                // painter.Draw(canvas);
+                painter.Draw(canvas);
             }
         }
 

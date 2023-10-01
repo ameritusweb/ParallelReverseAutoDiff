@@ -1,10 +1,4 @@
 ﻿using CSharpMath.Rendering.FrontEnd;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace GradientExplorer.LaTeX.Wpf
@@ -13,7 +7,19 @@ namespace GradientExplorer.LaTeX.Wpf
     {
         public override SolidColorBrush UnwrapColor(System.Drawing.Color color)
         {
-            throw new NotImplementedException();
+            if (color.IsEmpty)
+            {
+                return null; // Or a default SolidColorBrush, as you prefer
+            }
+
+            return new SolidColorBrush(
+                Color.FromArgb(
+                    color.A,
+                    color.R,
+                    color.G,
+                    color.B
+                )
+            );
         }
 
         public override ICanvas WrapCanvas(WpfCanvas canvas)
@@ -23,7 +29,17 @@ namespace GradientExplorer.LaTeX.Wpf
 
         public override System.Drawing.Color WrapColor(SolidColorBrush color)
         {
-            throw new NotImplementedException();
+            if (color == null)
+            {
+                return System.Drawing.Color.Empty;
+            }
+
+            return System.Drawing.Color.FromArgb(
+                color.Color.A,
+                color.Color.R,
+                color.Color.G,
+                color.Color.B
+            );
         }
     }
 }
