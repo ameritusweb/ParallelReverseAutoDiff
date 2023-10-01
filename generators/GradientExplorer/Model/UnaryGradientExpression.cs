@@ -6,24 +6,8 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Model
 {
-    public enum FunctionType
+    public class UnaryGradientExpression : GradientExpression
     {
-        Unknown,
-
-        Exp,
-
-        Sin,
-
-        Cos,
-
-        Tan,
-
-        Log,
-
-        Ln,
-
-        Pow,
-
-        Sqrt,
+        public GradientGraph FPrime { get; set; }
     }
 }

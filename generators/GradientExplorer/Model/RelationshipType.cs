@@ -14,6 +14,12 @@ namespace GradientExplorer.Model
 
         Exponent,
 
-        Coefficient
+        Coefficient,
+
+        Operand,
+
+        Numerator,
+
+        Denominator
     }
 }

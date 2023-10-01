@@ -12,21 +12,28 @@ namespace ToolWindow
 {
     public partial class GradientExplorerControl : UserControl
     {
-        private Dictionary<FunctionType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
+        private Dictionary<NodeType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
+        private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
 
         public GradientExplorerControl(Version vsVersion)
         {
             InitializeComponent();
 
-            gradientUnaryExpressionMap = new Dictionary<FunctionType, Func<SyntaxNode, GradientGraph>>()
+            gradientUnaryExpressionMap = new Dictionary<NodeType, Func<SyntaxNode, GradientGraph>>()
             {
-                { FunctionType.Exp, DifferentiateExpExpression },
-                { FunctionType.Sin, DifferentiateSinExpression },
-                { FunctionType.Cos, DifferentiateCosExpression },
-                { FunctionType.Tan, DifferentiateTanExpression },
-                { FunctionType.Log, DifferentiateLogExpression },
-                { FunctionType.Ln, DifferentiateLnExpression },
-                { FunctionType.Sqrt, DifferentiateSqrtExpression },
+                { NodeType.Exp, DifferentiateExpExpression },
+                { NodeType.Sin, DifferentiateSinExpression },
+                { NodeType.Cos, DifferentiateCosExpression },
+                { NodeType.Tan, DifferentiateTanExpression },
+                { NodeType.Log, DifferentiateLogExpression },
+                { NodeType.Ln, DifferentiateLnExpression },
+                { NodeType.Sqrt, DifferentiateSqrtExpression },
+            };
+
+            gradientNonUnaryExpressionMap = new Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>>()
+            {
+                { NodeType.Pow, DifferentiatePowExpression },
+                // Add other non-unary functions here
             };
 
             lblHeadline.Content = $"Visual Studio v{vsVersion}";
@@ -156,20 +163,59 @@ namespace ToolWindow
 
                 case InvocationExpressionSyntax invocationExpression:
                     // Handle functions like Math.Exp, etc.
-                    var functionType = this.GetFunctionType(invocationExpression);
-                    if (functionType != FunctionType.Unknown)
+                    var functionType = this.GetNodeType(invocationExpression);
+                    if (gradientNonUnaryExpressionMap.ContainsKey(functionType)) // Non-unary functions
+                    {
+                        var differentiationFunction = gradientNonUnaryExpressionMap[functionType];
+                        var innerExpression = invocationExpression.ArgumentList.Arguments[0].Expression;
+                        var secondInnerExpression = invocationExpression.ArgumentList.Arguments[1].Expression;
+                        if (innerExpression is InvocationExpressionSyntax innerInvocationExpression)
+                        {
+                            if (secondInnerExpression is InvocationExpressionSyntax secondInnerInvocationExpression)
+                            {
+                                // Handle nested functions like Math.Pow(Math.Cos(x), Math.Sin(x))
+                                var innerNodeType = this.GetNodeType(innerInvocationExpression);
+                                var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
+                                var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                                var secondInnerNodeType = this.GetNodeType(secondInnerInvocationExpression);
+                                var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
+                                var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                                CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
+                                gradientExpression.F = DecomposeExpression(innerInnerExpression, gradientGraph);
+                                gradientExpression.G = DecomposeExpression(secondInnerInvocationExpression, gradientGraph);
+                                gradientExpression.FPrime = innerDifferentiationFunction.Invoke(innerInnerExpression);
+                                gradientExpression.GPrime = secondInnerDifferentiationFunction.Invoke(secondInnerInnerExpression);
+                                gradientGraph.Expressions.Add(gradientExpression);
+                            }
+                        }
+                        else
+                        {
+                            // Handle functions like Math.Pow(x, 2)
+                            UnaryGradientExpression gradientExpression = new UnaryGradientExpression();
+                            gradientExpression.FPrime = differentiationFunction.Invoke(new List<SyntaxNode>() { innerExpression, secondInnerExpression });
+                            gradientGraph.Expressions.Add(gradientExpression);
+                        }
+                    }
+                    else if (gradientUnaryExpressionMap.ContainsKey(functionType))
                     {
                         var differentiationFunction = gradientUnaryExpressionMap[functionType];
                         var innerExpression = invocationExpression.ArgumentList.Arguments[0].Expression;
                         if (innerExpression is InvocationExpressionSyntax innerInvocationExpression)
                         {
                             // Handle nested functions like Math.Sin(Math.Cos(x))
-                            var innerFunctionType = this.GetFunctionType(innerInvocationExpression);
-                            var innerDifferentiationFunction = gradientUnaryExpressionMap[innerFunctionType];
+                            var innerNodeType = this.GetNodeType(innerInvocationExpression);
+                            var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
                             var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
                             ChainRuleGradientExpression gradientExpression = new ChainRuleGradientExpression();
                             gradientExpression.FPrimeOfG = differentiationFunction.Invoke(innerInvocationExpression);
                             gradientExpression.GPrime = innerDifferentiationFunction.Invoke(innerInnerExpression);
+                            gradientGraph.Expressions.Add(gradientExpression);
+                        }
+                        else
+                        {
+                            // Handle functions like Math.Exp(x)
+                            UnaryGradientExpression gradientExpression = new UnaryGradientExpression();
+                            gradientExpression.FPrime = differentiationFunction.Invoke(invocationExpression);
                             gradientGraph.Expressions.Add(gradientExpression);
                         }
                     }
@@ -190,7 +236,7 @@ namespace ToolWindow
             return gradientGraph;
         }
 
-        private FunctionType GetFunctionType(InvocationExpressionSyntax invocation)
+        private NodeType GetNodeType(InvocationExpressionSyntax invocation)
         {
             if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpression)
             {
@@ -200,28 +246,28 @@ namespace ToolWindow
                     switch (name)
                     {
                         case "Math.Exp":
-                            return FunctionType.Exp;
+                            return NodeType.Exp;
                         case "Math.Log":
-                            return FunctionType.Ln;
+                            return NodeType.Ln;
                         case "Math.Log10":
-                            return FunctionType.Log;
+                            return NodeType.Log;
                         case "Math.Sin":
-                            return FunctionType.Sin;
+                            return NodeType.Sin;
                         case "Math.Cos":
-                            return FunctionType.Cos;
+                            return NodeType.Cos;
                         case "Math.Tan":
-                            return FunctionType.Tan;
+                            return NodeType.Tan;
                         case "Math.Sqrt":
-                            return FunctionType.Sqrt;
+                            return NodeType.Sqrt;
                         case "Math.Pow":
-                            return FunctionType.Pow;
+                            return NodeType.Pow;
                         default:
                             throw new InvalidOperationException("Unknown function type");
                     }
                 }
             }
 
-            return FunctionType.Unknown;
+            return NodeType.Unknown;
         }
 
         private GradientGraph DifferentiateExpExpression(SyntaxNode innerInvocation)
@@ -243,7 +289,7 @@ namespace ToolWindow
 
                 Node node = new Node()
                 {
-                    FunctionType = FunctionType.Exp,
+                    NodeType = NodeType.Exp,
                 };
                 node.Edges.Add(edge);
 
@@ -271,7 +317,7 @@ namespace ToolWindow
 
                 Node node = new Node()
                 {
-                    FunctionType = FunctionType.Cos,
+                    NodeType = NodeType.Cos,
                 };
                 node.Edges.Add(edge);
 
@@ -305,12 +351,149 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
+            Node divide = new Node()
+            {
+                NodeType = NodeType.Divide,
+            };
+
+            Node numerator = new Node()
+            {
+                Value = 1,
+                Type = typeof(int).Name,
+            };
+
+            Node denominator = new Node()
+            {
+                SyntaxNode = innerInvocation,
+            };
+
+            Edge operand1 = new Edge()
+            {
+                Relationship = RelationshipType.Numerator,
+                TargetNode = numerator,
+            };
+
+            Edge operand2 = new Edge()
+            {
+                Relationship = RelationshipType.Denominator,
+                TargetNode = denominator,
+            };
+
+            divide.Edges.Add(operand1);
+            divide.Edges.Add(operand2);
+
+            graph.Nodes.Add(divide);
+
+            return graph;
+        }
+
+        private Node FunctionWithCoefficient(NodeType node, Node coefficient, SyntaxNode innerInvocation)
+        {
+            Node inner = new Node()
+            {
+                SyntaxNode = innerInvocation,
+            };
+
+            Edge edge = new Edge()
+            {
+                Relationship = RelationshipType.Function,
+                TargetNode = inner,
+            };
+
+            Node functionNode = new Node()
+            {
+                NodeType = node,
+            };
+            functionNode.Edges.Add(edge);
+
+            Edge coefficientEdge = new Edge()
+            {
+                Relationship = RelationshipType.Coefficient,
+                TargetNode = coefficient,
+            };
+            functionNode.Edges.Add(coefficientEdge);
+
+            return functionNode;
+        }
+
+        private GradientGraph DifferentiatePowExpression(List<SyntaxNode> syntaxNodes)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            Node baseNode = new Node()
+            {
+                SyntaxNode = syntaxNodes[0]
+            };
+
+            Node exponent = new Node()
+            {
+                Value = int.Parse((syntaxNodes[1] as LiteralExpressionSyntax).Token.Value.ToString()) - 1,
+                Type = typeof(int).Name,
+            };
+
+            Edge edge = new Edge()
+            {
+                Relationship = RelationshipType.Exponent,
+                TargetNode = exponent,
+            };
+            baseNode.Edges.Add(edge);
+
+            Node coefficient = new Node()
+            {
+                Value = int.Parse((syntaxNodes[1] as LiteralExpressionSyntax).Token.Value.ToString()),
+                Type = typeof(int).Name,
+            };
+
+            Edge edge1 = new Edge()
+            {
+                Relationship = RelationshipType.Coefficient,
+                TargetNode = coefficient,
+            };
+            baseNode.Edges.Add(edge1);
+
+            graph.Nodes.Add(baseNode);
+
             return graph;
         }
 
         private GradientGraph DifferentiateSqrtExpression(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
+
+            Node two = new Node()
+            {
+                Value = 2,
+                Type = typeof(int).Name,
+            };
+
+            var functionWithCoefficent = FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
+
+            Node divide = new Node()
+            {
+                NodeType = NodeType.Divide
+            };
+
+            Node numerator = new Node()
+            {
+                Value = 1,
+                Type = typeof(int).Name,
+            };
+
+            Edge operand1 = new Edge()
+            {
+                Relationship = RelationshipType.Numerator,
+                TargetNode = numerator
+            };
+            divide.Edges.Add(operand1);
+
+            Edge operand2 = new Edge()
+            {
+                Relationship = RelationshipType.Denominator,
+                TargetNode = functionWithCoefficent
+            };
+            divide.Edges.Add(operand2);
+
+            graph.Nodes.Add(divide);
 
             return graph;
         }

@@ -9,7 +9,6 @@ namespace GradientExplorer.Model
     public class Edge
     {
         public RelationshipType Relationship { get; set; } // "operand of", "exponent of", etc.
-        public Node FromNode { get; set; }
         public Node TargetNode { get; set; }
     }
 }

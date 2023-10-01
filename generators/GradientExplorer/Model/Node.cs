@@ -21,12 +21,12 @@ namespace GradientExplorer.Model
             RawType = rawType;
         }
 
-        public FunctionType FunctionType { get; set; }
+        public NodeType NodeType { get; set; }
 
         public SyntaxNode SyntaxNode { get; set; }
 
         public string Type { get; set; } // "Constant", "Variable", "Operation", etc.
-        public string Value { get; set; } // Value for constants, variable name for variables, etc.
+        public object Value { get; set; } // Value for constants, variable name for variables, etc.
         public object RawValue { get; set; }
         public Type RawType { get; set; }
         public List<Edge> Edges { get; set; } = new List<Edge>(); // Edges to other nodes
