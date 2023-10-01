@@ -8,6 +8,7 @@
              xmlns:util="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Utilities"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
+             xmlns:w="clr-namespace:GradientExplorer.LaTeX.Wpf"
              toolkit:Themes.UseVsTheme="True"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -15,6 +16,7 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <Label x:Name="lblHeadline" Margin="10" HorizontalAlignment="Center">Click me!!</Label>
+            <w:WpfCanvas x:Name="laTeXCanvas" Width="300" Height="150"></w:WpfCanvas>
             <Button Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
         </StackPanel>
     </Grid>

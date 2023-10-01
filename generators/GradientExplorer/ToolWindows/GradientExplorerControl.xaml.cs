@@ -1,4 +1,6 @@
-﻿using GradientExplorer.Model;
+﻿using CSharpMath.Rendering.FrontEnd;
+using GradientExplorer.LaTeX.Wpf;
+using GradientExplorer.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ToolWindow
 {
@@ -79,36 +82,44 @@ namespace ToolWindow
                 var root = syntaxTree.GetRoot();
                 var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
+                this.ParseMethod(forwardMethod);
+                var canvas = laTeXCanvas;
+                WpfMathPainter painter = new WpfMathPainter();
+                painter.LaTeX = "\\frac{1}{1 + e^{\\sin(-x)}}";
+                // painter.Draw(canvas);
+            }
+        }
 
-                if (forwardMethod != null)
+        private void ParseMethod(MethodDeclarationSyntax method)
+        {
+            if (method != null)
+            {
+                var blockSyntax = method.Body;
+                var forLoops = blockSyntax.DescendantNodes().OfType<ForStatementSyntax>().ToList();
+
+                // Assume the last for-loop is the innermost loop
+                if (forLoops.Count > 0)
                 {
-                    var blockSyntax = forwardMethod.Body;
-                    var forLoops = blockSyntax.DescendantNodes().OfType<ForStatementSyntax>().ToList();
+                    var innermostLoop = forLoops.Last();
+                    var innerBlock = innermostLoop.Statement as BlockSyntax;
 
-                    // Assume the last for-loop is the innermost loop
-                    if (forLoops.Count > 0)
+                    if (innerBlock != null)
                     {
-                        var innermostLoop = forLoops.Last();
-                        var innerBlock = innermostLoop.Statement as BlockSyntax;
-
-                        if (innerBlock != null)
+                        foreach (var statement in innerBlock.Statements)
                         {
-                            foreach (var statement in innerBlock.Statements)
+                            // Assuming that the main computation will be an expression statement.
+                            if (statement is ExpressionStatementSyntax expressionStatement)
                             {
-                                // Assuming that the main computation will be an expression statement.
-                                if (statement is ExpressionStatementSyntax expressionStatement)
+                                // This is where you'll find operations like Output[i][j] = ...
+                                var expression = expressionStatement.Expression;
+
+                                if (expression is AssignmentExpressionSyntax assignmentExpression)
                                 {
-                                    // This is where you'll find operations like Output[i][j] = ...
-                                    var expression = expressionStatement.Expression;
+                                    // This is where you'll find the right-hand side of the assignment
+                                    var rightHandSide = assignmentExpression.Right;
 
-                                    if (expression is AssignmentExpressionSyntax assignmentExpression)
-                                    {
-                                        // This is where you'll find the right-hand side of the assignment
-                                        var rightHandSide = assignmentExpression.Right;
-
-                                        // Decompose the right-hand side into a gradient graph
-                                        GradientGraph gradientGraph = DecomposeExpression(rightHandSide, new GradientGraph());
-                                    }
+                                    // Decompose the right-hand side into a gradient graph
+                                    GradientGraph gradientGraph = DecomposeExpression(rightHandSide, new GradientGraph());
                                 }
                             }
                         }

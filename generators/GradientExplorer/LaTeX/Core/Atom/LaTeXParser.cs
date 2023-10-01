@@ -476,8 +476,7 @@ namespace CSharpMath.Atom {
 
     private static void MathListToLaTeX
       (MathList mathList, StringBuilder builder, FontStyle outerFontStyle) {
-      static bool MathAtomToLaTeX(MathAtom atom, StringBuilder builder,
-        [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? command) {
+      static bool MathAtomToLaTeX(MathAtom atom, StringBuilder builder, out string? command) {
         if (LaTeXSettings.CommandForAtom(atom) is string name) {
           command = name;
           builder.Append(name);

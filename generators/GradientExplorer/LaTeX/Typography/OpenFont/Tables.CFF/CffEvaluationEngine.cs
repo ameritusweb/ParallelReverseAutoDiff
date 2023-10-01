@@ -307,7 +307,7 @@ namespace Typography.OpenFont.CFF
             get => _glyphTranslator;
             set => _glyphTranslator = value;
         }
-        [System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        
         private void ThrowNullGlyphTranslator() => throw new InvalidOperationException(nameof(GlyphTranslator) + " not set");
         public void Push(double value)
         {

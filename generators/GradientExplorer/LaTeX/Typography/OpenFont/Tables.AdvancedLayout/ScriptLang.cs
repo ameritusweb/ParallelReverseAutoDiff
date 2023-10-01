@@ -689,11 +689,11 @@ namespace Typography.OpenFont
                 return scriptLang;
             }
         }
-        public static bool TryGetUnicodeLangBitsArray(string langShortName, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out UnicodeLangBits[]? unicodeLangBits)
+        public static bool TryGetUnicodeLangBitsArray(string langShortName, out UnicodeLangBits[]? unicodeLangBits)
         {
             return s_registeredScriptTagsToUnicodeLangBits.TryGetValue(langShortName, out unicodeLangBits);
         }
-        public static bool TryGetScriptLang(char c, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ScriptLang? scLang)
+        public static bool TryGetScriptLang(char c, out ScriptLang? scLang)
         {
             foreach (var kp in s_unicodeLangToScriptLang)
             {

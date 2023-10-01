@@ -126,7 +126,7 @@ namespace CSharpMath.Rendering.FrontEnd {
           measure.Width, measure.Height);
         canvas.CurrentColor = null;
         static T? Nullable<T>(T nonnull) where T : struct => new T?(nonnull);
-        display.Draw(new GraphicsContext(canvas,
+        display.Draw(new WpfGraphicsContext(canvas,
           GlyphBoxColor is var (glyph, textRun) ? Nullable((WrapColor(glyph), WrapColor(textRun))) : null
         ));
         canvas.Restore();

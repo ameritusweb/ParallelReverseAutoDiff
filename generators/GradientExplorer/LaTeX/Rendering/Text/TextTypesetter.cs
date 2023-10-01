@@ -40,7 +40,7 @@ namespace CSharpMath.Rendering.Text {
         TextLayoutLineBuilder line,
         List<IDisplay<Fonts, Glyph>> displayList,
         List<IDisplay<Fonts, Glyph>> displayMathList,
-        FontStyle style,
+        CSharpMath.Atom.FontStyle style,
         Color? color
       ) {
 
@@ -195,7 +195,7 @@ namespace CSharpMath.Rendering.Text {
         globalLine,
         relativePositionList,
         absolutePositionList,
-        FontStyle.Roman /*FontStyle.Default is FontStyle.Italic, FontStyle.Roman is no change to characters*/,
+        CSharpMath.Atom.FontStyle.Roman /*FontStyle.Default is FontStyle.Italic, FontStyle.Roman is no change to characters*/,
         null
       );
       BreakLine(globalLine, relativePositionList, absolutePositionList); //remember to finalize the last line
