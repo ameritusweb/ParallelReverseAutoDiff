@@ -30,11 +30,12 @@ namespace CSharpMath.Display.Displays {
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
       Accentee.Draw(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.Translate(Position);
       context.SetTextPosition(new PointF());
       Accent.Draw(context);
-      context.RestoreState();
+      context.RestoreState(id);
     }
 
     public Color? TextColor { get; set; }

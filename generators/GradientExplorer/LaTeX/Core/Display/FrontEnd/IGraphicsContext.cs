@@ -11,8 +11,8 @@ namespace CSharpMath.Display.FrontEnd {
       (IReadOnlyList<TGlyph> glyphs, TFont font, IEnumerable<PointF> points, Color? color);
     void FillRect(RectangleF rect, Color color);
     void Translate(PointF dxy);
-    void SaveState();
-    void RestoreState();
+    void SaveState(Guid id);
+    void RestoreState(Guid id);
     void SetTextPosition(PointF position);
   }
 }

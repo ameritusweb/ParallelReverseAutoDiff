@@ -23,12 +23,13 @@ namespace CSharpMath.Display.Displays {
     
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.SetTextPosition(this.Position);
       foreach (var run in Runs) {
         run.Draw(context);
       }
-      context.RestoreState();
+      context.RestoreState(id);
     }
     public PointF Position { get; set; }
     public float Ascent => Runs.CollectionAscent();

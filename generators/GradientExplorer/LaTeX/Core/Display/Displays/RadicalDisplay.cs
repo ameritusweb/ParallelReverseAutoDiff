@@ -55,7 +55,8 @@ namespace CSharpMath.Display.Displays {
       this.DrawBackground(context);
       Radicand.Draw(context);
       Degree?.Draw(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       var translation = new PointF(Position.X + _radicalShift, Position.Y);
       context.Translate(translation);
       context.SetTextPosition(new PointF());
@@ -67,7 +68,7 @@ namespace CSharpMath.Display.Displays {
       var lineStart = new PointF(_radicalGlyph.Width, Ascent - heightFromTop - LineThickness / 2);
       var lineEnd = new PointF(lineStart.X + Radicand.Width, lineStart.Y);
       context.DrawLine(lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y, LineThickness, TextColor);
-      context.RestoreState();
+      context.RestoreState(id);
     }
     public Color? TextColor { get; set; }
     public void SetTextColorRecursive(Color? textColor) {

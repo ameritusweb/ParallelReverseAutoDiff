@@ -39,11 +39,12 @@ namespace CSharpMath.Display.Displays {
 
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.Translate(new PointF(Position.X, Position.Y - ShiftDown));
       context.SetTextPosition(new PointF());
       context.DrawGlyphsAtPoints(_glyphs, Font, _glyphPositions, TextColor);
-      context.RestoreState();
+      context.RestoreState(id);
     }
 
     public TFont Font { get; }

@@ -113,7 +113,8 @@ namespace CSharpMath.Rendering.FrontEnd {
     public abstract void Draw(TCanvas canvas, TextAlignment alignment, Thickness padding = default, float offsetX = 0, float offsetY = 0);
     protected void DrawCore(ICanvas canvas, IDisplay<Fonts, Glyph>? display, PointF? position = null) {
       if (display != null) {
-        canvas.Save();
+        Guid id = Guid.NewGuid();
+        canvas.Save(id);
         //invert the canvas vertically: displays are drawn with mathematical coordinates, not graphical coordinates
         canvas.Scale(1, -1);
         canvas.Scale(Magnification, Magnification);
@@ -129,7 +130,7 @@ namespace CSharpMath.Rendering.FrontEnd {
         display.Draw(new WpfGraphicsContext(canvas,
           GlyphBoxColor is var (glyph, textRun) ? Nullable((WrapColor(glyph), WrapColor(textRun))) : null
         ));
-        canvas.Restore();
+        canvas.Restore(id);
       }
     }
     #endregion Methods

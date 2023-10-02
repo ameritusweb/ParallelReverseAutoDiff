@@ -55,9 +55,10 @@ namespace CSharpMath.Display.Displays {
       this.DrawBackground(context);
       Numerator.Draw(context);
       Denominator.Draw(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.DrawLine(Position.X, Position.Y + LinePosition, Position.X + Width, Position.Y + LinePosition, LineThickness, TextColor);
-      context.RestoreState();
+      context.RestoreState(id);
     }
     public Color? TextColor { get; set; }
     public void SetTextColorRecursive(Color? textColor) {

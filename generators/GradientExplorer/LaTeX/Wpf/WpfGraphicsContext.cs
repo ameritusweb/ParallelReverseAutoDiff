@@ -47,10 +47,11 @@ namespace CSharpMath.Rendering.BackEnd
                 var scale = typeface.CalculateScaleToPixelFromPointSize(font.PointSize);
                 // var pathBuilder = new GlyphOutlineBuilder(typeface);
                 // pathBuilder.BuildFromGlyph(glyph.Info, font.PointSize);
-                Canvas.Save();
+                Guid id = Guid.NewGuid();
+                Canvas.Save(id);
                 Canvas.CurrentColor = color;
                 Canvas.Translate(point.X, point.Y);
-                var wpfPath = new WpfPath();
+                var wpfPath = new WpfPath(Canvas);
                 wpfPath.BeginRead(0);  // The contour count is not being used in your implementation
                 var pathBuilder = new GlyphOutlineBuilder(glyph.Typeface);
                 pathBuilder.BuildFromGlyph(glyph.Info, font.PointSize);
@@ -60,7 +61,7 @@ namespace CSharpMath.Rendering.BackEnd
                 StreamGeometry geometry = wpfPath.GetGeometry();
                 // Now use 'geometry' to draw the path onto your WPF canvas
                 ((WpfCanvas)Canvas).DrawStreamGeometry(geometry, System.Windows.Media.Color.FromArgb(Canvas.CurrentColor.Value.A, Canvas.CurrentColor.Value.R, Canvas.CurrentColor.Value.G, Canvas.CurrentColor.Value.B));
-                Canvas.Restore();
+                Canvas.Restore(id);
             }
         }
         public void DrawLine(float x1, float y1, float x2, float y2, float lineThickness, System.Drawing.Color? color)
@@ -92,7 +93,8 @@ namespace CSharpMath.Rendering.BackEnd
                 Canvas.StrokeRect(textPosition.X, textPosition.Y + descent, width, ascent - descent);
             }
             var pointSize = run.Font.PointSize;
-            Canvas.Save();
+            Guid id = Guid.NewGuid();
+            Canvas.Save(id);
             Canvas.Translate(textPosition.X, textPosition.Y);
             Canvas.CurrentColor = color;
             foreach (var (glyph, kernAfter, foreground) in run.GlyphInfos)
@@ -101,7 +103,7 @@ namespace CSharpMath.Rendering.BackEnd
                 var scale = typeface.CalculateScaleToPixelFromPointSize(pointSize);
                 var index = glyph.Info.GlyphIndex;
                 Canvas.CurrentColor = foreground ?? color;
-                var wpfPath = new WpfPath();
+                var wpfPath = new WpfPath(Canvas);
                 wpfPath.BeginRead(0);  // The contour count is not being used in your implementation
                 var pathBuilder = new GlyphOutlineBuilder(glyph.Typeface);
                 pathBuilder.BuildFromGlyph(glyph.Info, pointSize);
@@ -113,7 +115,7 @@ namespace CSharpMath.Rendering.BackEnd
                 ((WpfCanvas)Canvas).DrawStreamGeometry(geometry, System.Windows.Media.Color.FromArgb(Canvas.CurrentColor.Value.A, Canvas.CurrentColor.Value.R, Canvas.CurrentColor.Value.G, Canvas.CurrentColor.Value.B));
                 Canvas.Translate(typeface.GetHAdvanceWidthFromGlyphIndex(index) * scale + kernAfter, 0);
             }
-            Canvas.Restore();
+            Canvas.Restore(id);
         }
 
         public void FillRect(RectangleF rect, System.Drawing.Color color)
@@ -121,8 +123,15 @@ namespace CSharpMath.Rendering.BackEnd
             Canvas.CurrentColor = color;
             Canvas.FillRect(rect.X, rect.Y, rect.Width, rect.Height);
         }
-        public void RestoreState() => Canvas.Restore();
-        public void SaveState() => Canvas.Save();
+        public void RestoreState(Guid id)
+        {
+            Canvas.Restore(id);
+        }
+        public void SaveState(Guid id)
+        {
+            Canvas.Save(id);
+        }
+
         public void Translate(PointF dxy) => Canvas.Translate(dxy.X, dxy.Y);
     }
 }

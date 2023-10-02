@@ -38,12 +38,13 @@ namespace CSharpMath.Display.Displays {
     public float Width => Displays.CollectionWidth();
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.Translate(this.Position);
       context.SetTextPosition(new PointF());
       foreach (var displayAtom in Displays)
         displayAtom.Draw(context);
-      context.RestoreState();
+      context.RestoreState(id);
     }
     /// <summary>The string returned is NOT real TeX! It's for debugging purposes only.</summary>
     public override string ToString() => string.Concat(Displays);

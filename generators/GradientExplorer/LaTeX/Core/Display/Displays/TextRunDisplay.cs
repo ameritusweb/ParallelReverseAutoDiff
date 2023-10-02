@@ -30,9 +30,10 @@ namespace CSharpMath.Display.Displays {
     public bool HasScript { get; set; }
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.DrawGlyphRunWithOffset(Run, Position, TextColor);
-      context.RestoreState();
+      context.RestoreState(id);
     }
     public Color? TextColor { get; set; }
     public void SetTextColorRecursive(Color? textColor) => TextColor ??= textColor;

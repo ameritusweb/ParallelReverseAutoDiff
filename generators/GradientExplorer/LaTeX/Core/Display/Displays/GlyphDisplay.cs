@@ -28,13 +28,14 @@ namespace CSharpMath.Display.Displays {
     }
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       using var glyphs = new Structures.RentedArray<TGlyph>(Glyph);
       using var positions = new Structures.RentedArray<PointF>(new PointF());
       context.Translate(new PointF(Position.X, Position.Y - ShiftDown));
       context.SetTextPosition(new PointF());
       context.DrawGlyphsAtPoints(glyphs.Result, Font, positions.Result, TextColor);
-      context.RestoreState();
+      context.RestoreState(id);
     }
     public Color? TextColor { get; set; }
     public void SetTextColorRecursive(Color? textColor) => TextColor ??= textColor;

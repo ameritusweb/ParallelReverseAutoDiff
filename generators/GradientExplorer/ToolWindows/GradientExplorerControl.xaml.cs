@@ -82,16 +82,16 @@ namespace ToolWindow
                 var root = syntaxTree.GetRoot();
                 var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
-                this.ParseMethod(forwardMethod);
+                var gradientGraph = this.ParseMethod(forwardMethod);
                 var canvas = laTeXCanvas;
                 var wpfCanvas = new WpfCanvas(canvas);
                 WpfMathPainter painter = new WpfMathPainter();
-                painter.LaTeX = "\\frac{1}{1 + e^{\\sin(-x)}}";
+                painter.LaTeX = gradientGraph.ToLaTeX();
                 painter.Draw(wpfCanvas);
             }
         }
 
-        private void ParseMethod(MethodDeclarationSyntax method)
+        private GradientGraph? ParseMethod(MethodDeclarationSyntax method)
         {
             if (method != null)
             {
@@ -121,12 +121,14 @@ namespace ToolWindow
 
                                     // Decompose the right-hand side into a gradient graph
                                     GradientGraph gradientGraph = DecomposeExpression(rightHandSide, new GradientGraph());
+                                    return gradientGraph;
                                 }
                             }
                         }
                     }
                 }
             }
+            return null;
         }
 
         private GradientGraph DecomposeExpression(ExpressionSyntax expression, GradientGraph gradientGraph)

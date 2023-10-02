@@ -27,9 +27,10 @@ namespace CSharpMath.Display.Displays {
     public void Draw(IGraphicsContext<TFont, TGlyph> context) {
       this.DrawBackground(context);
       Inner.Draw(context);
-      context.SaveState();
+      Guid id = Guid.NewGuid();
+      context.SaveState(id);
       context.DrawLine(Position.X, Position.Y + LineShiftUp, Position.X + Inner.Width, Position.Y + LineShiftUp, LineThickness, TextColor);
-      context.RestoreState();
+      context.RestoreState(id);
     }
     public Color? TextColor { get; set; }
     public void SetTextColorRecursive(Color? textColor) {

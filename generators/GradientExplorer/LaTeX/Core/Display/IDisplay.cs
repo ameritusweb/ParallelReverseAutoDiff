@@ -40,9 +40,10 @@ namespace CSharpMath {
       (this IDisplay<TFont, TGlyph> display, IGraphicsContext<TFont, TGlyph> context)
       where TFont : IFont<TGlyph> {
       if (display.BackColor is { } color) {
-        context.SaveState();
+        Guid id = Guid.NewGuid();
+        context.SaveState(id);
         context.FillRect(display.Frame(), color);
-        context.RestoreState();
+        context.RestoreState(id);
       }
     }
   }

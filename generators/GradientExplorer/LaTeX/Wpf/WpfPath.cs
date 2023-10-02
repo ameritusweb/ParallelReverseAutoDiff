@@ -13,6 +13,12 @@ namespace GradientExplorer.LaTeX.Translation
     {
         private StreamGeometry geometry = new StreamGeometry();
         private StreamGeometryContext context;
+        private ICanvas _canvas;
+
+        public WpfPath(ICanvas canvas)
+        {
+            _canvas = canvas;
+        }
 
         public void BeginRead(int contourCount)
         {
@@ -26,25 +32,25 @@ namespace GradientExplorer.LaTeX.Translation
 
         public override void MoveTo(float x0, float y0)
         {
-            context.BeginFigure(new Point(x0, y0), true /* is filled */, false /* is closed */);
+            context.BeginFigure(new Point(x0, _canvas.Height - y0), true /* is filled */, false /* is closed */);
         }
 
         public override void LineTo(float x1, float y1)
         {
-            context.LineTo(new Point(x1, y1), true /* is stroked */, false /* is smooth join */);
+            context.LineTo(new Point(x1, _canvas.Height - y1), true /* is stroked */, false /* is smooth join */);
         }
 
         public override void Curve3(float x1, float y1, float x2, float y2)
         {
             // For Quadratic Bezier, we need to calculate the control point
             // Here it's simply passed as is
-            context.QuadraticBezierTo(new Point(x1, y1), new Point(x2, y2), true /* is stroked */, false /* is smooth join */);
+            context.QuadraticBezierTo(new Point(x1, _canvas.Height - y1), new Point(x2, _canvas.Height - y2), true /* is stroked */, false /* is smooth join */);
         }
 
         public override void Curve4(float x1, float y1, float x2, float y2, float x3, float y3)
         {
             // For Cubic Bezier
-            context.BezierTo(new Point(x1, y1), new Point(x2, y2), new Point(x3, y3), true /* is stroked */, false /* is smooth join */);
+            context.BezierTo(new Point(x1, _canvas.Height - y1), new Point(x2, _canvas.Height - y2), new Point(x3, _canvas.Height - y3), true /* is stroked */, false /* is smooth join */);
         }
 
         public override void CloseContour()

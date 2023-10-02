@@ -1,5 +1,7 @@
 ﻿using CSharpMath.Rendering.FrontEnd;
 using GradientExplorer.LaTeX.Translation;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -8,18 +10,25 @@ namespace GradientExplorer.LaTeX.Wpf
 {
     public class WpfCanvas : ICanvas
     {
+        private SolidColorBrush _defaultColorBrush;
         private SolidColorBrush _currentColorBrush;
         private Canvas _canvas;
         private double _currentX;
         private double _currentY;
+        private Dictionary<Guid, (double, double)> _savedMap;
 
         public WpfCanvas(Canvas canvas)
         {
             _canvas = canvas;
             _currentY = canvas.ActualHeight;
-        }   
+            _savedMap = new Dictionary<Guid, (double, double)>();
+        }
 
-        public System.Drawing.Color DefaultColor { get; set; }
+        public System.Drawing.Color DefaultColor
+        {
+            get => System.Drawing.Color.FromArgb(_defaultColorBrush.Color.A, _defaultColorBrush.Color.R, _defaultColorBrush.Color.G, _defaultColorBrush.Color.B);
+            set => _defaultColorBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B));
+        }
 
         public System.Drawing.Color? CurrentColor
         {
@@ -52,7 +61,7 @@ namespace GradientExplorer.LaTeX.Wpf
                 Y1 = y1,
                 X2 = x2,
                 Y2 = y2,
-                Stroke = _currentColorBrush,
+                Stroke = _currentColorBrush ?? new SolidColorBrush(Colors.White),
                 StrokeThickness = lineThickness
             };
             _canvas.Children.Add(line);
@@ -67,7 +76,7 @@ namespace GradientExplorer.LaTeX.Wpf
                 Fill = _currentColorBrush
             };
             Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, top);
+            Canvas.SetTop(rect, _canvas.ActualHeight + top);
             _canvas.Children.Add(rect);
         }
 
@@ -87,14 +96,18 @@ namespace GradientExplorer.LaTeX.Wpf
             _canvas.Children.Add(path);
         }
 
-        public void Restore()
+        public void Restore(Guid id)
         {
             // Implement state restoration if needed
+            var restored = _savedMap[id];
+            this._currentX = restored.Item1;
+            this._currentY = restored.Item2;
         }
 
-        public void Save()
+        public void Save(Guid id)
         {
             // Implement state saving if needed
+            _savedMap[id] = (this._currentX, this._currentY);
         }
 
         public void Scale(float sx, float sy)
@@ -105,7 +118,7 @@ namespace GradientExplorer.LaTeX.Wpf
         public CSharpMath.Rendering.FrontEnd.Path StartNewPath()
         {
             // Use your WpfPath implementation here
-            return new WpfPath();
+            return new WpfPath(this);
         }
 
         public void StrokeRect(float left, float top, float width, float height)
@@ -124,12 +137,14 @@ namespace GradientExplorer.LaTeX.Wpf
         public void Translate(float dx, float dy)
         {
             _currentX += dx;
-            _currentY += dy;
+            _currentY -= dy;
         }
 
         public void SetTextPosition(float fx, float dy)
         {
             // Implement text positioning if needed
+            _currentX += fx;
+            _currentY -= dy;
         }
     }
 }
