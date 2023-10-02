@@ -64,11 +64,21 @@ namespace CSharpMath.Structures {
       this.defaultParser = defaultParser;
       this.defaultParserForCommands = defaultParserForCommands;
       Added += (key, value) => {
-        if (key.AsSpan().StartsWithInvariant(@"\"))
-          if (SplitCommand(key.AsSpan()) != key.Length - 1)
-            commands.Add(key, value);
-          else throw new ArgumentException("Key is unreachable: " + key, nameof(key));
-        else nonCommands.Add((key, value));
+          if (key.AsSpan().StartsWithInvariant(@"\"))
+          {
+              if (SplitCommand(key.AsSpan()) != key.Length - 1)
+              {
+                  commands.Add(key, value);
+              }
+              else
+              {
+                  throw new ArgumentException("Key is unreachable: " + key, nameof(key));
+              }
+          }
+          else
+          {
+              nonCommands.Add((key, value));
+          }
       };
     }
     readonly DefaultDelegate defaultParser;
@@ -90,18 +100,26 @@ namespace CSharpMath.Structures {
 
       System.Diagnostics.Debug.Assert(chars[0] == '\\');
       var splitIndex = 1;
-      if (splitIndex < chars.Length)
-        if (IsEnglishAlphabetOrAt(chars[splitIndex])) {
-          do splitIndex++; while (splitIndex < chars.Length && IsEnglishAlphabetOrAt(chars[splitIndex]));
-          if (splitIndex < chars.Length)
-            switch (chars[splitIndex]) {
-              case '*':
-              case '=':
-              case '\'':
-                splitIndex++;
-                break;
-            }
-        } else splitIndex++;
+            if (splitIndex < chars.Length)
+                if (IsEnglishAlphabetOrAt(chars[splitIndex]))
+                {
+                    do splitIndex++; while (splitIndex < chars.Length && IsEnglishAlphabetOrAt(chars[splitIndex]));
+                    if (splitIndex < chars.Length)
+                    {
+                        switch (chars[splitIndex])
+                        {
+                            case '*':
+                            case '=':
+                            case '\'':
+                                splitIndex++;
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    splitIndex++;
+                }
       return splitIndex;
     }
     /// <summary>Tries to find a command at the beginning of <see cref="char"/>s, returning the
@@ -110,8 +128,10 @@ namespace CSharpMath.Structures {
       Result<(TValue Result, int SplitIndex)> TryLookupCommand(ReadOnlySpan<char> chars) {
         var splitIndex = SplitCommand(chars);
         var lookup = chars.Slice(0, splitIndex);
-        while (splitIndex < chars.Length && char.IsWhiteSpace(chars[splitIndex]))
-          splitIndex++;
+                while (splitIndex < chars.Length && char.IsWhiteSpace(chars[splitIndex]))
+                {
+                    splitIndex++;
+                }
         return commands.TryGetValue(lookup.ToString(), out var result)
                ? Result.Ok((result, splitIndex))
                : defaultParserForCommands(lookup);
@@ -125,7 +145,10 @@ namespace CSharpMath.Structures {
         return defaultParser(chars);
       }
 
-      if (chars.IsEmpty) throw new ArgumentException("There are no characters to read.", nameof(chars));
+            if (chars.IsEmpty)
+            {
+                throw new ArgumentException("There are no characters to read.", nameof(chars));
+            }
       return chars.StartsWithInvariant(@"\") ? TryLookupCommand(chars) : TryLookupNonCommand(chars);
     }
   }
@@ -172,9 +195,14 @@ namespace CSharpMath.Structures {
             firstToSecond
             .Where(kvp => EqualityComparer<TSecond>.Default.Equals(kvp.Value,svalue))
             .Select(kvp => kvp.Key).ToArray();
-          if (otherFirsts.IsEmpty())
-            secondToFirst.Remove(svalue);
-          else secondToFirst[svalue] = otherFirsts[0];
+                    if (otherFirsts.IsEmpty())
+                    {
+                        secondToFirst.Remove(svalue);
+                    }
+                    else
+                    {
+                        secondToFirst[svalue] = otherFirsts[0];
+                    }
         }
       }
       return exists;
@@ -188,8 +216,10 @@ namespace CSharpMath.Structures {
           firstToSecond
           .Where(kvp => EqualityComparer<TSecond>.Default.Equals(kvp.Value,second))
           .Select(kvp => kvp.Key).ToArray();
-        foreach (var first in firsts)
-          firstToSecond.Remove(first);
+                foreach (var first in firsts)
+                {
+                    firstToSecond.Remove(first);
+                }
       }
       return exists;
     }

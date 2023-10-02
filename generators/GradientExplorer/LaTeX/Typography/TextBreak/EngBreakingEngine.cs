@@ -60,12 +60,18 @@ namespace Typography.TextBreak
             //----------------------------------------
             int endBefore = start + len;
             if (endBefore > input.Length)
+            {
                 throw new System.ArgumentOutOfRangeException(nameof(len), len, "The range provided was partially out of bounds.");
+            }
             else if (start < 0)
+            {
                 throw new System.ArgumentOutOfRangeException(nameof(start), start, "The starting index was negative.");
+            }
             //throw instead of skipping the entire for loop
             else if (len < 0)
+            {
                 throw new System.ArgumentOutOfRangeException(nameof(len), len, "The length provided was negative.");
+            }
             //----------------------------------------
 
             LexState lexState = LexState.Init;

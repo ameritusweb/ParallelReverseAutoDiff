@@ -458,7 +458,9 @@ namespace Typography.WebFont
         static Bounds FindSimpleGlyphBounds(Glyph glyph)
         {
             if (!(glyph.TtfWoffInfo is var (_, glyphPoints)))
+            {
                 throw new System.NotImplementedException("Built glyph is not WOFF glyph");
+            }
 
             int j = glyphPoints.Length;
             float xmin = float.MaxValue;
@@ -469,10 +471,22 @@ namespace Typography.WebFont
             for (int i = 0; i < j; ++i)
             {
                 GlyphPointF p = glyphPoints[i];
-                if (p.X < xmin) xmin = p.X;
-                if (p.X > xmax) xmax = p.X;
-                if (p.Y < ymin) ymin = p.Y;
-                if (p.Y > ymax) ymax = p.Y;
+                if (p.X < xmin)
+                {
+                    xmin = p.X;
+                }
+                if (p.X > xmax)
+                {
+                    xmax = p.X;
+                }
+                if (p.Y < ymin)
+                {
+                    ymin = p.Y;
+                }
+                if (p.Y > ymax)
+                {
+                    ymax = p.Y;
+                }
             }
 
             return new Bounds(

@@ -384,7 +384,10 @@ namespace Typography.TextBreak
         //
         void DoIndexOfSmallAmount(CustomDicTextBuffer textBuffer)
         {
-            if (_wordSpanList == null) throw new InvalidOperationException(nameof(DoIndex) + " already called");
+            if (_wordSpanList == null)
+            {
+                throw new InvalidOperationException(nameof(DoIndex) + " already called");
+            }
             //convention...
             //data must me sorted (ascending) before use with the wordSpanList 
 
@@ -458,12 +461,18 @@ namespace Typography.TextBreak
         {
             //refactor note:
             //remain in this style -> easy to debug
-            if (_charBuffer == null) throw new InvalidOperationException("Buffer not frozen yet");
+            if (_charBuffer == null)
+            {
+                throw new InvalidOperationException("Buffer not frozen yet");
+            }
             return _charBuffer[index];
         }
         public string GetString(int index, int len)
         {
-            if (_charBuffer == null) throw new InvalidOperationException("Buffer not frozen yet");
+            if (_charBuffer == null)
+            {
+                throw new InvalidOperationException("Buffer not frozen yet");
+            }
             return new string(_charBuffer, index, len);
         }
     }

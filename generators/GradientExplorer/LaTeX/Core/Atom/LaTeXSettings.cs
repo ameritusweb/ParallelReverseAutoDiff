@@ -16,16 +16,25 @@ namespace CSharpMath.Atom {
     public static LaTeXCommandDictionary<Boundary> BoundaryDelimiters { get; } =
       new LaTeXCommandDictionary<Boundary>(
         consume => {
-          if (consume.IsEmpty) throw new InvalidCodePathException("Unexpected empty " + nameof(consume));
+            if (consume.IsEmpty)
+            {
+                throw new InvalidCodePathException("Unexpected empty " + nameof(consume));
+            }
           if (char.IsHighSurrogate(consume[0])) {
-            if (consume.Length == 1)
-              return "Unexpected single high surrogate without its counterpart";
-            if (!char.IsLowSurrogate(consume[1]))
-              return "Low surrogate not found after high surrogate";
+                if (consume.Length == 1)
+                {
+                    return "Unexpected single high surrogate without its counterpart";
+                }
+                if (!char.IsLowSurrogate(consume[1]))
+                {
+                    return "Low surrogate not found after high surrogate";
+                }
             return "Invalid delimiter " + consume.Slice(0, 2).ToString();
           } else {
-            if (char.IsLowSurrogate(consume[0]))
-              return "Unexpected low surrogate without its counterpart";
+                if (char.IsLowSurrogate(consume[0]))
+                {
+                    return "Unexpected low surrogate without its counterpart";
+                }
             return "Invalid delimiter " + consume[0];
           }
         },
@@ -87,13 +96,17 @@ namespace CSharpMath.Atom {
       new LaTeXCommandDictionary<Func<LaTeXParser, MathList, char, Result<(MathAtom? Atom, MathList? Return)>>>(consume => {
         if (consume.IsEmpty) throw new ArgumentException("Unexpected empty " + nameof(consume));
         if (char.IsHighSurrogate(consume[0])) {
-          if (consume.Length == 1 || !char.IsLowSurrogate(consume[1]))
-            return "Low surrogate not found after high surrogate";
+              if (consume.Length == 1 || !char.IsLowSurrogate(consume[1]))
+              {
+                  return "Low surrogate not found after high surrogate";
+              }
           var atom = new Ordinary(consume.Slice(0, 2).ToString());
           return ((parser, accumulate, stopChar) => Ok(atom), 2);
         } else {
-          if (char.IsLowSurrogate(consume[0]))
-            return "High surrogate not found before low surrogate";
+              if (char.IsLowSurrogate(consume[0]))
+              {
+                  return "High surrogate not found before low surrogate";
+              }
           var atom = new Ordinary(consume[0].ToStringInvariant());
           return ((parser, accumulate, stopChar) => Ok(atom), 1);
         }
@@ -341,9 +354,14 @@ namespace CSharpMath.Atom {
           return (readsToEnd ? parser.ReadUntil(stopChar, accumulate) : parser.ReadArgument()).Bind(r => {
             parser.CurrentFontStyle = oldFontStyle;
             parser.TextMode = oldSpacesAllowed;
-            if (readsToEnd)
-              return OkStop(accumulate);
-            else return OkStyled(r);
+              if (readsToEnd)
+              {
+                  return OkStop(accumulate);
+              }
+              else
+              {
+                  return OkStyled(r);
+              }
           });
         });
       }) {
@@ -360,7 +378,10 @@ namespace CSharpMath.Atom {
       };
 
     public static Color? ParseColor(string? hexOrName) {
-      if (hexOrName == null) return null;
+            if (hexOrName == null)
+            {
+                return null;
+            }
       if (hexOrName.StartsWith("#", StringComparison.Ordinal)) {
         var hex = hexOrName.Substring(1);
         return
@@ -372,8 +393,10 @@ namespace CSharpMath.Atom {
           };
       }
 #pragma warning disable CA1308 // Normalize strings to uppercase
-      if (PredefinedColors.FirstToSecond.TryGetValue(hexOrName.ToLowerInvariant(), out var predefined))
-        return predefined;
+            if (PredefinedColors.FirstToSecond.TryGetValue(hexOrName.ToLowerInvariant(), out var predefined))
+            {
+                return predefined;
+            }
 #pragma warning restore CA1308 // Normalize strings to uppercase
       return null;
     }
@@ -382,8 +405,10 @@ namespace CSharpMath.Atom {
         return sb.Append(outString);
       } else {
         sb.Append('#');
-        if (color.A != 255)
-          sb.Append(color.A.ToStringInvariant("X2"));
+                if (color.A != 255)
+                {
+                    sb.Append(color.A.ToStringInvariant("X2"));
+                }
         return sb.Append(color.R.ToStringInvariant("X2"))
                  .Append(color.G.ToStringInvariant("X2"))
                  .Append(color.B.ToStringInvariant("X2"));
@@ -422,9 +447,13 @@ namespace CSharpMath.Atom {
       var atomWithoutScripts = atom.Clone(false);
       atomWithoutScripts.Superscript.Clear();
       atomWithoutScripts.Subscript.Clear();
-      if (atomWithoutScripts is IMathListContainer container)
-        foreach (var list in container.InnerLists)
-          list.Clear();
+            if (atomWithoutScripts is IMathListContainer container)
+            {
+                foreach (var list in container.InnerLists)
+                {
+                    list.Clear();
+                }
+            }
       return CommandSymbols.SecondToFirst.TryGetValue(atomWithoutScripts, out var name) ? name : null;
     }
 

@@ -602,18 +602,28 @@ namespace Typography.OpenFont.CFF
         {
             _reader = reader;
             //
-            if (!(ReadNameIndex() is { } fontNames)) return;
-            if (!(ReadTopDICTIndex() is var (charStringsOffset, charsetOffset, encodingOffset, privateDICTSize, privateDICTOffset)))
+            if (!(ReadNameIndex() is { } fontNames))
+            {
                 return;
-            if(!(ReadStringIndex() is { } uniqueStringTable)) return;
+            }
+            if (!(ReadTopDICTIndex() is var (charStringsOffset, charsetOffset, encodingOffset, privateDICTSize, privateDICTOffset)))
+            {
+                return;
+            }
+            if (!(ReadStringIndex() is { } uniqueStringTable))
+            {
+                return;
+            }
             ResultCff1FontSet = new Cff1FontSet(fontNames, uniqueStringTable);
             var globalSubrRawBufferList = ReadGlobalSubrIndex();
 
             //----------------------
             var (privateDict, localSubrRawBufferList, defaultWidthX, nominalWidthX)
                 = ReadPrivateDict(cffStartAt, privateDICTOffset, privateDICTSize);
-            if(!(ReadCharStringsIndex(cffStartAt, charStringsOffset, globalSubrRawBufferList, localSubrRawBufferList) is { } glyphInstructions))
+            if (!(ReadCharStringsIndex(cffStartAt, charStringsOffset, globalSubrRawBufferList, localSubrRawBufferList) is { } glyphInstructions))
+            {
                 return;
+            }
             var glyphs = ReadCharsets(cffStartAt, charsetOffset, glyphInstructions, uniqueStringTable);
 
             ReadEncodings(cffStartAt, encodingOffset);

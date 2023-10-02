@@ -192,10 +192,14 @@ namespace Typography.OpenFont
                 return;
 
             if (_controlValueTable == null)
+            {
                 _controlValueTable = new float[cvt.Length];
+            }
             //copy cvt and apply scale
             for (int i = cvt.Length - 1; i >= 0; --i)
+            {
                 _controlValueTable[i] = cvt[i] * scale;
+            }
 
             _scale = scale;
             _ppem = (int)Math.Round(ppem);
@@ -209,7 +213,9 @@ namespace Typography.OpenFont
 
                 // save off the CVT graphics state so that we can restore it for each glyph we hint
                 if ((_state.InstructionControl & InstructionControlFlags.UseDefaultGraphicsState) != 0)
+                {
                     _cvtState.Reset();
+                }
                 else
                 {
                     // always reset a few fields; copy the reset
@@ -226,11 +232,15 @@ namespace Typography.OpenFont
         public void HintGlyph(GlyphPointF[] glyphPoints, ushort[] contours, byte[]? instructions)
         {
             if (instructions == null || instructions.Length == 0)
+            {
                 return;
+            }
 
             // check if the CVT program disabled hinting
             if ((_state.InstructionControl & InstructionControlFlags.InhibitGridFitting) != 0)
+            {
                 return;
+            }
 
             // TODO: composite glyphs
             // TODO: round the phantom points?
@@ -450,7 +460,9 @@ namespace Typography.OpenFont
 
                             // moving twilight points moves their "original" value also
                             if (_zp2.IsTwilight)
+                            {
                                 _zp2.Original[index].P = _zp2.Current[index].P;
+                            }
                         }
                         break;
                     case OpCode.MD0:
@@ -491,16 +503,20 @@ namespace Typography.OpenFont
                         {
                             var end = _stack.Pop();
                             for (int i = _stack.Pop(); i <= end; i++)
+                            {
                                 //points.Current[i].Type = PointType.OnCurve;
                                 _points.Current[i].onCurve = true;
+                            }
                         }
                         break;
                     case OpCode.FLIPRGOFF:
                         {
                             var end = _stack.Pop();
                             for (int i = _stack.Pop(); i <= end; i++)
+                            {
                                 //points.Current[i].Type = PointType.Quadratic;
                                 _points.Current[i].onCurve = false;
+                            }
                         }
                         break;
                     case OpCode.SHP0:
@@ -516,7 +532,10 @@ namespace Typography.OpenFont
                     case OpCode.SHC0:
                     case OpCode.SHC1:
                         {
-                            if (_contours is null) throw new NotSupportedException();
+                            if (_contours is null)
+                            {
+                                throw new NotSupportedException();
+                            }
                             Zone zone;
                             int point;
                             var displacement = ComputeDisplacement((int)opcode, out zone, out point);
@@ -539,21 +558,30 @@ namespace Typography.OpenFont
                     case OpCode.SHZ0:
                     case OpCode.SHZ1:
                         {
-                            if (_contours is null) throw new NotSupportedException();
+                            if (_contours is null)
+                            {
+                                throw new NotSupportedException();
+                            }
                             Zone zone;
                             int point;
                             var displacement = ComputeDisplacement((int)opcode, out zone, out point);
                             var count = 0;
                             if (_zp2.IsTwilight)
+                            {
                                 count = _zp2.Current.Length;
+                            }
                             else if (_contours.Length > 0)
+                            {
                                 count = _contours[_contours.Length - 1] + 1;
+                            }
 
                             for (int i = 0; i < count; i++)
                             {
                                 // don't move the reference point
                                 if (zone.Current != _zp2.Current || point != i)
+                                {
                                     _zp2.Current[i].P += displacement;
+                                }
                             }
                         }
                         break;
@@ -623,7 +651,9 @@ namespace Typography.OpenFont
                             _state.Rp1 = _state.Rp0;
                             _state.Rp2 = pointIndex;
                             if (opcode == OpCode.MSIRP1)
+                            {
                                 _state.Rp0 = pointIndex;
+                            }
                         }
                         break;
                     case OpCode.IP:
@@ -679,7 +709,10 @@ namespace Typography.OpenFont
                     case OpCode.UTP: _zp0.TouchState[_stack.Pop()] &= ~GetTouchState(); break;
                     case OpCode.IUP0:
                     case OpCode.IUP1:
-                        if (_contours is null) throw new NotSupportedException();
+                        if (_contours is null)
+                        {
+                            throw new NotSupportedException();
+                        }
                         // bail if no contours (empty outline)
                         if (_contours.Length == 0)
                         {
@@ -1011,9 +1044,13 @@ namespace Typography.OpenFont
                     case OpCode.JROF:
                         {
                             if (_stack.PopBool() == (opcode == OpCode.JROT))
+                            {
                                 stream.Jump(_stack.Pop() - 1);
+                            }
                             else
+                            {
                                 _stack.Pop();    // ignore the offset
+                            }
                         }
                         break;
                     case OpCode.JMPR: stream.Jump(_stack.Pop() - 1); break;
@@ -1134,7 +1171,9 @@ namespace Typography.OpenFont
                     case OpCode.FDEF:
                         {
                             if (!allowFunctionDefs || inFunction)
+                            {
                                 throw new InvalidTrueTypeFontException("Can't define functions here.");
+                            }
 
                             _functions[_stack.Pop()] = stream;
                             while (SkipNext(ref stream) != OpCode.ENDF) ;
@@ -1143,7 +1182,9 @@ namespace Typography.OpenFont
                     case OpCode.IDEF:
                         {
                             if (!allowFunctionDefs || inFunction)
+                            {
                                 throw new InvalidTrueTypeFontException("Can't define functions here.");
+                            }
 
                             _instructionDefs[_stack.Pop()] = stream;
                             while (SkipNext(ref stream) != OpCode.ENDF) ;
@@ -1152,7 +1193,9 @@ namespace Typography.OpenFont
                     case OpCode.ENDF:
                         {
                             if (!inFunction)
+                            {
                                 throw new InvalidTrueTypeFontException("Found invalid ENDF marker outside of a function definition.");
+                            }
                             return;
                         }
                     case OpCode.CALL:
@@ -1160,7 +1203,9 @@ namespace Typography.OpenFont
                         {
                             _callStackSize++;
                             if (_callStackSize > MaxCallStack)
+                            {
                                 throw new InvalidTrueTypeFontException("Stack overflow; infinite recursion?");
+                            }
 
                             var function = _functions[_stack.Pop()];
                             var count = opcode == OpCode.LOOPCALL ? _stack.Pop() : 1;
@@ -1186,7 +1231,10 @@ namespace Typography.OpenFont
                     case OpCode.DELTAC2:
                     case OpCode.DELTAC3:
                         {
-                            if (_controlValueTable is null) throw new NotSupportedException();
+                            if (_controlValueTable is null)
+                            {
+                                throw new NotSupportedException();
+                            }
                             var last = _stack.Pop();
                             for (int i = 1; i <= last; i++)
                             {
@@ -1231,7 +1279,9 @@ namespace Typography.OpenFont
                                 var triggerPpem = (arg >> 4) & 0xF;
                                 triggerPpem += _state.DeltaBase;
                                 if (opcode != OpCode.DELTAP1)
+                                {
                                     triggerPpem += (opcode - OpCode.DELTAP2 + 1) * 16;
+                                }
 
                                 // if the current ppem matches the trigger, apply the exception
                                 if (_ppem == triggerPpem)
@@ -1240,7 +1290,9 @@ namespace Typography.OpenFont
                                     // it's encoded such that 0 isn't an allowable value (who wants to shift by 0 anyway?)
                                     var amount = (arg & 0xF) - 8;
                                     if (amount >= 0)
+                                    {
                                         amount++;
+                                    }
                                     amount *= 1 << (6 - _state.DeltaShift);
 
                                     MovePoint(_zp0, pointIndex, F26Dot6ToFloat(amount));
@@ -1267,7 +1319,9 @@ namespace Typography.OpenFont
 
                             // we're always rendering in grayscale
                             if ((selector & 0x20) != 0)
+                            {
                                 result |= 1 << 12;
+                            }
 
                             // TODO: ClearType flags
 
@@ -1277,9 +1331,13 @@ namespace Typography.OpenFont
 
                     default:
                         if (opcode >= OpCode.MIRP)
+                        {
                             MoveIndirectRelative(opcode - OpCode.MIRP);
+                        }
                         else if (opcode >= OpCode.MDRP)
+                        {
                             MoveDirectRelative(opcode - OpCode.MDRP);
+                        }
                         else
                         {
                             // check if this is a runtime-defined opcode
@@ -1302,13 +1360,18 @@ namespace Typography.OpenFont
         int CheckIndex(int index, int length)
         {
             if (index < 0 || index >= length)
+            {
                 throw new InvalidTrueTypeFontException();
+            }
             return index;
         }
 
         float ReadCvt()
         {
-            if (_controlValueTable is null) throw new NotSupportedException();
+            if (_controlValueTable is null)
+            {
+                throw new NotSupportedException();
+            }
             return _controlValueTable[CheckIndex(_stack.Pop(), _controlValueTable.Length)];
         }
 
@@ -1316,7 +1379,9 @@ namespace Typography.OpenFont
         {
             _fdotp = (float)Vector2.Dot(_state.Freedom, _state.Projection);
             if (Math.Abs(_fdotp) < Epsilon)
+            {
                 _fdotp = 1.0f;
+            }
         }
 
         void SetFreedomVectorToAxis(int axis)
@@ -1350,7 +1415,9 @@ namespace Typography.OpenFont
             {
                 // invalid; just set to whatever
                 if (mode >= 2)
+                {
                     _state.Freedom = Vector2.UnitX;
+                }
                 else
                 {
                     _state.Projection = Vector2.UnitX;
@@ -1365,7 +1432,9 @@ namespace Typography.OpenFont
                 line = Vector2.Normalize(line);
 
                 if (mode >= 2)
+                {
                     _state.Freedom = line;
+                }
                 else
                 {
                     _state.Projection = line;
@@ -1381,11 +1450,15 @@ namespace Typography.OpenFont
                 line = p2 - p1;
 
                 if (line.LengthSquared() == 0)
+                {
                     _state.DualProjection = Vector2.UnitX;
+                }
                 else
                 {
                     if ((mode & 0x1) != 0)
+                    {
                         line = new Vector2(-line.Y, line.X);
+                    }
 
                     _state.DualProjection = Vector2.Normalize(line);
                 }
@@ -1463,7 +1536,9 @@ namespace Typography.OpenFont
             var currentDistance = Project(point - _zp0.GetCurrent(_state.Rp0));
 
             if (_state.AutoFlip && Math.Sign(originalDistance) != Math.Sign(cvt))
+            {
                 cvt = -cvt;
+            }
 
             // if bit 2 is set, round the distance and look at the cut-in value
             var distance = cvt;
@@ -1471,7 +1546,9 @@ namespace Typography.OpenFont
             {
                 // only perform cut-in tests when both points are in the same zone
                 if (_zp0.IsTwilight == _zp1.IsTwilight && Math.Abs(cvt - originalDistance) > _state.ControlValueCutIn)
+                {
                     cvt = originalDistance;
+                }
                 distance = Round(cvt);
             }
 
@@ -1479,9 +1556,13 @@ namespace Typography.OpenFont
             if ((flags & 0x8) != 0)
             {
                 if (originalDistance >= 0)
+                {
                     distance = Math.Max(distance, _state.MinDistance);
+                }
                 else
+                {
                     distance = Math.Min(distance, -_state.MinDistance);
+                }
             }
 
             // move the point
@@ -1489,7 +1570,9 @@ namespace Typography.OpenFont
             _state.Rp1 = _state.Rp0;
             _state.Rp2 = pointIndex;
             if ((flags & 0x10) != 0)
+            {
                 _state.Rp0 = pointIndex;
+            }
         }
 
         void MoveDirectRelative(int flags)
@@ -1504,23 +1587,33 @@ namespace Typography.OpenFont
             if (Math.Abs(originalDistance - _state.SingleWidthValue) < _state.SingleWidthCutIn)
             {
                 if (originalDistance >= 0)
+                {
                     originalDistance = _state.SingleWidthValue;
+                }
                 else
+                {
                     originalDistance = -_state.SingleWidthValue;
+                }
             }
 
             // if bit 2 is set, perform rounding
             var distance = originalDistance;
             if ((flags & 0x4) != 0)
+            {
                 distance = Round(distance);
+            }
 
             // if bit 3 is set, constrain to the minimum distance
             if ((flags & 0x8) != 0)
             {
                 if (originalDistance >= 0)
+                {
                     distance = Math.Max(distance, _state.MinDistance);
+                }
                 else
+                {
                     distance = Math.Min(distance, -_state.MinDistance);
+                }
             }
 
             // move the point
@@ -1554,9 +1647,13 @@ namespace Typography.OpenFont
         {
             var touch = TouchState.None;
             if (_state.Freedom.X != 0)
+            {
                 touch = TouchState.X;
+            }
             if (_state.Freedom.Y != 0)
+            {
                 touch |= TouchState.Y;
+            }
 
             return touch;
         }
@@ -1636,7 +1733,9 @@ namespace Typography.OpenFont
                     {
                         var count = opcode == OpCode.NPUSHB ? stream.NextByte() : opcode - OpCode.PUSHB1 + 1;
                         for (int i = 0; i < count; i++)
+                        {
                             stream.NextByte();
+                        }
                     }
                     break;
                 case OpCode.NPUSHW:
@@ -1651,7 +1750,9 @@ namespace Typography.OpenFont
                     {
                         var count = opcode == OpCode.NPUSHW ? stream.NextByte() : opcode - OpCode.PUSHW1 + 1;
                         for (int i = 0; i < count; i++)
+                        {
                             stream.NextWord();
+                        }
                     }
                     break;
             }
@@ -1662,7 +1763,9 @@ namespace Typography.OpenFont
         static unsafe void InterpolatePoints(byte* current, byte* original, int start, int end, int ref1, int ref2)
         {
             if (start > end)
+            {
                 return;
+            }
 
             // figure out how much the two reference points
             // have been shifted from their original positions
@@ -1713,7 +1816,9 @@ namespace Typography.OpenFont
         static void InterpolatePointsXAxis(GlyphPointF[] current, GlyphPointF[] original, int start, int end, int ref1, int ref2)
         {
             if (start > end)
+            {
                 return;
+            }
 
             // figure out how much the two reference points
             // have been shifted from their original positions
@@ -1763,7 +1868,9 @@ namespace Typography.OpenFont
         static void InterpolatePointsYAxis(GlyphPointF[] current, GlyphPointF[] original, int start, int end, int ref1, int ref2)
         {
             if (start > end)
+            {
                 return;
+            }
 
             // figure out how much the two reference points
             // have been shifted from their original positions
@@ -1840,7 +1947,9 @@ namespace Typography.OpenFont
             public int NextByte()
             {
                 if (Done)
+                {
                     throw new InvalidTrueTypeFontException();
+                }
                 return instructions[ip++];
             }
 
@@ -1915,14 +2024,18 @@ namespace Typography.OpenFont
             {
                 var val = Peek(index);
                 for (int i = _count - index - 1; i < _count - 1; i++)
+                {
                     _s[i] = _s[i + 1];
+                }
                 _s[_count - 1] = val;
             }
 
             public void Swap()
             {
                 if (_count < 2)
+                {
                     throw new InvalidTrueTypeFontException();
+                }
 
                 var tmp = _s[_count - 1];
                 _s[_count - 1] = _s[_count - 2];
@@ -1932,21 +2045,27 @@ namespace Typography.OpenFont
             public void Push(int value)
             {
                 if (_count == _s.Length)
+                {
                     throw new InvalidTrueTypeFontException();
+                }
                 _s[_count++] = value;
             }
 
             public int Pop()
             {
                 if (_count == 0)
+                {
                     throw new InvalidTrueTypeFontException();
+                }
                 return _s[--_count];
             }
 
             public int Peek(int index)
             {
                 if (index < 0 || index >= _count)
+                {
                     throw new InvalidTrueTypeFontException();
+                }
                 return _s[_count - index - 1];
             }
         }

@@ -36,12 +36,21 @@ namespace CSharpMath.Atom.Atoms {
     /// <summary>Number of columns</summary>
     public int NColumns => NRows == 0 ? 0 : Cells.Max(row => row.Count);
     public void SetCell(MathList list, int iRow, int iColumn) {
-      while (Cells.Count <= iRow) Cells.Add(new List<MathList>());
-      while (Cells[iRow].Count <= iColumn) Cells[iRow].Add(new MathList());
+            while (Cells.Count <= iRow)
+            {
+                Cells.Add(new List<MathList>());
+            }
+            while (Cells[iRow].Count <= iColumn)
+            {
+                Cells[iRow].Add(new MathList());
+            }
       Cells[iRow][iColumn] = list;
     }
     public void SetAlignment(ColumnAlignment alignment, int columnIndex) {
-      while (Alignments.Count <= columnIndex) Alignments.Add(ColumnAlignment.Center);
+            while (Alignments.Count <= columnIndex)
+            {
+                Alignments.Add(ColumnAlignment.Center);
+            }
       Alignments[columnIndex] = alignment;
     }
     public ColumnAlignment GetAlignment(int columnIndex) =>

@@ -61,10 +61,16 @@ namespace Typography.OpenFont.Tables
         }
         public void FillGlyphInfo(Glyph glyph)
         {
-            if (_binReader is null) throw new ObjectDisposedException(nameof(_binReader));
+            if (_binReader is null)
+            {
+                throw new ObjectDisposedException(nameof(_binReader));
+            }
+
             //int srcOffset, int srcLen, int srcFormat,
             if (!(glyph.BitmapSVGInfo is { } bitmapSvg))
+            {
                 throw new NotSupportedException("Only Bitmap/SVG glyphs are supported");
+            }
             _binReader.BaseStream.Position = bitmapSvg.streamOffset;
             switch (bitmapSvg.imgFormat)
             {

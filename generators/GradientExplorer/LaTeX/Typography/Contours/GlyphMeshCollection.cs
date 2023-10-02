@@ -32,13 +32,17 @@ namespace Typography.Contours
         public bool TryGetCacheGlyph(ushort glyphIndex, out T vxs)
         {
             if (_currentGlyphDic == null)
+            {
                 throw new System.InvalidOperationException(nameof(SetCacheInfo) + " not called");
+            }
             return _currentGlyphDic.TryGetValue(glyphIndex, out vxs);
         }
         public void RegisterCachedGlyph(ushort glyphIndex, T vxs)
         {
             if (_currentGlyphDic == null)
+            {
                 throw new System.InvalidOperationException(nameof(SetCacheInfo) + " not called");
+            }
             _currentGlyphDic[glyphIndex] = vxs;
         }
         public void ClearAll()

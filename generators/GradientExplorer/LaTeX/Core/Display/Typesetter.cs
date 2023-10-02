@@ -339,16 +339,24 @@ namespace CSharpMath.Display {
               var current = new AttributedGlyphRun<TFont, TGlyph>(
                 nucleusText, glyphs, _font, atom is Placeholder, (atom as Placeholder)?.Color);
               _currentLine.AppendGlyphRun(current);
-              if (_currentLineIndexRange.Location == Range.UndefinedInt)
-                _currentLineIndexRange = atom.IndexRange;
-              else
-                _currentLineIndexRange = new Range(_currentLineIndexRange.Location,
-                  _currentLineIndexRange.Length + atom.IndexRange.Length);
-              // add the fused atoms
-              if (atom.FusedAtoms != null)
-                _currentAtoms.AddRange(atom.FusedAtoms);
-              else
-                _currentAtoms.Add(atom);
+                            if (_currentLineIndexRange.Location == Range.UndefinedInt)
+                            {
+                                _currentLineIndexRange = atom.IndexRange;
+                            }
+                            else
+                            {
+                                _currentLineIndexRange = new Range(_currentLineIndexRange.Location,
+                                  _currentLineIndexRange.Length + atom.IndexRange.Length);
+                            }
+                            // add the fused atoms
+                            if (atom.FusedAtoms != null)
+                            {
+                                _currentAtoms.AddRange(atom.FusedAtoms);
+                            }
+                            else
+                            {
+                                _currentAtoms.Add(atom);
+                            }
               if (atom.Subscript.IsNonEmpty() || atom.Superscript.IsNonEmpty()) {
                 var line = AddDisplayLine(true);
                 if (line is null) throw new InvalidCodePathException("evenIfLengthIsZero not respected");
@@ -358,9 +366,11 @@ namespace CSharpMath.Display {
                     (_font, atom.Nucleus.Length - 1, atom.Nucleus);
                   delta = _context.MathTable.GetItalicCorrection(_styleFont, glyph);
                 }
-                if (delta > 0 && atom.Subscript.IsEmpty())
-                  // add a kern of delta
-                  _currentPosition.X += delta;
+                                if (delta > 0 && atom.Subscript.IsEmpty())
+                                {
+                                    // add a kern of delta
+                                    _currentPosition.X += delta;
+                                }
                 MakeScripts(atom, line, atom.IndexRange.End - 1, delta);
               }
               break;
@@ -815,8 +825,10 @@ namespace CSharpMath.Display {
           return variant;
         }
       }
-      if (glyphAscent is float.NaN || glyphDescent is float.NaN || glyphWidth is float.NaN)
-        throw new InvalidCodePathException("glyphAscent, glyphDescent or glyphWidth is NaN.");
+            if (glyphAscent is float.NaN || glyphDescent is float.NaN || glyphWidth is float.NaN)
+            {
+                throw new InvalidCodePathException("glyphAscent, glyphDescent or glyphWidth is NaN.");
+            }
       return variants.Last();
     }
     private List<List<ListDisplay<TFont, TGlyph>>> TypesetCells(Table table, float[] columnWidths) {

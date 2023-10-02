@@ -286,11 +286,19 @@ namespace Typography.OpenFont.CFF
             if (_step1List == null)
             {
                 _step1List = new List<Type2Instruction>();
-            } else _step1List.Clear();
+            }
+            else
+            {
+                _step1List.Clear();
+            }
             if (_step2List == null)
             {
                 _step2List = new List<Type2Instruction>();
-            } else _step2List.Clear();
+            }
+            else
+            {
+                _step2List.Clear();
+            }
             //
             CompactStep1OnlyLoadInt(_step1List, insts);
             CompactStep2MergeLoadIntWithNextCommand(_step1List, _step2List);

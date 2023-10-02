@@ -141,7 +141,9 @@ namespace Typography.OpenFont.Tables
                     // glyph or glyph context and performs a substitution, if specified."
                     // https://www.microsoft.com/typography/otspec/gsub.htm
                     if (subTable.DoSubstitutionAt(inputGlyphs, pos, len))
+                    {
                         return true;
+                    }
                 }
                 return false;
             }

@@ -82,7 +82,10 @@ namespace Typography.TextBreak
 
         public string CopyCurrentSpanString()
         {
-            if (_buffer == null) throw new InvalidOperationException(nameof(LoadText) + " not called");
+            if (_buffer == null)
+            {
+                throw new InvalidOperationException(nameof(LoadText) + " not called");
+            }
             return new string(_buffer, LatestSpanStartAt, LatestSpanLen);
         }
 
@@ -128,7 +131,10 @@ namespace Typography.TextBreak
         //
         internal void SetCurrentIndex(int index)
         {
-            if (_buffer == null) throw new InvalidOperationException(nameof(LoadText) + " not called");
+            if (_buffer == null)
+            {
+                throw new InvalidOperationException(nameof(LoadText) + " not called");
+            }
             _currentIndex = index;
             if (index < _endIndex)
             {

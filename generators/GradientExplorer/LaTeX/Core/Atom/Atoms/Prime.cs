@@ -7,9 +7,11 @@ namespace CSharpMath.Atom.Atoms {
     public new Prime Clone(bool finalize) => (Prime)base.Clone(finalize);
     protected override MathAtom CloneInside(bool finalize) => new Prime(Length);
     private static string PrimeOfLength(int length) {
-      if (length <= 0)
-        throw new System.ArgumentOutOfRangeException(
-          nameof(length), length, "Only positive length is allowed.");
+            if (length <= 0)
+            {
+                throw new System.ArgumentOutOfRangeException(
+                  nameof(length), length, "Only positive length is allowed.");
+            }
       var sb = new System.Text.StringBuilder();
       Append: switch (length) {
         //glyphs are already superscripted

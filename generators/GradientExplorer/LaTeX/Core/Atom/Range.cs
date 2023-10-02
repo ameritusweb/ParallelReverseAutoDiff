@@ -35,8 +35,14 @@ namespace CSharpMath.Atom {
     /// <summary>If either Range is NotFound, returns the other.
     /// Otherwise, combines the ranges.</summary>
     public static Range operator +(Range range1, Range range2) {
-      if (range1.IsNotFound) return range2;
-      if (range2.IsNotFound) return range1;
+            if (range1.IsNotFound)
+            {
+                return range2;
+            }
+            if (range2.IsNotFound)
+            {
+                return range1;
+            }
       var start = Math.Min(range1.Location, range2.Location);
       var end = Math.Max(range1.End, range2.End);
       return new Range(start, end - start);
@@ -48,7 +54,10 @@ namespace CSharpMath.Atom {
     public Range Slice(int start, int length) => new Range(Location + start, length);
     public static Range Combine(IEnumerable<Range> ranges) {
       var trimRanges = ranges.Where(r => !r.IsNotFound).ToList();
-      if (trimRanges.Count == 0) return NotFound;
+            if (trimRanges.Count == 0)
+            {
+                return NotFound;
+            }
       int start = trimRanges.Min(r => r.Location);
       int end = trimRanges.Max(r => r.End);
       return new Range(start, end - start);

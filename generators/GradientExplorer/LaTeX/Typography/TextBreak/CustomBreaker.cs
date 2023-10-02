@@ -124,7 +124,10 @@ namespace Typography.TextBreak
                             BreakingEngine anotherEngine = SelectEngine(_visitor.Char);
                             if (anotherEngine == currentEngine)
                             {
-                                if (ThrowIfCharOutOfRange) throw new NotSupportedException($"A proper breaking engine for character '{_visitor.Char}' was not found.");
+                                if (ThrowIfCharOutOfRange)
+                                {
+                                    throw new NotSupportedException($"A proper breaking engine for character '{_visitor.Char}' was not found.");
+                                }
                                 startAt = _visitor.CurrentIndex + 1;
                                 _visitor.SetCurrentIndex(startAt);
                                 _visitor.AddWordBreakAtCurrentIndex(WordKind.Unknown);

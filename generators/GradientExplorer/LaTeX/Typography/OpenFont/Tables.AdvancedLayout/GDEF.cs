@@ -234,7 +234,9 @@ namespace Typography.OpenFont.Tables
                 }
             }
             else
+            {
                 throw new NotImplementedException();
+            }
         }
         void FillAttachPoints(Glyph[] inputGlyphs)
         {

@@ -10,15 +10,18 @@ namespace CSharpMath.Rendering.Text {
     public void ControlSpace() => Add(new TextAtom.ControlSpace());
     public void Accent(TextAtom atom, string accent) => Add(new TextAtom.Accent(atom, accent));
     public void Text(string text) {
-      if (char.IsPunctuation(text, 0))
-        switch (Last) {
-          case TextAtom.Text { Content: var prevText }:
-            Last = new TextAtom.Text(prevText + text);
-            return;
-          case TextAtom.Math { DisplayStyle: false, Content: var mathList }:
-            mathList.Add(new Atom.Atoms.Punctuation(text));
-            return;
-        }
+            if (char.IsPunctuation(text, 0))
+            {
+                switch (Last)
+                {
+                    case TextAtom.Text { Content: var prevText }:
+                        Last = new TextAtom.Text(prevText + text);
+                        return;
+                    case TextAtom.Math { DisplayStyle: false, Content: var mathList }:
+                        mathList.Add(new Atom.Atoms.Punctuation(text));
+                        return;
+                }
+            }
       Add(new TextAtom.Text(text));
     }
     public void Space(Space space) => Add(new TextAtom.Space(space));

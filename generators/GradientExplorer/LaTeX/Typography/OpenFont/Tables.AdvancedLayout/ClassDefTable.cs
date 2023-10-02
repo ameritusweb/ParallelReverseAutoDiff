@@ -193,7 +193,11 @@ namespace Typography.OpenFont.Tables
                     }
                 }
                 return -1;
-            } else throw new NotImplementedException();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 

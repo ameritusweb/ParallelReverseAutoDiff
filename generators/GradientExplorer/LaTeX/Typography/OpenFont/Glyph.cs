@@ -124,17 +124,26 @@ namespace Typography.OpenFont
         internal static Glyph Clone(Glyph original, ushort newGlyphIndex)
         {
             if (original.TtfWoffInfo is var (endPoints, glyphPoints))
+            {
                 return new Glyph(
                     Utils.CloneArray(glyphPoints),
                     Utils.CloneArray(endPoints),
                     original.Bounds,
                     original.GlyphInstructions != null ? Utils.CloneArray(original.GlyphInstructions) : null,
                     newGlyphIndex);
+            }
             else if (original.CffInfo is { } data)
+            {
                 return new Glyph(data);
+            }
             else if (original.BitmapSVGInfo is var (offset, len, format))
+            {
                 return new Glyph(original.GlyphIndex, offset, len, format);
-            else throw new NotImplementedException();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>

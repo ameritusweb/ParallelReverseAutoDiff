@@ -85,8 +85,10 @@ namespace CSharpMath.Rendering.FrontEnd {
             var pointer = errorLine.TrimStart(' ');
             var spaces = errorLine.Length - pointer.Length;
             var pointerIndentChars = errorLines[i - 1];
-            if (spaces < pointerIndentChars.Length)
-              pointerIndentChars = pointerIndentChars.Remove(spaces);
+                        if (spaces < pointerIndentChars.Length)
+                        {
+                            pointerIndentChars = pointerIndentChars.Remove(spaces);
+                        }
             x =
               TypesettingContext.Instance.GlyphBoundsProvider.GetTypographicWidth(font,
                 new AttributedGlyphRun<Fonts, Glyph>(pointerIndentChars,

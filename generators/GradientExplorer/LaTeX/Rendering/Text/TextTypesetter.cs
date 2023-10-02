@@ -47,9 +47,11 @@ namespace CSharpMath.Rendering.Text {
         IDisplay<Fonts, Glyph> display;
         switch (atom) {
           case TextAtom.List list:
-            foreach (var a in list.Content)
-              AddDisplaysWithLineBreaks
-                (a, fonts, line, displayList, displayMathList, style, color);
+                        foreach (var a in list.Content)
+                        {
+                            AddDisplaysWithLineBreaks
+                              (a, fonts, line, displayList, displayMathList, style, color);
+                        }
             break;
           case TextAtom.Style st:
             AddDisplaysWithLineBreaks

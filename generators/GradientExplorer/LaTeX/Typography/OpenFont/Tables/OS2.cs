@@ -134,8 +134,14 @@ namespace Typography.OpenFont.Tables
                     ReadVersion5(reader);
                     break;
             }
-            if (panose is { } x) panose = x; // https://github.com/dotnet/roslyn/issues/39740
-            else throw new System.NotImplementedException($"{nameof(panose)} is null.");
+            if (panose is { } x)
+            {
+                panose = x; // https://github.com/dotnet/roslyn/issues/39740
+            }
+            else
+            {
+                throw new System.NotImplementedException($"{nameof(panose)} is null.");
+            }
         }
         void ReadVersion0(BinaryReader reader)
         {

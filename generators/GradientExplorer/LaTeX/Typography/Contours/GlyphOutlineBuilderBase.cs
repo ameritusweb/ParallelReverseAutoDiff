@@ -131,7 +131,10 @@ namespace Typography.Contours
             {
                 tx.Read(points, contours, _recentPixelScale);
             }
-            else throw new System.InvalidOperationException($"{nameof(BuildFromGlyph)} not called");
+            else
+            {
+                throw new System.InvalidOperationException($"{nameof(BuildFromGlyph)} not called");
+            }
         }
     }
 

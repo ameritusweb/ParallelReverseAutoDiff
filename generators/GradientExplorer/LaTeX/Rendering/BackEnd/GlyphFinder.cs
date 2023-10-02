@@ -11,7 +11,10 @@ namespace CSharpMath.Rendering.BackEnd {
     public Glyph Lookup(Fonts fonts, int codepoint) {
       foreach (var font in fonts) {
         var g = font.GetGlyphIndex(codepoint);
-        if (g != 0) return new Glyph(font, font.GetGlyph(g));
+                if (g != 0)
+                {
+                    return new Glyph(font, font.GetGlyph(g));
+                }
       }
       return Lookup(fonts, GlyphNotFound);
     }

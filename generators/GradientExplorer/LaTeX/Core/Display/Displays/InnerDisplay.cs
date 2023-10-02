@@ -35,8 +35,10 @@ namespace CSharpMath.Display.Displays {
           l.Position = value;
           Inner.Position = new PointF(value.X + l.Width, value.Y);
         } else Inner.Position = value;
-        if (Right is { } r)
-          r.Position = new PointF(Inner.Position.X + Inner.Width, value.Y);
+                if (Right is { } r)
+                {
+                    r.Position = new PointF(Inner.Position.X + Inner.Width, value.Y);
+                }
       }
     }
     public bool HasScript { get; set; }

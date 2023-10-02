@@ -11,9 +11,11 @@ namespace CSharpMath.Rendering.BackEnd {
     public (IEnumerable<float> Advances, float Total) GetAdvancesForGlyphs
       (Fonts font, IEnumerable<Glyph> glyphs, int nGlyphs) {
       var advances = new List<float>(nGlyphs);
-      foreach (var glyph in glyphs)
-        advances.Add(glyph.Typeface.GetHAdvanceWidthFromGlyphIndex(glyph.Info.GlyphIndex) *
-          glyph.Typeface.CalculateScaleToPixelFromPointSize(font.PointSize));
+            foreach (var glyph in glyphs)
+            {
+                advances.Add(glyph.Typeface.GetHAdvanceWidthFromGlyphIndex(glyph.Info.GlyphIndex) *
+                  glyph.Typeface.CalculateScaleToPixelFromPointSize(font.PointSize));
+            }
       return (advances, advances.Sum());
     }
     public IEnumerable<RectangleF> GetBoundingRectsForGlyphs

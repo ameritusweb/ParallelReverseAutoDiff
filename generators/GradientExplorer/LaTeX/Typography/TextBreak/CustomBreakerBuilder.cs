@@ -31,7 +31,10 @@ namespace Typography.TextBreak
         static void InitAllDics()
         {
             //
-            if (s_dicProvider == null) return;
+            if (s_dicProvider == null)
+            {
+                return;
+            }
             if (s_thaiDic == null)
             {
                 var customDic = new CustomDic();

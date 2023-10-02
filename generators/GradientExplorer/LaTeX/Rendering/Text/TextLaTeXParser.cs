@@ -41,8 +41,10 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
     /// <summary>Handle additional languages</summary>
     public static List<BreakingEngine> AdditionalBreakingEngines { get; } = new();
     public static Result<TextAtom> TextAtomFromLaTeX(string latexSource) {
-      if (string.IsNullOrEmpty(latexSource))
-        return new TextAtom.List(Array.Empty<TextAtom>());
+            if (string.IsNullOrEmpty(latexSource))
+            {
+                return new TextAtom.List(Array.Empty<TextAtom>());
+            }
       int endAt = 0;
       bool? displayMath = null;
       var mathLaTeX = new StringBuilder();
@@ -156,13 +158,20 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
           //Nothing should be before dollar sign checking -- dollar sign checking uses continue;
           atoms.TextLength = startAt;
           if (textSection.Is('$')) {
-            if (backslashEscape)
-              if (displayMath != null) mathLaTeX.Append(@"\$");
-              else atoms.Text("$");
-            else {
-              dollarCount++;
-              continue;
-            }
+                        if (backslashEscape)
+                            if (displayMath != null)
+                            {
+                                mathLaTeX.Append(@"\$");
+                            }
+                            else
+                            {
+                                atoms.Text("$");
+                            }
+                        else
+                        {
+                            dollarCount++;
+                            continue;
+                        }
             backslashEscape = false;
           } else {
             { if (CheckDollarCount(startAt, ref endAt, atoms).Error is string error) return error; }
@@ -203,19 +212,26 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
                     break;
                   case var _ when textSection.Is('%'):
                     var comment = new StringBuilder();
-                    while (NextSection(latex, ref textSection) && wordKind != WordKind.NewLine)
-                      comment.Append(textSection);
+                                        while (NextSection(latex, ref textSection) && wordKind != WordKind.NewLine)
+                                        {
+                                            comment.Append(textSection);
+                                        }
                     atoms.Comment(comment.ToString());
                     break;
                   case var _ when textSection.Is('{'):
-                    if (BuildBreakList(latex, atoms, ++i, false, '}').Bind(index => i = index).Error is string error)
-                      return error;
+                                        if (BuildBreakList(latex, atoms, ++i, false, '}').Bind(index => i = index).Error is string error)
+                                        {
+                                            return error;
+                                        }
                     break;
                   case var _ when textSection.Is('}'):
                     return "Missing opening brace";
                   // !char.IsSurrogate(textSection[0]) is result of https://github.com/LayoutFarm/Typography/issues/206
                   case var _ when wordKind == WordKind.NewLine && !char.IsSurrogate(textSection[0]):
-                    if (oneCharOnly) continue;
+                                        if (oneCharOnly)
+                                        {
+                                            continue;
+                                        }
                     // Consume newlines after commands
                     // Double newline == paragraph break
                     if (afterNewline) {
@@ -233,14 +249,20 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
                     else atoms.ControlSpace();
                     break;
                   default: //Just ordinary text
-                    if (oneCharOnly) {
-                      var firstCodepointLength = char.IsHighSurrogate(textSection[0]) ? 2 : 1;
-                      if (startAt + firstCodepointLength < endAt) { //Only re-read if current break span is more than 1 long
-                        i--;
-                        breakList[i] = new BreakAtInfo(breakList[i].breakAt + firstCodepointLength, breakList[i].wordKind);
-                      }
-                      atoms.Text(textSection.Slice(0, firstCodepointLength).ToString());
-                    } else atoms.Text(textSection.ToString());
+                                        if (oneCharOnly)
+                                        {
+                                            var firstCodepointLength = char.IsHighSurrogate(textSection[0]) ? 2 : 1;
+                                            if (startAt + firstCodepointLength < endAt)
+                                            { //Only re-read if current break span is more than 1 long
+                                                i--;
+                                                breakList[i] = new BreakAtInfo(breakList[i].breakAt + firstCodepointLength, breakList[i].wordKind);
+                                            }
+                                            atoms.Text(textSection.Slice(0, firstCodepointLength).ToString());
+                                        }
+                                        else
+                                        {
+                                            atoms.Text(textSection.ToString());
+                                        }
                     break;
                 }
                 afterCommand = false;
@@ -346,7 +368,10 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
                         for (int j = 0; j < space.Length; j++) {
                           if ('0' <= space[j] && space[j] <= '9' || space[j] == '.') lastNum = j;
                         }
-                        if (lastNum == -1) return Err("Space cannot be empty");
+                          if (lastNum == -1)
+                          {
+                              return Err("Space cannot be empty");
+                          }
                         return Space.Create(space.Slice(0, lastNum + 1).ToString(), space.Slice(lastNum + 1).ToString(), true);
                       }).Bind(space => atoms.Space(space)).Error is string error)
                         return Err(error);
@@ -368,17 +393,29 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
                             ? Ok(parsedResult)
                             : Err("Invalid font size");
                         });
-                      if (error != null) return error;
+                                            if (error != null)
+                                            {
+                                                return error;
+                                            }
                       var (resizedContent, error2) = ReadArgumentAtom(latex);
-                      if (error2 != null) return error2;
+                                            if (error2 != null)
+                                            {
+                                                return error2;
+                                            }
                       atoms.Size(resizedContent, fontSize);
                       break;
                     }
                   case "color": {
                       var (color, error) = ReadColor(latex, ref textSection);
-                      if (error != null) return error;
+                                            if (error != null)
+                                            {
+                                                return error;
+                                            }
                       var (coloredContent, error2) = ReadArgumentAtom(latex);
-                      if (error2 != null) return error2;
+                                            if (error2 != null)
+                                            {
+                                                return error2;
+                                            }
                       atoms.Color(coloredContent, color);
                       break;
                     }
@@ -427,17 +464,35 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
             }
           }
           afterNewline = false;
-          if (oneCharOnly) return Ok(i);
+                    if (oneCharOnly)
+                    {
+                        return Ok(i);
+                    }
         }
-        if (backslashEscape) return @"Invalid command \";
-        if (stopChar > 0) return stopChar == '}' ? "Expected }, unbalanced braces" : $@"Expected {stopChar}";
+                if (backslashEscape)
+                {
+                    return @"Invalid command \";
+                }
+                if (stopChar > 0)
+                {
+                    return stopChar == '}' ? "Expected }, unbalanced braces" : $@"Expected {stopChar}";
+                }
         return Ok(i);
       }
       var error = BuildBreakList(latexSource.AsSpan(), globalAtoms, 0, false, '\0').Error;
-      if (error != null) return LaTeXParser.HelpfulErrorMessage(error, latexSource, endAt);
+            if (error != null)
+            {
+                return LaTeXParser.HelpfulErrorMessage(error, latexSource, endAt);
+            }
       error = CheckDollarCount(latexSource.Length, ref endAt, globalAtoms).Error;
-      if (error != null) return LaTeXParser.HelpfulErrorMessage(error, latexSource, endAt);
-      if (displayMath != null) return LaTeXParser.HelpfulErrorMessage("Math mode was not terminated", latexSource, endAt);
+            if (error != null)
+            {
+                return LaTeXParser.HelpfulErrorMessage(error, latexSource, endAt);
+            }
+            if (displayMath != null)
+            {
+                return LaTeXParser.HelpfulErrorMessage("Math mode was not terminated", latexSource, endAt);
+            }
       return globalAtoms.Build();
     }
     public static StringBuilder TextAtomToLaTeX(TextAtom atom, StringBuilder? b = null) {
@@ -446,11 +501,21 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
         case TextAtom.Text t:
           foreach (var ch in t.Content) {
             var c = ch.ToStringInvariant();
-            if (TextLaTeXSettings.PredefinedTextSymbols.SecondToFirst.TryGetValue(c, out var v))
-              if ('a' <= v[0] && v[0] <= 'z' || 'A' <= v[0] && v[0] <= 'Z')
-                b.Append('\\').Append(v).Append(' ');
-              else b.Append('\\').Append(v);
-            else b.Append(c);
+                        if (TextLaTeXSettings.PredefinedTextSymbols.SecondToFirst.TryGetValue(c, out var v))
+                        {
+                            if ('a' <= v[0] && v[0] <= 'z' || 'A' <= v[0] && v[0] <= 'Z')
+                            {
+                                b.Append('\\').Append(v).Append(' ');
+                            }
+                            else
+                            {
+                                b.Append('\\').Append(v);
+                            }
+                        }
+                        else
+                        {
+                            b.Append(c);
+                        }
           }
           return b;
         case TextAtom.Newline _:
@@ -494,8 +559,10 @@ BreakText(@"Here are some text $1 + 12 \frac23 \sqrt4$ $$Display$$ text")
           LaTeXSettings.ColorToString(c.Colour, b).Append("}{");
           return TextAtomToLaTeX(c.Content, b).Append('}');
         case TextAtom.List l:
-          foreach (var a in l.Content)
-            TextAtomToLaTeX(a, b);
+                    foreach (var a in l.Content)
+                    {
+                        TextAtomToLaTeX(a, b);
+                    }
           return b;
         case null:
           throw new ArgumentNullException(nameof(atom),

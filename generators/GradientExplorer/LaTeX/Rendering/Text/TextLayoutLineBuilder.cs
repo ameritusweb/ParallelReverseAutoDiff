@@ -31,7 +31,10 @@ namespace CSharpMath.Rendering.Text {
         accumulator.Add(display);
       }
       verticalAdvance += Descent;
-      if(appendLineGap) verticalAdvance += GapAfterLine;
+            if (appendLineGap)
+            {
+                verticalAdvance += GapAfterLine;
+            }
       Ascent = Descent = Width = GapAfterLine = 0;
     }
   }

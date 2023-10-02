@@ -22,24 +22,30 @@ namespace CSharpMath.Atom {
     /// or <see cref="null"/> when <see cref="Atoms"/> is empty.</returns>
     public MathAtom? Last {
       get {
-        for (int i = Atoms.Count - 1; i >= 0; i--)
-          switch (Atoms[i]) {
-            case Comment _:
-              continue;
-            case var atom:
-              return atom;
-          }
+                for (int i = Atoms.Count - 1; i >= 0; i--)
+                {
+                    switch (Atoms[i])
+                    {
+                        case Comment _:
+                            continue;
+                        case var atom:
+                            return atom;
+                    }
+                }
         return null;
       }
       set {
-        for (int i = Atoms.Count - 1; i >= 0; i--)
-          switch (Atoms[i]) {
-            case Comment _:
-              continue;
-            default:
-              Atoms[i] = value;
-              return;
-          }
+                for (int i = Atoms.Count - 1; i >= 0; i--)
+                {
+                    switch (Atoms[i])
+                    {
+                        case Comment _:
+                            continue;
+                        default:
+                            Atoms[i] = value;
+                            return;
+                    }
+                }
         Atoms.Add(value);
       }
     }
@@ -47,8 +53,10 @@ namespace CSharpMath.Atom {
     public MathList Clone(bool finalize) {
       var newList = new MathList();
       if (!finalize) {
-        foreach (var atom in Atoms)
-          newList.Add(atom.Clone(finalize));
+                foreach (var atom in Atoms)
+                {
+                    newList.Add(atom.Clone(finalize));
+                }
       } else {
         foreach (var atom in Atoms) {
           if (atom is Comment) {
@@ -131,13 +139,19 @@ namespace CSharpMath.Atom {
     IEnumerator IEnumerable.GetEnumerator() => Atoms.GetEnumerator();
     public int IndexOf(MathAtom item) => Atoms.IndexOf(item);
     public void Insert(int index, MathAtom item) {
-      if (item != null) Atoms.Insert(index, item);
-      else throw new ArgumentNullException(nameof(item), "MathList cannot contain null.");
+            if (item != null)
+            {
+                Atoms.Insert(index, item);
+            }
+            else throw new ArgumentNullException(nameof(item), "MathList cannot contain null.");
     }
     public void RemoveAt(int index) => Atoms.RemoveAt(index);
     public virtual void Add(MathAtom item) {
-      if (item != null) Atoms.Add(item);
-      else throw new ArgumentNullException(nameof(item), "MathList cannot contain null.");
+            if (item != null)
+            {
+                Atoms.Add(item);
+            }
+            else throw new ArgumentNullException(nameof(item), "MathList cannot contain null.");
     }
     public void Clear() => Atoms.Clear();
     public bool Contains(MathAtom item) => Atoms.Contains(item);

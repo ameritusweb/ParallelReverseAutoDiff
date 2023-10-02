@@ -78,7 +78,14 @@ namespace CSharpMath.Structures {
       error = Error;
     }
     public void Match(Action successAction, System.Action<string> errorAction) {
-      if (Error != null) errorAction(Error); else successAction(_value);
+            if (Error != null)
+            {
+                errorAction(Error);
+            }
+            else
+            {
+                successAction(_value);
+            }
     }
     public TResult Match<TResult>(Func<TResult> successAction, System.Func<string, TResult> errorAction) =>
       Error != null ? errorAction(Error) : successAction(_value);
@@ -93,8 +100,14 @@ namespace CSharpMath.Structures {
     public delegate TResult Func<TResult>(ReadOnlySpan<T> result);
     public delegate TResult Func<TOther, TResult>(ReadOnlySpan<T> thisResult, TOther otherResult);
     public Result Bind(Action method) {
-      if (Error is string error) return error;
-      else method(_value);
+            if (Error is string error)
+            {
+                return error;
+            }
+            else
+            {
+                method(_value);
+            }
       return Result.Ok();
     }
     public Result Bind(Func<Result> method) => Error ?? method(_value);
