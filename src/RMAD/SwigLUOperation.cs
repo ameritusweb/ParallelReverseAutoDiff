@@ -12,12 +12,12 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class SwigLUOperation : Operation, IOperation
     {
+        private readonly double beta;
         private Matrix input;
         private Matrix w;
         private Matrix v;
         private Matrix b;
         private Matrix c;
-        private double beta;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SwigLUOperation"/> class.
@@ -41,7 +41,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input, this.w, this.v, this.b, this.c }, (key, oldValue) => new[] { this.input, this.w, this.v, this.b, this.c });
+            this.IntermediateMatrixArrays.AddOrUpdate(id, new[] { this.input, this.w, this.v, this.b, this.c }, (_, _) => new[] { this.input, this.w, this.v, this.b, this.c });
         }
 
         /// <inheritdoc />

@@ -298,7 +298,7 @@ namespace ParallelReverseAutoDiff.RMAD
             Guid id = Guid.NewGuid();
             this.Ids.Add(id);
             this.Types.Add(nameof(matrix));
-            this.Matrices.AddOrUpdate(id, matrix, (key, oldValue) => matrix);
+            this.Matrices.AddOrUpdate(id, matrix, (_, _) => matrix);
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace ParallelReverseAutoDiff.RMAD
             Guid id = Guid.NewGuid();
             this.Ids.Add(id);
             this.Types.Add(nameof(deepMatrix));
-            this.DeepMatrices.AddOrUpdate(id, deepMatrix, (key, oldValue) => deepMatrix);
+            this.DeepMatrices.AddOrUpdate(id, deepMatrix, (_, _) => deepMatrix);
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace ParallelReverseAutoDiff.RMAD
             Guid id = Guid.NewGuid();
             this.Ids.Add(id);
             this.Types.Add(nameof(deepMatrixArray));
-            this.DeepMatrixArrays.AddOrUpdate(id, deepMatrixArray, (key, oldValue) => deepMatrixArray);
+            this.DeepMatrixArrays.AddOrUpdate(id, deepMatrixArray, (_, _) => deepMatrixArray);
         }
     }
 }

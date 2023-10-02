@@ -659,7 +659,7 @@ namespace ParallelReverseAutoDiff.RMAD
             List<double[]> list = new List<double[]>();
             for (int i = 0; i < matrix.Length; ++i)
             {
-                list.Add(new double[] { matrix[i] });
+                list.Add(new[] { matrix[i] });
             }
 
             this.matrix = list.ToArray();

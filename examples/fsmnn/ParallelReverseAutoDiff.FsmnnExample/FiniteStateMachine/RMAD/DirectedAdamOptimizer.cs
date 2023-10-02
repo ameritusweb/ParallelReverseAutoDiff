@@ -14,13 +14,14 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class DirectedAdamOptimizer
     {
-        private NeuralNetwork network;
+        private readonly NeuralNetwork network;
+        private readonly ConcurrentDictionary<Matrix, HashSet<string>> matrixMap;
+        private readonly ConcurrentDictionary<Matrix, double> scalingMap;
+        private readonly ConcurrentDictionary<Matrix, HashSet<string>> e1Map;
+        private readonly ConcurrentDictionary<Matrix, HashSet<string>> e2Map;
+        private readonly ConcurrentDictionary<Matrix, HashSet<string>> intersectMap;
+
         private bool switchGradients;
-        private ConcurrentDictionary<Matrix, HashSet<string>> matrixMap;
-        private ConcurrentDictionary<Matrix, double> scalingMap;
-        private ConcurrentDictionary<Matrix, HashSet<string>> e1Map;
-        private ConcurrentDictionary<Matrix, HashSet<string>> e2Map;
-        private ConcurrentDictionary<Matrix, HashSet<string>> intersectMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedAdamOptimizer"/> class.

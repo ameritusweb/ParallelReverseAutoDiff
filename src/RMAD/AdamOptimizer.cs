@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class AdamOptimizer
     {
-        private NeuralNetwork network;
+        private readonly NeuralNetwork network;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdamOptimizer"/> class.

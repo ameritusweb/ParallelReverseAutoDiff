@@ -28,7 +28,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public override void Store(Guid id)
         {
             // Store the intermediate DeepMatrix
-            this.IntermediateDeepMatrices.AddOrUpdate(id, this.input, (key, oldValue) => this.input);
+            this.IntermediateDeepMatrices.AddOrUpdate(id, this.input, (_, _) => this.input);
         }
 
         /// <inheritdoc />

@@ -33,7 +33,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public override void Store(Guid id)
         {
             var data = new[] { (object)this.input, (object)this.means, (object)this.vars, (object)this.n };
-            this.IntermediateObjectArrays.AddOrUpdate(id, data, (key, oldValue) => data);
+            this.IntermediateObjectArrays.AddOrUpdate(id, data, (_, _) => data);
         }
 
         /// <inheritdoc />

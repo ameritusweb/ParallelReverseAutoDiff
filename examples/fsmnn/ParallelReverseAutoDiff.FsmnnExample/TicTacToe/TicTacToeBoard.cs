@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.TicTacToe
     /// </summary>
     public class TicTacToeBoard
     {
-        private char[,] board = new char[3, 3];
+        private readonly char[,] board = new char[3, 3];
         private char currentPlayer;
 
         /// <summary>

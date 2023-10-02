@@ -6,7 +6,6 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -14,7 +13,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class GradientClipper
     {
-        private NeuralNetwork network;
+        private readonly NeuralNetwork network;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GradientClipper"/> class.

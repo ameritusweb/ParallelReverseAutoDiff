@@ -95,7 +95,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
             double bestAlpha = this.Alpha;  // Store the initial value
             Matrix bestGradient = new Matrix(1, this.predicted.Cols);
 
-            this.RecursiveAlphaSearch(new double[] { 50d }, ref bestAlpha, ref bestAngle, ref bestGradient, MaxRecursionDepth);
+            this.RecursiveAlphaSearch(new[] { 50d }, ref bestAlpha, ref bestAngle, ref bestGradient, MaxRecursionDepth);
 
             this.Alpha = bestAlpha;
             return bestGradient;

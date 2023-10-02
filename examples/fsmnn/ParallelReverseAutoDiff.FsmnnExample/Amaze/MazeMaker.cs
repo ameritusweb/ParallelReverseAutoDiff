@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
     /// </summary>
     public class MazeMaker
     {
-        private Random random;
+        private readonly Random random;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MazeMaker"/> class.

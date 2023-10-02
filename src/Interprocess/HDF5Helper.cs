@@ -33,7 +33,7 @@ namespace ParallelReverseAutoDiff.Interprocess
             for (int i = 0; i < matrix.Rows; i++)
             {
                 // Create a dataspace for each row.
-                long dataspaceId = H5S.create_simple(1, new ulong[] { (ulong)matrix[i].Length }, null);
+                long dataspaceId = H5S.create_simple(1, new[] { (ulong)matrix[i].Length }, null);
 
                 // Create a dataset for each row.
                 long datasetId = H5D.create(fileId, $"row{i}", H5T.NATIVE_DOUBLE, dataspaceId);

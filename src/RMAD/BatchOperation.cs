@@ -11,8 +11,8 @@ namespace ParallelReverseAutoDiff.RMAD
     public abstract class BatchOperation<T> : OperationBase, IBatchOperation
         where T : IOperationBase
     {
+        private readonly NeuralNetwork network;
         private T[] operations;
-        private NeuralNetwork network;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BatchOperation{T}"/> class.

@@ -19,7 +19,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.AttentionMessagePassi
 
         private AttentionMessagePassingComputationGraph computationGraph;
 
-        private IModelLayer hiddenLayer;
+        private readonly IModelLayer hiddenLayer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttentionMessagePassingNeuralNetwork"/> class.

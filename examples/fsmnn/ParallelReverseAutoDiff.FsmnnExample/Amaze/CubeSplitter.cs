@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
     /// </summary>
     public class CubeSplitter
     {
-        private int maxDepth;
+        private readonly int maxDepth;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CubeSplitter"/> class.

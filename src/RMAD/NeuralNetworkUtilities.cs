@@ -5,14 +5,12 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// The utilities for a neural network.
     /// </summary>
     public class NeuralNetworkUtilities
     {
-        private NeuralNetwork network;
+        private readonly NeuralNetwork network;
         private AdamOptimizer adamOptimizer;
         private GradientClipper gradientClipper;
 

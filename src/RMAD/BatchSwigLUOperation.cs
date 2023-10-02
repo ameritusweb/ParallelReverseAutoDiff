@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class BatchSwigLUOperation : BatchOperation<SwigLUOperation>
     {
-        private double beta;
+        private readonly double beta;
 
         private BatchSwigLUOperation(NeuralNetwork net, double beta)
             : base(net)
@@ -36,7 +36,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (_, _) => this.Operations);
         }
 
         /// <inheritdoc />

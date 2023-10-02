@@ -33,7 +33,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (key, oldValue) => this.Operations);
+            this.IntermediateOperationArrays.AddOrUpdate(id, this.Operations, (_, _) => this.Operations);
         }
 
         /// <inheritdoc />

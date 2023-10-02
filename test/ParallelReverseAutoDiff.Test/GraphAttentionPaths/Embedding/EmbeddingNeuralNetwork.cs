@@ -70,7 +70,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
         {
             get
             {
-                return new IModelLayer[] { this.embeddingLayer }.ToList();
+                return new[] { this.embeddingLayer }.ToList();
             }
         }
 

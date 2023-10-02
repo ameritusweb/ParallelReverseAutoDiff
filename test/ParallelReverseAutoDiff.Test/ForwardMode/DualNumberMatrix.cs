@@ -9,7 +9,7 @@ namespace ParallelReverseAutoDiff.Test.ForwardMode
 {
     public class DualNumberMatrix
     {
-        private DualNumber[][] matrix;
+        private readonly DualNumber[][] matrix;
 
         public DualNumberMatrix(int numRows, int numCols)
         {
