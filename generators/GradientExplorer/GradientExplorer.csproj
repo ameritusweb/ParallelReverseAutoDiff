@@ -46,6 +46,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Diagram\ClickCounter.cs" />
+    <Compile Include="Diagram\Common.cs" />
+    <Compile Include="Diagram\DiagramViewer.cs" />
+    <Compile Include="Diagram\GvMouseEventArgs.cs" />
+    <Compile Include="Diagram\IInvalidatable.cs" />
+    <Compile Include="Diagram\NativeMethods.cs" />
+    <Compile Include="Diagram\VEdge.cs" />
+    <Compile Include="Diagram\VLabel.cs" />
+    <Compile Include="Diagram\VNode.cs" />
     <Compile Include="LaTeX\Core\Atom\Atoms\Accent.cs" />
     <Compile Include="LaTeX\Core\Atom\Atoms\BinaryOperator.cs" />
     <Compile Include="LaTeX\Core\Atom\Atoms\Close.cs" />
@@ -321,6 +330,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
       <Version>4.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Msagl.Drawing">
+      <Version>1.1.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.7.2196">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
