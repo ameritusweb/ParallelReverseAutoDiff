@@ -25,10 +25,14 @@ namespace CSharpMath.Rendering.BackEnd
         }
         public (System.Drawing.Color glyph, System.Drawing.Color textRun)? GlyphBoxColor { get; set; }
         public ICanvas Canvas { get; set; }
-        void IGraphicsContext<Fonts, Glyph>.SetTextPosition(PointF position) => Translate(position);
+        void IGraphicsContext<Fonts, Glyph>.SetTextPosition(PointF position) => Canvas.SetTextPosition(position.X, position.Y);
         public void DrawGlyphsAtPoints
           (IReadOnlyList<Glyph> glyphs, Fonts font, IEnumerable<PointF> points, System.Drawing.Color? color)
         {
+            if (color == null)
+            {
+                color = System.Drawing.Color.White;
+            }
             foreach (var (glyph, point) in glyphs.Zip(points, System.ValueTuple.Create))
             {
                 if (GlyphBoxColor != null)
@@ -67,6 +71,10 @@ namespace CSharpMath.Rendering.BackEnd
         public void DrawGlyphRunWithOffset
           (Display.AttributedGlyphRun<Fonts, Glyph> run, PointF offset, System.Drawing.Color? color)
         {
+            if (color == null)
+            {
+                color = System.Drawing.Color.White;
+            }
             var textPosition = offset;
             if (GlyphBoxColor != null)
             {

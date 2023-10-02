@@ -1,13 +1,23 @@
 ﻿using CSharpMath.Rendering.FrontEnd;
 using GradientExplorer.LaTeX.Translation;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace GradientExplorer.LaTeX.Wpf
 {
-    public class WpfCanvas : System.Windows.Controls.Canvas, ICanvas
+    public class WpfCanvas : ICanvas
     {
         private SolidColorBrush _currentColorBrush;
+        private Canvas _canvas;
+        private double _currentX;
+        private double _currentY;
+
+        public WpfCanvas(Canvas canvas)
+        {
+            _canvas = canvas;
+            _currentY = canvas.ActualHeight;
+        }   
 
         public System.Drawing.Color DefaultColor { get; set; }
 
@@ -30,9 +40,9 @@ namespace GradientExplorer.LaTeX.Wpf
 
         public PaintStyle CurrentStyle { get; set; }
 
-        float ICanvas.Width => (float)this.ActualWidth;
+        float ICanvas.Width => (float)_canvas.ActualWidth;
 
-        float ICanvas.Height => (float)this.ActualHeight;
+        float ICanvas.Height => (float)_canvas.ActualHeight;
 
         public void DrawLine(float x1, float y1, float x2, float y2, float lineThickness)
         {
@@ -45,7 +55,7 @@ namespace GradientExplorer.LaTeX.Wpf
                 Stroke = _currentColorBrush,
                 StrokeThickness = lineThickness
             };
-            this.Children.Add(line);
+            _canvas.Children.Add(line);
         }
 
         public void FillRect(float left, float top, float width, float height)
@@ -56,9 +66,9 @@ namespace GradientExplorer.LaTeX.Wpf
                 Height = height,
                 Fill = _currentColorBrush
             };
-            SetLeft(rect, left);
-            SetTop(rect, top);
-            this.Children.Add(rect);
+            Canvas.SetLeft(rect, left);
+            Canvas.SetTop(rect, top);
+            _canvas.Children.Add(rect);
         }
 
         // Add this new method to render StreamGeometry
@@ -70,8 +80,11 @@ namespace GradientExplorer.LaTeX.Wpf
             path.Stroke = new SolidColorBrush(color);
             path.StrokeThickness = 1; // You can adjust this value as needed
 
+            Canvas.SetTop(path, _currentY);
+            Canvas.SetLeft(path, _currentX);
+
             // Add the Path to the Canvas' children
-            this.Children.Add(path);
+            _canvas.Children.Add(path);
         }
 
         public void Restore()
@@ -103,14 +116,20 @@ namespace GradientExplorer.LaTeX.Wpf
                 Height = height,
                 Stroke = _currentColorBrush
             };
-            SetLeft(rect, left);
-            SetTop(rect, top);
-            this.Children.Add(rect);
+            Canvas.SetLeft(rect, left);
+            Canvas.SetTop(rect, top);
+            _canvas.Children.Add(rect);
         }
 
         public void Translate(float dx, float dy)
         {
-            // Implement translation if needed
+            _currentX += dx;
+            _currentY += dy;
+        }
+
+        public void SetTextPosition(float fx, float dy)
+        {
+            // Implement text positioning if needed
         }
     }
 }

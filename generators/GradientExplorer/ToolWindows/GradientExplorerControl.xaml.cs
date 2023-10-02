@@ -84,9 +84,10 @@ namespace ToolWindow
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
                 this.ParseMethod(forwardMethod);
                 var canvas = laTeXCanvas;
+                var wpfCanvas = new WpfCanvas(canvas);
                 WpfMathPainter painter = new WpfMathPainter();
                 painter.LaTeX = "\\frac{1}{1 + e^{\\sin(-x)}}";
-                painter.Draw(canvas);
+                painter.Draw(wpfCanvas);
             }
         }
 

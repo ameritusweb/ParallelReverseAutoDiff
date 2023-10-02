@@ -14,6 +14,7 @@ namespace CSharpMath.Rendering.FrontEnd {
     void FillRect(float left, float top, float width, float height);
     void Save();
     void Translate(float dx, float dy);
+    void SetTextPosition(float dx, float dy);
     void Scale(float sx, float sy);
     void Restore();
   }

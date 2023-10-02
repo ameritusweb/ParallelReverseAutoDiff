@@ -24,7 +24,7 @@ namespace GradientExplorer.LaTeX.Wpf
 
         public override ICanvas WrapCanvas(WpfCanvas canvas)
         {
-            throw new NotImplementedException();
+            return canvas;
         }
 
         public override System.Drawing.Color WrapColor(SolidColorBrush color)
