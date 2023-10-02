@@ -121,7 +121,8 @@ namespace ParallelReverseAutoDiff.FsmnnExample.TicTacToe
                 return this.Evaluate(node.State);
             }
 
-            if (node.State.CurrentPlayer == 'X') // Assuming 'X' is the maximizer
+            // Assuming 'X' is the maximizer
+            if (node.State.CurrentPlayer == 'X')
             {
                 double maxEval = double.NegativeInfinity;
                 int counter = 0;
@@ -145,7 +146,9 @@ namespace ParallelReverseAutoDiff.FsmnnExample.TicTacToe
 
                 return maxEval;
             }
-            else // Assuming 'O' is the minimizer
+
+            // Assuming 'O' is the minimizer
+            else
             {
                 double minEval = double.PositiveInfinity;
                 int counter = 0;

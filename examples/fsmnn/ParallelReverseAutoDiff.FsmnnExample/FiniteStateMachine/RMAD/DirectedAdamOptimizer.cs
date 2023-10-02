@@ -251,9 +251,10 @@ namespace ParallelReverseAutoDiff.RMAD
             var example = new HashSet<string>();
             var avg = gradient[0].Select(x => Math.Abs(x)).Average();
             var max = gradient[0].Select(x => Math.Abs(x)).Max();
+            var frobenius = w.FrobeniusNorm();
             avg = ((max - avg) / 8d) + avg;
 
-            double scalingFactor = max > avg ? ((avg / max) / 1000d) : 1d;
+            double scalingFactor = max > avg ? ((avg / max) / 1d) : 1d;
             this.scalingMap.TryAdd(w, scalingFactor);
             for (int i = 0; i < w.Length; i++)
             {
@@ -315,6 +316,18 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < w[0].Length; j++)
                 {
                     double weightReductionValue = this.network.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
+
+                    // Compute new weight without actually updating it
+                    double newWeight = w[i][j] - weightReductionValue;
+
+                    // Check if the magnitude increases
+                    if (frobenius > 0.0d && Math.Abs(newWeight) > Math.Abs(w[i][j]))
+                    {
+                        // Calculate the scaling factor based on the Frobenius norm
+                        double sFactor = 1 / (1 + frobenius);
+
+                        weightReductionValue *= sFactor; // Apply scaling directly to weightReductionValue
+                    }
 
                     w[i][j] -= weightReductionValue;
                 }

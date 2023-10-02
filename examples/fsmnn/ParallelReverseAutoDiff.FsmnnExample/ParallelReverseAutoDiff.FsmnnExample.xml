@@ -664,6 +664,449 @@
             <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
             <returns>A task.</returns>
         </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.Cell">
+            <summary>
+            The cell.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.Cell.Flower">
+            <summary>
+            Gets or sets the flower.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.Cell.Shape">
+            <summary>
+            Gets or sets the shape.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.Cell.Position">
+            <summary>
+            Gets or sets the position.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType">
+            <summary>
+            A flower type.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType.Empty">
+            <summary>
+            An empty cell.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType.Rose">
+            <summary>
+            Red and iconic in shape.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType.Sunflower">
+            <summary>
+            Bright yellow with a large center.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType.Tulip">
+            <summary>
+            Often red, pink, or yellow; tulip shape.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType.Bluebell">
+            <summary>
+            Blue, bell-shaped flowers.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.FlowerType.Orchid">
+            <summary>
+            Exotic looking, can come in various colors like purple.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType">
+            <summary>
+            The move type.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType.NoAction">
+            <summary>
+            No action.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType.RotateClockwise">
+            <summary>
+            Rotate clockwise.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType.RotateCounterClockwise">
+            <summary>
+            Rotate counter clockwise.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType.MoveDown">
+            <summary>
+            Move down.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType.MoveLeft">
+            <summary>
+            Move left.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType.MoveRight">
+            <summary>
+            Move right.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem">
+            <summary>
+            A scoring system.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.Score">
+            <summary>
+            Gets the overall score.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.AddScoreForLinesCleared(System.Int32)">
+            <summary>
+            Add to score for lines cleared.
+            </summary>
+            <param name="linesCleared">The number of lines cleared.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.AddScoreForFlowerBomb">
+            <summary>
+            Add to the score for a flower bomb.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.AddScoreForTSpin">
+            <summary>
+            Add to the score for a T spin.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.AddScoreForSoftDrop(System.Int32)">
+            <summary>
+            Add to the score for a soft drop.
+            </summary>
+            <param name="cellsDropped">The number of cells dropped.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.AddScoreForHardDrop(System.Int32)">
+            <summary>
+            Add to the score for a hard drop.
+            </summary>
+            <param name="cellsDropped">The number of cells dropped.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.ApplyLevelMultiplier(System.Int32)">
+            <summary>
+            Add to the score for a level multiplier.
+            </summary>
+            <param name="level">The level.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.ScoringSystem.Reset">
+            <summary>
+            Resets the score.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisBoard">
+            <summary>
+            The tetris board.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisBoard.Width">
+            <summary>
+            The width of the board.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisBoard.Height">
+            <summary>
+            The height of the board.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisBoard.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisBoard"/> class.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisBoard.Cells">
+            <summary>
+            Gets the cells of the board.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame">
+            <summary>
+            The tetris game.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame"/> class.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.Board">
+            <summary>
+            Gets the board.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.CurrentPiece">
+            <summary>
+            Gets or sets the current piece.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.UpcomingPieces">
+            <summary>
+            Gets the upcoming pieces.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.SpawnNewPiece">
+            <summary>
+            Spawn a new piece.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.IsValidMove(ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPiece)">
+            <summary>
+            Is a valid move.
+            </summary>
+            <param name="piece">The piece.</param>
+            <returns>True or false.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.MoveLeft">
+            <summary>
+            Move left.
+            </summary>
+            <returns>True or false.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.MoveRight">
+            <summary>
+            Move right.
+            </summary>
+            <returns>True or false.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.Rotate">
+            <summary>
+            Rotate the piece.
+            </summary>
+            <returns>True or false.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.HardDrop">
+            <summary>
+            Perform a hard drop.
+            </summary>
+            <returns>True or false.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.CheckForLineClear">
+            <summary>
+            Check for line clear.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisGame.IsGameOver">
+            <summary>
+            Is game over.
+            </summary>
+            <returns>True or false.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisMove">
+            <summary>
+            A tetris move.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisMove.#ctor(ParallelReverseAutoDiff.FsmnnExample.Tetris.MoveType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisMove"/> class.
+            </summary>
+            <param name="move">The move type.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisMove.Move">
+            <summary>
+            Gets or sets the move type.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisMove.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPiece">
+            <summary>
+            A tetris piece.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPiece.Position">
+            <summary>
+            Gets or sets the position.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPiece.Clone">
+            <summary>
+            Clone the tetris piece.
+            </summary>
+            <returns>The cloned piece.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPieceConfiguration">
+            <summary>
+            A tetris piece configuration.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPieceConfiguration.Shape">
+            <summary>
+            Gets or sets the shape.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPieceConfiguration.Flowers">
+            <summary>
+            Gets or sets the flowers.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisPieceConfiguration.Rotation">
+            <summary>
+            Gets or sets the rotation.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape">
+            <summary>
+            A tetris shape.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.None">
+            <summary>
+            No shape.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.I">
+            <summary>
+            A line piece.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.O">
+            <summary>
+            A square.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.T">
+            <summary>
+            A T.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.S">
+            <summary>
+            An S.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.Z">
+            <summary>
+            A Z.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.J">
+            <summary>
+            A J.
+            </summary>
+        </member>
+        <member name="F:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShape.L">
+            <summary>
+            An L.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShapes">
+            <summary>
+            Tetris shapes.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.Tetris.TetrisShapes.Item(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets the tetris shapes.
+            </summary>
+            <param name="p1">Param 1.</param>
+            <param name="p2">Param 2.</param>
+            <param name="p3">Param 3.</param>
+            <param name="p4">Param 4.</param>
+            <returns>True or false.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.MctsEngine">
+            <summary>
+            The MCTS engine.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.MctsEngine.#ctor(ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.MctsEngine"/> class.
+            </summary>
+            <param name="initialState">The initial stte.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.MctsEngine.Root">
+            <summary>
+            Gets or sets the root node.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.MctsEngine.RunSimulation(System.Int32)">
+            <summary>
+            Run simulations.
+            </summary>
+            <param name="maxSimulations">The max number of simulations.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.Node">
+            <summary>
+            A node in the MCTS tree.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.Node.State">
+            <summary>
+            Gets or sets the state of the board.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.Node.Parent">
+            <summary>
+            Gets or sets the parent node.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.Node.Children">
+            <summary>
+            Gets or sets the children.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.Node.Visits">
+            <summary>
+            Gets or sets the number of visits.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.Node.Value">
+            <summary>
+            Gets or sets the MCTS value.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard">
+            <summary>
+            Creates a tic tac toe board.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard"/> class.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard.Board">
+            <summary>
+            Gets the board.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard.CurrentPlayer">
+            <summary>
+            Gets the current player.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard.GetPossibleMoves">
+            <summary>
+            Gets the possible moves.
+            </summary>
+            <returns>The list of possible moves.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard.Clone">
+            <summary>
+            Clones the tic tac tow board.
+            </summary>
+            <returns>The tic tac toe board.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.FsmnnExample.TicTacToe.TicTacToeBoard.IsTerminal">
+            <summary>
+            Determines whether the board is terminal.
+            </summary>
+            <returns>True or false.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.Common.CommonMatrixUtils">
             <summary>
             A collection of matrix utilities for neural network development.
