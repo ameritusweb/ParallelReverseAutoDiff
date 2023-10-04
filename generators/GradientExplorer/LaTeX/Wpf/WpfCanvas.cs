@@ -20,7 +20,7 @@ namespace GradientExplorer.LaTeX.Wpf
         public WpfCanvas(Canvas canvas)
         {
             _canvas = canvas;
-            _currentY = canvas.ActualHeight;
+            _currentY = 0;
             _savedMap = new Dictionary<Guid, (double, double)>();
         }
 
@@ -57,10 +57,10 @@ namespace GradientExplorer.LaTeX.Wpf
         {
             var line = new Line
             {
-                X1 = x1,
-                Y1 = y1,
-                X2 = x2,
-                Y2 = y2,
+                X1 = _currentX + x1,
+                Y1 = _currentY - y1,
+                X2 = _currentX + x2,
+                Y2 = _currentY - y2,
                 Stroke = _currentColorBrush ?? new SolidColorBrush(Colors.White),
                 StrokeThickness = lineThickness
             };
@@ -87,9 +87,9 @@ namespace GradientExplorer.LaTeX.Wpf
             var path = new System.Windows.Shapes.Path();
             path.Data = geometry;
             path.Stroke = new SolidColorBrush(color);
-            path.StrokeThickness = 1; // You can adjust this value as needed
+            path.StrokeThickness = 0.5; // You can adjust this value as needed
 
-            Canvas.SetTop(path, _currentY);
+            Canvas.SetTop(path, _currentY - _canvas.ActualHeight);
             Canvas.SetLeft(path, _currentX);
 
             // Add the Path to the Canvas' children

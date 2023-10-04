@@ -12,5 +12,10 @@ namespace GradientExplorer.Model
         public GradientGraph G { get; set; }
         public GradientGraph FPrime { get; set; }
         public GradientGraph GPrime { get; set; }
+
+        public Node Differentiate()
+        {
+            return new Node();
+        }
     }
 }

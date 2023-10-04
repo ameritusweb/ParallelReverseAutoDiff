@@ -1,5 +1,4 @@
-﻿using CSharpMath.Rendering.FrontEnd;
-using GradientExplorer.LaTeX.Wpf;
+﻿using GradientExplorer.LaTeX.Wpf;
 using GradientExplorer.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace ToolWindow
 {
@@ -146,8 +144,9 @@ namespace ToolWindow
                         // Sum rule
                         SumRuleGradientExpression gradientExpression = new SumRuleGradientExpression();
                         // Recursively decompose left and right operands
-                        gradientExpression.Operands.Add(DecomposeExpression(binaryExpression.Left, gradientGraph));
-                        gradientExpression.Operands.Add(DecomposeExpression(binaryExpression.Right, gradientGraph));
+                        gradientExpression.Operands.Add(DecomposeExpression(binaryExpression.Left, new GradientGraph()));
+                        gradientExpression.Operands.Add(DecomposeExpression(binaryExpression.Right, new GradientGraph()));
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "*")
@@ -155,10 +154,11 @@ namespace ToolWindow
                         // Product rule
                         ProductRuleGradientExpression gradientExpression = new ProductRuleGradientExpression();
                         // Recursively decompose left and right operands
-                        gradientExpression.F = DecomposeExpression(binaryExpression.Left, gradientGraph);
-                        gradientExpression.G = DecomposeExpression(binaryExpression.Right, gradientGraph);
-                        gradientExpression.FPrime = Differentiate(gradientExpression.F);
-                        gradientExpression.GPrime = Differentiate(gradientExpression.G);
+                        gradientExpression.F = GraphHelper.ConvertToGraph(binaryExpression.Left);
+                        gradientExpression.G = GraphHelper.ConvertToGraph(binaryExpression.Right);
+                        gradientExpression.FPrime = DecomposeExpression(binaryExpression.Left, new GradientGraph());
+                        gradientExpression.GPrime = DecomposeExpression(binaryExpression.Right, new GradientGraph());
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "/")
@@ -166,10 +166,11 @@ namespace ToolWindow
                         // Quotient rule
                         QuotientRuleGradientExpression gradientExpression = new QuotientRuleGradientExpression();
                         // Recursively decompose left and right operands
-                        gradientExpression.F = DecomposeExpression(binaryExpression.Left, gradientGraph);
-                        gradientExpression.G = DecomposeExpression(binaryExpression.Right, gradientGraph);
-                        gradientExpression.FPrime = Differentiate(gradientExpression.F);
-                        gradientExpression.GPrime = Differentiate(gradientExpression.G);
+                        gradientExpression.F = GraphHelper.ConvertToGraph(binaryExpression.Left);
+                        gradientExpression.G = GraphHelper.ConvertToGraph(binaryExpression.Right);
+                        gradientExpression.FPrime = DecomposeExpression(binaryExpression.Left, new GradientGraph());
+                        gradientExpression.GPrime = DecomposeExpression(binaryExpression.Right, new GradientGraph());
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
 
@@ -177,7 +178,7 @@ namespace ToolWindow
 
                 case InvocationExpressionSyntax invocationExpression:
                     // Handle functions like Math.Exp, etc.
-                    var functionType = this.GetNodeType(invocationExpression);
+                    var functionType = GraphHelper.GetNodeType(invocationExpression);
                     if (gradientNonUnaryExpressionMap.ContainsKey(functionType)) // Non-unary functions
                     {
                         var differentiationFunction = gradientNonUnaryExpressionMap[functionType];
@@ -188,17 +189,18 @@ namespace ToolWindow
                             if (secondInnerExpression is InvocationExpressionSyntax secondInnerInvocationExpression)
                             {
                                 // Handle nested functions like Math.Pow(Math.Cos(x), Math.Sin(x))
-                                var innerNodeType = this.GetNodeType(innerInvocationExpression);
+                                var innerNodeType = GraphHelper.GetNodeType(innerInvocationExpression);
                                 var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
                                 var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
-                                var secondInnerNodeType = this.GetNodeType(secondInnerInvocationExpression);
+                                var secondInnerNodeType = GraphHelper.GetNodeType(secondInnerInvocationExpression);
                                 var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
                                 var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
                                 CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
-                                gradientExpression.F = DecomposeExpression(innerInnerExpression, gradientGraph);
-                                gradientExpression.G = DecomposeExpression(secondInnerInvocationExpression, gradientGraph);
-                                gradientExpression.FPrime = innerDifferentiationFunction.Invoke(innerInnerExpression);
-                                gradientExpression.GPrime = secondInnerDifferentiationFunction.Invoke(secondInnerInnerExpression);
+                                gradientExpression.F = GraphHelper.ConvertToGraph(innerInnerExpression);
+                                gradientExpression.G = GraphHelper.ConvertToGraph(secondInnerInvocationExpression);
+                                gradientExpression.FPrime = IsDecomposable(innerInnerExpression) ? DecomposeExpression(innerInnerExpression, new GradientGraph()) : innerDifferentiationFunction.Invoke(innerInnerExpression);
+                                gradientExpression.GPrime = IsDecomposable(secondInnerInnerExpression) ? DecomposeExpression(secondInnerInnerExpression, new GradientGraph()) : secondInnerDifferentiationFunction.Invoke(secondInnerInnerExpression);
+                                gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                                 gradientGraph.Expressions.Add(gradientExpression);
                             }
                         }
@@ -207,6 +209,7 @@ namespace ToolWindow
                             // Handle functions like Math.Pow(x, 2)
                             UnaryGradientExpression gradientExpression = new UnaryGradientExpression();
                             gradientExpression.FPrime = differentiationFunction.Invoke(new List<SyntaxNode>() { innerExpression, secondInnerExpression });
+                            gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                             gradientGraph.Expressions.Add(gradientExpression);
                         }
                     }
@@ -217,19 +220,21 @@ namespace ToolWindow
                         if (innerExpression is InvocationExpressionSyntax innerInvocationExpression)
                         {
                             // Handle nested functions like Math.Sin(Math.Cos(x))
-                            var innerNodeType = this.GetNodeType(innerInvocationExpression);
+                            var innerNodeType = GraphHelper.GetNodeType(innerInvocationExpression);
                             var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
                             var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
                             ChainRuleGradientExpression gradientExpression = new ChainRuleGradientExpression();
                             gradientExpression.FPrimeOfG = differentiationFunction.Invoke(innerInvocationExpression);
-                            gradientExpression.GPrime = innerDifferentiationFunction.Invoke(innerInnerExpression);
+                            gradientExpression.GPrime = IsDecomposable(innerInnerExpression) ? DecomposeExpression(innerInvocationExpression, new GradientGraph()) : innerDifferentiationFunction.Invoke(innerInnerExpression);
+                            gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                             gradientGraph.Expressions.Add(gradientExpression);
                         }
                         else
                         {
                             // Handle functions like Math.Exp(x)
                             UnaryGradientExpression gradientExpression = new UnaryGradientExpression();
-                            gradientExpression.FPrime = differentiationFunction.Invoke(invocationExpression);
+                            gradientExpression.FPrime = differentiationFunction.Invoke(innerExpression);
+                            gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                             gradientGraph.Expressions.Add(gradientExpression);
                         }
                     }
@@ -238,9 +243,11 @@ namespace ToolWindow
                 // ... handle other types of expressions
 
                 // Base cases: expression cannot be decomposed further (e.g., literals, identifiers)
+                case ElementAccessExpressionSyntax elementAccess:
+                    gradientGraph.Nodes.Add(DifferentiateLiteral(elementAccess, LiteralType.Variable));
+                    break;
                 case LiteralExpressionSyntax literalExpression:
-                    Node literalNode = new Node(literalExpression.Token.Value, literalExpression.Token.Value.GetType());
-                    gradientGraph.Nodes.Add(literalNode);
+                    gradientGraph.Nodes.Add(DifferentiateLiteral(literalExpression, LiteralType.Constant));
                     break;
 
                 default:
@@ -250,93 +257,39 @@ namespace ToolWindow
             return gradientGraph;
         }
 
-        private NodeType GetNodeType(InvocationExpressionSyntax invocation)
+        private bool IsDecomposable(SyntaxNode node)
         {
-            if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpression)
-            {
-                if (memberAccessExpression.Expression is IdentifierNameSyntax identifierName)
-                {
-                    string name = identifierName.Identifier.Text + "." + memberAccessExpression.Name.Identifier.Text;
-                    switch (name)
-                    {
-                        case "Math.Exp":
-                            return NodeType.Exp;
-                        case "Math.Log":
-                            return NodeType.Ln;
-                        case "Math.Log10":
-                            return NodeType.Log;
-                        case "Math.Sin":
-                            return NodeType.Sin;
-                        case "Math.Cos":
-                            return NodeType.Cos;
-                        case "Math.Tan":
-                            return NodeType.Tan;
-                        case "Math.Sqrt":
-                            return NodeType.Sqrt;
-                        case "Math.Pow":
-                            return NodeType.Pow;
-                        default:
-                            throw new InvalidOperationException("Unknown function type");
-                    }
-                }
-            }
+            return !(node is LiteralExpressionSyntax || node is IdentifierNameSyntax || node is ElementAccessExpressionSyntax);
+        }
 
-            return NodeType.Unknown;
+        private Node DifferentiateLiteral(SyntaxNode node, LiteralType type)
+        {
+            Node literalNode = new Node(node, node.GetType());
+            literalNode.Value = type == LiteralType.Constant ? 0 : 1;
+            literalNode.Type = type.ToString();
+            return literalNode;
         }
 
         private GradientGraph DifferentiateExpExpression(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
-            if (innerInvocation is InvocationExpressionSyntax invocation)
-            {
-                Node target = new Node()
-                {
-                    SyntaxNode = invocation,
-                };
-                graph.Nodes.Add(target);
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-                Edge edge = new Edge()
-                {
-                    Relationship = RelationshipType.Function,
-                    TargetNode = target,
-                };
+            var node = GraphHelper.Function(NodeType.Exp, target);
 
-                Node node = new Node()
-                {
-                    NodeType = NodeType.Exp,
-                };
-                node.Edges.Add(edge);
-
-                graph.Nodes.Add(node);
-            }
+            graph.Nodes.Add(node);
             return graph;
         }
 
         private GradientGraph DifferentiateSinExpression(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
-            if (innerInvocation is PrefixUnaryExpressionSyntax prefixUnary)
-            {
-                Node target = new Node()
-                {
-                    SyntaxNode = prefixUnary,
-                };
-                graph.Nodes.Add(target);
 
-                Edge edge = new Edge()
-                {
-                    Relationship = RelationshipType.Function,
-                    TargetNode = target,
-                };
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-                Node node = new Node()
-                {
-                    NodeType = NodeType.Cos,
-                };
-                node.Edges.Add(edge);
+            var node = GraphHelper.Function(NodeType.Cos, target);
 
-                graph.Nodes.Add(node);
-            }
+            graph.Nodes.Add(node);
             return graph;
         }
 
@@ -373,13 +326,10 @@ namespace ToolWindow
             Node numerator = new Node()
             {
                 Value = 1,
-                Type = typeof(int).Name,
+                Type = LiteralType.Constant.ToString(),
             };
 
-            Node denominator = new Node()
-            {
-                SyntaxNode = innerInvocation,
-            };
+            var denominator = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
             Edge operand1 = new Edge()
             {
@@ -401,43 +351,11 @@ namespace ToolWindow
             return graph;
         }
 
-        private Node FunctionWithCoefficient(NodeType node, Node coefficient, SyntaxNode innerInvocation)
-        {
-            Node inner = new Node()
-            {
-                SyntaxNode = innerInvocation,
-            };
-
-            Edge edge = new Edge()
-            {
-                Relationship = RelationshipType.Function,
-                TargetNode = inner,
-            };
-
-            Node functionNode = new Node()
-            {
-                NodeType = node,
-            };
-            functionNode.Edges.Add(edge);
-
-            Edge coefficientEdge = new Edge()
-            {
-                Relationship = RelationshipType.Coefficient,
-                TargetNode = coefficient,
-            };
-            functionNode.Edges.Add(coefficientEdge);
-
-            return functionNode;
-        }
-
         private GradientGraph DifferentiatePowExpression(List<SyntaxNode> syntaxNodes)
         {
             GradientGraph graph = new GradientGraph();
 
-            Node baseNode = new Node()
-            {
-                SyntaxNode = syntaxNodes[0]
-            };
+            var baseNode = GraphHelper.ConvertToGraph(syntaxNodes[0]).Nodes.FirstOrDefault();
 
             Node exponent = new Node()
             {
@@ -455,7 +373,7 @@ namespace ToolWindow
             Node coefficient = new Node()
             {
                 Value = int.Parse((syntaxNodes[1] as LiteralExpressionSyntax).Token.Value.ToString()),
-                Type = typeof(int).Name,
+                Type = LiteralType.Constant.ToString(),
             };
 
             Edge edge1 = new Edge()
@@ -477,10 +395,10 @@ namespace ToolWindow
             Node two = new Node()
             {
                 Value = 2,
-                Type = typeof(int).Name,
+                Type = LiteralType.Constant.ToString(),
             };
 
-            var functionWithCoefficent = FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
+            var functionWithCoefficent = GraphHelper.FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
 
             Node divide = new Node()
             {
@@ -490,7 +408,7 @@ namespace ToolWindow
             Node numerator = new Node()
             {
                 Value = 1,
-                Type = typeof(int).Name,
+                Type = LiteralType.Constant.ToString(),
             };
 
             Edge operand1 = new Edge()
@@ -508,12 +426,6 @@ namespace ToolWindow
             divide.Edges.Add(operand2);
 
             graph.Nodes.Add(divide);
-
-            return graph;
-        }
-
-        private GradientGraph Differentiate(GradientGraph graph)
-        {
 
             return graph;
         }

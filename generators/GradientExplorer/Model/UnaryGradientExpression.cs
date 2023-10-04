@@ -9,5 +9,10 @@ namespace GradientExplorer.Model
     public class UnaryGradientExpression : GradientExpression
     {
         public GradientGraph FPrime { get; set; }
+
+        public Node Differentiate()
+        {
+            return new Node();
+        }
     }
 }
