@@ -65,6 +65,27 @@ namespace GradientExplorer.Model
             return functionNode;
         }
 
+        public static Node NodeWithCoefficientAndExponent(Node coefficient, Node exponent, SyntaxNode innerInvocation)
+        {
+            var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            Edge coefficientEdge = new Edge()
+            {
+                Relationship = RelationshipType.Coefficient,
+                TargetNode = coefficient,
+            };
+            inner.Edges.Add(coefficientEdge);
+
+            Edge exponentEdge = new Edge()
+            {
+                Relationship = RelationshipType.Exponent,
+                TargetNode = exponent,
+            };
+            inner.Edges.Add(exponentEdge);
+
+            return inner;
+        }
+
         public static Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type)
         {
             Node literalNode = new Node(node, node.GetType());

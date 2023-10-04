@@ -297,12 +297,36 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
+            Node coefficient = new Node()
+            {
+                Value = -1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var inner = GraphHelper.FunctionWithCoefficient(NodeType.Sin, coefficient, innerInvocation);
+
             return graph;
         }
 
         private GradientGraph DifferentiateTanExpression(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
+
+            Node numerator = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var inner = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            var cos = GraphHelper.Function(NodeType.Cos, inner);
+
+            var denominator = GraphHelper.Function(NodeType.Multiply, cos, cos);
+
+            var divide = GraphHelper.Function(NodeType.Divide, numerator, denominator);
+
+            graph.Nodes.Add(divide);
 
             return graph;
         }
@@ -311,17 +335,34 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
+            Node numerator = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var inner = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            Node c = new Node()
+            {
+                Value = 10,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var ln10 = GraphHelper.Function(NodeType.Ln, c);
+
+            var denominator = GraphHelper.Function(NodeType.Multiply, inner, ln10);
+
+            var divide = GraphHelper.Function(NodeType.Divide, numerator, denominator);
+
+            graph.Nodes.Add(divide);
+
             return graph;
         }
 
         private GradientGraph DifferentiateLnExpression(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
-
-            Node divide = new Node()
-            {
-                NodeType = NodeType.Divide,
-            };
 
             Node numerator = new Node()
             {
@@ -331,20 +372,7 @@ namespace ToolWindow
 
             var denominator = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Edge operand1 = new Edge()
-            {
-                Relationship = RelationshipType.Numerator,
-                TargetNode = numerator,
-            };
-
-            Edge operand2 = new Edge()
-            {
-                Relationship = RelationshipType.Denominator,
-                TargetNode = denominator,
-            };
-
-            divide.Edges.Add(operand1);
-            divide.Edges.Add(operand2);
+            var divide = GraphHelper.Function(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(divide);
 
@@ -355,20 +383,11 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            var baseNode = GraphHelper.ConvertToGraph(syntaxNodes[0]).Nodes.FirstOrDefault();
-
             Node exponent = new Node()
             {
                 Value = int.Parse((syntaxNodes[1] as LiteralExpressionSyntax).Token.Value.ToString()) - 1,
                 Type = typeof(int).Name,
             };
-
-            Edge edge = new Edge()
-            {
-                Relationship = RelationshipType.Exponent,
-                TargetNode = exponent,
-            };
-            baseNode.Edges.Add(edge);
 
             Node coefficient = new Node()
             {
@@ -376,12 +395,7 @@ namespace ToolWindow
                 Type = LiteralType.Constant.ToString(),
             };
 
-            Edge edge1 = new Edge()
-            {
-                Relationship = RelationshipType.Coefficient,
-                TargetNode = coefficient,
-            };
-            baseNode.Edges.Add(edge1);
+            var baseNode = GraphHelper.NodeWithCoefficientAndExponent(coefficient, exponent, syntaxNodes[0]);
 
             graph.Nodes.Add(baseNode);
 
@@ -400,30 +414,13 @@ namespace ToolWindow
 
             var functionWithCoefficent = GraphHelper.FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
 
-            Node divide = new Node()
-            {
-                NodeType = NodeType.Divide
-            };
-
             Node numerator = new Node()
             {
                 Value = 1,
                 Type = LiteralType.Constant.ToString(),
             };
 
-            Edge operand1 = new Edge()
-            {
-                Relationship = RelationshipType.Numerator,
-                TargetNode = numerator
-            };
-            divide.Edges.Add(operand1);
-
-            Edge operand2 = new Edge()
-            {
-                Relationship = RelationshipType.Denominator,
-                TargetNode = functionWithCoefficent
-            };
-            divide.Edges.Add(operand2);
+            var divide = GraphHelper.Function(NodeType.Divide, numerator, functionWithCoefficent);
 
             graph.Nodes.Add(divide);
 
