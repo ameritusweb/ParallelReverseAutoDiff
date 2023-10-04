@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -86,7 +87,7 @@ namespace ToolWindow
                 var root = syntaxTree.GetRoot();
                 var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
-                var gradientGraph = this.ParseMethod(forwardMethod);
+                var gradientGraph = await this.ParseMethod(forwardMethod);
                 var canvas = laTeXCanvas;
                 var wpfCanvas = new WpfCanvas(canvas);
                 WpfMathPainter painter = new WpfMathPainter();
@@ -95,7 +96,7 @@ namespace ToolWindow
             }
         }
 
-        private GradientGraph? ParseMethod(MethodDeclarationSyntax method)
+        private async Task<GradientGraph?> ParseMethod(MethodDeclarationSyntax method)
         {
             if (method != null)
             {
@@ -124,7 +125,7 @@ namespace ToolWindow
                                     var rightHandSide = assignmentExpression.Right;
 
                                     // Decompose the right-hand side into a gradient graph
-                                    GradientGraph gradientGraph = DecomposeExpression(rightHandSide, new GradientGraph());
+                                    GradientGraph gradientGraph = await DecomposeExpression(rightHandSide, new GradientGraph());
                                     return gradientGraph;
                                 }
                             }
@@ -135,47 +136,34 @@ namespace ToolWindow
             return null;
         }
 
-        private GradientGraph DecomposeExpression(ExpressionSyntax expression, GradientGraph gradientGraph)
+        private async Task<GradientGraph> DecomposeExpression(ExpressionSyntax expression, GradientGraph gradientGraph)
         {
             switch (expression)
             {
                 case ParenthesizedExpressionSyntax parenthesizedExpression:
                     // Recursively decompose the inner expression
-                    gradientGraph = DecomposeExpression(parenthesizedExpression.Expression, gradientGraph);
+                    gradientGraph = await DecomposeExpression(parenthesizedExpression.Expression, gradientGraph);
                     break;
                 case BinaryExpressionSyntax binaryExpression:
                     // Determine the rule based on the operator
                     if (binaryExpression.OperatorToken.Text == "+")
                     {
                         // Sum rule
-                        SumRuleGradientExpression gradientExpression = new SumRuleGradientExpression();
-                        // Recursively decompose left and right operands
-                        gradientExpression.Operands.Add(DecomposeExpression(binaryExpression.Left, new GradientGraph()));
-                        gradientExpression.Operands.Add(DecomposeExpression(binaryExpression.Right, new GradientGraph()));
+                        SumRuleGradientExpression gradientExpression = await CreateSumRuleExpressionAsync(binaryExpression);
                         gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "*")
                     {
                         // Product rule
-                        ProductRuleGradientExpression gradientExpression = new ProductRuleGradientExpression();
-                        // Recursively decompose left and right operands
-                        gradientExpression.F = GraphHelper.ConvertToGraph(binaryExpression.Left);
-                        gradientExpression.G = GraphHelper.ConvertToGraph(binaryExpression.Right);
-                        gradientExpression.FPrime = DecomposeExpression(binaryExpression.Left, new GradientGraph());
-                        gradientExpression.GPrime = DecomposeExpression(binaryExpression.Right, new GradientGraph());
+                        ProductRuleGradientExpression gradientExpression = await CreateProductRuleExpressionAsync(binaryExpression);
                         gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "/")
                     {
                         // Quotient rule
-                        QuotientRuleGradientExpression gradientExpression = new QuotientRuleGradientExpression();
-                        // Recursively decompose left and right operands
-                        gradientExpression.F = GraphHelper.ConvertToGraph(binaryExpression.Left);
-                        gradientExpression.G = GraphHelper.ConvertToGraph(binaryExpression.Right);
-                        gradientExpression.FPrime = DecomposeExpression(binaryExpression.Left, new GradientGraph());
-                        gradientExpression.GPrime = DecomposeExpression(binaryExpression.Right, new GradientGraph());
+                        QuotientRuleGradientExpression gradientExpression = await CreateQuotientRuleExpressionAsync(binaryExpression);
                         gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
@@ -201,11 +189,7 @@ namespace ToolWindow
                                 var secondInnerNodeType = GraphHelper.GetNodeType(secondInnerInvocationExpression);
                                 var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
                                 var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
-                                CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
-                                gradientExpression.F = GraphHelper.ConvertToGraph(innerInnerExpression);
-                                gradientExpression.G = GraphHelper.ConvertToGraph(secondInnerInvocationExpression);
-                                gradientExpression.FPrime = IsDecomposable(innerInnerExpression) ? DecomposeExpression(innerInnerExpression, new GradientGraph()) : innerDifferentiationFunction.Invoke(innerInnerExpression);
-                                gradientExpression.GPrime = IsDecomposable(secondInnerInnerExpression) ? DecomposeExpression(secondInnerInnerExpression, new GradientGraph()) : secondInnerDifferentiationFunction.Invoke(secondInnerInnerExpression);
+                                CompositePowerRuleGradientExpression gradientExpression = await CreateCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, innerInnerExpression, secondInnerInnerExpression, innerDifferentiationFunction, secondInnerDifferentiationFunction);
                                 gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                                 gradientGraph.Expressions.Add(gradientExpression);
                             }
@@ -229,9 +213,7 @@ namespace ToolWindow
                             var innerNodeType = GraphHelper.GetNodeType(innerInvocationExpression);
                             var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
                             var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
-                            ChainRuleGradientExpression gradientExpression = new ChainRuleGradientExpression();
-                            gradientExpression.FPrimeOfG = differentiationFunction.Invoke(innerInvocationExpression);
-                            gradientExpression.GPrime = IsDecomposable(innerInnerExpression) ? DecomposeExpression(innerInvocationExpression, new GradientGraph()) : innerDifferentiationFunction.Invoke(innerInnerExpression);
+                            ChainRuleGradientExpression gradientExpression = await CreateChainRuleExpressionAsync(innerInvocationExpression, innerInnerExpression, differentiationFunction, innerDifferentiationFunction);
                             gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                             gradientGraph.Expressions.Add(gradientExpression);
                         }
@@ -261,6 +243,89 @@ namespace ToolWindow
             }
 
             return gradientGraph;
+        }
+
+        private async Task<SumRuleGradientExpression> CreateSumRuleExpressionAsync(BinaryExpressionSyntax binaryExpression)
+        {
+            SumRuleGradientExpression gradientExpression = new SumRuleGradientExpression();
+
+            // Recursively decompose left and right operands
+            var left = Task.Run(() => DecomposeExpression(binaryExpression.Left, new GradientGraph()));
+            var right = Task.Run(() => DecomposeExpression(binaryExpression.Right, new GradientGraph()));
+
+            gradientExpression.Operands.Add(await left);
+            gradientExpression.Operands.Add(await right);
+
+            return gradientExpression;
+        }
+
+        private async Task<ChainRuleGradientExpression> CreateChainRuleExpressionAsync(ExpressionSyntax g, ExpressionSyntax innerG, Func<SyntaxNode, GradientGraph> diff, Func<SyntaxNode, GradientGraph> innerDiff)
+        {
+            ChainRuleGradientExpression gradientExpression = new ChainRuleGradientExpression();
+
+            var taskFPrimeOfG = Task.Run(() => diff.Invoke(g));
+            var taskGPrime = Task.Run(async () => IsDecomposable(innerG) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(innerDiff.Invoke(innerG)));
+
+            gradientExpression.FPrimeOfG = await taskFPrimeOfG;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
+        }
+
+        private async Task<CompositePowerRuleGradientExpression> CreateCompositePowerRuleExpressionAsync(ExpressionSyntax f, ExpressionSyntax g, ExpressionSyntax innerF, ExpressionSyntax innerG, Func<SyntaxNode, GradientGraph> diff1, Func<SyntaxNode, GradientGraph> diff2)
+        {
+            CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
+
+            var taskF = Task.Run(() => GraphHelper.ConvertToGraph(f));
+            var taskG = Task.Run(() => GraphHelper.ConvertToGraph(g));
+            var taskFPrime = Task.Run(async () => IsDecomposable(innerF) ? await DecomposeExpression(f, new GradientGraph()) : await Task.FromResult(diff1.Invoke(innerF)));
+            var taskGPrime = Task.Run(async () => IsDecomposable(innerG) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(diff2.Invoke(innerG)));
+
+            // Await the tasks and continue
+            gradientExpression.F = await taskF;
+            gradientExpression.G = await taskG;
+            gradientExpression.FPrime = await taskFPrime;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
+        }
+
+        private async Task<QuotientRuleGradientExpression> CreateQuotientRuleExpressionAsync(BinaryExpressionSyntax binaryExpression)
+        {
+            QuotientRuleGradientExpression gradientExpression = new QuotientRuleGradientExpression();
+
+            // Define tasks for async execution
+            var taskF = Task.Run(() => GraphHelper.ConvertToGraph(binaryExpression.Left));
+            var taskG = Task.Run(() => GraphHelper.ConvertToGraph(binaryExpression.Right));
+            var taskFPrime = Task.Run(() => DecomposeExpression(binaryExpression.Left, new GradientGraph()));
+            var taskGPrime = Task.Run(() => DecomposeExpression(binaryExpression.Right, new GradientGraph()));
+
+            // Await the tasks and continue
+            gradientExpression.F = await taskF;
+            gradientExpression.G = await taskG;
+            gradientExpression.FPrime = await taskFPrime;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
+        }
+
+        private async Task<ProductRuleGradientExpression> CreateProductRuleExpressionAsync(BinaryExpressionSyntax binaryExpression)
+        {
+            ProductRuleGradientExpression gradientExpression = new ProductRuleGradientExpression();
+
+            // Define tasks for async execution
+            var taskF = Task.Run(() => GraphHelper.ConvertToGraph(binaryExpression.Left));
+            var taskG = Task.Run(() => GraphHelper.ConvertToGraph(binaryExpression.Right));
+            var taskFPrime = Task.Run(() => DecomposeExpression(binaryExpression.Left, new GradientGraph()));
+            var taskGPrime = Task.Run(() => DecomposeExpression(binaryExpression.Right, new GradientGraph()));
+
+            // Await the tasks and continue
+            gradientExpression.F = await taskF;
+            gradientExpression.G = await taskG;
+            gradientExpression.FPrime = await taskFPrime;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
         }
 
         private bool IsDecomposable(SyntaxNode node)
