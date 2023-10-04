@@ -14,9 +14,21 @@ namespace GradientExplorer.Model
 
         Sin,
 
+        Asin,
+
+        Sinh,
+
         Cos,
 
+        Acos,
+
+        Cosh,
+
         Tan,
+
+        Atan,
+
+        Tanh,
 
         Log,
 

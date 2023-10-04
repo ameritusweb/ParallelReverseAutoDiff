@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpMath.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,13 @@ namespace GradientExplorer.Model
 
         public Node Differentiate()
         {
-            return new Node();
+            Node operandLeft = GraphHelper.Function(NodeType.Multiply, FPrime.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
+
+            Node operandRight = GraphHelper.Function(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
+
+            Node result = GraphHelper.Function(NodeType.Add, operandLeft, operandRight);
+
+            return result;
         }
     }
 }

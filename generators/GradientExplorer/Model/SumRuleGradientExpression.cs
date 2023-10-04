@@ -12,7 +12,10 @@ namespace GradientExplorer.Model
 
         public Node Differentiate()
         {
-            return new Node();
+
+            var result = GraphHelper.Function(NodeType.Add, Operands.Select(x => x.Nodes.FirstOrDefault()).ToList());
+
+            return result;
         }
     }
 }

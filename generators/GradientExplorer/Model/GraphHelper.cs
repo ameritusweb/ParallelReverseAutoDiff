@@ -1,10 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace GradientExplorer.Model
 {
@@ -49,6 +46,25 @@ namespace GradientExplorer.Model
             return node;
         }
 
+        public static Node Function(NodeType functionType, List<Node> operands)
+        {
+            Node node = new Node()
+            {
+                NodeType = functionType,
+            };
+            
+            foreach (var operand in operands)
+            {
+                Edge edge = new Edge()
+                {
+                    Relationship = RelationshipType.Operand,
+                    TargetNode = operand,
+                };
+                node.Edges.Add(edge);
+            }
+            return node;
+        }
+
         public static Node FunctionWithCoefficient(NodeType node, Node coefficient, SyntaxNode innerInvocation)
         {
             var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
@@ -76,6 +92,18 @@ namespace GradientExplorer.Model
             };
             inner.Edges.Add(coefficientEdge);
 
+            Edge exponentEdge = new Edge()
+            {
+                Relationship = RelationshipType.Exponent,
+                TargetNode = exponent,
+            };
+            inner.Edges.Add(exponentEdge);
+
+            return inner;
+        }
+
+        public static Node NodeWithExponent(Node inner, Node exponent)
+        {
             Edge exponentEdge = new Edge()
             {
                 Relationship = RelationshipType.Exponent,
@@ -170,10 +198,22 @@ namespace GradientExplorer.Model
                             return NodeType.Log;
                         case "Math.Sin":
                             return NodeType.Sin;
+                        case "Math.Asin":
+                            return NodeType.Asin;
+                        case "Math.Sinh":
+                            return NodeType.Sinh;
                         case "Math.Cos":
                             return NodeType.Cos;
+                        case "Math.Acos":
+                            return NodeType.Acos;
+                        case "Math.Cosh":
+                            return NodeType.Cosh;
                         case "Math.Tan":
                             return NodeType.Tan;
+                        case "Math.Atan":
+                            return NodeType.Atan;
+                        case "Math.Tanh":
+                            return NodeType.Tanh;
                         case "Math.Sqrt":
                             return NodeType.Sqrt;
                         case "Math.Pow":

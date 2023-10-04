@@ -24,8 +24,14 @@ namespace ToolWindow
             {
                 { NodeType.Exp, DifferentiateExpExpression },
                 { NodeType.Sin, DifferentiateSinExpression },
+                { NodeType.Sinh, DifferentiateSinhExpression },
+                { NodeType.Asin, DifferentiateAsinExpression },
                 { NodeType.Cos, DifferentiateCosExpression },
+                { NodeType.Cosh, DifferentiateCoshExpression },
+                { NodeType.Acos, DifferentiateAcosExpression },
                 { NodeType.Tan, DifferentiateTanExpression },
+                { NodeType.Tanh, DifferentiateTanhExpression },
+                { NodeType.Atan, DifferentiateAtanExpression },
                 { NodeType.Log, DifferentiateLogExpression },
                 { NodeType.Ln, DifferentiateLnExpression },
                 { NodeType.Sqrt, DifferentiateSqrtExpression },
@@ -293,6 +299,54 @@ namespace ToolWindow
             return graph;
         }
 
+        private GradientGraph DifferentiateSinhExpression(SyntaxNode innerInvocation)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            var node = GraphHelper.Function(NodeType.Cosh, target);
+
+            graph.Nodes.Add(node);
+            return graph;
+        }
+
+        private GradientGraph DifferentiateAsinExpression(SyntaxNode innerInvocation)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            Node numerator = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            Node exponent = new Node()
+            {
+                Value = 2,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var squared = GraphHelper.NodeWithExponent(target, exponent);
+
+            Node operand = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var subtract = GraphHelper.Function(NodeType.Subtract, operand, squared);
+
+            var denominator = GraphHelper.Function(NodeType.Sqrt, subtract);
+
+            var result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
+
+            graph.Nodes.Add(result);
+            return graph;
+        }
+
         private GradientGraph DifferentiateCosExpression(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
@@ -305,6 +359,57 @@ namespace ToolWindow
 
             var inner = GraphHelper.FunctionWithCoefficient(NodeType.Sin, coefficient, innerInvocation);
 
+            graph.Nodes.Add(inner);
+
+            return graph;
+        }
+
+        private GradientGraph DifferentiateCoshExpression(SyntaxNode innerInvocation)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            var inner = GraphHelper.Function(NodeType.Sinh, target);
+
+            graph.Nodes.Add(inner);
+
+            return graph;
+        }
+
+        private GradientGraph DifferentiateAcosExpression(SyntaxNode innerInvocation)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            Node numerator = new Node()
+            {
+                Value = -1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            Node exponent = new Node()
+            {
+                Value = 2,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var squared = GraphHelper.NodeWithExponent(target, exponent);
+
+            Node operand = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var subtract = GraphHelper.Function(NodeType.Subtract, operand, squared);
+
+            var denominator = GraphHelper.Function(NodeType.Sqrt, subtract);
+
+            var result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
+
+            graph.Nodes.Add(result);
             return graph;
         }
 
@@ -328,6 +433,62 @@ namespace ToolWindow
 
             graph.Nodes.Add(divide);
 
+            return graph;
+        }
+
+        private GradientGraph DifferentiateTanhExpression(SyntaxNode innerInvocation)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            Node operand = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var tanh = GraphHelper.Function(NodeType.Tanh, target);
+
+            var mult = GraphHelper.Function(NodeType.Multiply, tanh, tanh);
+
+            var result = GraphHelper.Function(NodeType.Subtract, operand, mult);
+
+            graph.Nodes.Add(result);
+            return graph;
+        }
+
+        private GradientGraph DifferentiateAtanExpression(SyntaxNode innerInvocation)
+        {
+            GradientGraph graph = new GradientGraph();
+
+            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+
+            Node numerator = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            Node exponent = new Node()
+            {
+                Value = 2,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var squared = GraphHelper.NodeWithExponent(target, exponent);
+
+            Node operand = new Node()
+            {
+                Value = 1,
+                Type = LiteralType.Constant.ToString(),
+            };
+
+            var denominator = GraphHelper.Function(NodeType.Add, operand, squared);
+
+            var result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
+
+            graph.Nodes.Add(result);
             return graph;
         }
 

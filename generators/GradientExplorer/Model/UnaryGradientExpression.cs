@@ -12,7 +12,7 @@ namespace GradientExplorer.Model
 
         public Node Differentiate()
         {
-            return new Node();
+            return FPrime.Nodes.FirstOrDefault();
         }
     }
 }

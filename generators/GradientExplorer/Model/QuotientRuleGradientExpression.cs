@@ -15,7 +15,18 @@ namespace GradientExplorer.Model
 
         public Node Differentiate()
         {
-            return new Node();
+
+            Node operandLeft = GraphHelper.Function(NodeType.Multiply, FPrime.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
+
+            Node operandRight = GraphHelper.Function(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
+
+            Node numerator = GraphHelper.Function(NodeType.Subtract, operandLeft, operandRight);
+
+            Node denominator = GraphHelper.NodeWithExponent(G.Nodes.FirstOrDefault(), new Node() { Value = 2, Type = LiteralType.Constant.ToString() });
+
+            Node result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
+
+            return result;
         }
     }
 }
