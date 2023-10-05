@@ -12,10 +12,6 @@ namespace GradientExplorer.Model
 
         Function,
 
-        Exponent,
-
-        Coefficient,
-
         Operand,
 
         Numerator,

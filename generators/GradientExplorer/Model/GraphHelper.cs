@@ -71,47 +71,44 @@ namespace GradientExplorer.Model
 
             var functionNode = Function(node, inner);
 
-            Edge coefficientEdge = new Edge()
-            {
-                Relationship = RelationshipType.Coefficient,
-                TargetNode = coefficient,
-            };
-            functionNode.Edges.Add(coefficientEdge);
+            var mult = Function(NodeType.Multiply, coefficient, functionNode);
 
-            return functionNode;
+            return mult;
         }
 
         public static Node NodeWithCoefficientAndExponent(Node coefficient, Node exponent, SyntaxNode innerInvocation)
         {
             var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Edge coefficientEdge = new Edge()
-            {
-                Relationship = RelationshipType.Coefficient,
-                TargetNode = coefficient,
-            };
-            inner.Edges.Add(coefficientEdge);
+            var pow = NodeWithExponent(inner, exponent);
 
-            Edge exponentEdge = new Edge()
-            {
-                Relationship = RelationshipType.Exponent,
-                TargetNode = exponent,
-            };
-            inner.Edges.Add(exponentEdge);
+            var mult = Function(NodeType.Multiply, coefficient, pow);
 
-            return inner;
+            return mult;
         }
 
         public static Node NodeWithExponent(Node inner, Node exponent)
         {
+            Node pow = new Node()
+            {
+                NodeType = NodeType.Pow,
+            };
+
+            Edge baseEdge = new Edge()
+            {
+                Relationship = RelationshipType.Operand,
+                TargetNode = inner,
+            };
+
             Edge exponentEdge = new Edge()
             {
-                Relationship = RelationshipType.Exponent,
+                Relationship = RelationshipType.Operand,
                 TargetNode = exponent,
             };
-            inner.Edges.Add(exponentEdge);
+            pow.Edges.Add(baseEdge);
+            pow.Edges.Add(exponentEdge);
 
-            return inner;
+            return pow;
         }
 
         public static Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type)
@@ -158,13 +155,8 @@ namespace GradientExplorer.Model
             else if (node is PrefixUnaryExpressionSyntax prefixUnary)
             {
                 Node baseNode = ConvertToGraph(prefixUnary.Operand).Nodes.FirstOrDefault();
-                Edge edge = new Edge()
-                {
-                    Relationship = RelationshipType.Coefficient,
-                    TargetNode = ToValueNode(prefixUnary, prefixUnary.OperatorToken, LiteralType.Constant),
-                };
-                baseNode.Edges.Add(edge);
-                graph.Nodes.Add(baseNode);
+                var mult = Function(NodeType.Multiply, baseNode, ToValueNode(node, prefixUnary.OperatorToken, LiteralType.Constant));
+                graph.Nodes.Add(mult);
             }
             else if (node is BinaryExpressionSyntax binary)
             {
@@ -224,7 +216,7 @@ namespace GradientExplorer.Model
                 }
             }
 
-            return NodeType.Unknown;
+            return NodeType.ConstantOrVariable;
         }
     }
 }

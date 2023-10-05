@@ -126,6 +126,9 @@ namespace GradientExplorer.Model
                     GenerateLatexFromGraph(node.Edges[1].TargetNode, builder);
                     builder.Append("}");
                     break;
+                case NodeType.ConstantOrVariable:
+                    builder.Append(node.ValueAsString);
+                    break;
                 default:
                     break;
             }

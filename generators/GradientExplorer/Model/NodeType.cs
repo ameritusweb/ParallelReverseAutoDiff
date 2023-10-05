@@ -8,7 +8,7 @@ namespace GradientExplorer.Model
 {
     public enum NodeType
     {
-        Unknown,
+        ConstantOrVariable,
 
         Exp,
 
