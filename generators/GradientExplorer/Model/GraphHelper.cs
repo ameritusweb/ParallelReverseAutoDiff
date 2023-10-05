@@ -119,6 +119,86 @@ namespace GradientExplorer.Model
             return literalNode;
         }
 
+        public static Node ToConstantNode(int value)
+        {
+            Node literal = new Node()
+            {
+                Value = value,
+                Type = LiteralType.Constant.ToString(),
+            };
+            return literal;
+        }
+
+        public static Node ToValue(SyntaxNode node)
+        {
+            if (node is LiteralExpressionSyntax literalExpression)
+            {
+                Node literal = ToConstantNode((int)literalExpression.Token.Value);
+                return literal;
+            }
+            else if (node is ElementAccessExpressionSyntax elementAccess)
+            {
+                Node variable = new Node()
+                {
+                    Value = elementAccess.Expression,
+                    Type = LiteralType.Variable.ToString(),
+                };
+                return variable;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unknown node type");
+            }
+        }
+
+        public static Node ToValueNodeWithParent(SyntaxNode node, Node parent, int edgeIndex)
+        {
+            if (node is LiteralExpressionSyntax literalExpression)
+            {
+                Node literal = ToValueNode(literalExpression, literalExpression.Token, LiteralType.Constant);
+                parent.Edges[edgeIndex].TargetNode = literal;
+            }
+            else if (node is ElementAccessExpressionSyntax elementAccess)
+            {
+                Node variable = new Node()
+                {
+                    Value = elementAccess.Expression,
+                    Type = LiteralType.Variable.ToString(),
+                };
+                parent.Edges[edgeIndex].TargetNode = variable;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unknown node type");
+            }
+
+            return parent;
+        }
+
+        public static NodeType ToNodeType(BinaryExpressionSyntax binaryExpression)
+        {
+            if (binaryExpression.OperatorToken.Text == "+")
+            {
+                return NodeType.Add;
+            }
+            else if (binaryExpression.OperatorToken.Text == "-")
+            {
+                return NodeType.Subtract;
+            }
+            else if (binaryExpression.OperatorToken.Text == "*")
+            {
+                return NodeType.Multiply;
+            }
+            else if (binaryExpression.OperatorToken.Text == "/")
+            {
+                return NodeType.Divide;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unknown operator");
+            }
+        }
+
         public static GradientGraph ConvertToGraph(SyntaxNode node)
         {
             GradientGraph graph = new GradientGraph();
@@ -162,7 +242,7 @@ namespace GradientExplorer.Model
             {
                 Node left = ConvertToGraph(binary.Left).Nodes.FirstOrDefault();
                 Node right = ConvertToGraph(binary.Right).Nodes.FirstOrDefault();
-                Node multiply = Function(NodeType.Multiply, left, right);
+                Node multiply = Function(ToNodeType(binary), left, right);
                 graph.Nodes.Add(multiply);
             }
             else

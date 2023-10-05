@@ -382,25 +382,13 @@ namespace ToolWindow
 
             var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Node numerator = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(1);
 
-            Node exponent = new Node()
-            {
-                Value = 2,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node exponent = GraphHelper.ToConstantNode(2);
 
             var squared = GraphHelper.NodeWithExponent(target, exponent);
 
-            Node operand = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node operand = GraphHelper.ToConstantNode(1);
 
             var subtract = GraphHelper.Function(NodeType.Subtract, operand, squared);
 
@@ -416,11 +404,7 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            Node coefficient = new Node()
-            {
-                Value = -1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node coefficient = GraphHelper.ToConstantNode(-1);
 
             var inner = GraphHelper.FunctionWithCoefficient(NodeType.Sin, coefficient, innerInvocation);
 
@@ -448,25 +432,13 @@ namespace ToolWindow
 
             var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Node numerator = new Node()
-            {
-                Value = -1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(-1);
 
-            Node exponent = new Node()
-            {
-                Value = 2,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node exponent = GraphHelper.ToConstantNode(2);
 
             var squared = GraphHelper.NodeWithExponent(target, exponent);
 
-            Node operand = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node operand = GraphHelper.ToConstantNode(1);
 
             var subtract = GraphHelper.Function(NodeType.Subtract, operand, squared);
 
@@ -482,11 +454,7 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            Node numerator = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(1);
 
             var inner = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
@@ -507,11 +475,7 @@ namespace ToolWindow
 
             var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Node operand = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node operand = GraphHelper.ToConstantNode(1);
 
             var tanh = GraphHelper.Function(NodeType.Tanh, target);
 
@@ -529,25 +493,13 @@ namespace ToolWindow
 
             var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Node numerator = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(1);
 
-            Node exponent = new Node()
-            {
-                Value = 2,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node exponent = GraphHelper.ToConstantNode(2);
 
             var squared = GraphHelper.NodeWithExponent(target, exponent);
 
-            Node operand = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node operand = GraphHelper.ToConstantNode(1);
 
             var denominator = GraphHelper.Function(NodeType.Add, operand, squared);
 
@@ -561,19 +513,11 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            Node numerator = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(1);
 
             var inner = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
-            Node c = new Node()
-            {
-                Value = 10,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node c = GraphHelper.ToConstantNode(10);
 
             var ln10 = GraphHelper.Function(NodeType.Ln, c);
 
@@ -590,11 +534,7 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            Node numerator = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(1);
 
             var denominator = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
@@ -609,17 +549,30 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            Node exponent = new Node()
+            var subtract = new Node()
             {
-                Value = int.Parse((syntaxNodes[1] as LiteralExpressionSyntax).Token.Value.ToString()) - 1,
-                Type = typeof(int).Name,
+                NodeType = NodeType.Subtract,
             };
 
-            Node coefficient = new Node()
+            var constant = GraphHelper.ToConstantNode(1);
+
+            var edge1 = new Edge()
             {
-                Value = int.Parse((syntaxNodes[1] as LiteralExpressionSyntax).Token.Value.ToString()),
-                Type = LiteralType.Constant.ToString(),
+                Relationship = RelationshipType.Operand,
             };
+
+            var edge2 = new Edge()
+            {
+                Relationship = RelationshipType.Operand,
+                TargetNode = constant,
+            };
+
+            subtract.Edges.Add(edge1);
+            subtract.Edges.Add(edge2);
+
+            var exponent = GraphHelper.ToValueNodeWithParent(syntaxNodes[1], subtract, 0);
+
+            Node coefficient = GraphHelper.ToValue(syntaxNodes[1]);
 
             var baseNode = GraphHelper.NodeWithCoefficientAndExponent(coefficient, exponent, syntaxNodes[0]);
 
@@ -632,19 +585,11 @@ namespace ToolWindow
         {
             GradientGraph graph = new GradientGraph();
 
-            Node two = new Node()
-            {
-                Value = 2,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node two = GraphHelper.ToConstantNode(2);
 
             var functionWithCoefficent = GraphHelper.FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
 
-            Node numerator = new Node()
-            {
-                Value = 1,
-                Type = LiteralType.Constant.ToString(),
-            };
+            Node numerator = GraphHelper.ToConstantNode(1);
 
             var divide = GraphHelper.Function(NodeType.Divide, numerator, functionWithCoefficent);
 
