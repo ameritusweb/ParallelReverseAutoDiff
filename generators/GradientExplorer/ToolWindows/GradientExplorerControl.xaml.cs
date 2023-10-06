@@ -23,24 +23,24 @@ namespace ToolWindow
 
             gradientUnaryExpressionMap = new Dictionary<NodeType, Func<SyntaxNode, GradientGraph>>()
             {
-                { NodeType.Exp, DifferentiateExpExpression },
-                { NodeType.Sin, DifferentiateSinExpression },
-                { NodeType.Sinh, DifferentiateSinhExpression },
-                { NodeType.Asin, DifferentiateAsinExpression },
-                { NodeType.Cos, DifferentiateCosExpression },
-                { NodeType.Cosh, DifferentiateCoshExpression },
-                { NodeType.Acos, DifferentiateAcosExpression },
-                { NodeType.Tan, DifferentiateTanExpression },
-                { NodeType.Tanh, DifferentiateTanhExpression },
-                { NodeType.Atan, DifferentiateAtanExpression },
-                { NodeType.Log, DifferentiateLogExpression },
-                { NodeType.Ln, DifferentiateLnExpression },
-                { NodeType.Sqrt, DifferentiateSqrtExpression },
+                { NodeType.Exp, DifferentiationHelper.DifferentiateExpExpression },
+                { NodeType.Sin, DifferentiationHelper.DifferentiateSinExpression },
+                { NodeType.Sinh, DifferentiationHelper.DifferentiateSinhExpression },
+                { NodeType.Asin, DifferentiationHelper.DifferentiateAsinExpression },
+                { NodeType.Cos, DifferentiationHelper.DifferentiateCosExpression },
+                { NodeType.Cosh, DifferentiationHelper.DifferentiateCoshExpression },
+                { NodeType.Acos, DifferentiationHelper.DifferentiateAcosExpression },
+                { NodeType.Tan, DifferentiationHelper.DifferentiateTanExpression },
+                { NodeType.Tanh, DifferentiationHelper.DifferentiateTanhExpression },
+                { NodeType.Atan, DifferentiationHelper.DifferentiateAtanExpression },
+                { NodeType.Log, DifferentiationHelper.DifferentiateLogExpression },
+                { NodeType.Ln, DifferentiationHelper.DifferentiateLnExpression },
+                { NodeType.Sqrt, DifferentiationHelper.DifferentiateSqrtExpression },
             };
 
             gradientNonUnaryExpressionMap = new Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>>()
             {
-                { NodeType.Pow, DifferentiatePowExpression },
+                { NodeType.Pow, DifferentiationHelper.DifferentiatePowExpression },
                 // Add other non-unary functions here
             };
 
@@ -192,14 +192,28 @@ namespace ToolWindow
                             {
                                 // Handle nested functions like Math.Pow(Math.Cos(x), Math.Sin(x))
                                 var innerNodeType = GraphHelper.GetNodeType(innerInvocationExpression);
-                                var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
-                                var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
-                                var secondInnerNodeType = GraphHelper.GetNodeType(secondInnerInvocationExpression);
-                                var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
-                                var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
-                                CompositePowerRuleGradientExpression gradientExpression = await CreateCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, innerInnerExpression, secondInnerInnerExpression, innerDifferentiationFunction, secondInnerDifferentiationFunction);
-                                gradientGraph.Nodes.Add(gradientExpression.Differentiate());
-                                gradientGraph.Expressions.Add(gradientExpression);
+                                if (gradientNonUnaryExpressionMap.ContainsKey(innerNodeType))
+                                {
+                                    var innerDifferentiationFunction = gradientNonUnaryExpressionMap[innerNodeType];
+                                    var innerInnerExpressions = innerInvocationExpression.ArgumentList.Arguments.Select(x => x.Expression).ToList();
+                                    var secondInnerNodeType = GraphHelper.GetNodeType(secondInnerInvocationExpression);
+                                    var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
+                                    var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                                    CompositePowerRuleGradientExpression gradientExpression = await CreateNonUnaryCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, innerInnerExpressions, secondInnerInnerExpression, innerDifferentiationFunction, secondInnerDifferentiationFunction);
+                                    gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                    gradientGraph.Expressions.Add(gradientExpression);
+                                }
+                                else
+                                {
+                                    var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
+                                    var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                                    var secondInnerNodeType = GraphHelper.GetNodeType(secondInnerInvocationExpression);
+                                    var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
+                                    var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                                    CompositePowerRuleGradientExpression gradientExpression = await CreateCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, innerInnerExpression, secondInnerInnerExpression, innerDifferentiationFunction, secondInnerDifferentiationFunction);
+                                    gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                    gradientGraph.Expressions.Add(gradientExpression);
+                                }
                             }
                         }
                         else if (secondInnerExpression is InvocationExpressionSyntax secondInnerInvocationExpression)
@@ -261,13 +275,13 @@ namespace ToolWindow
 
                 // Base cases: expression cannot be decomposed further (e.g., literals, identifiers)
                 case PrefixUnaryExpressionSyntax prefixUnaryExpression:
-                    gradientGraph.Nodes.Add(DifferentiateLiteral(prefixUnaryExpression, LiteralType.Variable));
+                    gradientGraph.Nodes.Add(DifferentiationHelper.DifferentiateLiteral(prefixUnaryExpression, LiteralType.Variable));
                     break;
                 case ElementAccessExpressionSyntax elementAccess:
-                    gradientGraph.Nodes.Add(DifferentiateLiteral(elementAccess, LiteralType.Variable));
+                    gradientGraph.Nodes.Add(DifferentiationHelper.DifferentiateLiteral(elementAccess, LiteralType.Variable));
                     break;
                 case LiteralExpressionSyntax literalExpression:
-                    gradientGraph.Nodes.Add(DifferentiateLiteral(literalExpression, LiteralType.Constant));
+                    gradientGraph.Nodes.Add(DifferentiationHelper.DifferentiateLiteral(literalExpression, LiteralType.Constant));
                     break;
 
                 default:
@@ -326,6 +340,24 @@ namespace ToolWindow
             var taskGPrime = Task.Run(async () => innerG.Any(x => IsDecomposable(x)) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(innerDiff.Invoke(innerG.Select(x => x as SyntaxNode).ToList())));
 
             gradientExpression.FPrimeOfG = await taskFPrimeOfG;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
+        }
+
+        private async Task<CompositePowerRuleGradientExpression> CreateNonUnaryCompositePowerRuleExpressionAsync(ExpressionSyntax f, ExpressionSyntax g, List<ExpressionSyntax> innerF, ExpressionSyntax innerG, Func<List<SyntaxNode>, GradientGraph> diff1, Func<SyntaxNode, GradientGraph> diff2)
+        {
+            CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
+
+            var taskF = Task.Run(() => GraphHelper.ConvertToGraph(f));
+            var taskG = Task.Run(() => GraphHelper.ConvertToGraph(g));
+            var taskFPrime = Task.Run(async () => innerF.Any(x => IsDecomposable(x)) ? await DecomposeExpression(f, new GradientGraph()) : await Task.FromResult(diff1.Invoke(innerF.Select(x => x as SyntaxNode).ToList())));
+            var taskGPrime = Task.Run(async () => IsDecomposable(innerG) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(diff2.Invoke(innerG)));
+
+            // Await the tasks and continue
+            gradientExpression.F = await taskF;
+            gradientExpression.G = await taskG;
+            gradientExpression.FPrime = await taskFPrime;
             gradientExpression.GPrime = await taskGPrime;
 
             return gradientExpression;
@@ -408,278 +440,6 @@ namespace ToolWindow
         private bool IsDecomposable(SyntaxNode node)
         {
             return !(node is LiteralExpressionSyntax || node is IdentifierNameSyntax || node is ElementAccessExpressionSyntax);
-        }
-
-        private Node DifferentiateLiteral(SyntaxNode node, LiteralType type)
-        {
-            Node literalNode = new Node(node, node.GetType());
-            literalNode.Value = type == LiteralType.Constant ? 0 : 1;
-            if (node is PrefixUnaryExpressionSyntax prefix)
-            {
-                if (prefix.OperatorToken.Text == "-")
-                {
-                    literalNode.Value = (int)literalNode.Value * -1;
-                }
-            }
-            literalNode.Type = type.ToString();
-            return literalNode;
-        }
-
-        private GradientGraph DifferentiateExpExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            var node = GraphHelper.Function(NodeType.Exp, target);
-
-            graph.Nodes.Add(node);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateSinExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            var node = GraphHelper.Function(NodeType.Cos, target);
-
-            graph.Nodes.Add(node);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateSinhExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            var node = GraphHelper.Function(NodeType.Cosh, target);
-
-            graph.Nodes.Add(node);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateAsinExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            Node numerator = GraphHelper.ToConstantNode(1);
-
-            Node exponent = GraphHelper.ToConstantNode(2);
-
-            var squared = GraphHelper.NodeWithExponent(target, exponent);
-
-            Node operand = GraphHelper.ToConstantNode(1);
-
-            var subtract = GraphHelper.Function(NodeType.Subtract, operand, squared);
-
-            var denominator = GraphHelper.Function(NodeType.Sqrt, subtract);
-
-            var result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
-            graph.Nodes.Add(result);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateCosExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            Node coefficient = GraphHelper.ToConstantNode(-1);
-
-            var inner = GraphHelper.FunctionWithCoefficient(NodeType.Sin, coefficient, innerInvocation);
-
-            graph.Nodes.Add(inner);
-
-            return graph;
-        }
-
-        private GradientGraph DifferentiateCoshExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            var inner = GraphHelper.Function(NodeType.Sinh, target);
-
-            graph.Nodes.Add(inner);
-
-            return graph;
-        }
-
-        private GradientGraph DifferentiateAcosExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            Node numerator = GraphHelper.ToConstantNode(-1);
-
-            Node exponent = GraphHelper.ToConstantNode(2);
-
-            var squared = GraphHelper.NodeWithExponent(target, exponent);
-
-            Node operand = GraphHelper.ToConstantNode(1);
-
-            var subtract = GraphHelper.Function(NodeType.Subtract, operand, squared);
-
-            var denominator = GraphHelper.Function(NodeType.Sqrt, subtract);
-
-            var result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
-            graph.Nodes.Add(result);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateTanExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            Node numerator = GraphHelper.ToConstantNode(1);
-
-            var inner = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            var cos = GraphHelper.Function(NodeType.Cos, inner);
-
-            var denominator = GraphHelper.Function(NodeType.Multiply, cos, cos);
-
-            var divide = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
-            graph.Nodes.Add(divide);
-
-            return graph;
-        }
-
-        private GradientGraph DifferentiateTanhExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            Node operand = GraphHelper.ToConstantNode(1);
-
-            var tanh = GraphHelper.Function(NodeType.Tanh, target);
-
-            var mult = GraphHelper.Function(NodeType.Multiply, tanh, tanh);
-
-            var result = GraphHelper.Function(NodeType.Subtract, operand, mult);
-
-            graph.Nodes.Add(result);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateAtanExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var target = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            Node numerator = GraphHelper.ToConstantNode(1);
-
-            Node exponent = GraphHelper.ToConstantNode(2);
-
-            var squared = GraphHelper.NodeWithExponent(target, exponent);
-
-            Node operand = GraphHelper.ToConstantNode(1);
-
-            var denominator = GraphHelper.Function(NodeType.Add, operand, squared);
-
-            var result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
-            graph.Nodes.Add(result);
-            return graph;
-        }
-
-        private GradientGraph DifferentiateLogExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            Node numerator = GraphHelper.ToConstantNode(1);
-
-            var inner = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            Node c = GraphHelper.ToConstantNode(10);
-
-            var ln10 = GraphHelper.Function(NodeType.Ln, c);
-
-            var denominator = GraphHelper.Function(NodeType.Multiply, inner, ln10);
-
-            var divide = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
-            graph.Nodes.Add(divide);
-
-            return graph;
-        }
-
-        private GradientGraph DifferentiateLnExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            Node numerator = GraphHelper.ToConstantNode(1);
-
-            var denominator = GraphHelper.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
-
-            var divide = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
-            graph.Nodes.Add(divide);
-
-            return graph;
-        }
-
-        private GradientGraph DifferentiatePowExpression(List<SyntaxNode> syntaxNodes)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            var subtract = new Node()
-            {
-                NodeType = NodeType.Subtract,
-            };
-
-            var constant = GraphHelper.ToConstantNode(1);
-
-            var edge1 = new Edge()
-            {
-                Relationship = RelationshipType.Operand,
-            };
-
-            var edge2 = new Edge()
-            {
-                Relationship = RelationshipType.Operand,
-                TargetNode = constant,
-            };
-
-            subtract.Edges.Add(edge1);
-            subtract.Edges.Add(edge2);
-
-            var exponent = GraphHelper.ToValueNodeWithParent(syntaxNodes[1], subtract, 0);
-
-            Node coefficient = GraphHelper.ToValue(syntaxNodes[1]);
-
-            var baseNode = GraphHelper.NodeWithCoefficientAndExponent(coefficient, exponent, syntaxNodes[0]);
-
-            graph.Nodes.Add(baseNode);
-
-            return graph;
-        }
-
-        private GradientGraph DifferentiateSqrtExpression(SyntaxNode innerInvocation)
-        {
-            GradientGraph graph = new GradientGraph();
-
-            Node two = GraphHelper.ToConstantNode(2);
-
-            var functionWithCoefficent = GraphHelper.FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
-
-            Node numerator = GraphHelper.ToConstantNode(1);
-
-            var divide = GraphHelper.Function(NodeType.Divide, numerator, functionWithCoefficent);
-
-            graph.Nodes.Add(divide);
-
-            return graph;
         }
     }
 }

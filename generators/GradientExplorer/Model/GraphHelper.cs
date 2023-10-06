@@ -251,7 +251,7 @@ namespace GradientExplorer.Model
             else if (node is ElementAccessExpressionSyntax elementAccess)
             {
                 Node literalNode = new Node(node, node.GetType());
-                literalNode.Value = elementAccess.Expression;
+                literalNode.Value = elementAccess;
                 literalNode.Type = LiteralType.Variable.ToString();
                 graph.Nodes.Add(literalNode);
             }

@@ -250,6 +250,7 @@
     <Compile Include="LaTeX\Wpf\WpfPath.cs" />
     <Compile Include="LaTeX\Wpf\WpfMathPainter.cs" />
     <Compile Include="Model\CompositePowerRuleGradientExpression.cs" />
+    <Compile Include="Model\DifferentiationHelper.cs" />
     <Compile Include="Model\GraphHelper.cs" />
     <Compile Include="Model\LiteralType.cs" />
     <Compile Include="Model\DifferenceRuleGradientExpression.cs" />
