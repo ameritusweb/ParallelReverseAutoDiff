@@ -24,6 +24,11 @@ namespace GradientExplorer.LaTeX.Wpf
             _savedMap = new Dictionary<Guid, (double, double)>();
         }
 
+        public void SetWidth(float width)
+        {
+            _canvas.Width = width;
+        }
+
         public System.Drawing.Color DefaultColor
         {
             get => System.Drawing.Color.FromArgb(_defaultColorBrush.Color.A, _defaultColorBrush.Color.R, _defaultColorBrush.Color.G, _defaultColorBrush.Color.B);
@@ -49,9 +54,9 @@ namespace GradientExplorer.LaTeX.Wpf
 
         public PaintStyle CurrentStyle { get; set; }
 
-        float ICanvas.Width => (float)_canvas.ActualWidth;
+        float ICanvas.Width => (float)_canvas.Width;
 
-        float ICanvas.Height => (float)_canvas.ActualHeight;
+        float ICanvas.Height => (float)_canvas.Height;
 
         public void DrawLine(float x1, float y1, float x2, float y2, float lineThickness)
         {

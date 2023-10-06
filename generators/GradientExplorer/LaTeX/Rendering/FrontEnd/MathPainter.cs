@@ -6,6 +6,7 @@ namespace CSharpMath.Rendering.FrontEnd {
   using Structures;
   public abstract class MathPainter<TCanvas, TColor> : Painter<TCanvas, Atom.MathList, TColor> {
     protected bool _displayChanged = true;
+    protected abstract void UpdateCanvas(TCanvas canvas, IDisplay<Fonts, Glyph>? display);
     public override IDisplay<Fonts, Glyph>? Display { get; protected set; }
     protected override Result<Atom.MathList> LaTeXToContent(string latex) =>
       Atom.LaTeXParser.MathListFromLaTeX(latex);
@@ -25,6 +26,7 @@ namespace CSharpMath.Rendering.FrontEnd {
     public override void Draw(TCanvas canvas, TextAlignment alignment = TextAlignment.Center, Thickness padding = default, float offsetX = 0, float offsetY = 0) {
       var c = WrapCanvas(canvas);
       UpdateDisplay(float.NaN);
+      UpdateCanvas(canvas, Display);
       DrawCore(c, Display, Display == null ? new PointF?() : IPainterExtensions.GetDisplayPosition(Display.Width, Display.Ascent, Display.Descent, FontSize, c.Width, c.Height, alignment, padding, offsetX, offsetY));
     }
     public void Draw(TCanvas canvas, float x, float y) {

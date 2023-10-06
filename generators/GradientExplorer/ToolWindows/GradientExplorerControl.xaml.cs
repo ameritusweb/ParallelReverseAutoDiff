@@ -154,6 +154,13 @@ namespace ToolWindow
                         gradientGraph.Nodes.Add(gradientExpression.Differentiate());
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
+                    else if (binaryExpression.OperatorToken.Text == "-")
+                    {
+                        // Difference rule
+                        DifferenceRuleGradientExpression gradientExpression = await CreateDifferenceRuleExpressionAsync(binaryExpression);
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                        gradientGraph.Expressions.Add(gradientExpression);
+                    }
                     else if (binaryExpression.OperatorToken.Text == "*")
                     {
                         // Product rule
@@ -273,6 +280,20 @@ namespace ToolWindow
         private async Task<SumRuleGradientExpression> CreateSumRuleExpressionAsync(BinaryExpressionSyntax binaryExpression)
         {
             SumRuleGradientExpression gradientExpression = new SumRuleGradientExpression();
+
+            // Recursively decompose left and right operands
+            var left = Task.Run(() => DecomposeExpression(binaryExpression.Left, new GradientGraph()));
+            var right = Task.Run(() => DecomposeExpression(binaryExpression.Right, new GradientGraph()));
+
+            gradientExpression.Operands.Add(await left);
+            gradientExpression.Operands.Add(await right);
+
+            return gradientExpression;
+        }
+
+        private async Task<DifferenceRuleGradientExpression> CreateDifferenceRuleExpressionAsync(BinaryExpressionSyntax binaryExpression)
+        {
+            DifferenceRuleGradientExpression gradientExpression = new DifferenceRuleGradientExpression();
 
             // Recursively decompose left and right operands
             var left = Task.Run(() => DecomposeExpression(binaryExpression.Left, new GradientGraph()));

@@ -15,6 +15,7 @@ namespace CSharpMath.Rendering.FrontEnd {
     void Save(Guid id);
     void Translate(float dx, float dy);
     void SetTextPosition(float dx, float dy);
+    void SetWidth(float width);
     void Scale(float sx, float sy);
     void Restore(Guid id);
   }

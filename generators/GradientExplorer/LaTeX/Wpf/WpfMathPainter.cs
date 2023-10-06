@@ -1,4 +1,6 @@
-﻿using CSharpMath.Rendering.FrontEnd;
+﻿using CSharpMath.Display;
+using CSharpMath.Rendering.BackEnd;
+using CSharpMath.Rendering.FrontEnd;
 using System.Windows.Media;
 
 namespace GradientExplorer.LaTeX.Wpf
@@ -40,6 +42,11 @@ namespace GradientExplorer.LaTeX.Wpf
                 color.Color.G,
                 color.Color.B
             );
+        }
+
+        protected override void UpdateCanvas(WpfCanvas canvas, IDisplay<CSharpMath.Rendering.BackEnd.Fonts, Glyph> display)
+        {
+            canvas.SetWidth(display.Width);
         }
     }
 }

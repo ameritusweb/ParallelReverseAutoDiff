@@ -252,6 +252,7 @@
     <Compile Include="Model\CompositePowerRuleGradientExpression.cs" />
     <Compile Include="Model\GraphHelper.cs" />
     <Compile Include="Model\LiteralType.cs" />
+    <Compile Include="Model\DifferenceRuleGradientExpression.cs" />
     <Compile Include="Model\UnaryGradientExpression.cs" />
     <Compile Include="Model\ChainRuleGradientExpression.cs" />
     <Compile Include="Model\Edge.cs" />
