@@ -89,6 +89,7 @@ namespace ToolWindow
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
                 var gradientGraph = await this.ParseMethod(forwardMethod);
                 var canvas = laTeXCanvas;
+                canvas.Children.Clear();
                 var wpfCanvas = new WpfCanvas(canvas);
                 WpfMathPainter painter = new WpfMathPainter();
                 painter.LaTeX = gradientGraph.ToLaTeX();
@@ -194,6 +195,16 @@ namespace ToolWindow
                                 gradientGraph.Expressions.Add(gradientExpression);
                             }
                         }
+                        else if (secondInnerExpression is InvocationExpressionSyntax secondInnerInvocationExpression)
+                        {
+                            // Handle functions like Math.Pow(x, Math.Sin(x))
+                            var secondInnerNodeType = GraphHelper.GetNodeType(secondInnerInvocationExpression);
+                            var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
+                            var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                            CompositePowerRuleGradientExpression gradientExpression = await CreateCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, secondInnerInnerExpression, secondInnerDifferentiationFunction);
+                            gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                            gradientGraph.Expressions.Add(gradientExpression);
+                        }
                         else
                         {
                             // Handle functions like Math.Pow(x, 2)
@@ -211,11 +222,22 @@ namespace ToolWindow
                         {
                             // Handle nested functions like Math.Sin(Math.Cos(x))
                             var innerNodeType = GraphHelper.GetNodeType(innerInvocationExpression);
-                            var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
-                            var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
-                            ChainRuleGradientExpression gradientExpression = await CreateChainRuleExpressionAsync(innerInvocationExpression, innerInnerExpression, differentiationFunction, innerDifferentiationFunction);
-                            gradientGraph.Nodes.Add(gradientExpression.Differentiate());
-                            gradientGraph.Expressions.Add(gradientExpression);
+                            if (gradientNonUnaryExpressionMap.ContainsKey(innerNodeType))
+                            {
+                                var innerDifferentiationFunction = gradientNonUnaryExpressionMap[innerNodeType];
+                                var innerInnerExpressions = innerInvocationExpression.ArgumentList.Arguments.Select(x => x.Expression).ToList();
+                                ChainRuleGradientExpression gradientExpression = await CreateNonUnaryChainRuleExpressionAsync(innerInvocationExpression, innerInnerExpressions, differentiationFunction, innerDifferentiationFunction);
+                                gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                gradientGraph.Expressions.Add(gradientExpression);
+                            }
+                            else
+                            {
+                                var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
+                                var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
+                                ChainRuleGradientExpression gradientExpression = await CreateChainRuleExpressionAsync(innerInvocationExpression, innerInnerExpression, differentiationFunction, innerDifferentiationFunction);
+                                gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                gradientGraph.Expressions.Add(gradientExpression);
+                            }
                         }
                         else
                         {
@@ -231,6 +253,9 @@ namespace ToolWindow
                 // ... handle other types of expressions
 
                 // Base cases: expression cannot be decomposed further (e.g., literals, identifiers)
+                case PrefixUnaryExpressionSyntax prefixUnaryExpression:
+                    gradientGraph.Nodes.Add(DifferentiateLiteral(prefixUnaryExpression, LiteralType.Variable));
+                    break;
                 case ElementAccessExpressionSyntax elementAccess:
                     gradientGraph.Nodes.Add(DifferentiateLiteral(elementAccess, LiteralType.Variable));
                     break;
@@ -272,6 +297,19 @@ namespace ToolWindow
             return gradientExpression;
         }
 
+        private async Task<ChainRuleGradientExpression> CreateNonUnaryChainRuleExpressionAsync(ExpressionSyntax g, List<ExpressionSyntax> innerG, Func<SyntaxNode, GradientGraph> diff, Func<List<SyntaxNode>, GradientGraph> innerDiff)
+        {
+            ChainRuleGradientExpression gradientExpression = new ChainRuleGradientExpression();
+
+            var taskFPrimeOfG = Task.Run(() => diff.Invoke(g));
+            var taskGPrime = Task.Run(async () => innerG.Any(x => IsDecomposable(x)) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(innerDiff.Invoke(innerG.Select(x => x as SyntaxNode).ToList())));
+
+            gradientExpression.FPrimeOfG = await taskFPrimeOfG;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
+        }
+
         private async Task<CompositePowerRuleGradientExpression> CreateCompositePowerRuleExpressionAsync(ExpressionSyntax f, ExpressionSyntax g, ExpressionSyntax innerF, ExpressionSyntax innerG, Func<SyntaxNode, GradientGraph> diff1, Func<SyntaxNode, GradientGraph> diff2)
         {
             CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
@@ -279,6 +317,24 @@ namespace ToolWindow
             var taskF = Task.Run(() => GraphHelper.ConvertToGraph(f));
             var taskG = Task.Run(() => GraphHelper.ConvertToGraph(g));
             var taskFPrime = Task.Run(async () => IsDecomposable(innerF) ? await DecomposeExpression(f, new GradientGraph()) : await Task.FromResult(diff1.Invoke(innerF)));
+            var taskGPrime = Task.Run(async () => IsDecomposable(innerG) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(diff2.Invoke(innerG)));
+
+            // Await the tasks and continue
+            gradientExpression.F = await taskF;
+            gradientExpression.G = await taskG;
+            gradientExpression.FPrime = await taskFPrime;
+            gradientExpression.GPrime = await taskGPrime;
+
+            return gradientExpression;
+        }
+
+        private async Task<CompositePowerRuleGradientExpression> CreateCompositePowerRuleExpressionAsync(ExpressionSyntax f, ExpressionSyntax g, ExpressionSyntax innerG, Func<SyntaxNode, GradientGraph> diff2)
+        {
+            CompositePowerRuleGradientExpression gradientExpression = new CompositePowerRuleGradientExpression();
+
+            var taskF = Task.Run(() => GraphHelper.ConvertToGraph(f));
+            var taskG = Task.Run(() => GraphHelper.ConvertToGraph(g));
+            var taskFPrime = Task.Run(async () => await DecomposeExpression(f, new GradientGraph()));
             var taskGPrime = Task.Run(async () => IsDecomposable(innerG) ? await DecomposeExpression(g, new GradientGraph()) : await Task.FromResult(diff2.Invoke(innerG)));
 
             // Await the tasks and continue
@@ -337,6 +393,13 @@ namespace ToolWindow
         {
             Node literalNode = new Node(node, node.GetType());
             literalNode.Value = type == LiteralType.Constant ? 0 : 1;
+            if (node is PrefixUnaryExpressionSyntax prefix)
+            {
+                if (prefix.OperatorToken.Text == "-")
+                {
+                    literalNode.Value = (int)literalNode.Value * -1;
+                }
+            }
             literalNode.Type = type.ToString();
             return literalNode;
         }

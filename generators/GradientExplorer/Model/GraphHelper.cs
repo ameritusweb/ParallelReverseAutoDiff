@@ -113,13 +113,24 @@ namespace GradientExplorer.Model
 
         public static Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type)
         {
+            var value = token.ValueText == "-" ? "-1" : token.Value;
             Node literalNode = new Node(node, node.GetType());
-            literalNode.Value = token.Value;
+            literalNode.Value = value;
             literalNode.Type = type.ToString();
             return literalNode;
         }
 
         public static Node ToConstantNode(int value)
+        {
+            Node literal = new Node()
+            {
+                Value = value,
+                Type = LiteralType.Constant.ToString(),
+            };
+            return literal;
+        }
+
+        public static Node ToConstantNode(double value)
         {
             Node literal = new Node()
             {
@@ -205,13 +216,29 @@ namespace GradientExplorer.Model
             if (node is InvocationExpressionSyntax invocationExpression)
             {
                 var functionType = GetNodeType(invocationExpression);
-                var innerNode = invocationExpression.ArgumentList.Arguments[0].Expression;
-                var innerGraph = ConvertToGraph(innerNode);
-                Node target = innerGraph.Nodes.FirstOrDefault();
-                if (target != null)
+                var args = invocationExpression.ArgumentList.Arguments;
+                if (args.Count == 2)
                 {
-                    var source = Function(functionType, target);
-                    graph.Nodes.Add(source);
+                    var innerGraph1 = ConvertToGraph(args[0].Expression);
+                    var innerGraph2 = ConvertToGraph(args[1].Expression);
+                    Node target1 = innerGraph1.Nodes.FirstOrDefault();
+                    Node target2 = innerGraph2.Nodes.FirstOrDefault();
+                    if (target1 != null && target2 != null)
+                    {
+                        var source = Function(functionType, target1, target2);
+                        graph.Nodes.Add(source);
+                    }
+                }
+                else
+                {
+                    var innerNode = args[0].Expression;
+                    var innerGraph = ConvertToGraph(innerNode);
+                    Node target = innerGraph.Nodes.FirstOrDefault();
+                    if (target != null)
+                    {
+                        var source = Function(functionType, target);
+                        graph.Nodes.Add(source);
+                    }
                 }
             }
             else if (node is LiteralExpressionSyntax literalExpression)
@@ -235,7 +262,7 @@ namespace GradientExplorer.Model
             else if (node is PrefixUnaryExpressionSyntax prefixUnary)
             {
                 Node baseNode = ConvertToGraph(prefixUnary.Operand).Nodes.FirstOrDefault();
-                var mult = Function(NodeType.Multiply, baseNode, ToValueNode(node, prefixUnary.OperatorToken, LiteralType.Constant));
+                var mult = Function(NodeType.Multiply, ToValueNode(node, prefixUnary.OperatorToken, LiteralType.Constant), baseNode);
                 graph.Nodes.Add(mult);
             }
             else if (node is BinaryExpressionSyntax binary)
