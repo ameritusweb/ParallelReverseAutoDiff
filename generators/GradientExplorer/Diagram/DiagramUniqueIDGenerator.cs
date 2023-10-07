@@ -27,12 +27,54 @@ namespace GradientExplorer.Diagram
         private Task generationTask;
         private volatile CancellationTokenSource cancellationTokenSource;
 
+        private const string initialLetters = "AAAAAAAAAAAAAAAAAA"; // 18 As
+        private const string lastLetters = "zzzzzzzzzzzzzzzzzz"; // 18 zs
+        private readonly string letterset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        private readonly int lettersetLength;
+        private readonly char[] currentLetterID;
+        private int produceMode = 0;
+
         public static DiagramUniqueIDGenerator Instance => LazyLoadedInstance.Value;
 
         private DiagramUniqueIDGenerator()
         {
             cancellationTokenSource = new CancellationTokenSource();
             generationTask = Task.Run(() => GenerateIDs(), cancellationTokenSource.Token);
+            lettersetLength = letterset.Length;
+            currentLetterID = new char[18];
+            for (int i = 0; i < 18; i++)
+            {
+                currentLetterID[i] = 'A';
+            }
+        }
+
+        private char IncrementLetter(char currentLetter)
+        {
+            int idx = letterset.IndexOf(currentLetter);
+            int newIdx = (idx + 1) % lettersetLength;
+            return letterset[newIdx];
+        }
+
+        private void IncrementLetterID()
+        {
+            int carry = 1;
+            for (int i = 17; i >= 0; i--)
+            {
+                if (carry == 0)
+                {
+                    break;
+                }
+                char newChar = IncrementLetter(currentLetterID[i]);
+                if (newChar == 'A')
+                {
+                    carry = 1;
+                }
+                else
+                {
+                    carry = 0;
+                }
+                currentLetterID[i] = newChar;
+            }
         }
 
         private void ProduceNextID(int size)
@@ -91,37 +133,61 @@ namespace GradientExplorer.Diagram
             if (nextID >= long.MaxValue)
             {
                 Interlocked.Exchange(ref currentID, 0);
+                if (primaryPrefix == initialPrefix)
+                {
+                    Interlocked.Increment(ref produceMode);
+                }
                 Interlocked.Increment(ref primaryPrefix);
+
+                // Roll-over logic for primaryPrefix and secondaryPrefix
+                if (primaryPrefix >= long.MaxValue)
+                {
+                    Interlocked.Exchange(ref primaryPrefix, initialPrefix);
+                    if (secondaryPrefix == initialPrefix)
+                    {
+                        Interlocked.Increment(ref produceMode);
+                    }
+                    Interlocked.Increment(ref secondaryPrefix);
+
+                    // If all are maxed out, use a Letter ID
+                    if (secondaryPrefix >= long.MaxValue)
+                    {
+                        Interlocked.Exchange(ref secondaryPrefix, initialPrefix);
+                        if (new string(currentLetterID) == initialLetters)
+                        {
+                            Interlocked.Increment(ref produceMode);
+                        }
+                        IncrementLetterID();
+
+                        // If all are maxed out again, use GUIDs
+                        if (new string(currentLetterID) == lastLetters)
+                        {
+                            Interlocked.Increment(ref produceMode);
+                        }
+                    }
+                }
             }
 
-            // Roll-over logic for primaryPrefix and secondaryPrefix
-            if (primaryPrefix >= long.MaxValue)
-            {
-                Interlocked.Exchange(ref primaryPrefix, initialPrefix);
-                Interlocked.Increment(ref secondaryPrefix);
-            }
-
-            // If all are maxed out, return a GUID
-            if (secondaryPrefix >= long.MaxValue)
-            {
-                return Guid.NewGuid().ToString();
-            }
-
-            // Determine which prefixes to include in the ID
-            if (secondaryPrefix > initialPrefix)
-            {
-                id = $"{secondaryPrefix}{primaryPrefix}{nextID}";
-            }
-            else if (primaryPrefix > initialPrefix)
-            {
-                id = $"{primaryPrefix}{nextID}";
-            }
-            else
-            {
-                id = $"{nextID}";
-            }
+            id = ProduceMode(nextID);
 
             return id;
+        }
+
+        private string ProduceMode(long nextID)
+        {
+            switch (produceMode)
+            {
+                case 0:
+                    return $"{nextID}";
+                case 1:
+                    return $"{primaryPrefix}{nextID}";
+                case 2:
+                    return $"{secondaryPrefix}{primaryPrefix}{nextID}";
+                case 3:
+                    return $"{new string(currentLetterID)}{secondaryPrefix}{primaryPrefix}{nextID}";
+                default:
+                    return Guid.NewGuid().ToString();
+            }
         }
 
         public string GetNextID()
