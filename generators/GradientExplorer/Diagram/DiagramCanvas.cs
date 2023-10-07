@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace GradientExplorer.Diagram
 {
@@ -14,14 +15,28 @@ namespace GradientExplorer.Diagram
 
         private GradientGraph graph;
         private DiagramViewer viewer;
+        private Graph msaglGraph;
+        private DockPanel panel;
 
         public DiagramCanvas(GradientGraph graph)
         {
             this.graph = graph;
+            this.msaglGraph = new Graph();
             this.viewer = new DiagramViewer();
+            panel = new DockPanel();
         }
 
-        public void CreateMsaglGraph(Node gradientNode, Graph msaglGraph, Subgraph parentSubgraph = null)
+        public DockPanel ToPanel()
+        {
+            return panel;
+        }
+
+        public void BuildGraph()
+        {
+            CreateMsaglGraph(this.graph.Nodes.FirstOrDefault());
+        }
+
+        private void CreateMsaglGraph(GradientExplorer.Model.Node gradientNode, Subgraph parentSubgraph = null)
         {
             // Create MSAGL node if it doesn't exist.
             Microsoft.Msagl.Drawing.Node msaglNode;
@@ -37,7 +52,7 @@ namespace GradientExplorer.Diagram
 
             // Decide on subgraph creation.
             Subgraph newSubgraph = null;
-            if (gradientNode.GradientExpressionType != GradientExpressionType.None)
+            if (gradientNode.ExpressionType != GradientExpressionType.None)
             {
                 newSubgraph = new Subgraph($"cluster_{gradientNode.Id}");
                 newSubgraph.AddNode(msaglNode);
@@ -54,9 +69,12 @@ namespace GradientExplorer.Diagram
             // Create edges and recurse.
             foreach (var edge in gradientNode.Edges)
             {
-                CreateMsaglGraph(edge.TargetNode, msaglGraph, newSubgraph ?? parentSubgraph);
+                CreateMsaglGraph(edge.TargetNode, newSubgraph ?? parentSubgraph);
                 msaglGraph.AddEdge(gradientNode.Id, edge.TargetNode.Id);
             }
+
+            viewer.Graph = msaglGraph;
+            viewer.BindToPanel(panel);
         }
 
 

@@ -10,6 +10,16 @@ namespace GradientExplorer.Model
 
         public List<GradientExpression> Expressions { get; set; } = new List<GradientExpression>();
 
+        public GradientGraph DeepCopy()
+        {
+            GradientGraph result = new GradientGraph();
+            foreach (var node in Nodes)
+            {
+                result.Nodes.Add(node.DeepCopy());
+            }
+            return result;
+        }
+
         public string ToLaTeX()
         {
             var node = Nodes.FirstOrDefault();

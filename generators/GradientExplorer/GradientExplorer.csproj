@@ -251,6 +251,7 @@
     <Compile Include="LaTeX\Wpf\WpfCanvas.cs" />
     <Compile Include="LaTeX\Wpf\WpfPath.cs" />
     <Compile Include="LaTeX\Wpf\WpfMathPainter.cs" />
+    <Compile Include="Model\BaseNode.cs" />
     <Compile Include="Model\CompositePowerRuleGradientExpression.cs" />
     <Compile Include="Model\DifferentiationHelper.cs" />
     <Compile Include="Model\GradientExpressionType.cs" />

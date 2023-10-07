@@ -8,6 +8,8 @@ namespace GradientExplorer.Model
 {
     public enum GradientExpressionType
     {
+        None,
+
         ChainRule,
 
         CompositePowerRule,

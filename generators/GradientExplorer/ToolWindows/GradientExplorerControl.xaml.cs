@@ -1,9 +1,11 @@
-﻿using GradientExplorer.LaTeX.Wpf;
+﻿using GradientExplorer.Diagram;
+using GradientExplorer.LaTeX.Wpf;
 using GradientExplorer.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.Msagl.WpfGraphControl;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace ToolWindow
     {
         private Dictionary<NodeType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
         private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
+        private Dictionary<string, GradientGraph> gradientCache;
 
         public GradientExplorerControl(Version vsVersion)
         {
@@ -43,6 +46,8 @@ namespace ToolWindow
                 { NodeType.Pow, DifferentiationHelper.DifferentiatePowExpression },
                 // Add other non-unary functions here
             };
+
+            gradientCache = new Dictionary<string, GradientGraph>();
 
             lblHeadline.Content = $"Visual Studio v{vsVersion}";
         }
@@ -94,6 +99,10 @@ namespace ToolWindow
                 WpfMathPainter painter = new WpfMathPainter();
                 painter.LaTeX = gradientGraph.ToLaTeX();
                 painter.Draw(wpfCanvas);
+                DiagramCanvas diagram = new DiagramCanvas(gradientGraph);
+                diagram.BuildGraph();
+                var panel = diagram.ToPanel();
+                mainPanel.Children.Add(panel);
             }
         }
 
@@ -139,6 +148,14 @@ namespace ToolWindow
 
         private async Task<GradientGraph> DecomposeExpression(ExpressionSyntax expression, GradientGraph gradientGraph)
         {
+            string expressionFingerprint = expression.ToFullString();
+
+            // Check if the gradient for this expression is cached
+            if (gradientCache.ContainsKey(expressionFingerprint))
+            {
+                return gradientCache[expressionFingerprint].DeepCopy();
+            }
+
             switch (expression)
             {
                 case ParenthesizedExpressionSyntax parenthesizedExpression:
@@ -287,6 +304,9 @@ namespace ToolWindow
                 default:
                     break;
             }
+
+            // Cache the computed gradient before returning it
+            gradientCache[expressionFingerprint] = gradientGraph;
 
             return gradientGraph;
         }

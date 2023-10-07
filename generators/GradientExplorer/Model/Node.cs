@@ -8,18 +8,32 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Model
 {
-    public class Node
+    public class Node : BaseNode
     {
 
-        public Node()
-        {
-
+        public Node() : base()
+        { 
+        
         }
 
-        public Node(object rawValue, Type rawType)
+        public Node(object rawValue, Type rawType) : base()
         {
             RawValue = rawValue;
             RawType = rawType;
+        }
+
+        public Node DeepCopy()
+        {
+            Node copy = new Node();
+            copy.RawValue = RawValue;
+            copy.RawType = RawType;
+            copy.Type = Type;
+            copy.Value = Value;
+            copy.NodeType = NodeType;
+            copy.ExpressionType = ExpressionType;
+            copy.SyntaxNode = SyntaxNode;
+            copy.Edges.Select(x => x.DeepCopy()).ToList();
+            return copy;
         }
 
         public NodeType NodeType { get; set; }
