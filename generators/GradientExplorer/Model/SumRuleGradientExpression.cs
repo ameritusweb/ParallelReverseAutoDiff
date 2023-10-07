@@ -14,7 +14,7 @@ namespace GradientExplorer.Model
         {
 
             var result = GraphHelper.Function(NodeType.Add, Operands.Select(x => x.Nodes.FirstOrDefault()).ToList());
-
+            result.ExpressionType = GradientExpressionType.SumRule;
             return result;
         }
     }

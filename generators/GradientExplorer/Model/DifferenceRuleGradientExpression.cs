@@ -14,7 +14,7 @@ namespace GradientExplorer.Model
         {
 
             var result = GraphHelper.Function(NodeType.Subtract, Operands.Select(x => x.Nodes.FirstOrDefault()).ToList());
-
+            result.ExpressionType = GradientExpressionType.DifferenceRule;
             return result;
         }
     }

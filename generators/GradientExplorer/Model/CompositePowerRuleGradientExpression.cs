@@ -28,7 +28,7 @@ namespace GradientExplorer.Model
             Node finalTerm = GraphHelper.Function(NodeType.Add, term1, term2);
 
             Node result = GraphHelper.Function(NodeType.Multiply, baseExpression, finalTerm);
-
+            result.ExpressionType = GradientExpressionType.CompositePowerRule;
             return result;
         }
     }

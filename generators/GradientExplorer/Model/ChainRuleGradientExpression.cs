@@ -15,7 +15,7 @@ namespace GradientExplorer.Model
         {
 
             var result = GraphHelper.Function(NodeType.Multiply, FPrimeOfG.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
-
+            result.ExpressionType = GradientExpressionType.ChainRule;
             return result;
         }
     }

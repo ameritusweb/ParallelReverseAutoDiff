@@ -25,7 +25,7 @@ namespace GradientExplorer.Model
             Node denominator = GraphHelper.NodeWithExponent(G.Nodes.FirstOrDefault(), new Node() { Value = 2, Type = LiteralType.Constant.ToString() });
 
             Node result = GraphHelper.Function(NodeType.Divide, numerator, denominator);
-
+            result.ExpressionType = GradientExpressionType.QuotientRule;
             return result;
         }
     }

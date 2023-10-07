@@ -21,7 +21,7 @@ namespace GradientExplorer.Model
             Node operandRight = GraphHelper.Function(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
 
             Node result = GraphHelper.Function(NodeType.Add, operandLeft, operandRight);
-
+            result.ExpressionType = GradientExpressionType.ProductRule;
             return result;
         }
     }

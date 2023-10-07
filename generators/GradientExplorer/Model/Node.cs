@@ -24,6 +24,8 @@ namespace GradientExplorer.Model
 
         public NodeType NodeType { get; set; }
 
+        public GradientExpressionType ExpressionType { get; set; }
+
         public SyntaxNode SyntaxNode { get; set; }
 
         public string Type { get; set; } // "Constant", "Variable", "Operation", etc.
