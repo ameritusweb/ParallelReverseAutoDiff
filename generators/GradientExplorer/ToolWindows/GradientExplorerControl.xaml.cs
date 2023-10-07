@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Msagl.WpfGraphControl;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace ToolWindow
     {
         private Dictionary<NodeType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
         private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
-        private Dictionary<string, GradientGraph> gradientCache;
+        private ConcurrentDictionary<string, GradientGraph> gradientCache;
 
         public GradientExplorerControl(Version vsVersion)
         {
@@ -47,7 +48,7 @@ namespace ToolWindow
                 // Add other non-unary functions here
             };
 
-            gradientCache = new Dictionary<string, GradientGraph>();
+            gradientCache = new ConcurrentDictionary<string, GradientGraph>();
 
             lblHeadline.Content = $"Visual Studio v{vsVersion}";
         }
@@ -306,7 +307,7 @@ namespace ToolWindow
             }
 
             // Cache the computed gradient before returning it
-            gradientCache[expressionFingerprint] = gradientGraph;
+            gradientCache.AddOrUpdate(expressionFingerprint, gradientGraph, (key, oldValue) => gradientGraph);
 
             return gradientGraph;
         }

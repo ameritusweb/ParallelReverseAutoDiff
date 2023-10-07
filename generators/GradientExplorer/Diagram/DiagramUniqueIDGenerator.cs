@@ -23,6 +23,7 @@ namespace GradientExplorer.Diagram
 
         private ConcurrentQueue<string> idQueue = new ConcurrentQueue<string>();
         private const int batchSize = 1000;
+        private const int miniBatchSize = 10;
         private Task generationTask;
         private volatile CancellationTokenSource cancellationTokenSource;
 
@@ -34,6 +35,25 @@ namespace GradientExplorer.Diagram
             generationTask = Task.Run(() => GenerateIDs(), cancellationTokenSource.Token);
         }
 
+        private void ProduceNextID(int size)
+        {
+            bool lockTaken = false;
+            try
+            {
+                spinLock.Enter(ref lockTaken);
+                for (int i = 0; i < size; ++i)
+                {
+                    long nextID = Interlocked.Increment(ref currentID);
+                    string id = GenerateID(nextID);
+                    idQueue.Enqueue(id);
+                }
+            }
+            finally
+            {
+                if (lockTaken) spinLock.Exit();
+            }
+        }
+
         private void GenerateIDs()
         {
             while (true)
@@ -43,21 +63,7 @@ namespace GradientExplorer.Diagram
                 if (idQueue.Count < batchSize)
                 {
                     Interlocked.Exchange(ref delay, delayIncrement);
-                    bool lockTaken = false;
-                    try
-                    {
-                        spinLock.Enter(ref lockTaken);
-                        for (int i = 0; i < batchSize; ++i)
-                        {
-                            long nextID = Interlocked.Increment(ref currentID);
-                            string id = GenerateID(nextID);
-                            idQueue.Enqueue(id);
-                        }
-                    }
-                    finally
-                    {
-                        if (lockTaken) spinLock.Exit();
-                    }
+                    ProduceNextID(batchSize);
                 }
                 else if (delay < maxDelay)
                 {
@@ -126,13 +132,23 @@ namespace GradientExplorer.Diagram
             }
             else
             {
-                // Cancel the sleep timer in GenerateIDs()
-                cancellationTokenSource.Cancel();
 
-                Console.WriteLine("Fallback to GUID.");
+                ProduceNextID(miniBatchSize);
 
-                // Fallback logic
-                return Guid.NewGuid().ToString();
+                if (idQueue.TryDequeue(out string producedID))
+                {
+                    return producedID;
+                }
+                else
+                {
+                    // Cancel the sleep timer in GenerateIDs()
+                    cancellationTokenSource.Cancel();
+
+                    Console.WriteLine("Fallback to GUID.");
+
+                    // Fallback logic
+                    return Guid.NewGuid().ToString();
+                }
             }
         }
 

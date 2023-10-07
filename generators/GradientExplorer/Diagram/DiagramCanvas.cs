@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace GradientExplorer.Diagram
 {
@@ -24,6 +25,27 @@ namespace GradientExplorer.Diagram
             this.msaglGraph = new Graph();
             this.viewer = new DiagramViewer();
             panel = new DockPanel();
+            viewer.ObjectUnderMouseCursorChanged += Viewer_ObjectUnderMouseCursorChanged;
+            viewer.BindToPanel(panel);
+        }
+
+        private void Viewer_ObjectUnderMouseCursorChanged(object sender, ObjectUnderMouseCursorChangedEventArgs e)
+        {
+            var node = viewer.ObjectUnderMouseCursor as IViewerNode;
+            if (node != null)
+            {
+                var drawingNode = (Microsoft.Msagl.Drawing.Node)node.DrawingObject;
+                var text = drawingNode.Label.Text;
+            }
+            else
+            {
+                var edge = viewer.ObjectUnderMouseCursor as IViewerEdge;
+                if (edge != null)
+                {
+                    var text = ((Microsoft.Msagl.Drawing.Edge)edge.DrawingObject).SourceNode.Label.Text + "->" +
+                                         ((Microsoft.Msagl.Drawing.Edge)edge.DrawingObject).TargetNode.Label.Text;
+                }
+            }
         }
 
         public DockPanel ToPanel()
@@ -34,6 +56,11 @@ namespace GradientExplorer.Diagram
         public void BuildGraph()
         {
             CreateMsaglGraph(this.graph.Nodes.FirstOrDefault());
+            viewer.Graph = msaglGraph;
+            viewer.GraphCanvas.Width = 300;
+            viewer.GraphCanvas.Height = 300;
+            ScaleTransform flipTransform = new ScaleTransform(1, -1);
+            panel.LayoutTransform = flipTransform;
         }
 
         private void CreateMsaglGraph(GradientExplorer.Model.Node gradientNode, Subgraph parentSubgraph = null)
@@ -72,9 +99,6 @@ namespace GradientExplorer.Diagram
                 CreateMsaglGraph(edge.TargetNode, newSubgraph ?? parentSubgraph);
                 msaglGraph.AddEdge(gradientNode.Id, edge.TargetNode.Id);
             }
-
-            viewer.Graph = msaglGraph;
-            viewer.BindToPanel(panel);
         }
 
 

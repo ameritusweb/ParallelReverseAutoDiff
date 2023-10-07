@@ -32,7 +32,7 @@ namespace GradientExplorer.Model
             copy.NodeType = NodeType;
             copy.ExpressionType = ExpressionType;
             copy.SyntaxNode = SyntaxNode;
-            copy.Edges.Select(x => x.DeepCopy()).ToList();
+            copy.Edges = Edges.Select(x => x.DeepCopy()).ToList();
             return copy;
         }
 
