@@ -258,6 +258,8 @@
     <Compile Include="Model\GraphHelper.cs" />
     <Compile Include="Model\LiteralType.cs" />
     <Compile Include="Model\DifferenceRuleGradientExpression.cs" />
+    <Compile Include="Model\Theme.cs" />
+    <Compile Include="Model\ThemeManager.cs" />
     <Compile Include="Model\UnaryGradientExpression.cs" />
     <Compile Include="Model\ChainRuleGradientExpression.cs" />
     <Compile Include="Model\Edge.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\GradientExplorerCommand.cs" />
     <Compile Include="GradientExplorerPackage.cs" />
+    <Compile Include="Simplification\SimplificationInfo.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

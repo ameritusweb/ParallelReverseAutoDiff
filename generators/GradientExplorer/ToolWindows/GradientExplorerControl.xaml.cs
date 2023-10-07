@@ -5,13 +5,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.Msagl.WpfGraphControl;
+using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ToolWindow
 {
@@ -20,6 +21,8 @@ namespace ToolWindow
         private Dictionary<NodeType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
         private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
         private ConcurrentDictionary<string, GradientGraph> gradientCache;
+        private DiagramCanvas currentDiagram;
+        private DockPanel diagramPanel;
 
         public GradientExplorerControl(Version vsVersion)
         {
@@ -50,7 +53,18 @@ namespace ToolWindow
 
             gradientCache = new ConcurrentDictionary<string, GradientGraph>();
 
+            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+
             lblHeadline.Content = $"Visual Studio v{vsVersion}";
+        }
+
+        private async void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        {
+            var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
+            if (this.currentDiagram != null)
+            {
+                this.currentDiagram.UpdateTheme(currentTheme);
+            }
         }
 
         /// <summary>
@@ -99,11 +113,24 @@ namespace ToolWindow
                 var wpfCanvas = new WpfCanvas(canvas);
                 WpfMathPainter painter = new WpfMathPainter();
                 painter.LaTeX = gradientGraph.ToLaTeX();
+                lblHeadline.Content = painter.LaTeX;
                 painter.Draw(wpfCanvas);
-                DiagramCanvas diagram = new DiagramCanvas(gradientGraph);
-                diagram.BuildGraph();
-                var panel = diagram.ToPanel();
-                mainPanel.Children.Add(panel);
+                var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
+                if (currentDiagram == null)
+                {
+                    currentDiagram = new DiagramCanvas(gradientGraph.DeepCopy(), currentTheme);
+                    currentDiagram.BuildGraph();
+                    var panel = currentDiagram.ToPanel();
+                    ScaleTransform flipTransform = new ScaleTransform(1, -1);
+                    panel.LayoutTransform = flipTransform;
+                    this.diagramPanel = panel;
+                    mainPanel.Children.Add(panel);
+                }
+                else
+                {
+                    currentDiagram.Reinitialize(gradientGraph.DeepCopy(), currentTheme);
+                    currentDiagram.BuildGraph();
+                }
             }
         }
 

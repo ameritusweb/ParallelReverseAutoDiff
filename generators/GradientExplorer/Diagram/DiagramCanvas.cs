@@ -1,11 +1,8 @@
 ﻿using GradientExplorer.Model;
+using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -18,15 +15,29 @@ namespace GradientExplorer.Diagram
         private DiagramViewer viewer;
         private Graph msaglGraph;
         private DockPanel panel;
+        private Microsoft.Msagl.Drawing.Color backgroundColor;
+        private Microsoft.Msagl.Drawing.Color foregroundColor;
 
-        public DiagramCanvas(GradientGraph graph)
+        public DiagramCanvas(GradientGraph graph, Theme theme)
         {
             this.graph = graph;
             this.msaglGraph = new Graph();
             this.viewer = new DiagramViewer();
+            this.backgroundColor = Microsoft.Msagl.Drawing.Color.Transparent;
+            this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
             panel = new DockPanel();
             viewer.ObjectUnderMouseCursorChanged += Viewer_ObjectUnderMouseCursorChanged;
             viewer.BindToPanel(panel);
+        }
+
+        public void Reinitialize(GradientGraph graph, Theme theme)
+        {
+            this.graph = graph;
+            this.msaglGraph = new Graph();
+            this.backgroundColor = Microsoft.Msagl.Drawing.Color.Transparent;
+            this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
+            panel.LayoutTransform = null;
+            this.viewer.GraphCanvas.UpdateLayout();
         }
 
         private void Viewer_ObjectUnderMouseCursorChanged(object sender, ObjectUnderMouseCursorChangedEventArgs e)
@@ -53,35 +64,75 @@ namespace GradientExplorer.Diagram
             return panel;
         }
 
-        public void BuildGraph()
+        public void UpdateTheme(Theme theme)
         {
-            CreateMsaglGraph(this.graph.Nodes.FirstOrDefault());
-            viewer.Graph = msaglGraph;
-            viewer.GraphCanvas.Width = 300;
-            viewer.GraphCanvas.Height = 300;
-            ScaleTransform flipTransform = new ScaleTransform(1, -1);
-            panel.LayoutTransform = flipTransform;
+            switch (theme.Name)
+            {
+                case "Dark":
+                    this.foregroundColor = Microsoft.Msagl.Drawing.Color.White;
+                    break;
+                default:
+                    this.foregroundColor = Microsoft.Msagl.Drawing.Color.Black;
+                    break;
+            }
+            BuildGraph();
         }
 
-        private void CreateMsaglGraph(GradientExplorer.Model.Node gradientNode, Subgraph parentSubgraph = null)
+        public void BuildGraph()
+        {
+            int depth = 0;
+            this.msaglGraph.Attr.BackgroundColor = this.backgroundColor;
+            this.msaglGraph.Attr.Color = this.foregroundColor;
+            CreateMsaglGraph(this.graph.Nodes.FirstOrDefault(), depth);
+            viewer.Graph = msaglGraph;
+            viewer.GraphCanvas.Width = msaglGraph.Width;
+            viewer.GraphCanvas.Height = msaglGraph.Height;
+        }
+
+        private void CreateMsaglGraph(GradientExplorer.Model.Node gradientNode, int depth, Subgraph parentSubgraph = null)
         {
             // Create MSAGL node if it doesn't exist.
             Microsoft.Msagl.Drawing.Node msaglNode;
             if (!msaglGraph.Nodes.Any(n => n.Id == gradientNode.Id))
             {
                 msaglNode = new Microsoft.Msagl.Drawing.Node(gradientNode.Id);
+                msaglNode.Label.Text = gradientNode.DisplayString;
                 msaglGraph.AddNode(msaglNode);
+                if (parentSubgraph != null)
+                {
+                    parentSubgraph.AddNode(msaglNode);
+                }
             }
             else
             {
                 msaglNode = msaglGraph.FindNode(gradientNode.Id);
+                msaglNode.Label.Text = gradientNode.DisplayString;
             }
+
+            if (gradientNode.NodeType != NodeType.ConstantOrVariable)
+            {
+                msaglNode.Attr.Shape = Shape.Diamond;
+            }
+            else
+            {
+                msaglNode.Attr.Shape = Shape.Circle;
+            }
+
+            if (depth == 0)
+            {
+                msaglNode.Attr.Shape = Shape.DoubleCircle;
+            }
+
+            msaglNode.Label.FontColor = this.foregroundColor;
+            msaglNode.Attr.Color = this.foregroundColor;
 
             // Decide on subgraph creation.
             Subgraph newSubgraph = null;
             if (gradientNode.ExpressionType != GradientExpressionType.None)
             {
-                newSubgraph = new Subgraph($"cluster_{gradientNode.Id}");
+                newSubgraph = new Subgraph(gradientNode.ExpressionType.ToString());
+                newSubgraph.Attr.Color = this.foregroundColor;
+                newSubgraph.Label.FontColor = this.foregroundColor;
                 newSubgraph.AddNode(msaglNode);
                 if (parentSubgraph != null)
                 {
@@ -93,11 +144,20 @@ namespace GradientExplorer.Diagram
                 }
             }
 
+            depth++;
+
             // Create edges and recurse.
-            foreach (var edge in gradientNode.Edges)
-            {
-                CreateMsaglGraph(edge.TargetNode, newSubgraph ?? parentSubgraph);
-                msaglGraph.AddEdge(gradientNode.Id, edge.TargetNode.Id);
+            for (int i = 0; i < gradientNode.Edges.Count; ++i)
+            { 
+                var edge = gradientNode.Edges[i];
+                CreateMsaglGraph(edge.TargetNode, depth, newSubgraph ?? parentSubgraph);
+                var newEdge = msaglGraph.AddEdge(gradientNode.Id, edge.TargetNode.Id);
+                newEdge.Attr.Color = this.foregroundColor;
+                newEdge.Label = new Microsoft.Msagl.Drawing.Label($"{i}");
+                newEdge.Label.FontColor = this.foregroundColor;
+                newEdge.Label.FontSize = 12;
+                newEdge.Label.Width = 20;
+                newEdge.Label.Height = 20;
             }
         }
 

@@ -44,6 +44,20 @@ namespace GradientExplorer.Model
 
         public string Type { get; set; } // "Constant", "Variable", "Operation", etc.
         public object Value { get; set; } // Value for constants, variable name for variables, etc.
+        public string DisplayString
+        {
+            get
+            {
+                if (NodeType == NodeType.ConstantOrVariable)
+                {
+                    return ValueAsString;
+                }
+                else
+                {
+                    return NodeType.ToString();
+                }
+            }
+        }
         public string ValueAsString
         {
             get
