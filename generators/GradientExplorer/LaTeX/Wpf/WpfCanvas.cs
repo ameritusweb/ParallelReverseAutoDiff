@@ -1,5 +1,6 @@
 ﻿using CSharpMath.Rendering.FrontEnd;
 using GradientExplorer.LaTeX.Translation;
+using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls;
@@ -22,6 +23,8 @@ namespace GradientExplorer.LaTeX.Wpf
             _canvas = canvas;
             _currentY = 0;
             _savedMap = new Dictionary<Guid, (double, double)>();
+            var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            canvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
         }
 
         public void SetWidth(float width)

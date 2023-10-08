@@ -7,12 +7,15 @@ using CSharpMath.Rendering.FrontEnd;
 using CSharpMath.Structures;
 using GradientExplorer.LaTeX.Translation;
 using GradientExplorer.LaTeX.Wpf;
+using Microsoft.VisualStudio.PlatformUI;
 using Typography.OpenFont;
 
 namespace CSharpMath.Rendering.BackEnd
 {
     public class WpfGraphicsContext : IGraphicsContext<Fonts, Glyph>
     {
+        private System.Drawing.Color defaultColor;
+
         private class GlyphOutlineBuilder : Typography.Contours.GlyphOutlineBuilderBase
         {
             public GlyphOutlineBuilder(Typography.OpenFont.Typeface typeface) : base(typeface) { }
@@ -22,6 +25,8 @@ namespace CSharpMath.Rendering.BackEnd
         {
             Canvas = canvas;
             GlyphBoxColor = glyphBoxColor;
+            var foregroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+            defaultColor = System.Drawing.Color.FromArgb(foregroundColor.A, foregroundColor.R, foregroundColor.G, foregroundColor.B);
         }
         public (System.Drawing.Color glyph, System.Drawing.Color textRun)? GlyphBoxColor { get; set; }
         public ICanvas Canvas { get; set; }
@@ -31,7 +36,7 @@ namespace CSharpMath.Rendering.BackEnd
         {
             if (color == null)
             {
-                color = System.Drawing.Color.White;
+                color = defaultColor;
             }
             foreach (var (glyph, point) in glyphs.Zip(points, System.ValueTuple.Create))
             {
@@ -66,7 +71,7 @@ namespace CSharpMath.Rendering.BackEnd
         }
         public void DrawLine(float x1, float y1, float x2, float y2, float lineThickness, System.Drawing.Color? color)
         {
-            Canvas.CurrentColor = color;
+            Canvas.CurrentColor = defaultColor;
             Canvas.DrawLine(x1, y1, x2, y2, lineThickness);
         }
         public void DrawGlyphRunWithOffset
@@ -74,7 +79,7 @@ namespace CSharpMath.Rendering.BackEnd
         {
             if (color == null)
             {
-                color = System.Drawing.Color.White;
+                color = defaultColor;
             }
             var textPosition = offset;
             if (GlyphBoxColor != null)

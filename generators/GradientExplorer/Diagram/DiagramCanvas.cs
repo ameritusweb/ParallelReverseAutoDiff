@@ -2,6 +2,7 @@
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl;
+using Microsoft.VisualStudio.PlatformUI;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,7 +24,7 @@ namespace GradientExplorer.Diagram
             this.graph = graph;
             this.msaglGraph = new Graph();
             this.viewer = new DiagramViewer();
-            this.backgroundColor = Microsoft.Msagl.Drawing.Color.Transparent;
+            this.backgroundColor = theme.MsaglBackgroundColor;
             this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
             panel = new DockPanel();
             viewer.ObjectUnderMouseCursorChanged += Viewer_ObjectUnderMouseCursorChanged;
@@ -34,7 +35,7 @@ namespace GradientExplorer.Diagram
         {
             this.graph = graph;
             this.msaglGraph = new Graph();
-            this.backgroundColor = Microsoft.Msagl.Drawing.Color.Transparent;
+            this.backgroundColor = theme.MsaglBackgroundColor;
             this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
             panel.LayoutTransform = null;
             this.viewer.GraphCanvas.UpdateLayout();
@@ -64,18 +65,17 @@ namespace GradientExplorer.Diagram
             return panel;
         }
 
-        public void UpdateTheme(Theme theme)
+        public bool UpdateTheme(Theme theme)
         {
-            switch (theme.Name)
+            if (this.backgroundColor != theme.MsaglBackgroundColor)
             {
-                case "Dark":
-                    this.foregroundColor = Microsoft.Msagl.Drawing.Color.White;
-                    break;
-                default:
-                    this.foregroundColor = Microsoft.Msagl.Drawing.Color.Black;
-                    break;
+                this.backgroundColor = theme.MsaglBackgroundColor;
+                this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
+                Reinitialize(graph, theme);
+                BuildGraph();
+                return true;
             }
-            BuildGraph();
+            return false;
         }
 
         public void BuildGraph()

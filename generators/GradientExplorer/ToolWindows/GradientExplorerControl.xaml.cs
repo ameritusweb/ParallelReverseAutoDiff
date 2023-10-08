@@ -22,7 +22,7 @@ namespace ToolWindow
         private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
         private ConcurrentDictionary<string, GradientGraph> gradientCache;
         private DiagramCanvas currentDiagram;
-        private DockPanel diagramPanel;
+        private WpfMathPainter painter;
 
         public GradientExplorerControl(Version vsVersion)
         {
@@ -56,14 +56,26 @@ namespace ToolWindow
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
             lblHeadline.Content = $"Visual Studio v{vsVersion}";
+
+            var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            rootPanel.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
         }
 
         private async void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
         {
+            var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            rootPanel.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
+
             var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
             if (this.currentDiagram != null)
             {
-                this.currentDiagram.UpdateTheme(currentTheme);
+                bool changed = this.currentDiagram.UpdateTheme(currentTheme);
+                if (changed && painter != null)
+                {
+                    laTeXCanvas.Children.Clear();
+                    var wpfCanvas = new WpfCanvas(laTeXCanvas);
+                    painter.Draw(wpfCanvas);
+                }
             }
         }
 
@@ -111,7 +123,7 @@ namespace ToolWindow
                 var canvas = laTeXCanvas;
                 canvas.Children.Clear();
                 var wpfCanvas = new WpfCanvas(canvas);
-                WpfMathPainter painter = new WpfMathPainter();
+                painter = new WpfMathPainter();
                 painter.LaTeX = gradientGraph.ToLaTeX();
                 lblHeadline.Content = painter.LaTeX;
                 painter.Draw(wpfCanvas);
@@ -123,7 +135,6 @@ namespace ToolWindow
                     var panel = currentDiagram.ToPanel();
                     ScaleTransform flipTransform = new ScaleTransform(1, -1);
                     panel.LayoutTransform = flipTransform;
-                    this.diagramPanel = panel;
                     mainPanel.Children.Add(panel);
                 }
                 else

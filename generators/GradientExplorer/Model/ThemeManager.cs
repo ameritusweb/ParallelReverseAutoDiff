@@ -16,6 +16,7 @@ namespace GradientExplorer.Model
         private readonly AsyncLazy<IVsSettingsManager> _settingsManager;
 
         public Theme[] Themes { get; } = {
+            new Theme { Name = "Unknown", Guid = Guid.NewGuid() },
             new Theme { Name = "Dark", Guid = new Guid("{1DED0138-47CE-435E-84EF-9EC1F439B749}") },
             new Theme { Name = "Light", Guid = new Guid("{DE3DBBCD-F642-433C-8353-8F1DF4370ABA}") },
             new Theme { Name = "Blue", Guid = new Guid("{A4D6A176-B948-4B29-8C66-53C97A1ED7D0}") },
@@ -38,6 +39,8 @@ namespace GradientExplorer.Model
             IVsSettingsManager manager = await _settingsManager.GetValueAsync();
             SettingsStore store = new ShellSettingsManager(manager).GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
+            var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+
             if (store.CollectionExists(COLLECTION_NAME))
             {
                 if (store.PropertyExists(COLLECTION_NAME, PROPERTY_NAME))
@@ -48,13 +51,19 @@ namespace GradientExplorer.Model
                         Guid themeGuid;
                         if (Guid.TryParse(parts[2], out themeGuid))
                         {
-                            Theme theme = Array.Find(Themes, t => t.Guid == themeGuid);
-                            return theme ?? null;
+                            Theme theme = Array.Find(Themes, t => t.Guid == themeGuid).DeepClone();
+                            if (theme != null)
+                            {
+                                theme.BackgroundColor = backgroundColor;
+                                return theme;
+                            }
                         }
                     }
                 }
             }
-            return null;
+            var unknown = Themes[0].DeepClone();
+            unknown.BackgroundColor = backgroundColor;
+            return unknown;
         }
     }
 }
