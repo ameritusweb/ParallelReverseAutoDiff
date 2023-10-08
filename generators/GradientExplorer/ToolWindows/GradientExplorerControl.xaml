@@ -20,7 +20,7 @@
                 <StackPanel x:Name="mainPanel" Orientation="Vertical">
                     <Canvas x:Name="laTeXCanvas" Width="300" Height="150" ClipToBounds="True"></Canvas>
                 </StackPanel>
-                <Button Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
+                <Button Content="Generate" Click="button1_Click" Width="120" Height="80" Name="button1"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

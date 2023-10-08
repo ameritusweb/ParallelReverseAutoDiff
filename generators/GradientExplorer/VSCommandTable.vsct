@@ -9,13 +9,13 @@
   <Commands package="ToolWindow">
     <!--This section defines the elements the user can interact with, like a menu command or a button or combo box in a toolbar. -->
     <Buttons>
-      <Button guid="ToolWindow" id="MyCommand" priority="0x0100" type="Button">
+      <Button guid="ToolWindow" id="MyExplorerCommand" priority="0x0100" type="Button">
         <Parent guid="VSMainMenu" id="View.DevWindowsGroup.OtherWindows.Group1"/>
         <Icon guid="ImageCatalogGuid" id="ToolWindow" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Gradient Explorer</ButtonText>
-          <LocCanonicalName>.View.MyToolWindow</LocCanonicalName>
+          <LocCanonicalName>.View.MyGradientExplorer</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>
@@ -23,7 +23,10 @@
 
   <Symbols>
     <GuidSymbol name="ToolWindow" value="{0ad8bc0d-5177-48a6-a842-1122758690f6}">
-      <IDSymbol name="MyCommand" value="0x0100" />
+      <IDSymbol name="MyExplorerCommand" value="0x0100" />
+    </GuidSymbol>
+	<GuidSymbol name="ToolboxWindow" value="{0ad8bc0d-4266-48a6-a842-1122758690f6}">
+	   <IDSymbol name="MyToolboxCommand" value="0x0200" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

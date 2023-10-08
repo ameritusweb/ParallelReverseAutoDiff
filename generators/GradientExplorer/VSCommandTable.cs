@@ -14,12 +14,15 @@ namespace GradientExplorer
     {
         public const string ToolWindowString = "0ad8bc0d-5177-48a6-a842-1122758690f6";
         public static Guid ToolWindow = new Guid(ToolWindowString);
+        public const string ToolboxWindowString = "0ad8bc0d-4266-48a6-a842-1122758690f6";
+        public static Guid ToolboxWindow = new Guid(ToolboxWindowString);
     }
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
     /// </summary>
     internal sealed partial class PackageIds
     {
-        public const int MyCommand = 0x0100;
+        public const int MyExplorerCommand = 0x0100;
+        public const int MyToolboxCommand = 0x0200;
     }
 }

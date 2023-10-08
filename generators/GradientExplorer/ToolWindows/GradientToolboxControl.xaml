@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="ToolWindow.GradientToolboxControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ToolWindow"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <!-- Common Button Style -->
+        <Style x:Key="GradientToolButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="CornflowerBlue" BorderThickness="1" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF303030"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <UniformGrid Rows="5" Columns="2">
+            <Border Margin="10">
+                <Button Style="{StaticResource GradientToolButton}" >
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel x:Name="simplification" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        </StackPanel>
+                        <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
+                            <Label.Content>
+                                <AccessText TextWrapping="Wrap" Text="Simplification Tool"></AccessText>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Button>
+            </Border>
+            <Border Margin="10">
+                <Button Style="{StaticResource GradientToolButton}">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel x:Name="computation" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        </StackPanel>
+                        <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
+                            <Label.Content>
+                                <AccessText TextWrapping="Wrap" Text="Computation Graph Tool"></AccessText>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Button>
+            </Border>
+            <Border Margin="10">
+                <Button Style="{StaticResource GradientToolButton}" >
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel x:Name="debugging" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        </StackPanel>
+                        <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
+                            <Label.Content>
+                                <AccessText TextWrapping="Wrap" Text="Debugging Tool"></AccessText>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Button>
+            </Border>
+            <Border Margin="10">
+                <Button Style="{StaticResource GradientToolButton}">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel x:Name="metrics" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        </StackPanel>
+                        <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
+                            <Label.Content>
+                                <AccessText TextWrapping="Wrap" Text="Metrics Display"></AccessText>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Button>
+            </Border>
+            <Border Margin="10">
+                <Button Style="{StaticResource GradientToolButton}">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel x:Name="settings" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        </StackPanel>
+                        <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
+                            <Label.Content>
+                                <AccessText TextWrapping="Wrap" Text="Settings"></AccessText>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Button>
+            </Border>
+            <Border Margin="10">
+                <Button Style="{StaticResource GradientToolButton}">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel x:Name="help" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        </StackPanel>
+                        <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
+                            <Label.Content>
+                                <AccessText TextWrapping="Wrap" Text="Help"></AccessText>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Button>
+            </Border>
+        </UniformGrid>
+    </Grid>
+</UserControl>

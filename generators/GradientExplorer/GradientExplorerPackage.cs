@@ -10,6 +10,7 @@ namespace GradientExplorer
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version)]
     [ProvideToolWindow(typeof(ToolWindow.GradientExplorer.Pane), Style = VsDockStyle.Tabbed, Window = WindowGuids.SolutionExplorer)]
+    [ProvideToolWindow(typeof(ToolWindow.GradientToolbox.Pane), Style = VsDockStyle.Tabbed, Window = WindowGuids.SolutionExplorer)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageGuids.ToolWindowString)]
     public sealed class GradientExplorerPackage : ToolkitPackage

@@ -2,12 +2,12 @@
 
 namespace ToolWindow
 {
-    [Command(PackageIds.MyCommand)]
+    [Command(PackageIds.MyExplorerCommand)]
     internal sealed class GradientExplorerCommand : BaseCommand<GradientExplorerCommand>
     {
         protected override Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            return GradientExplorer.ShowAsync();
+            return GradientExplorer.ShowAsync().ContinueWith(x => GradientToolbox.ShowAsync());
         }
     }
 }

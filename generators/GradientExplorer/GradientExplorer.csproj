@@ -46,6 +46,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\GradientToolboxCommand.cs" />
     <Compile Include="Diagram\ClickCounter.cs" />
     <Compile Include="Diagram\Common.cs" />
     <Compile Include="Diagram\DiagramCanvas.cs" />
@@ -57,6 +58,25 @@
     <Compile Include="Diagram\VEdge.cs" />
     <Compile Include="Diagram\VLabel.cs" />
     <Compile Include="Diagram\VNode.cs" />
+    <Compile Include="Icons\Awesome.cs" />
+    <Compile Include="Icons\FlipOrientation.cs" />
+    <Compile Include="Icons\Icon.cs" />
+    <Compile Include="Icons\IconBase.cs" />
+    <Compile Include="Icons\IconBlock.cs" />
+    <Compile Include="Icons\IconBlockBase.cs" />
+    <Compile Include="Icons\IconChar.cs" />
+    <Compile Include="Icons\IconFont.cs" />
+    <Compile Include="Icons\IconHelper.cs" />
+    <Compile Include="Icons\IconImage.cs" />
+    <Compile Include="Icons\IconImageBase.cs" />
+    <Compile Include="Icons\IconSource.cs" />
+    <Compile Include="Icons\IconSourceBase.cs" />
+    <Compile Include="Icons\IconToImageConverter.cs" />
+    <Compile Include="Icons\IHaveIconFont.cs" />
+    <Compile Include="Icons\ToGeometry.cs" />
+    <Compile Include="Icons\ToGeometryBase.cs" />
+    <Compile Include="Icons\ToText.cs" />
+    <Compile Include="Icons\ToTextBase.cs" />
     <Compile Include="LaTeX\Core\Atom\Atoms\Accent.cs" />
     <Compile Include="LaTeX\Core\Atom\Atoms\BinaryOperator.cs" />
     <Compile Include="LaTeX\Core\Atom\Atoms\Close.cs" />
@@ -280,6 +300,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="ToolWindows\GradientToolbox.cs" />
+    <Compile Include="ToolWindows\GradientToolboxControl.xaml.cs">
+      <DependentUpon>GradientToolboxControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -287,6 +311,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="fonts\fa-brands-400.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="fonts\fa-regular-400.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="fonts\fa-solid-900.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <None Include="LaTeX\Core\Atom\LaTeX_symbols.pdf" />
     <EmbeddedResource Include="LaTeX\Rendering\ReferenceFonts\AMS-Capital-Blackboard-Bold.otf" />
     <EmbeddedResource Include="LaTeX\Rendering\ReferenceFonts\cyrillic-modern-nmr10.otf" />
@@ -323,6 +356,10 @@
     <Compile Include="ToolWindows\GradientExplorerControl.xaml.cs">
       <DependentUpon>GradientExplorerControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="ToolWindows\GradientToolboxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
