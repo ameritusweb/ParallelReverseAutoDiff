@@ -1,5 +1,7 @@
 ﻿using FontAwesome.Sharp;
+using GradientExplorer.Converters;
 using GradientExplorer.Diagram;
+using GradientExplorer.Extensions;
 using GradientExplorer.LaTeX.Wpf;
 using GradientExplorer.Model;
 using Microsoft.CodeAnalysis;
@@ -10,7 +12,6 @@ using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -78,6 +79,7 @@ namespace ToolWindow
             {
                 IsDarkMode = false;
             }
+            UpdateDarkModeProperties();
 
             IconImage gradientimage = new IconImage()
             {
@@ -100,6 +102,20 @@ namespace ToolWindow
             ComputationTab.Children.Insert(0, diagramimage);
         }
 
+        private string _expanderForeground;
+        public string ExpanderForeground
+        {
+            get { return _expanderForeground; }
+            set
+            {
+                if (_expanderForeground != value)
+                {
+                    _expanderForeground = value;
+                    OnPropertyChanged(nameof(ExpanderForeground));
+                }
+            }
+        }
+
         private bool _isDarkMode;
         public bool IsDarkMode
         {
@@ -109,6 +125,7 @@ namespace ToolWindow
                 if (_isDarkMode != value)
                 {
                     _isDarkMode = value;
+                    UpdateDarkModeProperties();
                     OnPropertyChanged(nameof(IsDarkMode));
                 }
             }
@@ -119,6 +136,47 @@ namespace ToolWindow
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private double? lastHeight;
+
+        private void MyExpander_Expanded(object sender, RoutedEventArgs e)
+        {
+            if (lastHeight.HasValue)
+            {
+                myExpander.Height = lastHeight.Value;
+            }
+            else
+            {
+                myExpander.Height = double.NaN; // Reset to auto-size
+            }
+        }
+
+        private void MyExpander_Collapsed(object sender, RoutedEventArgs e)
+        {
+            lastHeight = myExpander.ActualHeight;
+            myExpander.Height = double.NaN; // Reset to auto-size
+        }
+
+        private void Resizer_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            if (myExpander != null)
+            {
+                double newHeight = myExpander.ActualHeight + e.VerticalChange;
+                newHeight = Math.Max(newHeight, 50);  // Set a minimum height
+                myExpander.Height = newHeight;
+                lastHeight = newHeight;
+            }
+        }
+
+        private void Resizer_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            // Here, you don't need to reset the height as you're already managing it during the drag and collapse/expand events
+        }
+
+        private void UpdateDarkModeProperties()
+        {
+            ExpanderForeground = IsDarkMode ? Brushes.White.ToHex() : Brushes.Black.ToHex(); 
         }
 
         private async void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
