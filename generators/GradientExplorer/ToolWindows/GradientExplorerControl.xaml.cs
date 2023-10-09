@@ -1,4 +1,5 @@
-﻿using GradientExplorer.Diagram;
+﻿using FontAwesome.Sharp;
+using GradientExplorer.Diagram;
 using GradientExplorer.LaTeX.Wpf;
 using GradientExplorer.Model;
 using Microsoft.CodeAnalysis;
@@ -8,6 +9,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +19,7 @@ using System.Windows.Media;
 
 namespace ToolWindow
 {
-    public partial class GradientExplorerControl : UserControl
+    public partial class GradientExplorerControl : UserControl, INotifyPropertyChanged
     {
         private Dictionary<NodeType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
         private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
@@ -60,6 +62,63 @@ namespace ToolWindow
 
             var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
             rootPanel.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
+
+            this.DataContext = this;
+            double r = backgroundColor.R / 255.0;
+            double g = backgroundColor.G / 255.0;
+            double b = backgroundColor.B / 255.0;
+
+            // Calculate the luminance
+            double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            if (luminance <= 0.5)
+            {
+                IsDarkMode = true;
+            }
+            else
+            {
+                IsDarkMode = false;
+            }
+
+            IconImage gradientimage = new IconImage()
+            {
+                Icon = IconChar.Play,
+                Foreground = Brushes.CornflowerBlue
+            };
+            TransformGroup group = new TransformGroup();
+            group.Children.Add(new RotateTransform(90));
+            group.Children.Add(new TranslateTransform(18, 2.5));
+            gradientimage.RenderTransform = group;
+            gradientimage.Height = 20;
+            GradientTab.Children.Insert(0, gradientimage);
+
+            IconImage diagramimage = new IconImage()
+            {
+                Icon = IconChar.DiagramProject,
+                Foreground = Brushes.CornflowerBlue
+            };
+            diagramimage.Height = 20;
+            ComputationTab.Children.Insert(0, diagramimage);
+        }
+
+        private bool _isDarkMode;
+        public bool IsDarkMode
+        {
+            get { return _isDarkMode; }
+            set
+            {
+                if (_isDarkMode != value)
+                {
+                    _isDarkMode = value;
+                    OnPropertyChanged(nameof(IsDarkMode));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
@@ -68,6 +127,7 @@ namespace ToolWindow
             rootPanel.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
 
             var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
+            IsDarkMode = currentTheme.IsDark;
             if (this.currentDiagram != null)
             {
                 bool changed = this.currentDiagram.UpdateTheme(currentTheme);

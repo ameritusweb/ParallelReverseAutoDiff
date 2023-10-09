@@ -10,8 +10,8 @@
     <!--This section defines the elements the user can interact with, like a menu command or a button or combo box in a toolbar. -->
     <Buttons>
       <Button guid="ToolWindow" id="MyExplorerCommand" priority="0x0100" type="Button">
-        <Parent guid="VSMainMenu" id="View.DevWindowsGroup.OtherWindows.Group1"/>
-        <Icon guid="ImageCatalogGuid" id="ToolWindow" />
+		<Parent guid="VSMainMenu" id="View.ExplorerWindowsGroup"/>
+	    <Icon guid="ImageCatalogGuid" id="FunnelChart" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Gradient Explorer</ButtonText>

@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace ToolWindow
 {
@@ -29,6 +30,7 @@ namespace ToolWindow
             public Pane()
             {
                 BitmapImageMoniker = KnownMonikers.ToolWindow;
+                ToolBarLocation = (int)VSTWT_LOCATION.VSTWT_LEFT;
             }
         }
     }
