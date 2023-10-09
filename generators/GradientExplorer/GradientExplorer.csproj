@@ -47,7 +47,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\GradientToolboxCommand.cs" />
-    <Compile Include="Converters\ExpanderHelper.cs" />
+    <Compile Include="Helpers\ExpanderBehavior.cs" />
+    <Compile Include="Helpers\ExpanderHelper.cs" />
     <Compile Include="Diagram\ClickCounter.cs" />
     <Compile Include="Diagram\Common.cs" />
     <Compile Include="Diagram\DiagramCanvas.cs" />

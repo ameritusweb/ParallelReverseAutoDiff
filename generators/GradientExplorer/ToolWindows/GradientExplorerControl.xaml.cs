@@ -138,42 +138,6 @@ namespace ToolWindow
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private double? lastHeight;
-
-        private void MyExpander_Expanded(object sender, RoutedEventArgs e)
-        {
-            if (lastHeight.HasValue)
-            {
-                myExpander.Height = lastHeight.Value;
-            }
-            else
-            {
-                myExpander.Height = double.NaN; // Reset to auto-size
-            }
-        }
-
-        private void MyExpander_Collapsed(object sender, RoutedEventArgs e)
-        {
-            lastHeight = myExpander.ActualHeight;
-            myExpander.Height = double.NaN; // Reset to auto-size
-        }
-
-        private void Resizer_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-        {
-            if (myExpander != null)
-            {
-                double newHeight = myExpander.ActualHeight + e.VerticalChange;
-                newHeight = Math.Max(newHeight, 50);  // Set a minimum height
-                myExpander.Height = newHeight;
-                lastHeight = newHeight;
-            }
-        }
-
-        private void Resizer_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-        {
-            // Here, you don't need to reset the height as you're already managing it during the drag and collapse/expand events
-        }
-
         private void UpdateDarkModeProperties()
         {
             ExpanderForeground = IsDarkMode ? Brushes.White.ToHex() : Brushes.Black.ToHex(); 
