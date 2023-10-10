@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Helpers
 {
-    public class ClearCanvasEvent : CanvasEventBase
+    public enum EventType
     {
-        // Properties or methods specific to clearing the canvas
+        AddPathToCanvas,
+        ClearCanvas,
     }
 }

@@ -49,11 +49,10 @@
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\GradientToolboxCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Helpers\AddPathCanvasEvent.cs" />
+    <Compile Include="Helpers\AllowDrawBehavior.cs" />
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
-    <Compile Include="Helpers\CanvasEventBase.cs" />
-    <Compile Include="Helpers\ClearCanvasEvent.cs" />
     <Compile Include="Helpers\EventAggregator.cs" />
+    <Compile Include="Helpers\EventType.cs" />
     <Compile Include="Helpers\ExpanderBehavior.cs" />
     <Compile Include="Helpers\ExpanderHelper.cs" />
     <Compile Include="Diagram\ClickCounter.cs" />
@@ -68,8 +67,11 @@
     <Compile Include="Diagram\VLabel.cs" />
     <Compile Include="Diagram\VNode.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
-    <Compile Include="Helpers\HandlesAttribute.cs" />
     <Compile Include="Helpers\IEventAggregator.cs" />
+    <Compile Include="Helpers\IEventData.cs" />
+    <Compile Include="Helpers\Subscription.cs" />
+    <Compile Include="Helpers\SubscriptionAsync.cs" />
+    <Compile Include="Helpers\SubscriptionBase.cs" />
     <Compile Include="Icons\Awesome.cs" />
     <Compile Include="Icons\FlipOrientation.cs" />
     <Compile Include="Icons\Icon.cs" />
