@@ -9,6 +9,7 @@
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
              xmlns:w="clr-namespace:GradientExplorer.LaTeX.Wpf"
+             xmlns:sharp="clr-namespace:FontAwesome.Sharp"
              xmlns:local="clr-namespace:GradientExplorer.Helpers"
              toolkit:Themes.UseVsTheme="True"
              mc:Ignorable="d"
@@ -117,17 +118,18 @@ Content="{Binding Header, RelativeSource={RelativeSource Mode=FindAncestor, Ance
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel x:Name="GradientTab" Orientation="Horizontal">
+                            <sharp:IconImage Icon="{Binding GradientTabIcon.Icon}" Foreground="{Binding GradientTabIcon.Foreground}" Height="{Binding GradientTabIcon.Height}" RenderTransform="{Binding GradientTabIcon.Transforms}" ></sharp:IconImage>
                             <TextBlock VerticalAlignment="Center" Text="Gradient Panel" Margin="5,0,0,0"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <StackPanel x:Name="rootPanel" Orientation="Vertical">
+                    <StackPanel Background="{Binding BackgroundColor}" Orientation="Vertical">
                         <Expander Template="{StaticResource CustomExpanderTemplate}" local:ExpanderBehavior.TrackHeight="True" IsExpanded="True">
                             <Expander.Header>
                                 <TextBlock Foreground="{Binding ExpanderForeground}" Text="Controls"/>
                             </Expander.Header>
                             <StackPanel Orientation="Vertical">
-                                <Label x:Name="lblHeadline" Margin="10" HorizontalAlignment="Center">Click me!!</Label>
-                                <Button Content="Generate" Click="button1_Click" Width="100" Height="30" Name="button1"/>
+                                <Label Content="{Binding HeadlineText}" Margin="10" HorizontalAlignment="Center"></Label>
+                                <Button Content="Generate" Command="{Binding ComputeGradientCommand}" Width="100" Height="30" Name="button1"/>
                             </StackPanel>
                         </Expander>
                         <Expander Template="{StaticResource CustomExpanderTemplate}" local:ExpanderBehavior.TrackHeight="True" IsExpanded="True">
@@ -149,6 +151,7 @@ Content="{Binding Header, RelativeSource={RelativeSource Mode=FindAncestor, Ance
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel x:Name="ComputationTab" Orientation="Horizontal">
+                            <sharp:IconImage Icon="{Binding ComputationTabIcon.Icon}" Foreground="{Binding ComputationTabIcon.Foreground}" Height="{Binding ComputationTabIcon.Height}" ></sharp:IconImage>
                             <TextBlock Text="Computation Graph Panel" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         </StackPanel>
                     </TabItem.Header>
