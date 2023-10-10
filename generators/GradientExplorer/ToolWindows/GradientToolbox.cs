@@ -4,7 +4,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
 using Community.VisualStudio.Toolkit;
+using GradientExplorer.Helpers;
+using GradientExplorer.ViewModels;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Imaging;
@@ -20,8 +23,9 @@ namespace ToolWindow
 
         public override async Task<FrameworkElement> CreateAsync(int toolWindowId, CancellationToken cancellationToken)
         {
-            Version vsVersion = await VS.Shell.GetVsVersionAsync();
-            return new GradientToolboxControl(vsVersion);
+            var viewModel = AutofacContainerProvider.Container.Resolve<GradientToolboxViewModel>();
+
+            return new GradientToolboxControl(viewModel);
         }
 
         [Guid("03050460-e1a4-49ab-a3c5-b7b1cfc2b4da")]

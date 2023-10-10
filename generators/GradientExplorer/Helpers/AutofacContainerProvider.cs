@@ -32,6 +32,7 @@ namespace GradientExplorer.Helpers
                                 .As<IEventAggregator>()
                                 .SingleInstance();
                             builder.RegisterType<GradientExplorerViewModel>().AsSelf();
+                            builder.RegisterType<GradientToolboxViewModel>().AsSelf();
                             _container = builder.Build();
                         }
                     }

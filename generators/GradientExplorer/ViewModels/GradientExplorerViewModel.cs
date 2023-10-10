@@ -16,23 +16,23 @@ using GradientExplorer.Parsers;
 using FontAwesome.Sharp;
 using Microsoft.VisualStudio.PlatformUI;
 using GradientExplorer.Extensions;
+using GradientExplorer.Helpers;
 
 namespace GradientExplorer.ViewModels
 {
     public class GradientExplorerViewModel : INotifyPropertyChanged
     {
-        private Dictionary<NodeType, Func<SyntaxNode, GradientGraph>> gradientUnaryExpressionMap;
-        private Dictionary<NodeType, Func<List<SyntaxNode>, GradientGraph>> gradientNonUnaryExpressionMap;
-        private ConcurrentDictionary<string, GradientGraph> gradientCache;
         private DiagramCanvas currentDiagram;
         private WpfMathPainter painter;
         private IMethodParser methodParser;
+        private IEventAggregator EventAggregator;
 
         public ICommand ComputeGradientCommand { get; }
 
-        public GradientExplorerViewModel(IMethodParser methodParser)
+        public GradientExplorerViewModel(IMethodParser methodParser, IEventAggregator eventAggregator)
         {
             this.methodParser = methodParser;
+            this.EventAggregator = eventAggregator;
             ComputeGradientCommand = new AsyncRelayCommand(ComputeGradientAsync, CanComputeGradient);
             GradientTabIcon = new IconImageViewModel
             {

@@ -62,7 +62,7 @@
                 <Button Style="{StaticResource GradientToolButton}" >
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel x:Name="debugging" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-
+                            <sharp:IconImage Icon="{Binding DebuggingIcon.Icon}" Foreground="{Binding DebuggingIcon.Foreground}" Height="{Binding DebuggingIcon.Height}" ></sharp:IconImage>
                         </StackPanel>
                         <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
                             <Label.Content>
@@ -76,7 +76,7 @@
                 <Button Style="{StaticResource GradientToolButton}">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel x:Name="metrics" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-
+                            <sharp:IconImage Icon="{Binding MetricsIcon.Icon}" Foreground="{Binding MetricsIcon.Foreground}" Height="{Binding MetricsIcon.Height}" ></sharp:IconImage>
                         </StackPanel>
                         <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
                             <Label.Content>
@@ -90,7 +90,7 @@
                 <Button Style="{StaticResource GradientToolButton}">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel x:Name="settings" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-
+                            <sharp:IconImage Icon="{Binding SettingsIcon.Icon}" Foreground="{Binding SettingsIcon.Foreground}" Height="{Binding SettingsIcon.Height}" ></sharp:IconImage>
                         </StackPanel>
                         <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
                             <Label.Content>
@@ -104,7 +104,7 @@
                 <Button Style="{StaticResource GradientToolButton}">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel x:Name="help" MaxWidth="100" MaxHeight="40" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-
+                            <sharp:IconImage Icon="{Binding HelpIcon.Icon}" Foreground="{Binding HelpIcon.Foreground}" Height="{Binding HelpIcon.Height}" ></sharp:IconImage>
                         </StackPanel>
                         <Label Foreground="CornflowerBlue" HorizontalAlignment="Center">
                             <Label.Content>

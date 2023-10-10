@@ -318,6 +318,7 @@
     <Compile Include="ToolWindows\GradientToolboxControl.xaml.cs">
       <DependentUpon>GradientToolboxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\GradientToolboxViewModel.cs" />
     <Compile Include="ViewModels\GradientExplorerViewModel.cs" />
     <Compile Include="ViewModels\IconImageViewModel.cs" />
     <Compile Include="VSCommandTable.cs">
