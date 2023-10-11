@@ -23,6 +23,8 @@ namespace GradientExplorer.Helpers
                             var builder = new ContainerBuilder();
                             // Register your types here
                             builder.RegisterType<MethodParser>().As<IMethodParser>();
+                            builder.RegisterType<NodeFactory>().As<INodeFactory>();
+                            builder.RegisterType<NodeTypeFactory>().As<INodeTypeFactory>();
                             builder.RegisterType<ExpressionDecomposer>()
                                 .As<IExpressionDecomposer>()
                                 .SingleInstance();
