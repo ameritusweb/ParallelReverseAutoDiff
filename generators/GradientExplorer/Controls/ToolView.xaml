@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="GradientExplorer.Controls.ToolView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sharp="clr-namespace:FontAwesome.Sharp"
+             xmlns:local="clr-namespace:ToolWindow"
+             xmlns:helpers="clr-namespace:GradientExplorer.Helpers"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <!-- Breadcrumb -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+            <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                <TextBlock.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                </TextBlock.InputBindings>
+            </TextBlock>
+            <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+            <TextBlock Text="{Binding ToolName}" />
+        </StackPanel>
+
+        <!-- Content Slot -->
+        <ContentPresenter VerticalAlignment="Stretch" Margin="10,40,10,10"/>
+    </Grid>
+</UserControl>

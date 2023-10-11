@@ -49,6 +49,9 @@
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\GradientToolboxCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\ToolView.xaml.cs">
+      <DependentUpon>ToolView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\DrawDiagramBehavior.cs" />
     <Compile Include="Helpers\AllowDrawBehavior.cs" />
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
@@ -404,6 +407,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ToolWindows\GradientExplorer.cs" />
+    <Page Include="Controls\ToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ToolWindows\GradientExplorerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

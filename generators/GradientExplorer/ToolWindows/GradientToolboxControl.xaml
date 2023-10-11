@@ -6,6 +6,7 @@
              xmlns:sharp="clr-namespace:FontAwesome.Sharp"
              xmlns:local="clr-namespace:ToolWindow"
              xmlns:helpers="clr-namespace:GradientExplorer.Helpers"
+             xmlns:controls="clr-namespace:GradientExplorer.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -127,93 +128,39 @@
         </UniformGrid>
         <!-- Simplification Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=SimplificationTool}">
-            <!-- Breadcrumb -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
-                    <TextBlock.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
-                    </TextBlock.InputBindings>
-                </TextBlock>
-                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Text="Simplification Tool" />
-            </StackPanel>
-
-            <!-- Your Simplification Tool UI -->
+            <controls:ToolView>
+                <!-- Your Simplification Tool UI -->
+            </controls:ToolView>
         </Grid>
         <!-- Computation Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=ComputationTool}">
-            <!-- Breadcrumb -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
-                    <TextBlock.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
-                    </TextBlock.InputBindings>
-                </TextBlock>
-                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Text="Computation Tool" />
-            </StackPanel>
-
-            <!-- Your Computation Tool UI -->
+            <controls:ToolView>
+                <!-- Your Computation Tool UI -->
+            </controls:ToolView>
         </Grid>
         <!-- Debugging Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=DebuggingTool}">
-            <!-- Breadcrumb -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
-                    <TextBlock.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
-                    </TextBlock.InputBindings>
-                </TextBlock>
-                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Text="Debugging Tool" />
-            </StackPanel>
-
-            <!-- Your Debugging Tool UI -->
+            <controls:ToolView>
+                <!-- Your Debugging Tool UI -->
+            </controls:ToolView>
         </Grid>
         <!-- Metrics Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=MetricsTool}">
-            <!-- Breadcrumb -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
-                    <TextBlock.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
-                    </TextBlock.InputBindings>
-                </TextBlock>
-                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Text="Metrics Tool" />
-            </StackPanel>
-
-            <!-- Your Metrics Tool UI -->
+            <controls:ToolView>
+                <!-- Your Metrics Tool UI -->
+            </controls:ToolView>
         </Grid>
         <!-- Settings Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=SettingsTool}">
-            <!-- Breadcrumb -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
-                    <TextBlock.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
-                    </TextBlock.InputBindings>
-                </TextBlock>
-                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Text="Settings Tool" />
-            </StackPanel>
-
-            <!-- Your Settings Tool UI -->
+            <controls:ToolView>
+                <!-- Your Settings Tool UI -->
+            </controls:ToolView>
         </Grid>
         <!-- Help Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=HelpTool}">
-            <!-- Breadcrumb -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
-                    <TextBlock.InputBindings>
-                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
-                    </TextBlock.InputBindings>
-                </TextBlock>
-                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-                <TextBlock Text="Help Tool" />
-            </StackPanel>
-
-            <!-- Your Help Tool UI -->
+            <controls:ToolView>
+                <!-- Your Help Tool UI -->
+            </controls:ToolView>
         </Grid>
     </Grid>
 </UserControl>

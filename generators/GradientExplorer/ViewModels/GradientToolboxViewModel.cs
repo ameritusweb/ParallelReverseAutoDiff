@@ -96,6 +96,25 @@ namespace GradientExplorer.ViewModels
 
         public IconImageViewModel HelpIcon { get; set; }
 
+        public string ToolName
+        {
+            get
+            {
+                switch (CurrentView)
+                {
+                    case GradientToolView.UniformGrid: return "Uniform Grid";
+                    case GradientToolView.SimplificationTool: return "Simplification Tool";
+                    case GradientToolView.ComputationTool: return "Computation Tool";
+                    case GradientToolView.DebuggingTool: return "Debugging Tool";
+                    case GradientToolView.MetricsTool: return "Metrics Tool";
+                    case GradientToolView.SettingsTool: return "Settings Tool";
+                    case GradientToolView.HelpTool: return "Help Tool";
+                    // ... other cases
+                    default: return "Unknown Tool";
+                }
+            }
+        }
+
         private async Task SimplificationViewAsync()
         {
             var docView = await VS.Documents.GetActiveDocumentViewAsync();
