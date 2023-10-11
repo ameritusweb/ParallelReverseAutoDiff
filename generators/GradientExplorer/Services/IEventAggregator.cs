@@ -53,9 +53,8 @@ namespace GradientExplorer.Services
         /// </summary>
         /// <typeparam name="T">The expected type of the message.</typeparam>
         /// <param name="messageType">The message type enumeration value.</param>
-        /// <param name="message">The retrieved message, or the default value of T if not found.</param>
-        /// <returns>True if a message of the specified type was found, otherwise false.</returns>
-        bool TryRetrieveMessage<T>(MessageType messageType, out T message);
+        /// <returns>The retrieved message.</returns>
+        T RetrieveMessage<T>(MessageType messageType);
 
         /// <summary>
         /// Removes a message of a specific type from the event aggregator.

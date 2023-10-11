@@ -63,17 +63,14 @@ namespace GradientExplorer.Services
             uniqueSet[typeof(T)] = message;
         }
 
-        public bool TryRetrieveMessage<T>(MessageType messageType, out T message)
+        public T RetrieveMessage<T>(MessageType messageType)
         {
-            message = default;
-
             if (_messages.TryGetValue(messageType, out var uniqueSet) && uniqueSet.ContainsType(typeof(T)))
             {
-                message = (T)uniqueSet[typeof(T)];
-                return true;
+                return (T)uniqueSet[typeof(T)];
             }
 
-            return false;
+            throw new InvalidOperationException($"Message of type [{messageType}] not found.");
         }
 
         public bool RemoveMessage(MessageType messageType)

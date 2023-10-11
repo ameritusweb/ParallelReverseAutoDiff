@@ -4,8 +4,6 @@ using GradientExplorer.LaTeX.Translation;
 using GradientExplorer.Services;
 using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -63,8 +61,7 @@ namespace GradientExplorer.LaTeX.Wpf
         {
             get
             {
-                eventAggregator.TryRetrieveMessage(MessageType.CanvasWidth, out float width);
-                return width;
+                return eventAggregator.RetrieveMessage<float>(MessageType.CanvasWidth);
             }
         }
 
@@ -72,8 +69,7 @@ namespace GradientExplorer.LaTeX.Wpf
         {
             get
             {
-                eventAggregator.TryRetrieveMessage(MessageType.CanvasHeight, out float height);
-                return height;
+                return eventAggregator.RetrieveMessage<float>(MessageType.CanvasHeight);
             }
         }
 
@@ -99,11 +95,8 @@ namespace GradientExplorer.LaTeX.Wpf
                 Height = height,
                 Fill = _currentColorBrush
             };
-            bool result = eventAggregator.TryRetrieveMessage(MessageType.CanvasActualHeight, out float actualHeight);
-            if (result)
-            {
-                eventAggregator.Publish(EventType.AddRectToCanvas, new RectEventData { Rect = rect, Top = actualHeight + top, Left = left });
-            }
+            float actualHeight = eventAggregator.RetrieveMessage<float>(MessageType.CanvasActualHeight);
+            eventAggregator.Publish(EventType.AddRectToCanvas, new RectEventData { Rect = rect, Top = actualHeight + top, Left = left });
         }
 
         // Add this new method to render StreamGeometry
@@ -115,11 +108,8 @@ namespace GradientExplorer.LaTeX.Wpf
             path.Stroke = new SolidColorBrush(color);
             path.StrokeThickness = 0.5; // You can adjust this value as needed
 
-            bool result = eventAggregator.TryRetrieveMessage(MessageType.CanvasActualHeight, out float actualHeight);
-            if (result)
-            {
-                eventAggregator.Publish(EventType.AddPathToCanvas, new PathEventData { Path = path, Top = (float)(_currentY - actualHeight), Left = (float)_currentX });
-            }
+            var actualHeight = eventAggregator.RetrieveMessage<float>(MessageType.CanvasActualHeight);
+            eventAggregator.Publish(EventType.AddPathToCanvas, new PathEventData { Path = path, Top = (float)(_currentY - actualHeight), Left = (float)_currentX });
         }
 
         public void Restore(Guid id)
