@@ -80,6 +80,7 @@ namespace GradientExplorer.ViewModels
                 {
                     _currentView = value;
                     OnPropertyChanged(nameof(CurrentView));
+                    OnPropertyChanged(nameof(ToolName));  // Notify that ToolName has also changed
                 }
             }
         }
