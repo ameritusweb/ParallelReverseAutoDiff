@@ -58,8 +58,11 @@
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
     <Compile Include="Helpers\GradientToolView.cs" />
+    <Compile Include="Helpers\NodeBuilderPool.cs" />
     <Compile Include="Helpers\SeverityType.cs" />
     <Compile Include="Helpers\ViewToVisibilityConverter.cs" />
+    <Compile Include="Services\INodeBuilderPool.cs" />
+    <Compile Include="Services\NodeBuilder.cs" />
     <Compile Include="Services\DateTimeProvider.cs" />
     <Compile Include="Services\EnvironmentProvider.cs" />
     <Compile Include="Services\EventAggregator.cs" />

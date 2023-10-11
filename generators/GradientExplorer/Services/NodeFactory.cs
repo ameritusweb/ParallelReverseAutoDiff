@@ -3,119 +3,74 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GradientExplorer.Services
 {
     public class NodeFactory : INodeFactory
     {
-        private INodeTypeFactory NodeTypeFactory;
-        public NodeFactory(INodeTypeFactory nodeTypeFactory)
+        private INodeTypeFactory nodeTypeFactory;
+        private INodeBuilderPool nodeBuilderPool;
+        public NodeFactory(INodeTypeFactory nodeTypeFactory, INodeBuilderPool nodeBuilderPool)
         {
-            NodeTypeFactory = nodeTypeFactory;
+            this.nodeTypeFactory = nodeTypeFactory;
+            this.nodeBuilderPool = nodeBuilderPool;
         }
 
-        public Node Function(NodeType functionType, Node target)
+        public async Task<Node> FunctionAsync(NodeType functionType, Node target)
         {
-            Edge edge = new Edge()
-            {
-                Relationship = RelationshipType.Function,
-                TargetNode = target,
-            };
-
-            Node node = new Node()
-            {
-                NodeType = functionType,
-            };
-            node.Edges.Add(edge);
-            return node;
+            var nodeBuilder = await nodeBuilderPool.GetNodeBuilderAsync(functionType);
+            return nodeBuilder
+                    .WithFunction(target)
+                    .Build();
         }
 
-        public Node Function(NodeType functionType, Node left, Node right)
+        public async Task<Node> FunctionAsync(NodeType functionType, Node left, Node right)
         {
-            Edge leftEdge = new Edge()
-            {
-                Relationship = RelationshipType.Operand,
-                TargetNode = left,
-            };
-
-            Edge rightEdge = new Edge()
-            {
-                Relationship = RelationshipType.Operand,
-                TargetNode = right,
-            };
-
-            Node node = new Node()
-            {
-                NodeType = functionType,
-            };
-            node.Edges.Add(leftEdge);
-            node.Edges.Add(rightEdge);
-            return node;
+            var nodeBuilder = await nodeBuilderPool.GetNodeBuilderAsync(functionType);
+            return nodeBuilder
+                    .WithLeftOperand(left)
+                    .WithRightOperand(right)
+                    .Build();
         }
 
-        public Node Function(NodeType functionType, List<Node> operands)
+        public async Task<Node> FunctionAsync(NodeType functionType, List<Node> operands)
         {
-            Node node = new Node()
-            {
-                NodeType = functionType,
-            };
-
-            foreach (var operand in operands)
-            {
-                Edge edge = new Edge()
-                {
-                    Relationship = RelationshipType.Operand,
-                    TargetNode = operand,
-                };
-                node.Edges.Add(edge);
-            }
-            return node;
+            var nodeBuilder = await nodeBuilderPool.GetNodeBuilderAsync(functionType);
+            return nodeBuilder
+                    .WithOperands(operands)
+                    .Build();
         }
 
-        public Node FunctionWithCoefficient(NodeType node, Node coefficient, SyntaxNode innerInvocation)
+        public async Task<Node> FunctionWithCoefficientAsync(NodeType node, Node coefficient, SyntaxNode innerInvocation)
         {
-            var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var inner = (await ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var functionNode = Function(node, inner);
+            var functionNode = await FunctionAsync(node, inner);
 
-            var mult = Function(NodeType.Multiply, coefficient, functionNode);
+            var mult = await FunctionAsync(NodeType.Multiply, coefficient, functionNode);
 
             return mult;
         }
 
-        public Node NodeWithCoefficientAndExponent(Node coefficient, Node exponent, SyntaxNode innerInvocation)
+        public async Task<Node> NodeWithCoefficientAndExponentAsync(Node coefficient, Node exponent, SyntaxNode innerInvocation)
         {
-            var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var inner = (await ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var pow = NodeWithExponent(inner, exponent);
+            var pow = await NodeWithExponentAsync(inner, exponent);
 
-            var mult = Function(NodeType.Multiply, coefficient, pow);
+            var mult = await FunctionAsync(NodeType.Multiply, coefficient, pow);
 
             return mult;
         }
 
-        public Node NodeWithExponent(Node inner, Node exponent)
+        public async Task<Node> NodeWithExponentAsync(Node inner, Node exponent)
         {
-            Node pow = new Node()
-            {
-                NodeType = NodeType.Pow,
-            };
-
-            Edge baseEdge = new Edge()
-            {
-                Relationship = RelationshipType.Operand,
-                TargetNode = inner,
-            };
-
-            Edge exponentEdge = new Edge()
-            {
-                Relationship = RelationshipType.Operand,
-                TargetNode = exponent,
-            };
-            pow.Edges.Add(baseEdge);
-            pow.Edges.Add(exponentEdge);
-
-            return pow;
+            var nodeBuilder = await nodeBuilderPool.GetNodeBuilderAsync(NodeType.Pow);
+            return nodeBuilder
+                    .WithBaseOperand(inner)
+                    .WithExponentOperand(exponent)
+                    .Build();
         }
 
         public Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type)
@@ -193,33 +148,33 @@ namespace GradientExplorer.Services
             return parent;
         }
 
-        public GradientGraph ConvertToGraph(SyntaxNode node)
+        public async Task<GradientGraph> ConvertToGraphAsync(SyntaxNode node)
         {
             GradientGraph graph = new GradientGraph();
             if (node is InvocationExpressionSyntax invocationExpression)
             {
-                var functionType = NodeTypeFactory.GetNodeType(invocationExpression);
+                var functionType = nodeTypeFactory.GetNodeType(invocationExpression);
                 var args = invocationExpression.ArgumentList.Arguments;
                 if (args.Count == 2)
                 {
-                    var innerGraph1 = ConvertToGraph(args[0].Expression);
-                    var innerGraph2 = ConvertToGraph(args[1].Expression);
+                    var innerGraph1 = await ConvertToGraphAsync(args[0].Expression);
+                    var innerGraph2 = await ConvertToGraphAsync(args[1].Expression);
                     Node target1 = innerGraph1.Nodes.FirstOrDefault();
                     Node target2 = innerGraph2.Nodes.FirstOrDefault();
                     if (target1 != null && target2 != null)
                     {
-                        var source = Function(functionType, target1, target2);
+                        var source = await FunctionAsync(functionType, target1, target2);
                         graph.Nodes.Add(source);
                     }
                 }
                 else
                 {
                     var innerNode = args[0].Expression;
-                    var innerGraph = ConvertToGraph(innerNode);
+                    var innerGraph = await ConvertToGraphAsync(innerNode);
                     Node target = innerGraph.Nodes.FirstOrDefault();
                     if (target != null)
                     {
-                        var source = Function(functionType, target);
+                        var source = await FunctionAsync(functionType, target);
                         graph.Nodes.Add(source);
                     }
                 }
@@ -240,19 +195,19 @@ namespace GradientExplorer.Services
             }
             else if (node is ParenthesizedExpressionSyntax parenthesized)
             {
-                return ConvertToGraph(parenthesized.Expression);
+                return await ConvertToGraphAsync(parenthesized.Expression);
             }
             else if (node is PrefixUnaryExpressionSyntax prefixUnary)
             {
-                Node baseNode = ConvertToGraph(prefixUnary.Operand).Nodes.FirstOrDefault();
-                var mult = Function(NodeType.Multiply, ToValueNode(node, prefixUnary.OperatorToken, LiteralType.Constant), baseNode);
+                Node baseNode = (await ConvertToGraphAsync(prefixUnary.Operand)).Nodes.FirstOrDefault();
+                var mult = await FunctionAsync(NodeType.Multiply, ToValueNode(node, prefixUnary.OperatorToken, LiteralType.Constant), baseNode);
                 graph.Nodes.Add(mult);
             }
             else if (node is BinaryExpressionSyntax binary)
             {
-                Node left = ConvertToGraph(binary.Left).Nodes.FirstOrDefault();
-                Node right = ConvertToGraph(binary.Right).Nodes.FirstOrDefault();
-                Node multiply = Function(NodeTypeFactory.ToNodeType(binary), left, right);
+                Node left = (await ConvertToGraphAsync(binary.Left)).Nodes.FirstOrDefault();
+                Node right = (await ConvertToGraphAsync(binary.Right)).Nodes.FirstOrDefault();
+                Node multiply = await FunctionAsync(nodeTypeFactory.ToNodeType(binary), left, right);
                 graph.Nodes.Add(multiply);
             }
             else

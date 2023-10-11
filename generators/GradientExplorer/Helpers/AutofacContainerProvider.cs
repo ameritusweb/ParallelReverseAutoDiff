@@ -28,6 +28,9 @@ namespace GradientExplorer.Helpers
                             builder.RegisterType<ExpressionDecomposer>()
                                 .As<IExpressionDecomposer>()
                                 .SingleInstance();
+                            builder.RegisterType<NodeBuilderPool>()
+                                .As<INodeBuilderPool>()
+                                .SingleInstance();
                             builder.RegisterType<ExpressionDifferentiator>().As<IExpressionDifferentiator>();
                             builder.RegisterType<GradientGraphFactory>().As<IGradientGraphFactory>();
                             builder.RegisterType<LaTeXBuilder>().As<ILaTeXBuilder>();

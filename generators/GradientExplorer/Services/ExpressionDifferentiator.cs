@@ -33,211 +33,211 @@ namespace GradientExplorer.Services
             return literalNode;
         }
 
-        public GradientGraph DifferentiateExpExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateExpExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var node = nodeFactory.Function(NodeType.Exp, target);
+            var node = await nodeFactory.FunctionAsync(NodeType.Exp, target);
 
             graph.Nodes.Add(node);
             return graph;
         }
 
-        public GradientGraph DifferentiateSinExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateSinExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var node = nodeFactory.Function(NodeType.Cos, target);
+            var node = await nodeFactory.FunctionAsync(NodeType.Cos, target);
 
             graph.Nodes.Add(node);
             return graph;
         }
 
-        public GradientGraph DifferentiateSinhExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateSinhExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var node = nodeFactory.Function(NodeType.Cosh, target);
+            var node = await nodeFactory.FunctionAsync(NodeType.Cosh, target);
 
             graph.Nodes.Add(node);
             return graph;
         }
 
-        public GradientGraph DifferentiateAsinExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateAsinExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
             Node numerator = nodeFactory.ToConstantNode(1);
 
             Node exponent = nodeFactory.ToConstantNode(2);
 
-            var squared = nodeFactory.NodeWithExponent(target, exponent);
+            var squared = await nodeFactory.NodeWithExponentAsync(target, exponent);
 
             Node operand = nodeFactory.ToConstantNode(1);
 
-            var subtract = nodeFactory.Function(NodeType.Subtract, operand, squared);
+            var subtract = await nodeFactory.FunctionAsync(NodeType.Subtract, operand, squared);
 
-            var denominator = nodeFactory.Function(NodeType.Sqrt, subtract);
+            var denominator = await nodeFactory.FunctionAsync(NodeType.Sqrt, subtract);
 
-            var result = nodeFactory.Function(NodeType.Divide, numerator, denominator);
+            var result = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(result);
             return graph;
         }
 
-        public GradientGraph DifferentiateCosExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateCosExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
             Node coefficient = nodeFactory.ToConstantNode(-1);
 
-            var inner = nodeFactory.FunctionWithCoefficient(NodeType.Sin, coefficient, innerInvocation);
+            var inner = await nodeFactory.FunctionWithCoefficientAsync(NodeType.Sin, coefficient, innerInvocation);
 
             graph.Nodes.Add(inner);
 
             return graph;
         }
 
-        public GradientGraph DifferentiateCoshExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateCoshExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var inner = nodeFactory.Function(NodeType.Sinh, target);
+            var inner = await nodeFactory.FunctionAsync(NodeType.Sinh, target);
 
             graph.Nodes.Add(inner);
 
             return graph;
         }
 
-        public GradientGraph DifferentiateAcosExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateAcosExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
             Node numerator = nodeFactory.ToConstantNode(-1);
 
             Node exponent = nodeFactory.ToConstantNode(2);
 
-            var squared = nodeFactory.NodeWithExponent(target, exponent);
+            var squared = await nodeFactory.NodeWithExponentAsync(target, exponent);
 
             Node operand = nodeFactory.ToConstantNode(1);
 
-            var subtract = nodeFactory.Function(NodeType.Subtract, operand, squared);
+            var subtract = await nodeFactory.FunctionAsync(NodeType.Subtract, operand, squared);
 
-            var denominator = nodeFactory.Function(NodeType.Sqrt, subtract);
+            var denominator = await nodeFactory.FunctionAsync(NodeType.Sqrt, subtract);
 
-            var result = nodeFactory.Function(NodeType.Divide, numerator, denominator);
+            var result = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(result);
             return graph;
         }
 
-        public GradientGraph DifferentiateTanExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateTanExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
             Node numerator = nodeFactory.ToConstantNode(1);
 
-            var inner = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var inner = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var cos = nodeFactory.Function(NodeType.Cos, inner);
+            var cos = await nodeFactory.FunctionAsync(NodeType.Cos, inner);
 
-            var denominator = nodeFactory.Function(NodeType.Multiply, cos, cos);
+            var denominator = await nodeFactory.FunctionAsync(NodeType.Multiply, cos, cos);
 
-            var divide = nodeFactory.Function(NodeType.Divide, numerator, denominator);
+            var divide = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(divide);
 
             return graph;
         }
 
-        public GradientGraph DifferentiateTanhExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateTanhExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
             Node operand = nodeFactory.ToConstantNode(1);
 
-            var tanh = nodeFactory.Function(NodeType.Tanh, target);
+            var tanh = await nodeFactory.FunctionAsync(NodeType.Tanh, target);
 
-            var mult = nodeFactory.Function(NodeType.Multiply, tanh, tanh);
+            var mult = await nodeFactory.FunctionAsync(NodeType.Multiply, tanh, tanh);
 
-            var result = nodeFactory.Function(NodeType.Subtract, operand, mult);
+            var result = await nodeFactory.FunctionAsync(NodeType.Subtract, operand, mult);
 
             graph.Nodes.Add(result);
             return graph;
         }
 
-        public GradientGraph DifferentiateAtanExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateAtanExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
-            var target = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var target = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
             Node numerator = nodeFactory.ToConstantNode(1);
 
             Node exponent = nodeFactory.ToConstantNode(2);
 
-            var squared = nodeFactory.NodeWithExponent(target, exponent);
+            var squared = await nodeFactory.NodeWithExponentAsync(target, exponent);
 
             Node operand = nodeFactory.ToConstantNode(1);
 
-            var denominator = nodeFactory.Function(NodeType.Add, operand, squared);
+            var denominator = await nodeFactory.FunctionAsync(NodeType.Add, operand, squared);
 
-            var result = nodeFactory.Function(NodeType.Divide, numerator, denominator);
+            var result = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(result);
             return graph;
         }
 
-        public GradientGraph DifferentiateLogExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateLogExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
             Node numerator = nodeFactory.ToConstantNode(1);
 
-            var inner = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var inner = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
             Node c = nodeFactory.ToConstantNode(10);
 
-            var ln10 = nodeFactory.Function(NodeType.Ln, c);
+            var ln10 = await nodeFactory.FunctionAsync(NodeType.Ln, c);
 
-            var denominator = nodeFactory.Function(NodeType.Multiply, inner, ln10);
+            var denominator = await nodeFactory.FunctionAsync(NodeType.Multiply, inner, ln10);
 
-            var divide = nodeFactory.Function(NodeType.Divide, numerator, denominator);
+            var divide = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(divide);
 
             return graph;
         }
 
-        public GradientGraph DifferentiateLnExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateLnExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
             Node numerator = nodeFactory.ToConstantNode(1);
 
-            var denominator = nodeFactory.ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
+            var denominator = (await nodeFactory.ConvertToGraphAsync(innerInvocation)).Nodes.FirstOrDefault();
 
-            var divide = nodeFactory.Function(NodeType.Divide, numerator, denominator);
+            var divide = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, denominator);
 
             graph.Nodes.Add(divide);
 
             return graph;
         }
 
-        public GradientGraph DifferentiatePowExpression(List<SyntaxNode> syntaxNodes)
+        public async Task<GradientGraph> DifferentiatePowExpressionAsync(List<SyntaxNode> syntaxNodes)
         {
             GradientGraph graph = new GradientGraph();
 
@@ -266,24 +266,24 @@ namespace GradientExplorer.Services
 
             Node coefficient = nodeFactory.ToValue(syntaxNodes[1]);
 
-            var baseNode = nodeFactory.NodeWithCoefficientAndExponent(coefficient, exponent, syntaxNodes[0]);
+            var baseNode = await nodeFactory.NodeWithCoefficientAndExponentAsync(coefficient, exponent, syntaxNodes[0]);
 
             graph.Nodes.Add(baseNode);
 
             return graph;
         }
 
-        public GradientGraph DifferentiateSqrtExpression(SyntaxNode innerInvocation)
+        public async Task<GradientGraph> DifferentiateSqrtExpressionAsync(SyntaxNode innerInvocation)
         {
             GradientGraph graph = new GradientGraph();
 
             Node two = nodeFactory.ToConstantNode(2);
 
-            var functionWithCoefficent = nodeFactory.FunctionWithCoefficient(NodeType.Sqrt, two, innerInvocation);
+            var functionWithCoefficent = await nodeFactory.FunctionWithCoefficientAsync(NodeType.Sqrt, two, innerInvocation);
 
             Node numerator = nodeFactory.ToConstantNode(1);
 
-            var divide = nodeFactory.Function(NodeType.Divide, numerator, functionWithCoefficent);
+            var divide = await nodeFactory.FunctionAsync(NodeType.Divide, numerator, functionWithCoefficent);
 
             graph.Nodes.Add(divide);
 

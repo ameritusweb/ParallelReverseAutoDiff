@@ -14,21 +14,21 @@ namespace GradientExplorer.Model
         public GradientGraph FPrime { get; set; }
         public GradientGraph GPrime { get; set; }
 
-        public Node Differentiate(INodeFactory nodeFactory)
+        public async Task<Node> DifferentiateAsync(INodeFactory nodeFactory)
         {
-            Node baseExpression = nodeFactory.Function(NodeType.Pow, F.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
+            Node baseExpression = await nodeFactory.FunctionAsync(NodeType.Pow, F.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
 
-            Node lnF = nodeFactory.Function(NodeType.Ln, F.Nodes.FirstOrDefault());
+            Node lnF = await nodeFactory.FunctionAsync(NodeType.Ln, F.Nodes.FirstOrDefault());
 
-            Node term1 = nodeFactory.Function(NodeType.Multiply, GPrime.Nodes.FirstOrDefault(), lnF);
+            Node term1 = await nodeFactory.FunctionAsync(NodeType.Multiply, GPrime.Nodes.FirstOrDefault(), lnF);
 
-            Node fraction = nodeFactory.Function(NodeType.Divide, FPrime.Nodes.FirstOrDefault(), F.Nodes.FirstOrDefault());
+            Node fraction = await nodeFactory.FunctionAsync(NodeType.Divide, FPrime.Nodes.FirstOrDefault(), F.Nodes.FirstOrDefault());
 
-            Node term2 = nodeFactory.Function(NodeType.Multiply, G.Nodes.FirstOrDefault(), fraction);
+            Node term2 = await nodeFactory.FunctionAsync(NodeType.Multiply, G.Nodes.FirstOrDefault(), fraction);
 
-            Node finalTerm = nodeFactory.Function(NodeType.Add, term1, term2);
+            Node finalTerm = await nodeFactory.FunctionAsync(NodeType.Add, term1, term2);
 
-            Node result = nodeFactory.Function(NodeType.Multiply, baseExpression, finalTerm);
+            Node result = await nodeFactory.FunctionAsync(NodeType.Multiply, baseExpression, finalTerm);
             result.ExpressionType = GradientExpressionType.CompositePowerRule;
             return result;
         }

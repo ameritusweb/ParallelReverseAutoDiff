@@ -10,17 +10,17 @@ namespace GradientExplorer.Services
 {
     public interface INodeFactory
     {
-        Node Function(NodeType functionType, Node target);
-        Node Function(NodeType functionType, Node left, Node right);
-        Node Function(NodeType functionType, List<Node> operands);
-        Node FunctionWithCoefficient(NodeType nodeType, Node coefficient, SyntaxNode innerInvocation);
-        Node NodeWithCoefficientAndExponent(Node coefficient, Node exponent, SyntaxNode innerInvocation);
-        Node NodeWithExponent(Node inner, Node exponent);
+        Task<Node> FunctionAsync(NodeType functionType, Node target);
+        Task<Node> FunctionAsync(NodeType functionType, Node left, Node right);
+        Task<Node> FunctionAsync(NodeType functionType, List<Node> operands);
+        Task<Node> FunctionWithCoefficientAsync(NodeType nodeType, Node coefficient, SyntaxNode innerInvocation);
+        Task<Node> NodeWithCoefficientAndExponentAsync(Node coefficient, Node exponent, SyntaxNode innerInvocation);
+        Task<Node> NodeWithExponentAsync(Node inner, Node exponent);
         Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type);
         Node ToConstantNode(int value);
         Node ToConstantNode(double value);
         Node ToValue(SyntaxNode node);
         Node ToValueNodeWithParent(SyntaxNode node, Node parent, int edgeIndex);
-        GradientGraph ConvertToGraph(SyntaxNode node);
+        Task<GradientGraph> ConvertToGraphAsync(SyntaxNode node);
     }
 }

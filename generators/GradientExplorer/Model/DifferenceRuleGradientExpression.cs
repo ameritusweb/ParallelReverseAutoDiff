@@ -11,9 +11,9 @@ namespace GradientExplorer.Model
     {
         public List<GradientGraph> Operands { get; set; } = new List<GradientGraph>();
 
-        public Node Differentiate(INodeFactory nodeFactory)
+        public async Task<Node> DifferentiateAsync(INodeFactory nodeFactory)
         {
-            var result = nodeFactory.Function(NodeType.Subtract, Operands.Select(x => x.Nodes.FirstOrDefault()).ToList());
+            var result = await nodeFactory.FunctionAsync(NodeType.Subtract, Operands.Select(x => x.Nodes.FirstOrDefault()).ToList());
             result.ExpressionType = GradientExpressionType.DifferenceRule;
             return result;
         }

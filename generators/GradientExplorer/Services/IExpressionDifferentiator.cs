@@ -11,19 +11,19 @@ namespace GradientExplorer.Services
     public interface IExpressionDifferentiator
     {
         Node DifferentiateLiteral(SyntaxNode node, LiteralType type);
-        GradientGraph DifferentiateExpExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateSinExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateSinhExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateAsinExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateCosExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateCoshExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateAcosExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateTanExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateTanhExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateAtanExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateLogExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiateLnExpression(SyntaxNode innerInvocation);
-        GradientGraph DifferentiatePowExpression(List<SyntaxNode> syntaxNodes);
-        GradientGraph DifferentiateSqrtExpression(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateExpExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateSinExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateSinhExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateAsinExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateCosExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateCoshExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateAcosExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateTanExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateTanhExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateAtanExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateLogExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiateLnExpressionAsync(SyntaxNode innerInvocation);
+        Task<GradientGraph> DifferentiatePowExpressionAsync(List<SyntaxNode> syntaxNodes);
+        Task<GradientGraph> DifferentiateSqrtExpressionAsync(SyntaxNode innerInvocation);
     }
 }

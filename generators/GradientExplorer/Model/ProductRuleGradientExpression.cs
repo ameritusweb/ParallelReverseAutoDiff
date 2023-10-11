@@ -15,13 +15,13 @@ namespace GradientExplorer.Model
         public GradientGraph FPrime { get; set; }
         public GradientGraph GPrime { get; set; }
 
-        public Node Differentiate(INodeFactory nodeFactory)
+        public async Task<Node> DifferentiateAsync(INodeFactory nodeFactory)
         {
-            Node operandLeft = nodeFactory.Function(NodeType.Multiply, FPrime.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
+            Node operandLeft = await nodeFactory.FunctionAsync(NodeType.Multiply, FPrime.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
 
-            Node operandRight = nodeFactory.Function(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
+            Node operandRight = await nodeFactory.FunctionAsync(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
 
-            Node result = nodeFactory.Function(NodeType.Add, operandLeft, operandRight);
+            Node result = await nodeFactory.FunctionAsync(NodeType.Add, operandLeft, operandRight);
             result.ExpressionType = GradientExpressionType.ProductRule;
             return result;
         }
