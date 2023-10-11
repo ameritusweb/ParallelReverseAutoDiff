@@ -142,7 +142,8 @@ Content="{Binding Header, RelativeSource={RelativeSource Mode=FindAncestor, Ance
                             <Expander.Header>
                                 <TextBlock Foreground="{Binding ExpanderForeground}" Text="Diagram View"/>
                             </Expander.Header>
-                            <StackPanel x:Name="mainPanel" Orientation="Vertical">
+                            <StackPanel Orientation="Vertical">
+                                <DockPanel local:DrawDiagramBehavior.DrawDiagram="True"></DockPanel>
                             </StackPanel>
                         </Expander>
                     </StackPanel>

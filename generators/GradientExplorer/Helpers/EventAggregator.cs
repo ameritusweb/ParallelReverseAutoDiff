@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace GradientExplorer.Helpers
 {
@@ -8,8 +9,9 @@ namespace GradientExplorer.Helpers
     {
         private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _syncSubscriptions = new ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>>();
         private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _asyncSubscriptions = new ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>>();
+        private readonly ConcurrentDictionary<MessageType, UniqueTypeSet> _messages = new ConcurrentDictionary<MessageType, UniqueTypeSet>();
 
-        public Subscription<T> Subscribe<T>(EventType eventType, Action<T> action, int priority, Func<T, bool> filter = null) where T : IEventData
+        public Subscription<T> Subscribe<T>(EventType eventType, Action<T, CancellationToken> action, int priority, Func<T, bool> filter = null) where T : IEventData
         {
             var subscribers = _syncSubscriptions.GetOrAdd(eventType, _ => new ConcurrentDictionary<int, List<SubscriptionBase>>());
 
@@ -24,7 +26,7 @@ namespace GradientExplorer.Helpers
             return subscription;
         }
 
-        public SubscriptionAsync<T> SubscribeAsync<T>(EventType eventType, Func<T, Task> asyncAction, int priority, Func<T, bool> filter = null) where T : IEventData
+        public SubscriptionAsync<T> SubscribeAsync<T>(EventType eventType, Func<T, CancellationToken, Task> asyncAction, int priority, Func<T, bool> filter = null) where T : IEventData
         {
             var asyncSubscribers = _asyncSubscriptions.GetOrAdd(eventType, _ => new ConcurrentDictionary<int, List<SubscriptionBase>>());
 
@@ -54,6 +56,30 @@ namespace GradientExplorer.Helpers
             }
         }
 
+        public void PostMessage<T>(MessageType messageType, T message)
+        {
+            var uniqueSet = _messages.GetOrAdd(messageType, new UniqueTypeSet());
+            uniqueSet[typeof(T)] = message;
+        }
+
+        public bool TryRetrieveMessage<T>(MessageType messageType, out T message)
+        {
+            message = default;
+
+            if (_messages.TryGetValue(messageType, out var uniqueSet) && uniqueSet.ContainsType(typeof(T)))
+            {
+                message = (T)uniqueSet[typeof(T)];
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool RemoveMessage(MessageType messageType)
+        {
+            return _messages.TryRemove(messageType, out _);
+        }
+
         private void InvokeSubscribers<T>(EventType eventType, ConcurrentDictionary<int, List<SubscriptionBase>> subscribers, T eventData) where T : IEventData
         {
             foreach (var priorityGroup in subscribers.OrderByDescending(kvp => kvp.Key))
@@ -71,7 +97,7 @@ namespace GradientExplorer.Helpers
 
                         try
                         {
-                            subscription.Action(eventData);
+                            subscription.Action(eventData, subscription.CancellationTokenSource.Token);
                         }
                         catch (Exception ex)
                         {
@@ -107,7 +133,7 @@ namespace GradientExplorer.Helpers
                         {
                             try
                             {
-                                await subscription.AsyncAction(eventData);
+                                await subscription.AsyncAction(eventData, subscription.CancellationTokenSource.Token).ConfigureAwait(false);
                             }
                             catch (Exception ex)
                             {
@@ -121,7 +147,7 @@ namespace GradientExplorer.Helpers
                     }
                 }
 
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
         }
     }

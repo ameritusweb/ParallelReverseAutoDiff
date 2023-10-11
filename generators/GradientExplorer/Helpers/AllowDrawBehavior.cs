@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +38,7 @@ namespace GradientExplorer.Helpers
                 else
                 {
                     canvas.Loaded -= Canvas_Loaded;
+                    canvas.UnsubscribeAll();
                 }
             }
         }
@@ -45,13 +48,20 @@ namespace GradientExplorer.Helpers
             if (sender is Canvas canvas)
             {
                 var eventAggregator = AutofacContainerProvider.Container.Resolve<IEventAggregator>();
-                eventAggregator.Subscribe(EventType.AddPathToCanvas, new Action<IEventData>(data =>
+                var addPathSubscription = eventAggregator.Subscribe(EventType.AddPathToCanvas, new Action<IEventData, CancellationToken>((data, _) =>
                 {
-                    if (data is AddPathToCanvasEventData addPathToCanvasEventData)
+                    if (data is PathEventData pathEventData)
                     {
-                        canvas.Children.Add(addPathToCanvasEventData.Path);
+                        canvas.Children.Add(pathEventData.Path);
                     }
-                }));
+                }), 10);
+                canvas.AddSubscription(addPathSubscription);
+
+                var clearSubscription = eventAggregator.Subscribe(EventType.ClearCanvas, new Action<IEventData, CancellationToken>((data, _) =>
+                {
+                    canvas.Children.Clear();
+                }), 10);
+                canvas.AddSubscription(clearSubscription);
             }
         }
     }

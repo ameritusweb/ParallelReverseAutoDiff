@@ -9,6 +9,12 @@ namespace GradientExplorer.Helpers
     public enum EventType
     {
         AddPathToCanvas,
+        AddLineToCanvas,
+        AddRectToCanvas,
         ClearCanvas,
+        SetCanvasBackground,
+        SetCanvasWidth,
+        AddCanvasToPanel,
+        SetPanelLayoutTransform,
     }
 }

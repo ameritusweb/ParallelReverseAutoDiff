@@ -1,4 +1,5 @@
-﻿using GradientExplorer.Model;
+﻿using GradientExplorer.Helpers;
+using GradientExplorer.Model;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl;
@@ -15,20 +16,25 @@ namespace GradientExplorer.Diagram
         private GradientGraph graph;
         private DiagramViewer viewer;
         private Graph msaglGraph;
-        private DockPanel panel;
         private Microsoft.Msagl.Drawing.Color backgroundColor;
         private Microsoft.Msagl.Drawing.Color foregroundColor;
+        private IEventAggregator eventAggregator;
 
-        public DiagramCanvas(GradientGraph graph, Theme theme)
+        public DiagramCanvas(IEventAggregator eventAggregator, GradientGraph graph, Theme theme)
         {
             this.graph = graph;
             this.msaglGraph = new Graph();
             this.viewer = new DiagramViewer();
+            this.eventAggregator = eventAggregator;
             this.backgroundColor = theme.MsaglBackgroundColor;
             this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
-            panel = new DockPanel();
             viewer.ObjectUnderMouseCursorChanged += Viewer_ObjectUnderMouseCursorChanged;
-            viewer.BindToPanel(panel);
+            viewer.GraphCanvas.UpdateLayout();
+        }
+
+        public void AddToPanel()
+        {
+            eventAggregator.Publish(EventType.AddCanvasToPanel, new CanvasEventData { Canvas = viewer.GraphCanvas });
         }
 
         public void Reinitialize(GradientGraph graph, Theme theme)
@@ -37,7 +43,7 @@ namespace GradientExplorer.Diagram
             this.msaglGraph = new Graph();
             this.backgroundColor = theme.MsaglBackgroundColor;
             this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
-            panel.LayoutTransform = null;
+            eventAggregator.Publish(EventType.SetPanelLayoutTransform, new PanelLayoutTransformEventData { LayoutTransform = null });
             this.viewer.GraphCanvas.UpdateLayout();
         }
 
@@ -58,11 +64,6 @@ namespace GradientExplorer.Diagram
                                          ((Microsoft.Msagl.Drawing.Edge)edge.DrawingObject).TargetNode.Label.Text;
                 }
             }
-        }
-
-        public DockPanel ToPanel()
-        {
-            return panel;
         }
 
         public bool UpdateTheme(Theme theme)

@@ -11,12 +11,12 @@ namespace GradientExplorer.Helpers
 {
     public class SubscriptionAsync<T> : SubscriptionBase, IDisposable where T : IEventData
     {
-        private readonly Func<T, Task> _asyncAction;
+        private readonly Func<T, CancellationToken, Task> _asyncAction;
         private readonly Func<T, bool> _filter;
 
         private readonly ConcurrentDictionary<int, List<SubscriptionBase>> _asyncSubscribers;
 
-        public SubscriptionAsync(Func<T, Task> asyncAction, int priority, Func<T, bool> filter, ConcurrentDictionary<int, List<SubscriptionBase>> asyncSubscribers): base(priority)
+        public SubscriptionAsync(Func<T, CancellationToken, Task> asyncAction, int priority, Func<T, bool> filter, ConcurrentDictionary<int, List<SubscriptionBase>> asyncSubscribers): base(priority)
         {
             _asyncAction = asyncAction;
             _filter = filter;
@@ -30,7 +30,7 @@ namespace GradientExplorer.Helpers
             _asyncSubscribers[Priority].Add(this);
         }
 
-        public Func<T, Task> AsyncAction => _asyncAction;
+        public Func<T, CancellationToken, Task> AsyncAction => _asyncAction;
 
         public Func<T, bool> Filter => _filter;
 

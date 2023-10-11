@@ -17,6 +17,7 @@ using FontAwesome.Sharp;
 using Microsoft.VisualStudio.PlatformUI;
 using GradientExplorer.Extensions;
 using GradientExplorer.Helpers;
+using System.Windows.Controls;
 
 namespace GradientExplorer.ViewModels
 {
@@ -25,14 +26,14 @@ namespace GradientExplorer.ViewModels
         private DiagramCanvas currentDiagram;
         private WpfMathPainter painter;
         private IMethodParser methodParser;
-        private IEventAggregator EventAggregator;
+        private IEventAggregator eventAggregator;
 
         public ICommand ComputeGradientCommand { get; }
 
         public GradientExplorerViewModel(IMethodParser methodParser, IEventAggregator eventAggregator)
         {
             this.methodParser = methodParser;
-            this.EventAggregator = eventAggregator;
+            this.eventAggregator = eventAggregator;
             ComputeGradientCommand = new AsyncRelayCommand(ComputeGradientAsync, CanComputeGradient);
             GradientTabIcon = new IconImageViewModel
             {
@@ -168,9 +169,9 @@ namespace GradientExplorer.ViewModels
                 bool changed = this.currentDiagram.UpdateTheme(currentTheme);
                 if (changed && painter != null)
                 {
-                    //laTeXCanvas.Children.Clear();
-                    //var wpfCanvas = new WpfCanvas(laTeXCanvas);
-                    //painter.Draw(wpfCanvas);
+                    eventAggregator.Publish(EventType.ClearCanvas, new ClearEventData());
+                    var wpfCanvas = new WpfCanvas(eventAggregator);
+                    painter.Draw(wpfCanvas);
                 }
             }
         }
@@ -193,29 +194,27 @@ namespace GradientExplorer.ViewModels
                 var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
                 var gradientGraph = await methodParser.ParseMethodAsync(forwardMethod);
-                /*
-                var canvas = laTeXCanvas;
-                canvas.Children.Clear();
-                var wpfCanvas = new WpfCanvas(canvas);
+                eventAggregator.Publish(EventType.ClearCanvas, new ClearEventData());
+                var wpfCanvas = new WpfCanvas(eventAggregator);
                 painter = new WpfMathPainter();
                 painter.LaTeX = gradientGraph.ToLaTeX();
                 Headline = painter.LaTeX;
                 painter.Draw(wpfCanvas);
+
                 var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
                 if (currentDiagram == null)
                 {
-                    currentDiagram = new DiagramCanvas(gradientGraph.DeepCopy(), currentTheme);
+                    currentDiagram = new DiagramCanvas(eventAggregator, gradientGraph.DeepCopy(), currentTheme);
                     currentDiagram.BuildGraph();
-                    var panel = currentDiagram.ToPanel();
                     ScaleTransform flipTransform = new ScaleTransform(1, -1);
-                    panel.LayoutTransform = flipTransform;
-                    mainPanel.Children.Add(panel);
+                    eventAggregator.Publish(EventType.SetPanelLayoutTransform, new PanelLayoutTransformEventData { LayoutTransform = flipTransform });
+                    currentDiagram.AddToPanel();
                 }
                 else
                 {
                     currentDiagram.Reinitialize(gradientGraph.DeepCopy(), currentTheme);
                     currentDiagram.BuildGraph();
-                }*/
+                }
             }
         }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Helpers
 {
-    public abstract class SubscriptionBase
+    public abstract class SubscriptionBase : ISubscriptionBase
     {
         public int Priority { get; protected set; }
         public Stopwatch Stopwatch { get; protected set; }

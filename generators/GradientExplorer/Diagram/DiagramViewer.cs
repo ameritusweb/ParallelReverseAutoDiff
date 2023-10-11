@@ -154,17 +154,6 @@ namespace Microsoft.Msagl.WpfGraphControl
 
         #region WPF stuff
 
-        /// <summary>
-        /// adds the main panel of the viewer to the children of the parent
-        /// </summary>
-        /// <param name="panel"></param>
-        public void BindToPanel(Panel panel)
-        {
-            panel.Children.Add(GraphCanvas);
-            GraphCanvas.UpdateLayout();
-        }
-
-
         void ClickCounterElapsed(object sender, EventArgs e)
         {
             var vedge = clickCounter.ClickedObject as VEdge;
@@ -175,9 +164,6 @@ namespace Microsoft.Msagl.WpfGraphControl
             }
             clickCounter.ClickedObject = null;
         }
-
-
-
         void AdjustBtrectRenderTransform(object sender, EventArgs e)
         {
             if (_rectToFillCanvas == null)

@@ -11,12 +11,12 @@ namespace GradientExplorer.Helpers
 {
     public class Subscription<T> : SubscriptionBase, IDisposable where T : IEventData
     {
-        private readonly Action<T> _action;
+        private readonly Action<T, CancellationToken> _action;
         private readonly Func<T, bool> _filter;
 
         private readonly ConcurrentDictionary<int, List<SubscriptionBase>> _subscribers;
 
-        public Subscription(Action<T> action, int priority, Func<T, bool> filter, ConcurrentDictionary<int, List<SubscriptionBase>> subscribers) : base(priority)
+        public Subscription(Action<T, CancellationToken> action, int priority, Func<T, bool> filter, ConcurrentDictionary<int, List<SubscriptionBase>> subscribers) : base(priority)
         {
             _action = action;
             _filter = filter;
@@ -30,7 +30,7 @@ namespace GradientExplorer.Helpers
             _subscribers[Priority].Add(this);
         }
 
-        public Action<T> Action => _action;
+        public Action<T, CancellationToken> Action => _action;
 
         public Func<T, bool> Filter => _filter;
 

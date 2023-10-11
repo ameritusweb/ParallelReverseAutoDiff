@@ -1,4 +1,5 @@
 ﻿using CSharpMath.Rendering.FrontEnd;
+using GradientExplorer.Helpers;
 using GradientExplorer.LaTeX.Translation;
 using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Generic;
@@ -13,23 +14,23 @@ namespace GradientExplorer.LaTeX.Wpf
     {
         private SolidColorBrush _defaultColorBrush;
         private SolidColorBrush _currentColorBrush;
-        private Canvas _canvas;
         private double _currentX;
         private double _currentY;
         private Dictionary<Guid, (double, double)> _savedMap;
+        private readonly IEventAggregator eventAggregator;
 
-        public WpfCanvas(Canvas canvas)
+        public WpfCanvas(IEventAggregator eventAggregator)
         {
-            _canvas = canvas;
             _currentY = 0;
             _savedMap = new Dictionary<Guid, (double, double)>();
+            this.eventAggregator = eventAggregator;
             var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-            canvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
+            eventAggregator.Publish(EventType.SetCanvasBackground, new BackgroundEventData { SolidColorBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B)) });
         }
 
         public void SetWidth(float width)
         {
-            _canvas.Width = width;
+            eventAggregator.Publish(EventType.SetCanvasWidth, new WidthEventData { Width = width });
         }
 
         public System.Drawing.Color DefaultColor
@@ -57,9 +58,23 @@ namespace GradientExplorer.LaTeX.Wpf
 
         public PaintStyle CurrentStyle { get; set; }
 
-        float ICanvas.Width => (float)_canvas.Width;
+        float ICanvas.Width
+        {
+            get
+            {
+                eventAggregator.TryRetrieveMessage(MessageType.CanvasWidth, out float width);
+                return width;
+            }
+        }
 
-        float ICanvas.Height => (float)_canvas.Height;
+        float ICanvas.Height
+        {
+            get
+            {
+                eventAggregator.TryRetrieveMessage(MessageType.CanvasHeight, out float height);
+                return height;
+            }
+        }
 
         public void DrawLine(float x1, float y1, float x2, float y2, float lineThickness)
         {
@@ -72,7 +87,7 @@ namespace GradientExplorer.LaTeX.Wpf
                 Stroke = _currentColorBrush ?? new SolidColorBrush(Colors.White),
                 StrokeThickness = lineThickness
             };
-            _canvas.Children.Add(line);
+            eventAggregator.Publish(EventType.AddLineToCanvas, new LineEventData { Line = line });
         }
 
         public void FillRect(float left, float top, float width, float height)
@@ -83,9 +98,11 @@ namespace GradientExplorer.LaTeX.Wpf
                 Height = height,
                 Fill = _currentColorBrush
             };
-            Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, _canvas.ActualHeight + top);
-            _canvas.Children.Add(rect);
+            bool result = eventAggregator.TryRetrieveMessage(MessageType.CanvasActualHeight, out float actualHeight);
+            if (result)
+            {
+                eventAggregator.Publish(EventType.AddRectToCanvas, new RectEventData { Rect = rect, Top = actualHeight + top, Left = left });
+            }
         }
 
         // Add this new method to render StreamGeometry
@@ -97,11 +114,11 @@ namespace GradientExplorer.LaTeX.Wpf
             path.Stroke = new SolidColorBrush(color);
             path.StrokeThickness = 0.5; // You can adjust this value as needed
 
-            Canvas.SetTop(path, _currentY - _canvas.ActualHeight);
-            Canvas.SetLeft(path, _currentX);
-
-            // Add the Path to the Canvas' children
-            _canvas.Children.Add(path);
+            bool result = eventAggregator.TryRetrieveMessage(MessageType.CanvasActualHeight, out float actualHeight);
+            if (result)
+            {
+                eventAggregator.Publish(EventType.AddPathToCanvas, new PathEventData { Path = path, Top = (float)(_currentY - actualHeight), Left = (float)_currentX });
+            }
         }
 
         public void Restore(Guid id)
@@ -137,9 +154,7 @@ namespace GradientExplorer.LaTeX.Wpf
                 Height = height,
                 Stroke = _currentColorBrush
             };
-            Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, top);
-            _canvas.Children.Add(rect);
+            eventAggregator.Publish(EventType.AddRectToCanvas, new RectEventData { Rect = rect, Top = top, Left = left });
         }
 
         public void Translate(float dx, float dy)
