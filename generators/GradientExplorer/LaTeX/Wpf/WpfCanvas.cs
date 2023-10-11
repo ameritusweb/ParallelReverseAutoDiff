@@ -1,6 +1,7 @@
 ﻿using CSharpMath.Rendering.FrontEnd;
 using GradientExplorer.Helpers;
 using GradientExplorer.LaTeX.Translation;
+using GradientExplorer.Services;
 using Microsoft.VisualStudio.PlatformUI;
 using System.Collections.Generic;
 using System.Drawing;

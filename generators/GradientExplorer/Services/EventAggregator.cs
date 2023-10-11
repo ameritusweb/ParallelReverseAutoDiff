@@ -1,9 +1,10 @@
-﻿using System.Collections.Concurrent;
+﻿using GradientExplorer.Helpers;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace GradientExplorer.Helpers
+namespace GradientExplorer.Services
 {
     public class EventAggregator : IEventAggregator
     {

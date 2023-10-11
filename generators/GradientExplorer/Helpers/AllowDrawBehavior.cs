@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using GradientExplorer.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

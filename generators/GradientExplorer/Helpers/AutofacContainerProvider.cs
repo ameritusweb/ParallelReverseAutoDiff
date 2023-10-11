@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using GradientExplorer.Parsers;
+using GradientExplorer.Services;
 using GradientExplorer.ViewModels;
 using System;
 using System.Collections.Generic;

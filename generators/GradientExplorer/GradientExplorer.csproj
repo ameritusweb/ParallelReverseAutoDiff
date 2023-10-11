@@ -54,7 +54,8 @@
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
-    <Compile Include="Helpers\EventAggregator.cs" />
+    <Compile Include="Helpers\SeverityType.cs" />
+    <Compile Include="Services\EventAggregator.cs" />
     <Compile Include="Helpers\EventType.cs" />
     <Compile Include="Helpers\ExpanderBehavior.cs" />
     <Compile Include="Helpers\ExpanderHelper.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="Diagram\VNode.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Helpers\FrameworkElementExtensions.cs" />
-    <Compile Include="Helpers\IEventAggregator.cs" />
+    <Compile Include="Services\IEventAggregator.cs" />
     <Compile Include="Helpers\IEventData.cs" />
     <Compile Include="Helpers\ISubscriptionBase.cs" />
     <Compile Include="Helpers\CanvasEventData.cs" />
@@ -319,11 +320,15 @@
     <Compile Include="Model\QuotientRuleGradientExpression.cs" />
     <Compile Include="Model\RelationshipType.cs" />
     <Compile Include="Model\SumRuleGradientExpression.cs" />
-    <Compile Include="Parsers\IMethodParser.cs" />
-    <Compile Include="Parsers\MethodParser.cs" />
+    <Compile Include="Services\ILogger.cs" />
+    <Compile Include="Services\IMethodParser.cs" />
+    <Compile Include="Services\IPaneCreator.cs" />
+    <Compile Include="Services\Logger.cs" />
+    <Compile Include="Services\MethodParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\GradientExplorerCommand.cs" />
     <Compile Include="GradientExplorerPackage.cs" />
+    <Compile Include="Services\PaneCreator.cs" />
     <Compile Include="Simplification\SimplificationInfo.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>

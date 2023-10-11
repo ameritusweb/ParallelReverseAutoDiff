@@ -15,6 +15,7 @@ using FontAwesome.Sharp;
 using Microsoft.VisualStudio.PlatformUI;
 using GradientExplorer.Extensions;
 using GradientExplorer.Helpers;
+using GradientExplorer.Services;
 
 namespace GradientExplorer.ViewModels
 {

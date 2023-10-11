@@ -1,11 +1,12 @@
-﻿using System;
+﻿using GradientExplorer.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GradientExplorer.Helpers
+namespace GradientExplorer.Services
 {
     public interface IEventAggregator
     {

@@ -1,5 +1,6 @@
 ﻿using GradientExplorer.Helpers;
 using GradientExplorer.Model;
+using GradientExplorer.Services;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl;
