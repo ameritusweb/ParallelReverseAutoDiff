@@ -5,19 +5,16 @@ using GradientExplorer.Model;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.CodeAnalysis;
-using System.Collections.Concurrent;
 using GradientExplorer.Parsers;
 using FontAwesome.Sharp;
 using Microsoft.VisualStudio.PlatformUI;
 using GradientExplorer.Extensions;
 using GradientExplorer.Helpers;
-using System.Windows.Controls;
 
 namespace GradientExplorer.ViewModels
 {
