@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sharp="clr-namespace:FontAwesome.Sharp"
              xmlns:local="clr-namespace:ToolWindow"
+             xmlns:helpers="clr-namespace:GradientExplorer.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -35,9 +36,10 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <helpers:ViewToVisibilityConverter x:Key="ViewToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
-        <UniformGrid Rows="5" Columns="2">
+        <UniformGrid Rows="5" Columns="2" Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=UniformGrid}">
             <Border Margin="10">
                 <Button Style="{StaticResource GradientToolButton}" Command="{Binding SimplificationViewCommand}" >
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -123,5 +125,95 @@
                 </Button>
             </Border>
         </UniformGrid>
+        <!-- Simplification Tool -->
+        <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=SimplificationTool}">
+            <!-- Breadcrumb -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock Text="Simplification Tool" />
+            </StackPanel>
+
+            <!-- Your Simplification Tool UI -->
+        </Grid>
+        <!-- Computation Tool -->
+        <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=ComputationTool}">
+            <!-- Breadcrumb -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock Text="Computation Tool" />
+            </StackPanel>
+
+            <!-- Your Computation Tool UI -->
+        </Grid>
+        <!-- Debugging Tool -->
+        <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=DebuggingTool}">
+            <!-- Breadcrumb -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock Text="Debugging Tool" />
+            </StackPanel>
+
+            <!-- Your Debugging Tool UI -->
+        </Grid>
+        <!-- Metrics Tool -->
+        <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=MetricsTool}">
+            <!-- Breadcrumb -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock Text="Metrics Tool" />
+            </StackPanel>
+
+            <!-- Your Metrics Tool UI -->
+        </Grid>
+        <!-- Settings Tool -->
+        <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=SettingsTool}">
+            <!-- Breadcrumb -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock Text="Settings Tool" />
+            </StackPanel>
+
+            <!-- Your Settings Tool UI -->
+        </Grid>
+        <!-- Help Tool -->
+        <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=HelpTool}">
+            <!-- Breadcrumb -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+                <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock Text="Help Tool" />
+            </StackPanel>
+
+            <!-- Your Help Tool UI -->
+        </Grid>
     </Grid>
 </UserControl>

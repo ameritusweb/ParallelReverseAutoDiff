@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FontAwesome.Sharp;
 using Microsoft.VisualStudio.PlatformUI;
+using GradientExplorer.Helpers;
 
 namespace GradientExplorer.ViewModels
 {
@@ -18,6 +19,8 @@ namespace GradientExplorer.ViewModels
         public ICommand SettingsViewCommand { get; }
         public ICommand HelpViewCommand { get; }
 
+        // ICommand for clicking on "Gradient Toolbox" breadcrumb
+        public ICommand GoToUniformGridCommand { get; }
 
         public GradientToolboxViewModel()
         {
@@ -27,6 +30,7 @@ namespace GradientExplorer.ViewModels
             MetricsViewCommand = new AsyncRelayCommand(MetricsViewAsync, CanMetricsView);
             SettingsViewCommand = new AsyncRelayCommand(SettingsViewAsync, CanSettingsView);
             HelpViewCommand = new AsyncRelayCommand(HelpViewAsync, CanHelpView);
+            GoToUniformGridCommand = new RelayCommand(UniformGridView, CanUniformGridView);
             SimplificationIcon = new IconImageViewModel
             {
                 Icon = IconChar.WandMagicSparkles,
@@ -63,6 +67,21 @@ namespace GradientExplorer.ViewModels
                 Foreground = Brushes.CornflowerBlue,
                 Height = 40,
             };
+        }
+
+        private GradientToolView _currentView;
+
+        public GradientToolView CurrentView
+        {
+            get { return _currentView; }
+            set
+            {
+                if (_currentView != value)
+                {
+                    _currentView = value;
+                    OnPropertyChanged(nameof(CurrentView));
+                }
+            }
         }
 
         public IconImageViewModel SimplificationIcon { get; set; }
@@ -166,6 +185,18 @@ namespace GradientExplorer.ViewModels
             // Validation logic to enable/disable button
             return true;
         }
+
+        private void UniformGridView()
+        {
+            this.CurrentView = GradientToolView.UniformGrid;
+        }
+
+        private bool CanUniformGridView()
+        {
+            // Validation logic to enable/disable button
+            return true;
+        }
+
 
         public void LoadData()
         {
