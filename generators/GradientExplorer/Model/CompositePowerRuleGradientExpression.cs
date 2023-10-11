@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GradientExplorer.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,21 +14,21 @@ namespace GradientExplorer.Model
         public GradientGraph FPrime { get; set; }
         public GradientGraph GPrime { get; set; }
 
-        public Node Differentiate()
+        public Node Differentiate(INodeFactory nodeFactory)
         {
-            Node baseExpression = GraphHelper.Function(NodeType.Pow, F.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
+            Node baseExpression = nodeFactory.Function(NodeType.Pow, F.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
 
-            Node lnF = GraphHelper.Function(NodeType.Ln, F.Nodes.FirstOrDefault());
+            Node lnF = nodeFactory.Function(NodeType.Ln, F.Nodes.FirstOrDefault());
 
-            Node term1 = GraphHelper.Function(NodeType.Multiply, GPrime.Nodes.FirstOrDefault(), lnF);
+            Node term1 = nodeFactory.Function(NodeType.Multiply, GPrime.Nodes.FirstOrDefault(), lnF);
 
-            Node fraction = GraphHelper.Function(NodeType.Divide, FPrime.Nodes.FirstOrDefault(), F.Nodes.FirstOrDefault());
+            Node fraction = nodeFactory.Function(NodeType.Divide, FPrime.Nodes.FirstOrDefault(), F.Nodes.FirstOrDefault());
 
-            Node term2 = GraphHelper.Function(NodeType.Multiply, G.Nodes.FirstOrDefault(), fraction);
+            Node term2 = nodeFactory.Function(NodeType.Multiply, G.Nodes.FirstOrDefault(), fraction);
 
-            Node finalTerm = GraphHelper.Function(NodeType.Add, term1, term2);
+            Node finalTerm = nodeFactory.Function(NodeType.Add, term1, term2);
 
-            Node result = GraphHelper.Function(NodeType.Multiply, baseExpression, finalTerm);
+            Node result = nodeFactory.Function(NodeType.Multiply, baseExpression, finalTerm);
             result.ExpressionType = GradientExpressionType.CompositePowerRule;
             return result;
         }

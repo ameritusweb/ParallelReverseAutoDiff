@@ -71,28 +71,28 @@ namespace GradientExplorer.Services
                     {
                         // Sum rule
                         SumRuleGradientExpression gradientExpression = await CreateSumRuleExpressionAsync(binaryExpression);
-                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "-")
                     {
                         // Difference rule
                         DifferenceRuleGradientExpression gradientExpression = await CreateDifferenceRuleExpressionAsync(binaryExpression);
-                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "*")
                     {
                         // Product rule
                         ProductRuleGradientExpression gradientExpression = await CreateProductRuleExpressionAsync(binaryExpression);
-                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
                     else if (binaryExpression.OperatorToken.Text == "/")
                     {
                         // Quotient rule
                         QuotientRuleGradientExpression gradientExpression = await CreateQuotientRuleExpressionAsync(binaryExpression);
-                        gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                        gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                         gradientGraph.Expressions.Add(gradientExpression);
                     }
 
@@ -120,7 +120,7 @@ namespace GradientExplorer.Services
                                     var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
                                     var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
                                     CompositePowerRuleGradientExpression gradientExpression = await CreateNonUnaryCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, innerInnerExpressions, secondInnerInnerExpression, innerDifferentiationFunction, secondInnerDifferentiationFunction);
-                                    gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                    gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                                     gradientGraph.Expressions.Add(gradientExpression);
                                 }
                                 else
@@ -131,7 +131,7 @@ namespace GradientExplorer.Services
                                     var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
                                     var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
                                     CompositePowerRuleGradientExpression gradientExpression = await CreateCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, innerInnerExpression, secondInnerInnerExpression, innerDifferentiationFunction, secondInnerDifferentiationFunction);
-                                    gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                    gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                                     gradientGraph.Expressions.Add(gradientExpression);
                                 }
                             }
@@ -143,7 +143,7 @@ namespace GradientExplorer.Services
                             var secondInnerDifferentiationFunction = gradientUnaryExpressionMap[secondInnerNodeType];
                             var secondInnerInnerExpression = secondInnerInvocationExpression.ArgumentList.Arguments[0].Expression;
                             CompositePowerRuleGradientExpression gradientExpression = await CreateCompositePowerRuleExpressionAsync(innerExpression, secondInnerExpression, secondInnerInnerExpression, secondInnerDifferentiationFunction);
-                            gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                            gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                             gradientGraph.Expressions.Add(gradientExpression);
                         }
                         else
@@ -168,7 +168,7 @@ namespace GradientExplorer.Services
                                 var innerDifferentiationFunction = gradientNonUnaryExpressionMap[innerNodeType];
                                 var innerInnerExpressions = innerInvocationExpression.ArgumentList.Arguments.Select(x => x.Expression).ToList();
                                 ChainRuleGradientExpression gradientExpression = await CreateNonUnaryChainRuleExpressionAsync(innerInvocationExpression, innerInnerExpressions, differentiationFunction, innerDifferentiationFunction);
-                                gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                                 gradientGraph.Expressions.Add(gradientExpression);
                             }
                             else
@@ -176,7 +176,7 @@ namespace GradientExplorer.Services
                                 var innerDifferentiationFunction = gradientUnaryExpressionMap[innerNodeType];
                                 var innerInnerExpression = innerInvocationExpression.ArgumentList.Arguments[0].Expression;
                                 ChainRuleGradientExpression gradientExpression = await CreateChainRuleExpressionAsync(innerInvocationExpression, innerInnerExpression, differentiationFunction, innerDifferentiationFunction);
-                                gradientGraph.Nodes.Add(gradientExpression.Differentiate());
+                                gradientGraph.Nodes.Add(gradientExpression.Differentiate(nodeFactory));
                                 gradientGraph.Expressions.Add(gradientExpression);
                             }
                         }

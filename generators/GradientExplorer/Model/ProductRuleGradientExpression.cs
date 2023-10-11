@@ -1,4 +1,5 @@
 ﻿using CSharpMath.Structures;
+using GradientExplorer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,13 @@ namespace GradientExplorer.Model
         public GradientGraph FPrime { get; set; }
         public GradientGraph GPrime { get; set; }
 
-        public Node Differentiate()
+        public Node Differentiate(INodeFactory nodeFactory)
         {
-            Node operandLeft = GraphHelper.Function(NodeType.Multiply, FPrime.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
+            Node operandLeft = nodeFactory.Function(NodeType.Multiply, FPrime.Nodes.FirstOrDefault(), G.Nodes.FirstOrDefault());
 
-            Node operandRight = GraphHelper.Function(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
+            Node operandRight = nodeFactory.Function(NodeType.Multiply, F.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
 
-            Node result = GraphHelper.Function(NodeType.Add, operandLeft, operandRight);
+            Node result = nodeFactory.Function(NodeType.Add, operandLeft, operandRight);
             result.ExpressionType = GradientExpressionType.ProductRule;
             return result;
         }

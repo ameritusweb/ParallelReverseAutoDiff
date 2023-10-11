@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GradientExplorer.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,10 @@ namespace GradientExplorer.Model
         public GradientGraph FPrimeOfG { get; set; }
         public GradientGraph GPrime { get; set; }
 
-        public Node Differentiate()
+        public Node Differentiate(INodeFactory nodeFactory)
         {
 
-            var result = GraphHelper.Function(NodeType.Multiply, FPrimeOfG.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
+            var result = nodeFactory.Function(NodeType.Multiply, FPrimeOfG.Nodes.FirstOrDefault(), GPrime.Nodes.FirstOrDefault());
             result.ExpressionType = GradientExpressionType.ChainRule;
             return result;
         }
