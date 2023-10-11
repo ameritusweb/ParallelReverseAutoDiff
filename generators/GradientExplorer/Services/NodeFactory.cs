@@ -1,13 +1,20 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using GradientExplorer.Model;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace GradientExplorer.Model
+namespace GradientExplorer.Services
 {
-    public static class GraphHelper
+    public class NodeFactory : INodeFactory
     {
-        public static Node Function(NodeType functionType, Node target)
+        private INodeTypeFactory NodeTypeFactory;
+        public NodeFactory(INodeTypeFactory nodeTypeFactory)
+        {
+            NodeTypeFactory = nodeTypeFactory;
+        }
+
+        public Node Function(NodeType functionType, Node target)
         {
             Edge edge = new Edge()
             {
@@ -23,7 +30,7 @@ namespace GradientExplorer.Model
             return node;
         }
 
-        public static Node Function(NodeType functionType, Node left, Node right)
+        public Node Function(NodeType functionType, Node left, Node right)
         {
             Edge leftEdge = new Edge()
             {
@@ -46,13 +53,13 @@ namespace GradientExplorer.Model
             return node;
         }
 
-        public static Node Function(NodeType functionType, List<Node> operands)
+        public Node Function(NodeType functionType, List<Node> operands)
         {
             Node node = new Node()
             {
                 NodeType = functionType,
             };
-            
+
             foreach (var operand in operands)
             {
                 Edge edge = new Edge()
@@ -65,7 +72,7 @@ namespace GradientExplorer.Model
             return node;
         }
 
-        public static Node FunctionWithCoefficient(NodeType node, Node coefficient, SyntaxNode innerInvocation)
+        public Node FunctionWithCoefficient(NodeType node, Node coefficient, SyntaxNode innerInvocation)
         {
             var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
@@ -76,7 +83,7 @@ namespace GradientExplorer.Model
             return mult;
         }
 
-        public static Node NodeWithCoefficientAndExponent(Node coefficient, Node exponent, SyntaxNode innerInvocation)
+        public Node NodeWithCoefficientAndExponent(Node coefficient, Node exponent, SyntaxNode innerInvocation)
         {
             var inner = ConvertToGraph(innerInvocation).Nodes.FirstOrDefault();
 
@@ -87,7 +94,7 @@ namespace GradientExplorer.Model
             return mult;
         }
 
-        public static Node NodeWithExponent(Node inner, Node exponent)
+        public Node NodeWithExponent(Node inner, Node exponent)
         {
             Node pow = new Node()
             {
@@ -111,7 +118,7 @@ namespace GradientExplorer.Model
             return pow;
         }
 
-        public static Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type)
+        public Node ToValueNode(SyntaxNode node, SyntaxToken token, LiteralType type)
         {
             var value = token.ValueText == "-" ? "-1" : token.Value;
             Node literalNode = new Node(node, node.GetType());
@@ -120,7 +127,7 @@ namespace GradientExplorer.Model
             return literalNode;
         }
 
-        public static Node ToConstantNode(int value)
+        public Node ToConstantNode(int value)
         {
             Node literal = new Node()
             {
@@ -130,7 +137,7 @@ namespace GradientExplorer.Model
             return literal;
         }
 
-        public static Node ToConstantNode(double value)
+        public Node ToConstantNode(double value)
         {
             Node literal = new Node()
             {
@@ -140,7 +147,7 @@ namespace GradientExplorer.Model
             return literal;
         }
 
-        public static Node ToValue(SyntaxNode node)
+        public Node ToValue(SyntaxNode node)
         {
             if (node is LiteralExpressionSyntax literalExpression)
             {
@@ -162,7 +169,7 @@ namespace GradientExplorer.Model
             }
         }
 
-        public static Node ToValueNodeWithParent(SyntaxNode node, Node parent, int edgeIndex)
+        public Node ToValueNodeWithParent(SyntaxNode node, Node parent, int edgeIndex)
         {
             if (node is LiteralExpressionSyntax literalExpression)
             {
@@ -186,36 +193,12 @@ namespace GradientExplorer.Model
             return parent;
         }
 
-        public static NodeType ToNodeType(BinaryExpressionSyntax binaryExpression)
-        {
-            if (binaryExpression.OperatorToken.Text == "+")
-            {
-                return NodeType.Add;
-            }
-            else if (binaryExpression.OperatorToken.Text == "-")
-            {
-                return NodeType.Subtract;
-            }
-            else if (binaryExpression.OperatorToken.Text == "*")
-            {
-                return NodeType.Multiply;
-            }
-            else if (binaryExpression.OperatorToken.Text == "/")
-            {
-                return NodeType.Divide;
-            }
-            else
-            {
-                throw new InvalidOperationException("Unknown operator");
-            }
-        }
-
-        public static GradientGraph ConvertToGraph(SyntaxNode node)
+        public GradientGraph ConvertToGraph(SyntaxNode node)
         {
             GradientGraph graph = new GradientGraph();
             if (node is InvocationExpressionSyntax invocationExpression)
             {
-                var functionType = GetNodeType(invocationExpression);
+                var functionType = NodeTypeFactory.GetNodeType(invocationExpression);
                 var args = invocationExpression.ArgumentList.Arguments;
                 if (args.Count == 2)
                 {
@@ -269,7 +252,7 @@ namespace GradientExplorer.Model
             {
                 Node left = ConvertToGraph(binary.Left).Nodes.FirstOrDefault();
                 Node right = ConvertToGraph(binary.Right).Nodes.FirstOrDefault();
-                Node multiply = Function(ToNodeType(binary), left, right);
+                Node multiply = Function(NodeTypeFactory.ToNodeType(binary), left, right);
                 graph.Nodes.Add(multiply);
             }
             else
@@ -278,52 +261,6 @@ namespace GradientExplorer.Model
             }
 
             return graph;
-        }
-
-        public static NodeType GetNodeType(InvocationExpressionSyntax invocation)
-        {
-            if (invocation.Expression is MemberAccessExpressionSyntax memberAccessExpression)
-            {
-                if (memberAccessExpression.Expression is IdentifierNameSyntax identifierName)
-                {
-                    string name = identifierName.Identifier.Text + "." + memberAccessExpression.Name.Identifier.Text;
-                    switch (name)
-                    {
-                        case "Math.Exp":
-                            return NodeType.Exp;
-                        case "Math.Log":
-                            return NodeType.Ln;
-                        case "Math.Log10":
-                            return NodeType.Log;
-                        case "Math.Sin":
-                            return NodeType.Sin;
-                        case "Math.Asin":
-                            return NodeType.Asin;
-                        case "Math.Sinh":
-                            return NodeType.Sinh;
-                        case "Math.Cos":
-                            return NodeType.Cos;
-                        case "Math.Acos":
-                            return NodeType.Acos;
-                        case "Math.Cosh":
-                            return NodeType.Cosh;
-                        case "Math.Tan":
-                            return NodeType.Tan;
-                        case "Math.Atan":
-                            return NodeType.Atan;
-                        case "Math.Tanh":
-                            return NodeType.Tanh;
-                        case "Math.Sqrt":
-                            return NodeType.Sqrt;
-                        case "Math.Pow":
-                            return NodeType.Pow;
-                        default:
-                            throw new InvalidOperationException("Unknown function type");
-                    }
-                }
-            }
-
-            return NodeType.ConstantOrVariable;
         }
     }
 }
