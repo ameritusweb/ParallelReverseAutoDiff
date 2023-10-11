@@ -55,6 +55,8 @@
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
     <Compile Include="Helpers\SeverityType.cs" />
+    <Compile Include="Services\DateTimeProvider.cs" />
+    <Compile Include="Services\EnvironmentProvider.cs" />
     <Compile Include="Services\EventAggregator.cs" />
     <Compile Include="Helpers\EventType.cs" />
     <Compile Include="Helpers\ExpanderBehavior.cs" />
@@ -72,6 +74,8 @@
     <Compile Include="Diagram\VNode.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Helpers\FrameworkElementExtensions.cs" />
+    <Compile Include="Services\IDateTimeProvider.cs" />
+    <Compile Include="Services\IEnvironmentProvider.cs" />
     <Compile Include="Services\IEventAggregator.cs" />
     <Compile Include="Helpers\IEventData.cs" />
     <Compile Include="Helpers\ISubscriptionBase.cs" />

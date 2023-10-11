@@ -32,6 +32,18 @@ namespace GradientExplorer.Helpers
                             builder.RegisterType<EventAggregator>()
                                 .As<IEventAggregator>()
                                 .SingleInstance();
+                            builder.RegisterType<EnvironmentProvider>()
+                                .As<IEnvironmentProvider>()
+                                .SingleInstance();
+                            builder.RegisterType<DateTimeProvider>()
+                                .As<IDateTimeProvider>()
+                                .SingleInstance();
+                            builder.RegisterType<PaneCreator>()
+                                .As<IPaneCreator>()
+                                .SingleInstance();
+                            builder.RegisterType<Logger>()
+                                .As<ILogger>()
+                                .SingleInstance();
                             builder.RegisterType<GradientExplorerViewModel>().AsSelf();
                             builder.RegisterType<GradientToolboxViewModel>().AsSelf();
                             _container = builder.Build();

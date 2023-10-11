@@ -4,16 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GradientExplorer.Helpers
+namespace GradientExplorer.Services
 {
-    public enum SeverityType
+    public interface IEnvironmentProvider
     {
-        Debug,
-
-        Information,
-
-        Warning,
-
-        Error
+        string GetNewLine();
     }
 }

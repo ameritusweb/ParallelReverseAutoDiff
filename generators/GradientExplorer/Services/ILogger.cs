@@ -11,5 +11,6 @@ namespace GradientExplorer.Services
     {
         void Log(string message, SeverityType severity);
 
+        void SetMinSeverity(SeverityType newMinSeverity);
     }
 }
