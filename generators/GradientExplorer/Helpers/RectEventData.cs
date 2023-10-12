@@ -8,10 +8,8 @@ using System.Windows.Shapes;
 
 namespace GradientExplorer.Helpers
 {
-    public class RectEventData : IEventData
+    public class RectEventData : EventDataBase
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public CancellationTokenSource CancellationTokenSource => _cancellationTokenSource;
 
         public Rectangle Rect { get; set; }
 

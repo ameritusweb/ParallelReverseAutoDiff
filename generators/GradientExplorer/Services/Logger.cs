@@ -37,7 +37,7 @@ namespace GradientExplorer.Services
             string formattedMessage = FormatMessage(message, severity);
             try
             {
-                pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());
+                var res = pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());
             }
             catch (Exception ex)
             {

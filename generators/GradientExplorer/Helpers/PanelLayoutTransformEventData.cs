@@ -9,10 +9,8 @@ using System.Windows.Shapes;
 
 namespace GradientExplorer.Helpers
 {
-    public class PanelLayoutTransformEventData : IEventData
+    public class PanelLayoutTransformEventData : EventDataBase
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public CancellationTokenSource CancellationTokenSource => _cancellationTokenSource;
 
         public Transform LayoutTransform { get; set; }
     }
