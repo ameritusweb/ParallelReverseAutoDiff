@@ -6,20 +6,15 @@ namespace GradientExplorer.Services
 {
     public class EventAggregator : IEventAggregator, IMessagePoster, IMessageRetriever
     {
-        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> _syncSubscriptions;
-        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> _asyncSubscriptions;
+        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> _syncSubscriptions = new ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>>();
+        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> _asyncSubscriptions = new ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>>();
         private readonly ConcurrentDictionary<MessageType, UniqueTypeSet> _messages = new ConcurrentDictionary<MessageType, UniqueTypeSet>();
         private readonly ConcurrentDictionary<Type, object> _invokerCache = new ConcurrentDictionary<Type, object>();
         private readonly ILogger _logger;
 
-        public EventAggregator(
-            ILogger logger,
-            ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> syncSubscriptions,
-            ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> asyncSubscriptions)
+        public EventAggregator(ILogger logger)
         {
             _logger = logger;
-            this._syncSubscriptions = syncSubscriptions;
-            this._asyncSubscriptions = asyncSubscriptions;
         }
 
         public Subscription<T> Subscribe<T>(EventType eventType, Action<T, CancellationToken> action, int priority, Func<T, bool> filter = null) where T : IEventData
