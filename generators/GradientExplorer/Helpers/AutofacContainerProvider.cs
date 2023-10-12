@@ -2,6 +2,8 @@
 using GradientExplorer.Parsers;
 using GradientExplorer.Services;
 using GradientExplorer.ViewModels;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace GradientExplorer.Helpers
 {
@@ -22,6 +24,10 @@ namespace GradientExplorer.Helpers
                         {
                             var builder = new ContainerBuilder();
                             // Register your types here
+                            // Register ConcurrentDictionary for sync and async subscriptions
+                            builder.Register(ctx => new ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>>())
+                                   .AsSelf()
+                                   .InstancePerLifetimeScope();
                             builder.RegisterType<MethodParser>().As<IMethodParser>();
                             builder.RegisterType<NodeFactory>().As<INodeFactory>();
                             builder.RegisterType<NodeTypeFactory>().As<INodeTypeFactory>();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Services
 {
-    public class NodeTypeFactory
+    public class NodeTypeFactory : INodeTypeFactory
     {
         public NodeType ToNodeType(BinaryExpressionSyntax binaryExpression)
         {

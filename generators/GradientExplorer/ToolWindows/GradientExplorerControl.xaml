@@ -136,7 +136,7 @@ Content="{Binding Header, RelativeSource={RelativeSource Mode=FindAncestor, Ance
                             <Expander.Header>
                                 <TextBlock Foreground="{Binding ExpanderForeground}" Text="LaTeX View"/>
                             </Expander.Header>
-                            <Canvas x:Name="laTeXCanvas" Width="300" Height="150" ClipToBounds="True"></Canvas>
+                            <Canvas local:AllowDrawBehavior.AllowDraw="True" Width="300" Height="150" ClipToBounds="True"></Canvas>
                         </Expander>
                         <Expander Template="{StaticResource CustomExpanderTemplate}" local:ExpanderBehavior.TrackHeight="True" IsExpanded="True">
                             <Expander.Header>

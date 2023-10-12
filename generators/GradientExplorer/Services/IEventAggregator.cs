@@ -38,7 +38,7 @@ namespace GradientExplorer.Services
         /// <typeparam name="T">The event data type.</typeparam>
         /// <param name="eventType">The event type to publish.</param>
         /// <param name="eventData">The event data to publish.</param>
-        void Publish<T>(EventType eventType, T eventData) where T : IEventData;
+        Task PublishAsync<T>(EventType eventType, T eventData) where T : IEventData;
 
         /// <summary>
         /// Posts a message of a specific type to the event aggregator.

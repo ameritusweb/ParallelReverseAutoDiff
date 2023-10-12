@@ -1,16 +1,26 @@
 ﻿using GradientExplorer.Helpers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace GradientExplorer.Services
 {
     public class EventAggregator : IEventAggregator
     {
-        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _syncSubscriptions = new ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>>();
-        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _asyncSubscriptions = new ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>>();
+        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _syncSubscriptions;
+        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _asyncSubscriptions;
         private readonly ConcurrentDictionary<MessageType, UniqueTypeSet> _messages = new ConcurrentDictionary<MessageType, UniqueTypeSet>();
+        private readonly ILogger _logger;
+
+        public EventAggregator(
+            ILogger logger,
+            ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> syncSubscriptions,
+            ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> asyncSubscriptions)
+        {
+            _logger = logger;
+            this._syncSubscriptions = syncSubscriptions;
+            this._asyncSubscriptions = asyncSubscriptions;
+        }
 
         public Subscription<T> Subscribe<T>(EventType eventType, Action<T, CancellationToken> action, int priority, Func<T, bool> filter = null) where T : IEventData
         {
@@ -42,23 +52,39 @@ namespace GradientExplorer.Services
             return subscription;
         }
 
-        public void Publish<T>(EventType eventType, T eventData) where T : IEventData
+        public async Task PublishAsync<T>(EventType eventType, T eventData) where T : IEventData
         {
+            _logger.Log($"Message published with event type [{eventType}]", SeverityType.Information);
+
+            bool foundSubscribers = false;
+
             // Handle synchronous subscribers
             if (_syncSubscriptions.TryGetValue(eventType, out var syncSubscribers))
             {
-                InvokeSubscribers(eventType, syncSubscribers, eventData);
+                foundSubscribers = true;
+                var invoker = new SyncSubscriptionInvoker<T>(_logger);
+                invoker.InvokeSubscribers(eventType, syncSubscribers, eventData);
+
             }
 
             // Handle asynchronous subscribers
             if (_asyncSubscriptions.TryGetValue(eventType, out var asyncSubscribers))
             {
-                InvokeAsyncSubscribers(eventType, asyncSubscribers, eventData).Wait();
+                foundSubscribers = true;
+                var invoker = new AsyncSubscriptionInvoker<T>(_logger);
+                await invoker.InvokeSubscribersAsync(eventType, asyncSubscribers, eventData);
+            }
+
+            if (!foundSubscribers)
+            {
+                throw new InvalidOperationException($"No subscribers found for event type [{eventType}].");
             }
         }
 
         public void PostMessage<T>(MessageType messageType, T message)
         {
+            _logger.Log($"Message posted with message type [{messageType}] and data type {typeof(T).Name}", SeverityType.Information);
+
             var uniqueSet = _messages.GetOrAdd(messageType, new UniqueTypeSet());
             uniqueSet[typeof(T)] = message;
         }
@@ -70,83 +96,12 @@ namespace GradientExplorer.Services
                 return (T)uniqueSet[typeof(T)];
             }
 
-            throw new InvalidOperationException($"Message of type [{messageType}] not found.");
+            throw new InvalidOperationException($"Message of type [{messageType}] with data type [{typeof(T).Name}] not found.");
         }
 
         public bool RemoveMessage(MessageType messageType)
         {
             return _messages.TryRemove(messageType, out _);
-        }
-
-        private void InvokeSubscribers<T>(EventType eventType, ConcurrentDictionary<int, List<SubscriptionBase>> subscribers, T eventData) where T : IEventData
-        {
-            foreach (var priorityGroup in subscribers.OrderByDescending(kvp => kvp.Key))
-            {
-                foreach (var subscription in priorityGroup.Value.OfType<Subscription<T>>())
-                {
-                    if (subscription.CancellationTokenSource.Token.IsCancellationRequested)
-                    {
-                        continue; // Skip if cancellation has been requested
-                    }
-
-                    if (subscription.Filter == null || subscription.Filter(eventData))
-                    {
-                        subscription.Stopwatch.Start();
-
-                        try
-                        {
-                            subscription.Action(eventData, subscription.CancellationTokenSource.Token);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Encountered an exception while invoking a subscriber for event type {eventType}: {ex.Message}");
-                        }
-                        finally
-                        {
-                            subscription.Stopwatch.Stop();
-                        }
-                    }
-                }
-            }
-        }
-
-        private async Task InvokeAsyncSubscribers<T>(EventType eventType, ConcurrentDictionary<int, List<SubscriptionBase>> asyncSubscribers, T eventData) where T : IEventData
-        {
-            foreach (var priorityGroup in asyncSubscribers.OrderByDescending(kvp => kvp.Key))
-            {
-                var tasks = new List<Task>();
-
-                foreach (var subscription in priorityGroup.Value.OfType<SubscriptionAsync<T>>())
-                {
-                    if (subscription.CancellationTokenSource.Token.IsCancellationRequested)
-                    {
-                        continue; // Skip if cancellation has been requested
-                    }
-
-                    if (subscription.Filter == null || subscription.Filter(eventData))
-                    {
-                        subscription.Stopwatch.Start();
-
-                        tasks.Add(Task.Run(async () =>
-                        {
-                            try
-                            {
-                                await subscription.AsyncAction(eventData, subscription.CancellationTokenSource.Token).ConfigureAwait(false);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Encountered an exception while invoking a subscriber for event type {eventType}: {ex.Message}");
-                            }
-                            finally
-                            {
-                                subscription.Stopwatch.Stop();
-                            }
-                        }));
-                    }
-                }
-
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-            }
         }
     }
 }

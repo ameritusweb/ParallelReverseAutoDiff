@@ -46,8 +46,10 @@ namespace GradientExplorer.Helpers
 
         private static void Panel_Loaded(object sender, RoutedEventArgs e)
         {
+            var logger = AutofacContainerProvider.Container.Resolve<ILogger>();
             if (sender is Panel panel)
             {
+                logger.Log("Panel loaded.", SeverityType.Information);
                 var eventAggregator = AutofacContainerProvider.Container.Resolve<IEventAggregator>();
                 var addCanvasSubscription = eventAggregator.Subscribe(EventType.AddCanvasToPanel, new Action<IEventData, CancellationToken>((data, _) =>
                 {

@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace GradientExplorer.Services
 {
-    public class PaneCreator
+    public class PaneCreator : IPaneCreator
     {
         public IVsOutputWindowPane CreatePane(Guid paneGuid, string title, bool visible, bool clearWithSolution)
         {

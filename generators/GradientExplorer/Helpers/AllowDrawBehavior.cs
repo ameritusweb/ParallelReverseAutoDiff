@@ -46,8 +46,10 @@ namespace GradientExplorer.Helpers
 
         private static void Canvas_Loaded(object sender, RoutedEventArgs e)
         {
+            var logger = AutofacContainerProvider.Container.Resolve<ILogger>();
             if (sender is Canvas canvas)
             {
+                logger.Log("Canvas loaded.", SeverityType.Information);
                 var eventAggregator = AutofacContainerProvider.Container.Resolve<IEventAggregator>();
                 var addPathSubscription = eventAggregator.Subscribe(EventType.AddPathToCanvas, new Action<IEventData, CancellationToken>((data, _) =>
                 {
@@ -55,12 +57,18 @@ namespace GradientExplorer.Helpers
                     {
                         canvas.Children.Add(pathEventData.Path);
                     }
+                    eventAggregator.PostMessage(MessageType.CanvasWidth, (float)canvas.Width);
+                    eventAggregator.PostMessage(MessageType.CanvasHeight, (float)canvas.Height);
+                    eventAggregator.PostMessage(MessageType.CanvasActualHeight, (float)canvas.ActualHeight);
                 }), 10);
                 canvas.AddSubscription(addPathSubscription);
 
                 var clearSubscription = eventAggregator.Subscribe(EventType.ClearCanvas, new Action<IEventData, CancellationToken>((data, _) =>
                 {
                     canvas.Children.Clear();
+                    eventAggregator.PostMessage(MessageType.CanvasWidth, (float)canvas.Width);
+                    eventAggregator.PostMessage(MessageType.CanvasHeight, (float)canvas.Height);
+                    eventAggregator.PostMessage(MessageType.CanvasActualHeight, (float)canvas.ActualHeight);
                 }), 10);
                 canvas.AddSubscription(clearSubscription);
             }

@@ -25,14 +25,16 @@ namespace GradientExplorer.ViewModels
         private IGradientGraphFactory gradientGraphFactory;
         private IEventAggregator eventAggregator;
         private ILaTeXBuilder laTeXBuilder;
+        private ILogger logger;
 
         public ICommand ComputeGradientCommand { get; }
 
-        public GradientExplorerViewModel(IGradientGraphFactory gradientGraphFactory, IEventAggregator eventAggregator, ILaTeXBuilder laTeXBuilder)
+        public GradientExplorerViewModel(IGradientGraphFactory gradientGraphFactory, IEventAggregator eventAggregator, ILaTeXBuilder laTeXBuilder, ILogger logger)
         {
             this.gradientGraphFactory = gradientGraphFactory;
             this.eventAggregator = eventAggregator;
             this.laTeXBuilder = laTeXBuilder;
+            this.logger = logger;
             ComputeGradientCommand = new AsyncRelayCommand(ComputeGradientAsync, CanComputeGradient);
             GradientTabIcon = new IconImageViewModel
             {
@@ -54,6 +56,8 @@ namespace GradientExplorer.ViewModels
                 Foreground = Brushes.CornflowerBlue,
                 Height = 20,
             };
+
+            logger.Log("Gradient Explorer started", SeverityType.Information);
         }
 
         public Version VSVersion { get; set; }
@@ -168,7 +172,7 @@ namespace GradientExplorer.ViewModels
                 bool changed = this.currentDiagram.UpdateTheme(currentTheme);
                 if (changed && painter != null)
                 {
-                    eventAggregator.Publish(EventType.ClearCanvas, new ClearEventData());
+                    eventAggregator.PublishAsync(EventType.ClearCanvas, new ClearEventData()).Wait();
                     var wpfCanvas = new WpfCanvas(eventAggregator);
                     painter.Draw(wpfCanvas);
                 }
@@ -192,27 +196,30 @@ namespace GradientExplorer.ViewModels
                 var root = syntaxTree.GetRoot();
                 var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
                 var forwardMethod = methods.FirstOrDefault(m => m.Identifier.Text == "Forward");
-                var gradientGraph = await gradientGraphFactory.CreateGradientGraphAsync(forwardMethod);
-                eventAggregator.Publish(EventType.ClearCanvas, new ClearEventData());
-                var wpfCanvas = new WpfCanvas(eventAggregator);
-                painter = new WpfMathPainter();
-                painter.LaTeX = gradientGraph.ToLaTeX(laTeXBuilder);
-                Headline = painter.LaTeX;
-                painter.Draw(wpfCanvas);
+                if (forwardMethod != null)
+                {
+                    var gradientGraph = await gradientGraphFactory.CreateGradientGraphAsync(forwardMethod);
+                    eventAggregator.PublishAsync(EventType.ClearCanvas, new ClearEventData()).Wait();
+                    var wpfCanvas = new WpfCanvas(eventAggregator);
+                    painter = new WpfMathPainter();
+                    painter.LaTeX = gradientGraph.ToLaTeX(laTeXBuilder);
+                    Headline = painter.LaTeX;
+                    painter.Draw(wpfCanvas);
 
-                var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
-                if (currentDiagram == null)
-                {
-                    currentDiagram = new DiagramCanvas(eventAggregator, gradientGraph.DeepCopy(), currentTheme);
-                    currentDiagram.BuildGraph();
-                    ScaleTransform flipTransform = new ScaleTransform(1, -1);
-                    eventAggregator.Publish(EventType.SetPanelLayoutTransform, new PanelLayoutTransformEventData { LayoutTransform = flipTransform });
-                    currentDiagram.AddToPanel();
-                }
-                else
-                {
-                    currentDiagram.Reinitialize(gradientGraph.DeepCopy(), currentTheme);
-                    currentDiagram.BuildGraph();
+                    var currentTheme = await ThemeManager.Instance.GetCurrentThemeAsync();
+                    if (currentDiagram == null)
+                    {
+                        currentDiagram = new DiagramCanvas(eventAggregator, gradientGraph.DeepCopy(), currentTheme);
+                        currentDiagram.BuildGraph();
+                        ScaleTransform flipTransform = new ScaleTransform(1, -1);
+                        eventAggregator.PublishAsync(EventType.SetPanelLayoutTransform, new PanelLayoutTransformEventData { LayoutTransform = flipTransform }).Wait();
+                        currentDiagram.AddToPanel();
+                    }
+                    else
+                    {
+                        currentDiagram.Reinitialize(gradientGraph.DeepCopy(), currentTheme);
+                        currentDiagram.BuildGraph();
+                    }
                 }
             }
         }

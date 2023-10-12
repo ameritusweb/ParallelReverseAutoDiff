@@ -52,14 +52,17 @@
     <Compile Include="Controls\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AsyncSubscriptionInvoker.cs" />
     <Compile Include="Helpers\DrawDiagramBehavior.cs" />
     <Compile Include="Helpers\AllowDrawBehavior.cs" />
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
     <Compile Include="Helpers\GradientToolView.cs" />
+    <Compile Include="Helpers\KeyValuePairExtensions.cs" />
     <Compile Include="Helpers\NodeBuilderPool.cs" />
     <Compile Include="Helpers\SeverityType.cs" />
+    <Compile Include="Helpers\SyncSubscriptionInvoker.cs" />
     <Compile Include="Helpers\ViewToVisibilityConverter.cs" />
     <Compile Include="Services\INodeBuilderPool.cs" />
     <Compile Include="Services\NodeBuilder.cs" />

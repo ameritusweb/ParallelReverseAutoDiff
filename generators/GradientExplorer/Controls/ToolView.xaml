@@ -11,13 +11,13 @@
     <Grid>
         <!-- Breadcrumb -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
-            <TextBlock Text="Gradient Toolbox" Cursor="Hand">
+            <TextBlock Text="Gradient Toolbox" Foreground="{Binding ForegroundColor}" Cursor="Hand">
                 <TextBlock.InputBindings>
                     <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
                 </TextBlock.InputBindings>
             </TextBlock>
-            <sharp:IconImage Icon="ArrowRight" Height="16" VerticalAlignment="Center" Margin="5,0"/>
-            <TextBlock Text="{Binding ToolName}" />
+            <sharp:IconImage Icon="ArrowRight" Foreground="CornflowerBlue" Height="14" VerticalAlignment="Center" Margin="5,0"/>
+            <TextBlock Text="{Binding ToolName}" Foreground="{Binding ForegroundColor}" />
         </StackPanel>
 
         <!-- Content Slot -->

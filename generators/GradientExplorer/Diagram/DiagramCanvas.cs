@@ -35,7 +35,7 @@ namespace GradientExplorer.Diagram
 
         public void AddToPanel()
         {
-            eventAggregator.Publish(EventType.AddCanvasToPanel, new CanvasEventData { Canvas = viewer.GraphCanvas });
+            eventAggregator.PublishAsync(EventType.AddCanvasToPanel, new CanvasEventData { Canvas = viewer.GraphCanvas }).Wait();
         }
 
         public void Reinitialize(GradientGraph graph, Theme theme)
@@ -44,7 +44,7 @@ namespace GradientExplorer.Diagram
             this.msaglGraph = new Graph();
             this.backgroundColor = theme.MsaglBackgroundColor;
             this.foregroundColor = theme.IsDark ? Microsoft.Msagl.Drawing.Color.White : Microsoft.Msagl.Drawing.Color.Black;
-            eventAggregator.Publish(EventType.SetPanelLayoutTransform, new PanelLayoutTransformEventData { LayoutTransform = null });
+            eventAggregator.PublishAsync(EventType.SetPanelLayoutTransform, new PanelLayoutTransformEventData { LayoutTransform = null }).Wait();
             this.viewer.GraphCanvas.UpdateLayout();
         }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Services
 {
-    public class GradientGraphFactory
+    public class GradientGraphFactory : IGradientGraphFactory
     {
         private readonly IMethodParser methodParser;
         private readonly IExpressionDecomposer expressionDecomposer;
