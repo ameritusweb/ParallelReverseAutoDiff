@@ -10,5 +10,7 @@ namespace GradientExplorer.Helpers
     public interface IEventData
     {
         public CancellationTokenSource CancellationTokenSource { get; }
+
+        public PublishOptions Options { get; }
     }
 }

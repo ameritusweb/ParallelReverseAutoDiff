@@ -14,9 +14,9 @@ namespace GradientExplorer.Helpers
         private readonly Action<T, CancellationToken> _action;
         private readonly Func<T, bool> _filter;
 
-        private readonly ConcurrentDictionary<int, List<SubscriptionBase>> _subscribers;
+        private readonly ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>> _subscribers;
 
-        public Subscription(Action<T, CancellationToken> action, int priority, Func<T, bool> filter, ConcurrentDictionary<int, List<SubscriptionBase>> subscribers) : base(priority)
+        public Subscription(Action<T, CancellationToken> action, int priority, Func<T, bool> filter, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>> subscribers) : base(priority)
         {
             _action = action;
             _filter = filter;
@@ -24,7 +24,7 @@ namespace GradientExplorer.Helpers
 
             if (!_subscribers.ContainsKey(Priority))
             {
-                _subscribers[Priority] = new List<SubscriptionBase>();
+                _subscribers[Priority] = new ThreadSafeList<SubscriptionBase>();
             }
 
             _subscribers[Priority].Add(this);
@@ -34,7 +34,7 @@ namespace GradientExplorer.Helpers
 
         public Func<T, bool> Filter => _filter;
 
-        public ConcurrentDictionary<int, List<SubscriptionBase>> Subscribers => _subscribers;
+        public ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>> Subscribers => _subscribers;
 
         public void Dispose()
         {

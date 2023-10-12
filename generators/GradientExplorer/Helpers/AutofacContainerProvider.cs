@@ -43,6 +43,8 @@ namespace GradientExplorer.Helpers
                             // Register your IEventAggregator as a single instance
                             builder.RegisterType<EventAggregator>()
                                 .As<IEventAggregator>()
+                                .As<IMessagePoster>()
+                                .As<IMessageRetriever>()
                                 .SingleInstance();
                             builder.RegisterType<EnvironmentProvider>()
                                 .As<IEnvironmentProvider>()

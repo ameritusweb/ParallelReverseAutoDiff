@@ -1,15 +1,8 @@
 ﻿using Autofac;
 using GradientExplorer.Services;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace GradientExplorer.Helpers
 {
@@ -51,24 +44,25 @@ namespace GradientExplorer.Helpers
             {
                 logger.Log("Canvas loaded.", SeverityType.Information);
                 var eventAggregator = AutofacContainerProvider.Container.Resolve<IEventAggregator>();
+                var messagePoster = AutofacContainerProvider.Container.Resolve<IMessagePoster>();
                 var addPathSubscription = eventAggregator.Subscribe(EventType.AddPathToCanvas, new Action<IEventData, CancellationToken>((data, _) =>
                 {
                     if (data is PathEventData pathEventData)
                     {
                         canvas.Children.Add(pathEventData.Path);
                     }
-                    eventAggregator.PostMessage(MessageType.CanvasWidth, (float)canvas.Width);
-                    eventAggregator.PostMessage(MessageType.CanvasHeight, (float)canvas.Height);
-                    eventAggregator.PostMessage(MessageType.CanvasActualHeight, (float)canvas.ActualHeight);
+                    messagePoster.PostMessage(MessageType.CanvasWidth, (float)canvas.Width);
+                    messagePoster.PostMessage(MessageType.CanvasHeight, (float)canvas.Height);
+                    messagePoster.PostMessage(MessageType.CanvasActualHeight, (float)canvas.ActualHeight);
                 }), 10);
                 canvas.AddSubscription(addPathSubscription);
 
                 var clearSubscription = eventAggregator.Subscribe(EventType.ClearCanvas, new Action<IEventData, CancellationToken>((data, _) =>
                 {
                     canvas.Children.Clear();
-                    eventAggregator.PostMessage(MessageType.CanvasWidth, (float)canvas.Width);
-                    eventAggregator.PostMessage(MessageType.CanvasHeight, (float)canvas.Height);
-                    eventAggregator.PostMessage(MessageType.CanvasActualHeight, (float)canvas.ActualHeight);
+                    messagePoster.PostMessage(MessageType.CanvasWidth, (float)canvas.Width);
+                    messagePoster.PostMessage(MessageType.CanvasHeight, (float)canvas.Height);
+                    messagePoster.PostMessage(MessageType.CanvasActualHeight, (float)canvas.ActualHeight);
                 }), 10);
                 canvas.AddSubscription(clearSubscription);
             }

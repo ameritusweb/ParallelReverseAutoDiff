@@ -8,10 +8,8 @@ using System.Windows.Media;
 
 namespace GradientExplorer.Helpers
 {
-    public class BackgroundEventData : IEventData
+    public class BackgroundEventData : EventDataBase
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public CancellationTokenSource CancellationTokenSource => _cancellationTokenSource;
 
         public SolidColorBrush SolidColorBrush { get; set; }
     }

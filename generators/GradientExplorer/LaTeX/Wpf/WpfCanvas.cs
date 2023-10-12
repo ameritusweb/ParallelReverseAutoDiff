@@ -18,14 +18,16 @@ namespace GradientExplorer.LaTeX.Wpf
         private double _currentY;
         private Dictionary<Guid, (double, double)> _savedMap;
         private readonly IEventAggregator eventAggregator;
+        private readonly IMessageRetriever messageRetriever;
 
-        public WpfCanvas(IEventAggregator eventAggregator)
+        public WpfCanvas(IEventAggregator eventAggregator, IMessageRetriever messageRetriever)
         {
             _currentY = 0;
             _savedMap = new Dictionary<Guid, (double, double)>();
             this.eventAggregator = eventAggregator;
             var backgroundColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
             eventAggregator.PublishAsync(EventType.SetCanvasBackground, new BackgroundEventData { SolidColorBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B)) }).Wait();
+            this.messageRetriever = messageRetriever;
         }
 
         public void SetWidth(float width)
@@ -62,7 +64,7 @@ namespace GradientExplorer.LaTeX.Wpf
         {
             get
             {
-                return eventAggregator.RetrieveMessage<float>(MessageType.CanvasWidth);
+                return messageRetriever.RetrieveMessage<float>(MessageType.CanvasWidth);
             }
         }
 
@@ -70,7 +72,7 @@ namespace GradientExplorer.LaTeX.Wpf
         {
             get
             {
-                return eventAggregator.RetrieveMessage<float>(MessageType.CanvasHeight);
+                return messageRetriever.RetrieveMessage<float>(MessageType.CanvasHeight);
             }
         }
 
@@ -96,7 +98,7 @@ namespace GradientExplorer.LaTeX.Wpf
                 Height = height,
                 Fill = _currentColorBrush
             };
-            float actualHeight = eventAggregator.RetrieveMessage<float>(MessageType.CanvasActualHeight);
+            float actualHeight = messageRetriever.RetrieveMessage<float>(MessageType.CanvasActualHeight);
             eventAggregator.PublishAsync(EventType.AddRectToCanvas, new RectEventData { Rect = rect, Top = actualHeight + top, Left = left }).Wait();
         }
 
@@ -109,7 +111,7 @@ namespace GradientExplorer.LaTeX.Wpf
             path.Stroke = new SolidColorBrush(color);
             path.StrokeThickness = 0.5; // You can adjust this value as needed
 
-            var actualHeight = eventAggregator.RetrieveMessage<float>(MessageType.CanvasActualHeight);
+            var actualHeight = messageRetriever.RetrieveMessage<float>(MessageType.CanvasActualHeight);
             eventAggregator.PublishAsync(EventType.AddPathToCanvas, new PathEventData { Path = path, Top = (float)(_currentY - actualHeight), Left = (float)_currentX }).Wait();
         }
 

@@ -14,9 +14,9 @@ namespace GradientExplorer.Helpers
         private readonly Func<T, CancellationToken, Task> _asyncAction;
         private readonly Func<T, bool> _filter;
 
-        private readonly ConcurrentDictionary<int, List<SubscriptionBase>> _asyncSubscribers;
+        private readonly ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>> _asyncSubscribers;
 
-        public SubscriptionAsync(Func<T, CancellationToken, Task> asyncAction, int priority, Func<T, bool> filter, ConcurrentDictionary<int, List<SubscriptionBase>> asyncSubscribers): base(priority)
+        public SubscriptionAsync(Func<T, CancellationToken, Task> asyncAction, int priority, Func<T, bool> filter, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>> asyncSubscribers): base(priority)
         {
             _asyncAction = asyncAction;
             _filter = filter;
@@ -24,7 +24,7 @@ namespace GradientExplorer.Helpers
 
             if (!_asyncSubscribers.ContainsKey(Priority))
             {
-                _asyncSubscribers[Priority] = new List<SubscriptionBase>();
+                _asyncSubscribers[Priority] = new ThreadSafeList<SubscriptionBase>();
             }
 
             _asyncSubscribers[Priority].Add(this);

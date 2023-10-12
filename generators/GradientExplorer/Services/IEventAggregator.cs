@@ -1,10 +1,5 @@
 ﻿using GradientExplorer.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace GradientExplorer.Services
 {
@@ -39,28 +34,5 @@ namespace GradientExplorer.Services
         /// <param name="eventType">The event type to publish.</param>
         /// <param name="eventData">The event data to publish.</param>
         Task PublishAsync<T>(EventType eventType, T eventData) where T : IEventData;
-
-        /// <summary>
-        /// Posts a message of a specific type to the event aggregator.
-        /// </summary>
-        /// <typeparam name="T">The type of the message.</typeparam>
-        /// <param name="messageType">The message type enumeration value.</param>
-        /// <param name="message">The message to post.</param>
-        void PostMessage<T>(MessageType messageType, T message);
-
-        /// <summary>
-        /// Tries to retrieve a message of a specific type from the event aggregator.
-        /// </summary>
-        /// <typeparam name="T">The expected type of the message.</typeparam>
-        /// <param name="messageType">The message type enumeration value.</param>
-        /// <returns>The retrieved message.</returns>
-        T RetrieveMessage<T>(MessageType messageType);
-
-        /// <summary>
-        /// Removes a message of a specific type from the event aggregator.
-        /// </summary>
-        /// <param name="messageType">The message type enumeration value.</param>
-        /// <returns>True if the message was successfully removed, otherwise false.</returns>
-        bool RemoveMessage(MessageType messageType);
     }
 }

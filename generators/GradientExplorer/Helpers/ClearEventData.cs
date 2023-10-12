@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Helpers
 {
-    public class ClearEventData : IEventData
+    public class ClearEventData : EventDataBase
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public CancellationTokenSource CancellationTokenSource => _cancellationTokenSource;
+
     }
 }

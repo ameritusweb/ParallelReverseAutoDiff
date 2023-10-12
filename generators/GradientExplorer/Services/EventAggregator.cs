@@ -1,21 +1,21 @@
 ﻿using GradientExplorer.Helpers;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace GradientExplorer.Services
 {
-    public class EventAggregator : IEventAggregator
+    public class EventAggregator : IEventAggregator, IMessagePoster, IMessageRetriever
     {
-        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _syncSubscriptions;
-        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> _asyncSubscriptions;
+        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> _syncSubscriptions;
+        private readonly ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> _asyncSubscriptions;
         private readonly ConcurrentDictionary<MessageType, UniqueTypeSet> _messages = new ConcurrentDictionary<MessageType, UniqueTypeSet>();
+        private readonly ConcurrentDictionary<Type, object> _invokerCache = new ConcurrentDictionary<Type, object>();
         private readonly ILogger _logger;
 
         public EventAggregator(
             ILogger logger,
-            ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> syncSubscriptions,
-            ConcurrentDictionary<EventType, ConcurrentDictionary<int, List<SubscriptionBase>>> asyncSubscriptions)
+            ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> syncSubscriptions,
+            ConcurrentDictionary<EventType, ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>> asyncSubscriptions)
         {
             _logger = logger;
             this._syncSubscriptions = syncSubscriptions;
@@ -24,12 +24,12 @@ namespace GradientExplorer.Services
 
         public Subscription<T> Subscribe<T>(EventType eventType, Action<T, CancellationToken> action, int priority, Func<T, bool> filter = null) where T : IEventData
         {
-            var subscribers = _syncSubscriptions.GetOrAdd(eventType, _ => new ConcurrentDictionary<int, List<SubscriptionBase>>());
+            var subscribers = _syncSubscriptions.GetOrAdd(eventType, _ => new ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>());
 
             var subscription = new Subscription<T>(action, priority, filter, subscribers);
             if (!subscribers.ContainsKey(priority))
             {
-                subscribers[priority] = new List<SubscriptionBase>();
+                subscribers[priority] = new ThreadSafeList<SubscriptionBase>();
             }
 
             subscribers[priority].Add(subscription);
@@ -39,12 +39,12 @@ namespace GradientExplorer.Services
 
         public SubscriptionAsync<T> SubscribeAsync<T>(EventType eventType, Func<T, CancellationToken, Task> asyncAction, int priority, Func<T, bool> filter = null) where T : IEventData
         {
-            var asyncSubscribers = _asyncSubscriptions.GetOrAdd(eventType, _ => new ConcurrentDictionary<int, List<SubscriptionBase>>());
+            var asyncSubscribers = _asyncSubscriptions.GetOrAdd(eventType, _ => new ConcurrentDictionary<int, ThreadSafeList<SubscriptionBase>>());
 
             var subscription = new SubscriptionAsync<T>(asyncAction, priority, filter, asyncSubscribers);
             if (!asyncSubscribers.ContainsKey(priority))
             {
-                asyncSubscribers[priority] = new List<SubscriptionBase>();
+                asyncSubscribers[priority] = new ThreadSafeList<SubscriptionBase>();
             }
 
             asyncSubscribers[priority].Add(subscription);
@@ -58,11 +58,16 @@ namespace GradientExplorer.Services
 
             bool foundSubscribers = false;
 
+            // Retrieve or create the invoker from the cache.
+            ISubscriptionInvoker<T> invoker = (ISubscriptionInvoker<T>)_invokerCache.GetOrAdd(
+                typeof(T),
+                _ => SubscriptionInvokerFactory.GetInvoker<T>(_logger)
+            );
+
             // Handle synchronous subscribers
             if (_syncSubscriptions.TryGetValue(eventType, out var syncSubscribers))
             {
                 foundSubscribers = true;
-                var invoker = new SyncSubscriptionInvoker<T>(_logger);
                 invoker.InvokeSubscribers(eventType, syncSubscribers, eventData);
 
             }
@@ -71,11 +76,10 @@ namespace GradientExplorer.Services
             if (_asyncSubscriptions.TryGetValue(eventType, out var asyncSubscribers))
             {
                 foundSubscribers = true;
-                var invoker = new AsyncSubscriptionInvoker<T>(_logger);
                 await invoker.InvokeSubscribersAsync(eventType, asyncSubscribers, eventData);
             }
 
-            if (!foundSubscribers)
+            if (!foundSubscribers && !eventData.Options.AllowNoSubscribers)
             {
                 throw new InvalidOperationException($"No subscribers found for event type [{eventType}].");
             }

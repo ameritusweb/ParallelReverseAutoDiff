@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace GradientExplorer.Helpers
 {
-    public class WidthEventData : IEventData
+    public class WidthEventData : EventDataBase
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public CancellationTokenSource CancellationTokenSource => _cancellationTokenSource;
 
         public float Width { get; set; }
     }

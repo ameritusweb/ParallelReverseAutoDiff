@@ -24,15 +24,17 @@ namespace GradientExplorer.ViewModels
         private WpfMathPainter painter;
         private IGradientGraphFactory gradientGraphFactory;
         private IEventAggregator eventAggregator;
+        private IMessageRetriever messageRetriever;
         private ILaTeXBuilder laTeXBuilder;
         private ILogger logger;
 
         public ICommand ComputeGradientCommand { get; }
 
-        public GradientExplorerViewModel(IGradientGraphFactory gradientGraphFactory, IEventAggregator eventAggregator, ILaTeXBuilder laTeXBuilder, ILogger logger)
+        public GradientExplorerViewModel(IGradientGraphFactory gradientGraphFactory, IEventAggregator eventAggregator, IMessageRetriever messageRetriever, ILaTeXBuilder laTeXBuilder, ILogger logger)
         {
             this.gradientGraphFactory = gradientGraphFactory;
             this.eventAggregator = eventAggregator;
+            this.messageRetriever = messageRetriever;
             this.laTeXBuilder = laTeXBuilder;
             this.logger = logger;
             ComputeGradientCommand = new AsyncRelayCommand(ComputeGradientAsync, CanComputeGradient);
@@ -173,7 +175,7 @@ namespace GradientExplorer.ViewModels
                 if (changed && painter != null)
                 {
                     eventAggregator.PublishAsync(EventType.ClearCanvas, new ClearEventData()).Wait();
-                    var wpfCanvas = new WpfCanvas(eventAggregator);
+                    var wpfCanvas = new WpfCanvas(eventAggregator, messageRetriever);
                     painter.Draw(wpfCanvas);
                 }
             }
@@ -200,7 +202,7 @@ namespace GradientExplorer.ViewModels
                 {
                     var gradientGraph = await gradientGraphFactory.CreateGradientGraphAsync(forwardMethod);
                     eventAggregator.PublishAsync(EventType.ClearCanvas, new ClearEventData()).Wait();
-                    var wpfCanvas = new WpfCanvas(eventAggregator);
+                    var wpfCanvas = new WpfCanvas(eventAggregator, messageRetriever);
                     painter = new WpfMathPainter();
                     painter.LaTeX = gradientGraph.ToLaTeX(laTeXBuilder);
                     Headline = painter.LaTeX;

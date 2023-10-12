@@ -9,10 +9,8 @@ using System.Windows.Shapes;
 
 namespace GradientExplorer.Helpers
 {
-    public class CanvasEventData : IEventData
+    public class CanvasEventData : EventDataBase
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        public CancellationTokenSource CancellationTokenSource => _cancellationTokenSource;
 
         public Canvas Canvas { get; set; }
     }
