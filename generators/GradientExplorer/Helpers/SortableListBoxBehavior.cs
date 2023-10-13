@@ -76,18 +76,35 @@ namespace GradientExplorer.Helpers
 
         private static void ListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is ListBoxItem)
+            // Sender is ListBox, so we need to find the ListBoxItem that is actually under the mouse
+            if (sender is ListBox listBox)
             {
-                ListBoxItem draggedItem = sender as ListBoxItem;
-                DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
-                draggedItem.IsSelected = true;
+                var hitTestResult = VisualTreeHelper.HitTest(listBox, e.GetPosition(listBox));
+                var listBoxItem = FindVisualParent<ListBoxItem>(hitTestResult.VisualHit);
+
+                if (listBoxItem != null)
+                {
+                    ListBoxItem draggedItem = listBoxItem;
+                    DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+                    draggedItem.IsSelected = true;
+                }
             }
+        }
+
+        private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (child != null && !(child is T))
+            {
+                child = VisualTreeHelper.GetParent(child);
+            }
+            return child as T;
         }
 
         private static void ListBox_DragOver(object sender, DragEventArgs e)
         {
+            e.Handled = true;
             ListBox listBox = sender as ListBox;
-            var itemsSource = listBox.ItemsSource as ObservableCollection<SortableItem>;  // Cast to your specific item type
+            var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;  // Cast to your specific item type
 
             if (itemsSource == null)
             {
@@ -127,38 +144,41 @@ namespace GradientExplorer.Helpers
 
         private static void ListBox_Drop(object sender, DragEventArgs e)
         {
+
             ListBox listBox = sender as ListBox;
-            var itemsSource = listBox.ItemsSource as ObservableCollection<SortableItem>;  // Cast to your specific item type
+            var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;  // Cast to your specific item type
 
             if (itemsSource == null)
             {
                 throw new InvalidOperationException("ItemsSource is not an ObservableCollection<Item>");
             }
 
-            SortableItem droppedData = e.Data.GetData(typeof(SortableItem)) as SortableItem;
+            ISortableItem droppedData = e.Data.GetData(typeof(SortableItem)) as SortableItem;
             int removedIdx = itemsSource.IndexOf(droppedData);
             int targetIdx = itemsSource.IndexOf(ghostItem);
 
             ListBoxItem removedItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(removedIdx);
             ListBoxItem targetItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(targetIdx);
 
-            double animationDistance = CalculateAnimationDistance(removedItem, targetItem);
+            double animationDistance = CalculateAnimationDistance(listBox, removedItem, targetItem);
 
             // Animate and then perform data manipulation
             AnimateItemMove(sender as DependencyObject, removedItem, animationDistance, () =>
             {
                 // Replace the ghostItem with the actual dragged item
                 itemsSource[targetIdx] = droppedData;  // This replaces the ghost item
-                                                 // Remove the original instance of the dragged item
-                itemsSource.RemoveAt(removedIdx < targetIdx ? removedIdx : removedIdx + 1);
+                                                       // Remove the original instance of the dragged item
+                itemsSource.RemoveAt(removedIdx);
             });
+
+            e.Handled = true;
         }
 
-        private static double CalculateAnimationDistance(ListBoxItem from, ListBoxItem to)
+        private static double CalculateAnimationDistance(ListBox parent, ListBoxItem from, ListBoxItem to)
         {
             // Calculate distance between the Y positions of the two items
             // Logic can be customized based on layout and orientation
-            return to.TransformToAncestor(from.Parent as Visual).Transform(new Point(0, 0)).Y;
+            return to.TransformToAncestor(parent).Transform(new Point(0, 0)).Y - from.TransformToAncestor(parent).Transform(new Point(0, 0)).Y;
         }
 
         private static void AnimateItemMove(DependencyObject d, ListBoxItem item, double to, Action onAnimationCompleted)

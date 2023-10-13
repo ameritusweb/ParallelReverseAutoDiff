@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="GradientExplorer.Controls.ComputationTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GradientExplorer.Controls"
+             xmlns:helpers="clr-namespace:GradientExplorer.Helpers"
+             xmlns:sharp="clr-namespace:FontAwesome.Sharp"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="RegularRowTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon -->
+                <sharp:IconImage Icon="{Binding IconImage.Icon}" Foreground="{Binding IconImage.Foreground}" Height="{Binding IconImage.Height}" RenderTransform="{Binding IconImage.Transforms}" ></sharp:IconImage>
+
+                <!-- Content -->
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontStyle="Normal" Foreground="Black"/>
+
+                <!-- Solid Border -->
+                <Path Stroke="Gray" StrokeThickness="1">
+                    <Path.Data>
+                        <RectangleGeometry Rect="0,0,1,1" />
+                    </Path.Data>
+                </Path>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="GhostRowTemplate">
+            <Grid Opacity="0.6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon -->
+                <sharp:IconImage Icon="{Binding IconImage.Icon}" Foreground="{Binding IconImage.Foreground}" Height="{Binding IconImage.Height}" RenderTransform="{Binding IconImage.Transforms}" ></sharp:IconImage>
+
+                <!-- Content -->
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontStyle="Italic" Foreground="Gray"/>
+
+                <!-- Dashed Border -->
+                <Path Stroke="Black" StrokeThickness="1">
+                    <Path.Data>
+                        <RectangleGeometry Rect="0,0,1,1" />
+                    </Path.Data>
+                    <Path.Style>
+                        <Style TargetType="{x:Type Path}">
+                            <Setter Property="StrokeDashArray" Value="4,4"/>
+                        </Style>
+                    </Path.Style>
+                </Path>
+            </Grid>
+        </DataTemplate>
+
+
+        <helpers:SortableItemTemplateSelector x:Key="SortableItemTemplateSelector"
+            RegularItemTemplate="{StaticResource RegularRowTemplate}"
+            GhostItemTemplate="{StaticResource GhostRowTemplate}" />
+    </UserControl.Resources>
+    <Grid>
+        <ListBox
+             AllowDrop="True"
+             helpers:SortableListBoxBehavior.AllowSort="True"
+             helpers:SortableListBoxBehavior.AnimationDuration="0.5"
+             helpers:SortableListBoxBehavior.EasingFunction="{helpers:EasingFunction BounceEase}"
+             ItemsSource="{Binding ComputationGraph}"
+             ItemTemplateSelector="{StaticResource SortableItemTemplateSelector}">
+        </ListBox>
+    </Grid>
+</UserControl>

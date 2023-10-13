@@ -49,6 +49,9 @@
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\GradientToolboxCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\ComputationTabView.xaml.cs">
+      <DependentUpon>ComputationTabView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>
@@ -57,6 +60,7 @@
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
+    <Compile Include="Helpers\EasingFunctionExtension.cs" />
     <Compile Include="Helpers\EventDataBase.cs" />
     <Compile Include="Helpers\GradientToolView.cs" />
     <Compile Include="Helpers\ISubscriptionInvoker.cs" />
@@ -64,11 +68,13 @@
     <Compile Include="Helpers\NodeBuilderPool.cs" />
     <Compile Include="Helpers\PublishOptions.cs" />
     <Compile Include="Helpers\SeverityType.cs" />
+    <Compile Include="Helpers\SortableItemTemplateSelector.cs" />
     <Compile Include="Helpers\SortableListBoxBehavior.cs" />
     <Compile Include="Helpers\SubscriptionInvoker.cs" />
     <Compile Include="Helpers\SubscriptionInvokerFactory.cs" />
     <Compile Include="Helpers\ThreadSafeList.cs" />
     <Compile Include="Helpers\ViewToVisibilityConverter.cs" />
+    <Compile Include="Model\ISortableItem.cs" />
     <Compile Include="Model\SortableItem.cs" />
     <Compile Include="Services\IMessagePoster.cs" />
     <Compile Include="Services\IMessageRetriever.cs" />
@@ -373,6 +379,7 @@
     <Compile Include="ToolWindows\GradientToolboxControl.xaml.cs">
       <DependentUpon>GradientToolboxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ComputationTabViewModel.cs" />
     <Compile Include="ViewModels\GradientToolboxViewModel.cs" />
     <Compile Include="ViewModels\GradientExplorerViewModel.cs" />
     <Compile Include="ViewModels\IconImageViewModel.cs" />
@@ -421,6 +428,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ToolWindows\GradientExplorer.cs" />
+    <Page Include="Controls\ComputationTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ToolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

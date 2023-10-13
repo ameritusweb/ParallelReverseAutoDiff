@@ -10,7 +10,7 @@
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
              xmlns:w="clr-namespace:GradientExplorer.LaTeX.Wpf"
              xmlns:sharp="clr-namespace:FontAwesome.Sharp"
-             xmlns:local="clr-namespace:GradientExplorer.Helpers"
+             xmlns:local="clr-namespace:GradientExplorer.Helpers" xmlns:controls="clr-namespace:GradientExplorer.Controls"
              toolkit:Themes.UseVsTheme="True"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -156,7 +156,9 @@ Content="{Binding Header, RelativeSource={RelativeSource Mode=FindAncestor, Ance
                             <TextBlock Text="Computation Graph Panel" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <!-- Tab Content Here -->
+                    <controls:ComputationTabView DataContext="{Binding ComputationTabViewModel}">
+                        
+                    </controls:ComputationTabView>
                 </TabItem>
                 <!-- Additional Tabs -->
             </TabControl>
