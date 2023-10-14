@@ -55,6 +55,16 @@ namespace GradientExplorer.ViewModels
                     },
                     IsGhost = false
                 },
+                new SortableItem
+                {
+                    Name = "Item 3",
+                    IconImage = new IconImageViewModel {
+                        Foreground = System.Windows.Media.Brushes.CornflowerBlue,
+                        Height = 20,
+                        Icon = FontAwesome.Sharp.IconChar.Amazon,
+                    },
+                    IsGhost = false
+                },
             };
 
         }

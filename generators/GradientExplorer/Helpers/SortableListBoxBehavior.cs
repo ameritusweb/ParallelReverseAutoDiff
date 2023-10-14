@@ -85,8 +85,8 @@ namespace GradientExplorer.Helpers
                 if (listBoxItem != null)
                 {
                     ListBoxItem draggedItem = listBoxItem;
-                    DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
                     draggedItem.IsSelected = true;
+                    DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
                 }
             }
         }
@@ -112,34 +112,79 @@ namespace GradientExplorer.Helpers
             }
 
             Point position = e.GetPosition(listBox);
-            int index = GetCurrentIndex(listBox, position);
+            int? index = GetCurrentIndex(listBox, position);
+            int selectedIndex = listBox.SelectedIndex;  // Get the index of the selected (dragged) item
+
+            if (index.HasValue)
+            {
+                var ghostItemIndex = itemsSource.IndexOf(ghostItem);
+
+                // Decide where to place the ghost item based on the direction of the drag
+                if (index < selectedIndex)
+                {
+                    // Dragging upwards
+                    if (index != ghostItemIndex)
+                    {
+                        UpdateGhostItemPosition(itemsSource, index.Value);
+                    }
+                }
+                else if (index > selectedIndex)
+                {
+                    // Dragging downwards
+                    index++;  // Adjust to place the ghost item below the current item
+                    if (index != ghostItemIndex)
+                    {
+                        UpdateGhostItemPosition(itemsSource, index.Value);
+                    }
+                }
+            }
+        }
+
+        private static void UpdateGhostItemPosition(ObservableCollection<ISortableItem> itemsSource, int index)
+        {
+            var ghostItemIndex = itemsSource.IndexOf(ghostItem);
             if (!itemsSource.Contains(ghostItem))
             {
                 itemsSource.Insert(index, ghostItem);
             }
             else
             {
-                itemsSource.Move(itemsSource.IndexOf(ghostItem), index);
+                itemsSource.Move(ghostItemIndex, index);
             }
         }
 
-        private static int GetCurrentIndex(ListBox listBox, Point position)
+        private static int? GetCurrentIndex(ListBox listBox, Point position, double tolerance = 5.0)
         {
             for (int i = 0; i < listBox.Items.Count; i++)
             {
                 ListBoxItem item = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(i);
-                if (IsMouseOverTarget(item, position))
+                ISortableItem sortableItem = item.DataContext as ISortableItem;
+                if (!item.IsSelected && !sortableItem.IsGhost)
                 {
-                    return i;
+                    if (IsMouseOverTarget(listBox, item, position, tolerance))
+                    {
+                        return i;
+                    }
                 }
             }
-            return listBox.Items.Count - 1;
+            return default(int?);
         }
 
-        private static bool IsMouseOverTarget(Visual target, Point point)
+        private static bool IsMouseOverTarget(ListBox listBox, Visual target, Point point, double tolerance)
         {
             Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
-            return bounds.Contains(point);
+
+            // Transform the bounds to the coordinate space of the parent ListBox
+            GeneralTransform transform = target.TransformToAncestor(listBox);
+            bounds = transform.TransformBounds(bounds);
+            bounds = new Rect(bounds.Left + tolerance, bounds.Top + tolerance,
+                              bounds.Width - 2 * tolerance, bounds.Height - 2 * tolerance);
+            var withinBounds = bounds.Contains(point);
+            if (withinBounds)
+            {
+                
+            }
+            return withinBounds;
         }
 
         private static void ListBox_Drop(object sender, DragEventArgs e)
@@ -159,6 +204,8 @@ namespace GradientExplorer.Helpers
 
             ListBoxItem removedItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(removedIdx);
             ListBoxItem targetItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(targetIdx);
+
+            removedItem.IsSelected = false;
 
             double animationDistance = CalculateAnimationDistance(listBox, removedItem, targetItem);
 
