@@ -59,7 +59,7 @@ namespace GradientExplorer.ViewModels
                 Height = 20,
             };
 
-            ComputationTabViewModel = new ComputationTabViewModel(this);
+            ComputationTabViewModel = new ComputationTabViewModel(this, logger);
 
             logger.Log("Gradient Explorer started", SeverityType.Information);
         }

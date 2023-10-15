@@ -1,18 +1,24 @@
-﻿using GradientExplorer.Model;
-using System;
-using System.Collections.Generic;
+﻿using GradientExplorer.Helpers;
+using GradientExplorer.Model;
+using GradientExplorer.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GradientExplorer.ViewModels
 {
-    public class ComputationTabViewModel : INotifyPropertyChanged
+    public class ComputationTabViewModel : IViewModel, INotifyPropertyChanged
     {
+
+        private ILogger logger;
+
+        public ILogger Logger
+        {
+            get
+            {
+                return logger;
+            }
+        }
 
         private ObservableCollection<ISortableItem> _computationGraph;
 
@@ -29,9 +35,10 @@ namespace GradientExplorer.ViewModels
             }
         }
 
-        public ComputationTabViewModel(GradientExplorerViewModel parent) {
+        public ComputationTabViewModel(GradientExplorerViewModel parent, ILogger logger) {
 
             this.Parent = parent;
+            this.logger = logger;
 
             ComputationGraph = new ObservableCollection<ISortableItem>
             {

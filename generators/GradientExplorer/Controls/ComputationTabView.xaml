@@ -24,7 +24,7 @@
                 <sharp:IconImage Icon="{Binding IconImage.Icon}" Foreground="{Binding IconImage.Foreground}" Height="{Binding IconImage.Height}" RenderTransform="{Binding IconImage.Transforms}" ></sharp:IconImage>
 
                 <!-- Content -->
-                <TextBlock Grid.Column="1" Text="{Binding Name}" FontStyle="Normal" Foreground="Black"/>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontStyle="Normal" Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ComputationTabView}}, Path=DataContext.Parent.ExpanderForeground}"/>
 
                 <!-- Solid Border -->
                 <Path Stroke="Gray" StrokeThickness="1">
@@ -45,10 +45,10 @@
     </UserControl.Resources>
     <Grid>
         <local:SortableListBox
+             Background="{Binding Parent.BackgroundColor}"
              AllowDrop="True"
              helpers:SortableListBoxBehavior.AllowSort="True"
-             helpers:SortableListBoxBehavior.AnimationDuration="0.5"
-             helpers:SortableListBoxBehavior.EasingFunction="{helpers:EasingFunction BounceEase}"
+             helpers:SortableListBoxBehavior.AnimationDuration="150.0"
              ItemsSource="{Binding ComputationGraph}"
              ItemTemplate="{StaticResource RegularRowTemplate}">
         </local:SortableListBox>

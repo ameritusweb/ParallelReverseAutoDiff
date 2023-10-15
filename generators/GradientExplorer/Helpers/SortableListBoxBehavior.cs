@@ -29,7 +29,7 @@ namespace GradientExplorer.Helpers
 
         public static readonly DependencyProperty AnimationDurationProperty =
             DependencyProperty.RegisterAttached("AnimationDuration", typeof(double), typeof(SortableListBoxBehavior),
-                new PropertyMetadata(0.3));
+                new PropertyMetadata(150.0));
 
         public static double GetAnimationDuration(DependencyObject d)
         {
@@ -39,20 +39,6 @@ namespace GradientExplorer.Helpers
         public static void SetAnimationDuration(DependencyObject d, double value)
         {
             d.SetValue(AnimationDurationProperty, value);
-        }
-
-        public static readonly DependencyProperty EasingFunctionProperty =
-    DependencyProperty.RegisterAttached("EasingFunction", typeof(EasingFunctionBase), typeof(SortableListBoxBehavior),
-        new PropertyMetadata(new CubicEase { EasingMode = EasingMode.EaseInOut }));
-
-        public static EasingFunctionBase GetEasingFunction(DependencyObject d)
-        {
-            return (EasingFunctionBase)d.GetValue(EasingFunctionProperty);
-        }
-
-        public static void SetEasingFunction(DependencyObject d, EasingFunctionBase value)
-        {
-            d.SetValue(EasingFunctionProperty, value);
         }
 
         private static void OnAllowSortChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -139,6 +125,7 @@ namespace GradientExplorer.Helpers
         {
             e.Handled = true;
             SortableListBox listBox = sender as SortableListBox;
+            var logger = (listBox.DataContext as IViewModel).Logger;
             var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;
 
             if (itemsSource == null)
@@ -166,44 +153,48 @@ namespace GradientExplorer.Helpers
                 {
 
                     listBox.IsAnimating = true;
-
-                    // Set the ghost state for animation purposes
-                    itemsSource[selectedIndex].IsGhost = true;
-
-                    // Increase the Z-Index of the dragged item to make it appear above the other item
-                    Panel.SetZIndex(oldItem, 1);
-                    Panel.SetZIndex(newItem, 0);
-
-                    double oldItemY = oldItem.TranslatePoint(new Point(0, 0), listBox).Y;
-                    double newItemY = newItem.TranslatePoint(new Point(0, 0), listBox).Y;
-
-                    // Trigger animations and await their completion
-                    var oldStoryboard = AnimateRow(oldItem, newItemY - oldItemY);
-                    var newStoryboard = AnimateRow(newItem, oldItemY - newItemY);
-
-                    await Task.WhenAll(oldStoryboard, newStoryboard);
-
-                    // Reset Z-Index to default values
-                    Panel.SetZIndex(oldItem, 0);
-                    Panel.SetZIndex(newItem, 0);
-
-                    oldItem.RenderTransform = null;
-                    newItem.RenderTransform = null;
-
-                    // Perform the swap in data
-                    SwapItems(itemsSource, index.Value, selectedIndex);
-
-                    listBox.SelectedIndex = index.Value;
+                    await AnimateAndSwapItemsAsync(listBox, oldItem, newItem, itemsSource, index.Value, selectedIndex);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    logger.Log($"An unexpected error occurred during a list box item animation: {ex.Message}", SeverityType.Warning);
                 }
                 finally
                 {
                     listBox.IsAnimating = false;
                 }
             }
+        }
+
+        private static async Task AnimateAndSwapItemsAsync(SortableListBox listBox, ListBoxItem oldItem, ListBoxItem newItem, ObservableCollection<ISortableItem> itemsSource, int value, int selectedIndex)
+        {
+            // Set the ghost state for animation purposes
+            itemsSource[selectedIndex].IsGhost = true;
+
+            // Increase the Z-Index of the dragged item to make it appear above the other item
+            Panel.SetZIndex(oldItem, 1);
+            Panel.SetZIndex(newItem, 0);
+
+            double oldItemY = oldItem.TranslatePoint(new Point(0, 0), listBox).Y;
+            double newItemY = newItem.TranslatePoint(new Point(0, 0), listBox).Y;
+
+            // Trigger animations and await their completion
+            var oldStoryboard = AnimateRow(listBox, oldItem, newItemY - oldItemY);
+            var newStoryboard = AnimateRow(listBox, newItem, oldItemY - newItemY);
+
+            await Task.WhenAll(oldStoryboard, newStoryboard);
+
+            // Reset Z-Index to default values
+            Panel.SetZIndex(oldItem, 0);
+            Panel.SetZIndex(newItem, 0);
+
+            oldItem.RenderTransform = null;
+            newItem.RenderTransform = null;
+
+            // Perform the swap in data
+            SwapItems(itemsSource, value, selectedIndex);
+
+            listBox.SelectedIndex = value;
         }
 
         private static int? GetCurrentIndex(SortableListBox listBox, Point position, double tolerance = 5.0)
@@ -272,7 +263,7 @@ namespace GradientExplorer.Helpers
             e.Handled = true;
         }
 
-        private static async Task AnimateRow(ListBoxItem item, double translateY)
+        private static async Task AnimateRow(SortableListBox listBox, ListBoxItem item, double translateY)
         {
             var tcs = new TaskCompletionSource<bool>();
             var translateTransform = new TranslateTransform();
@@ -298,16 +289,34 @@ namespace GradientExplorer.Helpers
             {
                 PathGeometry = path,
                 Source = PathAnimationSource.X,
-                Duration = TimeSpan.FromMilliseconds(150),
-                FillBehavior = FillBehavior.HoldEnd
+                Duration = TimeSpan.FromMilliseconds(GetAnimationDuration(listBox)),
+                FillBehavior = FillBehavior.HoldEnd,
             };
 
             var yAnimation = new DoubleAnimationUsingPath
             {
                 PathGeometry = path,
                 Source = PathAnimationSource.Y,
-                Duration = TimeSpan.FromMilliseconds(150),
+                Duration = TimeSpan.FromMilliseconds(GetAnimationDuration(listBox)),
                 FillBehavior = FillBehavior.HoldEnd
+            };
+
+            // Adding a PropertyChanged callback to update the SpeedRatio
+            translateTransform.Changed += (sender, e) =>
+            {
+                double currentX = translateTransform.X;
+                double maxX = Math.Abs(translateY); // The maximum X value for the animation
+                if (maxX == 0) return;
+
+                double speedRatio = Math.Pow(currentX / maxX, 2);
+
+                if (speedRatio <= 0d)
+                {
+                    return;
+                }
+
+                xAnimation.SpeedRatio = speedRatio;
+                yAnimation.SpeedRatio = speedRatio;
             };
 
             var xBuilder = new PropertyPathBuilder()
@@ -339,6 +348,5 @@ namespace GradientExplorer.Helpers
             itemsSource[index1] = itemsSource[index2];
             itemsSource[index2] = temp;
         }
-
     }
 }

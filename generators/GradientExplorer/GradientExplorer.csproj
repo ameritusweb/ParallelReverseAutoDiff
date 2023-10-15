@@ -61,10 +61,10 @@
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
-    <Compile Include="Helpers\EasingFunctionExtension.cs" />
     <Compile Include="Helpers\EventDataBase.cs" />
     <Compile Include="Helpers\GradientToolView.cs" />
     <Compile Include="Helpers\ISubscriptionInvoker.cs" />
+    <Compile Include="Helpers\IViewModel.cs" />
     <Compile Include="Helpers\KeyValuePairExtensions.cs" />
     <Compile Include="Helpers\NodeBuilderPool.cs" />
     <Compile Include="Helpers\PropertyPathBuilder.cs" />
