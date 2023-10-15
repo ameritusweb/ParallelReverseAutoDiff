@@ -5,13 +5,13 @@ using System.Windows;
 using GradientExplorer.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace GradientExplorer.Helpers
 {
     public static class SortableListBoxBehavior
     {
-        private static SortableItem ghostItem = new SortableItem { Name = "Ghost", IsGhost = true };
-
         public static readonly DependencyProperty AllowSortProperty =
             DependencyProperty.RegisterAttached("AllowSort", typeof(bool), typeof(SortableListBoxBehavior),
                 new PropertyMetadata(false, OnAllowSortChanged));
@@ -55,6 +55,8 @@ namespace GradientExplorer.Helpers
         }
 
 
+        private static bool isPotentialDrag = false;
+
         private static void OnAllowSortChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is ListBox listBox)
@@ -62,21 +64,57 @@ namespace GradientExplorer.Helpers
                 if ((bool)e.NewValue)
                 {
                     listBox.PreviewMouseLeftButtonDown += ListBox_PreviewMouseLeftButtonDown;
+                    listBox.PreviewMouseLeftButtonUp += ListBox_PreviewMouseLeftButtonUp;
+                    listBox.PreviewMouseMove += ListBox_PreviewMouseMove;  // New line
                     listBox.DragOver += ListBox_DragOver;
                     listBox.Drop += ListBox_Drop;
                 }
                 else
                 {
                     listBox.PreviewMouseLeftButtonDown -= ListBox_PreviewMouseLeftButtonDown;
+                    listBox.PreviewMouseLeftButtonUp -= ListBox_PreviewMouseLeftButtonUp;
+                    listBox.PreviewMouseMove -= ListBox_PreviewMouseMove;  // New line
                     listBox.DragOver -= ListBox_DragOver;
                     listBox.Drop -= ListBox_Drop;
                 }
             }
         }
 
+        private static void ListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && isPotentialDrag)
+            {
+                // Sender is ListBox, so we need to find the ListBoxItem that was initially clicked
+                if (sender is ListBox listBox)
+                {
+                    var hitTestResult = VisualTreeHelper.HitTest(listBox, e.GetPosition(listBox));
+                    var listBoxItem = FindVisualParent<ListBoxItem>(hitTestResult.VisualHit);
+
+                    if (listBoxItem != null)
+                    {
+                        listBoxItem.IsSelected = true;
+                        (listBoxItem.DataContext as ISortableItem).IsGhost = true;
+                        DragDrop.DoDragDrop(listBoxItem, listBoxItem.DataContext, DragDropEffects.Move);
+
+                        // Reset the flag since we've initiated the drag-and-drop
+                        isPotentialDrag = false;
+                    }
+                }
+            }
+        }
+
         private static void ListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Sender is ListBox, so we need to find the ListBoxItem that is actually under the mouse
+            // Set a flag to indicate potential drag operation
+            isPotentialDrag = true;
+        }
+
+        private static void ListBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // Reset the flag since the mouse button is released
+            isPotentialDrag = false;
+
+            // Sender is ListBox, so we need to find the ListBoxItem that was initially clicked
             if (sender is ListBox listBox)
             {
                 var hitTestResult = VisualTreeHelper.HitTest(listBox, e.GetPosition(listBox));
@@ -84,9 +122,7 @@ namespace GradientExplorer.Helpers
 
                 if (listBoxItem != null)
                 {
-                    ListBoxItem draggedItem = listBoxItem;
-                    draggedItem.IsSelected = true;
-                    DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+                    (listBoxItem.DataContext as ISortableItem).IsGhost = false;
                 }
             }
         }
@@ -100,11 +136,11 @@ namespace GradientExplorer.Helpers
             return child as T;
         }
 
-        private static void ListBox_DragOver(object sender, DragEventArgs e)
+        private static async void ListBox_DragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
             ListBox listBox = sender as ListBox;
-            var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;  // Cast to your specific item type
+            var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;
 
             if (itemsSource == null)
             {
@@ -113,43 +149,42 @@ namespace GradientExplorer.Helpers
 
             Point position = e.GetPosition(listBox);
             int? index = GetCurrentIndex(listBox, position);
-            int selectedIndex = listBox.SelectedIndex;  // Get the index of the selected (dragged) item
+            int selectedIndex = listBox.SelectedIndex;
 
-            if (index.HasValue)
+            if (index.HasValue && index != selectedIndex)
             {
-                var ghostItemIndex = itemsSource.IndexOf(ghostItem);
+                var oldItem = listBox.ItemContainerGenerator.ContainerFromItem(itemsSource[selectedIndex]) as ListBoxItem;
+                var newItem = listBox.ItemContainerGenerator.ContainerFromItem(itemsSource[index.Value]) as ListBoxItem;
 
-                // Decide where to place the ghost item based on the direction of the drag
-                if (index < selectedIndex)
-                {
-                    // Dragging upwards
-                    if (index != ghostItemIndex)
-                    {
-                        UpdateGhostItemPosition(itemsSource, index.Value);
-                    }
-                }
-                else if (index > selectedIndex)
-                {
-                    // Dragging downwards
-                    index++;  // Adjust to place the ghost item below the current item
-                    if (index != ghostItemIndex)
-                    {
-                        UpdateGhostItemPosition(itemsSource, index.Value);
-                    }
-                }
-            }
-        }
+                if (oldItem == null || newItem == null) return;
 
-        private static void UpdateGhostItemPosition(ObservableCollection<ISortableItem> itemsSource, int index)
-        {
-            var ghostItemIndex = itemsSource.IndexOf(ghostItem);
-            if (!itemsSource.Contains(ghostItem))
-            {
-                itemsSource.Insert(index, ghostItem);
-            }
-            else
-            {
-                itemsSource.Move(ghostItemIndex, index);
+                // Set the ghost state for animation purposes
+                itemsSource[index.Value].IsGhost = true;
+
+                // Increase the Z-Index of the dragged item to make it appear above the other item
+                Panel.SetZIndex(oldItem, 1);
+                Panel.SetZIndex(newItem, 0);
+
+                double oldItemY = oldItem.TranslatePoint(new Point(0, 0), listBox).Y;
+                double newItemY = newItem.TranslatePoint(new Point(0, 0), listBox).Y;
+
+                // Trigger animations and await their completion
+                var oldStoryboard = AnimateRow(oldItem, newItemY - oldItemY);
+                var newStoryboard = AnimateRow(newItem, oldItemY - newItemY);
+
+                await Task.WhenAll(oldStoryboard, newStoryboard);
+
+                // Reset Z-Index to default values
+                Panel.SetZIndex(oldItem, 0);
+                Panel.SetZIndex(newItem, 0);
+
+                oldItem.RenderTransform = null;
+                newItem.RenderTransform = null;
+
+                // Perform the swap in data
+                SwapItems(itemsSource, index.Value, selectedIndex);
+
+                listBox.SelectedIndex = index.Value;
             }
         }
 
@@ -189,75 +224,105 @@ namespace GradientExplorer.Helpers
 
         private static void ListBox_Drop(object sender, DragEventArgs e)
         {
-
             ListBox listBox = sender as ListBox;
-            var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;  // Cast to your specific item type
+            var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;
 
             if (itemsSource == null)
             {
                 throw new InvalidOperationException("ItemsSource is not an ObservableCollection<Item>");
             }
 
-            ISortableItem droppedData = e.Data.GetData(typeof(SortableItem)) as SortableItem;
-            int removedIdx = itemsSource.IndexOf(droppedData);
-            int targetIdx = itemsSource.IndexOf(ghostItem);
-
-            ListBoxItem removedItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(removedIdx);
-            ListBoxItem targetItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromIndex(targetIdx);
-
-            removedItem.IsSelected = false;
-
-            double animationDistance = CalculateAnimationDistance(listBox, removedItem, targetItem);
-
-            // Animate and then perform data manipulation
-            AnimateItemMove(sender as DependencyObject, removedItem, animationDistance, () =>
+            // Reset any transformations applied during the drag-and-drop operation
+            foreach (var item in itemsSource)
             {
-                // Replace the ghostItem with the actual dragged item
-                itemsSource[targetIdx] = droppedData;  // This replaces the ghost item
-                                                       // Remove the original instance of the dragged item
-                itemsSource.RemoveAt(removedIdx);
-            });
+                var listBoxItem = listBox.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                if (listBoxItem != null)
+                {
+                    listBoxItem.RenderTransform = null;
+                    Panel.SetZIndex(listBoxItem, 0);  // Reset Z-Index to default
+                }
+            }
+
+            // Find the 'ghost' item and animate opacity back to 1
+            var ghostItem = itemsSource.FirstOrDefault(x => x.IsGhost);
+            if (ghostItem != null)
+            {
+                // Remove the ghost state
+                ghostItem.IsGhost = false;
+            }
 
             e.Handled = true;
         }
 
-        private static double CalculateAnimationDistance(ListBox parent, ListBoxItem from, ListBoxItem to)
+        private static async Task AnimateRow(ListBoxItem item, double translateY)
         {
-            // Calculate distance between the Y positions of the two items
-            // Logic can be customized based on layout and orientation
-            return to.TransformToAncestor(parent).Transform(new Point(0, 0)).Y - from.TransformToAncestor(parent).Transform(new Point(0, 0)).Y;
-        }
-
-        private static void AnimateItemMove(DependencyObject d, ListBoxItem item, double to, Action onAnimationCompleted)
-        {
-            double durationInSeconds = GetAnimationDuration(d);
-
-            TranslateTransform translateTransform = new TranslateTransform();
+            var tcs = new TaskCompletionSource<bool>();
+            var translateTransform = new TranslateTransform();
             item.RenderTransform = translateTransform;
 
-            DoubleAnimation animation = new DoubleAnimation
+            var path = new PathGeometry();
+            var pf = new PathFigure
             {
-                To = to,
-                Duration = new Duration(TimeSpan.FromSeconds(durationInSeconds)),
-                EasingFunction = GetEasingFunction(d) // 1. Easing Functions
+                StartPoint = new Point(0, 0),
+                IsClosed = false
+            };
+            var arcSeg = new ArcSegment
+            {
+                Point = new Point(0, translateY),
+                Size = new Size(Math.Abs(translateY), Math.Abs(translateY)),
+                IsLargeArc = false,
+                SweepDirection = SweepDirection.Counterclockwise
+            };
+            pf.Segments.Add(arcSeg);
+            path.Figures.Add(pf);
+
+            var xAnimation = new DoubleAnimationUsingPath
+            {
+                PathGeometry = path,
+                Source = PathAnimationSource.X,
+                Duration = TimeSpan.FromMilliseconds(250),
+                FillBehavior = FillBehavior.HoldEnd
             };
 
-            Storyboard.SetTarget(animation, translateTransform);
-            Storyboard.SetTargetProperty(animation, new PropertyPath("Y"));
-
-            Storyboard storyboard = new Storyboard();
-            storyboard.Children.Add(animation);
-
-            storyboard.Completed += (s, e) =>
+            var yAnimation = new DoubleAnimationUsingPath
             {
-                // Reset transformations after animation
-                item.RenderTransform = null;
-
-                // Execute additional logic after animation is complete
-                onAnimationCompleted?.Invoke();
+                PathGeometry = path,
+                Source = PathAnimationSource.Y,
+                Duration = TimeSpan.FromMilliseconds(250),
+                FillBehavior = FillBehavior.HoldEnd
             };
 
+            var xBuilder = new PropertyPathBuilder()
+                .WithDependencyProperty(UIElement.RenderTransformProperty)
+                .WithDependencyProperty(TranslateTransform.XProperty);
+
+            var yBuilder = new PropertyPathBuilder()
+                .WithDependencyProperty(UIElement.RenderTransformProperty)
+                .WithDependencyProperty(TranslateTransform.YProperty);
+
+            var storyboard = new Storyboard();
+            storyboard.AutoReverse = false;
+            storyboard.Children.Add(xAnimation);
+            storyboard.Children.Add(yAnimation);
+            Storyboard.SetTarget(xAnimation, item);
+            Storyboard.SetTarget(yAnimation, item);
+            Storyboard.SetTargetProperty(xAnimation, xBuilder.Build());
+            Storyboard.SetTargetProperty(yAnimation, yBuilder.Build());
+
+            storyboard.Completed += (s, e) => tcs.SetResult(true);
             storyboard.Begin();
+
+            await tcs.Task;
         }
+
+        private static void SwapItems(ObservableCollection<ISortableItem> itemsSource, int index1, int index2)
+        {
+            ISortableItem temp = itemsSource[index1];
+            itemsSource[index1] = itemsSource[index2];
+            itemsSource[index2] = temp;
+            itemsSource[index1].IsGhost = !itemsSource[index1].IsGhost;
+            itemsSource[index2].IsGhost = !itemsSource[index2].IsGhost;
+        }
+
     }
 }

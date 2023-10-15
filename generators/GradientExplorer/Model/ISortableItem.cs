@@ -14,6 +14,6 @@ namespace GradientExplorer.Model
 
         IconImageViewModel IconImage { get; }
 
-        bool IsGhost { get; }
+        bool IsGhost { get; set; }
     }
 }

@@ -11,7 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <DataTemplate x:Key="RegularRowTemplate">
-            <Grid>
+            <Grid x:Name="ItemGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -33,42 +33,15 @@
                     </Path.Data>
                 </Path>
             </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsGhost}" Value="True">
+                    <Setter TargetName="ItemGrid" Property="Opacity" Value="0.2"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsGhost}" Value="False">
+                    <Setter TargetName="ItemGrid" Property="Opacity" Value="1"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
-
-        <DataTemplate x:Key="GhostRowTemplate">
-            <Grid Opacity="0.6">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Icon -->
-                <sharp:IconImage Icon="{Binding IconImage.Icon}" Foreground="{Binding IconImage.Foreground}" Height="{Binding IconImage.Height}" RenderTransform="{Binding IconImage.Transforms}" ></sharp:IconImage>
-
-                <!-- Content -->
-                <TextBlock Grid.Column="1" Text="{Binding Name}" FontStyle="Italic" Foreground="Gray"/>
-
-                <!-- Dashed Border -->
-                <Path Stroke="Black" StrokeThickness="1">
-                    <Path.Data>
-                        <RectangleGeometry Rect="0,0,1,1" />
-                    </Path.Data>
-                    <Path.Style>
-                        <Style TargetType="{x:Type Path}">
-                            <Setter Property="StrokeDashArray" Value="4,4"/>
-                        </Style>
-                    </Path.Style>
-                </Path>
-            </Grid>
-        </DataTemplate>
-
-
-        <helpers:SortableItemTemplateSelector x:Key="SortableItemTemplateSelector"
-            RegularItemTemplate="{StaticResource RegularRowTemplate}"
-            GhostItemTemplate="{StaticResource GhostRowTemplate}" />
     </UserControl.Resources>
     <Grid>
         <ListBox
@@ -77,7 +50,7 @@
              helpers:SortableListBoxBehavior.AnimationDuration="0.5"
              helpers:SortableListBoxBehavior.EasingFunction="{helpers:EasingFunction BounceEase}"
              ItemsSource="{Binding ComputationGraph}"
-             ItemTemplateSelector="{StaticResource SortableItemTemplateSelector}">
+             ItemTemplate="{StaticResource RegularRowTemplate}">
         </ListBox>
     </Grid>
 </UserControl>
