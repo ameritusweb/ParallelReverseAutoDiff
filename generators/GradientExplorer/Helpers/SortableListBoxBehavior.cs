@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using System.Linq;
+using GradientExplorer.Controls;
 
 namespace GradientExplorer.Helpers
 {
@@ -54,38 +55,34 @@ namespace GradientExplorer.Helpers
             d.SetValue(EasingFunctionProperty, value);
         }
 
-
-        private static bool isPotentialDrag = false;
-
         private static void OnAllowSortChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ListBox listBox)
+            if (d is SortableListBox listBox)
             {
                 if ((bool)e.NewValue)
                 {
-                    listBox.PreviewMouseLeftButtonDown += ListBox_PreviewMouseLeftButtonDown;
-                    listBox.PreviewMouseLeftButtonUp += ListBox_PreviewMouseLeftButtonUp;
-                    listBox.PreviewMouseMove += ListBox_PreviewMouseMove;  // New line
-                    listBox.DragOver += ListBox_DragOver;
-                    listBox.Drop += ListBox_Drop;
+                    listBox.PreviewMouseLeftButtonDown += SortableListBox_PreviewMouseLeftButtonDown;
+                    listBox.PreviewMouseLeftButtonUp += SortableListBox_PreviewMouseLeftButtonUp;
+                    listBox.PreviewMouseMove += SortableListBox_PreviewMouseMove;  // New line
+                    listBox.DragOver += SortableListBox_DragOver;
+                    listBox.Drop += SortableListBox_Drop;
                 }
                 else
                 {
-                    listBox.PreviewMouseLeftButtonDown -= ListBox_PreviewMouseLeftButtonDown;
-                    listBox.PreviewMouseLeftButtonUp -= ListBox_PreviewMouseLeftButtonUp;
-                    listBox.PreviewMouseMove -= ListBox_PreviewMouseMove;  // New line
-                    listBox.DragOver -= ListBox_DragOver;
-                    listBox.Drop -= ListBox_Drop;
+                    listBox.PreviewMouseLeftButtonDown -= SortableListBox_PreviewMouseLeftButtonDown;
+                    listBox.PreviewMouseLeftButtonUp -= SortableListBox_PreviewMouseLeftButtonUp;
+                    listBox.PreviewMouseMove -= SortableListBox_PreviewMouseMove;  // New line
+                    listBox.DragOver -= SortableListBox_DragOver;
+                    listBox.Drop -= SortableListBox_Drop;
                 }
             }
         }
 
-        private static void ListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+        private static void SortableListBox_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && isPotentialDrag)
+            if (sender is SortableListBox listBox)
             {
-                // Sender is ListBox, so we need to find the ListBoxItem that was initially clicked
-                if (sender is ListBox listBox)
+                if (e.LeftButton == MouseButtonState.Pressed && listBox.IsPotentialDrag)
                 {
                     var hitTestResult = VisualTreeHelper.HitTest(listBox, e.GetPosition(listBox));
                     var listBoxItem = FindVisualParent<ListBoxItem>(hitTestResult.VisualHit);
@@ -97,26 +94,28 @@ namespace GradientExplorer.Helpers
                         DragDrop.DoDragDrop(listBoxItem, listBoxItem.DataContext, DragDropEffects.Move);
 
                         // Reset the flag since we've initiated the drag-and-drop
-                        isPotentialDrag = false;
+                        listBox.IsPotentialDrag = false;
                     }
                 }
             }
         }
 
-        private static void ListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static void SortableListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Set a flag to indicate potential drag operation
-            isPotentialDrag = true;
+            if (sender is SortableListBox listBox)
+            {
+                listBox.IsPotentialDrag = true;
+            }
         }
 
-        private static void ListBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private static void SortableListBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            // Reset the flag since the mouse button is released
-            isPotentialDrag = false;
-
-            // Sender is ListBox, so we need to find the ListBoxItem that was initially clicked
-            if (sender is ListBox listBox)
+            // Sender is SortableListBox, so we need to find the ListBoxItem that was initially clicked
+            if (sender is SortableListBox listBox)
             {
+                // Reset the flag since the mouse button is released
+                listBox.IsPotentialDrag = false;
                 var hitTestResult = VisualTreeHelper.HitTest(listBox, e.GetPosition(listBox));
                 var listBoxItem = FindVisualParent<ListBoxItem>(hitTestResult.VisualHit);
 
@@ -136,10 +135,10 @@ namespace GradientExplorer.Helpers
             return child as T;
         }
 
-        private static async void ListBox_DragOver(object sender, DragEventArgs e)
+        private static async void SortableListBox_DragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
-            ListBox listBox = sender as ListBox;
+            SortableListBox listBox = sender as SortableListBox;
             var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;
 
             if (itemsSource == null)
@@ -151,44 +150,63 @@ namespace GradientExplorer.Helpers
             int? index = GetCurrentIndex(listBox, position);
             int selectedIndex = listBox.SelectedIndex;
 
-            if (index.HasValue && index != selectedIndex)
+            if (index.HasValue && index != selectedIndex && !listBox.IsAnimating)
             {
                 var oldItem = listBox.ItemContainerGenerator.ContainerFromItem(itemsSource[selectedIndex]) as ListBoxItem;
                 var newItem = listBox.ItemContainerGenerator.ContainerFromItem(itemsSource[index.Value]) as ListBoxItem;
 
                 if (oldItem == null || newItem == null) return;
 
-                // Set the ghost state for animation purposes
-                itemsSource[index.Value].IsGhost = true;
+                foreach (var item in itemsSource)
+                {
+                    item.IsGhost = false;
+                }
 
-                // Increase the Z-Index of the dragged item to make it appear above the other item
-                Panel.SetZIndex(oldItem, 1);
-                Panel.SetZIndex(newItem, 0);
+                try
+                {
 
-                double oldItemY = oldItem.TranslatePoint(new Point(0, 0), listBox).Y;
-                double newItemY = newItem.TranslatePoint(new Point(0, 0), listBox).Y;
+                    listBox.IsAnimating = true;
 
-                // Trigger animations and await their completion
-                var oldStoryboard = AnimateRow(oldItem, newItemY - oldItemY);
-                var newStoryboard = AnimateRow(newItem, oldItemY - newItemY);
+                    // Set the ghost state for animation purposes
+                    itemsSource[selectedIndex].IsGhost = true;
 
-                await Task.WhenAll(oldStoryboard, newStoryboard);
+                    // Increase the Z-Index of the dragged item to make it appear above the other item
+                    Panel.SetZIndex(oldItem, 1);
+                    Panel.SetZIndex(newItem, 0);
 
-                // Reset Z-Index to default values
-                Panel.SetZIndex(oldItem, 0);
-                Panel.SetZIndex(newItem, 0);
+                    double oldItemY = oldItem.TranslatePoint(new Point(0, 0), listBox).Y;
+                    double newItemY = newItem.TranslatePoint(new Point(0, 0), listBox).Y;
 
-                oldItem.RenderTransform = null;
-                newItem.RenderTransform = null;
+                    // Trigger animations and await their completion
+                    var oldStoryboard = AnimateRow(oldItem, newItemY - oldItemY);
+                    var newStoryboard = AnimateRow(newItem, oldItemY - newItemY);
 
-                // Perform the swap in data
-                SwapItems(itemsSource, index.Value, selectedIndex);
+                    await Task.WhenAll(oldStoryboard, newStoryboard);
 
-                listBox.SelectedIndex = index.Value;
+                    // Reset Z-Index to default values
+                    Panel.SetZIndex(oldItem, 0);
+                    Panel.SetZIndex(newItem, 0);
+
+                    oldItem.RenderTransform = null;
+                    newItem.RenderTransform = null;
+
+                    // Perform the swap in data
+                    SwapItems(itemsSource, index.Value, selectedIndex);
+
+                    listBox.SelectedIndex = index.Value;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    listBox.IsAnimating = false;
+                }
             }
         }
 
-        private static int? GetCurrentIndex(ListBox listBox, Point position, double tolerance = 5.0)
+        private static int? GetCurrentIndex(SortableListBox listBox, Point position, double tolerance = 5.0)
         {
             for (int i = 0; i < listBox.Items.Count; i++)
             {
@@ -205,11 +223,11 @@ namespace GradientExplorer.Helpers
             return default(int?);
         }
 
-        private static bool IsMouseOverTarget(ListBox listBox, Visual target, Point point, double tolerance)
+        private static bool IsMouseOverTarget(SortableListBox listBox, Visual target, Point point, double tolerance)
         {
             Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
 
-            // Transform the bounds to the coordinate space of the parent ListBox
+            // Transform the bounds to the coordinate space of the parent SortableListBox
             GeneralTransform transform = target.TransformToAncestor(listBox);
             bounds = transform.TransformBounds(bounds);
             bounds = new Rect(bounds.Left + tolerance, bounds.Top + tolerance,
@@ -222,9 +240,9 @@ namespace GradientExplorer.Helpers
             return withinBounds;
         }
 
-        private static void ListBox_Drop(object sender, DragEventArgs e)
+        private static void SortableListBox_Drop(object sender, DragEventArgs e)
         {
-            ListBox listBox = sender as ListBox;
+            SortableListBox listBox = sender as SortableListBox;
             var itemsSource = listBox.ItemsSource as ObservableCollection<ISortableItem>;
 
             if (itemsSource == null)
@@ -280,7 +298,7 @@ namespace GradientExplorer.Helpers
             {
                 PathGeometry = path,
                 Source = PathAnimationSource.X,
-                Duration = TimeSpan.FromMilliseconds(250),
+                Duration = TimeSpan.FromMilliseconds(150),
                 FillBehavior = FillBehavior.HoldEnd
             };
 
@@ -288,7 +306,7 @@ namespace GradientExplorer.Helpers
             {
                 PathGeometry = path,
                 Source = PathAnimationSource.Y,
-                Duration = TimeSpan.FromMilliseconds(250),
+                Duration = TimeSpan.FromMilliseconds(150),
                 FillBehavior = FillBehavior.HoldEnd
             };
 
@@ -320,8 +338,6 @@ namespace GradientExplorer.Helpers
             ISortableItem temp = itemsSource[index1];
             itemsSource[index1] = itemsSource[index2];
             itemsSource[index2] = temp;
-            itemsSource[index1].IsGhost = !itemsSource[index1].IsGhost;
-            itemsSource[index2].IsGhost = !itemsSource[index2].IsGhost;
         }
 
     }

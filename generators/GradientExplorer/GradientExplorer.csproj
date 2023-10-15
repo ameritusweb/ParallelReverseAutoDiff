@@ -52,6 +52,7 @@
     <Compile Include="Controls\ComputationTabView.xaml.cs">
       <DependentUpon>ComputationTabView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SortableListBox.cs" />
     <Compile Include="Controls\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>

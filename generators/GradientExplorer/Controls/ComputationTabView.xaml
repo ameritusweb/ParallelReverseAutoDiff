@@ -44,13 +44,13 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <ListBox
+        <local:SortableListBox
              AllowDrop="True"
              helpers:SortableListBoxBehavior.AllowSort="True"
              helpers:SortableListBoxBehavior.AnimationDuration="0.5"
              helpers:SortableListBoxBehavior.EasingFunction="{helpers:EasingFunction BounceEase}"
              ItemsSource="{Binding ComputationGraph}"
              ItemTemplate="{StaticResource RegularRowTemplate}">
-        </ListBox>
+        </local:SortableListBox>
     </Grid>
 </UserControl>
