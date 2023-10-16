@@ -9,8 +9,10 @@ namespace GradientExplorer.Services
 {
     public interface ILogger
     {
-        void Log(string message, SeverityType severity);
+        void Log(string category, string message, SeverityType severity);
 
         void SetMinSeverity(SeverityType newMinSeverity);
+
+        void ClearLog();
     }
 }

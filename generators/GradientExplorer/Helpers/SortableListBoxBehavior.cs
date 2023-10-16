@@ -157,7 +157,8 @@ namespace GradientExplorer.Helpers
                 }
                 catch (Exception ex)
                 {
-                    logger.Log($"An unexpected error occurred during a list box item animation: {ex.Message}", SeverityType.Warning);
+                    logger.Log(nameof(SortableListBoxBehavior), $"An unexpected error occurred during a list box item animation: {ex.Message}", SeverityType.Warning);
+
                 }
                 finally
                 {

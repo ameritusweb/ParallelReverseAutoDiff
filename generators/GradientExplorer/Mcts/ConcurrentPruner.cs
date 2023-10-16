@@ -48,7 +48,7 @@ namespace GradientExplorer.Mcts
                 if (node.MarkForPruning && node.VisitorsCount == 0)
                 {
                     // Log the pruning action
-                    logger.Log($"Safely pruned node with ID: {node.Id}", Helpers.SeverityType.Information);
+                    logger.Log(nameof(MctsEngine), $"Safely pruned node with ID: {node.Id}", Helpers.SeverityType.Information);
 
                     // Clear children
                     node.Children = new ConcurrentBag<ITreeNode>();

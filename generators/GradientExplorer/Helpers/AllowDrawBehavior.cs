@@ -42,7 +42,7 @@ namespace GradientExplorer.Helpers
             var logger = AutofacContainerProvider.Container.Resolve<ILogger>();
             if (sender is Canvas canvas)
             {
-                logger.Log("Canvas loaded.", SeverityType.Information);
+                logger.Log(nameof(AllowDrawBehavior), "Canvas loaded.", SeverityType.Information);
                 var eventAggregator = AutofacContainerProvider.Container.Resolve<IEventAggregator>();
                 var messagePoster = AutofacContainerProvider.Container.Resolve<IMessagePoster>();
                 var addPathSubscription = eventAggregator.Subscribe(EventType.AddPathToCanvas, new Action<IEventData, CancellationToken>((data, _) =>

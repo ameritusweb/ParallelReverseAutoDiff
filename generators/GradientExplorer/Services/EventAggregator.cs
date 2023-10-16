@@ -49,7 +49,7 @@ namespace GradientExplorer.Services
 
         public async Task PublishAsync<T>(EventType eventType, T eventData) where T : IEventData
         {
-            _logger.Log($"Message published with event type [{eventType}]", SeverityType.Information);
+            _logger.Log(nameof(EventAggregator), $"Message published with event type [{eventType}]", SeverityType.Information);
 
             bool foundSubscribers = false;
 
@@ -82,7 +82,7 @@ namespace GradientExplorer.Services
 
         public void PostMessage<T>(MessageType messageType, T message)
         {
-            _logger.Log($"Message posted with message type [{messageType}] and data type {typeof(T).Name}", SeverityType.Information);
+            _logger.Log(nameof(EventAggregator), $"Message posted with message type [{messageType}] and data type {typeof(T).Name}", SeverityType.Information);
 
             var uniqueSet = _messages.GetOrAdd(messageType, new UniqueTypeSet());
             uniqueSet[typeof(T)] = message;

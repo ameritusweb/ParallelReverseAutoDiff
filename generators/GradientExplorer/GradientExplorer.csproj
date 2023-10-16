@@ -52,6 +52,9 @@
     <Compile Include="Controls\ComputationTabView.xaml.cs">
       <DependentUpon>ComputationTabView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SimplificationToolView.xaml.cs">
+      <DependentUpon>SimplificationToolView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SortableListBox.cs" />
     <Compile Include="Controls\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
@@ -391,6 +394,7 @@
     <Compile Include="ToolWindows\GradientToolboxControl.xaml.cs">
       <DependentUpon>GradientToolboxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\SimplificationToolViewModel.cs" />
     <Compile Include="ViewModels\ComputationTabViewModel.cs" />
     <Compile Include="ViewModels\GradientToolboxViewModel.cs" />
     <Compile Include="ViewModels\GradientExplorerViewModel.cs" />
@@ -441,6 +445,10 @@
   <ItemGroup>
     <Compile Include="ToolWindows\GradientExplorer.cs" />
     <Page Include="Controls\ComputationTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SimplificationToolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

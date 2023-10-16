@@ -70,8 +70,12 @@ namespace GradientExplorer.ViewModels
                 Height = 40,
             };
 
-            logger.Log("Gradient Toolbox started.", SeverityType.Information);
+            SimplificationToolViewModel = new SimplificationToolViewModel(this, logger);
+
+            logger.Log(nameof(GradientToolboxViewModel), "Gradient Toolbox started.", SeverityType.Information);
         }
+
+        public SimplificationToolViewModel SimplificationToolViewModel { get; set; }
 
         private GradientToolView _currentView;
 

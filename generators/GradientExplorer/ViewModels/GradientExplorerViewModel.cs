@@ -61,7 +61,7 @@ namespace GradientExplorer.ViewModels
 
             ComputationTabViewModel = new ComputationTabViewModel(this, logger);
 
-            logger.Log("Gradient Explorer started", SeverityType.Information);
+            logger.Log(nameof(GradientExplorerViewModel), "Gradient Explorer started", SeverityType.Information);
         }
 
         public Version VSVersion { get; set; }

@@ -63,7 +63,7 @@ namespace GradientExplorer.Mcts
         // Main function to perform Monte Carlo Tree Search
         public async Task<IReadOnlyList<SimplificationAction>> RunMCTS()
         {
-            logger.Log("MCTS Run started.", Helpers.SeverityType.Information);
+            logger.Log(nameof(MctsEngine), "MCTS Run started.", Helpers.SeverityType.Information);
 
             StartPruner();
 
@@ -216,7 +216,7 @@ namespace GradientExplorer.Mcts
             if (currentDepth > maxDepthSoFar)
             {
                 maxDepthSoFar = currentDepth;
-                logger.Log($"Tree expanded. New depth: {currentDepth}", Helpers.SeverityType.Information);
+                logger.Log(nameof(MctsEngine), $"Tree expanded. New depth: {currentDepth}", Helpers.SeverityType.Information);
             }
         }
 
@@ -245,7 +245,7 @@ namespace GradientExplorer.Mcts
             int rolloutDepth = currentDepth + RolloutDepth;  // Calculate the new depth after the rollout
             maxRolloutDepthSoFar = Math.Max(maxRolloutDepthSoFar, rolloutDepth);  // Update maxRolloutDepthSoFar
 
-            logger.Log($"Rollout complete. Rollout Depth: {rolloutDepth}, Max Rollout Depth: {maxRolloutDepthSoFar}", Helpers.SeverityType.Information);
+            logger.Log(nameof(MctsEngine), $"Rollout complete. Rollout Depth: {rolloutDepth}, Max Rollout Depth: {maxRolloutDepthSoFar}", Helpers.SeverityType.Information);
 
 
             return accumulatedScore;
@@ -306,7 +306,7 @@ namespace GradientExplorer.Mcts
                 // Log the new maximum of visits if it was updated
                 if (currentVisits > originalMaxVisits)
                 {
-                    logger.Log($"New maximum number of visits reached: {currentVisits}", Helpers.SeverityType.Information);
+                    logger.Log(nameof(MctsEngine), $"New maximum number of visits reached: {currentVisits}", Helpers.SeverityType.Information);
                 }
 
                 currentNode.AtomicIncrementVisitedForPruning();
@@ -319,7 +319,7 @@ namespace GradientExplorer.Mcts
             if (node.Score > highestScoreSoFar)
             {
                 highestScoreSoFar = node.Score;
-                logger.Log($"New best score found: {highestScoreSoFar}", Helpers.SeverityType.Information);
+                logger.Log(nameof(MctsEngine), $"New best score found: {highestScoreSoFar}", Helpers.SeverityType.Information);
             }
         }
 

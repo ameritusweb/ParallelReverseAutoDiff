@@ -50,11 +50,11 @@ namespace GradientExplorer.Helpers
             }
             catch (OperationCanceledException)
             {
-                _logger.Log($"Cancellation requested for event type {eventType}", SeverityType.Warning);
+                _logger.Log(nameof(SubscriptionInvoker<T>), $"Cancellation requested for event type {eventType}", SeverityType.Warning);
             }
             catch (Exception ex)
             {
-                _logger.Log($"Encountered an exception while invoking a subscriber for event type {eventType}: {ex.Message}", SeverityType.Error);
+                _logger.Log(nameof(SubscriptionInvoker<T>), $"Encountered an exception while invoking a subscriber for event type {eventType}: {ex.Message}", SeverityType.Error);
             }
             finally
             {
@@ -102,11 +102,11 @@ namespace GradientExplorer.Helpers
             }
             catch (OperationCanceledException)
             {
-                _logger.Log($"Cancellation requested for event type {eventType}", SeverityType.Warning);
+                _logger.Log(nameof(SubscriptionInvoker<T>), $"Cancellation requested for event type {eventType}", SeverityType.Warning);
             }
             catch (Exception ex)
             {
-                _logger.Log($"Encountered an exception while invoking an async subscriber for event type {eventType}: {ex.Message}", SeverityType.Error);
+                _logger.Log(nameof(SubscriptionInvoker<T>), $"Encountered an exception while invoking an async subscriber for event type {eventType}: {ex.Message}", SeverityType.Error);
             }
             finally
             {

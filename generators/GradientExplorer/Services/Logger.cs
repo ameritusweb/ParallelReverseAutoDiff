@@ -1,5 +1,8 @@
 ﻿using GradientExplorer.Helpers;
 using Microsoft.VisualStudio.Shell.Interop;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace GradientExplorer.Services
 {
@@ -8,6 +11,7 @@ namespace GradientExplorer.Services
         private readonly IPaneCreator paneCreator;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IEnvironmentProvider environmentProvider;
+        private readonly ConcurrentDictionary<string, List<string>> messageLog;
         private IVsOutputWindowPane pane;
         private SeverityType minSeverity;
 
@@ -17,7 +21,16 @@ namespace GradientExplorer.Services
             this.dateTimeProvider = dateTimeProvider;
             this.environmentProvider = environmentProvider;
             this.minSeverity = minSeverity;
+            messageLog = new ConcurrentDictionary<string, List<string>>();
             pane = paneCreator.CreatePane(Guid.NewGuid(), "Gradient Explorer", true, true);
+        }
+
+        public IDictionary<string, List<string>> MessageLog
+        {
+            get
+            {
+                return messageLog;
+            }
         }
 
         public void SetMinSeverity(SeverityType newMinSeverity)
@@ -25,7 +38,12 @@ namespace GradientExplorer.Services
             this.minSeverity = newMinSeverity;
         }
 
-        public void Log(string message, SeverityType severity)
+        public void ClearLog()
+        {
+            this.messageLog.Clear();
+        }
+
+        public void Log(string category, string message, SeverityType severity)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -35,6 +53,9 @@ namespace GradientExplorer.Services
             }
 
             string formattedMessage = FormatMessage(message, severity);
+
+            this.messageLog.AddOrUpdate(category, new List<string> { formattedMessage }, (x, o) => { o.Add(x); return o; });
+
             try
             {
                 var res = pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());

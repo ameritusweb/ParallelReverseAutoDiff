@@ -129,7 +129,7 @@
         <!-- Simplification Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=SimplificationTool}">
             <controls:ToolView>
-                <!-- Your Simplification Tool UI -->
+                <controls:SimplificationToolView DataContext="SimplificationToolViewModel" />
             </controls:ToolView>
         </Grid>
         <!-- Computation Tool -->
