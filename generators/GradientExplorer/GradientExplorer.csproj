@@ -75,6 +75,15 @@
     <Compile Include="Helpers\SubscriptionInvokerFactory.cs" />
     <Compile Include="Helpers\ThreadSafeList.cs" />
     <Compile Include="Helpers\ViewToVisibilityConverter.cs" />
+    <Compile Include="Mcts\ConcurrentEventSystem.cs" />
+    <Compile Include="Mcts\GameState.cs" />
+    <Compile Include="Mcts\GameStateGenerator.cs" />
+    <Compile Include="Mcts\IGameStateGenerator.cs" />
+    <Compile Include="Mcts\IMctsEngine.cs" />
+    <Compile Include="Mcts\ITreeNode.cs" />
+    <Compile Include="Mcts\MctsEngine.cs" />
+    <Compile Include="Mcts\SimplificationAction.cs" />
+    <Compile Include="Mcts\TreeNode.cs" />
     <Compile Include="Model\ISortableItem.cs" />
     <Compile Include="Model\SortableItem.cs" />
     <Compile Include="Services\IMessagePoster.cs" />
