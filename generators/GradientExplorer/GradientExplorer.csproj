@@ -82,6 +82,7 @@
     <Compile Include="Mcts\IGameStateGenerator.cs" />
     <Compile Include="Mcts\IMctsEngine.cs" />
     <Compile Include="Mcts\ITreeNode.cs" />
+    <Compile Include="Mcts\MctsAction.cs" />
     <Compile Include="Mcts\MctsEngine.cs" />
     <Compile Include="Mcts\SimplificationAction.cs" />
     <Compile Include="Mcts\TreeNode.cs" />

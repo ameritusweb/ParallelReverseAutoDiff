@@ -46,7 +46,7 @@ namespace GradientExplorer.Mcts
         /// <param name="node">The node from which to start the rollout.</param>
         /// <param name="currentDepth">The current depth of the node in the tree.</param>
         /// <returns>The score obtained from the rollout.</returns>
-        double SimulateRandomRollout(ITreeNode node, int currentDepth);
+        Task<double> SimulateRandomRollout(ITreeNode node, int currentDepth);
 
         /// <summary>
         /// Backpropagates the score from a leaf node to the root.

@@ -10,5 +10,7 @@ namespace GradientExplorer.Mcts
     public interface IGameStateGenerator
     {
         Task<ConcurrentQueue<GameState>> GenerateUniqueGameStates(GameState currentGameState);
+
+        Task<GameState> GetNextRandomGameState(GameState currentGameState);
     }
 }

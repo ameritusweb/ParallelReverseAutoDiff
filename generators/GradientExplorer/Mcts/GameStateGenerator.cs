@@ -17,5 +17,11 @@ namespace GradientExplorer.Mcts
             // Implement game-specific logic to generate next possible game states
             return new ConcurrentQueue<GameState>();
         }
+
+        public async Task<GameState> GetNextRandomGameState(GameState currentGameState)
+        {
+            await Task.Delay(1000);
+            return currentGameState;
+        }
     }
 }

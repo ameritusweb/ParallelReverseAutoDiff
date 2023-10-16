@@ -45,13 +45,11 @@ namespace GradientExplorer.Mcts
 
         public void StartPruner()
         {
-            // ... existing code ...
             pruner.Start();
         }
 
         public void StopPruner()
         {
-            // ... existing code ...
             pruner.Stop();
         }
 
@@ -73,8 +71,8 @@ namespace GradientExplorer.Mcts
             _ = Task.Run(EventSystem.EventListener);
 
             // Concurrent queue to hold nodes that need to be expanded
-            ConcurrentQueue<ITreeNode> expandQueue = new ConcurrentQueue<ITreeNode>();
-            expandQueue.Enqueue(Root);
+            ConcurrentQueue<MctsAction> expandQueue = new ConcurrentQueue<MctsAction>();
+            expandQueue.Enqueue(new MctsAction { TreeNode = Root, Depth = 0 });
 
             // Flag to control the termination of the MCTS loop
             bool shouldTerminate = false;
@@ -97,31 +95,45 @@ namespace GradientExplorer.Mcts
 
                 allTasks.Add(Task.Run(async () =>
                 {
-                    ITreeNode nodeToExpand;
+                    MctsAction nodeToExpand;
                     if (expandQueue.TryDequeue(out nodeToExpand))
                     {
                         // Increment VisitorsCount as a new task starts working on this node
-                        nodeToExpand.AtomicIncrementVisitorsCount();
+                        nodeToExpand.TreeNode.AtomicIncrementVisitorsCount();
 
                         // Perform Selection
-                        ITreeNode leafNode = SelectNode(nodeToExpand);
+                        ITreeNode leafNode = SelectNode(nodeToExpand.TreeNode);
 
                         // Perform Expansion (asynchronously)
-                        await ExpandNodeAsync(leafNode, initialDepth + 1);
+                        await ExpandNodeAsync(leafNode, nodeToExpand.Depth + 1);
 
-                        // Enqueue an expansion event right before initiating a rollout
-                        EventSystem.EnqueueEvent(() => {
-                            // Enqueue the root node for a new expansion phase
-                            expandQueue.Enqueue(Root);
-                        });
+                        if (leafNode.Children.Any())
+                        {
+                            // Enqueue an expansion event right before initiating a rollout
+                            EventSystem.EnqueueEvent(() =>
+                            {
+                                // Enqueue the leaf node
+                                expandQueue.Enqueue(new MctsAction { TreeNode = leafNode, Depth = nodeToExpand.Depth + 1 });
+                            });
+                        }
+                        else
+                        {
 
-                        // Perform Simulation (rollout)
-                        double rolloutScore = SimulateRandomRollout(leafNode, initialDepth + 1);
+                            // Enqueue an expansion event right before initiating a rollout
+                            EventSystem.EnqueueEvent(() =>
+                            {
+                                // Enqueue the root node for a new expansion phase
+                                expandQueue.Enqueue(new MctsAction { TreeNode = Root, Depth = 0 });
+                            });
 
-                        // Perform Backpropagation
-                        Backpropagate(leafNode, rolloutScore);
+                            // Perform Simulation (rollout)
+                            double rolloutScore = await SimulateRandomRollout(leafNode, initialDepth + 1);
 
-                        nodeToExpand.AtomicDecrementVisitorsCount();
+                            // Perform Backpropagation
+                            Backpropagate(leafNode, rolloutScore);
+                        }
+
+                        nodeToExpand.TreeNode.AtomicDecrementVisitorsCount();
                     }
 
                     semaphore.Release();
@@ -149,7 +161,7 @@ namespace GradientExplorer.Mcts
             ITreeNode selected = null;
             double bestValue = double.MinValue;
 
-            foreach (var child in node.Children)
+            foreach (var child in node.Children.Where(x => !x.MarkForPruning))
             {
                 // Compute UCB1 value
                 double ucbValue = (child.Score / child.Visits) +
@@ -209,7 +221,7 @@ namespace GradientExplorer.Mcts
         }
 
         // Function to perform a random rollout from a node and return the gained score
-        public double SimulateRandomRollout(ITreeNode node, int currentDepth)
+        public async Task<double> SimulateRandomRollout(ITreeNode node, int currentDepth)
         {
             GameState gameState = node.GameState;
             double accumulatedScore = 0;
@@ -221,8 +233,12 @@ namespace GradientExplorer.Mcts
                     break;
                 }
 
-                // Simulate random game advancement and update score
-                gameState = RandomlyAdvanceGameState(gameState);
+                // Randomly expand and advance game state and update score
+                ITreeNode childNode = await RandomlyExpandAndAdvanceGameState(node);
+
+                // Add the new child node to the current node's children
+                node.Children.Add(childNode);
+
                 accumulatedScore += EvaluateGameState(gameState); // Assuming you have a function to evaluate the game state
             }
 
@@ -235,16 +251,27 @@ namespace GradientExplorer.Mcts
             return accumulatedScore;
         }
 
+        public async Task<ITreeNode> RandomlyExpandAndAdvanceGameState(ITreeNode node)
+        {
+            // Use GameStateGenerator to get the next random GameState
+            GameState newState = await gameStateGenerator.GetNextRandomGameState(node.GameState);
+
+            // Create and return the new child node
+            ITreeNode child = new TreeNode
+            {
+                GameState = newState,
+                Score = 0,
+                Visits = 0,
+                Parent = node
+            };
+
+            return child;
+        }
+
         // Dummy function to check if a game state is terminal; replace with actual logic
         public bool IsTerminalState(GameState gameState)
         {
             return false; // Implement actual logic
-        }
-
-        // Dummy function to randomly advance game state; replace with actual logic
-        public GameState RandomlyAdvanceGameState(GameState gameState)
-        {
-            return gameState; // Implement actual logic
         }
 
         // Dummy function to evaluate a game state; replace with actual logic
@@ -365,8 +392,20 @@ namespace GradientExplorer.Mcts
         {
             if (node.Children.All(child => child.IsFullyExpanded) && node.VisitedForPruning >= node.Children.Count)
             {
-                node.MarkForPruning = true;
-                pruner.Enqueue(node);
+                // Take a snapshot and sort it
+                var sortedChildren = node.Children.OrderBy(child => child.Score).ToList();
+
+                // Determine the index up to which nodes will be marked for pruning
+                int markIndex = sortedChildren.Count / 2;  // 50% of the lowest scoring nodes
+
+                // Mark the lowest-scoring children for pruning
+                foreach (var child in sortedChildren.Take(markIndex))
+                {
+                    child.MarkForPruning = true;
+                    pruner.Enqueue(child);
+                }
+
+                // Reset the VisitedForPruning counter
                 node.VisitedForPruning = 0;
             }
         }
