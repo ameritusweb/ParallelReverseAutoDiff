@@ -15,7 +15,15 @@ namespace GradientExplorer.Mcts
         GameState GameState { get; set; }
         ITreeNode? Parent { get; set; } // Using ITreeNode for parent
         SimplificationAction Action { get; set; }
+        bool MarkForPruning { get; set; }
+        int VisitorsCount { get; set; }
+        bool IsFullyExpanded { get; set; }
+        int VisitedForPruning { get; set; }
+        string Id { get; }
 
+        void AtomicIncrementVisitedForPruning();
+        void AtomicIncrementVisitorsCount();
+        void AtomicDecrementVisitorsCount();
         void AtomicIncrementVisits();
         void AtomicAddToScore(double scoreToAdd);
     }

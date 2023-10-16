@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GradientExplorer.Diagram;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,34 @@ namespace GradientExplorer.Mcts
         public GameState GameState { get; set; } // Represents the game state at this node
         public ITreeNode? Parent { get; set; }
         public SimplificationAction Action { get; set; }
+        public bool MarkForPruning { get; set; } = false;
+        public bool IsFullyExpanded { get; set; } = false;
+        private int _visitorsCount;
+        public int VisitorsCount
+        {
+            get
+            {
+                return _visitorsCount;
+            }
+            set
+            {
+                _visitorsCount = value;
+            }
+        }
+        private int _visitedForPruning;
+        public int VisitedForPruning
+        {
+            get
+            {
+                return _visitedForPruning;
+            }
+            set
+            {
+                _visitedForPruning = value;
+            }
+        }
+
+        public string Id { get; private set; }
 
         public TreeNode(ITreeNode parent = null)
         {
@@ -41,9 +70,25 @@ namespace GradientExplorer.Mcts
             Score = 0;
             Visits = 0;
             Parent = parent;
+            Id = DiagramUniqueIDGenerator.Instance.GetNextID();
         }
 
         // Methods for atomic operations
+        public void AtomicIncrementVisitorsCount()
+        {
+            Interlocked.Increment(ref _visitorsCount);
+        }
+
+        public void AtomicIncrementVisitedForPruning()
+        {
+            Interlocked.Increment(ref _visitedForPruning);
+        }
+
+        public void AtomicDecrementVisitorsCount()
+        {
+            Interlocked.Decrement(ref _visitorsCount);
+        }
+
         public void AtomicIncrementVisits()
         {
             Interlocked.Increment(ref _visits);

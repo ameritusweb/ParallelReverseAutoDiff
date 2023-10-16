@@ -76,6 +76,7 @@
     <Compile Include="Helpers\ThreadSafeList.cs" />
     <Compile Include="Helpers\ViewToVisibilityConverter.cs" />
     <Compile Include="Mcts\ConcurrentEventSystem.cs" />
+    <Compile Include="Mcts\ConcurrentPruner.cs" />
     <Compile Include="Mcts\GameState.cs" />
     <Compile Include="Mcts\GameStateGenerator.cs" />
     <Compile Include="Mcts\IGameStateGenerator.cs" />

@@ -15,6 +15,7 @@ namespace GradientExplorer.Mcts
     {
         private readonly IGameStateGenerator gameStateGenerator;
         private readonly ILogger logger;
+        private readonly ConcurrentPruner pruner;
 
         private CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -39,6 +40,19 @@ namespace GradientExplorer.Mcts
             this.gameStateGenerator = gameStateGenerator;
             this.logger = logger;
             EventSystem = new ConcurrentEventSystem();
+            pruner = new ConcurrentPruner(TimeSpan.FromSeconds(5), logger);
+        }
+
+        public void StartPruner()
+        {
+            // ... existing code ...
+            pruner.Start();
+        }
+
+        public void StopPruner()
+        {
+            // ... existing code ...
+            pruner.Stop();
         }
 
         // Initialize the root node
@@ -52,6 +66,8 @@ namespace GradientExplorer.Mcts
         public async Task<IReadOnlyList<SimplificationAction>> RunMCTS()
         {
             logger.Log("MCTS Run started.", Helpers.SeverityType.Information);
+
+            StartPruner();
 
             // Start the event listener
             _ = Task.Run(EventSystem.EventListener);
@@ -84,6 +100,9 @@ namespace GradientExplorer.Mcts
                     ITreeNode nodeToExpand;
                     if (expandQueue.TryDequeue(out nodeToExpand))
                     {
+                        // Increment VisitorsCount as a new task starts working on this node
+                        nodeToExpand.AtomicIncrementVisitorsCount();
+
                         // Perform Selection
                         ITreeNode leafNode = SelectNode(nodeToExpand);
 
@@ -101,6 +120,8 @@ namespace GradientExplorer.Mcts
 
                         // Perform Backpropagation
                         Backpropagate(leafNode, rolloutScore);
+
+                        nodeToExpand.AtomicDecrementVisitorsCount();
                     }
 
                     semaphore.Release();
@@ -115,6 +136,8 @@ namespace GradientExplorer.Mcts
 
             // Find the best node based on your criteria (e.g., highest score)
             ITreeNode bestNode = SelectBestFinalNode();
+
+            StopPruner();
 
             // Retrieve the best sequence of actions leading to that node
             return GetBestActionSequence(bestNode);
@@ -169,6 +192,11 @@ namespace GradientExplorer.Mcts
                     children.Add(child);
                     counter++; // Increment the counter
                 }
+            }
+
+            if (uniqueGameStates.IsEmpty)
+            {
+                node.IsFullyExpanded = true;
             }
 
             node.Children = children;
@@ -254,6 +282,10 @@ namespace GradientExplorer.Mcts
                     logger.Log($"New maximum number of visits reached: {currentVisits}", Helpers.SeverityType.Information);
                 }
 
+                currentNode.AtomicIncrementVisitedForPruning();
+
+                CheckForPruning(currentNode);
+
                 currentNode = currentNode.Parent;
             }
 
@@ -323,7 +355,20 @@ namespace GradientExplorer.Mcts
 
             // Find the best node and return the best sequence of actions
             ITreeNode bestNode = SelectBestFinalNode();
+
+            StopPruner();
+
             return GetBestActionSequence(bestNode);
+        }
+
+        private void CheckForPruning(ITreeNode node)
+        {
+            if (node.Children.All(child => child.IsFullyExpanded) && node.VisitedForPruning >= node.Children.Count)
+            {
+                node.MarkForPruning = true;
+                pruner.Enqueue(node);
+                node.VisitedForPruning = 0;
+            }
         }
     }
 }
