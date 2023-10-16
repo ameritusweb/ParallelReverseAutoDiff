@@ -9,8 +9,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <!-- Breadcrumb -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10" Grid.Row="0">
             <TextBlock Text="Gradient Toolbox" Foreground="{Binding ForegroundColor}" Cursor="Hand">
                 <TextBlock.InputBindings>
                     <MouseBinding MouseAction="LeftClick" Command="{Binding GoToUniformGridCommand}"/>
@@ -20,7 +24,9 @@
             <TextBlock Text="{Binding ToolName}" Foreground="{Binding ForegroundColor}" />
         </StackPanel>
 
-        <!-- Content Slot -->
-        <ContentPresenter VerticalAlignment="Stretch" Margin="10,40,10,10"/>
+        <!-- Container for Inner Content -->
+        <Grid Name="InnerContentGrid" VerticalAlignment="Stretch" Margin="10,40,10,10" Grid.Row="1">
+            <!-- Inner content will be added here -->
+        </Grid>
     </Grid>
 </UserControl>

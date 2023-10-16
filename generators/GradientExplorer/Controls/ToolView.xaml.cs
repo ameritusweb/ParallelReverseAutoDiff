@@ -24,5 +24,25 @@ namespace GradientExplorer.Controls
         {
             InitializeComponent();
         }
+
+        public static readonly DependencyProperty InnerContentProperty =
+            DependencyProperty.Register("InnerContent", typeof(FrameworkElement), typeof(ToolView),
+                new PropertyMetadata(null, OnInnerContentChanged));
+
+        public object InnerContent
+        {
+            get { return GetValue(InnerContentProperty); }
+            set { SetValue(InnerContentProperty, value); }
+        }
+
+        private static void OnInnerContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var toolView = (ToolView)d;
+            toolView.InnerContentGrid.Children.Clear();
+            if (e.NewValue is FrameworkElement element)
+            {
+                toolView.InnerContentGrid.Children.Add(element);
+            }
+        }
     }
 }
