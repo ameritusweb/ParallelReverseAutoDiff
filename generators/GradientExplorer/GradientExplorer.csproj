@@ -65,6 +65,7 @@
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
     <Compile Include="Helpers\BackgroundEventData.cs" />
     <Compile Include="Helpers\ClearEventData.cs" />
+    <Compile Include="Helpers\DualQueueCollection.cs" />
     <Compile Include="Helpers\EventDataBase.cs" />
     <Compile Include="Helpers\GradientToolView.cs" />
     <Compile Include="Helpers\ISubscriptionInvoker.cs" />
