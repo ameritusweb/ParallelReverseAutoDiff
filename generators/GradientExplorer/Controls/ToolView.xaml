@@ -25,7 +25,7 @@
         </StackPanel>
 
         <!-- Container for Inner Content -->
-        <Grid Name="InnerContentGrid" VerticalAlignment="Stretch" Margin="10,40,10,10" Grid.Row="1">
+        <Grid Name="InnerContentGrid" Loaded="InnerContentGrid_Loaded" VerticalAlignment="Stretch" Margin="10,40,10,10" Grid.Row="1">
             <!-- Inner content will be added here -->
         </Grid>
     </Grid>

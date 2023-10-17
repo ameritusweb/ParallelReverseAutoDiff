@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GradientExplorer.Helpers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GradientExplorer.Controls
 {
@@ -35,6 +24,16 @@ namespace GradientExplorer.Controls
             set { SetValue(InnerContentProperty, value); }
         }
 
+        public static readonly DependencyProperty InnerContentDataContextProperty =
+            DependencyProperty.Register("InnerContentDataContext", typeof(IViewModel), typeof(ToolView),
+                new PropertyMetadata(null));
+
+        public object InnerContentDataContext
+        {
+            get { return GetValue(InnerContentDataContextProperty); }
+            set { SetValue(InnerContentDataContextProperty, value); }
+        }
+
         private static void OnInnerContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var toolView = (ToolView)d;
@@ -43,6 +42,12 @@ namespace GradientExplorer.Controls
             {
                 toolView.InnerContentGrid.Children.Add(element);
             }
+        }
+
+        private void InnerContentGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            var innerContentGrid = (Grid)sender;
+            innerContentGrid.DataContext = InnerContentDataContext;
         }
     }
 }

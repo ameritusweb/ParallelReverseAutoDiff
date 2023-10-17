@@ -128,9 +128,9 @@
         </UniformGrid>
         <!-- Simplification Tool -->
         <Grid Visibility="{Binding CurrentView, Converter={StaticResource ViewToVisibilityConverter}, ConverterParameter=SimplificationTool}">
-            <controls:ToolView>
+            <controls:ToolView InnerContentDataContext="{Binding SimplificationToolViewModel}">
                 <controls:ToolView.InnerContent>
-                    <controls:SimplificationToolView DataContext="SimplificationToolViewModel" />
+                    <controls:SimplificationToolView />
                 </controls:ToolView.InnerContent>
             </controls:ToolView>
         </Grid>
