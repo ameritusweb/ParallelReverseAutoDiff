@@ -24,6 +24,7 @@ namespace GradientExplorer.Mcts
         private double highestScoreSoFar = double.MinValue;
         private int maxDepthSoFar = 0;  // To keep track of the maximum depth
         private int maxRolloutDepthSoFar = 0;
+        private int numberOfNodes = 0;
         private List<Task> allTasks = new List<Task>();
         private int maxVisitsReached = 0;  // To keep track of the maximum number of visits
         private bool isInitialized = false;
@@ -125,6 +126,8 @@ namespace GradientExplorer.Mcts
                 }
                 else
                 {
+                    semaphore.Release();
+
                     // Wait for some task to complete before creating a new one
                     Task completedTask = await Task.WhenAny(allTasks);
                     allTasks.Remove(completedTask);
@@ -192,7 +195,7 @@ namespace GradientExplorer.Mcts
                     queueNotEmpty.Set();
 
                     // Perform Simulation (rollout)
-                    double rolloutScore = await SimulateRandomRollout(leafNode, initialDepth + 1);
+                    double rolloutScore = await SimulateRandomRollout(leafNode, nodeToExpand.Depth + 1);
 
                     // Perform Backpropagation
                     Backpropagate(leafNode, rolloutScore);
@@ -238,7 +241,11 @@ namespace GradientExplorer.Mcts
         // Function to expand a node by adding child nodes
         public async Task ExpandNodeAsync(ITreeNode node, int currentDepth)
         {
-            ConcurrentBag<ITreeNode> children = new ConcurrentBag<ITreeNode>();
+            // If the node is already fully expanded, return immediately
+            if (node.IsFullyExpanded)
+            {
+                return;
+            }
 
             // Get unique game states to be expanded
             IQueue<GameState> uniqueGameStates = await gameStateGenerator.GenerateUniqueGameStates(node.GameState);
@@ -252,7 +259,12 @@ namespace GradientExplorer.Mcts
                 {
                     ITreeNode child = new TreeNode(gameState, node);
 
-                    children.Add(child);
+                    // Directly add to the existing Children collection
+                    node.Children.Add(child);
+                    if (node.Children.Count > 10)
+                    {
+
+                    }
                     counter++; // Increment the counter
                 }
             }
@@ -261,8 +273,6 @@ namespace GradientExplorer.Mcts
             {
                 node.IsFullyExpanded = true;
             }
-
-            node.Children = children;
 
             if (currentDepth > maxDepthSoFar)
             {
@@ -274,6 +284,7 @@ namespace GradientExplorer.Mcts
         // Function to perform a random rollout from a node and return the gained score
         public async Task<double> SimulateRandomRollout(ITreeNode node, int currentDepth)
         {
+            ITreeNode currentNode = node;
             GameState gameState = node.GameState;
             double accumulatedScore = 0;
 
@@ -288,7 +299,16 @@ namespace GradientExplorer.Mcts
                 ITreeNode childNode = await RandomlyExpandAndAdvanceGameState(node);
 
                 // Add the new child node to the current node's children
-                node.Children.Add(childNode);
+                currentNode.Children.Add(childNode);
+                if (currentNode.Children.Count > 10)
+                {
+
+                }
+
+                // Make the new child node the current node for the next iteration
+                currentNode = childNode;
+
+                Interlocked.Increment(ref numberOfNodes);
 
                 accumulatedScore += EvaluateGameState(gameState); // Assuming you have a function to evaluate the game state
             }
