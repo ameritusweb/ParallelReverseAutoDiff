@@ -16,6 +16,10 @@ namespace GradientExplorer.Mcts
         {
             get
             {
+                if (_visits == 0)
+                {
+                    return 1;
+                }
                 return _visits;
             }
             set
@@ -64,11 +68,12 @@ namespace GradientExplorer.Mcts
 
         public string Id { get; private set; }
 
-        public TreeNode(ITreeNode parent = null)
+        public TreeNode(GameState gameState, ITreeNode parent = null)
         {
             Children = new ConcurrentBag<ITreeNode>();
             Score = 0;
             Visits = 0;
+            GameState = gameState;
             Parent = parent;
             Id = DiagramUniqueIDGenerator.Instance.GetNextID();
         }

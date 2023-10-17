@@ -16,6 +16,7 @@ namespace GradientExplorer.Mcts
         private readonly IGameStateGenerator gameStateGenerator;
         private readonly ILogger logger;
         private readonly ConcurrentPruner pruner;
+        private readonly Random rand;
 
         private CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -24,6 +25,7 @@ namespace GradientExplorer.Mcts
         private int maxRolloutDepthSoFar = 0;
         private List<Task> allTasks = new List<Task>();
         private int maxVisitsReached = 0;  // To keep track of the maximum number of visits
+        private bool isInitialized = false;
 
         public ITreeNode Root { get; set; }
         public int MaxConcurrentRollouts { get; set; } = 8;
@@ -33,14 +35,15 @@ namespace GradientExplorer.Mcts
         // Constant defining the depth of a rollout
         public int RolloutDepth { get; set; } = 10;
 
-        public ConcurrentEventSystem EventSystem { get; set; }
+        // Create a new ManualResetEventSlim that starts in the non-signaled state (false).
+        ManualResetEventSlim queueNotEmpty = new ManualResetEventSlim(false);
 
         public MctsEngine(IGameStateGenerator gameStateGenerator, ILogger logger)
         {
             this.gameStateGenerator = gameStateGenerator;
             this.logger = logger;
-            EventSystem = new ConcurrentEventSystem();
             pruner = new ConcurrentPruner(TimeSpan.FromSeconds(5), logger);
+            rand = new Random(Guid.NewGuid().GetHashCode());
         }
 
         public void StartPruner()
@@ -54,25 +57,31 @@ namespace GradientExplorer.Mcts
         }
 
         // Initialize the root node
-        public void Initialize()
+        public void Initialize(GameState gameState)
         {
-            Root = new TreeNode();
+            Root = new TreeNode(gameState);
             // Initialize Root's game state here
+            isInitialized = true;
         }
 
         // Main function to perform Monte Carlo Tree Search
         public async Task<IReadOnlyList<SimplificationAction>> RunMCTS()
         {
+            if (!isInitialized)
+            {
+                throw new InvalidOperationException("MCTS Engine has not been initialized.");
+            }
+
             logger.Log(nameof(MctsEngine), "MCTS Run started.", Helpers.SeverityType.Information);
 
             StartPruner();
 
-            // Start the event listener
-            _ = Task.Run(EventSystem.EventListener);
-
             // Concurrent queue to hold nodes that need to be expanded
             ConcurrentQueue<MctsAction> expandQueue = new ConcurrentQueue<MctsAction>();
             expandQueue.Enqueue(new MctsAction { TreeNode = Root, Depth = 0 });
+
+            // Signal that the queue is not empty
+            queueNotEmpty.Set();
 
             // Flag to control the termination of the MCTS loop
             bool shouldTerminate = false;
@@ -84,6 +93,9 @@ namespace GradientExplorer.Mcts
             // Semaphore to limit the number of concurrent rollouts
             var semaphore = new SemaphoreSlim(MaxConcurrentRollouts);
 
+            // Control the number of total tasks created
+            int totalTasksCreated = 0;
+
             while (!shouldTerminate)
             {
                 if (cts.Token.IsCancellationRequested)
@@ -91,53 +103,32 @@ namespace GradientExplorer.Mcts
                     break;
                 }
 
+                // Wait until the queue has items
+                queueNotEmpty.Wait();
+
                 await semaphore.WaitAsync();
 
-                allTasks.Add(Task.Run(async () =>
+                // Reset the event if the queue is empty
+                if (!expandQueue.Any())
                 {
-                    MctsAction nodeToExpand;
-                    if (expandQueue.TryDequeue(out nodeToExpand))
-                    {
-                        // Increment VisitorsCount as a new task starts working on this node
-                        nodeToExpand.TreeNode.AtomicIncrementVisitorsCount();
+                    queueNotEmpty.Reset();
+                    continue;
+                }
 
-                        // Perform Selection
-                        ITreeNode leafNode = SelectNode(nodeToExpand.TreeNode);
+                if (totalTasksCreated < MaxConcurrentRollouts)  // Limit the total number of tasks
+                {
 
-                        // Perform Expansion (asynchronously)
-                        await ExpandNodeAsync(leafNode, nodeToExpand.Depth + 1);
+                    allTasks.Add(Task.Run(() => ProcessMctsActionAsync(expandQueue, semaphore, initialDepth)));
 
-                        if (leafNode.Children.Any())
-                        {
-                            // Enqueue an expansion event right before initiating a rollout
-                            EventSystem.EnqueueEvent(() =>
-                            {
-                                // Enqueue the leaf node
-                                expandQueue.Enqueue(new MctsAction { TreeNode = leafNode, Depth = nodeToExpand.Depth + 1 });
-                            });
-                        }
-                        else
-                        {
-
-                            // Enqueue an expansion event right before initiating a rollout
-                            EventSystem.EnqueueEvent(() =>
-                            {
-                                // Enqueue the root node for a new expansion phase
-                                expandQueue.Enqueue(new MctsAction { TreeNode = Root, Depth = 0 });
-                            });
-
-                            // Perform Simulation (rollout)
-                            double rolloutScore = await SimulateRandomRollout(leafNode, initialDepth + 1);
-
-                            // Perform Backpropagation
-                            Backpropagate(leafNode, rolloutScore);
-                        }
-
-                        nodeToExpand.TreeNode.AtomicDecrementVisitorsCount();
-                    }
-
-                    semaphore.Release();
-                }));
+                    totalTasksCreated++;
+                }
+                else
+                {
+                    // Wait for some task to complete before creating a new one
+                    Task completedTask = await Task.WhenAny(allTasks);
+                    allTasks.Remove(completedTask);
+                    totalTasksCreated--;
+                }
 
                 // Update termination condition if needed
                 // e.g., shouldTerminate = some_condition;
@@ -155,6 +146,69 @@ namespace GradientExplorer.Mcts
             return GetBestActionSequence(bestNode);
         }
 
+        public async Task ProcessMctsActionAsync(ConcurrentQueue<MctsAction> expandQueue, SemaphoreSlim semaphore, int initialDepth)
+        {
+            MctsAction nodeToExpand;
+            try
+            {
+                if (expandQueue.TryDequeue(out nodeToExpand))
+                {
+                    // Reset the event if the queue is empty
+                    if (!expandQueue.Any())
+                    {
+                        queueNotEmpty.Reset();
+                    }
+
+                    // Increment VisitorsCount as a new task starts working on this node
+                    nodeToExpand.TreeNode.AtomicIncrementVisitorsCount();
+
+                    // Perform Selection
+                    ITreeNode leafNode = SelectNode(nodeToExpand.TreeNode);
+
+                    if (leafNode == null)
+                    {
+                        leafNode = nodeToExpand.TreeNode;
+                    }
+
+                    // Perform Expansion (asynchronously)
+                    await ExpandNodeAsync(leafNode, nodeToExpand.Depth + 1);
+
+                    if (leafNode.Children.Any())
+                    {
+                        // Enqueue an expansion event right before initiating a rollout
+                        // Enqueue the leaf node
+                        expandQueue.Enqueue(new MctsAction { TreeNode = leafNode, Depth = nodeToExpand.Depth + 1 });
+
+                        // Signal that the queue is not empty
+                        queueNotEmpty.Set();
+                    }
+
+                    // Enqueue an expansion event right before initiating a rollout
+                    // Enqueue the root node for a new expansion phase
+                    expandQueue.Enqueue(new MctsAction { TreeNode = Root, Depth = 0 });
+
+                    // Signal that the queue is not empty
+                    queueNotEmpty.Set();
+
+                    // Perform Simulation (rollout)
+                    double rolloutScore = await SimulateRandomRollout(leafNode, initialDepth + 1);
+
+                    // Perform Backpropagation
+                    Backpropagate(leafNode, rolloutScore);
+
+                    nodeToExpand.TreeNode.AtomicDecrementVisitorsCount();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred inside MCTS task: {ex.Message}");
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }
+
         // Selection logic using UCB1 formula
         public ITreeNode SelectNode(ITreeNode node)
         {
@@ -166,6 +220,8 @@ namespace GradientExplorer.Mcts
                 // Compute UCB1 value
                 double ucbValue = (child.Score / child.Visits) +
                     ExplorationConstant * Math.Sqrt(Math.Log(node.Visits) / child.Visits);
+
+                ucbValue += (1E-6 * rand.NextDouble());
 
                 // Update best node if needed
                 if (ucbValue > bestValue)
@@ -193,13 +249,7 @@ namespace GradientExplorer.Mcts
             {
                 if (uniqueGameStates.TryDequeue(out GameState gameState))
                 {
-                    ITreeNode child = new TreeNode
-                    {
-                        GameState = gameState,
-                        Score = 0,
-                        Visits = 0,
-                        Parent = node,
-                    };
+                    ITreeNode child = new TreeNode(gameState, node);
 
                     children.Add(child);
                     counter++; // Increment the counter
@@ -257,13 +307,7 @@ namespace GradientExplorer.Mcts
             GameState newState = await gameStateGenerator.GetNextRandomGameState(node.GameState);
 
             // Create and return the new child node
-            ITreeNode child = new TreeNode
-            {
-                GameState = newState,
-                Score = 0,
-                Visits = 0,
-                Parent = node
-            };
+            ITreeNode child = new TreeNode(newState, node);
 
             return child;
         }

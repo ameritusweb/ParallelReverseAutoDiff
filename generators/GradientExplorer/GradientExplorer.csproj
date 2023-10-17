@@ -59,6 +59,7 @@
     <Compile Include="Controls\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ConcurrentQueueExtensions.cs" />
     <Compile Include="Helpers\DrawDiagramBehavior.cs" />
     <Compile Include="Helpers\AllowDrawBehavior.cs" />
     <Compile Include="Helpers\AutofacContainerProvider.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Helpers\SubscriptionInvokerFactory.cs" />
     <Compile Include="Helpers\ThreadSafeList.cs" />
     <Compile Include="Helpers\ViewToVisibilityConverter.cs" />
-    <Compile Include="Mcts\ConcurrentEventSystem.cs" />
     <Compile Include="Mcts\ConcurrentPruner.cs" />
     <Compile Include="Mcts\GameState.cs" />
     <Compile Include="Mcts\GameStateGenerator.cs" />

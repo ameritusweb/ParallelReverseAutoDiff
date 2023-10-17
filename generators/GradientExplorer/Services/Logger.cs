@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GradientExplorer.Services
 {
@@ -14,6 +15,7 @@ namespace GradientExplorer.Services
         private readonly ConcurrentDictionary<string, List<string>> messageLog;
         private IVsOutputWindowPane pane;
         private SeverityType minSeverity;
+        private SynchronizationContext uiContext;
 
         public Logger(IPaneCreator paneCreator, IDateTimeProvider dateTimeProvider, IEnvironmentProvider environmentProvider, SeverityType minSeverity = SeverityType.Information)
         {
@@ -23,6 +25,7 @@ namespace GradientExplorer.Services
             this.minSeverity = minSeverity;
             messageLog = new ConcurrentDictionary<string, List<string>>();
             pane = paneCreator.CreatePane(Guid.NewGuid(), "Gradient Explorer", true, true);
+            uiContext = SynchronizationContext.Current;
         }
 
         public IDictionary<string, List<string>> MessageLog
@@ -45,25 +48,28 @@ namespace GradientExplorer.Services
 
         public void Log(string category, string message, SeverityType severity)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            if (severity < minSeverity)
+            uiContext.Post(_ =>
             {
-                return;
-            }
+                ThreadHelper.ThrowIfNotOnUIThread();
 
-            string formattedMessage = FormatMessage(message, severity);
+                if (severity < minSeverity)
+                {
+                    return;
+                }
 
-            this.messageLog.AddOrUpdate(category, new List<string> { formattedMessage }, (x, o) => { o.Add(x); return o; });
+                string formattedMessage = FormatMessage(message, severity);
 
-            try
-            {
-                var res = pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Logging failed unexpectedly for message [{formattedMessage}]: {ex.Message}");
-            }
+                this.messageLog.AddOrUpdate(category, new List<string> { formattedMessage }, (x, o) => { o.Add(x); return o; });
+
+                try
+                {
+                    var res = pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Logging failed unexpectedly for message [{formattedMessage}]: {ex.Message}");
+                }
+            }, null);
         }
 
         private string FormatMessage(string message, SeverityType severity)

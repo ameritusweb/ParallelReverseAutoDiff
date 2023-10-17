@@ -12,12 +12,11 @@ namespace GradientExplorer.Mcts
         int MaxConcurrentRollouts { get; set; }
         double ExplorationConstant { get; set; }
         int RolloutDepth { get; set; }
-        ConcurrentEventSystem EventSystem { get; set; }
 
         /// <summary>
         /// Initializes the root node for the Monte Carlo Tree Search.
         /// </summary>
-        void Initialize();
+        void Initialize(GameState gameState);
 
         /// <summary>
         /// Executes the Monte Carlo Tree Search algorithm.
