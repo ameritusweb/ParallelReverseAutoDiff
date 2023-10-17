@@ -68,6 +68,7 @@
     <Compile Include="Helpers\DualQueueCollection.cs" />
     <Compile Include="Helpers\EventDataBase.cs" />
     <Compile Include="Helpers\GradientToolView.cs" />
+    <Compile Include="Helpers\IQueue.cs" />
     <Compile Include="Helpers\ISubscriptionInvoker.cs" />
     <Compile Include="Helpers\IViewModel.cs" />
     <Compile Include="Helpers\KeyValuePairExtensions.cs" />

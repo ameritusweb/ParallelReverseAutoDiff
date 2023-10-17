@@ -1,40 +1,50 @@
-﻿using System;
+﻿using GradientExplorer.Helpers;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace GradientExplorer.Mcts
 {
     public class GameStateGenerator : IGameStateGenerator
     {
-        private ConcurrentDictionary<GameState, ConcurrentQueue<GameState>> gameStateCache = new ConcurrentDictionary<GameState, ConcurrentQueue<GameState>>();
-        
+        private ConcurrentDictionary<GameState, DualQueueCollection<GameState>> gameStateCache = new ConcurrentDictionary<GameState, DualQueueCollection<GameState>>();
+        private Random rand;
+        public GameStateGenerator()
+        {
+            rand = new Random(Guid.NewGuid().GetHashCode());
+        }
+
         // Dummy function to generate possible game states; replace with actual logic
-        public async Task<ConcurrentQueue<GameState>> GenerateUniqueGameStates(GameState currentGameState)
+        public async Task<IQueue<GameState>> GenerateUniqueGameStates(GameState currentGameState)
         {
 
             await Task.Delay(100);
             // Implement game-specific logic to generate next possible game states
-            if (!gameStateCache.ContainsKey(currentGameState))
+            DualQueueCollection<GameState> coll = gameStateCache.GetOrAdd(currentGameState, (x) => new DualQueueCollection<GameState>());
+            if (coll.InitialFill == null)
             {
-                var queue = new ConcurrentQueue<GameState>();
-                queue.Enqueue(currentGameState);
-                queue.Enqueue(currentGameState);
-                queue.Enqueue(currentGameState);
-                queue.Enqueue(currentGameState);
-                queue.Enqueue(currentGameState);
-                gameStateCache.TryAdd(currentGameState, queue);
+                coll.InitialFill = () =>
+                {
+                    List<GameState> states = new List<GameState>();
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    states.Add(new GameState(new Model.GradientGraph(), rand.NextDouble()));
+                    return states;
+                };
             }
-            
-
+            return coll;
         }
 
         public async Task<GameState> GetNextRandomGameState(GameState currentGameState)
         {
             await Task.Delay(100);
-            return currentGameState;
+            return new GameState(new Model.GradientGraph(), rand.NextDouble());
         }
     }
 }

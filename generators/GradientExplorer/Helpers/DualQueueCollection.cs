@@ -6,15 +6,16 @@ using System.Linq;
 
 namespace GradientExplorer.Helpers
 {
-    public class DualQueueCollection<T> : IProducerConsumerCollection<T>
+    public class DualQueueCollection<T> : IQueue<T>, IEnumerable
     {
         private readonly ConcurrentQueue<T> source = new ConcurrentQueue<T>();
         private readonly ConcurrentQueue<T> destination = new ConcurrentQueue<T>();
+        private IEnumerator<T> initialFillEnumerator;
 
         public event EventHandler SourceEmptied;
         public event EventHandler<T> ItemProcessed;
 
-        public Action<ConcurrentQueue<T>> InitialFill { get; set; }
+        public Func<IEnumerable<T>> InitialFill { get; set; }
 
         public DualQueueCollection()
         {
@@ -23,13 +24,12 @@ namespace GradientExplorer.Helpers
         public IReadOnlyList<T> Source => source.ToList().AsReadOnly();
         public IReadOnlyList<T> Destination => destination.ToList().AsReadOnly();
 
-        public bool TryAdd(T item)
+        public void Enqueue(T item)
         {
             source.Enqueue(item);
-            return true;
         }
 
-        public bool TryTake(out T item)
+        public bool TryDequeue(out T item)
         {
             LazyInitializeSource();
 
@@ -60,11 +60,35 @@ namespace GradientExplorer.Helpers
             return result;
         }
 
-        public int Count => source.Count + destination.Count;  // Be cautious about performance.
+        public bool TryPeek(out T item)
+        {
+            return source.TryPeek(out item);
+        }
 
-        public bool IsSynchronized => false;
+        public void Clear()
+        {
+            while (source.TryDequeue(out _)) ;
+        }
 
-        public object SyncRoot => throw new NotSupportedException();
+        public int Count => source.Count;  // Be cautious about performance
+
+        public bool IsEmpty
+        {
+            get
+            {
+                if (!source.IsEmpty)
+                {
+                    return false;
+                }
+
+                if (initialFillEnumerator != null)
+                {
+                    return !initialFillEnumerator.MoveNext();
+                }
+
+                return true;
+            }
+        }
 
         public void CopyTo(T[] array, int index)
         {
@@ -73,16 +97,7 @@ namespace GradientExplorer.Helpers
 
         public IEnumerator<T> GetEnumerator()
         {
-            return source.Concat(destination).GetEnumerator();
-        }
-
-        void ICollection.CopyTo(Array array, int index)
-        {
-            int i = index;
-            foreach (var item in this)
-            {
-                array.SetValue(item, i++);
-            }
+            return source.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -92,16 +107,23 @@ namespace GradientExplorer.Helpers
 
         public T[] ToArray()
         {
-            return source.Concat(destination).ToArray();
+            return source.ToArray();
         }
 
         private void LazyInitializeSource()
         {
-            lock (source)  // Added to ensure thread safety
+            lock (source)  // Ensuring thread safety
             {
                 if (source.IsEmpty && destination.IsEmpty)
                 {
-                    InitialFill?.Invoke(source);
+                    if (InitialFill != null)
+                    {
+                        initialFillEnumerator = InitialFill().GetEnumerator();
+                        while (initialFillEnumerator.MoveNext())
+                        {
+                            source.Enqueue(initialFillEnumerator.Current);
+                        }
+                    }
                 }
             }
         }

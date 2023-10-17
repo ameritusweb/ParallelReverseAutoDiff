@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GradientExplorer.Helpers;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace GradientExplorer.Mcts
 {
     public interface IGameStateGenerator
     {
-        Task<ConcurrentQueue<GameState>> GenerateUniqueGameStates(GameState currentGameState);
+        Task<IQueue<GameState>> GenerateUniqueGameStates(GameState currentGameState);
 
         Task<GameState> GetNextRandomGameState(GameState currentGameState);
     }

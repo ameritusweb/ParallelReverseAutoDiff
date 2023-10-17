@@ -1,4 +1,5 @@
-﻿using GradientExplorer.Services;
+﻿using GradientExplorer.Helpers;
+using GradientExplorer.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -240,7 +241,7 @@ namespace GradientExplorer.Mcts
             ConcurrentBag<ITreeNode> children = new ConcurrentBag<ITreeNode>();
 
             // Get unique game states to be expanded
-            ConcurrentQueue<GameState> uniqueGameStates = await gameStateGenerator.GenerateUniqueGameStates(node.GameState);
+            IQueue<GameState> uniqueGameStates = await gameStateGenerator.GenerateUniqueGameStates(node.GameState);
 
             int counter = 0; // Initialize a counter to keep track of how many nodes are expanded
             const int maxExpansions = 5; // Set the maximum number of expansions
