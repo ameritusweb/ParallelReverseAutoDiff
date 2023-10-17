@@ -322,7 +322,7 @@ namespace GradientExplorer.Mcts
         // Dummy function to evaluate a game state; replace with actual logic
         public double EvaluateGameState(GameState gameState)
         {
-            return 0; // Implement actual logic
+            return rand.NextDouble();
         }
 
         // Function to backpropagate the score from a leaf node up to the root

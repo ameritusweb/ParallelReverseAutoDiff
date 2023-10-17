@@ -10,13 +10,11 @@ namespace GradientExplorer.Mcts
     public class GameState
     {
         public GradientGraph RootGraph { get; set; }
-        public double Score { get; set; } // Score based on expression complexity
 
         // Constructor
-        public GameState(GradientGraph rootGraph, double score)
+        public GameState(GradientGraph rootGraph)
         {
             RootGraph = rootGraph;
-            Score = score;
         }
 
         // Method to apply a simplification rule and return a new GameState
