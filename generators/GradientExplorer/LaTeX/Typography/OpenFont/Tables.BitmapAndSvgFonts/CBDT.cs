@@ -33,9 +33,9 @@ namespace Typography.OpenFont.Tables
     {
         public const string Name = "CBDT";
 
-        GlyphBitmapDataFmt17 _format17 = new GlyphBitmapDataFmt17();
-        GlyphBitmapDataFmt18 _format18 = new GlyphBitmapDataFmt18();
-        GlyphBitmapDataFmt19 _format19 = new GlyphBitmapDataFmt19();
+        readonly GlyphBitmapDataFmt17 _format17 = new GlyphBitmapDataFmt17();
+        readonly GlyphBitmapDataFmt18 _format18 = new GlyphBitmapDataFmt18();
+        readonly GlyphBitmapDataFmt19 _format19 = new GlyphBitmapDataFmt19();
 
         // BinaryReaders also dispose their underlying streams
         IO.ByteOrderSwappingBinaryReader? _binReader; // underlying stream contains image data

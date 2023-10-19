@@ -24,13 +24,13 @@ namespace ParallelReverseAutoDiff.LstmExample
         private readonly int numLayers;
         private readonly string lstmName;
 
+        private readonly IModelLayer embeddingLayer;
+        private readonly IModelLayer hiddenLayer;
+        private readonly IModelLayer outputLayer;
+
         private Matrix[][] h;
         private Matrix[][] c; // Memory cell state
         private Matrix[] output;
-
-        private IModelLayer embeddingLayer;
-        private IModelLayer hiddenLayer;
-        private IModelLayer outputLayer;
 
         private Matrix[][][] arrays4D;
         private Matrix[][] arrays3D;

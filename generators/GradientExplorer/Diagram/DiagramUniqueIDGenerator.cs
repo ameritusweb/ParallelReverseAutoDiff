@@ -21,7 +21,7 @@ namespace GradientExplorer.Diagram
         private readonly int delayIncrement = 10000;
         private readonly int maxDelay = int.MaxValue - 10000;
 
-        private ConcurrentQueue<string> idQueue = new ConcurrentQueue<string>();
+        private readonly ConcurrentQueue<string> idQueue = new ConcurrentQueue<string>();
         private const int batchSize = 1000;
         private const int miniBatchSize = 10;
         private Task generationTask;

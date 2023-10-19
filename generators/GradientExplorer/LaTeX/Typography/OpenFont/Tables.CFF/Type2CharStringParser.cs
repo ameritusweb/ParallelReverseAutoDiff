@@ -355,7 +355,7 @@ namespace Typography.OpenFont.CFF
 
     class Type2GlyphInstructionList
     {
-        List<Type2Instruction> _insts;
+        readonly List<Type2Instruction> _insts;
 
         public Type2GlyphInstructionList()
         {
@@ -526,7 +526,7 @@ namespace Typography.OpenFont.CFF
         bool _foundSomeStem = false;
         bool _enterPathConstructionSeq = false;
 
-        Type2GlyphInstructionList _insts = new Type2GlyphInstructionList();
+        readonly Type2GlyphInstructionList _insts = new Type2GlyphInstructionList();
         int _current_integer_count = 0;
         bool _doStemCount = true;
         List<byte[]>? _globalSubrRawBufferList, _localSubrRawBufferList;
@@ -554,7 +554,7 @@ namespace Typography.OpenFont.CFF
 
         struct SimpleBinaryReader
         {
-            byte[] _buffer;
+            readonly byte[] _buffer;
             int _pos;
             public SimpleBinaryReader(byte[] buffer)
             {

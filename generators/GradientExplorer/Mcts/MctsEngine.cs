@@ -19,13 +19,13 @@ namespace GradientExplorer.Mcts
         private readonly ConcurrentPruner pruner;
         private readonly Random rand;
 
-        private CancellationTokenSource cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private double highestScoreSoFar = double.MinValue;
         private int maxDepthSoFar = 0;  // To keep track of the maximum depth
         private int maxRolloutDepthSoFar = 0;
         private int numberOfNodes = 0;
-        private List<Task> allTasks = new List<Task>();
+        private readonly List<Task> allTasks = new List<Task>();
         private int maxVisitsReached = 0;  // To keep track of the maximum number of visits
         private bool isInitialized = false;
 
@@ -38,7 +38,7 @@ namespace GradientExplorer.Mcts
         public int RolloutDepth { get; set; } = 10;
 
         // Create a new ManualResetEventSlim that starts in the non-signaled state (false).
-        ManualResetEventSlim queueNotEmpty = new ManualResetEventSlim(false);
+        readonly ManualResetEventSlim queueNotEmpty = new ManualResetEventSlim(false);
 
         public MctsEngine(IGameStateGenerator gameStateGenerator, ILogger logger)
         {

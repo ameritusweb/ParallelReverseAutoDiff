@@ -11,7 +11,7 @@ namespace Typography.OpenFont.Tables
         public const string Name = "CPAL";
         //
 
-        byte[] _colorBGRABuffer;
+        readonly byte[] _colorBGRABuffer;
         // Read the CPAL table
         // https://www.microsoft.com/typography/otspec/cpal.htm
         internal CPAL(TableHeader header, BinaryReader reader) : base(header, reader)

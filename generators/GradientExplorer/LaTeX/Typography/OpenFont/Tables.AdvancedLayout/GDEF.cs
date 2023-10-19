@@ -66,7 +66,7 @@ namespace Typography.OpenFont.Tables
     {
         public const string Name = "GDEF";
         //
-        long _tableStartAt;
+        readonly long _tableStartAt;
         public GDEF(TableHeader header, BinaryReader reader) : base(header, reader)
         {
             _tableStartAt = reader.BaseStream.Position;

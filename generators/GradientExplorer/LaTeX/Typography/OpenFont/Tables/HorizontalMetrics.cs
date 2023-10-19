@@ -23,7 +23,7 @@ namespace Typography.OpenFont.Tables
         //  pp1 = xmin - lsb
         //  pp2 = pp1 + aw
 
-        List<ushort> _advanceWidths; //in font design unit
+        readonly List<ushort> _advanceWidths; //in font design unit
         List<short> _leftSideBearings;//lsb, in font design unit
         public ushort GetAdvanceWidth(ushort index)
         {

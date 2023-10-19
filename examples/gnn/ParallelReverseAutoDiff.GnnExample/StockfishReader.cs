@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class StockfishReader
     {
-        private Random rand = new Random(Guid.NewGuid().GetHashCode());
+        private readonly Random rand = new Random(Guid.NewGuid().GetHashCode());
 
         /// <summary>
         /// Reads the best move from Stockfish.

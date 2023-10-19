@@ -17,7 +17,7 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class TrainingSetLoader
     {
-        private Random rand;
+        private readonly Random rand;
         private GraphAttentionPathsNeuralNetwork neuralNetwork;
         private ConcurrentBag<GapGraph> bagOfGraphs;
         private TrainingSetGenerator generator;

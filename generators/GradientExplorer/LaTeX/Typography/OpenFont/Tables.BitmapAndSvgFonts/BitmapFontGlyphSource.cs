@@ -5,7 +5,7 @@ namespace Typography.OpenFont.Tables
 {
     class BitmapFontGlyphSource
     {
-        CBLC _cblc;
+        readonly CBLC _cblc;
         CBDT _cbdt;
         public BitmapFontGlyphSource(CBLC cblc, CBDT cbdt)
         {

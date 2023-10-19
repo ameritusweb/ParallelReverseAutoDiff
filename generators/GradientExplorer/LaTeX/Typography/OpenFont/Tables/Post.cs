@@ -51,8 +51,8 @@ namespace Typography.OpenFont.Tables
         public const string Name = "post";
         //
         uint _italicAngle;
-        short _underlinePosition;
-        short _underlineThickness;
+        readonly short _underlinePosition;
+        readonly short _underlineThickness;
 
         //---------------
 

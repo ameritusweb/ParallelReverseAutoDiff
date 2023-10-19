@@ -32,8 +32,8 @@ using Microsoft.Msagl.Drawing;
 
 namespace Microsoft.Msagl.WpfGraphControl {
     internal class GvMouseEventArgs : MsaglMouseEventArgs {
-        MouseEventArgs args;
-        Point position;
+        readonly MouseEventArgs args;
+        readonly Point position;
 
         internal GvMouseEventArgs(MouseEventArgs argsPar, DiagramViewer graphScrollerP) {
             args = argsPar;

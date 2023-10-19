@@ -19,11 +19,11 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class GameState
     {
-        private Random rng;
-        private ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>> positionToPossibleMoveMap;
-        private ConcurrentDictionary<Position, GNNNode> positionToNodeMap;
-        private ConcurrentDictionary<int, GNNEdge> idToEdgeMap;
-        private GNNGraph graph;
+        private readonly Random rng;
+        private readonly ConcurrentDictionary<(Position, char), List<(Position, MoveType, char?, char?)>> positionToPossibleMoveMap;
+        private readonly ConcurrentDictionary<Position, GNNNode> positionToNodeMap;
+        private readonly ConcurrentDictionary<int, GNNEdge> idToEdgeMap;
+        private readonly GNNGraph graph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameState"/> class.
