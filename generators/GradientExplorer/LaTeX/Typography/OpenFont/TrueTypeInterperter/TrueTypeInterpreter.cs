@@ -39,8 +39,22 @@ namespace Typography.OpenFont
         public TrueTypeInterpreter(Typeface typeface) { 
             SetTypeFace(typeface);
             // https://github.com/dotnet/roslyn/issues/39740
-            if (_currentTypeFace is { } t) _currentTypeFace = t; else throw new NotImplementedException();
-            if (_interpreter is { } i) _interpreter = i; else throw new NotImplementedException();
+            if (_currentTypeFace is { } t)
+            {
+                _currentTypeFace = t;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            if (_interpreter is { } i)
+            {
+                _interpreter = i;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public GlyphPointF[] HintGlyph(ushort glyphIndex, float glyphSizeInPixel)
@@ -52,7 +66,9 @@ namespace Typography.OpenFont
             int horizontalAdv = _currentTypeFace.GetHAdvanceWidthFromGlyphIndex(glyphIndex);
             int hFrontSideBearing = _currentTypeFace.GetHFrontSideBearingFromGlyphIndex(glyphIndex);
             if (!(glyph.TtfWoffInfo is var (endPoints, glyphPoints)))
+            {
                 throw new NotSupportedException("Only TTF glyphs are supported");
+            }
             return HintGlyph(horizontalAdv,
                 hFrontSideBearing,
                 glyph.MinX,
@@ -154,11 +170,11 @@ namespace Typography.OpenFont
     {
         GraphicsState _state;
         GraphicsState _cvtState;
-        ExecutionStack _stack;
-        InstructionStream[] _functions;
-        InstructionStream[] _instructionDefs;
+        readonly ExecutionStack _stack;
+        readonly InstructionStream[] _functions;
+        readonly InstructionStream[] _instructionDefs;
         float[]? _controlValueTable;
-        int[] _storage;
+        readonly int[] _storage;
         ushort[]? _contours;
         float _scale;
         int _ppem;
@@ -189,7 +205,9 @@ namespace Typography.OpenFont
         public void SetControlValueTable(int[]? cvt, float scale, float ppem, byte[]? cvProgram)
         {
             if (_scale == scale || cvt == null)
+            {
                 return;
+            }
 
             if (_controlValueTable == null)
             {
@@ -259,10 +277,13 @@ namespace Typography.OpenFont
             OnVectorsUpdated();
 
             // normalize the round state settings
-            switch (_state.RoundState)
+            if (_state.RoundState == RoundMode.Super)
             {
-                case RoundMode.Super: SetSuperRound(1.0f); break;
-                case RoundMode.Super45: SetSuperRound(Sqrt2Over2); break;
+                SetSuperRound(1.0f);
+            }
+            else
+            {
+                SetSuperRound(Sqrt2Over2);
             }
 
             try
@@ -320,7 +341,9 @@ namespace Typography.OpenFont
                         {
                             var count = opcode == OpCode.NPUSHW ? stream.NextByte() : opcode - OpCode.PUSHW1 + 1;
                             for (int i = count - 1; i >= 0; --i)
+                            {
                                 _stack.Push(stream.NextWord());
+                            }
                         }
                         break;
 
@@ -343,7 +366,9 @@ namespace Typography.OpenFont
                     case OpCode.WCVTP:
                         {
                             if (_controlValueTable is null)
+                            {
                                 throw new NotSupportedException();
+                            }
                             var value = _stack.PopFloat();
                             var loc = CheckIndex(_stack.Pop(), _controlValueTable.Length);
                             _controlValueTable[loc] = value;
@@ -352,7 +377,9 @@ namespace Typography.OpenFont
                     case OpCode.WCVTF:
                         {
                             if (_controlValueTable is null)
+                            {
                                 throw new NotSupportedException();
+                            }
                             var value = _stack.Pop();
                             var loc = CheckIndex(_stack.Pop(), _controlValueTable.Length);
                             _controlValueTable[loc] = value * _scale;
@@ -387,7 +414,9 @@ namespace Typography.OpenFont
                             var x = _stack.Pop();
                             var vec = Vector2.Normalize(new Vector2(F2Dot14ToFloat(x), F2Dot14ToFloat(y)));
                             if (opcode == OpCode.SFVFS)
+                            {
                                 _state.Freedom = vec;
+                            }
                             else
                             {
                                 _state.Projection = vec;
@@ -429,9 +458,13 @@ namespace Typography.OpenFont
                                 // value is false if zero, otherwise shift the right bit into the flags
                                 var bit = 1 << (selector - 1);
                                 if (_stack.Pop() == 0)
+                                {
                                     _state.InstructionControl = (InstructionControlFlags)((int)_state.InstructionControl & ~bit);
+                                }
                                 else
+                                {
                                     _state.InstructionControl = (InstructionControlFlags)((int)_state.InstructionControl | bit);
+                                }
                             }
                         }
                         break;
@@ -491,10 +524,6 @@ namespace Typography.OpenFont
                                 var index = _stack.Pop();
                                 //review here again!
                                 _points.Current[index].onCurve = !_points.Current[index].onCurve;
-                                //if (points.Current[index].onCurve)
-                                //    points.Current[index].onCurve = false;
-                                //else
-                                //    points.Current[index].onCurve = true;
                             }
                             _state.Loop = 1;
                         }
@@ -504,7 +533,6 @@ namespace Typography.OpenFont
                             var end = _stack.Pop();
                             for (int i = _stack.Pop(); i <= end; i++)
                             {
-                                //points.Current[i].Type = PointType.OnCurve;
                                 _points.Current[i].onCurve = true;
                             }
                         }
@@ -514,7 +542,6 @@ namespace Typography.OpenFont
                             var end = _stack.Pop();
                             for (int i = _stack.Pop(); i <= end; i++)
                             {
-                                //points.Current[i].Type = PointType.Quadratic;
                                 _points.Current[i].onCurve = false;
                             }
                         }
@@ -606,7 +633,9 @@ namespace Typography.OpenFont
                             {
                                 // only use the CVT if we are above the cut-in point
                                 if (Math.Abs(distance - currentPos) > _state.ControlValueCutIn)
+                                {
                                     distance = currentPos;
+                                }
                                 distance = Round(distance);
                             }
 
@@ -675,9 +704,13 @@ namespace Typography.OpenFont
                                 {
                                     // a range of 0.0f is invalid according to the spec (would result in a div by zero)
                                     if (originalRange == 0.0f)
+                                    {
                                         newDistance = originalDistance;
+                                    }
                                     else
+                                    {
                                         newDistance = originalDistance * currentRange / originalRange;
+                                    }
                                 }
 
                                 MovePoint(_zp2, pointIndex, newDistance - currentDistance);
@@ -718,159 +751,6 @@ namespace Typography.OpenFont
                         {
                             break;
                         }
-
-                        //{
-
-                        //    //WinterDev's new managed version
-                        //    GlyphPointF[] currentPnts = points.Current;
-                        //    GlyphPointF[] originalPnts = points.Original;
-
-                        //    int cnt_count = contours.Length;
-                        //    int point = 0;
-                        //    // opcode controls whether we care about X or Y direction
-                        //    // do some pointer trickery so we can operate on the
-                        //    // points in a direction-agnostic manner
-                        //    TouchState touchMask;
-
-                        //    if (opcode == OpCode.IUP0)
-                        //    {
-                        //        //y -axis
-                        //        touchMask = TouchState.Y;
-
-                        //        //
-                        //        for (int i = 0; i < cnt_count; ++i)
-                        //        {
-                        //            int endPoint = contours[i];
-                        //            int firstPoint = point;
-                        //            int firstTouched = -1;
-                        //            int lastTouched = -1;
-
-                        //            for (; point <= endPoint; point++)
-                        //            {
-                        //                // check whether this point has been touched
-                        //                if ((points.TouchState[point] & touchMask) != 0)
-                        //                {
-                        //                    // if this is the first touched point in the contour, note it and continue
-                        //                    if (firstTouched < 0)
-                        //                    {
-                        //                        firstTouched = point;
-                        //                        lastTouched = point;
-                        //                        continue;
-                        //                    }
-
-                        //                    // otherwise, interpolate all untouched points
-                        //                    // between this point and our last touched point
-                        //                    InterpolatePointsYAxis(currentPnts, originalPnts, lastTouched + 1, point - 1, lastTouched, point);
-                        //                    lastTouched = point;
-                        //                }
-                        //            }
-
-                        //            // check if we had any touched points at all in this contour
-                        //            if (firstTouched >= 0)
-                        //            {
-                        //                // there are two cases left to handle:
-                        //                // 1. there was only one touched point in the whole contour, in
-                        //                //    which case we want to shift everything relative to that one
-                        //                // 2. several touched points, in which case handle the gap from the
-                        //                //    beginning to the first touched point and the gap from the last
-                        //                //    touched point to the end of the contour
-                        //                if (lastTouched == firstTouched)
-                        //                {
-                        //                    float delta = currentPnts[lastTouched].Y - originalPnts[lastTouched].Y;
-                        //                    if (delta != 0.0f)
-                        //                    {
-                        //                        for (int n = firstPoint; n < lastTouched; n++)
-                        //                        {
-                        //                            currentPnts[n].OffsetY(delta);
-                        //                        }
-                        //                        for (int n = lastTouched + 1; n <= endPoint; n++)
-                        //                        {
-                        //                            currentPnts[n].OffsetY(delta);
-                        //                        }
-
-                        //                    }
-                        //                }
-                        //                else
-                        //                {
-                        //                    InterpolatePointsYAxis(currentPnts, originalPnts, lastTouched + 1, endPoint, lastTouched, firstTouched);
-                        //                    if (firstTouched > 0)
-                        //                    {
-                        //                        InterpolatePointsYAxis(currentPnts, originalPnts, firstPoint, firstTouched - 1, lastTouched, firstTouched);
-                        //                    }
-                        //                }
-                        //            }
-
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        //x-axis
-                        //        touchMask = TouchState.X;
-                        //        //
-                        //        for (int i = 0; i < cnt_count; ++i)
-                        //        {
-                        //            int endPoint = contours[i];
-                        //            int firstPoint = point;
-                        //            int firstTouched = -1;
-                        //            int lastTouched = -1;
-
-                        //            for (; point <= endPoint; point++)
-                        //            {
-                        //                // check whether this point has been touched
-                        //                if ((points.TouchState[point] & touchMask) != 0)
-                        //                {
-                        //                    // if this is the first touched point in the contour, note it and continue
-                        //                    if (firstTouched < 0)
-                        //                    {
-                        //                        firstTouched = point;
-                        //                        lastTouched = point;
-                        //                        continue;
-                        //                    }
-
-                        //                    // otherwise, interpolate all untouched points
-                        //                    // between this point and our last touched point
-                        //                    InterpolatePointsXAxis(currentPnts, originalPnts, lastTouched + 1, point - 1, lastTouched, point);
-                        //                    lastTouched = point;
-                        //                }
-                        //            }
-
-                        //            // check if we had any touched points at all in this contour
-                        //            if (firstTouched >= 0)
-                        //            {
-                        //                // there are two cases left to handle:
-                        //                // 1. there was only one touched point in the whole contour, in
-                        //                //    which case we want to shift everything relative to that one
-                        //                // 2. several touched points, in which case handle the gap from the
-                        //                //    beginning to the first touched point and the gap from the last
-                        //                //    touched point to the end of the contour
-                        //                if (lastTouched == firstTouched)
-                        //                {
-                        //                    float delta = currentPnts[lastTouched].X - originalPnts[lastTouched].X;
-                        //                    if (delta != 0.0f)
-                        //                    {
-                        //                        for (int n = firstPoint; n < lastTouched; ++n)
-                        //                        {
-                        //                            currentPnts[n].OffsetX(delta);
-                        //                        }
-                        //                        for (int n = lastTouched + 1; n <= endPoint; ++n)
-                        //                        {
-                        //                            currentPnts[n].OffsetX(delta);
-                        //                        }
-                        //                    }
-                        //                }
-                        //                else
-                        //                {
-                        //                    InterpolatePointsXAxis(currentPnts, originalPnts, lastTouched + 1, endPoint, lastTouched, firstTouched);
-                        //                    if (firstTouched > 0)
-                        //                    {
-                        //                        InterpolatePointsXAxis(currentPnts, originalPnts, firstPoint, firstTouched - 1, lastTouched, firstTouched);
-                        //                    }
-                        //                }
-                        //            }
-                        //        }
-                        //    }
-                        //}
-                        //-----------------------------------------
                         unsafe
                         {
 
@@ -941,16 +821,22 @@ namespace Typography.OpenFont
                                             if (delta != 0.0f)
                                             {
                                                 for (int j = firstPoint; j < lastTouched; j++)
+                                                {
                                                     *GetPoint(current, j) += delta;
+                                                }
                                                 for (int j = lastTouched + 1; j <= endPoint; j++)
+                                                {
                                                     *GetPoint(current, j) += delta;
+                                                }
                                             }
                                         }
                                         else
                                         {
                                             InterpolatePoints(current, original, lastTouched + 1, endPoint, lastTouched, firstTouched);
                                             if (firstTouched > 0)
+                                            {
                                                 InterpolatePoints(current, original, firstPoint, firstTouched - 1, lastTouched, firstTouched);
+                                            }
                                         }
                                     }
                                 }
@@ -1012,11 +898,15 @@ namespace Typography.OpenFont
                                     opcode = SkipNext(ref stream);
                                     switch (opcode)
                                     {
+                                        default:
+                                            Console.WriteLine("Default"); break;
                                         case OpCode.IF: indent++; break;
                                         case OpCode.EIF: indent--; break;
                                         case OpCode.ELSE:
                                             if (indent == 1)
+                                            {
                                                 indent = 0;
+                                            }
                                             break;
                                     }
                                 }
@@ -1031,10 +921,13 @@ namespace Typography.OpenFont
                             while (indent > 0)
                             {
                                 opcode = SkipNext(ref stream);
-                                switch (opcode)
+                                if (opcode == OpCode.IF)
                                 {
-                                    case OpCode.IF: indent++; break;
-                                    case OpCode.EIF: indent--; break;
+                                    indent++;
+                                }
+                                else
+                                {
+                                    indent--;
                                 }
                             }
                         }
@@ -1145,7 +1038,9 @@ namespace Typography.OpenFont
                         {
                             var b = _stack.Pop();
                             if (b == 0)
+                            {
                                 throw new InvalidTrueTypeFontException("Division by zero.");
+                            }
 
                             var a = _stack.Pop();
                             var result = ((long)a << 6) / b;
@@ -1210,7 +1105,9 @@ namespace Typography.OpenFont
                             var function = _functions[_stack.Pop()];
                             var count = opcode == OpCode.LOOPCALL ? _stack.Pop() : 1;
                             for (int i = 0; i < count; i++)
+                            {
                                 Execute(function, true, false);
+                            }
                             _callStackSize--;
                         }
                         break;
@@ -1254,7 +1151,9 @@ namespace Typography.OpenFont
                                     // it's encoded such that 0 isn't an allowable value (who wants to shift by 0 anyway?)
                                     var amount = (arg & 0xF) - 8;
                                     if (amount >= 0)
+                                    {
                                         amount++;
+                                    }
                                     amount *= 1 << (6 - _state.DeltaShift);
 
                                     // update the CVT
@@ -1314,8 +1213,6 @@ namespace Typography.OpenFont
                             }
 
                             // TODO: rotation and stretching
-                            //if ((selector & 0x2) != 0)
-                            //if ((selector & 0x4) != 0)
 
                             // we're always rendering in grayscale
                             if ((selector & 0x20) != 0)
@@ -1343,11 +1240,15 @@ namespace Typography.OpenFont
                             // check if this is a runtime-defined opcode
                             var index = (int)opcode;
                             if (index > _instructionDefs.Length || !_instructionDefs[index].IsValid)
+                            {
                                 throw new InvalidTrueTypeFontException("Unknown opcode in font program.");
+                            }
 
                             _callStackSize++;
                             if (_callStackSize > MaxCallStack)
+                            {
                                 throw new InvalidTrueTypeFontException("Stack overflow; infinite recursion?");
+                            }
 
                             Execute(_instructionDefs[index], true, false);
                             _callStackSize--;
@@ -1377,7 +1278,7 @@ namespace Typography.OpenFont
 
         void OnVectorsUpdated()
         {
-            _fdotp = (float)Vector2.Dot(_state.Freedom, _state.Projection);
+            _fdotp = Vector2.Dot(_state.Freedom, _state.Projection);
             if (Math.Abs(_fdotp) < Epsilon)
             {
                 _fdotp = 1.0f;
@@ -1428,7 +1329,9 @@ namespace Typography.OpenFont
             {
                 // if mode is 1 or 3, we want a perpendicular vector
                 if ((mode & 0x1) != 0)
+                {
                     line = new Vector2(-line.Y, line.X);
+                }
                 line = Vector2.Normalize(line);
 
                 if (mode >= 2)
@@ -1493,6 +1396,8 @@ namespace Typography.OpenFont
             // bits 5-4 are the phase
             switch (mode & 0x30)
             {
+                default:
+                    Console.WriteLine("Default"); break;
                 case 0: _roundPhase = 0; break;
                 case 0x10: _roundPhase = roundPeriod / 4; break;
                 case 0x20: _roundPhase = roundPeriod / 2; break;
@@ -1501,9 +1406,13 @@ namespace Typography.OpenFont
 
             // bits 3-0 are the threshold
             if ((mode & 0xF) == 0)
+            {
                 _roundThreshold = roundPeriod - 1;
+            }
             else
+            {
                 _roundThreshold = ((mode & 0xF) - 4) * roundPeriod / 8;
+            }
         }
 
         void MoveIndirectRelative(int flags)
@@ -1517,9 +1426,13 @@ namespace Typography.OpenFont
             if (Math.Abs(cvt - _state.SingleWidthValue) < _state.SingleWidthCutIn)
             {
                 if (cvt >= 0)
+                {
                     cvt = _state.SingleWidthValue;
+                }
                 else
+                {
                     cvt = -_state.SingleWidthValue;
+                }
             }
 
             // if we're looking at the twilight zone we need to prepare the points there
@@ -1622,7 +1535,9 @@ namespace Typography.OpenFont
             _state.Rp1 = _state.Rp0;
             _state.Rp2 = pointIndex;
             if ((flags & 0x10) != 0)
+            {
                 _state.Rp0 = pointIndex;
+            }
         }
 
         Vector2 ComputeDisplacement(int mode, out Zone zone, out int point)
@@ -1696,7 +1611,9 @@ namespace Typography.OpenFont
                         result = (float)Math.Truncate(result / roundPeriod) * roundPeriod;
                         result += _roundPhase;
                         if (result < 0)
+                        {
                             result = _roundPhase;
+                        }
                     }
                     else
                     {
@@ -1704,7 +1621,9 @@ namespace Typography.OpenFont
                         result = -(float)Math.Truncate(result / roundPeriod) * roundPeriod;
                         result -= _roundPhase;
                         if (result > 0)
+                        {
                             result = -_roundPhase;
+                        }
                     }
                     return result;
 
