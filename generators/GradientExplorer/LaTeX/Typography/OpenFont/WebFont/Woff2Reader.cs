@@ -1491,58 +1491,6 @@ namespace Typography.WebFont
 
         static bool ReadUIntBase128(BinaryReader reader, out uint result)
         {
-
-            //UIntBase128 Data Type
-
-            //UIntBase128 is a different variable length encoding of unsigned integers,
-            //suitable for values up to 2^(32) - 1.
-
-            //A UIntBase128 encoded number is a sequence of bytes for which the most significant bit
-            //is set for all but the last byte,
-            //and clear for the last byte.
-
-            //The number itself is base 128 encoded in the lower 7 bits of each byte.
-            //Thus, a decoding procedure for a UIntBase128 is: 
-            //start with value = 0.
-            //Consume a byte, setting value = old value times 128 + (byte bitwise - and 127).
-            //Repeat last step until the most significant bit of byte is false.
-
-            //UIntBase128 encoding format allows a possibility of sub-optimal encoding,
-            //where e.g.the same numerical value can be represented with variable number of bytes(utilizing leading 'zeros').
-            //For example, the value 63 could be encoded as either one byte 0x3F or two(or more) bytes: [0x80, 0x3f].
-            //An encoder must not allow this to happen and must produce shortest possible encoding. 
-            //A decoder MUST reject the font file if it encounters a UintBase128 - encoded value with leading zeros(a value that starts with the byte 0x80),
-            //if UintBase128 - encoded sequence is longer than 5 bytes,
-            //or if a UintBase128 - encoded value exceeds 232 - 1.
-
-            //The "C-like" pseudo - code describing how to read the UIntBase128 format is presented below:
-            //bool ReadUIntBase128(data, * result)
-            //            {
-            //                UInt32 accum = 0;
-
-            //                for (i = 0; i < 5; i++)
-            //                {
-            //                    UInt8 data_byte = data.getNextUInt8();
-
-            //                    // No leading 0's
-            //                    if (i == 0 && data_byte = 0x80) return false;
-
-            //                    // If any of top 7 bits are set then << 7 would overflow
-            //                    if (accum & 0xFE000000) return false;
-
-            //                    *accum = (accum << 7) | (data_byte & 0x7F);
-
-            //                    // Spin until most significant bit of data byte is false
-            //                    if ((data_byte & 0x80) == 0)
-            //                    {
-            //                        *result = accum;
-            //                        return true;
-            //                    }
-            //                }
-            //                // UIntBase128 sequence exceeds 5 bytes
-            //                return false;
-            //            }
-
             uint accum = 0;
             result = 0;
             for (int i = 0; i < 5; ++i)

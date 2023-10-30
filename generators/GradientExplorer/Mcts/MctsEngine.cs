@@ -133,9 +133,6 @@ namespace GradientExplorer.Mcts
                     allTasks.Remove(completedTask);
                     totalTasksCreated--;
                 }
-
-                // Update termination condition if needed
-                // e.g., shouldTerminate = some_condition;
             }
 
             // Await all tasks to complete

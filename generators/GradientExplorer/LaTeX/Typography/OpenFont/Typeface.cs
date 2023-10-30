@@ -330,7 +330,10 @@ namespace Typography.OpenFont
         public static void FillWithCodepoints(List<int> codepoints, char[] str, int startAt = 0, int len = -1)
         {
 
-            if (len == -1) len = str.Length;
+            if (len == -1)
+            {
+                len = str.Length;
+            }
             // this is important!
             // -----------------------
             //  from @samhocevar's PR: (https://github.com/LayoutFarm/Typography/pull/56/commits/b71c7cf863531ebf5caa478354d3249bde40b96e)
@@ -1012,8 +1015,13 @@ namespace Typography.OpenFont
                     boundFinder.Reset();
 
                     if (g.CffInfo is { } cff)
+                    {
                         evalEngine.Run(boundFinder, cff.GlyphInstructions);
-                    else throw new System.NotSupportedException("Non-CFF glyph in CFF font");
+                    }
+                    else
+                    {
+                        throw new System.NotSupportedException("Non-CFF glyph in CFF font");
+                    }
 
                     g.Bounds = boundFinder.GetResultBounds();
                 }

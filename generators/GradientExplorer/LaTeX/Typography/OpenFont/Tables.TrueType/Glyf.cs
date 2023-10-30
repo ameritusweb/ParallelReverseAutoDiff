@@ -288,7 +288,7 @@ namespace Typography.OpenFont.Tables
             //move to composite glyph position
             reader.BaseStream.Seek(tableOffset + locations.Offsets[compositeGlyphIndex], SeekOrigin.Begin);//reset
             //------------------------
-            short contoursCount = reader.ReadInt16(); // ignored
+            reader.ReadInt16(); // ignored
             Bounds bounds = Utils.ReadBounds(reader);
 
             Glyph? finalGlyph = null;
@@ -498,36 +498,6 @@ namespace Typography.OpenFont.Tables
                 byte[] insts = reader.ReadBytes(numInstr);
                 finalGlyph.GlyphInstructions = insts;
             }
-            //F2DOT14 	16-bit signed fixed number with the low 14 bits of fraction (2.14).
-            //Transformation Option
-            //
-            //The C pseudo-code fragment below shows how the composite glyph information is stored and parsed; definitions for “flags” bits follow this fragment:
-            //  do {
-            //    USHORT flags;
-            //    USHORT glyphIndex;
-            //    if ( flags & ARG_1_AND_2_ARE_WORDS) {
-            //    (SHORT or FWord) argument1;
-            //    (SHORT or FWord) argument2;
-            //    } else {
-            //        USHORT arg1and2; /* (arg1 << 8) | arg2 */
-            //    }
-            //    if ( flags & WE_HAVE_A_SCALE ) {
-            //        F2Dot14  scale;    /* Format 2.14 */
-            //    } else if ( flags & WE_HAVE_AN_X_AND_Y_SCALE ) {
-            //        F2Dot14  xscale;    /* Format 2.14 */
-            //        F2Dot14  yscale;    /* Format 2.14 */
-            //    } else if ( flags & WE_HAVE_A_TWO_BY_TWO ) {
-            //        F2Dot14  xscale;    /* Format 2.14 */
-            //        F2Dot14  scale01;   /* Format 2.14 */
-            //        F2Dot14  scale10;   /* Format 2.14 */
-            //        F2Dot14  yscale;    /* Format 2.14 */
-            //    }
-            //} while ( flags & MORE_COMPONENTS ) 
-            //if (flags & WE_HAVE_INSTR){
-            //    USHORT numInstr
-            //    BYTE instr[numInstr]
-            //------------------------------------------------------------ 
-
 
             return finalGlyph ?? _emptyGlyph;
         }

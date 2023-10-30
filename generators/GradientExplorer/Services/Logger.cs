@@ -63,7 +63,7 @@ namespace GradientExplorer.Services
 
                 try
                 {
-                    var res = pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());
+                    pane.OutputStringThreadSafe(formattedMessage + environmentProvider.GetNewLine());
                 }
                 catch (Exception ex)
                 {

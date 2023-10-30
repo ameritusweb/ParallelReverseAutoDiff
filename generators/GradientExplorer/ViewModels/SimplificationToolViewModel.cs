@@ -39,7 +39,7 @@ namespace GradientExplorer.ViewModels
             GameStateGenerator generator = new GameStateGenerator();
             MctsEngine engine = new MctsEngine(generator, logger);
             engine.Initialize(new GameState(new GradientGraph()));
-            var simplification = await engine.RunMCTS();
+            await engine.RunMCTS();
         }
 
         private bool CanSimplify()

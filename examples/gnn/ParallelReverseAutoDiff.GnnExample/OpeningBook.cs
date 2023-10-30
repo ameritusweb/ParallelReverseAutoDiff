@@ -565,42 +565,6 @@ namespace ParallelReverseAutoDiff.GnnExample
                 new Move("{bn - b8 - d7}"),
             };
             openings.Add("Sicilian Canal", sicilianCanal);
-
-            //// Hedgehog for White
-            // var hedgehogWhite = new[]
-            // {
-            //    new Move("{d2 - d4}"),
-            //    new Move("{d7 - d6}"),
-            //    new Move("{c2 - c4}"),
-            //    new Move("{e7 - e6}"),
-            //    new Move("{b1 - d2}"),
-            //    new Move("{b8 - d7}"),
-            //    new Move("{g2 - g3}"),
-            //    new Move("{g7 - g6}"),
-            //    new Move("{b2 - b3}"),
-            //    new Move("{b7 - b6}"),
-            //    new Move("{f1 - b2}"),
-            //    new Move("{f8 - b7}"),
-            // };
-            // openings.Add("Hedgehog White", hedgehogWhite);
-
-            //// Hedgehog for Black
-            // var hedgehogBlack = new[]
-            // {
-            //    new Move("{e2 - e4}"),
-            //    new Move("{e7 - e6}"),
-            //    new Move("{d2 - d3}"),
-            //    new Move("{d7 - d6}"),
-            //    new Move("{g1 - d2}"),
-            //    new Move("{g8 - d7}"),
-            //    new Move("{g2 - g3}"),
-            //    new Move("{g7 - g6}"),
-            //    new Move("{b2 - b3}"),
-            //    new Move("{b7 - b6}"),
-            //    new Move("{f1 - b2}"),
-            //    new Move("{f8 - b7}"),
-            // };
-            // openings.Add("Hedgehog Black", hedgehogBlack);
             return openings;
         }
     }

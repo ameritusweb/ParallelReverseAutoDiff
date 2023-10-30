@@ -666,8 +666,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
 
                         var evalLosses = string.Join(" ", losses.OrderByDescending(x => evaluationMap[x.Item1]).Select(x => x.Item2 + " " + evaluationMap[x.Item1]));
 
-                        // var orderedOpposite2 = orderedOpposite.TakeWhile(x => !x.Item1.IsTarget).ToList();
-                        // orderedOpposite2 = orderedOpposite2.Concat(orderedOpposite.SkipWhile(x => !x.Item1.IsTarget).Take(1)).ToList();
                         this.PrintGraph(graph, evalLosses, string.Join(" ", ordered.Select(x => x.Item2)), string.Join(" ", orderedOpposite.Select(x => x.Item2 + " " + x.Item3 + "|")), gapPathTarget.Move(), loss[0][0], avgloss, orderedlosses.Last().Item3, orderedlosses.First().Item3, minloss?.Item2 ?? default(string)!, rewards.Min(), maxloss, maxRewards.Max());
                     }
                     else if (i > 0)
@@ -904,7 +902,6 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths
                     DeepMatrix gradients = new DeepMatrix(edges.Select(x => edgeGradientMap[x]).ToArray());
                     var embeddingsNet = this.embeddingNeuralNetwork[key];
                     embeddingsNet.RestoreOperationIntermediates(this.typeToIdMapEmbeddings[key]);
-                    var embeddingsGradient = await embeddingsNet.AutomaticBackwardPropagate(gradients);
                 }
             }
         }

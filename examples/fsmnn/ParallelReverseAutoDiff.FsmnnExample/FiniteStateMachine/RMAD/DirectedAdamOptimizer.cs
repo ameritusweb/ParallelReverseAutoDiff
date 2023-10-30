@@ -220,8 +220,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     double weightReductionValue = this.network.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
 
-                    var grad = gradient[i][j];
-
                     w[i][j] += weightReductionValue;  // adding here to reverse the update
                 }
             }
@@ -262,7 +260,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     if (Math.Abs(gradient[i][j]) < avg)
                     {
-                        gradient[i][j] = 0d; // *= scalingFactor;
+                        gradient[i][j] = 0d;
                         critical.Add($"{i} {j}");
                     }
                     else
@@ -272,31 +270,6 @@ namespace ParallelReverseAutoDiff.RMAD
                     }
                 }
             }
-
-            /*
-            if (this.SwitchGradients)
-            {
-                if (!this.e1Map.ContainsKey(w))
-                {
-                    this.e1Map.TryAdd(w, example);
-                }
-            }
-            else
-            {
-                if (!this.e2Map.ContainsKey(w))
-                {
-                    this.e2Map.TryAdd(w, example);
-                }
-            }
-
-            if (this.e1Map.ContainsKey(w) && this.e2Map.ContainsKey(w))
-            {
-                if (!this.intersectMap.ContainsKey(w))
-                {
-                    this.intersectMap.TryAdd(w, this.e1Map[w].Intersect(this.e2Map[w]).ToHashSet());
-                }
-            }
-            */
 
             // Update biased first moment estimate
             var firstMoment = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
@@ -340,7 +313,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.matrixMap.TryAdd(w, critical);
             if (!this.scalingMap.ContainsKey(w))
             {
-                bool res = this.scalingMap.TryAdd(w, scalingFactor);
+                this.scalingMap.TryAdd(w, scalingFactor);
             }
 
             // Update first moment

@@ -78,10 +78,6 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.RMAD
 
             this.targetIndex = target;
 
-            // Compute the final loss based on variance
-            double loss = Math.Pow(variance - trueVariance, 2);
-
-            // return loss;
             return dist;
         }
 

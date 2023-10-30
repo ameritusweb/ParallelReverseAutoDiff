@@ -19,7 +19,10 @@ public abstract class IconImageBase<TEnum> : Image where TEnum : struct, IConver
 
     protected IconImageBase()
     {
-        if (!typeof(TEnum).IsEnum) throw new ArgumentException("TEnum must be an enum.");
+        if (!typeof(TEnum).IsEnum)
+        {
+            throw new ArgumentException("TEnum must be an enum.");
+        }
     }
 
     public TEnum Icon
@@ -36,7 +39,10 @@ public abstract class IconImageBase<TEnum> : Image where TEnum : struct, IConver
 
     private static void OnIconPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is IconImageBase<TEnum> iconImage)) return;
+        if (!(d is IconImageBase<TEnum> iconImage))
+        {
+            return;
+        }
         var icon = (TEnum) e.NewValue;
         var imageSource = iconImage.ImageSourceFor(icon);
         iconImage.SetValue(SourceProperty, imageSource);
@@ -44,7 +50,10 @@ public abstract class IconImageBase<TEnum> : Image where TEnum : struct, IConver
 
     private static void OnForegroundPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is IconImageBase<TEnum> iconImage)) return;
+        if (!(d is IconImageBase<TEnum> iconImage))
+        {
+            return;
+        }
         var icon = (TEnum) d.GetValue(IconProperty);
         var imageSource = iconImage.ImageSourceFor(icon);
         iconImage.SetValue(SourceProperty, imageSource);

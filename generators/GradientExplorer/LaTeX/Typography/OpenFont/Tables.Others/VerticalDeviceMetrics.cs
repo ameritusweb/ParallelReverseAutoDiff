@@ -35,8 +35,8 @@ namespace Typography.OpenFont.Tables
             //uint8 	xRatio 	        Value to use for x-Ratio
             //uint8 	yStartRatio 	Starting y-Ratio value.
             //uint8 	yEndRatio 	    Ending y-Ratio value.
-            ushort version = reader.ReadUInt16();
-            ushort numRecs = reader.ReadUInt16();
+            reader.ReadUInt16();
+            reader.ReadUInt16();
             ushort numRatios = reader.ReadUInt16();
             _ratios = new Ratio[numRatios];
             for (int i = 0; i < numRatios; ++i)

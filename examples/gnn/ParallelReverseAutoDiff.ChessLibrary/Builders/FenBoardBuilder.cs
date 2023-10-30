@@ -88,13 +88,21 @@ namespace Chess
                         if (group.Value != "-")
                         {
                             if (group.Value.Contains('K'))
+                            {
                                 builder.CastleWK = true;
+                            }
                             if (group.Value.Contains('Q'))
+                            {
                                 builder.CastleWQ = true;
+                            }
                             if (group.Value.Contains('k'))
+                            {
                                 builder.CastleBK = true;
+                            }
                             if (group.Value.Contains('q'))
+                            {
                                 builder.CastleBQ = true;
+                            }
                         }
 
                         break;

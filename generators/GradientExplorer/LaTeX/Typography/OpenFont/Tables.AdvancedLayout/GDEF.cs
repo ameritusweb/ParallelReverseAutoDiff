@@ -258,7 +258,10 @@ namespace Typography.OpenFont.Tables
             //For more information on the use of mark attachment classes, 
             //see the description of lookup flags in the “Lookup Table” section of the chapter, OpenType Layout Common Table Formats.
             ClassDefTable? markAttachmentClassDef = this.MarkAttachmentClassDef;
-            if (markAttachmentClassDef == null) return;
+            if (markAttachmentClassDef == null)
+            {
+                return;
+            }
             //-----------------------------------------
 
             if (markAttachmentClassDef.format1 is var (startGlyph, classValues))

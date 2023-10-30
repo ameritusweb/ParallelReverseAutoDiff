@@ -99,7 +99,10 @@ public static class IconHelper
         Brush brush = null, double size = DefaultSize)
     {
         var typeface = TypefaceFor(iconChar, iconFont);
-        if (typeface == null) return null;
+        if (typeface == null)
+        {
+            return null;
+        }
         return typeface.TryFind(iconChar.UniCode(), out var gt, out var glyphIndex) ? ToImageSource(brush, size, gt, glyphIndex) : null;
     }
 
@@ -150,7 +153,9 @@ public static class IconHelper
         foreach (var typeface in typefaces)
         {
             if (typeface.TryFind(iconCode, out gt, out glyphIndex))
+            {
                 return typeface;
+            }
         }
         return null;
     }
@@ -185,15 +190,25 @@ public static class IconHelper
 
     internal static Typeface TypefaceFor(IconChar iconChar, IconFont iconFont)
     {
-        if (iconFont == IconFont.Auto) return TypefaceFor(iconChar);
+        if (iconFont == IconFont.Auto)
+        {
+            return TypefaceFor(iconChar);
+        }
         var key = (int)iconFont;
-        if (TypefaceForStyle.TryGetValue(key, out var typeFace)) return typeFace;
+        if (TypefaceForStyle.TryGetValue(key, out var typeFace))
+        {
+            return typeFace;
+        }
         if (!FontTitles.TryGetValue(key, out var name))
+        {
             return Throw($"No font loaded for style: {iconFont}");
+        }
 
         typeFace = Typefaces.FirstOrDefault(t => t.FontFamily.Source.EndsWith(name));
         if (typeFace == null)
+        {
             return Throw($"No font loaded for '{name}'");
+        }
 
         TypefaceForStyle.Add(key, typeFace);
         return typeFace;
@@ -203,7 +218,10 @@ public static class IconHelper
 
     internal static Typeface Throw(string message)
     {
-        if (ThrowOnNullFonts) throw new InvalidOperationException(message);
+        if (ThrowOnNullFonts)
+        {
+            throw new InvalidOperationException(message);
+        }
         return default;
     }
 

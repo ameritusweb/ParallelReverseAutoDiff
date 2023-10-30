@@ -69,11 +69,11 @@ namespace Typography.OpenFont.Tables
             _italicAngle = reader.ReadUInt32();
             _underlinePosition = reader.ReadInt16();
             _underlineThickness = reader.ReadInt16();
-            uint isFixedPitch = reader.ReadUInt32();
-            uint minMemType42 = reader.ReadUInt32();
-            uint maxMemType42 = reader.ReadUInt32();
-            uint minMemType1 = reader.ReadUInt32();
-            uint maxMemType1 = reader.ReadUInt32();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
 
             //If the version is 1.0 or 3.0, the table ends here. 
 
