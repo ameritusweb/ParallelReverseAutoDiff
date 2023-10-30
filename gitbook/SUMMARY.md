@@ -12,4 +12,4 @@
 
 ## Gradient Explorer VSIX Extension
 
-* [Yet another page](another-page.md)
+* [Yet another page](gradient-explorer/README.html)
