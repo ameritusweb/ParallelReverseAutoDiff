@@ -252,7 +252,10 @@ namespace Typography.TextBreak
         {
             get
             {
-                if (_wordSpanList == null) return 0;
+                if (_wordSpanList == null)
+                {
+                    return 0;
+                }
                 return _wordSpanList.Count;
             }
         }

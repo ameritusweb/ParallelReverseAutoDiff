@@ -120,9 +120,6 @@ namespace ParallelReverseAutoDiff.FsmnnExample.FiniteStateMachine.TraversalNetwo
             this.optimizer = new DirectedAdamOptimizer(this.embeddingNeuralNetwork, false);
             await this.embeddingNeuralNetwork.Initialize();
             this.modelLayers = this.modelLayers.Concat(this.embeddingNeuralNetwork.ModelLayers).ToList();
-
-            // this.SaveWeights();
-            // this.ApplyWeights();
         }
 
         /// <summary>

@@ -41,8 +41,8 @@ namespace Typography.OpenFont.Tables
         internal CBLC(TableHeader header, BinaryReader reader) : base(header, reader)
         {
             long cblcBeginPos = reader.BaseStream.Position;
-            ushort majorVersion = reader.ReadUInt16(); //3
-            ushort minorVersion = reader.ReadUInt16(); //0
+            reader.ReadUInt16(); //3
+            reader.ReadUInt16(); //0
             uint numSizes = reader.ReadUInt32();
 
             //The CblcHeader is followed immediately by the BitmapSize table array(s). 

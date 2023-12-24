@@ -13,12 +13,12 @@ namespace Typography.OpenFont.CFF
     {
 
         float _scale = 1;//default 
-        Stack<Type2EvaluationStack> _evalStackPool = new Stack<Type2EvaluationStack>();
+        readonly Stack<Type2EvaluationStack> _evalStackPool = new Stack<Type2EvaluationStack>();
 
         class PxScaleGlyphTx : IGlyphTranslator
         {
-            float _scale;
-            IGlyphTranslator _tx;
+            readonly float _scale;
+            readonly IGlyphTranslator _tx;
 
             bool _is_contour_opened;
 
@@ -127,6 +127,9 @@ namespace Typography.OpenFont.CFF
                 int merge_flags = inst.Op >> 6;//upper 2 bits is our extension flags
                 switch (merge_flags)
                 {
+                    default:
+                        Console.WriteLine("Default");
+                        break;
                     case 0: //nothing
                         break;
                     case 1:
@@ -286,8 +289,8 @@ namespace Typography.OpenFont.CFF
         internal double _currentX;
         internal double _currentY;
 
-        double[] _argStack = new double[50];
-        int _currentIndex = 0; //current stack index
+        readonly double[] _argStack = new double[50];
+        int _currentIndex;
 
         IGlyphTranslator? _glyphTranslator;
 #if DEBUG
@@ -345,7 +348,10 @@ namespace Typography.OpenFont.CFF
         /// </summary>
         public void R_MoveTo()
         {
-            if (_glyphTranslator is null) ThrowNullGlyphTranslator();
+            if (_glyphTranslator is null)
+            {
+                ThrowNullGlyphTranslator();
+            }
             //|- dx1 dy1 rmoveto(21) |-
 
             //moves the current point to

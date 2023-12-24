@@ -73,9 +73,15 @@ public static class Awesome
 
     private static void SpinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is FrameworkElement control)) return;
+        if (!(d is FrameworkElement control))
+        {
+            return;
+        }
 
-        if (!(e.NewValue is bool) || e.NewValue.Equals(e.OldValue)) return;
+        if (!(e.NewValue is bool) || e.NewValue.Equals(e.OldValue))
+        {
+            return;
+        }
         var spin = (bool)e.NewValue;
 
         if (spin)
@@ -93,8 +99,14 @@ public static class Awesome
 
     private static void SpinDurationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is FrameworkElement control)) return;
-        if (!(e.NewValue is double) || e.NewValue.Equals(e.OldValue)) return;
+        if (!(d is FrameworkElement control))
+        {
+            return;
+        }
+        if (!(e.NewValue is double) || e.NewValue.Equals(e.OldValue))
+        {
+            return;
+        }
         var spinDuration = (double)e.NewValue;
         StopSpin(control);
         BeginSpin(control, spinDuration);
@@ -108,8 +120,14 @@ public static class Awesome
 
     private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is FrameworkElement control)) return;
-        if (!(e.NewValue is double) || e.NewValue.Equals(e.OldValue)) return;
+        if (!(d is FrameworkElement control))
+        {
+            return;
+        }
+        if (!(e.NewValue is double) || e.NewValue.Equals(e.OldValue))
+        {
+            return;
+        }
         var rotation = (double)e.NewValue;
         SetRotation(control, rotation);
     }
@@ -121,8 +139,14 @@ public static class Awesome
 
     private static void FlipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is FrameworkElement control)) return;
-        if (!(e.NewValue is FlipOrientation) || e.NewValue.Equals(e.OldValue)) return;
+        if (!(d is FrameworkElement control))
+        {
+            return;
+        }
+        if (!(e.NewValue is FlipOrientation) || e.NewValue.Equals(e.OldValue))
+        {
+            return;
+        }
         var flipOrientation = (FlipOrientation)e.NewValue;
         SetFlipOrientation(control, flipOrientation);
     }
@@ -174,7 +198,10 @@ public static class Awesome
     private static void StopSpin(FrameworkElement control)
     {
         var storyboard = GetStoryboard(control);
-        if (storyboard == null) return;
+        if (storyboard == null)
+        {
+            return;
+        }
         storyboard.Stop();
         control.Resources.Remove(SpinnerStoryBoardName);
     }
@@ -257,7 +284,9 @@ public static class Awesome
     private static void InlinePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (!(d is TextBlock textBlock))
+        {
             return;
+        }
 
         var text = (string)e.NewValue ?? string.Empty;
         var pattern = GetPattern(textBlock) ?? DefaultPattern;
@@ -277,15 +306,23 @@ public static class Awesome
     public static IEnumerable<Inline> FormatText(string text, string pattern = DefaultPattern)
     {
         var tokens = Regex.Split(text, pattern);
-        if (tokens.Length == 1) return Enumerable.Empty<Inline>();
+        if (tokens.Length == 1)
+        {
+            return Enumerable.Empty<Inline>();
+        }
 
         var inlines = new List<Inline>();
         for (var i = 0; i < tokens.Length; i += 2)
         {
             var t = tokens[i];
             if (!string.IsNullOrWhiteSpace(t))
+            {
                 inlines.Add(new Run(t));
-            if (i + 1 >= tokens.Length) break;
+            }
+            if (i + 1 >= tokens.Length)
+            {
+                break;
+            }
 
             t = tokens[i + 1];
             inlines.Add(RunFor(t));
@@ -297,7 +334,9 @@ public static class Awesome
     private static Run RunFor(string token)
     {
         if (string.IsNullOrWhiteSpace(token))
+        {
             throw new ArgumentException("token must not be null, empty or whitespace");
+        }
         return Enum.TryParse<IconChar>(token, true, out var icon)
             ? new Run(icon.ToChar()) { FontFamily = IconHelper.FontFor(icon) }
             : new Run(token);

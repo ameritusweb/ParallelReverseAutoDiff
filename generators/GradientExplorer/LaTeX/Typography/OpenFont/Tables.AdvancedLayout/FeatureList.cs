@@ -136,7 +136,7 @@ namespace Typography.OpenFont.Tables
             //uint16 	LookupListIndex[LookupCount] 	Array of LookupList indices for this feature -zero-based (first lookup is LookupListIndex = 0)
             //--------------------------
 
-            ushort[] _lookupListIndices;
+            readonly ushort[] _lookupListIndices;
 
             public FeatureTable(ushort[] lookupListIndices)
             {

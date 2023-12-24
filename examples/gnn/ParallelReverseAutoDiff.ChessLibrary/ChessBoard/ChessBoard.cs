@@ -226,7 +226,9 @@ namespace Chess
                 var captured = new List<Piece>();
 
                 if (LoadedFromFen)
+                {
                     captured.AddRange(FenBuilder!.BlackCaptured);
+                }
 
                 captured.AddRange(DisplayedMoves.Where(m => m.CapturedPiece?.Color == PieceColor.Black)
                                                 .Select(m => new Piece(m.CapturedPiece.Color, m.CapturedPiece.Type)));
@@ -306,7 +308,10 @@ namespace Chess
             private set
             {
                 endGame = value;
-                if (value is not null) OnEndGameEvent();
+                if (value is not null)
+                {
+                    OnEndGameEvent();
+                }
             }
         }
         /// <summary>
@@ -586,7 +591,6 @@ namespace Chess
             if (IsLastMoveDisplayed && executedMoves.Count > 0)
             {
                 var move = executedMoves[^1];
-                var fen = this.ToFen();
 
                 if (move.Parameter is not null)
                 {

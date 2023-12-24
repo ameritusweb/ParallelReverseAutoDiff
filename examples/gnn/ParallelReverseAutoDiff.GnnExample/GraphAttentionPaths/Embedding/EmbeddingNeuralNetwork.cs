@@ -144,7 +144,7 @@ namespace ParallelReverseAutoDiff.Test.GraphAttentionPaths.Embedding
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
-                var result = forward.Invoke(op, parameters);
+                forward.Invoke(op, parameters);
                 if (op.ResultToName != null)
                 {
                     var split = op.ResultToName.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);

@@ -15,7 +15,10 @@ public class ToGeometry : ToGeometryBase<IconChar>
         get => _iconFont;
         set
         {
-            if (_iconFont.Equals(value)) return;
+            if (_iconFont.Equals(value))
+            {
+                return;
+            }
             _iconFont = value;
             UpdateGeometry();
         }

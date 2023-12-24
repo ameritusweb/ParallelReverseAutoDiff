@@ -13,7 +13,7 @@ namespace Chess
 {
     internal class EndGameProvider
     {
-        private ChessBoard board;
+        private readonly ChessBoard board;
 
         public EndGameProvider(ChessBoard board)
         {

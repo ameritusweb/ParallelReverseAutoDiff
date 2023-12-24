@@ -22,7 +22,10 @@ public abstract class IconBlockBase<TEnum> : TextBlock
 
     protected IconBlockBase(FontFamily fontFamily = null)
     {
-        if (!typeof(TEnum).IsEnum) throw new ArgumentException("TEnum must be an enum.");
+        if (!typeof(TEnum).IsEnum)
+        {
+            throw new ArgumentException("TEnum must be an enum.");
+        }
         _fontFamily = fontFamily ?? throw new ArgumentNullException(nameof(fontFamily));
 
         VerticalAlignment = VerticalAlignment.Center;
@@ -33,7 +36,10 @@ public abstract class IconBlockBase<TEnum> : TextBlock
         descriptor.AddValueChanged(this, handler);
         // ReSharper disable once VirtualMemberCallInConstructor
         var font = FontFor(Icon);
-        if (font != null) FontFamily = font;
+        if (font != null)
+        {
+            FontFamily = font;
+        }
 
         // remove handler otherwise we get a memory leak
         Unloaded += (s, e) => { descriptor.RemoveValueChanged(this, handler); };
@@ -47,7 +53,10 @@ public abstract class IconBlockBase<TEnum> : TextBlock
 
     private static void OnIconPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not IconBlockBase<TEnum> iconBlock) return;
+        if (d is not IconBlockBase<TEnum> iconBlock)
+        {
+            return;
+        }
 #if NET40
         iconBlock.SetValue(TextOptions.TextRenderingModeProperty, TextRenderingMode.ClearType);
 #endif
@@ -61,6 +70,8 @@ public abstract class IconBlockBase<TEnum> : TextBlock
     {
         var str = Text;
         if (string.IsNullOrEmpty(str) || str.Length > 2 || !Enum.IsDefined(typeof(TEnum), char.ConvertToUtf32(str, 0)))
+        {
             throw new FormatException();
+        }
     }
 }

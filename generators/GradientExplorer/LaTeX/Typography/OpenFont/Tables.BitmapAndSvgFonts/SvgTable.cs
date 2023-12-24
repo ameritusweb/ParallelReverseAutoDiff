@@ -28,7 +28,7 @@ namespace Typography.OpenFont.Tables
             //-----------
             ushort version = reader.ReadUInt16();
             uint offset32 = reader.ReadUInt32();
-            uint reserved = reader.ReadUInt32();
+            reader.ReadUInt32();
             //-------
 
 

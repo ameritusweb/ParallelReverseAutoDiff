@@ -168,7 +168,10 @@ namespace Typography.OpenFont.Tables
                 //
                 if (cmap is CharMapFormat14 cmap14)
                 {
-                    if (_charMap14List == null) _charMap14List = new List<CharMapFormat14>();
+                    if (_charMap14List == null)
+                    {
+                        _charMap14List = new List<CharMapFormat14>();
+                    }
                     //
                     _charMap14List.Add(cmap14);
                 }
@@ -365,7 +368,7 @@ namespace Typography.OpenFont.Tables
 #endif
 
             uint length = input.ReadUInt32();// Byte length of this subtable(including the header)
-            uint language = input.ReadUInt32();
+            input.ReadUInt32();
             uint numGroups = input.ReadUInt32();
 
 #if DEBUG

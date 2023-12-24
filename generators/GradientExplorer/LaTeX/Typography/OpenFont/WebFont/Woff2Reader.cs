@@ -31,7 +31,6 @@ namespace Typography.WebFont
         public uint flavor;
         public uint length;
         public uint numTables;
-        //public ushort reserved;
         public uint totalSfntSize;
         public uint totalCompressSize; //***
         public ushort majorVersion;
@@ -121,51 +120,9 @@ namespace Typography.WebFont
 
 
         static Glyf ReconstructGlyfTable(TableHeader header, BinaryReader reader, Woff2TableDirectory woff2TableDir)
-        {
-            //fill the information to glyfTable 
-            //reader.BaseStream.Position += woff2TableDir.transformLength;
-            //For greater compression effectiveness,
-            //the glyf table is split into several substreams, to group like data together. 
-
-            //The transformed table consists of a number of fields specifying the size of each of the substreams,
-            //followed by the substreams in sequence.
-
-            //During the decoding process the reverse transformation takes place,
-            //where data from various separate substreams are recombined to create a complete glyph record
-            //for each entry of the original glyf table.
-
-            //Transformed glyf Table
-            //Data-Type Semantic                Description and value type(if applicable)
-            //Fixed     version                 = 0x00000000
-            //UInt16    numGlyphs               Number of glyphs
-            //UInt16    indexFormatOffset      format for loca table, 
-            //                                 should be consistent with indexToLocFormat of 
-            //                                 the original head table(see[OFF] specification)
-
-            //UInt32    nContourStreamSize      Size of nContour stream in bytes
-            //UInt32    nPointsStreamSize       Size of nPoints stream in bytes
-            //UInt32    flagStreamSize          Size of flag stream in bytes
-            //UInt32    glyphStreamSize         Size of glyph stream in bytes(a stream of variable-length encoded values, see description below)
-            //UInt32    compositeStreamSize     Size of composite stream in bytes(a stream of variable-length encoded values, see description below)
-            //UInt32    bboxStreamSize          Size of bbox data in bytes representing combined length of bboxBitmap(a packed bit array) and bboxStream(a stream of Int16 values)
-            //UInt32    instructionStreamSize   Size of instruction stream(a stream of UInt8 values)
-
-            //Int16     nContourStream[]        Stream of Int16 values representing number of contours for each glyph record
-            //255UInt16 nPointsStream[]         Stream of values representing number of outline points for each contour in glyph records
-            //UInt8     flagStream[]            Stream of UInt8 values representing flag values for each outline point.
-            //Vary      glyphStream[]           Stream of bytes representing point coordinate values using variable length encoding format(defined in subclause 5.2)
-            //Vary      compositeStream[]       Stream of bytes representing component flag values and associated composite glyph data
-            //UInt8     bboxBitmap[]            Bitmap(a numGlyphs-long bit array) indicating explicit bounding boxes
-            //Int16     bboxStream[]            Stream of Int16 values representing glyph bounding box data
-            //UInt8     instructionStream[]	    Stream of UInt8 values representing a set of instructions for each corresponding glyph
-            
+        {            
             reader.BaseStream.Position = woff2TableDir.ExpectedStartAt;
-
-            long start = reader.BaseStream.Position;
-
-            uint version = reader.ReadUInt32();
             ushort numGlyphs = reader.ReadUInt16();
-            ushort indexFormatOffset = reader.ReadUInt16();
 
             uint nContourStreamSize = reader.ReadUInt32(); //in bytes
             uint nPointsStreamSize = reader.ReadUInt32(); //in bytes
@@ -212,50 +169,6 @@ namespace Typography.WebFont
 
                 }
             }
-
-            //--------------------------------------------------------------------------------------------
-            //glyphStream 
-            //5.2.Decoding of variable-length X and Y coordinates
-
-            //Simple glyph data structure defines all contours that comprise a glyph outline,
-            //which are presented by a sequence of on- and off-curve coordinate points. 
-
-            //These point coordinates are encoded as delta values representing the incremental values 
-            //between the previous and current corresponding X and Y coordinates of a point,
-            //the first point of each outline is relative to (0, 0) point.
-
-            //To minimize the size of the dataset of point coordinate values, 
-            //each point is presented as a (flag, xCoordinate, yCoordinate) triplet.
-
-            //The flag value is stored in a separate data stream 
-            //and the coordinate values are stored as part of the glyph data stream using a variable-length encoding format
-            //consuming a total of 2 - 5 bytes per point.
-
-            //Decoding of Simple Glyphs:
-
-            //For a simple glyph(when nContour > 0), the process continues as follows:
-            //    1) Read numberOfContours 255UInt16 values from the nPoints stream.
-            //    Each of these is the number of points of that contour.
-            //    Convert this into the endPtsOfContours[] array by computing the cumulative sum, then subtracting one.
-            //    For example, if the values in the stream are[2, 4], then the endPtsOfContours array is [1, 5].Also,
-            //      the sum of all the values in the array is the total number of points in the glyph, nPoints.
-            //      In the example given, the value of nPoints is 6.
-
-            //    2) Read nPoints UInt8 values from the flags stream.Each corresponds to one point in the reconstructed glyph outline.
-            //       The interpretation of the flag byte is described in details in subclause 5.2.
-
-            //    3) For each point(i.e.nPoints times), read a number of point coordinate bytes from the glyph stream.
-            //       The number of point coordinate bytes is a function of the flag byte read in the previous step: 
-            //       for (flag < 0x7f) in the range 0 to 83 inclusive, it is one byte.
-            //       In the range 84 to 119 inclusive, it is two bytes. 
-            //       In the range 120 to 123 inclusive, it is three bytes, 
-            //       and in the range 124 to 127 inclusive, it is four bytes. 
-            //       Decode these bytes according to the procedure specified in the subclause 5.2 to reconstruct delta-x and delta-y values of the glyph point coordinates.
-            //       Store these delta-x and delta-y values in the reconstructed glyph using the standard TrueType glyph encoding[OFF] subclause 5.3.3.
-
-            //    4) Read one 255UInt16 value from the glyph stream, which is instructionLength, the number of instruction bytes.
-            //    5) Read instructionLength bytes from instructionStream, and store these in the reconstituted glyph as instructions.
-            //--------
 #if DEBUG
             if (reader.BaseStream.Position != expected_nPointStartAt)
             {
@@ -522,34 +435,10 @@ namespace Typography.WebFont
             ushort[] pntPerContours, ref int pntContourIndex,
             byte[] flagStream, ref int flagStreamIndex)
         {
-
-            //reading from glyphstream*** 
-            //Building a SimpleGlyph 
-            //    1) Read numberOfContours 255UInt16 values from the nPoints stream.
-            //    Each of these is the number of points of that contour.
-            //    Convert this into the endPtsOfContours[] array by computing the cumulative sum, then subtracting one.
-            //    For example, if the values in the stream are[2, 4], then the endPtsOfContours array is [1, 5].Also,
-            //      the sum of all the values in the array is the total number of points in the glyph, nPoints.
-            //      In the example given, the value of nPoints is 6.
-
-            //    2) Read nPoints UInt8 values from the flags stream.Each corresponds to one point in the reconstructed glyph outline.
-            //       The interpretation of the flag byte is described in details in subclause 5.2.
-
-            //    3) For each point(i.e.nPoints times), read a number of point coordinate bytes from the glyph stream.
-            //       The number of point coordinate bytes is a function of the flag byte read in the previous step: 
-            //       for (flag < 0x7f)
-            //       in the range 0 to 83 inclusive, it is one byte.
-            //       In the range 84 to 119 inclusive, it is two bytes. 
-            //       In the range 120 to 123 inclusive, it is three bytes, 
-            //       and in the range 124 to 127 inclusive, it is four bytes. 
-            //       Decode these bytes according to the procedure specified in the subclause 5.2 to reconstruct delta-x and delta-y values of the glyph point coordinates.
-            //       Store these delta-x and delta-y values in the reconstructed glyph using the standard TrueType glyph encoding[OFF] subclause 5.3.3.
-
-            //    4) Read one 255UInt16 value from the glyph stream, which is instructionLength, the number of instruction bytes.
-            //    5) Read instructionLength bytes from instructionStream, and store these in the reconstituted glyph as instructions. 
-
-
-            if (tmpGlyph.numContour == 0) return emptyGlyph;
+            if (tmpGlyph.numContour == 0)
+            {
+                return emptyGlyph;
+            }
             if (tmpGlyph.numContour < 0)
             {
                 //composite glyph,
@@ -637,9 +526,7 @@ namespace Typography.WebFont
                                     enc.Ty(packedXY[1]) :
                                     0;
                             break;
-                        case 12: //12,12
-                                 //x = enc.Tx((packedXY[0] << 8) | (packedXY[1] >> 4));
-                                 //y = enc.Ty(((packedXY[1] & 0xF)) | (packedXY[2] >> 4));
+                        case 12:
                             x = enc.Tx((packedXY[0] << 4) | (packedXY[1] >> 4));
                             y = enc.Ty(((packedXY[1] & 0xF) << 8) | (packedXY[2]));
                             break;
@@ -678,7 +565,6 @@ namespace Typography.WebFont
             do
             {
                 flags = (Glyf.CompositeGlyphFlags)reader.ReadUInt16();
-                ushort glyphIndex = reader.ReadUInt16();
                 short arg1 = 0;
                 short arg2 = 0;
                 ushort arg1and2 = 0;
@@ -925,16 +811,6 @@ namespace Typography.WebFont
 
             } while (Glyf.HasFlag(flags, Glyf.CompositeGlyphFlags.MORE_COMPONENTS));
 
-            //
-            if (Glyf.HasFlag(flags, Glyf.CompositeGlyphFlags.WE_HAVE_INSTRUCTIONS))
-            {
-                //read this later
-                //ushort numInstr = reader.ReadUInt16();
-                //byte[] insts = reader.ReadBytes(numInstr);
-                //finalGlyph.GlyphInstructions = insts;
-            }
-
-
             return finalGlyph ?? emptyGlyph;
         }
 
@@ -993,7 +869,7 @@ namespace Typography.WebFont
 
             static TripleEncodingTable? s_encTable;
 
-            List<TripleEncodingRecord> _records = new List<TripleEncodingRecord>();
+            readonly List<TripleEncodingRecord> _records = new List<TripleEncodingRecord>();
             public static TripleEncodingTable GetEncTable() => s_encTable ??= new TripleEncodingTable();
             private TripleEncodingTable()
             {
@@ -1056,202 +932,26 @@ namespace Typography.WebFont
 
             void BuildTable()
             {
-                // Each of the 128 index values define the following properties and specified in details in the table below:
-
-                // Byte count(total number of bytes used for this set of coordinate values including one byte for 'flag' value).
-                // Number of bits used to represent X coordinate value(X bits).
-                // Number of bits used to represent Y coordinate value(Y bits).
-                // An additional incremental amount to be added to X bits value(delta X).
-                // An additional incremental amount to be added to Y bits value(delta Y).
-                // The sign of X coordinate value(X sign).
-                // The sign of Y coordinate value(Y sign).
-
-                //Please note that “Byte Count” field reflects total size of the triplet(flag, xCoordinate, yCoordinate), 
-                //including ‘flag’ value that is encoded in a separate stream.
-
-
-                //Triplet Encoding
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-
-                //(set 1.1)
-                //0     2            0       8       N/A       0     N/A     -   
-                //1                                            0             +
-                //2                                           256            -
-                //3                                           256            +
-                //4                                           512            -
-                //5                                           512            +
-                //6                                           768            -
-                //7                                           768            +
-                //8                                           1024           -
-                //9                                           1024           +
                 BuildRecords(2, 0, 8, null, new ushort[] { 0, 256, 512, 768, 1024 }); //2*5
 
-                //---------------------------------------------------------------------
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 1.2)
-                //10    2            8       0        0       N/A     -     N/A
-                //11                                  0               +
-                //12                                256               -
-                //13                                256               +
-                //14                                512               -
-                //15                                512               +
-                //16                                768               -
-                //17                                768               +
-                //18                                1024              -
-                //19                                1024              +
                 BuildRecords(2, 8, 0, new ushort[] { 0, 256, 512, 768, 1024 }, null); //2*5
 
-                //---------------------------------------------------------------------
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 2.1)
-                //20    2           4       4        1        1       -      -
-                //21                                          1       +      -
-                //22                                          1       -      +
-                //23                                          1       +      +
-                //24                                          17      -      -
-                //25                                          17      +      -
-                //26                                          17      -      +
-                //27                                          17      +      +
-                //28                                          33      -      - 
-                //29                                          33      +      -
-                //30                                          33      -      +
-                //31                                          33      +      +
-                //32                                          49      -      -
-                //33                                          49      +      -
-                //34                                          49      -      +
-                //35                                          49      +      +  
                 BuildRecords(2, 4, 4, new ushort[] { 1 }, new ushort[] { 1, 17, 33, 49 });// 4*4 => 16 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 2.2)
-                //36    2           4       4       17        1       -      -
-                //37                                          1       +      -
-                //38                                          1       -      +
-                //39                                          1       +      +
-                //40                                          17      -      -
-                //41                                          17      +      -
-                //42                                          17      -      + 
-                //43                                          17      +      +
-                //44                                          33      -      - 
-                //45                                          33      +      -
-                //46                                          33      -      +
-                //47                                          33      +      +
-                //48                                          49      -      -
-                //49                                          49      +      -
-                //50                                          49      -      +
-                //51                                          49      +      +
                 BuildRecords(2, 4, 4, new ushort[] { 17 }, new ushort[] { 1, 17, 33, 49 });// 4*4 => 16 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 2.3)
-                //52    2           4          4     33        1      -      -
-                //53                                           1      +      -
-                //54                                           1      -      +
-                //55                                           1      +      +
-                //56                                          17      -      -
-                //57                                          17      +      -
-                //58                                          17      -      +
-                //59                                          17      +      +
-                //60                                          33      -      -
-                //61                                          33      +      -
-                //62                                          33      -      +
-                //63                                          33      +      +
-                //64                                          49      -      -
-                //65                                          49      +      -
-                //66                                          49      -      +
-                //67                                          49      +      +
                 BuildRecords(2, 4, 4, new ushort[] { 33 }, new ushort[] { 1, 17, 33, 49 });// 4*4 => 16 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 2.4)
-                //68    2           4         4     49         1      -      -
-                //69                                           1      +      -
-                //70                                           1      -      +
-                //71                                           1      +      +
-                //72                                          17      -      -
-                //73                                          17      +      -
-                //74                                          17      -     +
-                //75                                          17      +     +
-                //76                                          33      -     -
-                //77                                          33      +     -
-                //78                                          33      -     +
-                //79                                          33      +     +
-                //80                                          49      -     -
-                //81                                          49      +     -
-                //82                                          49      -     +
-                //83                                          49      +     +
                 BuildRecords(2, 4, 4, new ushort[] { 49 }, new ushort[] { 1, 17, 33, 49 });// 4*4 => 16 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 3.1)
-                //84    3             8       8         1      1      -     -
-                //85                                           1      +     -
-                //86                                           1      -     +
-                //87                                           1      +     +
-                //88                                         257      -     -
-                //89                                         257      +     -
-                //90                                         257      -     +
-                //91                                         257      +     +
-                //92                                         513      -     -
-                //93                                         513      +     -
-                //94                                         513      -     +
-                //95                                         513      +     +
                 BuildRecords(3, 8, 8, new ushort[] { 1 }, new ushort[] { 1, 257, 513 });// 4*3 => 12 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 3.2)
-                //96    3               8       8      257      1     -      -
-                //97                                            1     +      -
-                //98                                            1     -      +
-                //99                                            1     +      +
-                //100                                         257     -      -
-                //101                                         257     +      -
-                //102                                         257     -      +
-                //103                                         257     +      +
-                //104                                         513     -      -
-                //105                                         513     +      -
-                //106                                         513     -      +
-                //107                                         513     +      +
                 BuildRecords(3, 8, 8, new ushort[] { 257 }, new ushort[] { 1, 257, 513 });// 4*3 => 12 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 3.3)
-                //108   3              8        8       513     1     -      -
-                //109                                           1     +      -
-                //110                                           1     -      +
-                //111                                           1     +      +
-                //112                                         257     -      -
-                //113                                         257     +      -
-                //114                                         257     -      +
-                //115                                         257     +      +
-                //116                                         513     -      -
-                //117                                         513     +      -
-                //118                                         513     -      +
-                //119                                         513     +      +
                 BuildRecords(3, 8, 8, new ushort[] { 513 }, new ushort[] { 1, 257, 513 });// 4*3 => 12 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 4)
-                //120   4               12     12         0      0    -      -
-                //121                                                 +      -
-                //122                                                 -      +
-                //123                                                 +      +
                 BuildRecords(4, 12, 12, new ushort[] { 0 }, new ushort[] { 0 }); // 4*1 => 4 records
 
-                //---------------------------------------------------------------------            
-                //Index ByteCount   Xbits   Ybits   DeltaX  DeltaY  Xsign   Ysign
-                //(set 5)
-                //124   5               16      16      0       0     -      -
-                //125                                                 +      -
-                //126                                                 -      +
-                //127                                                 +      + 
                 BuildRecords(5, 16, 16, new ushort[] { 0 }, new ushort[] { 0 });// 4*1 => 4 records
 
             }
@@ -1268,7 +968,9 @@ namespace Typography.WebFont
                 if (deltaXs == null)
                 {
                     if (deltaYs == null)
+                    {
                         throw new System.ArgumentException($"{nameof(deltaXs)} and {nameof(deltaYs)} cannot both be null");
+                    }
                     //(set 1.1)
                     for (int y = 0; y < deltaYs.Length; ++y)
                     {
@@ -1364,7 +1066,10 @@ namespace Typography.WebFont
         public PreviewFontInfo? ReadPreview(BinaryReader reader)
         {
             var header = ReadHeader(reader);
-            if (header == null) return null;  //=> return here and notify user too.
+            if (header == null)
+            {
+                return null;  //=> return here and notify user too.
+            }
             Woff2TableDirectory[] woff2TablDirs = ReadTableDirectories(header, reader);
             if (DecompressHandler == null)
             {
@@ -1391,11 +1096,6 @@ namespace Typography.WebFont
             {
                 if (!DecompressHandler(compressedBuffer, decompressedStream))
                 {
-                    //...Most notably, 
-                    //the data for the font tables is compressed in a SINGLE data stream comprising all the font tables.
-
-                    //if not pass set to null
-                    //decompressedBuffer = null;
                     return null;
                 }
                 //from decoded stream we read each table
@@ -1497,11 +1197,9 @@ namespace Typography.WebFont
                 return null;
             }
             header.flavor = reader.ReadUInt32();
-            string flavorName = Utils.TagToString(header.flavor);
 
             header.length = reader.ReadUInt32();
             header.numTables = reader.ReadUInt16();
-            ushort reserved = reader.ReadUInt16();
             header.totalSfntSize = reader.ReadUInt32();
             header.totalCompressSize = reader.ReadUInt32();//***
 
@@ -1521,7 +1219,7 @@ namespace Typography.WebFont
         Woff2TableDirectory[] ReadTableDirectories(Woff2Header header, BinaryReader reader)
         {
 
-            uint tableCount = (uint)header.numTables; //?
+            uint tableCount = header.numTables; //?
             var tableDirs = new Woff2TableDirectory[tableCount];
 
             long expectedTableStartAt = 0;
@@ -1582,6 +1280,7 @@ namespace Typography.WebFont
                 switch (table.PreprocessingTransformation)
                 {
                     default:
+                        Console.WriteLine("Default");
                         break;
                     case 0:
                         {
@@ -1792,58 +1491,6 @@ namespace Typography.WebFont
 
         static bool ReadUIntBase128(BinaryReader reader, out uint result)
         {
-
-            //UIntBase128 Data Type
-
-            //UIntBase128 is a different variable length encoding of unsigned integers,
-            //suitable for values up to 2^(32) - 1.
-
-            //A UIntBase128 encoded number is a sequence of bytes for which the most significant bit
-            //is set for all but the last byte,
-            //and clear for the last byte.
-
-            //The number itself is base 128 encoded in the lower 7 bits of each byte.
-            //Thus, a decoding procedure for a UIntBase128 is: 
-            //start with value = 0.
-            //Consume a byte, setting value = old value times 128 + (byte bitwise - and 127).
-            //Repeat last step until the most significant bit of byte is false.
-
-            //UIntBase128 encoding format allows a possibility of sub-optimal encoding,
-            //where e.g.the same numerical value can be represented with variable number of bytes(utilizing leading 'zeros').
-            //For example, the value 63 could be encoded as either one byte 0x3F or two(or more) bytes: [0x80, 0x3f].
-            //An encoder must not allow this to happen and must produce shortest possible encoding. 
-            //A decoder MUST reject the font file if it encounters a UintBase128 - encoded value with leading zeros(a value that starts with the byte 0x80),
-            //if UintBase128 - encoded sequence is longer than 5 bytes,
-            //or if a UintBase128 - encoded value exceeds 232 - 1.
-
-            //The "C-like" pseudo - code describing how to read the UIntBase128 format is presented below:
-            //bool ReadUIntBase128(data, * result)
-            //            {
-            //                UInt32 accum = 0;
-
-            //                for (i = 0; i < 5; i++)
-            //                {
-            //                    UInt8 data_byte = data.getNextUInt8();
-
-            //                    // No leading 0's
-            //                    if (i == 0 && data_byte = 0x80) return false;
-
-            //                    // If any of top 7 bits are set then << 7 would overflow
-            //                    if (accum & 0xFE000000) return false;
-
-            //                    *accum = (accum << 7) | (data_byte & 0x7F);
-
-            //                    // Spin until most significant bit of data byte is false
-            //                    if ((data_byte & 0x80) == 0)
-            //                    {
-            //                        *result = accum;
-            //                        return true;
-            //                    }
-            //                }
-            //                // UIntBase128 sequence exceeds 5 bytes
-            //                return false;
-            //            }
-
             uint accum = 0;
             result = 0;
             for (int i = 0; i < 5; ++i)

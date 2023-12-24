@@ -15,7 +15,10 @@ public class IconBlock: IconBlockBase<IconChar>, IHaveIconFont
 
     private static void OnIconFontPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (!(d is IconBlock iconBlock)) return;
+        if (!(d is IconBlock iconBlock))
+        {
+            return;
+        }
         iconBlock.SetValue(FontFamilyProperty, iconBlock.FontFor(iconBlock.Icon));
     }
 

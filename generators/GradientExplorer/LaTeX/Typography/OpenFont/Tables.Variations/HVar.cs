@@ -33,12 +33,12 @@ namespace Typography.OpenFont.Tables
             //Offset32  lsbMappingOffset            Offset in bytes from the start of this table to the delta - set index mapping for left side bearings(may be NULL).
             //Offset32  rsbMappingOffset            Offset in bytes from the start of this table to the delta - set index mapping for right side bearings(may be NULL).            
 
-            ushort majorVersion = reader.ReadUInt16();
-            ushort minorVersion = reader.ReadUInt16();
+            reader.ReadUInt16();
+            reader.ReadUInt16();
             uint itemVariationStoreOffset = reader.ReadUInt32();
-            uint advanceWidthMappingOffset = reader.ReadUInt32();
-            uint lsbMappingOffset = reader.ReadUInt32();
-            uint rsbMappingOffset = reader.ReadUInt32();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
             //
             //-----------------------------------------
 

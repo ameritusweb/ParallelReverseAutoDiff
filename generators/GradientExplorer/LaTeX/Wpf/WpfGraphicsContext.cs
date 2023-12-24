@@ -49,9 +49,7 @@ namespace CSharpMath.Rendering.BackEnd
                     Canvas.StrokeRect(point.X + rect.X, point.Y + rect.Y, rect.Width, rect.Height);
                 }
                 var typeface = glyph.Typeface;
-                var scale = typeface.CalculateScaleToPixelFromPointSize(font.PointSize);
-                // var pathBuilder = new GlyphOutlineBuilder(typeface);
-                // pathBuilder.BuildFromGlyph(glyph.Info, font.PointSize);
+                typeface.CalculateScaleToPixelFromPointSize(font.PointSize);
                 Guid id = Guid.NewGuid();
                 Canvas.Save(id);
                 Canvas.CurrentColor = color;

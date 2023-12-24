@@ -15,7 +15,7 @@ namespace GradientExplorer.Diagram
     {
 
         private GradientGraph graph;
-        private DiagramViewer viewer;
+        private readonly DiagramViewer viewer;
         private Graph msaglGraph;
         private Microsoft.Msagl.Drawing.Color backgroundColor;
         private Microsoft.Msagl.Drawing.Color foregroundColor;

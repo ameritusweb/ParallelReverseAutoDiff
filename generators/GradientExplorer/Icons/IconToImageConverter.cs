@@ -23,10 +23,14 @@ public class IconToImageConverter : IValueConverter, IHaveIconFont
         };
 
         if (Foreground != null)
+        {
             image.Foreground = Foreground;
+        }
 
         if (ImageStyle != null)
+        {
             image.Style = ImageStyle;
+        }
 
         return image;
     }

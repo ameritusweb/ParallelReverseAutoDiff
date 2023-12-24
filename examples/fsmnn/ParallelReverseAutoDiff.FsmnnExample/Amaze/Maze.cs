@@ -82,8 +82,6 @@ namespace ParallelReverseAutoDiff.FsmnnExample.Amaze
             Matrix trueLabel = new Matrix(1, size);
             trueLabel[0, 0] = 1d;
             trueLabel[0, 1] = 1d;
-
-            // trueLabel[0, 1] = 1d;
             return trueLabel;
         }
 

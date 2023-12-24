@@ -27,7 +27,10 @@ public abstract class IconSourceBase<TEnum> : MarkupExtension
         get => _foreground;
         set
         {
-            if (_foreground.Equals(value)) return;
+            if (_foreground.Equals(value))
+            {
+                return;
+            }
             _foreground = value;
             UpdateImageSource();
         }
@@ -38,7 +41,10 @@ public abstract class IconSourceBase<TEnum> : MarkupExtension
         get => _size;
         set
         {
-            if (Math.Abs(_size - value) < 0.5) return;
+            if (Math.Abs(_size - value) < 0.5)
+            {
+                return;
+            }
             _size = value;
             UpdateImageSource();
         }

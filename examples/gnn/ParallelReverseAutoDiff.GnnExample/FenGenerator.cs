@@ -84,7 +84,6 @@ namespace ParallelReverseAutoDiff.GnnExample
                 {
                     foreach (var (buffer, index) in buffers.WithIndex())
                     {
-                        Guid guid = Guid.NewGuid();
                         ZipArchiveEntry entry = archive.CreateEntry($"game{index}.json");
                         using (Stream entryStream = entry.Open())
                         {

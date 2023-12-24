@@ -18,7 +18,10 @@ public class IconSource : IconSourceBase<IconChar>, IHaveIconFont
         get => _iconFont;
         set
         {
-            if (_iconFont.Equals(value)) return;
+            if (_iconFont.Equals(value))
+            {
+                return;
+            }
             _iconFont = value;
             UpdateImageSource();
         }

@@ -377,7 +377,7 @@ namespace Typography.OpenFont
             var gsub = ReadTableIfExists(tables, input, GSUB.Name, (h, r) => new GSUB(h, r));
             var gpos = ReadTableIfExists(tables, input, GPOS.Name, (h, r) => new GPOS(h, r));
             var baseTable = ReadTableIfExists(tables, input, BASE.Name, (h, r) => new BASE(h, r));
-            var jstf = ReadTableIfExists(tables, input, JSTF.Name, (h, r) => new JSTF(h, r));
+            ReadTableIfExists(tables, input, JSTF.Name, (h, r) => new JSTF(h, r));
 
             var colr = ReadTableIfExists(tables, input, COLR.Name, (h, r) => new COLR(h, r));
             var cpal = ReadTableIfExists(tables, input, CPAL.Name, (h, r) => new CPAL(h, r));

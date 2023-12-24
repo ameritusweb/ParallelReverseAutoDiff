@@ -34,7 +34,9 @@ namespace Microsoft.Msagl.WpfGraphControl {
             get {
                 var geomNode = Node.GeometryNode;
                 if (geomNode == null)
+                {
                     return 0;
+                }
                 return geomNode.AllClusterAncestors.Count();
             }
         }
@@ -78,8 +80,14 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
         internal IEnumerable<FrameworkElement> FrameworkElements {
             get {
-                if (FrameworkElementOfNodeForLabel != null) yield return FrameworkElementOfNodeForLabel;
-                if (BoundaryPath != null) yield return BoundaryPath;
+                if (FrameworkElementOfNodeForLabel != null)
+                {
+                    yield return FrameworkElementOfNodeForLabel;
+                }
+                if (BoundaryPath != null)
+                {
+                    yield return BoundaryPath;
+                }
                 if (_collapseButtonBorder != null) {
                     yield return _collapseButtonBorder;
                     yield return _topMarginRect;
@@ -89,7 +97,10 @@ namespace Microsoft.Msagl.WpfGraphControl {
         }
 
         void SetupSubgraphDrawing(LayoutAlgorithmSettings settings) {
-            if (_subgraph == null) return;
+            if (_subgraph == null)
+            {
+                return;
+            }
 
             SetupTopMarginBorder();
             SetupCollapseSymbol();
@@ -169,7 +180,9 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
         void InvokeIsCollapsedChanged() {
             if (IsCollapsedChanged != null)
+            {
                 IsCollapsedChanged(this);
+            }
         }
 
 
@@ -199,23 +212,6 @@ namespace Microsoft.Msagl.WpfGraphControl {
             return collapseButtonCenter;
         }
 
-
-/*
-        void FlipCollapsePath() {
-            var size = GetCollapseBorderSymbolSize();
-            var center = GetCollapseButtonCenter(size);
-
-            if (collapsePathFlipped) {
-                collapsePathFlipped = false;
-                collapseSymbolPath.RenderTransform = null;
-            }
-            else {
-                collapsePathFlipped = true;
-                collapseSymbolPath.RenderTransform = new RotateTransform(180, center.X, center.Y);
-            }
-        }
-*/
-
         Geometry CreateCollapseSymbolPath(Point center, double width) {
             var pathGeometry = new PathGeometry();
             var pathFigure = new PathFigure {StartPoint = Common.WpfPoint(center + new Point(-width, width))};
@@ -230,7 +226,6 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
         internal void CreateNodeBoundaryPath(bool setNodeToolTips) {
             if (FrameworkElementOfNodeForLabel != null) {
-                // FrameworkElementOfNode.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 var center = Node.GeometryNode.Center;
                 var margin = 2*Node.Attr.LabelMargin;
                 var bc = NodeBoundaryCurves.GetNodeBoundaryCurve(Node,
@@ -248,7 +243,9 @@ namespace Microsoft.Msagl.WpfGraphControl {
                 && !string.IsNullOrEmpty(Node.LabelText))) {
                 BoundaryPath.ToolTip = Node.LabelText;
                 if (FrameworkElementOfNodeForLabel != null)
+                {
                     FrameworkElementOfNodeForLabel.ToolTip = Node.LabelText;
+                }
             }
         }
 
@@ -367,8 +364,11 @@ namespace Microsoft.Msagl.WpfGraphControl {
             foreach (ICurve seg in curve.Segments) {
                 var ls = seg as LineSegment;
                 if (ls != null)
+                {
                     pathFigure.Segments.Add(new System.Windows.Media.LineSegment(Common.WpfPoint(ls.End), true));
-                else {
+                }
+                else
+                {
                     var ellipse = seg as Ellipse;
                     if (ellipse != null)
                         pathFigure.Segments.Add(new ArcSegment(Common.WpfPoint(ellipse.End),
@@ -437,7 +437,9 @@ namespace Microsoft.Msagl.WpfGraphControl {
         public void Invalidate() {
             if (!Node.IsVisible) {
                 foreach (var fe in FrameworkElements)
+                {
                     fe.Visibility = Visibility.Hidden;
+                }
                 return;
             }
 
@@ -447,7 +449,10 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
 
             SetFillAndStroke();
-            if (_subgraph == null) return;
+            if (_subgraph == null)
+            {
+                return;
+            }
             PositionTopMarginBorder((Cluster) _subgraph.GeometryNode);
             double collapseBorderSize = GetCollapseBorderSymbolSize();
             var collapseButtonCenter = GetCollapseButtonCenter(collapseBorderSize);
@@ -473,7 +478,9 @@ namespace Microsoft.Msagl.WpfGraphControl {
                 var buttonRadius = subgraph.DiameterOfOpenCollapseButton / 2;
 
                 if (_subgraph.GeometryNode is Cluster c && c.IsCollapsed)
+                {
                     return box.Center + new Point(buttonRadius, 0);
+                }
 
                 var text = 
                     DiagramViewer.MeasureText(
@@ -512,9 +519,13 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
         internal void DetouchFromCanvas(Canvas graphCanvas) {
             if (BoundaryPath != null)
+            {
                 graphCanvas.Children.Remove(BoundaryPath);
+            }
             if (FrameworkElementOfNodeForLabel != null)
+            {
                 graphCanvas.Children.Remove(FrameworkElementOfNodeForLabel);
+            }
         }
     }
 }

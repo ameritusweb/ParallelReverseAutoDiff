@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class ChessBoardLoader
     {
-        private List<string> files;
+        private readonly List<string> files;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChessBoardLoader"/> class.

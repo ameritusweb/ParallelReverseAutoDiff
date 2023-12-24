@@ -158,9 +158,13 @@ namespace Chess
             ChessBoard.DropPiece(move, board);
 
             if (CapturedPawnPosition.HasValue)
+            {
                 board.pieces[CapturedPawnPosition.Y, CapturedPawnPosition.X] = null;
+            }
             else
+            {
                 throw new ChessArgumentException(board, nameof(CapturedPawnPosition), nameof(IMoveParameter.Execute));
+            }
         }
 
         void IMoveParameter.Undo(Move move, ChessBoard board)

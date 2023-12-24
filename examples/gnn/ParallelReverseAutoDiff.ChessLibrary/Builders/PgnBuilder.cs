@@ -76,13 +76,19 @@ namespace Chess
             if (!board.IsEndGame)
             {
                 if (pgn.Contains("1-0"))
+                {
                     board.Resign(PieceColor.Black);
+                }
 
                 else if (pgn.Contains("0-1"))
+                {
                     board.Resign(PieceColor.White);
+                }
 
                 else if (pgn.Contains("1/2-1/2"))
+                {
                     board.Draw();
+                }
             }
 
             return (true, null);

@@ -14,7 +14,7 @@ namespace Typography.Contours
         //hint glyph collection        
         //per typeface
         Dictionary<ushort, T>? _currentGlyphDic = null;
-        Dictionary<GlyphKey, Dictionary<ushort, T>> _registerGlyphCollection = new Dictionary<GlyphKey, Dictionary<ushort, T>>();
+        readonly Dictionary<GlyphKey, Dictionary<ushort, T>> _registerGlyphCollection = new Dictionary<GlyphKey, Dictionary<ushort, T>>();
 
         public void SetCacheInfo(Typeface typeface, float sizeInPts, HintTechnique hintTech)
         {
@@ -51,7 +51,7 @@ namespace Typography.Contours
             _registerGlyphCollection.Clear();
         }
 
-        List<GlyphKey> _tempKeys = new List<GlyphKey>();
+        readonly List<GlyphKey> _tempKeys = new List<GlyphKey>();
 
         public void Clear(Typeface typeface)
         {

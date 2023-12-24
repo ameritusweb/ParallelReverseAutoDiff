@@ -14,9 +14,9 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class StatisticsGenerator
     {
-        private ChessBoardLoader loader = new ChessBoardLoader();
+        private readonly ChessBoardLoader loader = new ChessBoardLoader();
 
-        private Dictionary<GamePhase, Dictionary<string, int>> edgeFrequenciesByPhase;
+        private readonly Dictionary<GamePhase, Dictionary<string, int>> edgeFrequenciesByPhase;
         private long totalMoves;
 
         /// <summary>

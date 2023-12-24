@@ -64,7 +64,8 @@ namespace Microsoft.Msagl.WpfGraphControl {
         internal void AddMouseUp() {
             const double minDistanceForClickDownAndUp = 0.1;
             if (IsRunning) {
-                if ((mousePosition() - LastDownClickPosition).Length > minDistanceForClickDownAndUp) {
+                if ((mousePosition() - LastDownClickPosition).Length > minDistanceForClickDownAndUp)
+                {
                     //it is not a click
                     UpCount = 0;
                     DownCount = 0;
@@ -72,7 +73,9 @@ namespace Microsoft.Msagl.WpfGraphControl {
                     IsRunning = false;
                 }
                 else
+                {
                     UpCount++;
+                }
             }
         }
 
@@ -87,8 +90,10 @@ namespace Microsoft.Msagl.WpfGraphControl {
 
         protected virtual void OnElapsed() {
             EventHandler<EventArgs> handler = Elapsed;
-            if (handler != null) 
+            if (handler != null)
+            {
                 handler(this, EventArgs.Empty);
+            }
         }
     }
 }

@@ -145,7 +145,7 @@ namespace Typography.OpenFont.Tables
 
             long beginAt = reader.BaseStream.Position;
             ushort tupleVariationCount = reader.ReadUInt16();
-            ushort dataOffset = reader.ReadUInt16();
+            reader.ReadUInt16();
             int flags = tupleVariationCount >> 12; //uppper 4 bits
             int tupleCount = tupleVariationCount & 0xFFF;//low 12 bits are the number of tuple variation tables for this glyph
 

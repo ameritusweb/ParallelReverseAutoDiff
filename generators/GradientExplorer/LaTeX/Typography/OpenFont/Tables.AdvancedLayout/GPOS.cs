@@ -125,7 +125,7 @@ namespace Typography.OpenFont.Tables
             class LkSubTableType1 : LookupSubTable
             {
                 ValueRecord? _singleValue;
-                ValueRecord?[]? _multiValues;
+                readonly ValueRecord?[]? _multiValues;
                 public LkSubTableType1(ValueRecord? singleValue, CoverageTable coverage)
                 {
                     this.Format = 1;

@@ -37,7 +37,7 @@ namespace Typography.OpenFont.IO
         public override int ReadInt32() => BitConverter.ToInt32(RR(4), 8 - 4);
 
         //
-        byte[] _reusable_buffer = new byte[8]; //fix buffer size to 8 bytes
+        readonly byte[] _reusable_buffer = new byte[8]; //fix buffer size to 8 bytes
         /// <summary>
         /// read and reverse 
         /// </summary>

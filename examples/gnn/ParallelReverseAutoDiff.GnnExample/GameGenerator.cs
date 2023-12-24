@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class GameGenerator
     {
-        private Random rand = new Random(Guid.NewGuid().GetHashCode());
+        private readonly Random rand = new Random(Guid.NewGuid().GetHashCode());
 
         /// <summary>
         /// Generate for both chess engines and save.
