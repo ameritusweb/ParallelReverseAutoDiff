@@ -40,7 +40,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateMatrices.AddOrUpdate(id, this.dropoutMask, (_, _) => this.dropoutMask);
+            this.IntermediateMatrices.AddOrUpdate(id, this.dropoutMask, (x, y) => this.dropoutMask);
         }
 
         /// <inheritdoc />

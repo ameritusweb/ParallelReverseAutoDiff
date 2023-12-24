@@ -95,6 +95,8 @@ ElementwiseMultiplyAndSumOperation
 
 EmbeddingOperation - Used for word or subword embeddings.
 
+FeatureAggregationOperation - Used for GATs
+
 GELUOperation
 
 GpuMatrixMultiplyAndSumOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast computation.

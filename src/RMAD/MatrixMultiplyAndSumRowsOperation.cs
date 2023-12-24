@@ -30,8 +30,8 @@ namespace ParallelReverseAutoDiff.RMAD
         public override void Store(Guid id)
         {
             // Store the intermediate matrices
-            this.IntermediateMatrices.AddOrUpdate(id, this.a, (_, _) => this.a);
-            this.IntermediateDeepMatrices.AddOrUpdate(id, this.b, (_, _) => this.b);
+            this.IntermediateMatrices.AddOrUpdate(id, this.a, (x, y) => this.a);
+            this.IntermediateDeepMatrices.AddOrUpdate(id, this.b, (x, y) => this.b);
         }
 
         /// <inheritdoc />

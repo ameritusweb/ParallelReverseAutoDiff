@@ -34,7 +34,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override void Store(Guid id)
         {
-            this.IntermediateObjectArrays.AddOrUpdate(id, new[] { (object)this.input, (object)this.mean, (object)this.var, (object)this.n, (object)this.numRows, (object)this.numCols }, (_, _) => new[] { (object)this.input, (object)this.mean, (object)this.var, (object)this.n, (object)this.numRows, (object)this.numCols });
+            this.IntermediateObjectArrays.AddOrUpdate(id, new[] { (object)this.input, (object)this.mean, (object)this.var, (object)this.n, (object)this.numRows, (object)this.numCols }, (x, y) => new[] { (object)this.input, (object)this.mean, (object)this.var, (object)this.n, (object)this.numRows, (object)this.numCols });
         }
 
         /// <inheritdoc />
