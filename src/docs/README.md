@@ -173,13 +173,19 @@ The first dimension is the channel size and the second and third dimensions are 
 
 DeepBatchNormalizationOperation
 
+DeepConcatenateOperation
+
 DeepConvolutionOperation
 
 DeepLeakyReLUOperation
 
 DeepMatrixElementwiseAddOperation
 
+DeepMatrixElementWiseMultiplySumOperation
+
 DeepMaxPoolOperation
+
+DeepPairwiseAttentionOperation
 
 DeepReLUOperation
 

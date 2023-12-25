@@ -243,6 +243,34 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Returns a new Matrix object containing the concatenated matrices.
+        /// </summary>
+        /// <param name="other">The other matrix.</param>
+        /// <returns>New Matrix containing the concatenation.</returns>
+        public Matrix ConcatenateColumns(Matrix other)
+        {
+            if (this.Rows != other.Rows)
+            {
+                throw new InvalidOperationException("Both matrices must have the same number of rows to concatenate columns.");
+            }
+
+            int newCols = this.Cols + other.Cols;
+            Matrix result = new Matrix(this.Rows, newCols);
+
+            // Parallelize the row copying
+            Parallel.For(0, this.Rows, i =>
+            {
+                // Copy data from the current matrix
+                Array.Copy(this.matrix[i], 0, result.matrix[i], 0, this.Cols);
+
+                // Copy data from the other matrix
+                Array.Copy(other.matrix[i], 0, result.matrix[i], this.Cols, other.Cols);
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Returns a new Matrix object containing the ith column of the original Matrix.
         /// </summary>
         /// <param name="colIndex">The column index to slice.</param>
