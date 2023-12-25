@@ -1,0 +1,22 @@
+{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "linear_transform",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "nodeFeatures", "linearWeights" ],
+          "gradientResultTo": [ null, "DLinearWeights" ],
+          "initializations": [
+            null,
+            {
+              "type": "Xavier",
+              "rows": "numFeatures",
+              "columns": "numFeaturesProjected"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

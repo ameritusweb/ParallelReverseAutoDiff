@@ -71,7 +71,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return aggregatedFeatures;
+            this.Output = aggregatedFeatures;
+            return this.Output;
         }
 
         /// <inheritdoc />

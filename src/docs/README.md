@@ -103,6 +103,8 @@ GpuMatrixMultiplyAndSumOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast
 
 GpuMatrixMultiplyOperation - Leverages NVIDIA, AMD, or Intel GPUs for fast computation.
 
+GraphAttentionOperation - Used for GATs
+
 HadamardProductOperation
 
 HierarchicalScalingOperation - For increased interpretability.
@@ -123,6 +125,8 @@ MatrixBroadcastOperation
 
 MatrixConcatenateOperation
 
+MatrixDiagonalFilterOperation
+
 MatrixMultiplyOperation
 
 MatrixMultiplyAndSumOperation
@@ -140,6 +144,8 @@ MatrixRowConcatenateOperation
 MatrixVectorConcatenateOperation
 
 MatrixVerticalConcatenateOperation
+
+PaddingMaskOperation
 
 ReLUOperation
 
