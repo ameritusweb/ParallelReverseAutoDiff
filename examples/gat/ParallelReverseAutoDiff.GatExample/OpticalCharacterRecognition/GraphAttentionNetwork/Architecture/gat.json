@@ -75,6 +75,27 @@
               "id": "features_keys_transpose",
               "type": "MatrixTransposeOperation",
               "inputs": [ "features_keys_transpose" ]
+            },
+            {
+              "id": "multi_query_self_attention",
+              "type": "MultiQuerySelfAttentionOperation",
+              "inputs": [ "transformed_act", "MultipleQueries", "features_keys_transpose" ],
+              "gradientResultTo": [ null, "DMultipleQueries", null ]
+            },
+            {
+              "id": "attention_scale",
+              "type": "MatrixMultiplyScalarOperation",
+              "inputs": [ "multi_query_self_attention", "Divisor" ]
+            },
+            {
+              "id": "attention_weights",
+              "type": "SineSoftmaxOperation",
+              "inputs": [ "attention_scale" ]
+            },
+            {
+              "id": "attention_weights_values",
+              "type": "HadamardProductOperation",
+              "inputs": [ "attention_weights", "features_values" ]
             }
           ],
           "layers": [
@@ -83,7 +104,7 @@
                 {
                   "id": "graph_attention",
                   "type": "GraphAttentionOperation",
-                  "inputs": [ "transformed_act", "AdjacencyMatrix", "AttentionWeights" ],
+                  "inputs": [ "attention_weights_values", "AdjacencyMatrix", "AttentionWeights" ],
                   "gradientResultTo": [ null, "DAttentionWeights" ]
                 },
                 {
