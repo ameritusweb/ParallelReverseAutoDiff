@@ -1,20 +1,110 @@
 {
   "timeSteps": [
     {
-      "startOperations": [
+      "layers": [
         {
-          "id": "linear_transform",
-          "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "nodeFeatures", "linearWeights" ],
-          "gradientResultTo": [ null, "DLinearWeights" ],
-          "initializations": [
-            null,
+          "startOperations": [
             {
-              "type": "Xavier",
-              "rows": "numFeatures",
-              "columns": "numFeaturesProjected"
+              "id": "node_features_transform",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "nodeFeatures", "linearWeights" ],
+              "gradientResultTo": [ null, "DLinearWeights" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "transformed_features_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "node_features_transform", "transformationBias" ],
+              "gradientResultTo": [ null, "DTransformationBias" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "1",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "rms_norm_transformed",
+              "type": "RMSNormOperation",
+              "inputs": [ "transformed_features_add", "G" ],
+              "gradientResultTo": [ null, "DG" ]
+            },
+            {
+              "id": "transformed_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "rms_norm_transformed" ]
+            }
+          ],
+          "layers": [
+            {
+              "operations": [
+                {
+                  "id": "graph_attention",
+                  "type": "GraphAttentionOperation",
+                  "inputs": [ "transformed_act", "AdjacencyMatrix", "AttentionWeights" ],
+                  "gradientResultTo": [ null, "DAttentionWeights" ]
+                },
+                {
+                  "id": "attention_leaky_relu",
+                  "type": "LeakyReLUOperation",
+                  "inputs": [ "graph_attention" ]
+                },
+                {
+                  "id": "normalize_attention",
+                  "type": "SoftmaxOperation",
+                  "inputs": [ "attention_leaky_relu" ]
+                },
+                {
+                  "id": "feature_aggregation",
+                  "type": "FeatureAggregationOperation",
+                  "inputs": [ "normalize_attention", "transformed_act" ]
+                }
+              ]
+            }
+          ],
+          "endOperations": [
+            {
+              "id": "deep_concatenate",
+              "type": "DeepConcatenateOperation",
+              "inputs": [ "feature_aggregation_output" ]
+            },
+            {
+              "id": "deep_pairwise_attention",
+              "type": "DeepPairwiseAttentionOperation",
+              "inputs": [ "deep_concatenate" ]
+            },
+            {
+              "id": "deep_elementwise_multiply_sum",
+              "type": "DeepMatrixElementWiseMultiplySumOperation",
+              "inputs": [ "deep_concatenate", "deep_pairwise_attention" ]
+            },
+            {
+              "id": "rmsnorm",
+              "type": "RMSNormOperation",
+              "inputs": [ "deep_elemenwise_multiply_sum" ]
+            },
+            {
+              "id": "end_layer_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "rmsnorm" ]
             }
           ]
+        }
+      ],
+      "endoperations": [
+        {
+          "id": "output",
+          "type": "MatrixRowConcatenateOperation",
+          "inputs": [ "end_layer_act_last" ]
         }
       ]
     }
