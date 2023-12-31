@@ -77,15 +77,28 @@
               "inputs": [ "features_keys_transpose" ]
             },
             {
-              "id": "multi_query_self_attention",
-              "type": "MultiQuerySelfAttentionOperation",
-              "inputs": [ "transformed_act", "MultipleQueries", "features_keys_transpose" ],
-              "gradientResultTo": [ null, "DMultipleQueries", null ]
+              "id": "queries_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "Queries", "features_keys_transpose" ],
+              "gradientResultTo": [ "DQueries", null ],
+              "initializations": [
+                {
+                  "type": "Xavier",
+                  "rows": "numFeaturesProjected",
+                  "columns": "numFeaturesProjected"
+                },
+                null
+              ]
+            },
+            {
+              "id": "queries_keys_transpose",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "queries_keys" ]
             },
             {
               "id": "attention_scale",
               "type": "MatrixMultiplyScalarOperation",
-              "inputs": [ "multi_query_self_attention", "Divisor" ]
+              "inputs": [ "queries_keys_transpose", "Divisor" ]
             },
             {
               "id": "attention_weights",
@@ -114,7 +127,7 @@
                 },
                 {
                   "id": "normalize_attention",
-                  "type": "SoftmaxOperation",
+                  "type": "SineSoftmaxOperation",
                   "inputs": [ "attention_leaky_relu" ]
                 },
                 {
