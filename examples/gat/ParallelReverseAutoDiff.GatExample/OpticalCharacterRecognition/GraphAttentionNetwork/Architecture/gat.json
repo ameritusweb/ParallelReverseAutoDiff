@@ -42,6 +42,39 @@
               "id": "transformed_act",
               "type": "LeakyReLUOperation",
               "inputs": [ "rms_norm_transformed" ]
+            },
+            {
+              "id": "features_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "transformed_act", "Keys" ],
+              "gradientResultTo": [ null, "DKeys" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeaturesProjected",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "features_values",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "transformed_act", "Values" ],
+              "gradientResultTo": [ null, "DValues" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeaturesProjected",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "features_keys_transpose",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "features_keys_transpose" ]
             }
           ],
           "layers": [

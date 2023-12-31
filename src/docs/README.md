@@ -145,6 +145,8 @@ MatrixVectorConcatenateOperation
 
 MatrixVerticalConcatenateOperation
 
+MultiQuerySelfAttentionOperation
+
 PaddingMaskOperation
 
 ReLUOperation
