@@ -168,6 +168,22 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             {
                 var parameters = this.LookupParameters(op);
 
+                if (op.Id == "deep_concatenate")
+                {
+                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
+                    Matrix[] matrixArray = new Matrix[objArray.Length];
+                    for (int i = 0; i < objArray.Length; ++i)
+                    {
+                        var obj = objArray[i];
+                        if (obj is Matrix m)
+                        {
+                            matrixArray[i] = m;
+                        }
+                    }
+
+                    parameters[0] = new DeepMatrix(matrixArray);
+                }
+
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
@@ -360,7 +376,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             this.computationGraph = new GraphAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddIntermediate("Input", _ => this.Input)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2))
                 .AddWeight("LinearWeights", x => linearWeights[x.Layer]).AddGradient("DLinearWeights", x => linearWeightsGradient[x.Layer])
                 .AddWeight("TransformationBias", x => transformationBias[x.Layer]).AddGradient("DTransformationBias", x => transformationBiasGradient[x.Layer])
@@ -375,8 +390,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddBias("G", x => g[x.Layer]).AddGradient("DG", x => gGradient[x.Layer])
                 .AddWeight("AdjacencyMatrix", x => adjacency[x.Layer][x.NestedLayer]).AddGradient("DAdjacencyMatrix", x => adjacencyGradient[x.Layer][x.NestedLayer])
                 .AddWeight("AttentionWeights", x => attentionWeights[x.Layer]).AddGradient("DAttentionWeights", x => attentionWeightsGradient[x.Layer])
-                .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.computationGraph["nodeFeatures_concatenate_0_0"] : this.computationGraph[$"output_act_0_{x.Layer - 1}"])
-                .AddOperationFinder("attention_scores_swiglu", x => x.NestedLayer == 0 ? this.computationGraph[$"attention_scores_0_{x.Layer}"] : this.computationGraph[$"swiglu_act_0_{x.Layer}_{x.NestedLayer - 1}"])
+                .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"swiglu_act_0_{x.Layer - 1}"])
+                .AddOperationFinder("swiglu_act_last", _ => this.computationGraph[$"swiglu_act_0_{this.NumLayers - 1}"])
+                .AddOperationFinder("feature_aggregation_array", x => this.computationGraph.ToOperationArray("feature_aggregation", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumLayers - 1)))
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;

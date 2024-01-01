@@ -155,7 +155,7 @@
             {
               "id": "deep_concatenate",
               "type": "DeepConcatenateOperation",
-              "inputs": [ "feature_aggregation_output" ]
+              "inputs": [ "feature_aggregation_array" ]
             },
             {
               "id": "deep_pairwise_attention",
