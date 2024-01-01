@@ -123,9 +123,14 @@
             {
               "operations": [
                 {
+                  "id": "graph_adjacency",
+                  "type": "SigmoidOperation",
+                  "inputs": [ "AdjacencyMatrix" ]
+                },
+                {
                   "id": "graph_attention",
                   "type": "GraphAttentionOperation",
-                  "inputs": [ "attention_weights_values", "AdjacencyMatrix", "AttentionWeights" ],
+                  "inputs": [ "attention_weights_values", "graph_adjacency", "AttentionWeights" ],
                   "gradientResultTo": [ null, null, "DAttentionWeights" ]
                 },
                 {
@@ -163,14 +168,39 @@
               "inputs": [ "deep_concatenate", "deep_pairwise_attention" ]
             },
             {
-              "id": "rmsnorm",
-              "type": "RMSNormOperation",
-              "inputs": [ "deep_elemenwise_multiply_sum" ]
+              "id": "fully_connected",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "deep_elementwise_multiply_sum", "FW" ],
+              "gradientResultTo": [ null, "DFW" ]
             },
             {
-              "id": "end_layer_act",
-              "type": "LeakyReLUOperation",
-              "inputs": [ "rmsnorm" ]
+              "id": "fully_connected_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected", "FB" ],
+              "gradientResultTo": [ null, "DFB" ]
+            },
+            {
+              "id": "fully_connected_2",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "deep_elementwise_multiply_sum", "F2W" ],
+              "gradientResultTo": [ null, "DF2W" ]
+            },
+            {
+              "id": "fully_connected_2_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected_2", "F2B" ],
+              "gradientResultTo": [ null, "DF2B" ]
+            },
+            {
+              "id": "fully_connected_act",
+              "type": "SwishOperation",
+              "inputs": [ "fully_connected_add", "Beta" ],
+              "gradientResultTo": [ null, "DBeta" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "HadamardProductOperation",
+              "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
             }
           ]
         }
@@ -179,7 +209,7 @@
         {
           "id": "output",
           "type": "MatrixRowConcatenateOperation",
-          "inputs": [ "end_layer_act_last" ]
+          "inputs": [ "swiglu_act_last" ]
         }
       ]
     }

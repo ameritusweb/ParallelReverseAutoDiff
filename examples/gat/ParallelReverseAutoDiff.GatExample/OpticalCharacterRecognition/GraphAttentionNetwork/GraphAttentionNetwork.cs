@@ -60,33 +60,26 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("Queries", new[] { numNestedFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("QB", new[] { 1, numNestedOutputFeatures }, InitializationType.Zeroes);
+                    .AddModelElementGroup("AdjacencyMatrix", new[] { numNodes, numNodes }, InitializationType.HeAdjacency)
+                    .AddModelElementGroup("AttentionWeights", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
+                numNestedOutputFeatures = numNestedOutputFeatures * 2;
             }
 
             this.outputLayers = new List<IModelLayer>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var outputLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("FW", new[] { this.NumQueries, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("FB", new[] { this.NumQueries, 1, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("F2W", new[] { this.NumQueries, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("F2B", new[] { this.NumQueries, 1, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("Beta", new[] { this.NumQueries, 1, 1 }, InitializationType.He)
-                    .AddModelElementGroup("R", new[] { numNestedOutputFeatures, this.NumFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("RB", new[] { 1, this.NumFeatures }, InitializationType.Zeroes)
-                    .AddModelElementGroup("G", new[] { this.NumFeatures, this.NumFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("CS", new[] { this.NumFeatures, this.NumFeatures }, InitializationType.Xavier);
+                    .AddModelElementGroup("FW", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("FB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2W", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("F2B", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He);
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
+                numNestedOutputFeatures = numNestedOutputFeatures * 2;
             }
-
-            this.outputLayer = new ModelLayerBuilder(this)
-                .AddModelElementGroup("DM", new[] { numNodes, this.NumFeatures, this.NumFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("KO", new[] { 1, numNodes }, InitializationType.Zeroes)
-                .Build();
 
             this.InitializeState();
         }
@@ -94,17 +87,12 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         /// <summary>
         /// Gets the input matrix.
         /// </summary>
-        public DeepMatrix Input { get; private set; }
+        public Matrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
         public Matrix Output { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the count of the path.
-        /// </summary>
-        public int NumPath { get; set; }
 
         /// <summary>
         /// Gets the model layers of the neural network.
@@ -113,34 +101,14 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         {
             get
             {
-                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers).Append(this.embeddingLayer).Append(this.outputLayer);
+                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
             }
         }
-
-        /// <summary>
-        /// Gets the alphabet size of the neural network.
-        /// </summary>
-        internal int AlphabetSize { get; private set; }
-
-        /// <summary>
-        /// Gets the number of indices of the neural network.
-        /// </summary>
-        internal int NumIndices { get; private set; }
-
-        /// <summary>
-        /// Gets the embedding size of the neural network.
-        /// </summary>
-        internal int EmbeddingSize { get; private set; }
 
         /// <summary>
         /// Gets the number of layers of the neural network.
         /// </summary>
         internal int NumLayers { get; private set; }
-
-        /// <summary>
-        /// Gets the number of queries of the neural network.
-        /// </summary>
-        internal int NumQueries { get; private set; }
 
         /// <summary>
         /// Gets the number of features of the neural network.
@@ -183,7 +151,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         /// The forward pass of the edge attention neural network.
         /// </summary>
         /// <param name="input">The input.</param>
-        public void AutomaticForwardPropagate(DeepMatrix input)
+        public void AutomaticForwardPropagate(Matrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -199,46 +167,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             do
             {
                 var parameters = this.LookupParameters(op);
-
-                if (op.Id == "reduce")
-                {
-                }
-
-                if (op.Id == "keys_nodeFeatures")
-                {
-                }
-
-                if (op.Id == "queries_keys_transpose")
-                {
-                }
-
-                if (op.Id == "fully_connected")
-                {
-                }
-
-                if (op.Id == "pre_output")
-                {
-                }
-
-                if (op.Id == "output_act_summation" || op.Id == "swiglu_act_summation")
-                {
-                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
-                    Matrix[] matrixArray = new Matrix[objArray.Length];
-                    for (int i = 0; i < objArray.Length; ++i)
-                    {
-                        var obj = objArray[i];
-                        if (obj is Matrix m)
-                        {
-                            matrixArray[i] = m;
-                        }
-                    }
-
-                    parameters[0] = new DeepMatrix(matrixArray);
-                }
-
-                if (op.Id == "output_softmax")
-                {
-                }
 
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
@@ -293,7 +221,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
         {
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_softmax_0_0"];
+            backwardStartOperation = this.computationGraph["output_0_0"];
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
@@ -315,7 +243,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 opVisitor.Reset();
             }
 
-            IOperationBase? backwardEndOperation = this.computationGraph["batch_embeddings_0_0"];
+            IOperationBase? backwardEndOperation = this.computationGraph["node_features_transform_0_0"];
             if (backwardEndOperation.CalculatedGradient == null)
             {
                 return gradient;
@@ -330,8 +258,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, this.NumNodes).ToArray());
-            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumPath, this.NumIndices, 1));
+            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
+            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
 
             if (this.Output == null)
             {
@@ -444,11 +372,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<NestedLayersJsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
-            this.computationGraph = new EmbeddingComputationGraph(this);
+            this.computationGraph = new GraphAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
-                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumNodes, 2))
+                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2))
                 .AddWeight("DM", _ => outputDeepMatrix).AddGradient("DDM", _ => outputGradientDeepMatrix)
                 .AddBias("KO", _ => outputBias).AddGradient("DKO", _ => outputGradientBias)
                 .AddWeight("Embeddings", _ => weightMatrix).AddGradient("DEmbeddings", _ => gradientMatrix)
@@ -471,10 +399,10 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddOperationFinder("attention_scores_swiglu", x => x.NestedLayer == 0 ? this.computationGraph[$"attention_scores_0_{x.Layer}"] : this.computationGraph[$"swiglu_act_0_{x.Layer}_{x.NestedLayer - 1}"])
                 .AddOperationFinder("output_act_array", x => this.computationGraph.ToOperationArray("output_act", new LayerInfo(0, 0), new LayerInfo(0, this.NumLayers - 1)))
                 .AddOperationFinder("swiglu_act_array", x => this.computationGraph.ToOperationArray("swiglu_act", new LayerInfo(0, x.Layer, 0), new LayerInfo(0, x.Layer, this.NumQueries - 1)))
-                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumQueries);
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_softmax_0_0"];
+            backwardStartOperation = this.computationGraph["output_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
