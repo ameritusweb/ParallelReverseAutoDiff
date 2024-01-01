@@ -160,7 +160,7 @@
             {
               "id": "deep_pairwise_attention",
               "type": "DeepPairwiseAttentionOperation",
-              "inputs": [ "deep_concatenate" ]
+              "inputs": [ "deep_concatenate", "PairwiseAttentionWeights" ]
             },
             {
               "id": "deep_elementwise_multiply_sum",
@@ -209,7 +209,8 @@
         {
           "id": "output",
           "type": "MatrixRowConcatenateOperation",
-          "inputs": [ "swiglu_act_last" ]
+          "inputs": [ "swiglu_act_last" ],
+          "setResultTo": "Output"
         }
       ]
     }

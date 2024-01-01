@@ -37,6 +37,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     }
 
                     var gradient = network.Forward(matrix);
+                    network.SaveWeights();
                     await network.Backward(gradient);
 
                     await network.Reset();

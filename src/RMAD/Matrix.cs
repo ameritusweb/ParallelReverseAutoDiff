@@ -158,6 +158,28 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Subtracts two matrices.
+        /// </summary>
+        /// <param name="m1">The first matrix.</param>
+        /// <param name="m2">The second matrix.</param>
+        /// <returns>The resultant matrix.</returns>
+        public static Matrix operator -(Matrix m1, Matrix m2)
+        {
+            int numRows = m1.Rows;
+            int numCols = m1.Cols;
+            Matrix result = new Matrix(numRows, numCols);
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i, j] = m1[i, j] - m2[i, j];
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Multiplies two matrices together.
         /// </summary>
         /// <param name="m1">The first matrix.</param>
@@ -312,6 +334,45 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 this[i, colIndex] = columnMatrix[i, 0];
             }
+        }
+
+        /// <summary>
+        /// Performs element-wise power operation on the matrix.
+        /// </summary>
+        /// <param name="power">The power to raise each element to.</param>
+        /// <returns>A new matrix with each element raised to the specified power.</returns>
+        public Matrix ElementwisePower(double power)
+        {
+            int numRows = this.Rows;
+            int numCols = this.Cols;
+            Matrix result = new Matrix(numRows, numCols);
+
+            Parallel.For(0, numRows, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    result[i, j] = Math.Pow(this[i, j], power);
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates the mean of all elements in the matrix.
+        /// </summary>
+        /// <returns>The mean of the matrix elements.</returns>
+        public double Mean()
+        {
+            double sum = 0;
+            int totalElements = this.Rows * this.Cols;
+
+            foreach (var row in this.matrix)
+            {
+                sum += row.Sum();
+            }
+
+            return sum / totalElements;
         }
 
         /// <summary>
