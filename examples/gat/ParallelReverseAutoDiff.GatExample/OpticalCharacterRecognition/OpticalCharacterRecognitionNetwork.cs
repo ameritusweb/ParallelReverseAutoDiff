@@ -135,12 +135,39 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
 
-            return input;
+            var res = ComputeVariedSoftmax(output[0], 0.0001);
+            var rr = res.OrderByDescending(r => r).ToList();
+            var rrr = rr.Select(x => Math.Round(x, 3)).Distinct().ToList();
+            var sum = rr.Sum();
+            var maxRounded = Math.Round(rr.Max(), 3);
+            var minRounded = Math.Round(rr.Min(), 3);
+            var indices = res.Select((r, i) => new { r, i }).Where(ri => Math.Round(ri.r, 3) == maxRounded).Select(ri => ri.i).ToList();
+            List<double> list = new List<double>();
+            foreach (var index in indices)
+            {
+                list.Add(res[index]);
+            }
+
+            return output;
             //CategoricalCrossEntropyLossOperation lossOperation = new CategoricalCrossEntropyLossOperation();
             //lossOperation.Forward(output, this.maze.ToTrueLabel(output.Cols));
             //var gradientOfLoss = lossOperation.Backward();
 
             //return gradientOfLoss;
+        }
+
+        public double[] ComputeVariedSoftmax(double[] x, double temperature)
+        {
+            double[] softmax = new double[x.Length];
+            double sumExp = x.Sum(xi => Math.Exp(xi / temperature));
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                softmax[i] = Math.Exp(x[i] / temperature) / sumExp;
+            }
+
+            double scaleFactor = Math.Sqrt(x.Length) / softmax.Sum();
+            return softmax.Select(s => s * scaleFactor).ToArray();
         }
 
         /// <summary>

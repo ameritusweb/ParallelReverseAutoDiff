@@ -76,6 +76,12 @@ namespace ParallelReverseAutoDiff.RMAD
         public int[] Dimensions(string identifier);
 
         /// <summary>
+        /// Randomizes the weights.
+        /// </summary>
+        /// <returns>The randomized weights.</returns>
+        public IModelLayer RandomizeWeights();
+
+        /// <summary>
         /// Clones the model layer.
         /// </summary>
         /// <returns>The model layer.</returns>

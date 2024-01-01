@@ -112,6 +112,58 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
+        public IModelLayer RandomizeWeights()
+        {
+            foreach (var key in this.elements.Keys)
+            {
+                var (weight, gradient, firstMoment, secondMoment, dimensions, initialization) = this.elements[key];
+
+                switch (dimensions.Length)
+                {
+                    case 2:
+                        {
+                            var matrix = weight as Matrix;
+                            if (matrix != null)
+                            {
+                                matrix.Initialize(initialization);
+                            }
+
+                            break;
+                        }
+
+                    case 3:
+                        {
+                            var deepMatrix = weight as DeepMatrix;
+                            if (deepMatrix != null)
+                            {
+                                deepMatrix.Initialize(initialization);
+                            }
+
+                            break;
+                        }
+
+                    case 4:
+                        {
+                            var deepMatrixArray = weight as DeepMatrix[];
+                            if (deepMatrixArray != null)
+                            {
+                                foreach (var deepMatrix in deepMatrixArray)
+                                {
+                                    deepMatrix.Initialize(initialization);
+                                }
+                            }
+
+                            break;
+                        }
+                }
+
+                this.elements[key] = (weight, gradient, firstMoment, secondMoment, dimensions, initialization);
+            }
+
+            return this;
+        }
+
+        /// <inheritdoc />
         public IModelLayer Clone()
         {
             ModelLayer clone = new ModelLayer(this.neuralNetwork);
