@@ -46,7 +46,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 var inputLayerBuilder = new ModelLayerBuilder(this)
                     .AddModelElementGroup("LinearWeights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("TransformationBias", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes)
-                    .AddModelElementGroup("G", new[] { numNodes, numInputOutputFeatures }, InitializationType.He)
+                    .AddModelElementGroup("G", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier) // TODO: Change to He
                     .AddModelElementGroup("Keys", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("Values", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("Queries", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier);
@@ -60,7 +60,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("AdjacencyMatrix", new[] { numLayers, numNodes, numNodes }, InitializationType.HeAdjacency)
+                    .AddModelElementGroup("AdjacencyMatrix", new[] { numLayers, numNodes, numNodes }, InitializationType.Xavier) // TODO: Change to adjacency initialization
                     .AddModelElementGroup("AttentionWeights", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
@@ -75,7 +75,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                     .AddModelElementGroup("FB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("F2W", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("F2B", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He);
+                    .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.Xavier); // TODO: Make He
                 var outputLayer = outputLayerBuilder.Build();
                 this.outputLayers.Add(outputLayer);
                 numNestedOutputFeatures = numNestedOutputFeatures * 2;
@@ -330,7 +330,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 transformationBias.Add(this.inputLayers[i].WeightMatrix("TransformationBias"));
                 keys.Add(this.inputLayers[i].WeightMatrix("Keys"));
                 values.Add(this.inputLayers[i].WeightMatrix("Values"));
-                queries.Add(this.nestedLayers[i].WeightMatrix("Queries"));
+                queries.Add(this.inputLayers[i].WeightMatrix("Queries"));
                 adjacency.Add(this.nestedLayers[i].WeightDeepMatrix("AdjacencyMatrix"));
                 attentionWeights.Add(this.nestedLayers[i].WeightMatrix("AttentionWeights"));
                 fully.Add(this.outputLayers[i].WeightMatrix("FW"));
@@ -338,7 +338,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 fully2.Add(this.outputLayers[i].WeightMatrix("F2W"));
                 fully2Bias.Add(this.outputLayers[i].WeightMatrix("F2B"));
                 beta.Add(this.outputLayers[i].WeightMatrix("Beta"));
-                g.Add(this.outputLayers[i].WeightMatrix("G"));
+                g.Add(this.inputLayers[i].WeightMatrix("G"));
             }
 
             List<Matrix> linearWeightsGradient = new List<Matrix>();
@@ -360,7 +360,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 transformationBiasGradient.Add(this.inputLayers[i].GradientMatrix("TransformationBias"));
                 keysGradient.Add(this.inputLayers[i].GradientMatrix("Keys"));
                 valuesGradient.Add(this.inputLayers[i].GradientMatrix("Values"));
-                queriesGradient.Add(this.nestedLayers[i].GradientMatrix("Queries"));
+                queriesGradient.Add(this.inputLayers[i].GradientMatrix("Queries"));
                 adjacencyGradient.Add(this.nestedLayers[i].GradientDeepMatrix("AdjacencyMatrix"));
                 attentionWeightsGradient.Add(this.nestedLayers[i].GradientMatrix("AttentionWeights"));
                 fullyGradient.Add(this.outputLayers[i].GradientMatrix("FW"));
@@ -368,7 +368,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 fully2Gradient.Add(this.outputLayers[i].GradientMatrix("F2W"));
                 fully2BiasGradient.Add(this.outputLayers[i].GradientMatrix("F2B"));
                 betaGradient.Add(this.outputLayers[i].GradientMatrix("Beta"));
-                gGradient.Add(this.outputLayers[i].GradientMatrix("G"));
+                gGradient.Add(this.inputLayers[i].GradientMatrix("G"));
             }
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
@@ -376,7 +376,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             this.computationGraph = new GraphAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
-                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 2))
+                .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
                 .AddWeight("LinearWeights", x => linearWeights[x.Layer]).AddGradient("DLinearWeights", x => linearWeightsGradient[x.Layer])
                 .AddWeight("TransformationBias", x => transformationBias[x.Layer]).AddGradient("DTransformationBias", x => transformationBiasGradient[x.Layer])
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])

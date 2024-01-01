@@ -82,7 +82,7 @@
             {
               "id": "features_keys_transpose",
               "type": "MatrixTransposeOperation",
-              "inputs": [ "features_keys_transpose" ]
+              "inputs": [ "features_keys" ]
             },
             {
               "id": "queries_keys",

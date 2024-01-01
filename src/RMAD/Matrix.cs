@@ -782,7 +782,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return hash;
         }
 
-        private void InitializeHe(double scalingFactor = 1.0, double shiftingFactor = 1.0)
+        private void InitializeHe(double scalingFactor = 1.0, double shiftingFactor = 0.0)
         {
             var variance = 2.0 / this.Cols;
 

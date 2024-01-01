@@ -351,6 +351,9 @@ namespace ParallelReverseAutoDiff.RMAD
                     break;
                 case InitializationType.Zeroes:
                     break;
+                case InitializationType.HeAdjacency:
+                    this.InitializeHe(1.0d, 5.0d);
+                    break;
                 default:
                     throw new ArgumentException("Invalid initialization type.");
             }
@@ -399,7 +402,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return this.GetEnumerator();
         }
 
-        private void InitializeHe(double scalingFactor = 1.0)
+        private void InitializeHe(double scalingFactor = 1.0, double shiftingFactor = 0.0d)
         {
             var variance = 2.0 / this.Cols;
 
@@ -409,7 +412,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     for (int j = 0; j < this.Cols; j++)
                     {
-                        this[d, i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble() * scalingFactor;
+                        this[d, i, j] = (Math.Sqrt(variance) * MatrixUtils.Random.NextDouble() * scalingFactor) + shiftingFactor;
                     }
                 }
             });
