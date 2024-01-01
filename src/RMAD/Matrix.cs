@@ -577,6 +577,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 case InitializationType.Xavier:
                     this.InitializeXavier();
                     break;
+                case InitializationType.HeAdjacency:
+                    this.InitializeHe(1.0d, 5.0d);
+                    break;
                 case InitializationType.Zeroes:
                     break;
                 default:
@@ -779,7 +782,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return hash;
         }
 
-        private void InitializeHe(double scalingFactor = 1.0)
+        private void InitializeHe(double scalingFactor = 1.0, double shiftingFactor = 1.0)
         {
             var variance = 2.0 / this.Cols;
 
@@ -787,7 +790,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < this.Cols; j++)
                 {
-                    this[i, j] = Math.Sqrt(variance) * MatrixUtils.Random.NextDouble() * scalingFactor;
+                    this[i, j] = (Math.Sqrt(variance) * MatrixUtils.Random.NextDouble() * scalingFactor) + shiftingFactor;
                 }
             });
         }

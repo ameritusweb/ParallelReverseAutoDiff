@@ -54,77 +54,67 @@ namespace ParallelReverseAutoDiff.RMAD
             this.nodeFeatures = nodeFeatures;
             this.adjacency = adjacency;
             this.weights = weights;
-
-            int n = nodeFeatures.Rows;  // Number of nodes
-            int m = nodeFeatures.Cols;  // Number of features per node
-
+            int n = nodeFeatures.Rows;
+            int m = nodeFeatures.Cols;
             this.Output = new Matrix(n, n);
 
             Parallel.For(0, n, i =>
             {
                 for (int j = 0; j < n; j++)
                 {
-                    // Check if nodes are adjacent
-                    if (adjacency[i, j] != 0)
+                    Matrix concatenatedFeatures = new Matrix(2 * m, 1);
+                    for (int k = 0; k < m; k++)
                     {
-                        // Concatenate and transpose node features
-                        Matrix concatenatedFeatures = new Matrix(2 * m, 1);
-                        for (int k = 0; k < m; k++)
-                        {
-                            concatenatedFeatures[k, 0] = nodeFeatures[i, k];
-                            concatenatedFeatures[m + k, 0] = nodeFeatures[j, k];
-                        }
-
-                        // Calculate attention coefficient
-                        double attentionCoefficient = 0;
-                        for (int k = 0; k < 2 * m; k++)
-                        {
-                            attentionCoefficient += weights[0, k] * concatenatedFeatures[k, 0];
-                        }
-
-                        this.Output[i, j] = attentionCoefficient;
+                        concatenatedFeatures[k, 0] = nodeFeatures[i, k];
+                        concatenatedFeatures[m + k, 0] = nodeFeatures[j, k];
                     }
+
+                    double attentionCoefficient = 0;
+                    for (int k = 0; k < 2 * m; k++)
+                    {
+                        attentionCoefficient += weights[0, k] * concatenatedFeatures[k, 0];
+                    }
+
+                    this.Output[i, j] = attentionCoefficient * adjacency[i, j];
                 }
             });
-
             return this.Output;
         }
 
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
-            int n = this.nodeFeatures.Rows;  // Number of nodes
-            int m = this.nodeFeatures.Cols;  // Number of features per node
-
+            int n = this.nodeFeatures.Rows;
+            int m = this.nodeFeatures.Cols;
             Matrix dNodeFeatures = new Matrix(n, m);
             Matrix dWeights = new Matrix(1, 2 * m);
+            Matrix dAdjacency = new Matrix(n, n);
 
             Parallel.For(0, n, i =>
             {
                 for (int j = 0; j < n; j++)
                 {
-                    // Check if nodes are adjacent
-                    if (this.adjacency[i, j] != 0)
+                    for (int k = 0; k < m; k++)
                     {
-                        // Calculate gradient w.r.t. node features
-                        for (int k = 0; k < m; k++)
-                        {
-                            dNodeFeatures[i, k] += dOutput[i, j] * this.weights[0, k];         // Gradient for features of node i
-                            dNodeFeatures[j, k] += dOutput[i, j] * this.weights[0, m + k];    // Gradient for features of node j
-                        }
-
-                        // Calculate gradient w.r.t. weights
-                        for (int k = 0; k < m; k++)
-                        {
-                            dWeights[0, k] += dOutput[i, j] * this.nodeFeatures[i, k];         // Gradient for the first half of weights
-                            dWeights[0, m + k] += dOutput[i, j] * this.nodeFeatures[j, k];    // Gradient for the second half of weights
-                        }
+                        dNodeFeatures[i, k] += dOutput[i, j] * this.weights[0, k];
+                        dNodeFeatures[j, k] += dOutput[i, j] * this.weights[0, m + k];
+                        dWeights[0, k] += dOutput[i, j] * this.nodeFeatures[i, k];
+                        dWeights[0, m + k] += dOutput[i, j] * this.nodeFeatures[j, k];
                     }
+
+                    double attentionGradient = 0;
+                    for (int k = 0; k < 2 * m; k++)
+                    {
+                        attentionGradient += this.weights[0, k] * (k < m ? this.nodeFeatures[i, k % m] : this.nodeFeatures[j, k % m]);
+                    }
+
+                    dAdjacency[i, j] = dOutput[i, j] * attentionGradient;
                 }
             });
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dNodeFeatures)
+                .AddScalingGradient(dAdjacency)
                 .AddWeightGradient(dWeights)
                 .Build();
         }

@@ -7,7 +7,7 @@
             {
               "id": "node_features_transform",
               "type": "GpuMatrixMultiplyOperation",
-              "inputs": [ "nodeFeatures", "linearWeights" ],
+              "inputs": [ "nodeFeatures", "LinearWeights" ],
               "gradientResultTo": [ null, "DLinearWeights" ],
               "initializations": [
                 null,
@@ -21,7 +21,7 @@
             {
               "id": "transformed_features_add",
               "type": "MatrixAddBroadcastingOperation",
-              "inputs": [ "node_features_transform", "transformationBias" ],
+              "inputs": [ "node_features_transform", "TransformationBias" ],
               "gradientResultTo": [ null, "DTransformationBias" ],
               "initializations": [
                 null,
@@ -36,7 +36,15 @@
               "id": "rms_norm_transformed",
               "type": "RMSNormOperation",
               "inputs": [ "transformed_features_add", "G" ],
-              "gradientResultTo": [ null, "DG" ]
+              "gradientResultTo": [ null, "DG" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
             },
             {
               "id": "transformed_act",
@@ -118,7 +126,7 @@
                   "id": "graph_attention",
                   "type": "GraphAttentionOperation",
                   "inputs": [ "attention_weights_values", "AdjacencyMatrix", "AttentionWeights" ],
-                  "gradientResultTo": [ null, "DAttentionWeights" ]
+                  "gradientResultTo": [ null, null, "DAttentionWeights" ]
                 },
                 {
                   "id": "attention_leaky_relu",
