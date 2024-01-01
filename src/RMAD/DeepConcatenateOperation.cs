@@ -19,7 +19,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IDeepOperation Instantiate(NeuralNetwork net)
         {
-            return new DeepPairwiseAttentionOperation();
+            return new DeepConcatenateOperation();
         }
 
         /// <summary>
