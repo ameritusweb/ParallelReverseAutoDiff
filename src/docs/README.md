@@ -169,6 +169,8 @@ SwishOperation
 
 TanhOperation
 
+VariedSoftmaxOperation
+
 ### Deep Operations
 These types of operations operate on instances of the DeepMatrix class which is a 3-D matrix.
 The first dimension is the channel size and the second and third dimensions are the row and column sizes respectively.

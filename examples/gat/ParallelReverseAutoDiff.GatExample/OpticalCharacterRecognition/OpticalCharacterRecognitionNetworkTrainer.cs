@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD;
 using ParallelReverseAutoDiff.RMAD;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     for (int j = 0; j < 500; ++j)
                     {
                         var res = network.Forward(matrix);
+
                         calculator.AddDataPoint(res);
                         // calculator.AddDataPoints(array);
 

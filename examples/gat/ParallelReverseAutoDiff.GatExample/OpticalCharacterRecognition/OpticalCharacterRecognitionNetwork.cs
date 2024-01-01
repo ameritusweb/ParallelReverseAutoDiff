@@ -43,6 +43,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             this.graphAttentionNetwork = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
         }
 
+        public GraphAttentionNetwork.GraphAttentionNetwork GraphAttentionNetwork => this.graphAttentionNetwork;
+
         /// <summary>
         /// Reset the network.
         /// </summary>
@@ -146,7 +148,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
 
-            var res = ComputeVariedSoftmax(output[0], 0.0001);
+            var res = ComputeVariedSoftmax(output[0], 0.0002d);
             var rr = res.OrderByDescending(r => r).ToList();
 
             double max = Math.Round(rr.Max(), 3);
