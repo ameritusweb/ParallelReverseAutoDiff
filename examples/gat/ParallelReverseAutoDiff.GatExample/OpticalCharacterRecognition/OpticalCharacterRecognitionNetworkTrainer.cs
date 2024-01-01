@@ -36,12 +36,20 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                         }
                     }
 
-                    var gradient = network.Forward(matrix);
-                    network.SaveWeights();
-                    await network.Backward(gradient);
+                    OnlineStatisticsCalculator calculator = new OnlineStatisticsCalculator();
 
-                    await network.Reset();
-                    Thread.Sleep(1000);
+                    for (int j = 0; j < 500; ++j)
+                    {
+                        var res = network.Forward(matrix);
+                        calculator.AddDataPoint(res);
+                        // calculator.AddDataPoints(array);
+
+                        Console.WriteLine($"Mean: {calculator.GetMean()}, StdDev: {calculator.GetStandardDeviation()}, Var: {calculator.GetVariance()}, Min: {calculator.GetMin()}, Max: {calculator.GetMax()}");
+                        network.RandomizeWeights();
+                        Thread.Sleep(10);
+                    }
+
+                    File.WriteAllText(jsonFile.Replace(".json", ".txt"), $"Mean: {calculator.GetMean()}, StdDev: {calculator.GetStandardDeviation()}, Var: {calculator.GetVariance()}, Min: {calculator.GetMin()}, Max: {calculator.GetMax()}");
                 }
             }
             catch (Exception ex)

@@ -82,6 +82,17 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         }
 
         /// <summary>
+        /// Randomizes weights
+        /// </summary>
+        public void RandomizeWeights()
+        {
+            foreach (var modelLayer in this.modelLayers)
+            {
+                modelLayer.RandomizeWeights();
+            }
+        }
+
+        /// <summary>
         /// Save the weights to the save path.
         /// </summary>
         public void SaveWeights()
@@ -128,7 +139,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public Matrix Forward(Matrix input)
+        public double Forward(Matrix input)
         {
             var gatNet = this.graphAttentionNetwork;
             gatNet.InitializeState();
@@ -137,23 +148,64 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
             var res = ComputeVariedSoftmax(output[0], 0.0001);
             var rr = res.OrderByDescending(r => r).ToList();
-            var rrr = rr.Select(x => Math.Round(x, 3)).Distinct().ToList();
-            var sum = rr.Sum();
-            var maxRounded = Math.Round(rr.Max(), 3);
-            var minRounded = Math.Round(rr.Min(), 3);
-            var indices = res.Select((r, i) => new { r, i }).Where(ri => Math.Round(ri.r, 3) == maxRounded).Select(ri => ri.i).ToList();
-            List<double> list = new List<double>();
-            foreach (var index in indices)
-            {
-                list.Add(res[index]);
-            }
 
-            return output;
+            double max = Math.Round(rr.Max(), 3);
+            var rrr = res.Where(x => Math.Round(x, 3) == max).ToList();
+
+            return max;
+
+            //List<int> indices = new List<int>();
+            //for (int i = 0; i < 17; ++i)
+            //{
+            //    var ind = res.ToList().FindIndex(x => x == rr[i]);
+            //    indices.Add(ind);
+            //}
+            //var ord = indices.OrderByDescending(x => x).ToList();
+
+            //// Create a list to store the original numbers and their ranks
+            //var numberRankPairs = new List<(int Number, int Rank)>();
+
+            //// Iterate through the original list and find each number's rank
+            //foreach (var number in indices)
+            //{
+            //    int rank = ord.IndexOf(number) + 1;
+            //    numberRankPairs.Add((number, rank));
+            //}
+
+            //var rrrr = rr.Select(x => Math.Round(x, 3)).Distinct().ToList();
+            //var scaled = ScaleValuesToMax(rrrr, 3d);
+
+
+            //return numberRankPairs;
+            //return rrr.ToArray();
+            //var sum = rr.Sum();
+            //var maxRounded = Math.Round(rr.Max(), 3);
+            //var minRounded = Math.Round(rr.Min(), 3);
+            //var indices = res.Select((r, i) => new { r, i }).Where(ri => Math.Round(ri.r, 3) == maxRounded).Select(ri => ri.i).ToList();
+            //List<double> list = new List<double>();
+            //foreach (var index in indices)
+            //{
+            //    list.Add(res[index]);
+            //}
+
+            //return output;
             //CategoricalCrossEntropyLossOperation lossOperation = new CategoricalCrossEntropyLossOperation();
             //lossOperation.Forward(output, this.maze.ToTrueLabel(output.Cols));
             //var gradientOfLoss = lossOperation.Backward();
 
             //return gradientOfLoss;
+        }
+
+        public List<double> ScaleValuesToMax(List<double> values, double newMax)
+        {
+            if (values == null || !values.Any())
+                throw new ArgumentException("Values list cannot be null or empty.");
+
+            double currentMax = values.Max();
+            if (currentMax == 0)
+                return values; // Avoid division by zero.
+
+            return values.Select(value => value / currentMax * newMax).ToList();
         }
 
         public double[] ComputeVariedSoftmax(double[] x, double temperature)
