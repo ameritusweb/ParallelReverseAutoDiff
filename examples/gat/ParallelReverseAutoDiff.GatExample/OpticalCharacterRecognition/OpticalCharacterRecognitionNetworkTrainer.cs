@@ -53,19 +53,19 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
                     targets.Add(targetMax);
                    
-                    var (gradient, output, sorted) = network.Forward(matrix, targetMax);
+                    var (gradient, output, sorted) = network.Forward(matrix, targetMax, sub1, sub2);
 
                     Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + sorted.Max() + ", Grad: " + gradient[0].Max());
 
-                    var inputGradient = await network.Backward(gradient);
-                    var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
-                    network.AdjustLearningRate(randLearning);
-                    network.ApplyGradients();
+                    //var inputGradient = await network.Backward(gradient);
+                    //var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
+                    //network.AdjustLearningRate(randLearning);
+                    //network.ApplyGradients();
                     await network.Reset();
                     Thread.Sleep(1000);
                     if (i % 21 == 20)
                     {
-                        network.SaveWeights();
+                        //network.SaveWeights();
                     }
                 }
             }
@@ -102,7 +102,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                             matrix[j, k] = data[j][k];
                         }
                     }
-                    var (gradient, output, sorted) = network.Forward(matrix, 0.75d);
+                    var (gradient, output, sorted) = network.Forward(matrix, 0.75d, "A", "A");
                     var inputGradient = await network.Backward(gradient);
                     network.ApplyGradients();
                     await network.Reset();
@@ -144,7 +144,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
                     for (int j = 0; j < 500; ++j)
                     {
-                        var res = network.Forward(matrix, 0.25d);
+                        var res = network.Forward(matrix, 0.25d, "A", "A");
 
                         // calculator.AddDataPoint(res);
                         // calculator.AddDataPoints(array);

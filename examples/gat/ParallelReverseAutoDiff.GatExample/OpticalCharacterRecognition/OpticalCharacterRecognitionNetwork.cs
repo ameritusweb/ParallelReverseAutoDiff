@@ -76,7 +76,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 777;
+            var initialAdamIteration = 1219;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -116,7 +116,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "c791bf15-791d-45dc-aa77-fe5016707180_777";
+            var guid = "30019852-5be6-4abc-8f93-c3208ae30609_1219";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -142,8 +142,27 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax)
+        public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax, string char1, string char2)
         {
+            Dictionary<string, double> A = new Dictionary<string, double>() {
+                { "A", 20.5d },
+                { "B", 15.0d },
+                { "C", 10.5d },
+                { "D", 5.0d },
+                { "E", 0.5d },
+            };
+
+            for (int i = 0; i < input.Rows; i++)
+            {
+                double scaleFactor = i < 17 ? A[char1] : A[char2];
+
+                for (int j = 0; j < input.Cols; j++)
+                {
+                    if (input[i][j] != -1d)
+                        input[i][j] *= scaleFactor;
+                }
+            }
+
             var gatNet = this.graphAttentionNetwork;
             gatNet.InitializeState();
             gatNet.AutomaticForwardPropagate(input);

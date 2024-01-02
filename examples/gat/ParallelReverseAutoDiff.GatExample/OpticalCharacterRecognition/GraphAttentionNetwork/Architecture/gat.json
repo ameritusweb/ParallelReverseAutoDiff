@@ -33,23 +33,9 @@
               ]
             },
             {
-              "id": "rms_norm_transformed",
-              "type": "RMSNormOperation",
-              "inputs": [ "transformed_features_add", "G" ],
-              "gradientResultTo": [ null, "DG" ],
-              "initializations": [
-                null,
-                {
-                  "type": "Xavier",
-                  "rows": "numFeatures",
-                  "columns": "numFeaturesProjected"
-                }
-              ]
-            },
-            {
               "id": "transformed_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "rms_norm_transformed" ]
+              "inputs": [ "transformed_features_add" ]
             },
             {
               "id": "features_keys",
@@ -110,7 +96,7 @@
             },
             {
               "id": "attention_weights",
-              "type": "SineSoftmaxOperation",
+              "type": "VariedSoftmaxOperation",
               "inputs": [ "attention_scale" ]
             },
             {
