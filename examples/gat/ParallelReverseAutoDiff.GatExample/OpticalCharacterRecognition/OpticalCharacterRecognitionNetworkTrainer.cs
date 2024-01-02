@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                             matrix[j, k] = data[j][k];
                         }
                     }
-                    var (gradient, output, sorted) = network.Forward(matrix);
+                    var (gradient, output, sorted) = network.Forward(matrix, 0.75d);
                     var inputGradient = await network.Backward(gradient);
                     network.ApplyGradients();
                     await network.Reset();
@@ -81,7 +81,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
                     for (int j = 0; j < 500; ++j)
                     {
-                        var res = network.Forward(matrix);
+                        var res = network.Forward(matrix, 0.25d);
 
                         // calculator.AddDataPoint(res);
                         // calculator.AddDataPoints(array);

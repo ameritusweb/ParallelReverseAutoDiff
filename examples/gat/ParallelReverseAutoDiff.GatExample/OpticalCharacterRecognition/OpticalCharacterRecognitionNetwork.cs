@@ -142,7 +142,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, List<double>) Forward(Matrix input)
+        public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax)
         {
             var gatNet = this.graphAttentionNetwork;
             gatNet.InitializeState();
@@ -150,7 +150,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             var output = gatNet.Output;
             var arrList = output[0].ToList();
             var rr = arrList.OrderByDescending(r => r).ToList();
-            var scaled = ScaleValuesToMax(arrList, 0.25d);
+            var scaled = ScaleValuesToMax(arrList, targetMax);
             var rrScaled = scaled.OrderByDescending(r => r).ToList();
             MeanSquaredErrorLossOperation lossOperation = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
             lossOperation.Forward(output, new Matrix(scaled.ToArray()));
