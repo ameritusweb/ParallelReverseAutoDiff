@@ -18,6 +18,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.00002d, 4);
                 await network.Initialize();
                 network.ApplyWeights();
+                RandomNumberGenerator generator = new RandomNumberGenerator();
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
                 var pairs = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
                 int i = 0;
@@ -57,6 +58,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + sorted.Max() + ", Grad: " + gradient[0].Max());
 
                     var inputGradient = await network.Backward(gradient);
+                    var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
+                    network.AdjustLearningRate(randLearning);
                     network.ApplyGradients();
                     await network.Reset();
                     Thread.Sleep(1000);

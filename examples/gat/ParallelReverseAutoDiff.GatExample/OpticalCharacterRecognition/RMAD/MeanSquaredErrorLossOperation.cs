@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD
 {
     using System;
+    using System.Runtime.CompilerServices;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -13,6 +14,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD
     /// </summary>
     public class MeanSquaredErrorLossOperation
     {
+        private readonly Random rand = new Random(Guid.NewGuid().GetHashCode());
         private Matrix predictions;
         private Matrix targets;
 
@@ -79,14 +81,13 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD
         /// <returns>Dropout mask matrix.</returns>
         private Matrix GenerateDropoutMask(int rows, int cols, double dropoutRate)
         {
-            Random rand = new Random();
             Matrix mask = new Matrix(rows, cols);
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    mask[i, j] = rand.NextDouble() > dropoutRate ? 1 : 0;
+                    mask[i, j] = this.rand.NextDouble() > dropoutRate ? 1 : 0;
                 }
             }
 
