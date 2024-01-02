@@ -16,6 +16,46 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
         }
 
+        public async Task Train2()
+        {
+            try
+            {
+                CudaBlas.Instance.Initialize();
+                OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.0000001d, 4);
+                await network.Initialize();
+                var jsonFiles = Directory.GetFiles(@"E:\gatstore", "*.json");
+                for (int i = 0; i < jsonFiles.Length - 1; i += 2)
+                {
+                    var json1 = File.ReadAllText(jsonFiles[i]);
+                    var data1 = JsonConvert.DeserializeObject<List<List<double>>>(json1);
+                    var json2 = File.ReadAllText(jsonFiles[i + 1]);
+                    var data2 = JsonConvert.DeserializeObject<List<List<double>>>(json2);
+                    var data = data1.Concat(data2).ToList();
+                    Matrix matrix = new Matrix(data.Count, data[0].Count);
+                    for (int j = 0; j < data.Count; j++)
+                    {
+                        for (int k = 0; k < data[0].Count; k++)
+                        {
+                            matrix[j, k] = data[j][k];
+                        }
+                    }
+                    var gradient = network.Forward(matrix);
+                    await network.Backward(gradient);
+                    network.ApplyGradients();
+                    await network.Reset();
+                    Thread.Sleep(5000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                CudaBlas.Instance.Dispose();
+            }
+        }
+
         public async Task Train()
         {
             try
@@ -43,7 +83,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     {
                         var res = network.Forward(matrix);
 
-                        calculator.AddDataPoint(res);
+                        // calculator.AddDataPoint(res);
                         // calculator.AddDataPoints(array);
 
                         Console.WriteLine($"Mean: {calculator.GetMean()}, StdDev: {calculator.GetStandardDeviation()}, Var: {calculator.GetVariance()}, Min: {calculator.GetMin()}, Max: {calculator.GetMax()}");

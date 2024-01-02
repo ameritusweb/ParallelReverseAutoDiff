@@ -207,9 +207,14 @@
       ],
       "endoperations": [
         {
-          "id": "output",
+          "id": "pre_output",
           "type": "MatrixRowConcatenateOperation",
           "inputs": [ "swiglu_act_last" ],
+        },
+        {
+          "id": "output",
+          "type": "VariedSoftmaxOperation",
+          "inputs": [ "pre_output" ],
           "setResultTo": "Output"
         }
       ]

@@ -8,7 +8,7 @@ namespace ParallelReverseAutoDiff.GatExample
         {
             Console.WriteLine("Hello, World!");
             OpticalCharacterRecognitionNetworkTrainer trainer = new OpticalCharacterRecognitionNetworkTrainer();
-            Task.Run(async () => await trainer.Train()).Wait();
+            Task.Run(async () => await trainer.Train2()).Wait();
         }
     }
 }

@@ -197,7 +197,21 @@ namespace ParallelReverseAutoDiff.RMAD
             }
             else if (node is IOperation)
             {
-                backwardResult = (node as IOperation)?.Backward((Matrix)node.BackwardInput);
+                if (node.BackwardInput is DeepMatrix backwardDeep)
+                {
+                    if (node.LayerInfo.Type == LayerInfoType.Nested)
+                    {
+                        backwardResult = (node as IOperation)?.Backward(backwardDeep[node.LayerInfo.NestedLayer]);
+                    }
+                    else
+                    {
+                        backwardResult = (node as IOperation)?.Backward(backwardDeep[node.LayerInfo.Layer]);
+                    }
+                }
+                else
+                {
+                    backwardResult = (node as IOperation)?.Backward((Matrix)node.BackwardInput);
+                }
             }
 
             if (backwardResult == null)
