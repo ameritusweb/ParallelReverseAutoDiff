@@ -262,7 +262,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             }
 
             IOperationBase? backwardEndOperation = this.computationGraph["node_features_transform_0_0"];
-            if (backwardEndOperation.CalculatedGradient == null)
+            if (backwardEndOperation.CalculatedGradient[1] == null)
             {
                 return gradient;
             }
