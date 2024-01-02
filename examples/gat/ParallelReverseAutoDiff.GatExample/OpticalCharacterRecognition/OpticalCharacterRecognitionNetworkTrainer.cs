@@ -1,11 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD;
 using ParallelReverseAutoDiff.RMAD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 {
@@ -14,6 +8,59 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         public OpticalCharacterRecognitionNetworkTrainer()
         {
 
+        }
+
+        public async Task Train3()
+        {
+            try
+            {
+                CudaBlas.Instance.Initialize();
+                OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.00001d, 4);
+                await network.Initialize();
+                var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
+                var pairs = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
+                int i = 0;
+                foreach (var pair in pairs)
+                {
+                    i++;
+                    var i1 = pair.Item1;
+                    var i2 = pair.Item2;
+                    var json1 = File.ReadAllText(jsonFiles[i1]);
+                    var data1 = JsonConvert.DeserializeObject<List<List<double>>>(json1);
+                    var json2 = File.ReadAllText(jsonFiles[i2]);
+                    var data2 = JsonConvert.DeserializeObject<List<List<double>>>(json2);
+                    var data = data1.Concat(data2).ToList();
+                    var sub1 = jsonFiles[i1].Substring(16, 1);
+                    var sub2 = jsonFiles[i2].Substring(16, 1);
+                    double targetMax = sub1 == sub2 ? 0.75d : 0.25d;
+                    Matrix matrix = new Matrix(data.Count, data[0].Count);
+                    for (int j = 0; j < data.Count; j++)
+                    {
+                        for (int k = 0; k < data[0].Count; k++)
+                        {
+                            matrix[j, k] = data[j][k];
+                        }
+                    }
+
+                    var (gradient, output, sorted) = network.Forward(matrix, targetMax);
+                    var inputGradient = await network.Backward(gradient);
+                    network.ApplyGradients();
+                    await network.Reset();
+                    Thread.Sleep(5000);
+                    if (i % 10 == 9)
+                    {
+                        network.SaveWeights();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                CudaBlas.Instance.Dispose();
+            }
         }
 
         public async Task Train2()
