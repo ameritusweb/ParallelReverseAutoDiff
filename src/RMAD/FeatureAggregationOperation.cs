@@ -53,6 +53,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 throw new ArgumentException("Invalid dimensions for coefficient and feature matrices.");
             }
 
+            this.coefficients = coefficients;
+            this.features = features;
+
             int n = features.Rows; // Number of nodes
             int p = features.Cols; // Number of features per node
 
