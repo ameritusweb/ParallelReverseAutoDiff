@@ -63,7 +63,34 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD
             int n = this.predictions.Rows * this.predictions.Cols;
             Matrix dPredictions = (this.predictions - this.targets) * (2.0 / n);
 
-            return dPredictions;
+            // Implementing dropout
+            Matrix dropoutMask = GenerateDropoutMask(dPredictions.Rows, dPredictions.Cols, 0.2);
+            Matrix dPredictionsWithDropout = dPredictions.ElementwiseMultiply(dropoutMask);
+
+            return dPredictionsWithDropout;
+        }
+
+        /// <summary>
+        /// Generates a dropout mask with a specified dropout rate.
+        /// </summary>
+        /// <param name="rows">Number of rows in the mask.</param>
+        /// <param name="cols">Number of columns in the mask.</param>
+        /// <param name="dropoutRate">Dropout rate (fraction of elements to be zeroed).</param>
+        /// <returns>Dropout mask matrix.</returns>
+        private Matrix GenerateDropoutMask(int rows, int cols, double dropoutRate)
+        {
+            Random rand = new Random();
+            Matrix mask = new Matrix(rows, cols);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    mask[i, j] = rand.NextDouble() > dropoutRate ? 1 : 0;
+                }
+            }
+
+            return mask;
         }
     }
 }

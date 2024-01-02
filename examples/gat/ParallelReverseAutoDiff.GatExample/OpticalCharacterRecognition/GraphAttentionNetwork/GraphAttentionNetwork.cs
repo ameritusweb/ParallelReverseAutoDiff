@@ -186,6 +186,16 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                     parameters[0] = new DeepMatrix(matrixArray);
                 }
 
+                if (op.Id == "graph_attention")
+                {
+
+                }
+
+                if (op.Id == "feature_aggregation")
+                {
+
+                }
+
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {

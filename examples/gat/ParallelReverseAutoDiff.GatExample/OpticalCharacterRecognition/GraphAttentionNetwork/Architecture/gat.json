@@ -125,7 +125,8 @@
                 {
                   "id": "graph_adjacency",
                   "type": "SigmoidOperation",
-                  "inputs": [ "AdjacencyMatrix" ]
+                  "inputs": [ "AdjacencyMatrix" ],
+                  "gradientResultTo": [ "DAdjacencyMatrix" ]
                 },
                 {
                   "id": "graph_attention",
@@ -160,7 +161,8 @@
             {
               "id": "deep_pairwise_attention",
               "type": "DeepPairwiseAttentionOperation",
-              "inputs": [ "deep_concatenate", "PairwiseAttentionWeights" ]
+              "inputs": [ "deep_concatenate", "PairwiseAttentionWeights" ],
+              "gradientResultTo": [ null, "DPairwiseAttentionWeights" ]
             },
             {
               "id": "deep_elementwise_multiply_sum",

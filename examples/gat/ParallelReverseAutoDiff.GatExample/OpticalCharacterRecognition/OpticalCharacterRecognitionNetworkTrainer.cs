@@ -15,11 +15,13 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             try
             {
                 CudaBlas.Instance.Initialize();
-                OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.00001d, 4);
+                OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.00002d, 4);
                 await network.Initialize();
+                network.ApplyWeights();
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
                 var pairs = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
                 int i = 0;
+                List<double> targets = new List<double>();
                 foreach (var pair in pairs)
                 {
                     i++;
@@ -30,9 +32,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     var json2 = File.ReadAllText(jsonFiles[i2]);
                     var data2 = JsonConvert.DeserializeObject<List<List<double>>>(json2);
                     var data = data1.Concat(data2).ToList();
-                    var sub1 = jsonFiles[i1].Substring(16, 1);
-                    var sub2 = jsonFiles[i2].Substring(16, 1);
-                    double targetMax = sub1 == sub2 ? 0.75d : 0.25d;
+                    var file1 = jsonFiles[i1].Substring(jsonFiles[i1].LastIndexOf('\\') + 1);
+                    var file2 = jsonFiles[i2].Substring(jsonFiles[i2].LastIndexOf('\\') + 1);
+                    var sub1 = file1.Substring(16, 1);
+                    var sub2 = file2.Substring(16, 1);
+                    double targetMax = sub1 == sub2 ? 0.75d : 0.2d;
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -41,13 +45,22 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                             matrix[j, k] = data[j][k];
                         }
                     }
+                    if (targetMax == 0.2d && targetMax == targets.LastOrDefault())
+                    {
+                        continue;
+                    }
 
+                    targets.Add(targetMax);
+                   
                     var (gradient, output, sorted) = network.Forward(matrix, targetMax);
+
+                    Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + sorted.Max() + ", Grad: " + gradient[0].Max());
+
                     var inputGradient = await network.Backward(gradient);
                     network.ApplyGradients();
                     await network.Reset();
-                    Thread.Sleep(5000);
-                    if (i % 10 == 9)
+                    Thread.Sleep(1000);
+                    if (i % 21 == 20)
                     {
                         network.SaveWeights();
                     }

@@ -10,38 +10,30 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
     {
         public static List<Tuple<int, int>> GenerateRandomPairs(int numberOfFiles)
         {
-            List<int> indices = new List<int>();
+            // Step 1: Generate all possible pairs in both orders
+            List<Tuple<int, int>> allPairs = new List<Tuple<int, int>>();
             for (int i = 0; i < numberOfFiles; i++)
             {
-                indices.Add(i);
+                for (int j = i + 1; j < numberOfFiles; j++)
+                {
+                    allPairs.Add(new Tuple<int, int>(i, j));
+                    allPairs.Add(new Tuple<int, int>(j, i));
+                }
             }
 
-            // Shuffle the indices
+            // Step 2: Shuffle the generated pairs
             Random rng = new Random(Guid.NewGuid().GetHashCode());
-            int n = indices.Count;
+            int n = allPairs.Count;
             while (n > 1)
             {
                 n--;
                 int k = rng.Next(n + 1);
-                int value = indices[k];
-                indices[k] = indices[n];
-                indices[n] = value;
+                Tuple<int, int> value = allPairs[k];
+                allPairs[k] = allPairs[n];
+                allPairs[n] = value;
             }
 
-            // Create pairs from the shuffled indices
-            List<Tuple<int, int>> pairs = new List<Tuple<int, int>>();
-            for (int i = 0; i < indices.Count - 1; i += 2)
-            {
-                pairs.Add(new Tuple<int, int>(indices[i], indices[i + 1]));
-            }
-
-            // If odd number of files, the last file won't be paired
-            if (numberOfFiles % 2 != 0)
-            {
-                Console.WriteLine("Warning: Odd number of files. Last file will not be paired.");
-            }
-
-            return pairs;
+            return allPairs;
         }
     }
 }
