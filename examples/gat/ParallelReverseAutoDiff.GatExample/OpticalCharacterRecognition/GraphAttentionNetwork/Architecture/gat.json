@@ -267,9 +267,14 @@
           "inputs": [ "pre_output_relu", "SoftDivisor" ]
         },
         {
+          "id": "pre_output_add",
+          "type": "MatrixAddScalarOperation",
+          "inputs": [ "pre_output_mult", "SoftSum" ]
+        },
+        {
           "id": "output",
           "type": "VariedSoftmaxOperation",
-          "inputs": [ "pre_output", "pre_output_mult" ],
+          "inputs": [ "pre_output", "pre_output_add" ],
           "setResultTo": "Output"
         }
       ]
