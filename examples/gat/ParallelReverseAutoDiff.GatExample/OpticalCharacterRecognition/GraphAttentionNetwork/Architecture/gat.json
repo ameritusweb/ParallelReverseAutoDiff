@@ -262,6 +262,11 @@
           "inputs": [ "swiglu_act_last" ]
         },
         {
+          "id": "pre_output_act",
+          "type": "PiecewiseActivationOperation",
+          "inputs": [ "pre_output" ]
+        },
+        {
           "id": "pre_output_relu",
           "type": "LeakyReLUOperation",
           "inputs": [ "pre_output" ]
@@ -279,7 +284,7 @@
         {
           "id": "output",
           "type": "VariedSoftmaxOperation",
-          "inputs": [ "pre_output", "pre_output_add" ],
+          "inputs": [ "pre_output_act", "pre_output_add" ],
           "setResultTo": "Output"
         }
       ]
