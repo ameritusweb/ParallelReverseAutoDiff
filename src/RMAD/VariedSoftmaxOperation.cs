@@ -96,9 +96,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
             Matrix dTemp = new Matrix(1, numCols);
 
-            double[,] gradSoftmaxTemp = new double[1, 1];
+            double[,] gradSoftmaxTemp = new double[1, numCols];
 
-            gradSoftmaxTemp[0, 0] = -this.input[0][0] / Math.Pow(this.temperature, 2) * softmaxGrad[0, 0];
+            for (int j = 0; j < numCols; j++)
+            {
+                gradSoftmaxTemp[0, j] = -this.input[0][j] / Math.Pow(this.temperature, 2) * softmaxGrad[0, j];
+            }
 
             double gradientSumTemp = 0;
 
