@@ -19,9 +19,14 @@
               ]
             },
             {
+              "id": "node_features_transform_hadamard",
+              "type": "HadamardProductOperation",
+              "inputs": [ "nodeFeatures", "node_features_transform" ]
+            },
+            {
               "id": "transformed_features_add",
               "type": "MatrixAddBroadcastingOperation",
-              "inputs": [ "node_features_transform", "TransformationBias" ],
+              "inputs": [ "node_features_transform_hadamard", "TransformationBias" ],
               "gradientResultTo": [ null, "DTransformationBias" ],
               "initializations": [
                 null,
@@ -109,6 +114,11 @@
               "type": "GpuMatrixMultiplyOperation",
               "inputs": [ "attention_weights_values", "ResidualWeights" ],
               "gradientResultTo": [ null, "DResidualWeights" ]
+            },
+            {
+              "id": "scaled_residual_hadamard",
+              "type": "HadamardProductOperation",
+              "inputs": [ "node_features_transform_hadamard", "scaled_residual" ]
             }
           ],
           "layers": [
@@ -164,7 +174,7 @@
             {
               "id": "add_residual",
               "type": "MatrixAddOperation",
-              "inputs": [ "deep_elementwise_multiply_sum", "scaled_residual" ]
+              "inputs": [ "deep_elementwise_multiply_sum", "scaled_residual_hadamard" ]
             },
             {
               "id": "fully_connected",
@@ -216,9 +226,19 @@
           "inputs": [ "swiglu_act_last" ]
         },
         {
+          "id": "pre_output_relu",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "pre_output" ]
+        },
+        {
+          "id": "pre_output_mult",
+          "type": "MatrixMultiplyScalarOperation",
+          "inputs": [ "pre_output_relu", "SoftDivisor" ]
+        },
+        {
           "id": "output",
           "type": "VariedSoftmaxOperation",
-          "inputs": [ "pre_output" ],
+          "inputs": [ "pre_output", "pre_output_mult" ],
           "setResultTo": "Output"
         }
       ]
