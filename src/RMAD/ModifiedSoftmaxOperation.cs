@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class ModifiedSoftmaxOperation : Operation
     {
-        private const double Temperature = 0.2d;
+        private const double Temperature = 0.1d;
         private Matrix input;
 
         /// <summary>

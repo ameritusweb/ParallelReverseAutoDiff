@@ -96,13 +96,19 @@
             },
             {
               "id": "attention_weights",
-              "type": "VariedSoftmaxOperation",
+              "type": "ModifiedSoftmaxOperation",
               "inputs": [ "attention_scale" ]
             },
             {
               "id": "attention_weights_values",
               "type": "HadamardProductOperation",
               "inputs": [ "attention_weights", "features_values" ]
+            },
+            {
+              "id": "scaled_residual",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "attention_weights_values", "ResidualWeights" ],
+              "gradientResultTo": [ null, "DResidualWeights" ]
             }
           ],
           "layers": [
@@ -156,9 +162,14 @@
               "inputs": [ "deep_concatenate", "deep_pairwise_attention" ]
             },
             {
+              "id": "add_residual",
+              "type": "MatrixAddOperation",
+              "inputs": [ "deep_elementwise_multiply_sum", "scaled_residual" ]
+            },
+            {
               "id": "fully_connected",
               "type": "GpuMatrixMultiplyOperation",
-              "inputs": [ "deep_elementwise_multiply_sum", "FW" ],
+              "inputs": [ "add_residual", "FW" ],
               "gradientResultTo": [ null, "DFW" ]
             },
             {
@@ -170,7 +181,7 @@
             {
               "id": "fully_connected_2",
               "type": "GpuMatrixMultiplyOperation",
-              "inputs": [ "deep_elementwise_multiply_sum", "F2W" ],
+              "inputs": [ "add_residual", "F2W" ],
               "gradientResultTo": [ null, "DF2W" ]
             },
             {
