@@ -438,7 +438,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
-                .AddScalar("SoftDivisor", x => 1d / 400000d)
+                .AddScalar("SoftDivisor", x => 1d / 50000d)
                 .AddScalar("SoftSum", x => 0.0000002048d)
                 .AddWeight("LinearWeights", x => linearWeights[x.Layer]).AddGradient("DLinearWeights", x => linearWeightsGradient[x.Layer])
                 .AddWeight("TransformationBias", x => transformationBias[x.Layer]).AddGradient("DTransformationBias", x => transformationBiasGradient[x.Layer])
