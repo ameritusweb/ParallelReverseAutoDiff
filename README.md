@@ -127,6 +127,8 @@ MatrixConcatenateOperation
 
 MatrixDiagonalFilterOperation
 
+MatrixHorizontalConcatenateOperation
+
 MatrixMultiplyOperation
 
 MatrixMultiplyAndSumOperation

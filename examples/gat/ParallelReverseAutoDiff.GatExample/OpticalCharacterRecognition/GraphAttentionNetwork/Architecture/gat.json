@@ -19,14 +19,14 @@
               ]
             },
             {
-              "id": "node_features_transform_hadamard",
-              "type": "HadamardProductOperation",
-              "inputs": [ "nodeFeatures", "node_features_transform" ]
+              "id": "node_features_concat",
+              "type": "MatrixHorizontalConcatenateOperation",
+              "inputs": [ "nodeFeatures", "nodeFeatures" ]
             },
             {
               "id": "transformed_features_add",
               "type": "MatrixAddBroadcastingOperation",
-              "inputs": [ "node_features_transform_hadamard", "TransformationBias" ],
+              "inputs": [ "node_features_transform", "TransformationBias" ],
               "gradientResultTo": [ null, "DTransformationBias" ],
               "initializations": [
                 null,
@@ -118,7 +118,18 @@
             {
               "id": "scaled_residual_hadamard",
               "type": "HadamardProductOperation",
-              "inputs": [ "node_features_transform_hadamard", "scaled_residual" ]
+              "inputs": [ "nodeFeatures", "attention_weights_values" ]
+            },
+            {
+              "id": "inverse_residual",
+              "type": "HadamardProductOperation",
+              "inputs": [ "nodeFeatures", "InverseResidualWeights" ],
+              "gradientResultTo": [ null, "DInverseResidualWeights" ]
+            },
+            {
+              "id": "inverse_residual_concat",
+              "type": "MatrixHorizontalConcatenateOperation",
+              "inputs": [ "scaled_residual_hadamard", "inverse_residual" ]
             }
           ],
           "layers": [
@@ -172,9 +183,14 @@
               "inputs": [ "deep_concatenate", "deep_pairwise_attention" ]
             },
             {
-              "id": "add_residual",
+              "id": "add_residual_add",
               "type": "MatrixAddOperation",
-              "inputs": [ "deep_elementwise_multiply_sum", "scaled_residual_hadamard" ]
+              "inputs": [ "deep_elementwise_multiply_sum", "scaled_residual" ]
+            },
+            {
+              "id": "add_residual",
+              "type": "HadamardProductOperation",
+              "inputs": [ "add_residual_add", "inverse_residual_concat" ]
             },
             {
               "id": "fully_connected",
@@ -212,9 +228,24 @@
               "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
             },
             {
-              "id": "swiglu_act",
+              "id": "swiglu_act_add",
               "type": "MatrixAddOperation",
               "inputs": [ "pre_swiglu_act", "fully_connected_act" ]
+            },
+            {
+              "id": "swiglu_act_hada",
+              "type": "HadamardProductOperation",
+              "inputs": [ "swiglu_act_add", "add_residual" ]
+            },
+            {
+              "id": "swiglu_act_add2",
+              "type": "MatrixAddOperation",
+              "inputs": [ "swiglu_act_hada", "node_features_concat" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "swiglu_act_add2" ]
             }
           ]
         }
