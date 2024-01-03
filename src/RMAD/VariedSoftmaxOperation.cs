@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Varied softmax operation.
@@ -65,42 +66,49 @@ namespace ParallelReverseAutoDiff.RMAD
         public override BackwardResult Backward(Matrix dLdOutput)
         {
             int numCols = this.input.Cols;
-            double sumExp = this.input.SelectMany(x => x).Sum(xi => Math.Exp(xi / this.temperature));
-            double[] softmax = new double[numCols];
-            for (int i = 0; i < numCols; i++)
-            {
-                softmax[i] = Math.Exp(this.input[0][i] / this.temperature) / sumExp;
-            }
+            double[] expInputs = this.input.SelectMany(x => x).Select(xi => Math.Exp(xi / this.temperature)).ToArray();
+            double sumExp = expInputs.Sum();
 
+            double[] softmax = expInputs.Select(expInput => expInput / sumExp).ToArray();
             double softmaxSum = softmax.Sum();
             double scaleFactor = Math.Sqrt(numCols) / softmaxSum;
             double scaleFactorGradient = -Math.Sqrt(numCols) / Math.Pow(softmaxSum, 2);
+
             Matrix dX = new Matrix(1, numCols);
             Matrix dTemp = new Matrix(1, numCols);
 
-            for (int i = 0; i < numCols; i++)
+            double[,] softmaxGrad = new double[numCols, numCols];
+            double[,] gradSoftmaxTemp = new double[numCols, numCols];
+
+            // Parallelize the outer loop
+            Parallel.For(0, numCols, i =>
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    softmaxGrad[i, j] = softmax[i] * ((i == j ? 1 : 0) - softmax[j]);
+                    gradSoftmaxTemp[i, j] = -this.input[0][j] / Math.Pow(this.temperature, 2) * softmaxGrad[i, j];
+                }
+            });
+
+            Parallel.For(0, numCols, i =>
             {
                 double gradientSumX = 0;
                 double gradientSumTemp = 0;
+
                 for (int j = 0; j < numCols; j++)
                 {
-                    double softmaxGrad = softmax[i] * ((i == j ? 1 : 0) - softmax[j]);
-                    double gradSoftmaxTemp = -this.input[0][j] / Math.Pow(this.temperature, 2) * softmaxGrad;
-
-                    // Gradient with respect to input
-                    double totalGradX = ((softmaxGrad / this.temperature) * scaleFactor * dLdOutput[0][j]) +
+                    double totalGradX = ((softmaxGrad[i, j] / this.temperature) * scaleFactor * dLdOutput[0][j]) +
                                         (softmax[i] * scaleFactorGradient * dLdOutput[0][j]);
                     gradientSumX += totalGradX;
 
-                    // Gradient with respect to temperature
-                    double totalGradTemp = (gradSoftmaxTemp * scaleFactor * dLdOutput[0][j]) +
+                    double totalGradTemp = (gradSoftmaxTemp[i, j] * scaleFactor * dLdOutput[0][j]) +
                                            (softmax[i] * scaleFactorGradient * dLdOutput[0][j]);
                     gradientSumTemp += totalGradTemp;
                 }
 
                 dX[0][i] = gradientSumX;
                 dTemp[0][i] = gradientSumTemp;
-            }
+            });
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dX)
