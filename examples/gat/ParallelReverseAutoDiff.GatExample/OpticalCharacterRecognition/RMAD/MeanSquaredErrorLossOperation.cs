@@ -66,7 +66,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD
             Matrix dPredictions = (this.predictions - this.targets) * (2.0 / n);
 
             // Implementing dropout
-            Matrix dropoutMask = GenerateDropoutMask(dPredictions.Rows, dPredictions.Cols, 0.2);
+            Matrix dropoutMask = GenerateDropoutMask(dPredictions.Rows, dPredictions.Cols, 0.01);
             Matrix dPredictionsWithDropout = dPredictions.ElementwiseMultiply(dropoutMask);
 
             return dPredictionsWithDropout;

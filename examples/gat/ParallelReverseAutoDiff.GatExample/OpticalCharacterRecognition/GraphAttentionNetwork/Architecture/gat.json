@@ -19,9 +19,14 @@
               ]
             },
             {
+              "id": "leaky",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "nodeFeatures" ]
+            },
+            {
               "id": "node_features_concat",
               "type": "MatrixHorizontalConcatenateOperation",
-              "inputs": [ "nodeFeatures", "nodeFeatures" ]
+              "inputs": [ "nodeFeatures", "leaky" ]
             },
             {
               "id": "transformed_features_add",

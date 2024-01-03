@@ -17,7 +17,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 CudaBlas.Instance.Initialize();
                 OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.00002d, 4);
                 await network.Initialize();
-                network.ApplyWeights();
+                //network.ApplyWeights();
                 RandomNumberGenerator generator = new RandomNumberGenerator();
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
                 var pairs = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
@@ -37,7 +37,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     var file2 = jsonFiles[i2].Substring(jsonFiles[i2].LastIndexOf('\\') + 1);
                     var sub1 = file1.Substring(16, 1);
                     var sub2 = file2.Substring(16, 1);
-                    double targetMax = sub1 == sub2 ? 0.75d : 0.2d;
+                    double targetMax = sub1 == sub2 ? 30d : 1d;
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -46,7 +46,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                             matrix[j, k] = data[j][k];
                         }
                     }
-                    if (targetMax == 0.2d && targetMax == targets.LastOrDefault())
+                    if (targetMax == 1d && targetMax == targets.LastOrDefault())
                     {
                         continue;
                     }
@@ -57,15 +57,15 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
                     Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + sorted.Max() + ", Grad: " + gradient[0].Max());
 
-                    //var inputGradient = await network.Backward(gradient);
+                    var inputGradient = await network.Backward(gradient);
                     //var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
                     //network.AdjustLearningRate(randLearning);
-                    //network.ApplyGradients();
+                    network.ApplyGradients();
                     await network.Reset();
                     Thread.Sleep(1000);
                     if (i % 21 == 20)
                     {
-                        //network.SaveWeights();
+                        network.SaveWeights();
                     }
                 }
             }

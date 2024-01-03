@@ -76,7 +76,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1219;
+            var initialAdamIteration = 1;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -134,7 +134,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         {
             var clipper = this.graphAttentionNetwork.Utilities.GradientClipper;
             clipper.Clip(this.modelLayers.ToArray());
-            var adamOptimizer = new StochasticAdamOptimizer(this.graphAttentionNetwork);
+            var adamOptimizer = this.graphAttentionNetwork.Utilities.AdamOptimizer;//new StochasticAdamOptimizer(this.graphAttentionNetwork);
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
@@ -144,24 +144,24 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The gradient of the loss wrt the output.</returns>
         public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax, string char1, string char2)
         {
-            Dictionary<string, double> A = new Dictionary<string, double>() {
-                { "A", 0.1d },
-                { "B", 0.001d },
-                { "C", 0.0001d },
-                { "D", 0.00001d },
-                { "E", 0.000001d },
-            };
+            //Dictionary<string, double> A = new Dictionary<string, double>() {
+            //    { "A", 0.1d },
+            //    { "B", 0.001d },
+            //    { "C", 0.0001d },
+            //    { "D", 0.00001d },
+            //    { "E", 0.000001d },
+            //};
 
-            for (int i = 0; i < input.Rows; i++)
-            {
-                double scaleFactor = i < 17 ? A[char1] : A[char2];
+            //for (int i = 0; i < input.Rows; i++)
+            //{
+            //    double scaleFactor = i < 17 ? A[char1] : A[char2];
 
-                for (int j = 0; j < input.Cols; j++)
-                {
-                    if (input[i][j] != -1d)
-                        input[i][j] *= scaleFactor;
-                }
-            }
+            //    for (int j = 0; j < input.Cols; j++)
+            //    {
+            //        if (input[i][j] != -1d)
+            //            input[i][j] *= scaleFactor;
+            //    }
+            //}
 
             var gatNet = this.graphAttentionNetwork;
             gatNet.InitializeState();
