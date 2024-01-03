@@ -47,6 +47,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                     .AddModelElementGroup("LinearWeights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("TransformationBias", new[] { 1, numInputOutputFeatures }, InitializationType.Zeroes)
                     .AddModelElementGroup("G", new[] { numNodes, numInputOutputFeatures }, InitializationType.He)
+                    .AddModelElementGroup("GG", new[] { numNodes, numInputOutputFeatures * 8 }, InitializationType.He)
                     .AddModelElementGroup("Keys", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("Values", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("Queries", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
@@ -203,6 +204,21 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 }
 
                 if (op.Id == "node_features_transform")
+                {
+
+                }
+
+                if (op.Id == "add_residual")
+                {
+
+                }
+
+                if (op.Id == "swiglu_act")
+                {
+
+                }
+
+                if( op.Id == "output")
                 {
 
                 }
@@ -365,7 +381,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 fully2.Add(this.outputLayers[i].WeightMatrix("F2W"));
                 fully2Bias.Add(this.outputLayers[i].WeightMatrix("F2B"));
                 beta.Add(this.outputLayers[i].WeightMatrix("Beta"));
-                g.Add(this.inputLayers[i].WeightMatrix("G"));
+                g.Add(this.inputLayers[i].WeightMatrix("GG"));
             }
 
             List<Matrix> linearWeightsGradient = new List<Matrix>();
@@ -399,7 +415,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 fully2Gradient.Add(this.outputLayers[i].GradientMatrix("F2W"));
                 fully2BiasGradient.Add(this.outputLayers[i].GradientMatrix("F2B"));
                 betaGradient.Add(this.outputLayers[i].GradientMatrix("Beta"));
-                gGradient.Add(this.inputLayers[i].GradientMatrix("G"));
+                gGradient.Add(this.inputLayers[i].GradientMatrix("GG"));
             }
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
@@ -420,7 +436,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddWeight("F2W", x => fully2[x.Layer]).AddGradient("DF2W", x => fully2Gradient[x.Layer])
                 .AddWeight("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
                 .AddWeight("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
-                .AddBias("G", x => g[x.Layer]).AddGradient("DG", x => gGradient[x.Layer])
+                .AddBias("GG", x => g[x.Layer]).AddGradient("DGG", x => gGradient[x.Layer])
                 .AddWeight("AdjacencyMatrix", x => adjacency[x.Layer][x.NestedLayer]).AddGradient("DAdjacencyMatrix", x => adjacencyGradient[x.Layer][x.NestedLayer])
                 .AddWeight("AttentionWeights", x => attentionWeights[x.Layer][x.NestedLayer]).AddGradient("DAttentionWeights", x => attentionWeightsGradient[x.Layer][x.NestedLayer])
                 .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"swiglu_act_0_{x.Layer - 1}"])

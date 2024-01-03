@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class VariedSoftmaxOperation : Operation
     {
-        private const double Temperature = 0.0002d;
+        private double temperature;
         private Matrix input;
 
         /// <summary>
@@ -42,16 +42,18 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Performs the forward operation for the softmax function.
         /// </summary>
         /// <param name="input">The input to the softmax operation.</param>
+        /// <param name="temp">The temperature to use for the softmax operation.</param>
         /// <returns>The output of the softmax operation.</returns>
-        public Matrix Forward(Matrix input)
+        public Matrix Forward(Matrix input, Matrix temp) // both input and temp are 1xN matrices
         {
             this.input = input;
+            this.temperature = temp.SelectMany(x => x).Sum();
             double[] softmax = new double[this.input.Cols];
-            double sumExp = this.input.SelectMany(x => x).Sum(xi => Math.Exp(xi / Temperature));
+            double sumExp = this.input.SelectMany(x => x).Sum(xi => Math.Exp(xi / this.temperature));
 
             for (int i = 0; i < this.input.Cols; i++)
             {
-                softmax[i] = Math.Exp(this.input[0][i] / Temperature) / sumExp;
+                softmax[i] = Math.Exp(this.input[0][i] / this.temperature) / sumExp;
             }
 
             double scaleFactor = Math.Sqrt(this.input.Cols) / softmax.Sum();
@@ -63,34 +65,46 @@ namespace ParallelReverseAutoDiff.RMAD
         public override BackwardResult Backward(Matrix dLdOutput)
         {
             int numCols = this.input.Cols;
-            double sumExp = this.input.SelectMany(x => x).Sum(xi => Math.Exp(xi / Temperature));
+            double sumExp = this.input.SelectMany(x => x).Sum(xi => Math.Exp(xi / this.temperature));
             double[] softmax = new double[numCols];
             for (int i = 0; i < numCols; i++)
             {
-                softmax[i] = Math.Exp(this.input[0][i] / Temperature) / sumExp;
+                softmax[i] = Math.Exp(this.input[0][i] / this.temperature) / sumExp;
             }
 
             double softmaxSum = softmax.Sum();
             double scaleFactor = Math.Sqrt(numCols) / softmaxSum;
             double scaleFactorGradient = -Math.Sqrt(numCols) / Math.Pow(softmaxSum, 2);
             Matrix dX = new Matrix(1, numCols);
+            Matrix dTemp = new Matrix(1, numCols);
 
             for (int i = 0; i < numCols; i++)
             {
-                double gradientSum = 0;
+                double gradientSumX = 0;
+                double gradientSumTemp = 0;
                 for (int j = 0; j < numCols; j++)
                 {
                     double softmaxGrad = softmax[i] * ((i == j ? 1 : 0) - softmax[j]);
-                    double totalGrad = ((softmaxGrad / Temperature) * scaleFactor * dLdOutput[0][j]) +
-                                       (softmax[i] * scaleFactorGradient * dLdOutput[0][j]);
-                    gradientSum += totalGrad;
+                    double gradSoftmaxTemp = -this.input[0][j] / Math.Pow(this.temperature, 2) * softmaxGrad;
+
+                    // Gradient with respect to input
+                    double totalGradX = ((softmaxGrad / this.temperature) * scaleFactor * dLdOutput[0][j]) +
+                                        (softmax[i] * scaleFactorGradient * dLdOutput[0][j]);
+                    gradientSumX += totalGradX;
+
+                    // Gradient with respect to temperature
+                    double totalGradTemp = (gradSoftmaxTemp * scaleFactor * dLdOutput[0][j]) +
+                                           (softmax[i] * scaleFactorGradient * dLdOutput[0][j]);
+                    gradientSumTemp += totalGradTemp;
                 }
 
-                dX[0][i] = gradientSum;
+                dX[0][i] = gradientSumX;
+                dTemp[0][i] = gradientSumTemp;
             }
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dX)
+                .AddScalingGradient(dTemp)
                 .Build();
         }
     }

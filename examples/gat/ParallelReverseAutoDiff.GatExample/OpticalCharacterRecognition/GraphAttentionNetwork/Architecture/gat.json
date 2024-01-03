@@ -96,7 +96,7 @@
             },
             {
               "id": "attention_weights",
-              "type": "ModifiedSoftmaxOperation",
+              "type": "MultiRowModifiedSoftmaxOperation",
               "inputs": [ "attention_scale" ]
             },
             {
@@ -197,9 +197,14 @@
               "gradientResultTo": [ null, "DBeta" ]
             },
             {
-              "id": "swiglu_act",
+              "id": "pre_swiglu_act",
               "type": "HadamardProductOperation",
               "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "MatrixAddOperation",
+              "inputs": [ "pre_swiglu_act", "fully_connected_act" ]
             }
           ]
         }
@@ -208,7 +213,7 @@
         {
           "id": "pre_output",
           "type": "MatrixRowConcatenateOperation",
-          "inputs": [ "swiglu_act_last" ],
+          "inputs": [ "swiglu_act_last" ]
         },
         {
           "id": "output",

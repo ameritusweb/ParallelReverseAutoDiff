@@ -145,11 +145,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax, string char1, string char2)
         {
             Dictionary<string, double> A = new Dictionary<string, double>() {
-                { "A", 20.5d },
-                { "B", 15.0d },
-                { "C", 10.5d },
-                { "D", 5.0d },
-                { "E", 0.5d },
+                { "A", 2.0d },
+                { "B", 0.0001d },
+                { "C", 0.0001d },
+                { "D", 0.0001d },
+                { "E", 0.0001d },
             };
 
             for (int i = 0; i < input.Rows; i++)
