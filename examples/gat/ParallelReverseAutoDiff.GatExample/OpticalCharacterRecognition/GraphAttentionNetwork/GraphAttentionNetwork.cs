@@ -244,6 +244,31 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 var deepOutput = op.GetDeepOutput();
                 if (output != null)
                 {
+                    if (op.Id == "output")
+                    {
+                        var length = (output as Matrix)[0].Length;
+                        var p1 = (Matrix)(parameters[0] as Matrix).Clone();
+                        var p2 = (Matrix)(parameters[1] as Matrix).Clone();
+                        var first = new Matrix(p1[0].Take(length / 2).ToArray());
+                        object[] parametersFirst = new object[] { first, p2 };
+
+                        var op1 = VariedSoftmaxOperation.Instantiate(this);
+                        var forward1 = typeof(VariedSoftmaxOperation).GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
+
+                        var firstOutput = forward1.Invoke(op1, parametersFirst);
+                        var firstLL = (firstOutput as Matrix)[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+                        var max1 = (firstOutput as Matrix)[0].Max();
+                        var second = new Matrix(p1[0].Skip(length / 2).Take(length / 2).ToArray());
+                        object[] parametersSecond = new object[] { second, p2 };
+                        var secondOutput = forward1.Invoke(op1, parametersSecond);
+                        var secondLL = (secondOutput as Matrix)[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+                        var max2 = (secondOutput as Matrix)[0].Max();
+
+                        var sorted = (output as Matrix)[0].OrderByDescending(x => x).ToArray();
+                        var max = sorted.Max();
+                        var ll = (output as Matrix)[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+                        Console.WriteLine(max1 + " " + max2 + " " + max + " " + Math.Abs(max1 - max2));
+                    }
                     if (double.IsNaN(output[0][0]))
                     {
                     }
@@ -439,7 +464,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddIntermediate("Output", _ => this.Output)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
                 .AddScalar("SoftDivisor", x => 1d / 400000d)
-                .AddScalar("SoftSum", x => 0.0000002048d)
+                .AddScalar("SoftSum", x => 0.0000004096d)
                 .AddWeight("LinearWeights", x => linearWeights[x.Layer]).AddGradient("DLinearWeights", x => linearWeightsGradient[x.Layer])
                 .AddWeight("TransformationBias", x => transformationBias[x.Layer]).AddGradient("DTransformationBias", x => transformationBiasGradient[x.Layer])
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])
