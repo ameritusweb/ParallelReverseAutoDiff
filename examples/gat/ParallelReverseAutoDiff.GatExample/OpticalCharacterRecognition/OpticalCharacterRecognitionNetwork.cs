@@ -24,6 +24,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         private GraphAttentionNetwork.GraphAttentionNetwork graphAttentionNetwork;
 
         private List<IModelLayer> modelLayers;
+        private List<(string, string)> entities;
+        private Matrix? prevOutputTwo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpticalCharacterRecognitionNetwork"/> class.
@@ -41,6 +43,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             this.learningRate = learningRate;
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
+            this.entities = new List<(string, string)>();
             this.graphAttentionNetwork = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
         }
 
@@ -76,7 +79,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1929;
+            var initialAdamIteration = 2520;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -116,7 +119,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "8f6e260d-b5f8-4488-aa76-892b6870ee3c_1929";
+            var guid = "5206b397-c348-43c3-9178-3a8465ab7aa5_2520";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -167,6 +170,24 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             gatNet.InitializeState();
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
+            var outputTwo = gatNet.OutputTwo;
+
+            var last = entities.LastOrDefault();
+            if (last != default && char1 == char2 && (last.Item1 == char1 || last.Item2 == char1 || last.Item1 == char2 || last.Item2 == char2))
+            {
+                var prev = prevOutputTwo[0].ToList();
+                var prevDiff = Math.Abs(prev[0] - prev[1]);
+                var currDiff = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
+                if (prevDiff < currDiff)
+                {
+                    var avg = outputTwo[0].Sum() / 2d;
+                    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
+                    var gradTwo = lossOperation2.Backward();
+                    return (gradTwo, outputTwo, new List<double>());
+                }
+            } 
+
             var arrList = output[0].ToList();
             var rr = arrList.OrderByDescending(r => r).ToList();
             var scaled = ScaleValuesToMax(arrList, targetMax);
@@ -178,6 +199,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             {
                 Console.WriteLine("NaN");
             }
+
+            entities.Add((char1, char2));
+            prevOutputTwo = (Matrix)outputTwo.Clone();
 
             return (gradient, output, rr);
         }
@@ -274,9 +298,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         /// <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
         /// <returns>A task.</returns>
-        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput)
+        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput, bool outputTwo)
         {
-            return await this.graphAttentionNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput);
+            return await this.graphAttentionNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput, outputTwo);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private double temperature;
         private Matrix input;
+        private Matrix tempMatrix;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -48,6 +49,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix Forward(Matrix input, Matrix temp) // both input and temp are 1xN matrices
         {
             this.input = input;
+            this.tempMatrix = temp;
             this.temperature = temp.SelectMany(x => x).Sum();
             double[] softmax = new double[this.input.Cols];
             double sumExp = this.input.SelectMany(x => x).Sum(xi => Math.Exp(xi / this.temperature));
@@ -94,30 +96,33 @@ namespace ParallelReverseAutoDiff.RMAD
                 dX[0][i] = gradientSum;
             });
 
-            Matrix dTemp = new Matrix(1, numCols);
+            Matrix dTemp = new Matrix(1, this.tempMatrix.Cols);
 
-            double[,] gradSoftmaxTemp = new double[1, numCols];
-
-            for (int j = 0; j < numCols; j++)
+            if (this.tempMatrix.Cols == numCols)
             {
-                gradSoftmaxTemp[0, j] = -this.input[0][j] / Math.Pow(this.temperature, 2) * softmaxGrad[0, j];
-            }
+                double[,] gradSoftmaxTemp = new double[1, numCols];
 
-            double gradientSumTemp = 0;
+                for (int j = 0; j < numCols; j++)
+                {
+                    gradSoftmaxTemp[0, j] = -this.input[0][j] / Math.Pow(this.temperature, 2) * softmaxGrad[0, j];
+                }
 
-            for (int j = 0; j < numCols; j++)
-            {
-                double totalGradTemp = (gradSoftmaxTemp[0, j] * scaleFactor * dLdOutput[0][j]) +
-                                        (softmax[0] * scaleFactorGradient * dLdOutput[0][j]);
-                gradientSumTemp += totalGradTemp;
-            }
+                double gradientSumTemp = 0;
 
-            dTemp[0][0] = gradientSumTemp;
-            double scalar = gradientSumTemp / dX[0][0];
+                for (int j = 0; j < numCols; j++)
+                {
+                    double totalGradTemp = (gradSoftmaxTemp[0, j] * scaleFactor * dLdOutput[0][j]) +
+                                            (softmax[0] * scaleFactorGradient * dLdOutput[0][j]);
+                    gradientSumTemp += totalGradTemp;
+                }
 
-            for (int j = 1; j < numCols; ++j)
-            {
-                dTemp[0][j] = scalar * dX[0][j];
+                dTemp[0][0] = gradientSumTemp;
+                double scalar = gradientSumTemp / dX[0][0];
+
+                for (int j = 1; j < numCols; ++j)
+                {
+                    dTemp[0][j] = scalar * dX[0][j];
+                }
             }
 
             return new BackwardResultBuilder()

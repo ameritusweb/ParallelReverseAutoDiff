@@ -99,6 +99,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         public Matrix Output { get; private set; }
 
         /// <summary>
+        /// Gets the output matrix.
+        /// </summary>
+        public Matrix OutputTwo { get; private set; }
+
+        /// <summary>
         /// Gets the model layers of the neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
@@ -228,6 +233,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
 
                 }
 
+                if (op.Id == "square_and_sum")
+                {
+
+                }
+
                 if( op.Id == "output")
                 {
                     Console.WriteLine((parameters[1] as Matrix)[0].Sum());
@@ -244,6 +254,10 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 var deepOutput = op.GetDeepOutput();
                 if (output != null)
                 {
+                    if (op.Id == "square_and_sum")
+                    {
+                        Console.WriteLine("SAS: " + (output as Matrix)[0][0] + " " + (output as Matrix)[0][1]);
+                    }
                     if (op.Id == "output")
                     {
                         var length = (output as Matrix)[0].Length;
@@ -308,10 +322,22 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         /// </summary>
         /// <param name="gradient">The gradient of the loss.</param>
         /// <returns>The gradient.</returns>
-        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
+        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient, bool outputTwo)
         {
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_0_0"];
+            if (outputTwo)
+            {
+                backwardStartOperation = this.computationGraph["square_and_sum_0_0"];
+                this.computationGraph["pre_output_act_0_0"].BackwardDependencyCounts = (new int[] { 2 }).ToList();
+                this.computationGraph["pre_output_add_0_0"].BackwardDependencyCounts = (new int[] { 2 }).ToList();
+            }
+            else
+            {
+                backwardStartOperation = this.computationGraph["output_0_0"];
+                this.computationGraph["pre_output_act_0_0"].BackwardDependencyCounts = (new int[] { 1 }).ToList();
+                this.computationGraph["pre_output_add_0_0"].BackwardDependencyCounts = (new int[] { 1 }).ToList();
+            }
+
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
@@ -349,6 +375,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         {
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes)).ToArray());
+            var outputTwo = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
 
             if (this.Output == null)
@@ -358,6 +385,15 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             else
             {
                 this.Output.Replace(output.ToArray());
+            }
+
+            if (this.OutputTwo == null)
+            {
+                this.OutputTwo = outputTwo;
+            }
+            else
+            {
+                this.OutputTwo.Replace(outputTwo.ToArray());
             }
 
             if (this.Input == null)
@@ -462,6 +498,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             this.computationGraph = new GraphAttentionComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
+                .AddIntermediate("OutputTwo", _ => this.OutputTwo)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
                 .AddScalar("SoftDivisor", x => 1d / 400000d)
                 .AddScalar("SoftSum", x => 0.0000004096d)
@@ -491,6 +528,19 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
+
+            AddCount("square_and_sum_0_0", 1);
+            AddCount("output_left_0_0", 1);
+            AddCount("output_right_0_0", 1);
+            AddCount("take_left_0_0", 1);
+            AddCount("take_right_0_0", 1);
+        }
+
+        private void AddCount(string identifier, int count)
+        {
+            IOperationBase backwardStartOperation2a = this.computationGraph[identifier];
+            backwardStartOperation2a.BackwardDependencyCounts = new List<int>();
+            backwardStartOperation2a.BackwardDependencyCounts.Add(count);
         }
     }
 }

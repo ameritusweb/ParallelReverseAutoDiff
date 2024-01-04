@@ -55,9 +55,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                    
                     var (gradient, output, sorted) = network.Forward(matrix, targetMax, sub1, sub2);
 
-                    Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + sorted.Max() + ", Grad: " + gradient[0].Max());
+                    Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + (sorted.Any() ? sorted.Max() : "") + ", Grad: " + gradient[0].Max());
 
-                    var inputGradient = await network.Backward(gradient);
+                    var inputGradient = await network.Backward(gradient, !sorted.Any());
                     //var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
                     //network.AdjustLearningRate(randLearning);
                     network.ApplyGradients();
@@ -67,46 +67,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     {
                         network.SaveWeights();
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                CudaBlas.Instance.Dispose();
-            }
-        }
-
-        public async Task Train2()
-        {
-            try
-            {
-                CudaBlas.Instance.Initialize();
-                OpticalCharacterRecognitionNetwork network = new OpticalCharacterRecognitionNetwork(34, 223, 3, 0.00001d, 4);
-                await network.Initialize();
-                var jsonFiles = Directory.GetFiles(@"E:\gatstore", "*.json");
-                for (int i = 0; i < 100; i++)
-                {
-                    var json1 = File.ReadAllText(jsonFiles[0]);
-                    var data1 = JsonConvert.DeserializeObject<List<List<double>>>(json1);
-                    var json2 = File.ReadAllText(jsonFiles[1]);
-                    var data2 = JsonConvert.DeserializeObject<List<List<double>>>(json2);
-                    var data = data1.Concat(data2).ToList();
-                    Matrix matrix = new Matrix(data.Count, data[0].Count);
-                    for (int j = 0; j < data.Count; j++)
-                    {
-                        for (int k = 0; k < data[0].Count; k++)
-                        {
-                            matrix[j, k] = data[j][k];
-                        }
-                    }
-                    var (gradient, output, sorted) = network.Forward(matrix, 0.75d, "A", "A");
-                    var inputGradient = await network.Backward(gradient);
-                    network.ApplyGradients();
-                    await network.Reset();
-                    Thread.Sleep(5000);
                 }
             }
             catch (Exception ex)
