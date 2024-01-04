@@ -79,7 +79,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 2520;
+            var initialAdamIteration = 2560;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -119,7 +119,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "5206b397-c348-43c3-9178-3a8465ab7aa5_2520";
+            var guid = "81a74ed1-b7c9-49e6-9bf4-2273e8c5d0c2_2560";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {

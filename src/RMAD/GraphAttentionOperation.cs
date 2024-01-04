@@ -114,7 +114,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dNodeFeatures)
-                .AddScalingGradient(dAdjacency)
+                .AddInputGradient(dAdjacency)
                 .AddWeightGradient(dWeights)
                 .Build();
         }
