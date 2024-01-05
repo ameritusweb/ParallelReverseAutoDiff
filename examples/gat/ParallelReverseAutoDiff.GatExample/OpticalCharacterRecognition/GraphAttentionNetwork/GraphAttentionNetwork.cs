@@ -266,7 +266,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 {
                     if (op.Id == "square_and_sum")
                     {
-                        Console.WriteLine("SAS: " + (output as Matrix)[0][0] + " " + (output as Matrix)[0][1]);
+                        var s1 = (output as Matrix)[0][0];
+                        var s2 = (output as Matrix)[0][1];
+                        Console.WriteLine("SAS: " + s1 + " " + s2 + " " + (s1 > s2 ? (s1 / s2 * 100 - 100) : (s2 / s1 * 100 - 100)));
                     }
                     if (op.Id == "output")
                     {

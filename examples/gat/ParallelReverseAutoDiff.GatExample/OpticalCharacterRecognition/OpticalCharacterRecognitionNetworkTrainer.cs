@@ -20,9 +20,13 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 network.ApplyWeights();
                 RandomNumberGenerator generator = new RandomNumberGenerator();
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
-                var pairs = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
+                var pairsAll = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
                 int i = 0;
                 List<double> targets = new List<double>();
+                var pairs2 = pairsAll.Select((x, ind) => (ind, jsonFiles[x.Item1].Substring(jsonFiles[x.Item1].LastIndexOf('\\') + 1).Substring(16) + " "
+                                       + jsonFiles[x.Item2].Substring(jsonFiles[x.Item2].LastIndexOf('\\') + 1).Substring(16))).Where(x => x.Item2.StartsWith("A_Inter_30px_pos1.", StringComparison.Ordinal)).ToList();
+                var pairs3 = pairs2.Where(x => x.Item2.Substring(6).Contains("B_Cabin", StringComparison.Ordinal)).ToList();
+                var pairs = pairs3.Select(x => pairsAll[x.ind]).ToList();
                 foreach (var pair in pairs)
                 {
                     var i1 = pair.Item1;
@@ -47,7 +51,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     }
                     if (targetMax == 0.5d && targetMax == targets.LastOrDefault())
                     {
-                        continue;
+                        //continue;
                     }
                     i++;
 
@@ -55,17 +59,17 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                    
                     var (gradient, output, sorted) = network.Forward(matrix, targetMax, sub1, sub2);
 
-                    Console.WriteLine("Target: " + targetMax + " " + sub1.Substring(0, 1) + " " + sub2.Substring(0, 1) + " " + (sorted.Any() ? sorted.Max() : "") + ", Grad: " + gradient[0].Max());
+                    Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + (sorted.Any() ? sorted.Max() : "") + ", Grad: " + gradient[0].Max());
 
-                    var inputGradient = await network.Backward(gradient, !sorted.Any());
+                    //var inputGradient = await network.Backward(gradient, !sorted.Any());
                     //var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
                     //network.AdjustLearningRate(randLearning);
-                    network.ApplyGradients();
+                    //network.ApplyGradients();
                     await network.Reset();
                     Thread.Sleep(1000);
                     if (i % 25 == 24)
                     {
-                        network.SaveWeights();
+                        //network.SaveWeights();
                     }
                 }
             }
