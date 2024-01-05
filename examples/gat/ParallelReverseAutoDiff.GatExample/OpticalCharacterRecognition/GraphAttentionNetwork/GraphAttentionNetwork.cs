@@ -104,6 +104,16 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         public Matrix OutputTwo { get; private set; }
 
         /// <summary>
+        /// Gets the output matrix.
+        /// </summary>
+        public Matrix OutputLeft { get; private set; }
+
+        /// <summary>
+        /// Gets the output matrix.
+        /// </summary>
+        public Matrix OutputRight { get; private set; }
+
+        /// <summary>
         /// Gets the model layers of the neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
@@ -376,6 +386,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes)).ToArray());
             var outputTwo = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
+            var outputLeft = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
+            var outputRight = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
             var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
 
             if (this.Output == null)
@@ -394,6 +406,24 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             else
             {
                 this.OutputTwo.Replace(outputTwo.ToArray());
+            }
+
+            if (this.OutputLeft == null)
+            {
+                this.OutputLeft = outputLeft;
+            }
+            else
+            {
+                this.OutputLeft.Replace(outputLeft.ToArray());
+            }
+
+            if (this.OutputRight == null)
+            {
+                this.OutputRight = outputRight;
+            }
+            else
+            {
+                this.OutputRight.Replace(outputRight.ToArray());
             }
 
             if (this.Input == null)
@@ -499,6 +529,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("OutputTwo", _ => this.OutputTwo)
+                .AddIntermediate("OutputLeft", _ => this.OutputLeft)
+                .AddIntermediate("OutputRight", _ => this.OutputRight)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
                 .AddScalar("SoftDivisor", x => 1d / 400000d)
                 .AddScalar("SoftSum", x => 0.0000004096d)

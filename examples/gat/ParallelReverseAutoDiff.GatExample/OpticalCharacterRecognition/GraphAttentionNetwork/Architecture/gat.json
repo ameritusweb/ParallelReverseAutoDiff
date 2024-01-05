@@ -294,12 +294,14 @@
         {
           "id": "output_left",
           "type": "VariedSoftmaxOperation",
-          "inputs": [ "take_left", "pre_output_add" ]
+          "inputs": [ "take_left", "pre_output_add" ],
+          "setResultTo": "OutputLeft"
         },
         {
           "id": "output_right",
           "type": "VariedSoftmaxOperation",
-          "inputs": [ "take_right", "pre_output_add" ]
+          "inputs": [ "take_right", "pre_output_add" ],
+          "setResultTo": "OutputRight"
         },
         {
           "id": "square_and_sum",

@@ -25,7 +25,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 List<double> targets = new List<double>();
                 foreach (var pair in pairs)
                 {
-                    i++;
                     var i1 = pair.Item1;
                     var i2 = pair.Item2;
                     var json1 = File.ReadAllText(jsonFiles[i1]);
@@ -35,9 +34,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     var data = data1.Concat(data2).ToList();
                     var file1 = jsonFiles[i1].Substring(jsonFiles[i1].LastIndexOf('\\') + 1);
                     var file2 = jsonFiles[i2].Substring(jsonFiles[i2].LastIndexOf('\\') + 1);
-                    var sub1 = file1.Substring(16, 1);
-                    var sub2 = file2.Substring(16, 1);
-                    double targetMax = sub1 == sub2 ? 3.5d : 0.5d;
+                    var sub1 = file1.Substring(16);
+                    var sub2 = file2.Substring(16);
+                    double targetMax = sub1.Substring(0, 1) == sub2.Substring(0, 1) ? 3.5d : 0.5d;
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -50,12 +49,13 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     {
                         continue;
                     }
+                    i++;
 
                     targets.Add(targetMax);
                    
                     var (gradient, output, sorted) = network.Forward(matrix, targetMax, sub1, sub2);
 
-                    Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + (sorted.Any() ? sorted.Max() : "") + ", Grad: " + gradient[0].Max());
+                    Console.WriteLine("Target: " + targetMax + " " + sub1.Substring(0, 1) + " " + sub2.Substring(0, 1) + " " + (sorted.Any() ? sorted.Max() : "") + ", Grad: " + gradient[0].Max());
 
                     var inputGradient = await network.Backward(gradient, !sorted.Any());
                     //var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);

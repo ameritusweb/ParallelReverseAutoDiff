@@ -26,6 +26,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         private List<IModelLayer> modelLayers;
         private List<(string, string)> entities;
         private Matrix? prevOutputTwo;
+        private List<string> wrongs;
+        private List<string> rights;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpticalCharacterRecognitionNetwork"/> class.
@@ -44,6 +46,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
             this.entities = new List<(string, string)>();
+            this.wrongs = new List<string>();
+            this.rights = new List<string>();
             this.graphAttentionNetwork = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
         }
 
@@ -79,7 +83,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 2560;
+            var initialAdamIteration = 4592;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -119,7 +123,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "81a74ed1-b7c9-49e6-9bf4-2273e8c5d0c2_2560";
+            var guid = "b7f759e3-6923-4877-b392-e6b166cb92a4_4592";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -145,8 +149,10 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax, string char1, string char2)
+        public (Matrix, Matrix, List<double>) Forward(Matrix input, double targetMax, string f1, string f2)
         {
+            string char1 = f1.Substring(0, 1);
+            string char2 = f2.Substring(0, 1);
             //Dictionary<string, double> A = new Dictionary<string, double>() {
             //    { "A", 0.1d },
             //    { "B", 0.001d },
@@ -171,8 +177,45 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
             var outputTwo = gatNet.OutputTwo;
+            var outputLeft = gatNet.OutputLeft;
+            var outputRight = gatNet.OutputRight;
+            var maxDiff = Math.Abs(outputLeft[0].Max() - outputRight[0].Max());
+
+            if (maxDiff < 1d)
+            {
+                if (char1 != char2)
+                {
+                    wrongs.Add($"1: {f1} {f2}");
+                } else
+                {
+                    rights.Add($"2: {f1} {f2}");
+                }
+            }
 
             var last = entities.LastOrDefault();
+            //double ddd = outputTwo[0][0] > outputTwo[0][1] ? (outputTwo[0][0] / outputTwo[0][1] * 100) : (outputTwo[0][1] / outputTwo[0][0] * 100);
+            //if (ddd > 105)
+            //{
+            //    // different
+            //    if (char1 == char2)
+            //    {
+            //        wrongs.Add($"1: {f1} {f2}");
+            //    } else
+            //    {
+            //        rights.Add($"2: {f1} {f2}");
+            //    }
+            //} else
+            //{
+            //    // same
+            //    if (char1 == char2)
+            //    {
+            //        rights.Add($"3: {f1} {f2}");
+            //    } else
+            //    {
+            //        wrongs.Add($"4: {f1} {f2}");
+            //    }
+            //}
+
             if (last != default && char1 == char2 && (last.Item1 == char1 || last.Item2 == char1 || last.Item1 == char2 || last.Item2 == char2))
             {
                 var prev = prevOutputTwo[0].ToList();
@@ -186,7 +229,17 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     var gradTwo = lossOperation2.Backward();
                     return (gradTwo, outputTwo, new List<double>());
                 }
-            } 
+            } else if (char1 == char2)
+            {
+                //if ((outputTwo[0][0] > (outputTwo[0][1] * 2d)) || (outputTwo[0][1] > (outputTwo[0][0] * 2d)))
+                //{
+                //    var avg = outputTwo[0].Sum() / 2d;
+                //    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                //    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
+                //    var gradTwo = lossOperation2.Backward();
+                //    return (gradTwo, outputTwo, new List<double>());
+                //}
+            }
 
             var arrList = output[0].ToList();
             var rr = arrList.OrderByDescending(r => r).ToList();
