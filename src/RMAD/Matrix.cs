@@ -265,6 +265,29 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Sums each column across all rows to form a single row.
+        /// </summary>
+        /// <returns>An array of double values where each element is the sum of the corresponding column.</returns>
+        public double[] ElementwiseSumRows()
+        {
+            if (this.Rows == 0)
+            {
+                throw new InvalidOperationException("Matrix has no rows.");
+            }
+
+            double[] columnSums = new double[this.Cols];
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    columnSums[j] += this.matrix[i][j];
+                }
+            }
+
+            return columnSums;
+        }
+
+        /// <summary>
         /// Returns a new Matrix object containing the concatenated matrices.
         /// </summary>
         /// <param name="other">The other matrix.</param>

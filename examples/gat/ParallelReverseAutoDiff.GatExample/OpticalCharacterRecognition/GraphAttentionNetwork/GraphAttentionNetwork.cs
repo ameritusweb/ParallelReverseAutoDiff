@@ -114,6 +114,16 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         public Matrix OutputRight { get; private set; }
 
         /// <summary>
+        /// Gets the output matrix.
+        /// </summary>
+        public Matrix MaskedOutputLeft { get; private set; }
+
+        /// <summary>
+        /// Gets the output matrix.
+        /// </summary>
+        public Matrix MaskedOutputRight { get; private set; }
+
+        /// <summary>
         /// Gets the model layers of the neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
@@ -270,6 +280,10 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                         var s2 = (output as Matrix)[0][1];
                         Console.WriteLine("SAS: " + s1 + " " + s2 + " " + (s1 > s2 ? (s1 / s2 * 100 - 100) : (s2 / s1 * 100 - 100)));
                     }
+                    if (op.Id == "pre_output_act")
+                    {
+
+                    }
                     if (op.Id == "output")
                     {
                         var length = (output as Matrix)[0].Length;
@@ -390,6 +404,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             var outputTwo = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var outputLeft = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
             var outputRight = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
+            var maskedOutputLeft = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
+            var maskedOutputRight = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
             var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
 
             if (this.Output == null)
@@ -426,6 +442,24 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             else
             {
                 this.OutputRight.Replace(outputRight.ToArray());
+            }
+
+            if (this.MaskedOutputLeft == null)
+            {
+                this.MaskedOutputLeft = maskedOutputLeft;
+            }
+            else
+            {
+                this.MaskedOutputLeft.Replace(maskedOutputLeft.ToArray());
+            }
+
+            if (this.MaskedOutputRight == null)
+            {
+                this.MaskedOutputRight = maskedOutputRight;
+            }
+            else
+            {
+                this.MaskedOutputRight.Replace(maskedOutputRight.ToArray());
             }
 
             if (this.Input == null)
@@ -533,9 +567,12 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddIntermediate("OutputTwo", _ => this.OutputTwo)
                 .AddIntermediate("OutputLeft", _ => this.OutputLeft)
                 .AddIntermediate("OutputRight", _ => this.OutputRight)
+                .AddIntermediate("MaskedOutputLeft", _ => this.MaskedOutputLeft)
+                .AddIntermediate("MaskedOutputRight", _ => this.MaskedOutputRight)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
                 .AddScalar("SoftDivisor", x => 1d / 400000d)
                 .AddScalar("SoftSum", x => 0.0000004096d)
+                .AddScalar("MaskThreshold", x => 0.01d)
                 .AddWeight("LinearWeights", x => linearWeights[x.Layer]).AddGradient("DLinearWeights", x => linearWeightsGradient[x.Layer])
                 .AddWeight("TransformationBias", x => transformationBias[x.Layer]).AddGradient("DTransformationBias", x => transformationBiasGradient[x.Layer])
                 .AddWeight("Keys", x => keys[x.Layer]).AddGradient("DKeys", x => keysGradient[x.Layer])

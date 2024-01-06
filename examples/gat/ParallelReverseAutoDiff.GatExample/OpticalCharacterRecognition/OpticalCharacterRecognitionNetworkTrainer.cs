@@ -23,11 +23,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 var pairsAll = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
                 int i = 0;
                 List<double> targets = new List<double>();
-                var pairs2 = pairsAll.Select((x, ind) => (ind, jsonFiles[x.Item1].Substring(jsonFiles[x.Item1].LastIndexOf('\\') + 1).Substring(16) + " "
-                                       + jsonFiles[x.Item2].Substring(jsonFiles[x.Item2].LastIndexOf('\\') + 1).Substring(16))).Where(x => x.Item2.StartsWith("A_Inter_30px_pos1.", StringComparison.Ordinal)).ToList();
-                var pairs3 = pairs2.Where(x => x.Item2.Substring(6).Contains("B_Cabin", StringComparison.Ordinal)).ToList();
-                var pairs = pairs3.Select(x => pairsAll[x.ind]).ToList();
-                foreach (var pair in pairs)
+                //var pairs2 = pairsAll.Select((x, ind) => (ind, jsonFiles[x.Item1].Substring(jsonFiles[x.Item1].LastIndexOf('\\') + 1).Substring(16) + " "
+                //                       + jsonFiles[x.Item2].Substring(jsonFiles[x.Item2].LastIndexOf('\\') + 1).Substring(16))).Where(x => x.Item2.StartsWith("A_Inter_30px_pos1.", StringComparison.Ordinal)).ToList();
+                //var pairs3 = pairs2.Where(x => x.Item2.Substring(6).Contains("A_Inter", StringComparison.Ordinal)).ToList();
+                //var pairs = pairs3.Select(x => pairsAll[x.ind]).ToList();
+                foreach (var pair in pairsAll)
                 {
                     var i1 = pair.Item1;
                     var i2 = pair.Item2;
@@ -40,7 +40,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     var file2 = jsonFiles[i2].Substring(jsonFiles[i2].LastIndexOf('\\') + 1);
                     var sub1 = file1.Substring(16);
                     var sub2 = file2.Substring(16);
-                    double targetMax = sub1.Substring(0, 1) == sub2.Substring(0, 1) ? 3.5d : 0.5d;
+                    double targetMax = sub1.Substring(0, 1) == sub2.Substring(0, 1) ? 65d : 1d;
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -49,9 +49,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                             matrix[j, k] = data[j][k];
                         }
                     }
-                    if (targetMax == 0.5d && targetMax == targets.LastOrDefault())
+                    if (targetMax == 1.0d && targetMax == targets.LastOrDefault())
                     {
-                        //continue;
+                        continue;
                     }
                     i++;
 
@@ -61,15 +61,15 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 
                     Console.WriteLine("Target: " + targetMax + " " + sub1 + " " + sub2 + " " + (sorted.Any() ? sorted.Max() : "") + ", Grad: " + gradient[0].Max());
 
-                    //var inputGradient = await network.Backward(gradient, !sorted.Any());
+                    var inputGradient = await network.Backward(gradient, !sorted.Any());
                     //var randLearning = generator.GetRandomNumber(0.00001d, 0.0001d);
                     //network.AdjustLearningRate(randLearning);
-                    //network.ApplyGradients();
+                    network.ApplyGradients();
                     await network.Reset();
                     Thread.Sleep(1000);
                     if (i % 25 == 24)
                     {
-                        //network.SaveWeights();
+                        network.SaveWeights();
                     }
                 }
             }

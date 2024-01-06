@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading.Tasks;
     using System.Xml;
     using ILGPU;
+    using ILGPU.Algorithms;
     using ILGPU.Runtime;
     using ILGPU.Runtime.Cuda;
     using ManagedCuda;
@@ -126,7 +127,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 this.producerMutex = new Semaphore(0, 1);
                 this.consumerMutex = new Semaphore(1, 1);
                 this.resultMutex = new Semaphore(0, 1);
-                this.context = Context.CreateDefault();
+                this.context = Context.Create(builder => builder.Default().EnableAlgorithms());
                 this.cudaDevice = this.context.GetCudaDevice(0);
                 this.cudaAccelerator = this.cudaDevice.CreateCudaAccelerator(this.context);
                 this.isInitialized = true;

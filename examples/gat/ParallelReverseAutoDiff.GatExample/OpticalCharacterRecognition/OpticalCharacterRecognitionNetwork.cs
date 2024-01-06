@@ -83,7 +83,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 4417;
+            var initialAdamIteration = 6415;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -123,7 +123,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "20d423bc-4d61-475c-a642-6acf8b1e4a73_4417a";
+            var guid = "8edf519c-3edc-44ea-a18e-d8e047418e1a_6415";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -179,6 +179,16 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             var outputTwo = gatNet.OutputTwo;
             var outputLeft = gatNet.OutputLeft;
             var outputRight = gatNet.OutputRight;
+            //var maskedOutputLeft = gatNet.MaskedOutputLeft;
+            //var maskedOutputRight = gatNet.MaskedOutputRight;
+            //var sorted1 = outputLeft[0].OrderByDescending(x => x).ToList();
+            //var sorted2 = outputRight[0].OrderByDescending(x => x).ToList();
+            //var sortedM1 = maskedOutputLeft[0].OrderByDescending(x => x).ToList();
+            //var sortedM2 = maskedOutputRight[0].OrderByDescending(x => x).ToList();
+            //var firstLL = outputLeft[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+            //var firstLLM = maskedOutputLeft[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+            //var secondLL = outputRight[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+            //var secondLLM = maskedOutputRight[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
             var maxDiff = Math.Abs(outputLeft[0].Max() - outputRight[0].Max());
 
             if (maxDiff < 1d)
@@ -231,14 +241,14 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 }
             } else if (char1 == char2)
             {
-                //if ((outputTwo[0][0] > (outputTwo[0][1] * 2d)) || (outputTwo[0][1] > (outputTwo[0][0] * 2d)))
-                //{
-                //    var avg = outputTwo[0].Sum() / 2d;
-                //    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-                //    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
-                //    var gradTwo = lossOperation2.Backward();
-                //    return (gradTwo, outputTwo, new List<double>());
-                //}
+                if ((outputTwo[0][0] > (outputTwo[0][1] * 2d)) || (outputTwo[0][1] > (outputTwo[0][0] * 2d)))
+                {
+                    var avg = outputTwo[0].Sum() / 2d;
+                    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
+                    var gradTwo = lossOperation2.Backward();
+                    return (gradTwo, outputTwo, new List<double>());
+                }
             }
 
             var arrList = output[0].ToList();
