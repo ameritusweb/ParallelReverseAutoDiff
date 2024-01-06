@@ -265,6 +265,27 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Does the matrix contain any NaN or Infinity values.
+        /// </summary>
+        /// <returns>The result.</returns>
+        public bool HasNaNOrInfinity()
+        {
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    double value = this.matrix[i][j];
+                    if (double.IsNaN(value) || double.IsInfinity(value))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Sums each column across all rows to form a single row.
         /// </summary>
         /// <returns>An array of double values where each element is the sum of the corresponding column.</returns>
