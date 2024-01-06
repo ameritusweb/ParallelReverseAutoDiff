@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for parallelized reverse mode automatic differentiation in C# for custom neural network development.</description>
 	<repository type="git" url="https://github.com/ameritusweb/ParallelReverseAutoDiff.git" commit="0a9bbd18f45c4f4434160a7c064539f29f3a3c67" />
-    <releaseNotes>Updated ILGPU.</releaseNotes>
+    <releaseNotes>Fix NaN issue.</releaseNotes>
     <copyright>ameritusweb, 2024</copyright>
     <tags>autodiff automatic-differentiation parallel reverse-mode differentiation C# neural network</tags>
     <dependencies>

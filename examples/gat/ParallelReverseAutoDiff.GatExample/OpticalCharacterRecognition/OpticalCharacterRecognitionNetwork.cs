@@ -83,7 +83,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 6415;
+            var initialAdamIteration = 6489;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -123,7 +123,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "8edf519c-3edc-44ea-a18e-d8e047418e1a_6415";
+            var guid = "70876a64-0f0c-4373-88c9-118ceab91952_6489";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -141,7 +141,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         {
             var clipper = this.graphAttentionNetwork.Utilities.GradientClipper;
             clipper.Clip(this.modelLayers.ToArray());
-            var adamOptimizer = this.graphAttentionNetwork.Utilities.AdamOptimizer;//new StochasticAdamOptimizer(this.graphAttentionNetwork);
+            var adamOptimizer = new StochasticAdamOptimizer(this.graphAttentionNetwork);
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
@@ -258,6 +258,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             MeanSquaredErrorLossOperation lossOperation = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
             lossOperation.Forward(output, new Matrix(scaled.ToArray()));
             var gradient = lossOperation.Backward();
+            Console.WriteLine("Gradient: " + gradient.SelectMany(x => x).Max() + " " + gradient.SelectMany(x => x).Min());
             if (gradient[0].Any(x => double.IsNaN(x)))
             {
                 Console.WriteLine("NaN");

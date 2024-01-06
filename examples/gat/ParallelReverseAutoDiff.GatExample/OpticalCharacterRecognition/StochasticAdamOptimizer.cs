@@ -33,7 +33,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="layers">The layers to optimize.</param>
         public void Optimize(IModelLayer[] layers)
         {
-            Parallel.For(0, layers.Length, i =>
+            for (int i = 0; i < layers.Length; i++)
             {
                 var layer = layers[i];
                 var identifiers = layer.Identifiers;
@@ -89,7 +89,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             }
                     }
                 }
-            });
+            }
         }
 
         /// <summary>
@@ -208,22 +208,6 @@ namespace ParallelReverseAutoDiff.RMAD
             // Compute bias-corrected second raw moment estimate
             Matrix vW_hat = MatrixUtils.ScalarMultiply(1 / (1 - Math.Pow(beta2, this.network.Parameters.AdamIteration)), secondMoment);
 
-            List<double> randomRate = new List<double>();
-            if (w[0][0] > 4d)
-            {
-                for (int j = 0; j < w[0].Length; j++)
-                {
-                    randomRate.Add(randGen.GetRandomNumber(0.1d, 1d));
-                }
-            }
-            else
-            {
-                for (int j = 0; j < w[0].Length; j++)
-                {
-                    randomRate.Add(randGen.GetRandomNumber(0.00001d, 0.001d));
-                }
-            }
-
             // Update weights
             for (int i = 0; i < w.Length; i++)
             {
@@ -231,10 +215,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     double weightReductionValue = this.network.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
 
-                    if (weightReductionValue > 0d)
+                    if (double.IsNaN(weightReductionValue))
                     {
-                        double ww = w[i][j];
-                        weightReductionValue = randomRate[j] * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
+                        Console.WriteLine("Weight reduction value is NaN.");
                     }
 
                     w[i][j] -= weightReductionValue;

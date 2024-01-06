@@ -96,10 +96,35 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     for (int k = 0; k < m; k++)
                     {
-                        dNodeFeatures[i, k] += dOutput[i, j] * this.weights[0, k];
-                        dNodeFeatures[j, k] += dOutput[i, j] * this.weights[0, m + k];
-                        dWeights[0, k] += dOutput[i, j] * this.nodeFeatures[i, k];
-                        dWeights[0, m + k] += dOutput[i, j] * this.nodeFeatures[j, k];
+                        var intermediate1 = dOutput[i, j] * this.weights[0, k];
+                        var intermediate2 = dOutput[i, j] * this.weights[0, m + k];
+                        var intermediate3 = dOutput[i, j] * this.nodeFeatures[i, k];
+                        var intermediate4 = dOutput[i, j] * this.nodeFeatures[j, k];
+
+                        if (double.IsNaN(intermediate1) || double.IsInfinity(intermediate1))
+                        {
+                            throw new InvalidOperationException($"NaN or Infinity encountered in intermediate1: {dOutput[i, j]} {this.weights[0, k]}");
+                        }
+
+                        if (double.IsNaN(intermediate2) || double.IsInfinity(intermediate2))
+                        {
+                            throw new InvalidOperationException($"NaN or Infinity encountered in intermediate2: {dOutput[i, j]} {this.weights[0, m + k]}");
+                        }
+
+                        if (double.IsNaN(intermediate3) || double.IsInfinity(intermediate3))
+                        {
+                            throw new InvalidOperationException($"NaN or Infinity encountered in intermediate3: {dOutput[i, j]} {this.nodeFeatures[i, k]}");
+                        }
+
+                        if (double.IsNaN(intermediate4) || double.IsInfinity(intermediate4))
+                        {
+                            throw new InvalidOperationException($"NaN or Infinity encountered in intermediate4: {dOutput[i, j]} {this.nodeFeatures[j, k]}");
+                        }
+
+                        dNodeFeatures[i, k] += intermediate1;
+                        dNodeFeatures[j, k] += intermediate2;
+                        dWeights[0, k] += intermediate3;
+                        dWeights[0, m + k] += intermediate4;
                     }
 
                     double attentionGradient = 0;
