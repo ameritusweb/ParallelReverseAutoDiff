@@ -269,9 +269,9 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
-                if (op is GraphAttentionOperation varied)
+                if (op is PiecewiseActivationOperation varied)
                 {
-                    varied.Forward(parameters[0] as Matrix, parameters[1] as Matrix, parameters[2] as Matrix);
+                    varied.Forward(parameters[0] as Matrix);
                 }
                 else
                 {

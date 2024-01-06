@@ -83,6 +83,11 @@ namespace ParallelReverseAutoDiff.RMAD
                     {
                         double expNegX = Math.Exp(-x);
                         gradient = 3 * expNegX / Math.Pow(1 + expNegX, 2);
+
+                        if (double.IsNaN(gradient) || double.IsInfinity(gradient))
+                        {
+                            throw new InvalidOperationException($"NaN or Infinity encountered in gradient: {x} {expNegX} {i} {j}");
+                        }
                     }
                     else if (x < 18.7)
                     {
@@ -92,9 +97,19 @@ namespace ParallelReverseAutoDiff.RMAD
                     {
                         double exp16MinusX = Math.Exp(16 - x);
                         gradient = -7 * exp16MinusX / Math.Pow(1 + exp16MinusX, 2);
+
+                        if (double.IsNaN(gradient) || double.IsInfinity(gradient))
+                        {
+                            throw new InvalidOperationException($"NaN or Infinity encountered in gradient: {x} {exp16MinusX} {i} {j}");
+                        }
                     }
 
                     dLdInput[i, j] = dLdOutput[i, j] * gradient;
+
+                    if (double.IsNaN(dLdInput[i, j]) || double.IsInfinity(dLdInput[i, j]))
+                    {
+                        throw new InvalidOperationException($"NaN or Infinity encountered in dLdInput: {dLdOutput[i, j]} {gradient} {i} {j}");
+                    }
                 }
             }
 
