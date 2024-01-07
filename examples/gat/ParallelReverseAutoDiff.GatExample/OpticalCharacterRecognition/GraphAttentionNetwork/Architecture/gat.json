@@ -294,7 +294,8 @@
         {
           "id": "pre_output_add",
           "type": "MatrixAddScalarOperation",
-          "inputs": [ "tanop", "SoftSum" ]
+          "inputs": [ "tanop", "SoftSum" ],
+          "setResultTo": "PreOutputAdd"
         },
         {
           "id": "output_left",

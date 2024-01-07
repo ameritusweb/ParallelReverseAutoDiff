@@ -28,6 +28,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         private Matrix? prevOutputTwo;
         private List<string> wrongs;
         private List<string> rights;
+        private List<double> diffStore;
+        private List<double> sameStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpticalCharacterRecognitionNetwork"/> class.
@@ -48,6 +50,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             this.entities = new List<(string, string)>();
             this.wrongs = new List<string>();
             this.rights = new List<string>();
+            this.diffStore = new List<double>();
+            this.sameStore = new List<double>();
             this.graphAttentionNetwork = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
         }
 
@@ -83,7 +87,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 6687;
+            var initialAdamIteration = 6932;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -123,7 +127,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "71699527-881b-4e21-bda5-ae6989933b64_6687";
+            var guid = "2b832753-9d0a-4162-b92d-1ed9ef25ad91_6932";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -179,6 +183,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             var outputTwo = gatNet.OutputTwo;
             var outputLeft = gatNet.OutputLeft;
             var outputRight = gatNet.OutputRight;
+            var preOutputAdd = gatNet.PreOutputAdd;
             //var maskedOutputLeft = gatNet.MaskedOutputLeft;
             //var maskedOutputRight = gatNet.MaskedOutputRight;
             //var sorted1 = outputLeft[0].OrderByDescending(x => x).ToList();
@@ -191,14 +196,42 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             //var secondLLM = maskedOutputRight[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
             var maxDiff = Math.Abs(outputLeft[0].Max() - outputRight[0].Max());
 
-            if (maxDiff < 1d)
+            if (maxDiff < 0.001d && preOutputAdd.Sum() > 30d)
             {
                 if (char1 != char2)
                 {
-                    wrongs.Add($"1: {f1} {f2}");
+                    if (sameStore.Any() && maxDiff < sameStore.LastOrDefault())
+                    {
+                        wrongs.Add($"1: {f1} {f2}");
+                    }
+                    
+                    diffStore.Add(maxDiff);
                 } else
                 {
-                    rights.Add($"2: {f1} {f2}");
+                    if (!diffStore.Any() || (diffStore.Any() && maxDiff < diffStore.LastOrDefault()))
+                    {
+                        rights.Add($"2: {f1} {f2}");
+                        Console.WriteLine("Score: " + rights.Count + " " + wrongs.Count);
+                    }
+
+                    sameStore.Add(maxDiff);
+                }
+                if (rights.Count > 30 || wrongs.Count > 30)
+                {
+                    rights.Clear();
+                    wrongs.Clear();
+                    diffStore.Clear();
+                    sameStore.Clear();
+                }
+            } else
+            {
+                if (char1 != char2)
+                {
+                    diffStore.Add(maxDiff);
+                }
+                else
+                {
+                    sameStore.Add(maxDiff);
                 }
             }
 

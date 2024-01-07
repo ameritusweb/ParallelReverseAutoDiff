@@ -116,6 +116,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         /// <summary>
         /// Gets the output matrix.
         /// </summary>
+        public Matrix PreOutputAdd { get; private set; }
+
+        /// <summary>
+        /// Gets the output matrix.
+        /// </summary>
         public Matrix MaskedOutputLeft { get; private set; }
 
         /// <summary>
@@ -235,7 +240,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
-                if (op is PiecewiseActivationOperation varied)
+                if (op is MultiRowModifiedSoftmaxOperation varied)
                 {
                     varied.Forward(parameters[0] as Matrix);
                 }
@@ -377,6 +382,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             var outputTwo = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var outputLeft = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
             var outputRight = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
+            var preOutputAdd = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes)).ToArray());
             var maskedOutputLeft = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
             var maskedOutputRight = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d)).ToArray());
             var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
@@ -415,6 +421,15 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             else
             {
                 this.OutputRight.Replace(outputRight.ToArray());
+            }
+
+            if (this.PreOutputAdd == null)
+            {
+                this.PreOutputAdd = preOutputAdd;
+            }
+            else
+            {
+                this.PreOutputAdd.Replace(preOutputAdd.ToArray());
             }
 
             if (this.MaskedOutputLeft == null)
@@ -540,6 +555,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddIntermediate("OutputTwo", _ => this.OutputTwo)
                 .AddIntermediate("OutputLeft", _ => this.OutputLeft)
                 .AddIntermediate("OutputRight", _ => this.OutputRight)
+                .AddIntermediate("PreOutputAdd", _ => this.PreOutputAdd)
                 .AddIntermediate("MaskedOutputLeft", _ => this.MaskedOutputLeft)
                 .AddIntermediate("MaskedOutputRight", _ => this.MaskedOutputRight)
                 .AddScalar("Divisor", x => 1d / Math.Pow(this.NumFeatures, 0.5d))
