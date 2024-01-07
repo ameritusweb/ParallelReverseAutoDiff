@@ -79,7 +79,11 @@ namespace ParallelReverseAutoDiff.RMAD
                     double x = this.input[i, j];
                     double gradient;
 
-                    if (x < 1.63)
+                    if (x < -100)
+                    {
+                        gradient = double.Epsilon;
+                    }
+                    else if (x < 1.63)
                     {
                         double expNegX = Math.Exp(-x);
                         gradient = 3 * expNegX / Math.Pow(1 + expNegX, 2);
