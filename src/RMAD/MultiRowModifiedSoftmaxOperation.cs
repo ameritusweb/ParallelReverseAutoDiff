@@ -50,12 +50,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
             for (int row = 0; row < input.Rows; row++)
             {
-                double sumExp = this.input[row].Sum(xi => Math.Exp(xi / Temperature));
+                double sumExp = this.input[row].Sum(xi => this.CalcWithExp(xi));
                 double[] softmax = new double[input.Cols];
 
                 for (int col = 0; col < input.Cols; col++)
                 {
-                    softmax[col] = Math.Exp(input[row, col] / Temperature) / sumExp;
+                    softmax[col] = this.CalcWithExp(this.input[row][col]) / sumExp;
                 }
 
                 double scaleFactor = Math.Sqrt(input.Cols) / softmax.Sum();
@@ -76,11 +76,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
             for (int row = 0; row < this.input.Rows; row++)
             {
-                double sumExp = this.input[row].Sum(xi => Math.Exp(xi / Temperature));
+                double sumExp = this.input[row].Sum(xi => this.CalcWithExp(xi));
                 double[] softmax = new double[this.input.Cols];
                 for (int i = 0; i < this.input.Cols; i++)
                 {
-                    softmax[i] = Math.Exp(this.input[row, i] / Temperature) / sumExp;
+                    softmax[i] = this.CalcWithExp(this.input[row][i]) / sumExp;
                 }
 
                 double softmaxSum = softmax.Sum();
@@ -105,6 +105,17 @@ namespace ParallelReverseAutoDiff.RMAD
             return new BackwardResultBuilder()
                 .AddInputGradient(dX)
                 .Build();
+        }
+
+        private double CalcWithExp(double value)
+        {
+            var res = Math.Exp(value / Temperature);
+            if (res > float.MaxValue || double.IsNaN(res) || double.IsInfinity(res))
+            {
+                return float.MaxValue;
+            }
+
+            return res;
         }
     }
 }

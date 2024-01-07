@@ -213,50 +213,16 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                     parameters[0] = new DeepMatrix(matrixArray);
                 }
 
-                if (op.Id == "attention_weights_values")
-                {
-
-                }
-
                 if (op.Id == "attention_weights")
                 {
 
                 }
 
-                if (op.Id == "fully_connected")
+                if (op.Id == "pre_output_add")
                 {
 
                 }
 
-                if (op.Id == "inverse_residual_concat")
-                {
-
-                }
-
-                if (op.Id == "add_residual")
-                {
-
-                }
-
-                if (op.Id == "pre_output_act")
-                {
-
-                }
-
-                if (op.Id == "pre_output")
-                {
-
-                }
-
-                if (op.Id == "node_features_transform")
-                {
-
-                }
-
-                if (op.Id == "square_and_sum")
-                {
-
-                }
 
                 if( op.Id == "output")
                 {

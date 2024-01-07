@@ -287,9 +287,14 @@
           "inputs": [ "pre_output_relu", "SoftDivisor" ]
         },
         {
+          "id": "tanop",
+          "type": "TanhOperation",
+          "inputs": [ "pre_output_mult" ]
+        },
+        {
           "id": "pre_output_add",
           "type": "MatrixAddScalarOperation",
-          "inputs": [ "pre_output_mult", "SoftSum" ]
+          "inputs": [ "tanop", "SoftSum" ]
         },
         {
           "id": "output_left",
