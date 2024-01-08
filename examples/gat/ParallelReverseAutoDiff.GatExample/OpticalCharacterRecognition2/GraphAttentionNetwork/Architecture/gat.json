@@ -1,0 +1,319 @@
+{
+  "timeSteps": [
+    {
+      "layers": [
+        {
+          "startOperations": [
+            {
+              "id": "node_features_transform",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "nodeFeatures", "LinearWeights" ],
+              "gradientResultTo": [ null, "DLinearWeights" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeatures",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "leaky",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "nodeFeatures" ]
+            },
+            {
+              "id": "node_features_concat",
+              "type": "MatrixHorizontalConcatenateOperation",
+              "inputs": [ "nodeFeatures", "leaky" ]
+            },
+            {
+              "id": "transformed_features_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "node_features_transform", "TransformationBias" ],
+              "gradientResultTo": [ null, "DTransformationBias" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "1",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "transformed_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "transformed_features_add" ]
+            },
+            {
+              "id": "features_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "transformed_act", "Keys" ],
+              "gradientResultTo": [ null, "DKeys" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeaturesProjected",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "features_values",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "transformed_act", "Values" ],
+              "gradientResultTo": [ null, "DValues" ],
+              "initializations": [
+                null,
+                {
+                  "type": "Xavier",
+                  "rows": "numFeaturesProjected",
+                  "columns": "numFeaturesProjected"
+                }
+              ]
+            },
+            {
+              "id": "features_keys_transpose",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "features_keys" ]
+            },
+            {
+              "id": "queries_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "Queries", "features_keys_transpose" ],
+              "gradientResultTo": [ "DQueries", null ],
+              "initializations": [
+                {
+                  "type": "Xavier",
+                  "rows": "numFeaturesProjected",
+                  "columns": "numFeaturesProjected"
+                },
+                null
+              ]
+            },
+            {
+              "id": "queries_keys_transpose",
+              "type": "MatrixTransposeOperation",
+              "inputs": [ "queries_keys" ]
+            },
+            {
+              "id": "attention_scale",
+              "type": "MatrixMultiplyScalarOperation",
+              "inputs": [ "queries_keys_transpose", "Divisor" ]
+            },
+            {
+              "id": "attention_weights",
+              "type": "MultiRowModifiedSoftmaxOperation",
+              "inputs": [ "attention_scale" ]
+            },
+            {
+              "id": "attention_weights_values",
+              "type": "HadamardProductOperation",
+              "inputs": [ "attention_weights", "features_values" ]
+            },
+            {
+              "id": "scaled_residual",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "attention_weights_values", "ResidualWeights" ],
+              "gradientResultTo": [ null, "DResidualWeights" ]
+            },
+            {
+              "id": "scaled_residual_hadamard",
+              "type": "HadamardProductOperation",
+              "inputs": [ "nodeFeatures", "attention_weights_values" ]
+            },
+            {
+              "id": "inverse_residual",
+              "type": "HadamardProductOperation",
+              "inputs": [ "nodeFeatures", "InverseResidualWeights" ],
+              "gradientResultTo": [ null, "DInverseResidualWeights" ]
+            },
+            {
+              "id": "inverse_residual_concat",
+              "type": "MatrixHorizontalConcatenateOperation",
+              "inputs": [ "scaled_residual_hadamard", "inverse_residual" ]
+            }
+          ],
+          "layers": [
+            {
+              "operations": [
+                {
+                  "id": "graph_adjacency",
+                  "type": "SigmoidOperation",
+                  "inputs": [ "AdjacencyMatrix" ],
+                  "gradientResultTo": [ "DAdjacencyMatrix" ]
+                },
+                {
+                  "id": "graph_attention",
+                  "type": "GraphAttentionOperation",
+                  "inputs": [ "attention_weights_values", "graph_adjacency", "AttentionWeights" ],
+                  "gradientResultTo": [ null, null, "DAttentionWeights" ]
+                },
+                {
+                  "id": "attention_leaky_relu",
+                  "type": "LeakyReLUOperation",
+                  "inputs": [ "graph_attention" ]
+                },
+                {
+                  "id": "normalize_attention",
+                  "type": "SineSoftmaxOperation",
+                  "inputs": [ "attention_leaky_relu" ]
+                },
+                {
+                  "id": "feature_aggregation",
+                  "type": "FeatureAggregationOperation",
+                  "inputs": [ "normalize_attention", "transformed_act" ]
+                }
+              ]
+            }
+          ],
+          "endOperations": [
+            {
+              "id": "deep_concatenate",
+              "type": "DeepConcatenateOperation",
+              "inputs": [ "feature_aggregation_array" ]
+            },
+            {
+              "id": "deep_pairwise_attention",
+              "type": "DeepPairwiseAttentionOperation",
+              "inputs": [ "deep_concatenate", "PairwiseAttentionWeights" ],
+              "gradientResultTo": [ null, "DPairwiseAttentionWeights" ]
+            },
+            {
+              "id": "deep_elementwise_multiply_sum",
+              "type": "DeepMatrixElementWiseMultiplySumOperation",
+              "inputs": [ "deep_concatenate", "deep_pairwise_attention" ]
+            },
+            {
+              "id": "add_residual_add",
+              "type": "MatrixAddOperation",
+              "inputs": [ "deep_elementwise_multiply_sum", "scaled_residual" ]
+            },
+            {
+              "id": "add_residual",
+              "type": "HadamardProductOperation",
+              "inputs": [ "add_residual_add", "inverse_residual_concat" ]
+            },
+            {
+              "id": "fully_connected",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "add_residual", "FW" ],
+              "gradientResultTo": [ null, "DFW" ]
+            },
+            {
+              "id": "fully_connected_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected", "FB" ],
+              "gradientResultTo": [ null, "DFB" ]
+            },
+            {
+              "id": "fully_connected_2",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "add_residual", "F2W" ],
+              "gradientResultTo": [ null, "DF2W" ]
+            },
+            {
+              "id": "fully_connected_2_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "fully_connected_2", "F2B" ],
+              "gradientResultTo": [ null, "DF2B" ]
+            },
+            {
+              "id": "fully_connected_act",
+              "type": "SwishOperation",
+              "inputs": [ "fully_connected_add", "Beta" ],
+              "gradientResultTo": [ null, "DBeta" ]
+            },
+            {
+              "id": "pre_swiglu_act",
+              "type": "HadamardProductOperation",
+              "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+            },
+            {
+              "id": "swiglu_act_add",
+              "type": "MatrixAddOperation",
+              "inputs": [ "pre_swiglu_act", "fully_connected_act" ]
+            },
+            {
+              "id": "swiglu_act_hada",
+              "type": "HadamardProductOperation",
+              "inputs": [ "swiglu_act_add", "add_residual" ]
+            },
+            {
+              "id": "swiglu_act_add2",
+              "type": "MatrixAddOperation",
+              "inputs": [ "swiglu_act_hada", "node_features_concat" ]
+            },
+            {
+              "id": "swiglu_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "swiglu_act_add2" ]
+            }
+          ]
+        }
+      ],
+      "endoperations": [
+        {
+          "id": "pre_output",
+          "type": "MatrixRowConcatenateOperation",
+          "inputs": [ "swiglu_act_last" ]
+        },
+        {
+          "id": "pre_output_act",
+          "type": "PiecewiseActivationOperation",
+          "inputs": [ "pre_output" ]
+        },
+        {
+          "id": "take_left",
+          "type": "TakeLeftOperation",
+          "inputs": [ "pre_output_act" ]
+        },
+        {
+          "id": "take_right",
+          "type": "TakeRightOperation",
+          "inputs": [ "pre_output_act" ]
+        },
+        {
+          "id": "pre_output_relu",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "pre_output" ]
+        },
+        {
+          "id": "pre_output_mult",
+          "type": "MatrixMultiplyScalarOperation",
+          "inputs": [ "pre_output_relu", "SoftDivisor" ]
+        },
+        {
+          "id": "pre_output_add",
+          "type": "MatrixAddScalarOperation",
+          "inputs": [ "pre_output_mult", "SoftSum" ]
+        },
+        {
+          "id": "output_left",
+          "type": "VariedSoftmaxOperation",
+          "inputs": [ "take_left", "pre_output_add" ]
+        },
+        {
+          "id": "output_right",
+          "type": "VariedSoftmaxOperation",
+          "inputs": [ "take_right", "pre_output_add" ]
+        },
+        {
+          "id": "square_and_sum",
+          "type": "ElementwiseSquareAndSumOperation",
+          "inputs": [ "output_left", "output_right" ],
+          "setResultTo": "OutputTwo"
+        },
+        {
+          "id": "output",
+          "type": "VariedSoftmaxOperation",
+          "inputs": [ "pre_output_act", "pre_output_add" ],
+          "setResultTo": "Output"
+        }
+      ]
+    }
+  ]
+}
