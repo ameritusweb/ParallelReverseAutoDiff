@@ -40,7 +40,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     var file2 = jsonFiles[i2].Substring(jsonFiles[i2].LastIndexOf('\\') + 1);
                     var sub1 = file1.Substring(16);
                     var sub2 = file2.Substring(16);
-                    double targetMax = sub1.Substring(0, 1) == sub2.Substring(0, 1) ? 65d : 1d;
+                    double targetMax = sub1.Substring(0, 1) == sub2.Substring(0, 1) ? 3.5d : 0.5d;
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -49,7 +49,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                             matrix[j, k] = data[j][k];
                         }
                     }
-                    if (targetMax == 1.0d && targetMax == targets.LastOrDefault())
+                    if (targetMax == 0.5d && targetMax == targets.LastOrDefault())
                     {
                         continue;
                     }

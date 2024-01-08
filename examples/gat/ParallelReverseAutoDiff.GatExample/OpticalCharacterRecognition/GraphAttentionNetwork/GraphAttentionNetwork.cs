@@ -20,6 +20,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         private readonly List<IModelLayer> inputLayers;
         private readonly List<IModelLayer> nestedLayers;
         private readonly List<IModelLayer> outputLayers;
+        private readonly IModelLayer realOutputLayer;
 
         private GraphAttentionComputationGraph computationGraph;
 
@@ -85,6 +86,11 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 numOutputFeatures = numOutputFeatures * 2;
             }
 
+            var realOutputLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("RealOutputWeightsLeft", new[] { (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d), (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.01d) }, InitializationType.Xavier)
+                .AddModelElementGroup("RealOutputWeightsRight", new[] { (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.5d), (int)(this.NumFeatures * Math.Pow(2, this.NumLayers) * this.NumNodes * 0.01d) }, InitializationType.Xavier);
+            this.realOutputLayer = realOutputLayerBuilder.Build();
+
             this.InitializeState();
         }
 
@@ -135,7 +141,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
         {
             get
             {
-                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers);
+                return this.inputLayers.Concat(this.nestedLayers).Concat(this.outputLayers).Append(this.realOutputLayer);
             }
         }
 
@@ -344,6 +350,10 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
+
+                var stopOp = this.computationGraph["pre_output_0_0"];
+                stopOp.BackwardAdjacentOperations.Clear();
+
                 backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
@@ -361,9 +371,18 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 }
 
                 opVisitor.Reset();
+            } else
+            {
+                return new Matrix();
             }
 
             IOperationBase? backwardEndOperation = this.computationGraph["node_features_transform_0_0"];
+
+            if (backwardEndOperation.CalculatedGradient == null)
+            {
+                return new Matrix();
+            }
+
             if (backwardEndOperation.CalculatedGradient[1] == null)
             {
                 return gradient;
@@ -491,6 +510,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             List<Matrix> fully2Bias = new List<Matrix>();
             List<Matrix> scaling = new List<Matrix>();
             List<Matrix> beta = new List<Matrix>();
+            var realOutputWeightsLeft = this.realOutputLayer.WeightMatrix("RealOutputWeightsLeft");
+            var realOutputWeightsRight = this.realOutputLayer.WeightMatrix("RealOutputWeightsRight");
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 linearWeights.Add(this.inputLayers[i].WeightMatrix("LinearWeights"));
@@ -527,6 +548,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             List<Matrix> fully2BiasGradient = new List<Matrix>();
             List<Matrix> scalingGradient = new List<Matrix>();
             List<Matrix> betaGradient = new List<Matrix>();
+            var realOutputWeightsGradientLeft = this.realOutputLayer.GradientMatrix("RealOutputWeightsLeft");
+            var realOutputWeightsGradientRight = this.realOutputLayer.GradientMatrix("RealOutputWeightsRight");
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 linearWeightsGradient.Add(this.inputLayers[i].GradientMatrix("LinearWeights"));
@@ -576,6 +599,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
                 .AddWeight("F2B", x => fully2Bias[x.Layer]).AddGradient("DF2B", x => fully2BiasGradient[x.Layer])
                 .AddWeight("ScalingWeights", x => scaling[x.Layer]).AddGradient("DScalingWeights", x => scalingGradient[x.Layer])
                 .AddWeight("Beta", x => beta[x.Layer]).AddGradient("DBeta", x => betaGradient[x.Layer])
+                .AddWeight("RealOutputWeightsLeft", x => realOutputWeightsLeft).AddGradient("DRealOutputWeightsLeft", x => realOutputWeightsGradientLeft)
+                .AddWeight("RealOutputWeightsRight", x => realOutputWeightsRight).AddGradient("DRealOutputWeightsRight", x => realOutputWeightsGradientRight)
                 .AddWeight("AdjacencyMatrix", x => adjacency[x.Layer][x.NestedLayer]).AddGradient("DAdjacencyMatrix", x => adjacencyGradient[x.Layer][x.NestedLayer])
                 .AddWeight("AttentionWeights", x => attentionWeights[x.Layer][x.NestedLayer]).AddGradient("DAttentionWeights", x => attentionWeightsGradient[x.Layer][x.NestedLayer])
                 .AddOperationFinder("nodeFeatures", x => x.Layer == 0 ? this.Input : this.computationGraph[$"swiglu_act_0_{x.Layer - 1}"])
@@ -594,6 +619,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.GraphAt
             AddCount("output_right_0_0", 1);
             AddCount("take_left_0_0", 1);
             AddCount("take_right_0_0", 1);
+            AddCount("take_left_pre_0_0", 1);
+            AddCount("take_right_pre_0_0", 1);
         }
 
         private void AddCount(string identifier, int count)

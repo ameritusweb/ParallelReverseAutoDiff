@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="OpticalCharacterRecognition\GraphAttentionNetwork\Architecture\gat.json" />
+    <None Remove="OpticalCharacterRecognition\GraphAttentionNetwork\Architecture\gat2.json" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -19,12 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="OpticalCharacterRecognition\GraphAttentionNetwork\Architecture\gat2.json" />
     <EmbeddedResource Include="OpticalCharacterRecognition\GraphAttentionNetwork\Architecture\gat.json" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="ParallelReverseAutoDiff" Version="1.1.60" />
+    <PackageReference Include="ParallelReverseAutoDiff" Version="1.1.61" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

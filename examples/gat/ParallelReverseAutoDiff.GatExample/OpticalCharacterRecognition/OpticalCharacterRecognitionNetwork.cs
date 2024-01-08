@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 {
     using System;
     using System.IO;
+    using Microsoft.VisualBasic;
     using ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -30,6 +31,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         private List<string> rights;
         private List<double> diffStore;
         private List<double> sameStore;
+        private double totalDiff = 0;
+        private double numberOfDiffs = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpticalCharacterRecognitionNetwork"/> class.
@@ -87,7 +90,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 6932;
+            var initialAdamIteration = 6064;
             var model = new GraphAttentionNetwork.GraphAttentionNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.graphAttentionNetwork = model;
@@ -127,7 +130,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "2b832753-9d0a-4162-b92d-1ed9ef25ad91_6932";
+            var guid = "3a98ff3c-69af-4043-bc02-412456497116_6064";
             var dir = $"E:\\gatstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -146,7 +149,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             var clipper = this.graphAttentionNetwork.Utilities.GradientClipper;
             clipper.Clip(this.modelLayers.ToArray());
             var adamOptimizer = new StochasticAdamOptimizer(this.graphAttentionNetwork);
-            adamOptimizer.Optimize(this.modelLayers.ToArray());
+            adamOptimizer.Optimize(new IModelLayer[] { this.modelLayers.LastOrDefault() });
         }
 
         /// <summary>
@@ -259,48 +262,100 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             //    }
             //}
 
+            if (char1 == char2 && outputTwo[0][0] > outputTwo[0][1])
+            {
+                var avg = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
+                totalDiff += avg;
+                numberOfDiffs += 1d;
+                var aa = totalDiff / numberOfDiffs;
+                var aaa = aa * Math.Exp(aa);
+                MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { outputTwo[0][0] - (aaa * 100d), outputTwo[0][1] + (aaa * 100d) } }));
+                var gradTwo = lossOperation2.Backward();
+                return (gradTwo, outputTwo, new List<double>());
+            } else if (char1 != char2 && outputTwo[0][0] < outputTwo[0][1])
+            {
+                var avg = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
+                totalDiff += avg;
+                numberOfDiffs += 1d;
+                var aa = totalDiff / numberOfDiffs;
+                var aaa = aa * Math.Exp(aa);
+                MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { outputTwo[0][0] + (aaa * 100d), outputTwo[0][1] - (aaa * 100d) } }));
+                var gradTwo = lossOperation2.Backward();
+                return (gradTwo, outputTwo, new List<double>());
+            } else
+            {
+                if (char1 == char2 && (outputTwo[0][1] / outputTwo[0][0]) < 2d)
+                {
+                    var avg = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
+                    totalDiff += avg;
+                    numberOfDiffs += 1d;
+                    var aaa = totalDiff / numberOfDiffs;
+                    var ccc = (Math.Exp(aaa) - 1);
+                    var aa = Math.Max(0d, aaa * (1 - ccc));
+                    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { outputTwo[0][0] - aa, outputTwo[0][1] + aa } }));
+                    var gradTwo = lossOperation2.Backward();
+                    return (gradTwo, outputTwo, new List<double>());
+                } else if (char1 != char2 && (outputTwo[0][0] / outputTwo[0][1]) < 2d)
+                {
+                    var avg = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
+                    totalDiff += avg;
+                    numberOfDiffs += 1d;
+                    var aaa = totalDiff / numberOfDiffs;
+                    var ccc = (Math.Exp(aaa) - 1);
+                    var aa = Math.Max(0d, aaa * (1 - ccc));
+                    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { outputTwo[0][0] + aa, outputTwo[0][1] - aa } }));
+                    var gradTwo = lossOperation2.Backward();
+                    return (gradTwo, outputTwo, new List<double>());
+                }
+                return (new Matrix(new double[][] { new double[] { 0.0d, 0.0d } }), outputTwo, new List<double>());
+            }
+
             if (last != default && char1 == char2 && (last.Item1 == char1 || last.Item2 == char1 || last.Item1 == char2 || last.Item2 == char2))
             {
-                var prev = prevOutputTwo[0].ToList();
-                var prevDiff = Math.Abs(prev[0] - prev[1]);
-                var currDiff = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
-                if (prevDiff < currDiff)
-                {
-                    var avg = outputTwo[0].Sum() / 2d;
-                    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-                    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
-                    var gradTwo = lossOperation2.Backward();
-                    return (gradTwo, outputTwo, new List<double>());
-                }
+                //var prev = prevOutputTwo[0].ToList();
+                //var prevDiff = Math.Abs(prev[0] - prev[1]);
+                //var currDiff = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
+                //if (prevDiff < currDiff)
+                //{
+                //    var avg = outputTwo[0].Sum() / 2d;
+                //    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                //    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
+                //    var gradTwo = lossOperation2.Backward();
+                //    return (gradTwo, outputTwo, new List<double>());
+                //}
             } else if (char1 == char2)
             {
-                if ((outputTwo[0][0] > (outputTwo[0][1] * 2d)) || (outputTwo[0][1] > (outputTwo[0][0] * 2d)))
-                {
-                    var avg = outputTwo[0].Sum() / 2d;
-                    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-                    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
-                    var gradTwo = lossOperation2.Backward();
-                    return (gradTwo, outputTwo, new List<double>());
-                }
+                //if ((outputTwo[0][0] > (outputTwo[0][1] * 2d)) || (outputTwo[0][1] > (outputTwo[0][0] * 2d)))
+                //{
+                //    var avg = outputTwo[0].Sum() / 2d;
+                //    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+                //    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
+                //    var gradTwo = lossOperation2.Backward();
+                //    return (gradTwo, outputTwo, new List<double>());
+                //}
             }
 
-            var arrList = output[0].ToList();
-            var rr = arrList.OrderByDescending(r => r).ToList();
-            var scaled = ScaleValuesToMax(arrList, targetMax);
-            var rrScaled = scaled.OrderByDescending(r => r).ToList();
-            MeanSquaredErrorLossOperation lossOperation = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-            lossOperation.Forward(output, new Matrix(scaled.ToArray()));
-            var gradient = lossOperation.Backward();
-            Console.WriteLine("Gradient: " + gradient.SelectMany(x => x).Max() + " " + gradient.SelectMany(x => x).Min());
-            if (gradient[0].Any(x => double.IsNaN(x)))
-            {
-                Console.WriteLine("NaN");
-            }
+            //var arrList = output[0].ToList();
+            //var rr = arrList.OrderByDescending(r => r).ToList();
+            //var scaled = ScaleValuesToMax(arrList, targetMax);
+            //var rrScaled = scaled.OrderByDescending(r => r).ToList();
+            //MeanSquaredErrorLossOperation lossOperation = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
+            //lossOperation.Forward(output, new Matrix(scaled.ToArray()));
+            //var gradient = lossOperation.Backward();
+            //Console.WriteLine("Gradient: " + gradient.SelectMany(x => x).Max() + " " + gradient.SelectMany(x => x).Min());
+            //if (gradient[0].Any(x => double.IsNaN(x)))
+            //{
+            //    Console.WriteLine("NaN");
+            //}
 
-            entities.Add((char1, char2));
-            prevOutputTwo = (Matrix)outputTwo.Clone();
+            //entities.Add((char1, char2));
+            //prevOutputTwo = (Matrix)outputTwo.Clone();
 
-            return (gradient, output, rr);
+            //return (gradient, output, rr);
         }
 
         /// <summary>

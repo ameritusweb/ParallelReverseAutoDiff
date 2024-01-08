@@ -267,24 +267,14 @@
           "inputs": [ "pre_output" ]
         },
         {
-          "id": "take_left_pre",
+          "id": "take_left",
           "type": "TakeLeftOperation",
           "inputs": [ "pre_output_act" ]
         },
         {
-          "id": "take_right_pre",
+          "id": "take_right",
           "type": "TakeRightOperation",
           "inputs": [ "pre_output_act" ]
-        },
-        {
-          "id": "take_left",
-          "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "take_left_pre", "RealOutputWeightsLeft" ]
-        },
-        {
-          "id": "take_right",
-          "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "take_right_pre", "RealOutputWeightsRight" ]
         },
         {
           "id": "pre_output_relu",
