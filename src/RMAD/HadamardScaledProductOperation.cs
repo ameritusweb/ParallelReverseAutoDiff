@@ -16,6 +16,7 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private Matrix input1;
         private Matrix input2;
+        private double minValue;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -46,18 +47,20 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="input1">The first input to the Hadamard scaled product operation.</param>
         /// <param name="input2">The second input to the Hadamard scaled product operation.</param>
+        /// <param name="minValue">The minimum value to use for scaling.</param>
         /// <returns>The output of the Hadamard scaled product operation.</returns>
-        public Matrix Forward(Matrix input1, Matrix input2)
+        public Matrix Forward(Matrix input1, Matrix input2, double minValue)
         {
             this.input1 = input1;
             this.input2 = input2;
+            this.minValue = minValue;
             int numRows = input1.Length;
             int numCols = input1[0].Length;
 
             this.Output = new Matrix(numRows, numCols);
 
             // Find the maximum value in both input matrices
-            double maxVal = Math.Max(input1.ToArray().SelectMany(x => x).Max(), input2.ToArray().SelectMany(x => x).Max());
+            double maxVal = Math.Max(minValue, Math.Max(input1.ToArray().SelectMany(x => x).Max(), input2.ToArray().SelectMany(x => x).Max()));
 
             // Parallelize the outer loop
             Parallel.For(0, numRows, i =>
@@ -81,7 +84,7 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix dLdInput1 = new Matrix(numRows, numCols);
             Matrix dLdInput2 = new Matrix(numRows, numCols);
 
-            double maxVal = Math.Max(this.input1.ToArray().SelectMany(x => x).Max(), this.input2.ToArray().SelectMany(x => x).Max());
+            double maxVal = Math.Max(this.minValue, Math.Max(this.input1.ToArray().SelectMany(x => x).Max(), this.input2.ToArray().SelectMany(x => x).Max()));
 
             // Parallelize the outer loop
             Parallel.For(0, numRows, i =>
