@@ -1,0 +1,96 @@
+﻿{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "start_solar_system",
+          "type": "GravitationalInfluenceOnWeightsOperation",
+          "inputs": [ "StartWeights", "StartDistances", "DivisorMatrix", "GravConst" ],
+          "gradientResultTo": [ "DStartWeights", "DStartDistances", "DDivisorMatrix", null ]
+        },
+        {
+          "id": "features_mult",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "input", "start_solar_system" ]
+        },
+        {
+          "id": "features_add",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "features_mult", "KB" ],
+          "gradientResultTo": [ null, "DKB" ]
+        },
+        {
+          "id": "features_act",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "features_add" ]
+        }
+      ],
+      "layers": [
+        {
+          "operations": [
+            {
+              "id": "hidden_solar_system",
+              "type": "GravitationalInfluenceOperation",
+              "inputs": [ "features_act_last", "HiddenDistances", "HiddenDivisorMatrix", "HiddenGravConst" ],
+              "gradientResultTo": [ null, "DHiddenDistances", "DHiddenDivisorMatrix", null ]
+            },
+            {
+              "id": "queryedge_add",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "hidden_solar_system", "QB" ],
+              "gradientResultTo": [ null, "DQB" ]
+            },
+            {
+              "id": "queries_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "queryedge_add" ]
+            }
+          ]
+        }
+      ],
+      "endOperations": [
+        {
+          "id": "fully_connected",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "queries_act_last", "FW" ],
+          "gradientResultTo": [ null, "DFW" ]
+        },
+        {
+          "id": "fully_connected_add",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "fully_connected", "FB" ],
+          "gradientResultTo": [ null, "DFB" ]
+        },
+        {
+          "id": "fully_connected_2",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "queries_act_last", "F2W" ],
+          "gradientResultTo": [ null, "DF2W" ]
+        },
+        {
+          "id": "fully_connected_2_add",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "fully_connected_2", "F2B" ],
+          "gradientResultTo": [ null, "DF2B" ]
+        },
+        {
+          "id": "fully_connected_act",
+          "type": "SwishOperation",
+          "inputs": [ "fully_connected_add", "Beta" ],
+          "gradientResultTo": [ null, "DBeta" ]
+        },
+        {
+          "id": "pre_swiglu_act",
+          "type": "HadamardScaledProductOperation",
+          "inputs": [ "fully_connected_act", "fully_connected_2_add" ]
+        },
+        {
+          "id": "output",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "pre_swiglu_act" ],
+          "setResultTo": "Output"
+        }
+      ]
+    }
+  ]
+}
