@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            GravNetTrainer trainer = new GravNetTrainer();
+            trainer.Train().Wait();
         }
     }
 }
