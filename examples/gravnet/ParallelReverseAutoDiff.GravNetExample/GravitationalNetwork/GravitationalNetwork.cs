@@ -34,7 +34,7 @@
             int numInputOutputFeatures = this.NumFeatures;
             var inputLayerBuilder = new ModelLayerBuilder(this)
                 .AddModelElementGroup("StartWeights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("StartDistances", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Zeroes)
+                .AddModelElementGroup("StartDistances", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("DivisorMatrix", new[] { 1, 1 }, InitializationType.Xavier)
                 .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier);
             var inputLayer = inputLayerBuilder.Build();
@@ -45,8 +45,8 @@
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("HiddenDistances", new[] { numLayers, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("HiddenDivisorMatrix", new[] { numLayers, 1, 1 }, InitializationType.Xavier)
+                    .AddModelElementGroup("HiddenDistances", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("HiddenDivisorMatrix", new[] { 1, 1 }, InitializationType.Xavier)
                     .AddModelElementGroup("QB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
@@ -179,6 +179,11 @@
                 if (forward == null)
                 {
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
+                }
+
+                if (op is GravitationalInfluenceOnWeightsOperation grav)
+                {
+                    grav.Forward(parameters[0] as Matrix, parameters[1] as Matrix, parameters[2] as Matrix, (double)parameters[3]);
                 }
 
                 forward.Invoke(op, parameters);
@@ -361,6 +366,7 @@
             this.computationGraph = new GravitationalComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
+                .AddIntermediate("Input", _ => this.Input)
                 .AddScalar("GravConst", x => 1d)
                 .AddScalar("HiddenGravConst", x => gravConsts[x.Layer])
                 .AddWeight("StartWeights", x => startWeights).AddGradient("DStartWeights", x => startWeightsGradient)
@@ -375,8 +381,8 @@
                 .AddWeight("F2W", x => f2w).AddGradient("DF2W", x => f2wGradient)
                 .AddWeight("F2B", x => f2b).AddGradient("DF2B", x => f2bGradient)
                 .AddWeight("Beta", x => beta).AddGradient("DBeta", x => betaGradient)
-                .AddOperationFinder("features_act_last", x => x.Layer == 0 ? this.computationGraph[$"features_act_0_0"] : this.computationGraph[$"queries_act_0_{x.Layer - 1}"])
-                .AddOperationFinder("queries_act_last", _ => this.computationGraph[$"queries_act_0_{this.NumLayers - 1}"])
+                .AddOperationFinder("features_act_last", x => x.Layer == 0 ? this.computationGraph[$"features_act_0_0"] : this.computationGraph[$"hidden_act_0_{x.Layer - 1}"])
+                .AddOperationFinder("hidden_act_last", _ => this.computationGraph[$"hidden_act_0_{this.NumLayers - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;

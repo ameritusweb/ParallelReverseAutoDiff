@@ -11,7 +11,7 @@
         {
           "id": "features_mult",
           "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "input", "start_solar_system" ]
+          "inputs": [ "Input", "start_solar_system" ]
         },
         {
           "id": "features_add",
@@ -35,15 +35,15 @@
               "gradientResultTo": [ null, "DHiddenDistances", "DHiddenDivisorMatrix", null ]
             },
             {
-              "id": "queryedge_add",
+              "id": "hidden_add",
               "type": "MatrixAddBroadcastingOperation",
               "inputs": [ "hidden_solar_system", "QB" ],
               "gradientResultTo": [ null, "DQB" ]
             },
             {
-              "id": "queries_act",
+              "id": "hidden_act",
               "type": "LeakyReLUOperation",
-              "inputs": [ "queryedge_add" ]
+              "inputs": [ "hidden_add" ]
             }
           ]
         }
@@ -52,7 +52,7 @@
         {
           "id": "fully_connected",
           "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "queries_act_last", "FW" ],
+          "inputs": [ "hidden_act_last", "FW" ],
           "gradientResultTo": [ null, "DFW" ]
         },
         {
@@ -64,7 +64,7 @@
         {
           "id": "fully_connected_2",
           "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "queries_act_last", "F2W" ],
+          "inputs": [ "hidden_act_last", "F2W" ],
           "gradientResultTo": [ null, "DF2W" ]
         },
         {

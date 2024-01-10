@@ -1,4 +1,5 @@
-﻿using ParallelReverseAutoDiff.RMAD;
+﻿using Newtonsoft.Json;
+using ParallelReverseAutoDiff.RMAD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,33 @@ namespace ParallelReverseAutoDiff.GravNetExample
     {
         public async Task Train()
         {
-            GravNet net = new GravNet(10, 200, 3, 0.0002d, 4d);
+            CudaBlas.Instance.Initialize();
+            GravNet net = new GravNet(17, 223, 3, 0.0002d, 4d);
             await net.Initialize();
 
-            Random rand = new Random(1234);
-            Matrix input = new Matrix(100, 200);
-            for (int i = 0; i < input.Rows; i++)
-            {
-                for (int j = 0; j < input.Cols; j++)
-                {
+            var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
 
-                    input[i, j] = 1d;
+            Random random = new Random(Guid.NewGuid().GetHashCode());
+            var files = jsonFiles.OrderBy(x => random.Next()).ToArray();
+            foreach (var jsonFile in files)
+            {
+                var json = File.ReadAllText(jsonFile);
+                var data = JsonConvert.DeserializeObject<List<List<double>>>(json);
+                var file = jsonFile.Substring(jsonFile.LastIndexOf('\\') + 1);
+                var sub = file.Substring(16, 1);
+
+                Matrix matrix = new Matrix(data.Count, data[0].Count);
+                for (int j = 0; j < data.Count; j++)
+                {
+                    for (int k = 0; k < data[0].Count; k++)
+                    {
+                        matrix[j, k] = data[j][k];
+                    }
                 }
+
+                var res = net.Forward(matrix);
+
             }
-            
-            net.Forward();
         }
     }
 }

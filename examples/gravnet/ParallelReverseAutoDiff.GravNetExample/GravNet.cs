@@ -147,7 +147,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
 
-            return (gradient, output);
+            return (output, output);
         }
 
         /// <summary>
