@@ -94,30 +94,37 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
-            Matrix dInput1 = new Matrix(this.input1.Rows, this.input1.Cols);
-            Matrix dInput2 = new Matrix(this.input2.Rows, this.input2.Cols);
-            Matrix dWeights = new Matrix(this.weights.Rows, this.weights.Cols);
+            Matrix dInput1 = new Matrix(input1.Rows, input1.Cols);
+            Matrix dInput2 = new Matrix(input2.Rows, input2.Cols);
+            Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
 
-            double sumX = this.summationX.Sum();
-            double sumY = this.summationY.Sum();
+            double sumX = summationX.Sum();
+            double sumY = summationY.Sum();
 
-            double resultMagnitude = Math.Sqrt((sumX * sumX) + (sumY * sumY));
-            double resultAngle = Math.Atan2(sumY, sumX);
+            // Gradients for output magnitude
+            double dResultMagnitude_dSumX = sumX / Math.Sqrt(sumX * sumX + sumY * sumY);
+            double dResultMagnitude_dSumY = sumY / Math.Sqrt(sumX * sumX + sumY * sumY);
 
-            double dResultMagnitude_dSumX = sumX / resultMagnitude;
-            double dResultMagnitude_dSumY = sumY / resultMagnitude;
+            // Gradients for output angle
+            double dResultAngle_dSumX = -sumY / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
+            double dResultAngle_dSumY = sumX / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
 
-            Parallel.For(0, this.input1.Rows, i =>
+            double dMagnitudeOutput = dOutput[0, 0]; // Gradient of the loss function with respect to the output magnitude
+            double dAngleOutput = dOutput[0, 1];     // Gradient of the loss function with respect to the output angle
+
+            // Partial derivatives of atan2 for the aggregated sumX and sumY
+            double dAtan2_dX = -sumY / (sumX * sumX + sumY * sumY);
+            double dAtan2_dY = sumX / (sumX * sumX + sumY * sumY);
+
+            // Updating gradients with respect to resultMagnitude and resultAngle
+            for (int i = 0; i < input1.Rows; i++)
             {
-                double sumXLocal = this.summationX[i];
-                double sumYLocal = this.summationY[i];
-
-                for (int j = 0; j < this.input1.Cols / 2; j++)
+                for (int j = 0; j < input1.Cols / 2; j++)
                 {
-                    double magnitude = this.input1[i, j];
-                    double angle = this.input1[i, j + this.input1.Cols / 2];
-                    double wMagnitude = this.input2[i, j];
-                    double wAngle = this.input2[i, j + this.input2.Cols / 2];
+                    double magnitude = input1[i, j];
+                    double angle = input1[i, j + input1.Cols / 2];
+                    double wMagnitude = input2[i, j];
+                    double wAngle = input2[i, j + input2.Cols / 2];
 
                     double x1 = magnitude * Math.Cos(angle);
                     double y1 = magnitude * Math.Sin(angle);
@@ -127,27 +134,45 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumx = x1 + x2;
                     double sumy = y1 + y2;
 
-                    double resultMagnitudeLocal = Math.Sqrt(sumx * sumx + sumy * sumy) * this.weights[i, j] * this.weights[i, j];
-                    double resultAngleLocal = Math.Atan2(sumy, sumx);
+                    // Compute derivatives for magnitude
+                    double dResultMagnitudeLocal_dX1 = 2 * sumx * x1 * weights[i, j] * weights[i, j];
+                    double dResultMagnitudeLocal_dY1 = 2 * sumy * y1 * weights[i, j] * weights[i, j];
 
-                    double dResultMagnitudeLocal_dX1 = 2 * sumx * x1 * this.weights[i, j] * this.weights[i, j];
-                    double dResultMagnitudeLocal_dY1 = 2 * sumy * y1 * this.weights[i, j] * this.weights[i, j];
+                    double dResultMagnitudeLocal_dX2 = 2 * sumx * x2 * weights[i, j] * weights[i, j];
+                    double dResultMagnitudeLocal_dY2 = 2 * sumy * y2 * weights[i, j] * weights[i, j];
 
-                    double dResultMagnitudeLocal_dX2 = 2 * sumx * x2 * this.weights[i, j] * this.weights[i, j];
-                    double dResultMagnitudeLocal_dY2 = 2 * sumy * y2 * this.weights[i, j] * this.weights[i, j];
+                    // Compute derivatives for angle
+                    double dResultAngle_dX1 = -dResultAngle_dSumX;
+                    double dResultAngle_dY1 = dResultAngle_dSumY;
 
-                    double dResultMagnitudeLocal_dWeight = 2 * resultMagnitudeLocal * this.weights[i, j];
+                    double dResultAngle_dX2 = -dResultAngle_dSumX;
+                    double dResultAngle_dY2 = dResultAngle_dSumY;
 
-                    // Apply chain rule for each component
-                    dInput1[i, j] += dOutput[0, 0] * dResultMagnitude_dSumX * dResultMagnitudeLocal_dX1;
-                    dInput1[i, j + input1.Cols / 2] += dOutput[0, 0] * dResultMagnitude_dSumY * dResultMagnitudeLocal_dY1;
+                    // Apply chain rule to propagate back to input1, input2, and weights
+                    dInput1[i, j] += dMagnitudeOutput * dResultMagnitude_dSumX * dResultMagnitudeLocal_dX1;
+                    dInput1[i, j + input1.Cols / 2] += dMagnitudeOutput * dResultMagnitude_dSumY * dResultMagnitudeLocal_dY1;
 
-                    dInput2[i, j] += dOutput[0, 0] * dResultMagnitude_dSumX * dResultMagnitudeLocal_dX2;
-                    dInput2[i, j + input2.Cols / 2] += dOutput[0, 0] * dResultMagnitude_dSumY * dResultMagnitudeLocal_dY2;
+                    dInput2[i, j] += dMagnitudeOutput * dResultMagnitude_dSumX * dResultMagnitudeLocal_dX2;
+                    dInput2[i, j + input2.Cols / 2] += dMagnitudeOutput * dResultMagnitude_dSumY * dResultMagnitudeLocal_dY2;
 
-                    dWeights[i, j] += dOutput[0, 0] * dResultMagnitudeLocal_dWeight;
+                    dInput1[i, j] += dAngleOutput * dResultAngle_dX1;
+                    dInput1[i, j + input1.Cols / 2] += dAngleOutput * dResultAngle_dY1;
+
+                    dInput2[i, j] += dAngleOutput * dResultAngle_dX2;
+                    dInput2[i, j + input2.Cols / 2] += dAngleOutput * dResultAngle_dY2;
+
+                    // Compute how changes in weights affect sumX and sumY
+                    double dSumX_dWeight = Math.Sqrt(sumx * sumx + sumy * sumy) * (2 * weights[i, j]);
+                    double dSumY_dWeight = dSumX_dWeight; // Assuming similar relationship due to symmetry
+
+                    // Refine derivative with respect to weights for angle
+                    double dResultAngle_dWeight = dResultAngle_dSumX * dSumX_dWeight + dResultAngle_dSumY * dSumY_dWeight;
+
+                    // Update dWeights with contributions from both magnitude and angle
+                    dWeights[i, j] += dMagnitudeOutput * (2 * weights[i, j] * Math.Sqrt(sumx * sumx + sumy * sumy)); // Contribution from magnitude
+                    dWeights[i, j] += dAngleOutput * dResultAngle_dWeight;                                         // Contribution from angle
                 }
-            });
+            }
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dInput1)
