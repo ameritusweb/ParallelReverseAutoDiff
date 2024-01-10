@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GravitationalNetwork\Architecture\gravnet.json" />
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -19,12 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="GravitationalNetwork\Architecture\gravnet.json" />
+    <EmbeddedResource Include="VectorNetwork\Architecture\vectornet.json" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="ParallelReverseAutoDiff" Version="1.1.63" />
+    <PackageReference Include="ParallelReverseAutoDiff" Version="1.1.64" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

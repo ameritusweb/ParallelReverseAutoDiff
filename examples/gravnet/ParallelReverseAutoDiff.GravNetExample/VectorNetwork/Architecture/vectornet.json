@@ -1,0 +1,36 @@
+﻿{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "start_solar_system",
+          "type": "ElementwiseVectorMultiplyOperation",
+          "inputs": [ "Input", "WeightVectors", "Weights" ],
+          "gradientResultTo": [ null, "DWeightVectors", "DWeights" ]
+        },
+        {
+          "id": "start_solar_system_2",
+          "type": "ElementwiseVectorMultiplyOperation",
+          "inputs": [ "Input", "WeightVectors2", "Weights2" ],
+          "gradientResultTo": [ null, "DWeightVectors2", "DWeights2" ]
+        },
+        {
+          "id": "features_mult",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "Input", "start_solar_system" ]
+        },
+        {
+          "id": "features_add",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "features_mult", "KB" ],
+          "gradientResultTo": [ null, "DKB" ]
+        },
+        {
+          "id": "features_act",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "features_add" ]
+        }
+      ]
+    }
+  ]
+}
