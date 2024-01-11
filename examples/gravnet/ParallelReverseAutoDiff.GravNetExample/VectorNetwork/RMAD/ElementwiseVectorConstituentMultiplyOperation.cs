@@ -16,6 +16,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input1;
         private Matrix input2;
         private Matrix weights;
+        private Matrix sumX;
+        private Matrix sumY;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -40,10 +42,12 @@ namespace ParallelReverseAutoDiff.RMAD
             this.weights = weights;
 
             var Output = new Matrix(input1.Rows,input2.Cols);
+            this.sumX = new Matrix(input1.Rows, input2.Cols / 2);
+            this.sumY = new Matrix(input1.Rows, input2.Cols / 2);
 
             Parallel.For(0, input1.Rows, i =>
             {
-                for (int j = 0; j < input2.Rows / 2; j++)
+                for (int j = 0; j < input2.Cols / 2; j++)
                 {
                     double sumX = 0.0;
                     double sumY = 0.0;
@@ -74,6 +78,10 @@ namespace ParallelReverseAutoDiff.RMAD
                         sumX += resultMagnitude * Math.Cos(resultAngle);
                         sumY += resultMagnitude * Math.Sin(resultAngle);
                     }
+
+                    this.sumX[i, j] = sumX;
+                    this.sumY[i, j] = sumY;
+
                     this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
                     this.Output[i, j + (input2.Rows / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
                 }
@@ -83,7 +91,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <inheritdoc />
-        public BackwardResult Backward(Matrix dOutput)
+        public override BackwardResult Backward(Matrix dOutput)
         {
             // Initialize gradient matrices
             Matrix dInput1 = new Matrix(input1.Rows, input1.Cols);
@@ -131,18 +139,47 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dCombinedAngle_dX2 = (weights[k, j] > 0 ? 1 : -1) * (-deltay / (deltax * deltax + deltay * deltay));
                         double dCombinedAngle_dY2 = (weights[k, j] > 0 ? 1 : -1) * (deltax / (deltax * deltax + deltay * deltay));
 
-                        // Apply chain rule for gradients of input1 and input2
-                        dInput1[i, j] += dOutput[i, j] * dCombinedMagnitude_dX1 + dOutput[i, j + input1.Cols / 2] * dCombinedAngle_dX1;
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY1 + dOutput[i, j + input1.Cols / 2] * dCombinedAngle_dY1;
+                        double dX1_dMagnitude = Math.Cos(angle);
+                        double dY1_dMagnitude = Math.Sin(angle);
+                        double dX1_dAngle = -magnitude * Math.Sin(angle);
+                        double dY1_dAngle = magnitude * Math.Cos(angle);
 
-                        dInput2[k, j] += dOutput[i, j] * dCombinedMagnitude_dX2 + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dX2;
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY2 + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dY2;
+                        double dX2_dWMagnitude = Math.Cos(wAngle);
+                        double dY2_dWMagnitude = Math.Sin(wAngle);
+                        double dX2_dWAngle = -wMagnitude * Math.Sin(wAngle);
+                        double dY2_dWAngle = wMagnitude * Math.Cos(wAngle);
+
+                        dInput1[i, j] += dOutput[i, j] * dCombinedMagnitude_dX1 * dX1_dMagnitude + dOutput[i, j + input1.Cols / 2] * dCombinedAngle_dX1 * dX1_dAngle;
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY1 * dY1_dMagnitude + dOutput[i, j + input1.Cols / 2] * dCombinedAngle_dY1 * dY1_dAngle;
+
+                        dInput2[k, j] += dOutput[i, j] * dCombinedMagnitude_dX2 * dX2_dWMagnitude + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dX2 * dX2_dWAngle;
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY2 * dY2_dWMagnitude + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dY2 * dY2_dWAngle;
+
+                        // Calculate dSumX_dWeight and dSumY_dWeight considering quadratic scaling
+                        double dSumX_dWeight = 0.0;
+                        double dSumY_dWeight = 0.0;
+                        for (int l = 0; l < input2.Rows / 2; l++)
+                        {
+                            double deltaXComponent = input1[i, l] * Math.Cos(input1[i, l + input1.Cols / 2]) - input2[l, k] * Math.Cos(input2[l, k + input2.Cols / 2]);
+                            double deltaYComponent = input1[i, l] * Math.Sin(input1[i, l + input1.Cols / 2]) - input2[l, k] * Math.Sin(input2[l, k + input2.Cols / 2]);
+
+                            dSumX_dWeight += 2 * weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaXComponent;
+                            dSumY_dWeight += 2 * weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaYComponent;
+                        }
+
+                        double sumX = this.sumX[i, j];
+                        double sumY = this.sumY[i, j];
+                        double dMagnitude_dSumX = sumX / Math.Sqrt(sumX * sumX + sumY * sumY);
+                        double dMagnitude_dSumY = sumY / Math.Sqrt(sumX * sumX + sumY * sumY);
+                        double dAngle_dSumX = -sumY / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
+                        double dAngle_dSumY = sumX / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
+
+                        // Apply chain rule for weights
+                        dWeights[k, j] += dOutput[i, j] * (dMagnitude_dSumX * dSumX_dWeight + dMagnitude_dSumY * dSumY_dWeight);
+                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (dAngle_dSumX * dSumX_dWeight + dAngle_dSumY * dSumY_dWeight);
                     }
                 }
             }
-
-            // Calculate and accumulate gradients for weights
-            // (This part needs to be developed based on how weights affect the vectors in the forward pass)
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dInput1)
