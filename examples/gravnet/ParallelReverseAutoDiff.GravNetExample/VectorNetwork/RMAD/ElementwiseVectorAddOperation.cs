@@ -47,10 +47,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     // Accessing the magnitudes and angles from the concatenated matrices
                     double magnitude = input1[i, j];
-                    double angle = input1[i, j + input1.Cols / 2];
+                    double angle = input1[i, j + (input1.Cols / 2)];
 
                     double wMagnitude = input2[i, j];
-                    double wAngle = input2[i, j + input2.Cols / 2];
+                    double wAngle = input2[i, j + (input2.Cols / 2)];
 
                     // Compute vector components
                     double x1 = magnitude * Math.Cos(angle);
@@ -62,12 +62,12 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumy = y1 + y2;
 
                     // Compute resultant vector magnitude and angle
-                    double resultMagnitude = Math.Sqrt(sumx * sumx + sumy * sumy) * weights[i, j] * weights[i, j];
+                    double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * weights[i, j];
                     double resultAngle = Math.Atan2(sumy, sumx);
 
                     // Store results in the output matrix
                     Output[i, j] = resultMagnitude;
-                    Output[i, j + input1.Cols / 2] = resultAngle;
+                    Output[i, j + (input1.Cols / 2)] = resultAngle;
                 }
             });
 
@@ -79,7 +79,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             Matrix dMagnitudesAngles = new Matrix(this.input1.Rows, this.input1.Cols);
             Matrix dWMagnitudesAngles = new Matrix(this.input2.Rows, this.input2.Cols);
-            Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
+            Matrix dWeights = new Matrix(this.weights.Rows, this.weights.Cols);
 
             Parallel.For(0, this.input1.Rows, i =>
             {
@@ -87,9 +87,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     // Recompute relevant forward pass values
                     double magnitude = this.input1[i, j];
-                    double angle = this.input1[i, j + this.input1.Cols / 2];
+                    double angle = this.input1[i, j + (this.input1.Cols / 2)];
                     double wMagnitude = this.input2[i, j];
-                    double wAngle = this.input2[i, j + this.input2.Cols / 2];
+                    double wAngle = this.input2[i, j + (this.input2.Cols / 2)];
 
                     double x1 = magnitude * Math.Cos(angle);
                     double y1 = magnitude * Math.Sin(angle);
@@ -98,19 +98,19 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumx = x1 + x2;
                     double sumy = y1 + y2;
 
-                    double resultMagnitude = Math.Sqrt(sumx * sumx + sumy * sumy) * this.weights[i, j] * this.weights[i, j];
+                    double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * this.weights[i, j] * this.weights[i, j];
 
                     // Gradient for magnitude and weighted magnitude
-                    double dResultMagnitude_dMagnitude = (sumx * Math.Cos(angle) + sumy * Math.Sin(angle)) / resultMagnitude;
-                    double dResultMagnitude_dWMagnitude = (sumx * Math.Cos(wAngle) + sumy * Math.Sin(wAngle)) / resultMagnitude;
+                    double dResultMagnitude_dMagnitude = ((sumx * Math.Cos(angle)) + (sumy * Math.Sin(angle))) / resultMagnitude;
+                    double dResultMagnitude_dWMagnitude = ((sumx * Math.Cos(wAngle)) + (sumy * Math.Sin(wAngle))) / resultMagnitude;
                     dMagnitudesAngles[i, j] += dOutput[i, j] * dResultMagnitude_dMagnitude;
                     dWMagnitudesAngles[i, j] += dOutput[i, j] * dResultMagnitude_dWMagnitude;
 
                     // Gradient for angle and weighted angle
-                    double dResultMagnitude_dAngle = -magnitude * (sumx * Math.Sin(angle) - sumy * Math.Cos(angle)) / resultMagnitude;
-                    double dResultMagnitude_dWAngle = -wMagnitude * (sumx * Math.Sin(wAngle) - sumy * Math.Cos(wAngle)) / resultMagnitude;
-                    dMagnitudesAngles[i, j + this.input1.Cols / 2] += dOutput[i, j + this.input1.Cols / 2] * dResultMagnitude_dAngle;
-                    dWMagnitudesAngles[i, j + this.input2.Cols / 2] += dOutput[i, j + this.input2.Cols / 2] * dResultMagnitude_dWAngle;
+                    double dResultMagnitude_dAngle = -magnitude * ((sumx * Math.Sin(angle)) - (sumy * Math.Cos(angle))) / resultMagnitude;
+                    double dResultMagnitude_dWAngle = -wMagnitude * ((sumx * Math.Sin(wAngle)) - (sumy * Math.Cos(wAngle))) / resultMagnitude;
+                    dMagnitudesAngles[i, j + (this.input1.Cols / 2)] += dOutput[i, j + (this.input1.Cols / 2)] * dResultMagnitude_dAngle;
+                    dWMagnitudesAngles[i, j + (this.input2.Cols / 2)] += dOutput[i, j + (this.input2.Cols / 2)] * dResultMagnitude_dWAngle;
 
                     // Gradient for weights
                     double dResultMagnitude_dWeight = resultMagnitude * 2 * weights[i, j];

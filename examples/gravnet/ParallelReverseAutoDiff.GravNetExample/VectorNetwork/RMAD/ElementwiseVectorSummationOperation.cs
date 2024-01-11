@@ -18,6 +18,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix weights;
         private double[] summationX;
         private double[] summationY;
+        private CalculatedValues[,] calculatedValues;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -44,6 +45,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
             this.Output = new Matrix(1, 2);
 
+            this.calculatedValues = new CalculatedValues[this.input1.Rows, this.input1.Cols / 2];
+
             double[] summationX = new double[input1.Rows];
             double[] summationY = new double[input1.Rows];
             Parallel.For(0, input1.Rows, i =>
@@ -54,10 +57,10 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     // Accessing the magnitudes and angles from the concatenated matrices
                     double magnitude = input1[i, j];
-                    double angle = input1[i, j + input1.Cols / 2];
+                    double angle = input1[i, j + (input1.Cols / 2)];
 
                     double wMagnitude = input2[i, j];
-                    double wAngle = input2[i, j + input2.Cols / 2];
+                    double wAngle = input2[i, j + (input2.Cols / 2)];
 
                     // Compute vector components
                     double x1 = magnitude * Math.Cos(angle);
@@ -74,6 +77,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     sumX += resultMagnitude * Math.Cos(resultAngle);
                     sumY += resultMagnitude * Math.Sin(resultAngle);
+
+                    this.CalculateAndStoreValues(i, j);
                 }
 
                 summationX[i] = sumX;
@@ -102,46 +107,31 @@ namespace ParallelReverseAutoDiff.RMAD
             double sumX = summationX.Sum();
             double sumY = summationY.Sum();
 
+            double sumXSquared = sumX * sumX;
+            double sumYSquared = sumY * sumY;
+
+            double combinedSquares = sumXSquared + sumYSquared;
+
             // Gradients for output magnitude
-            double dResultMagnitude_dSumX = sumX / Math.Sqrt(sumX * sumX + sumY * sumY);
-            double dResultMagnitude_dSumY = sumY / Math.Sqrt(sumX * sumX + sumY * sumY);
+            double dResultMagnitude_dSumX = sumX / Math.Sqrt(combinedSquares);
+            double dResultMagnitude_dSumY = sumY / Math.Sqrt(combinedSquares);
 
             // Gradients for output angle
-            double dResultAngle_dSumX = -sumY / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
-            double dResultAngle_dSumY = sumX / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
+            double dResultAngle_dSumX = -sumY / combinedSquares;
+            double dResultAngle_dSumY = sumX / combinedSquares;
 
             double dMagnitudeOutput = dOutput[0, 0]; // Gradient of the loss function with respect to the output magnitude
             double dAngleOutput = dOutput[0, 1];     // Gradient of the loss function with respect to the output angle
 
             // Partial derivatives of atan2 for the aggregated sumX and sumY
-            double dAtan2_dX = -sumY / (sumX * sumX + sumY * sumY);
-            double dAtan2_dY = sumX / (sumX * sumX + sumY * sumY);
+            double dAtan2_dX = dResultAngle_dSumX;
+            double dAtan2_dY = dResultAngle_dSumY;
 
             // Updating gradients with respect to resultMagnitude and resultAngle
-            for (int i = 0; i < input1.Rows; i++)
+            Parallel.For(0, this.input1.Rows, i =>
             {
-                for (int j = 0; j < input1.Cols / 2; j++)
+                for (int j = 0; j < this.input1.Cols / 2; j++)
                 {
-                    double magnitude = input1[i, j];
-                    double angle = input1[i, j + input1.Cols / 2];
-                    double wMagnitude = input2[i, j];
-                    double wAngle = input2[i, j + input2.Cols / 2];
-
-                    double x1 = magnitude * Math.Cos(angle);
-                    double y1 = magnitude * Math.Sin(angle);
-                    double x2 = wMagnitude * Math.Cos(wAngle);
-                    double y2 = wMagnitude * Math.Sin(wAngle);
-
-                    double sumx = x1 + x2;
-                    double sumy = y1 + y2;
-
-                    // Compute derivatives for magnitude
-                    double dResultMagnitudeLocal_dX1 = 2 * sumx * x1 * weights[i, j] * weights[i, j];
-                    double dResultMagnitudeLocal_dY1 = 2 * sumy * y1 * weights[i, j] * weights[i, j];
-
-                    double dResultMagnitudeLocal_dX2 = 2 * sumx * x2 * weights[i, j] * weights[i, j];
-                    double dResultMagnitudeLocal_dY2 = 2 * sumy * y2 * weights[i, j] * weights[i, j];
-
                     // Compute derivatives for angle
                     double dResultAngle_dX1 = -dResultAngle_dSumX;
                     double dResultAngle_dY1 = dResultAngle_dSumY;
@@ -150,32 +140,69 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dResultAngle_dY2 = dResultAngle_dSumY;
 
                     // Apply chain rule to propagate back to input1, input2, and weights
-                    dInput1[i, j] += (dMagnitudeOutput * dResultMagnitude_dSumX * dResultMagnitudeLocal_dX1) + (dAngleOutput * dResultAngle_dX1);
-                    dInput1[i, j + (this.input1.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * dResultMagnitudeLocal_dY1) + (dAngleOutput * dResultAngle_dY1);
+                    dInput1[i, j] += (dMagnitudeOutput * dResultMagnitude_dSumX * this.calculatedValues[i, j].DResultMagnitudeLocalDX1) + (dAngleOutput * dResultAngle_dX1);
+                    dInput1[i, j + (this.input1.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * this.calculatedValues[i, j].DResultMagnitudeLocalDY1) + (dAngleOutput * dResultAngle_dY1);
 
-                    dInput2[i, j] += (dMagnitudeOutput * dResultMagnitude_dSumX * dResultMagnitudeLocal_dX2) + (dAngleOutput * dResultAngle_dX2);
-                    dInput2[i, j + (this.input2.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * dResultMagnitudeLocal_dY2) + (dAngleOutput * dResultAngle_dY2);
-
-                    double combinedMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy));
-
-                    // Compute how changes in weights affect sumX and sumY
-                    double dSumX_dWeight = 2 * this.weights[i, j] * sumx * combinedMagnitude;
-                    double dSumY_dWeight = 2 * this.weights[i, j] * sumy * combinedMagnitude;
+                    dInput2[i, j] += (dMagnitudeOutput * dResultMagnitude_dSumX * this.calculatedValues[i, j].DResultMagnitudeLocalDX2) + (dAngleOutput * dResultAngle_dX2);
+                    dInput2[i, j + (this.input2.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * this.calculatedValues[i, j].DResultMagnitudeLocalDY2) + (dAngleOutput * dResultAngle_dY2);
 
                     // Apply the chain rule to calculate the gradient of resultAngle with respect to the weight
-                    double dResultAngle_dWeight = (dAtan2_dX * dSumX_dWeight) + (dAtan2_dY * dSumY_dWeight);
+                    double dResultAngle_dWeight = (dAtan2_dX * this.calculatedValues[i, j].DSumXDWeight) + (dAtan2_dY * this.calculatedValues[i, j].DSumYDWeight);
 
                     // Update dWeights with contributions from both magnitude and angle
-                    dWeights[i, j] += dMagnitudeOutput * (2 * this.weights[i, j] * Math.Sqrt((sumx * sumx) + (sumy * sumy))); // Contribution from magnitude
+                    dWeights[i, j] += dMagnitudeOutput * (2 * this.weights[i, j] * this.calculatedValues[i, j].CombinedMagnitude); // Contribution from magnitude
                     dWeights[i, j] += dAngleOutput * dResultAngle_dWeight;                                     // Contribution from angle
                 }
-            }
+            });
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dInput1)
                 .AddInputGradient(dInput2)
                 .AddInputGradient(dWeights)
                 .Build();
+        }
+
+        private struct CalculatedValues
+        {
+            public double CombinedMagnitude;
+
+            public double DResultMagnitudeLocalDX1;
+            public double DResultMagnitudeLocalDY1;
+
+            public double DResultMagnitudeLocalDX2;
+            public double DResultMagnitudeLocalDY2;
+
+            public double DSumXDWeight;
+            public double DSumYDWeight;
+        }
+
+        private void CalculateAndStoreValues(int i, int j)
+        {
+            // Calculate and store values
+            CalculatedValues values;
+            var magnitude = this.input1[i, j];
+            var angle = this.input1[i, j + (this.input1.Cols / 2)];
+            var wMagnitude = this.input2[i, j];
+            var wAngle = this.input2[i, j + (this.input2.Cols / 2)];
+
+            var x1 = magnitude * Math.Cos(angle);
+            var y1 = magnitude * Math.Sin(angle);
+            var x2 = wMagnitude * Math.Cos(wAngle);
+            var y2 = wMagnitude * Math.Sin(wAngle);
+
+            var combinedX = x1 + x2;
+            var combinedY = y1 + y2;
+            var weightsSquared = this.weights[i, j] * this.weights[i, j];
+
+            values.CombinedMagnitude = Math.Sqrt((combinedX * combinedX) + (combinedY * combinedY));
+            values.DResultMagnitudeLocalDX1 = 2 * combinedX * x1 * weightsSquared;
+            values.DResultMagnitudeLocalDY1 = 2 * combinedY * y1 * weightsSquared;
+            values.DResultMagnitudeLocalDX2 = 2 * combinedX * x2 * weightsSquared;
+            values.DResultMagnitudeLocalDY2 = 2 * combinedY * y2 * weightsSquared;
+            values.DSumXDWeight = 2 * this.weights[i, j] * combinedX * values.CombinedMagnitude;
+            values.DSumYDWeight = 2 * this.weights[i, j] * combinedY * values.CombinedMagnitude;
+
+            this.calculatedValues[i, j] = values;
         }
     }
 }
