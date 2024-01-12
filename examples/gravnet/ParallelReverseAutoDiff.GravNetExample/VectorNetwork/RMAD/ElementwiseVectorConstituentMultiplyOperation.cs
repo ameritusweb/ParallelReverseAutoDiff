@@ -126,56 +126,43 @@ namespace ParallelReverseAutoDiff.RMAD
                         // Combined magnitude and angle as in the forward pass
                         double combinedMagnitude = Math.Sqrt(deltax * deltax + deltay * deltay);
 
-                        // Calculate intermediate derivatives for combinedMagnitude and combinedAngle
-                        // Derivatives for combinedMagnitude
-                        double dCombinedMagnitude_dX1 = (weights[k, j] > 0 ? -1 : 1) * deltax / combinedMagnitude;
-                        double dCombinedMagnitude_dY1 = (weights[k, j] > 0 ? -1 : 1) * deltay / combinedMagnitude;
-                        double dCombinedMagnitude_dX2 = (weights[k, j] > 0 ? 1 : -1) * deltax / combinedMagnitude;
-                        double dCombinedMagnitude_dY2 = (weights[k, j] > 0 ? 1 : -1) * deltay / combinedMagnitude;
+                        double dSumX_dDeltaX = 0d; // empirically determined, set to 0 for now
+                        double dSumY_dDeltaY = 0d; // empirically determined, set to 0 for now
 
-                        // Derivatives for combinedAngle
-                        double dCombinedAngle_dX1 = (weights[k, j] > 0 ? -1 : 1) * (-deltay / (deltax * deltax + deltay * deltay));
-                        double dCombinedAngle_dY1 = (weights[k, j] > 0 ? -1 : 1) * (deltax / (deltax * deltax + deltay * deltay));
-                        double dCombinedAngle_dX2 = (weights[k, j] > 0 ? 1 : -1) * (-deltay / (deltax * deltax + deltay * deltay));
-                        double dCombinedAngle_dY2 = (weights[k, j] > 0 ? 1 : -1) * (deltax / (deltax * deltax + deltay * deltay));
+                        // Derivatives of delta components with respect to inputs
+                        double dDeltaX_dX1 = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign
+                        double dDeltaY_dY1 = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign
+                        double dDeltaX_dX2 = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
+                        double dDeltaY_dY2 = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
 
-                        double dX1_dMagnitude = Math.Cos(angle);
-                        double dY1_dMagnitude = Math.Sin(angle);
-                        double dX1_dAngle = -magnitude * Math.Sin(angle);
-                        double dY1_dAngle = magnitude * Math.Cos(angle);
+                        // Analytically determined gradients for combined magnitude
+                        double dCombinedMagnitude_dSumX = this.sumX[i, j] / Math.Sqrt(this.sumX[i, j] * this.sumX[i, j] + this.sumY[i, j] * this.sumY[i, j]);
+                        double dCombinedMagnitude_dSumY = this.sumY[i, j] / Math.Sqrt(this.sumX[i, j] * this.sumX[i, j] + this.sumY[i, j] * this.sumY[i, j]);
 
-                        double dX2_dWMagnitude = Math.Cos(wAngle);
-                        double dY2_dWMagnitude = Math.Sin(wAngle);
-                        double dX2_dWAngle = -wMagnitude * Math.Sin(wAngle);
-                        double dY2_dWAngle = wMagnitude * Math.Cos(wAngle);
+                        double dCombinedAngle_dSumX = -deltay / (deltax * deltax + deltay * deltay);
+                        double dCombinedAngle_dSumY = deltax / (deltax * deltax + deltay * deltay);
 
-                        dInput1[i, j] += dOutput[i, j] * dCombinedMagnitude_dX1 * dX1_dMagnitude + dOutput[i, j + input1.Cols / 2] * dCombinedAngle_dX1 * dX1_dAngle;
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY1 * dY1_dMagnitude + dOutput[i, j + input1.Cols / 2] * dCombinedAngle_dY1 * dY1_dAngle;
+                        // Apply chain rule for dInput1
+                        dInput1[i, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 + dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1);
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 + dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1);
 
-                        dInput2[k, j] += dOutput[i, j] * dCombinedMagnitude_dX2 * dX2_dWMagnitude + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dX2 * dX2_dWAngle;
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY2 * dY2_dWMagnitude + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dY2 * dY2_dWAngle;
+                        // Apply chain rule for dInput2
+                        dInput2[k, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 + dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2);
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 + dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2);
 
-                        double dSumX_dWeight = 0.0;
-                        double dSumY_dWeight = 0.0;
-                        for (int l = 0; l < input2.Rows / 2; l++)
-                        {
-                            double deltaXComponent = input1[i, l] * Math.Cos(input1[i, l + input1.Cols / 2]) - input2[l, k] * Math.Cos(input2[l, k + input2.Cols / 2]);
-                            double deltaYComponent = input1[i, l] * Math.Sin(input1[i, l + input1.Cols / 2]) - input2[l, k] * Math.Sin(input2[l, k + input2.Cols / 2]);
+                        // Derivatives of delta components with respect to weight
+                        double dDeltaX_dWeight = (weights[k, j] > 0) ? (x2 - x1) : (x1 - x2);
+                        double dDeltaY_dWeight = (weights[k, j] > 0) ? (y2 - y1) : (y1 - y2);
 
-                            dSumX_dWeight += weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaXComponent;
-                            dSumY_dWeight += weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaYComponent;
-                        }
+                        // Apply chain rule for weights for magnitude and angle
+                        dWeights[k, j] += dOutput[i, j] *
+                                          (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
+                                           dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dWeight);
 
-                        double sumX = this.sumX[i, j];
-                        double sumY = this.sumY[i, j];
-                        double dMagnitude_dSumX = sumX / Math.Sqrt(sumX * sumX + sumY * sumY);
-                        double dMagnitude_dSumY = sumY / Math.Sqrt(sumX * sumX + sumY * sumY);
-                        double dAngle_dSumX = -sumY / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
-                        double dAngle_dSumY = sumX / (Math.Pow(sumX, 2) + Math.Pow(sumY, 2));
+                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] *
+                                          (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
+                                           dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight);
 
-                        // Apply chain rule for weights
-                        dWeights[k, j] += dOutput[i, j] * (dMagnitude_dSumX * dSumX_dWeight + dMagnitude_dSumY * dSumY_dWeight);
-                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (dAngle_dSumX * dSumX_dWeight + dAngle_dSumY * dSumY_dWeight);
                     }
                 }
             });
