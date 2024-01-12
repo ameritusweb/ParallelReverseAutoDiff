@@ -72,7 +72,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumy = y1 + y2;
 
                     // Compute resultant vector magnitude and angle
-                    double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * weights[i, j];
+                    double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
                     double resultAngle = Math.Atan2(sumy, sumx);
 
                     sumX += resultMagnitude * Math.Cos(resultAngle);
@@ -147,10 +147,12 @@ namespace ParallelReverseAutoDiff.RMAD
                     dInput2[i, j + (this.input2.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * this.calculatedValues[i, j].DResultMagnitudeLocalDY2) + (dAngleOutput * dResultAngle_dY2);
 
                     // Apply the chain rule to calculate the gradient of resultAngle with respect to the weight
-                    double dResultAngle_dWeight = (dAtan2_dX * this.calculatedValues[i, j].DSumXDWeight) + (dAtan2_dY * this.calculatedValues[i, j].DSumYDWeight);
+                    double dResultAngle_dWeightX = dAtan2_dX * this.calculatedValues[i, j].DSumXDWeight;
+                    double dResultAngle_dWeightY = dAtan2_dY * this.calculatedValues[i, j].DSumYDWeight;
+                    double dResultAngle_dWeight = dResultAngle_dWeightX + dResultAngle_dWeightY;
 
                     // Update dWeights with contributions from both magnitude and angle
-                    dWeights[i, j] += dMagnitudeOutput * (2 * this.weights[i, j] * this.calculatedValues[i, j].CombinedMagnitude); // Contribution from magnitude
+                    dWeights[i, j] += dMagnitudeOutput * (this.weights[i, j] * this.calculatedValues[i, j].CombinedMagnitude); // Contribution from magnitude
                     dWeights[i, j] += dAngleOutput * dResultAngle_dWeight;                                     // Contribution from angle
                 }
             });
@@ -160,20 +162,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 .AddInputGradient(dInput2)
                 .AddInputGradient(dWeights)
                 .Build();
-        }
-
-        private struct CalculatedValues
-        {
-            public double CombinedMagnitude;
-
-            public double DResultMagnitudeLocalDX1;
-            public double DResultMagnitudeLocalDY1;
-
-            public double DResultMagnitudeLocalDX2;
-            public double DResultMagnitudeLocalDY2;
-
-            public double DSumXDWeight;
-            public double DSumYDWeight;
         }
 
         private void CalculateAndStoreValues(int i, int j)
@@ -192,17 +180,30 @@ namespace ParallelReverseAutoDiff.RMAD
 
             var combinedX = x1 + x2;
             var combinedY = y1 + y2;
-            var weightsSquared = this.weights[i, j] * this.weights[i, j];
 
             values.CombinedMagnitude = Math.Sqrt((combinedX * combinedX) + (combinedY * combinedY));
-            values.DResultMagnitudeLocalDX1 = 2 * combinedX * x1 * weightsSquared;
-            values.DResultMagnitudeLocalDY1 = 2 * combinedY * y1 * weightsSquared;
-            values.DResultMagnitudeLocalDX2 = 2 * combinedX * x2 * weightsSquared;
-            values.DResultMagnitudeLocalDY2 = 2 * combinedY * y2 * weightsSquared;
-            values.DSumXDWeight = 2 * this.weights[i, j] * combinedX * values.CombinedMagnitude;
-            values.DSumYDWeight = 2 * this.weights[i, j] * combinedY * values.CombinedMagnitude;
+            values.DResultMagnitudeLocalDX1 = combinedX * x1 * this.weights[i, j];
+            values.DResultMagnitudeLocalDY1 = combinedY * y1 * this.weights[i, j];
+            values.DResultMagnitudeLocalDX2 = combinedX * x2 * this.weights[i, j];
+            values.DResultMagnitudeLocalDY2 = combinedY * y2 * this.weights[i, j];
+            values.DSumXDWeight = this.weights[i, j] * combinedX * values.CombinedMagnitude;
+            values.DSumYDWeight = this.weights[i, j] * combinedY * values.CombinedMagnitude;
 
             this.calculatedValues[i, j] = values;
+        }
+
+        private struct CalculatedValues
+        {
+            public double CombinedMagnitude;
+
+            public double DResultMagnitudeLocalDX1;
+            public double DResultMagnitudeLocalDY1;
+
+            public double DResultMagnitudeLocalDX2;
+            public double DResultMagnitudeLocalDY2;
+
+            public double DSumXDWeight;
+            public double DSumYDWeight;
         }
     }
 }

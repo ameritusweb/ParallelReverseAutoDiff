@@ -72,7 +72,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         double deltay = weights[k, j] > 0 ? y2 - y1 : y1 - y2;
 
                         // Compute resultant vector magnitude and angle
-                        double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j] * weights[k, j];
+                        double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
                         double resultAngle = Math.Atan2(deltay, deltax);
 
                         sumX += resultMagnitude * Math.Cos(resultAngle);
@@ -99,10 +99,10 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
 
             // Loop through each element in input1
-            for (int i = 0; i < input1.Rows; i++)
+            Parallel.For(0, input1.Rows, i =>
             {
                 // Loop through each half of the columns in input1 (representing magnitudes and angles)
-                for (int j = 0; j < input1.Cols / 2; j++)
+                for (int j = 0; j < input2.Cols / 2; j++)
                 {
                     // Nested loop for each element in input2
                     for (int k = 0; k < input2.Rows / 2; k++)
@@ -155,7 +155,6 @@ namespace ParallelReverseAutoDiff.RMAD
                         dInput2[k, j] += dOutput[i, j] * dCombinedMagnitude_dX2 * dX2_dWMagnitude + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dX2 * dX2_dWAngle;
                         dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * dCombinedMagnitude_dY2 * dY2_dWMagnitude + dOutput[i, j + input2.Cols / 2] * dCombinedAngle_dY2 * dY2_dWAngle;
 
-                        // Calculate dSumX_dWeight and dSumY_dWeight considering quadratic scaling
                         double dSumX_dWeight = 0.0;
                         double dSumY_dWeight = 0.0;
                         for (int l = 0; l < input2.Rows / 2; l++)
@@ -163,8 +162,8 @@ namespace ParallelReverseAutoDiff.RMAD
                             double deltaXComponent = input1[i, l] * Math.Cos(input1[i, l + input1.Cols / 2]) - input2[l, k] * Math.Cos(input2[l, k + input2.Cols / 2]);
                             double deltaYComponent = input1[i, l] * Math.Sin(input1[i, l + input1.Cols / 2]) - input2[l, k] * Math.Sin(input2[l, k + input2.Cols / 2]);
 
-                            dSumX_dWeight += 2 * weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaXComponent;
-                            dSumY_dWeight += 2 * weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaYComponent;
+                            dSumX_dWeight += weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaXComponent;
+                            dSumY_dWeight += weights[k, j] * Math.Sqrt(deltaXComponent * deltaXComponent + deltaYComponent * deltaYComponent) * deltaYComponent;
                         }
 
                         double sumX = this.sumX[i, j];
@@ -179,7 +178,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (dAngle_dSumX * dSumX_dWeight + dAngle_dSumY * dSumY_dWeight);
                     }
                 }
-            }
+            });
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dInput1)
