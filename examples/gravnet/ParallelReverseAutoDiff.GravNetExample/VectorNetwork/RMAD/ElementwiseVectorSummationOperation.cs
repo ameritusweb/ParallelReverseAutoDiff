@@ -132,28 +132,35 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < this.input1.Cols / 2; j++)
                 {
-                    // Compute derivatives for angle
-                    double dResultAngle_dX1 = -dResultAngle_dSumX;
-                    double dResultAngle_dY1 = dResultAngle_dSumY;
+                    // Empirically determined derivatives
+                    double dSumX_dLocalizedResultMagnitude = 0d; // Calculated empirically, but set to 0 for now
+                    double dSumY_dLocalizedResultMagnitude = 0d; // Calculated empirically, but set to 0 for now
 
-                    double dResultAngle_dX2 = -dResultAngle_dSumX;
-                    double dResultAngle_dY2 = dResultAngle_dSumY;
+                    // Chain with calculated derivatives for overall magnitude
+                    double dMagnitude_dWeight =
+                        (dSumX_dLocalizedResultMagnitude * dResultMagnitude_dSumX +
+                         dSumY_dLocalizedResultMagnitude * dResultMagnitude_dSumY) * this.weights[i, j];
 
-                    // Apply chain rule to propagate back to input1, input2, and weights
-                    dInput1[i, j] += (dMagnitudeOutput * dResultMagnitude_dSumX * this.calculatedValues[i, j].DResultMagnitudeLocalDX1) + (dAngleOutput * dResultAngle_dX1);
-                    dInput1[i, j + (this.input1.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * this.calculatedValues[i, j].DResultMagnitudeLocalDY1) + (dAngleOutput * dResultAngle_dY1);
+                    // Update dWeights with contributions from magnitude
+                    dWeights[i, j] += dMagnitudeOutput * dMagnitude_dWeight;
 
-                    dInput2[i, j] += (dMagnitudeOutput * dResultMagnitude_dSumX * this.calculatedValues[i, j].DResultMagnitudeLocalDX2) + (dAngleOutput * dResultAngle_dX2);
-                    dInput2[i, j + (this.input2.Cols / 2)] += (dMagnitudeOutput * dResultMagnitude_dSumY * this.calculatedValues[i, j].DResultMagnitudeLocalDY2) + (dAngleOutput * dResultAngle_dY2);
+                    // Chain rule for the angle contribution
+                    double dLocalizedResultMagnitude_dWeightX = this.calculatedValues[i, j].DResultMagnitudeLocalDX1 * this.weights[i, j]; // For X
+                    double dLocalizedResultMagnitude_dWeightY = this.calculatedValues[i, j].DResultMagnitudeLocalDY1 * this.weights[i, j]; // For Y
 
-                    // Apply the chain rule to calculate the gradient of resultAngle with respect to the weight
-                    double dResultAngle_dWeightX = dAtan2_dX * this.calculatedValues[i, j].DSumXDWeight;
-                    double dResultAngle_dWeightY = dAtan2_dY * this.calculatedValues[i, j].DSumYDWeight;
+                    double dResultAngle_dWeightX = dResultAngle_dSumX * dSumX_dLocalizedResultMagnitude * dLocalizedResultMagnitude_dWeightX;
+                    double dResultAngle_dWeightY = dResultAngle_dSumY * dSumY_dLocalizedResultMagnitude * dLocalizedResultMagnitude_dWeightY;
                     double dResultAngle_dWeight = dResultAngle_dWeightX + dResultAngle_dWeightY;
 
-                    // Update dWeights with contributions from both magnitude and angle
-                    dWeights[i, j] += dMagnitudeOutput * (this.weights[i, j] * this.calculatedValues[i, j].CombinedMagnitude); // Contribution from magnitude
-                    dWeights[i, j] += dAngleOutput * dResultAngle_dWeight;                                     // Contribution from angle
+                    // Update dWeights with contributions from angle
+                    dWeights[i, j] += dAngleOutput * dResultAngle_dWeight;
+
+                    // Apply chain rule to propagate back to dInput1 and dInput2
+                    dInput1[i, j] += dMagnitudeOutput * dResultMagnitude_dSumX * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX1;
+                    dInput1[i, j + (this.input1.Cols / 2)] += dMagnitudeOutput * dResultMagnitude_dSumY * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY1;
+
+                    dInput2[i, j] += dMagnitudeOutput * dResultMagnitude_dSumX * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX2;
+                    dInput2[i, j + (this.input2.Cols / 2)] += dMagnitudeOutput * dResultMagnitude_dSumY * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY2;                                   // Contribution from angle
                 }
             });
 
@@ -181,29 +188,20 @@ namespace ParallelReverseAutoDiff.RMAD
             var combinedX = x1 + x2;
             var combinedY = y1 + y2;
 
-            values.CombinedMagnitude = Math.Sqrt((combinedX * combinedX) + (combinedY * combinedY));
             values.DResultMagnitudeLocalDX1 = combinedX * x1 * this.weights[i, j];
             values.DResultMagnitudeLocalDY1 = combinedY * y1 * this.weights[i, j];
             values.DResultMagnitudeLocalDX2 = combinedX * x2 * this.weights[i, j];
             values.DResultMagnitudeLocalDY2 = combinedY * y2 * this.weights[i, j];
-            values.DSumXDWeight = this.weights[i, j] * combinedX * values.CombinedMagnitude;
-            values.DSumYDWeight = this.weights[i, j] * combinedY * values.CombinedMagnitude;
 
             this.calculatedValues[i, j] = values;
         }
 
         private struct CalculatedValues
         {
-            public double CombinedMagnitude;
-
             public double DResultMagnitudeLocalDX1;
             public double DResultMagnitudeLocalDY1;
-
             public double DResultMagnitudeLocalDX2;
             public double DResultMagnitudeLocalDY2;
-
-            public double DSumXDWeight;
-            public double DSumYDWeight;
         }
     }
 }
