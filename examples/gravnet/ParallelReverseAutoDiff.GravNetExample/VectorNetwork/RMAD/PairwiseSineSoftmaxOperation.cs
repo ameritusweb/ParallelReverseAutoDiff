@@ -67,14 +67,18 @@ namespace ParallelReverseAutoDiff.RMAD
                     double expSinA = Math.Exp(Math.Sin(a));
                     double expSinB = Math.Exp(Math.Sin(b));
 
-                    double g1 = (2 * expSinA) + expSinB;
-                    // double dSinSoftmaxj1 = ((expSinA * Math.Cos(a) * g1) - (expSinA * 2 * expSinA * Math.Cos(a))) / Math.Pow(g1, 2d);
-                    // double dSinSoftmaxj1 = (expSinA * Math.Cos(a)) * (g1 - (2 * expSinA)) / Math.Pow(g1, 2d);
-                    double dSinSoftmaxj1 = (expSinA * Math.Cos(a)) * expSinB / Math.Pow(g1, 2d);
-                    double g2 = expSinA + (2 * expSinB);
-                    // double dSinSoftmaxj2 = ((expSinB * Math.Cos(b) * g2) - (expSinB * 2 * expSinB * Math.Cos(b))) / Math.Pow(g2, 2d);
-                    // double dSinSoftmaxj2 = (expSinB * Math.Cos(b)) * (g2 - (2 * expSinB)) / Math.Pow(g2, 2d);
-                    double dSinSoftmaxj2 = (expSinB * Math.Cos(b)) * expSinA / Math.Pow(g2, 2d);
+                    double f1 = expSinA;
+                    double fPrime1 = Math.Cos(a) * expSinA;
+                    double g1 = expSinA + expSinB;
+                    double gPrime1 = Math.Cos(a) * expSinA;
+                    double dSinSoftmaxj1 = ((fPrime1 * g1) - (f1 * gPrime1)) / Math.Pow(g1, 2d);
+
+                    double f2 = expSinB;
+                    double fPrime2 = Math.Cos(b) * expSinB;
+                    double g2 = expSinA + expSinB;
+                    double gPrime2 = Math.Cos(b) * expSinB;
+                    double dSinSoftmaxj2 = ((fPrime2 * g2) - (f2 * gPrime2)) / Math.Pow(g2, 2d);
+
                     dLdInput[i][j] = dLdOutput[i][j] * dSinSoftmaxj1;
                     dLdInput[i][j + M] = dLdOutput[i][j + M] * dSinSoftmaxj2;
                 }
@@ -101,9 +105,9 @@ namespace ParallelReverseAutoDiff.RMAD
                     double b = input[i, j + M];
                     double sumExp = Math.Exp(Math.Sin(a)) + Math.Exp(Math.Sin(b));
                     double numerator1 = Math.Exp(Math.Sin(a));
-                    output[i, j] = numerator1 / (sumExp + numerator1);
+                    output[i, j] = numerator1 / sumExp;
                     double numerator2 = Math.Exp(Math.Sin(b));
-                    output[i, j + M] = numerator2 / (sumExp + numerator2);
+                    output[i, j + M] = numerator2 / sumExp;
                 }
             }
 
