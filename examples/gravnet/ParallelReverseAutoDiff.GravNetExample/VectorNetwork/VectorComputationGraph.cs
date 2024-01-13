@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.GravNetExample.VectorNetwork
 {
     using ParallelReverseAutoDiff.RMAD;
+    using System;
 
     public class VectorComputationGraph : ComputationGraph
     {
@@ -26,6 +27,19 @@ namespace ParallelReverseAutoDiff.GravNetExample.VectorNetwork
         protected override void DependenciesSetup(IOperationBase operation, LayerInfo layerInfo)
         {
             base.DependenciesSetup(operation, layerInfo);
+        }
+
+        protected override Type TypeRetrieved(string type)
+        {
+            var aa = base.TypeRetrieved(type);
+            var actualType = Type.GetType("ParallelReverseAutoDiff.RMAD." + type);
+            if (actualType == null)
+            {
+                return aa;
+            } else
+            {
+                return actualType;
+            }
         }
     }
 }

@@ -31,12 +31,16 @@
 
             int numInputOutputFeatures = this.NumFeatures;
             var inputLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("Angles", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
                 .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("WeightVectors2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("Weights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("Weights2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("Keys", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("Queries", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("QB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("SummationWeights", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier);
             var inputLayer = inputLayerBuilder.Build();
             this.inputLayer = inputLayer;
 
@@ -148,7 +152,7 @@
                     parameters[0] = new DeepMatrix(matrixArray);
                 }
 
-                if (op.Id == "output")
+                if (op.Id == "vector_attention")
                 {
 
                 }
@@ -164,7 +168,11 @@
                 var deepOutput = op.GetDeepOutput();
                 if (output != null)
                 {
-                    if (op.Id == "output")
+                    if (op.Id == "vector_softmax")
+                    {
+
+                    }
+                    if (op.Id == "vector_queries_act")
                     {
 
                     }
@@ -248,8 +256,8 @@
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
-            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures).ToArray());
+            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
+            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
 
             if (this.Output == null)
             {
@@ -285,6 +293,9 @@
         /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
+            var angles = this.inputLayer.WeightMatrix("Angles");
+            var anglesGradient = this.inputLayer.GradientMatrix("Angles");
+
             var weightVectors = this.inputLayer.WeightMatrix("WeightVectors");
             var weightVectorsGradient = this.inputLayer.GradientMatrix("WeightVectors");
 
@@ -303,19 +314,32 @@
             var kb = this.inputLayer.WeightMatrix("KB");
             var kbGradient = this.inputLayer.GradientMatrix("KB");
 
+            var queries = this.inputLayer.WeightMatrix("Queries");
+            var queriesGradient = this.inputLayer.GradientMatrix("Queries");
+
+            var qb = this.inputLayer.WeightMatrix("QB");
+            var qbGradient = this.inputLayer.GradientMatrix("QB");
+
+            var summationWeights = this.inputLayer.WeightMatrix("SummationWeights");
+            var summationWeightsGradient = this.inputLayer.GradientMatrix("SummationWeights");
+
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new VectorComputationGraph(this);
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
+                .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
                 .AddWeight("WeightVectors", x => weightVectors).AddGradient("DWeightVectors", x => weightVectors)
                 .AddWeight("WeightVectors2", x => weightVectors2).AddGradient("DWeightVectors2", x => weightVectors2)
                 .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
                 .AddWeight("Weights2", x => weights2).AddGradient("DWeights2", x => weights2Gradient)
                 .AddWeight("Keys", x => keys).AddGradient("DKeys", x => keysGradient)
                 .AddWeight("KB", x => kb).AddGradient("DKB", x => kbGradient)
-                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumLayers);
+                .AddWeight("Queries", x => queries).AddGradient("DQueries", x => queriesGradient)
+                .AddWeight("QB", x => qb).AddGradient("DQB", x => qbGradient)
+                .AddWeight("SummationWeights", x => summationWeights).AddGradient("DSummationWeights", x => summationWeightsGradient)
+                .ConstructFromArchitecture(jsonArchitecture);
 
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_0_0"];

@@ -43,7 +43,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.input2 = input2;
             this.weights = weights;
 
-            var Output = new Matrix(input1.Rows,input2.Cols);
+            this.Output = new Matrix(input1.Rows,input2.Cols);
             this.sumX = new Matrix(input1.Rows, input2.Cols / 2);
             this.sumY = new Matrix(input1.Rows, input2.Cols / 2);
             this.slopesX = new Matrix(input1.Rows, input2.Cols / 2);
@@ -117,7 +117,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            return Output;
+            return this.Output;
         }
 
         /// <inheritdoc />

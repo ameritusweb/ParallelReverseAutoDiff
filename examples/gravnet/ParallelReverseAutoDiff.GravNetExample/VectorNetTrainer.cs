@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         public async Task Train()
         {
             CudaBlas.Instance.Initialize();
-            VectorNet net = new VectorNet(17, 223, 3, 0.0002d, 4d);
+            VectorNet net = new VectorNet(17, 446, 3, 0.0002d, 4d);
             await net.Initialize();
 
             var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
