@@ -10,8 +10,6 @@
         private const string ARCHITECTURE = "vectornet";
 
         private readonly IModelLayer inputLayer;
-        private readonly List<IModelLayer> nestedLayers;
-        private readonly IModelLayer outputLayer;
 
         private VectorComputationGraph computationGraph;
 
@@ -33,34 +31,14 @@
 
             int numInputOutputFeatures = this.NumFeatures;
             var inputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("StartWeights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("StartDistances", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("DivisorMatrix", new[] { 1, 1 }, InitializationType.Xavier)
-                .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier);
+                .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("WeightVectors2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("Weights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("Weights2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("Keys", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier)
             var inputLayer = inputLayerBuilder.Build();
             this.inputLayer = inputLayer;
-
-            this.nestedLayers = new List<IModelLayer>();
-            int numNestedOutputFeatures = this.NumFeatures;
-            for (int i = 0; i < this.NumLayers; ++i)
-            {
-                var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("HiddenDistances", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("HiddenDivisorMatrix", new[] { 1, 1 }, InitializationType.Xavier)
-                    .AddModelElementGroup("QB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier);
-                var nestedLayer = nestedLayerBuilder.Build();
-                this.nestedLayers.Add(nestedLayer);
-            }
-
-            int numOutputFeatures = this.NumFeatures;
-            var outputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("FW", new[] { numOutputFeatures, numOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("FB", new[] { 1, numOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("F2W", new[] { numOutputFeatures, numOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("F2B", new[] { 1, numOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("Beta", new[] { 1, 1 }, InitializationType.He);
-            var outputLayer = outputLayerBuilder.Build();
-            this.outputLayer = outputLayer;
 
             this.InitializeState();
         }
@@ -87,7 +65,7 @@
         {
             get
             {
-                return (new IModelLayer[] { this.inputLayer }).Concat(this.nestedLayers).Append(this.outputLayer);
+                return (new IModelLayer[] { this.inputLayer });
             }
         }
 
@@ -255,13 +233,13 @@
                 opVisitor.Reset();
             }
 
-            IOperationBase? backwardEndOperation = this.computationGraph["node_features_transform_0_0"];
-            if (backwardEndOperation.CalculatedGradient[1] == null)
+            IOperationBase? backwardEndOperation = this.computationGraph["weight_vectors_square_0_0"];
+            if (backwardEndOperation.CalculatedGradient[0] == null)
             {
                 return gradient;
             }
 
-            return backwardEndOperation.CalculatedGradient[1] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
+            return backwardEndOperation.CalculatedGradient[0] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
         }
 
         /// <summary>
@@ -307,54 +285,23 @@
         /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
-            var startWeights = this.inputLayer.WeightMatrix("StartWeights");
-            var startWeightsGradient = this.inputLayer.GradientMatrix("StartWeights");
+            var weightVectors = this.inputLayer.WeightMatrix("WeightVectors");
+            var weightVectorsGradient = this.inputLayer.GradientMatrix("WeightVectors");
 
-            var startDistances = this.inputLayer.WeightMatrix("StartDistances");
-            var startDistancesGradient = this.inputLayer.GradientMatrix("StartDistances");
+            var weightVectors2 = this.inputLayer.WeightMatrix("WeightVectors2");
+            var weightVectors2Gradient = this.inputLayer.GradientMatrix("WeightVectors2");
 
-            var divisorMatrix = this.inputLayer.WeightMatrix("DivisorMatrix");
-            var divisorMatrixGradient = this.inputLayer.GradientMatrix("DivisorMatrix");
+            var weights = this.inputLayer.WeightMatrix("Weights");
+            var weightsGradient = this.inputLayer.GradientMatrix("Weights");
+
+            var weights2 = this.inputLayer.WeightMatrix("Weights2");
+            var weights2Gradient = this.inputLayer.GradientMatrix("Weights2");
+
+            var keys = this.inputLayer.WeightMatrix("Keys");
+            var keysGradient = this.inputLayer.GradientMatrix("Keys");
 
             var kb = this.inputLayer.WeightMatrix("KB");
             var kbGradient = this.inputLayer.GradientMatrix("KB");
-
-            List<Matrix> hiddenDistances = new List<Matrix>();
-            List<Matrix> hiddenDivisorMatrix = new List<Matrix>();
-            List<Matrix> qb = new List<Matrix>();
-            for (int i = 0; i < this.NumLayers; ++i)
-            {
-                hiddenDistances.Add(this.nestedLayers[i].WeightMatrix("HiddenDistances"));
-                hiddenDivisorMatrix.Add(this.nestedLayers[i].WeightMatrix("HiddenDivisorMatrix"));
-                qb.Add(this.nestedLayers[i].WeightMatrix("QB"));
-            }
-
-            List<Matrix> hiddenDistancesGradient = new List<Matrix>();
-            List<Matrix> hiddenDivisorMatrixGradient = new List<Matrix>();
-            List<Matrix> qbGradient = new List<Matrix>();
-            for (int i = 0; i < this.NumLayers; ++i)
-            {
-                hiddenDistancesGradient.Add(this.nestedLayers[i].GradientMatrix("HiddenDistances"));
-                hiddenDivisorMatrixGradient.Add(this.nestedLayers[i].GradientMatrix("HiddenDivisorMatrix"));
-                qbGradient.Add(this.nestedLayers[i].GradientMatrix("QB"));
-            }
-
-            var fw = this.outputLayer.WeightMatrix("FW");
-            var fwGradient = this.outputLayer.GradientMatrix("FW");
-
-            var fb = this.outputLayer.WeightMatrix("FB");
-            var fbGradient = this.outputLayer.GradientMatrix("FB");
-
-            var f2w = this.outputLayer.WeightMatrix("F2W");
-            var f2wGradient = this.outputLayer.GradientMatrix("F2W");
-
-            var f2b = this.outputLayer.WeightMatrix("F2B");
-            var f2bGradient = this.outputLayer.GradientMatrix("F2B");
-
-            var beta = this.outputLayer.WeightMatrix("Beta");
-            var betaGradient = this.outputLayer.GradientMatrix("Beta");
-
-            double[] gravConsts = new double[] { 1.0d, 1.0d, 1.0d };
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
@@ -362,22 +309,12 @@
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
-                .AddScalar("GravConst", x => 1d)
-                .AddScalar("HiddenGravConst", x => gravConsts[x.Layer])
-                .AddWeight("StartWeights", x => startWeights).AddGradient("DStartWeights", x => startWeightsGradient)
-                .AddWeight("StartDistances", x => startDistances).AddGradient("DStartDistances", x => startDistancesGradient)
-                .AddWeight("DivisorMatrix", x => divisorMatrix).AddGradient("DDivisorMatrix", x => divisorMatrixGradient)
+                .AddWeight("WeightVectors", x => weightVectors).AddGradient("DWeightVectors", x => weightVectors)
+                .AddWeight("WeightVectors2", x => weightVectors2).AddGradient("DWeightVectors2", x => weightVectors2)
+                .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
+                .AddWeight("Weights2", x => weights2).AddGradient("DWeights2", x => weights2Gradient)
+                .AddWeight("Keys", x => keys).AddGradient("DKeys", x => keysGradient)
                 .AddWeight("KB", x => kb).AddGradient("DKB", x => kbGradient)
-                .AddWeight("HiddenDistances", x => hiddenDistances[x.Layer]).AddGradient("DHiddenDistances", x => hiddenDistancesGradient[x.Layer])
-                .AddWeight("HiddenDivisorMatrix", x => hiddenDivisorMatrix[x.Layer]).AddGradient("DHiddenDivisorMatrix", x => hiddenDivisorMatrixGradient[x.Layer])
-                .AddWeight("QB", x => qb[x.Layer]).AddGradient("DQB", x => qbGradient[x.Layer])
-                .AddWeight("FW", x => fw).AddGradient("DFW", x => fwGradient)
-                .AddWeight("FB", x => fb).AddGradient("DFB", x => fbGradient)
-                .AddWeight("F2W", x => f2w).AddGradient("DF2W", x => f2wGradient)
-                .AddWeight("F2B", x => f2b).AddGradient("DF2B", x => f2bGradient)
-                .AddWeight("Beta", x => beta).AddGradient("DBeta", x => betaGradient)
-                .AddOperationFinder("features_act_last", x => x.Layer == 0 ? this.computationGraph[$"features_act_0_0"] : this.computationGraph[$"hidden_act_0_{x.Layer - 1}"])
-                .AddOperationFinder("hidden_act_last", _ => this.computationGraph[$"hidden_act_0_{this.NumLayers - 1}"])
                 .ConstructFromArchitecture(jsonArchitecture, this.NumLayers, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;

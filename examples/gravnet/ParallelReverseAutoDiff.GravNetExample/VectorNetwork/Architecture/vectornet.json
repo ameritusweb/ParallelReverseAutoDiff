@@ -3,37 +3,76 @@
     {
       "startOperations": [
         {
-          "id": "input_square",
+          "id": "weight_vectors_square",
           "type": "ElementwiseSquareOperation",
-          "inputs": [ "Input" ]
+          "inputs": [ "WeightVectors" ],
+          "gradientResultTo": [ "DWeightVectors" ]
+        },
+        {
+          "id": "weight_vectors_square_2",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "WeightVectors2" ],
+          "gradientResultTo": [ "DWeightVectors2" ]
+        },
+        {
+          "id": "weight_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Weights" ],
+          "gradientResultTo": [ "DWeights" ]
+        },
+        {
+          "id": "weight_square_2",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Weights2" ],
+          "gradientResultTo": [ "DWeights2" ]
         },
         {
           "id": "start_solar_system",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "input_square", "WeightVectors", "Weights" ],
-          "gradientResultTo": [ null, "DWeightVectors", "DWeights" ]
+          "inputs": [ "Input", "weight_vectors_square", "weight_square" ]
         },
         {
           "id": "start_solar_system_2",
-          "type": "ElementwiseVectorMultiplyOperation",
-          "inputs": [ "input_square", "WeightVectors2", "Weights2" ],
-          "gradientResultTo": [ null, "DWeightVectors2", "DWeights2" ]
+          "type": "ElementwiseVectorConstituentMultiplyOperation",
+          "inputs": [ "Input", "weight_vectors_square2", "weight_square2" ]
         },
         {
-          "id": "features_mult",
+          "id": "vector_add",
+          "type": "ElementwiseVectorAddOperation",
+          "inputs": [ "start_solar_system", "start_solar_system_2" ]
+        },
+        {
+          "id": "vector_keys",
           "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "Input", "start_solar_system" ]
+          "inputs": [ "vector_add", "Keys" ],
+          "gradientResultTo": [ null, "DKeys" ]
         },
         {
-          "id": "features_add",
+          "id": "vector_add_broadcasting",
           "type": "MatrixAddBroadcastingOperation",
-          "inputs": [ "features_mult", "KB" ],
+          "inputs": [ "vector_keys", "KB" ],
           "gradientResultTo": [ null, "DKB" ]
         },
         {
-          "id": "features_act",
+          "id": "vector_act",
           "type": "LeakyReLUOperation",
-          "inputs": [ "features_add" ]
+          "inputs": [ "vector_add_broadcasting" ]
+        },
+        {
+          "id": "vector_softmax",
+          "type": "PairwiseSineSoftmaxOperation",
+          "inputs": [ "vector_act" ]
+        },
+        {
+          "id": "vector_attention",
+          "type": "VectorAttentionOperation",
+          "inputs": [ "vector_add", "vector_softmax" ]
+        },
+        {
+          "id": "output",
+          "type": "ElementwiseVectorSummationOperation",
+          "inputs": [ "vector_attention" ],
+          "setResultTo": "Output"
         }
       ]
     }
