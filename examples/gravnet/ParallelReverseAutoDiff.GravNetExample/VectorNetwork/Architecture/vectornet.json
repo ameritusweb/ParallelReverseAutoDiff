@@ -4,7 +4,7 @@
       "startOperations": [
         {
           "id": "start_solar_system",
-          "type": "ElementwiseVectorMultiplyOperation",
+          "type": "ElementwiseVectorConstituentMultiplyOperation",
           "inputs": [ "Input", "WeightVectors", "Weights" ],
           "gradientResultTo": [ null, "DWeightVectors", "DWeights" ]
         },
