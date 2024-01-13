@@ -3,15 +3,20 @@
     {
       "startOperations": [
         {
+          "id": "input_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Input" ]
+        },
+        {
           "id": "start_solar_system",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "Input", "WeightVectors", "Weights" ],
+          "inputs": [ "input_square", "WeightVectors", "Weights" ],
           "gradientResultTo": [ null, "DWeightVectors", "DWeights" ]
         },
         {
           "id": "start_solar_system_2",
           "type": "ElementwiseVectorMultiplyOperation",
-          "inputs": [ "Input", "WeightVectors2", "Weights2" ],
+          "inputs": [ "input_square", "WeightVectors2", "Weights2" ],
           "gradientResultTo": [ null, "DWeightVectors2", "DWeights2" ]
         },
         {
