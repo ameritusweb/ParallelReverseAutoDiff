@@ -18,6 +18,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix weights;
         private Matrix sumX;
         private Matrix sumY;
+        private Matrix slopesX;
+        private Matrix slopesY;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -44,6 +46,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var Output = new Matrix(input1.Rows,input2.Cols);
             this.sumX = new Matrix(input1.Rows, input2.Cols / 2);
             this.sumY = new Matrix(input1.Rows, input2.Cols / 2);
+            this.slopesX = new Matrix(input1.Rows, input2.Cols / 2);
+            this.slopesY = new Matrix(input1.Rows, input2.Cols / 2);
 
             Parallel.For(0, input1.Rows, i =>
             {
@@ -51,6 +55,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     double sumX = 0.0;
                     double sumY = 0.0;
+
+                    double[] resultMagnitudes = new double[input2.Rows / 2];
+                    double[] resultAngles = new double[input2.Rows / 2];
 
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
@@ -73,10 +80,33 @@ namespace ParallelReverseAutoDiff.RMAD
 
                         // Compute resultant vector magnitude and angle
                         double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
+                        resultMagnitudes[k] = resultMagnitude;
                         double resultAngle = Math.Atan2(deltay, deltax);
+                        resultAngles[k] = resultAngle;
 
                         sumX += resultMagnitude * Math.Cos(resultAngle);
                         sumY += resultMagnitude * Math.Sin(resultAngle);
+                    }
+
+                    for (int k = 0; k < input1.Cols / 2; k++)
+                    {
+                        double perturbedResultMagnitude = resultMagnitudes[k] * 0.0001d;
+                        double rx = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x * Math.Cos(resultAngles[k]));
+                        rx += perturbedResultMagnitude * Math.Cos(resultAngles[k]);
+                        double ry = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x * Math.Sin(resultAngles[k]));
+                        ry += perturbedResultMagnitude * Math.Sin(resultAngles[k]);
+
+                        double resultMagnitudeChange = perturbedResultMagnitude - resultMagnitudes[k];
+                        double sumXChange = rx - sumX;
+
+                        double slopeX = sumXChange / resultMagnitudeChange;
+
+                        double sumYChange = ry - sumY;
+
+                        double slopeY = sumYChange / resultMagnitudeChange;
+
+                        this.slopesX[i, j] = slopeX;
+                        this.slopesY[i, j] = slopeY;
                     }
 
                     this.sumX[i, j] = sumX;
@@ -126,8 +156,8 @@ namespace ParallelReverseAutoDiff.RMAD
                         // Combined magnitude and angle as in the forward pass
                         double combinedMagnitude = Math.Sqrt(deltax * deltax + deltay * deltay);
 
-                        double dSumX_dDeltaX = 0d; // empirically determined, set to 0 for now
-                        double dSumY_dDeltaY = 0d; // empirically determined, set to 0 for now
+                        double dSumX_dDeltaX = this.slopesX[i, j]; // empirically determined
+                        double dSumY_dDeltaY = this.slopesY[i, j]; // empirically determined
 
                         // Derivatives of delta components with respect to inputs
                         double dDeltaX_dX1 = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign

@@ -18,6 +18,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix weights;
         private double[] summationX;
         private double[] summationY;
+        private Matrix slopesX;
+        private Matrix slopesY;
         private CalculatedValues[,] calculatedValues;
 
         /// <summary>
@@ -45,14 +47,21 @@ namespace ParallelReverseAutoDiff.RMAD
 
             this.Output = new Matrix(1, 2);
 
+            this.slopesX = new Matrix(input1.Rows, input1.Cols / 2);
+            this.slopesY = new Matrix(input1.Rows, input1.Cols / 2);
+
             this.calculatedValues = new CalculatedValues[this.input1.Rows, this.input1.Cols / 2];
 
             double[] summationX = new double[input1.Rows];
             double[] summationY = new double[input1.Rows];
+            double[,] perturbationX = new double[input1.Rows, input1.Cols / 2];
+            double[,] perturbationY = new double[input1.Rows, input1.Cols / 2];
             Parallel.For(0, input1.Rows, i =>
             {
                 double sumX = 0.0d;
                 double sumY = 0.0d;
+                double[] resultMagnitudes = new double[input1.Cols / 2];
+                double[] resultAngles = new double[input1.Cols / 2];
                 for (int j = 0; j < input1.Cols / 2; j++)
                 {
                     // Accessing the magnitudes and angles from the concatenated matrices
@@ -73,12 +82,35 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     // Compute resultant vector magnitude and angle
                     double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
+                    resultMagnitudes[j] = resultMagnitude;
                     double resultAngle = Math.Atan2(sumy, sumx);
+                    resultAngles[j] = resultAngle;
 
                     sumX += resultMagnitude * Math.Cos(resultAngle);
                     sumY += resultMagnitude * Math.Sin(resultAngle);
 
                     this.CalculateAndStoreValues(i, j);
+                }
+
+                for (int j = 0; j < input1.Cols / 2; j++)
+                {
+                    double perturbedResultMagnitude = resultMagnitudes[j] * 0.0001d;
+                    double rx = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x * Math.Cos(resultAngles[j]));
+                    rx += perturbedResultMagnitude * Math.Cos(resultAngles[j]);
+                    double ry = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x * Math.Sin(resultAngles[j]));
+                    ry += perturbedResultMagnitude * Math.Sin(resultAngles[j]);
+
+                    double resultMagnitudeChange = perturbedResultMagnitude - resultMagnitudes[j];
+                    double sumXChange = rx - sumX;
+
+                    double slopeX = sumXChange / resultMagnitudeChange;
+
+                    double sumYChange = ry - sumY;
+
+                    double slopeY = sumYChange / resultMagnitudeChange;
+
+                    this.slopesX[i, j] = slopeX;
+                    this.slopesY[i, j] = slopeY;
                 }
 
                 summationX[i] = sumX;
@@ -133,8 +165,8 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < this.input1.Cols / 2; j++)
                 {
                     // Empirically determined derivatives
-                    double dSumX_dLocalizedResultMagnitude = 0d; // Calculated empirically, but set to 0 for now
-                    double dSumY_dLocalizedResultMagnitude = 0d; // Calculated empirically, but set to 0 for now
+                    double dSumX_dLocalizedResultMagnitude = this.slopesX[i, j]; // Calculated empirically
+                    double dSumY_dLocalizedResultMagnitude = this.slopesY[i, j]; // Calculated empirically
 
                     // Chain with calculated derivatives for overall magnitude
                     double dMagnitude_dWeight =

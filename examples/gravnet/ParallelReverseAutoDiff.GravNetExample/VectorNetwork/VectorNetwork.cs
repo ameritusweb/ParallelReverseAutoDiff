@@ -181,11 +181,6 @@
                     throw new Exception($"Forward method not found for operation {op.OperationType.Name}");
                 }
 
-                if (op is VectorInfluenceOnWeightsOperation grav)
-                {
-                    grav.Forward(parameters[0] as Matrix, parameters[1] as Matrix, parameters[2] as Matrix, (double)parameters[3]);
-                }
-
                 forward.Invoke(op, parameters);
                 var output = op.GetOutput();
                 var deepOutput = op.GetDeepOutput();
