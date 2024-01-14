@@ -31,7 +31,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="vectors">The first input to the vector attention operation.</param>
         /// <param name="probabilities">The second input to the vector attention operation.</param>
-        /// <returns>The output of the vector attentionn operation.</returns>
+        /// <returns>The output of the vector attention operation.</returns>
         public Matrix Forward(Matrix vectors, Matrix probabilities)
         {
             this.vectors = vectors;
@@ -45,15 +45,15 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < M; j++)
                 {
-                    // Check the existence probability
-                    double magnitude = probabilities[i, j] > 0.5 ? vectors[i, j] : 0;
+                    // Calculate the scaling factor for the magnitude
+                    double prob = probabilities[i, j];
+                    double magnitudeScale = 1.5 - prob; // Ranges from 1 (at prob = 0.5) to 2 (at prob = 0) to 0.5 (at prob = 1)
+                    double magnitude = vectors[i, j] * magnitudeScale;
 
-                    // Check the angle probability and calculate the opposite angle if needed
+                    // Adjust the angle based on the probability
                     double angle = vectors[i, j + M];
-                    if (probabilities[i, j + M] > 0.5)
-                    {
-                        angle = (angle + Math.PI) % (2 * Math.PI); // Opposite angle
-                    }
+                    double angleAdjustment = Math.PI * (1 - prob); // Ranges from 0 (at prob = 1) to π (at prob = 0)
+                    angle = (angle + angleAdjustment) % (2 * Math.PI);
 
                     this.Output[i, j] = magnitude;
                     this.Output[i, j + M] = angle;
@@ -74,18 +74,29 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < M; j++)
                 {
+                    double prop1 = probabilities[i, j];
                     // Gradient for magnitude
-                    dVectors[i, j] = probabilities[i, j] > 0.5 ? dOutput[i, j] : 0;
-                    dProbabilities[i, j] = (probabilities[i, j] > 0.5 ? 1 : 0) * dOutput[i, j];
+                    dVectors[i, j] = dOutput[i, j] * (1.5d - prop1); // Assuming direct gradient flow for magnitude
 
                     // Gradient for angle
-                    bool isFlipped = probabilities[i, j + M] > 0.5;
                     double dAngle = dOutput[i, j + M];
-                    dVectors[i, j + M] = isFlipped ? -dAngle : dAngle;
+                    dVectors[i, j + M] = dAngle; // Assuming direct gradient flow for angle
 
-                    // Consistent gradient for probability w.r.t angle
-                    // The gradient indicates the direction to adjust the probability
-                    dProbabilities[i, j + M] = dAngle * (isFlipped ? -1 : 1);
+                    double dAngle_dProb1 = -Math.PI;
+                    double dAngle_dProb2 = Math.PI;
+
+                    // Gradient for Prob1 (affects magnitude and angle)
+                    dProbabilities[i, j] = dAngle * dAngle_dProb1; // From derivative dAngle/dProb1 = -π
+
+                    // Gradient for Prob2 (affects only angle)
+                    dProbabilities[i, j + M] = dAngle * dAngle_dProb2; // From derivative dAngle/dProb2 = π
+
+                    double dMagnitude = dOutput[i, j];
+                    double originalMagnitude = this.vectors[i, j];
+
+                    // Compute gradients for probabilities related to magnitude
+                    dProbabilities[i, j] += -dMagnitude * originalMagnitude; // dMagnitude/dProb1
+                    dProbabilities[i, j + M] += dMagnitude * originalMagnitude; // dMagnitude/dProb2
                 }
             });
 

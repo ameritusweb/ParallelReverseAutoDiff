@@ -15,9 +15,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                VectorNet net = new VectorNet(17, 446, 3, 0.0002d, 4d);
+                VectorNet net = new VectorNet(17, 446, 3, 0.01d, 4d);
                 await net.Initialize();
-                // net.ApplyWeights();
+                net.ApplyWeights();
 
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
 
@@ -64,7 +64,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     net.ApplyGradients();
                     await net.Reset();
                     Thread.Sleep(1000);
-                    if (i % 25 == 24)
+                    if (i % 100 == 99)
                     {
                         net.SaveWeights();
                     }
