@@ -90,7 +90,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     for (int k = 0; k < input1.Cols / 2; k++)
                     {
-                        double perturbedResultMagnitude = resultMagnitudes[k] * 0.0001d;
+                        double perturbedResultMagnitude = resultMagnitudes[k] == 0.0d ? 0.0001d : (resultMagnitudes[k] * 0.0001d);
                         double rx = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x * Math.Cos(resultAngles[k]));
                         rx += perturbedResultMagnitude * Math.Cos(resultAngles[k]);
                         double ry = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x * Math.Sin(resultAngles[k]));
@@ -116,6 +116,21 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.Output[i, j + (input2.Rows / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
                 }
             });
+
+            double maxX = this.slopesX.ToArray().SelectMany(x => x).Max();
+            double maxY = this.slopesY.ToArray().SelectMany(x => x).Max();
+            double max = Math.Max(maxX, maxY);
+            if (max > 4d)
+            {
+                Parallel.For(0, input1.Rows, i =>
+                {
+                    for (int j = 0; j < input2.Cols / 2; ++j)
+                    {
+                        this.slopesX[i, j] = this.slopesX[i, j] / max;
+                        this.slopesY[i, j] = this.slopesY[i, j] / max;
+                    }
+                });
+            }
 
             return this.Output;
         }

@@ -107,10 +107,15 @@
           "inputs": [ "vector_add", "vector_queries_softmax" ]
         },
         {
+          "id": "summation_weights_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "SummationWeights" ],
+          "gradientResultTo": [ "DSummationWeights" ]
+        },
+        {
           "id": "output",
-          "type": "ElementwiseVectorSummationOperation",
-          "inputs": [ "vector_attention", "vector_queries_attention", "SummationWeights" ],
-          "gradientResultTo": [ null, null, "DSummationWeights" ],
+          "type": "ElementwiseVectorCartesianSummationOperation",
+          "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ],
           "setResultTo": "Output"
         }
       ]
