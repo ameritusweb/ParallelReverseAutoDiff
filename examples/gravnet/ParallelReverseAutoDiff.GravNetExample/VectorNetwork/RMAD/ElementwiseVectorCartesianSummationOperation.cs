@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using ParallelReverseAutoDiff.GravNetExample.VectorNetwork;
     using System;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -22,6 +23,12 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix slopesX;
         private Matrix slopesY;
         private CalculatedValues[,] calculatedValues;
+        private VectorNetwork vectorNetwork;
+
+        public ElementwiseVectorCartesianSummationOperation(VectorNetwork vectorNetwork)
+        {
+            this.vectorNetwork = vectorNetwork;
+        }
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -30,7 +37,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new ElementwiseVectorCartesianSummationOperation();
+            return new ElementwiseVectorCartesianSummationOperation(net as VectorNetwork);
         }
 
         /// <summary>
@@ -139,8 +146,10 @@ namespace ParallelReverseAutoDiff.RMAD
             this.summationX = summationX;
             this.summationY = summationY;
 
-            VectorVisualizer visualizer = new VectorVisualizer();
-            visualizer.Draw(resultVectors, string.Empty + Guid.NewGuid().GetHashCode());
+            this.vectorNetwork.RecordVectors(resultVectors);
+
+            //VectorVisualizer visualizer = new VectorVisualizer();
+            //visualizer.Draw(resultVectors, string.Empty + Guid.NewGuid().GetHashCode());
 
             this.Output[0, 0] = this.summationX.Sum();
             this.Output[0, 1] = this.summationY.Sum();

@@ -57,6 +57,22 @@
         /// </summary>
         public Matrix Output { get; private set; }
 
+        public double TargetAngle { get; set; }
+
+        public double OppositeAngle { get; set; }
+
+        public int[] GoodTotals { get; set; }
+
+        public int[] BadTotals { get; set; }
+
+        public int[] OnlyGoodTotals { get; set; }
+
+        public int[] OnlyBadTotals { get; set; }
+
+        public List<(List<int>, List<int>)> Rankings { get; set; }
+
+        public List<int> LastGoodIndices { get; set; }
+
         /// <summary>
         /// Gets the model layers of the neural network.
         /// </summary>
@@ -82,6 +98,139 @@
         /// Gets the number of nodes of the neural network.
         /// </summary>
         internal int NumNodes { get; private set; }
+
+        public void RecordVectors(double[,] vectors)
+        {
+
+            if (this.GoodTotals == null)
+            {
+                this.GoodTotals = new int[vectors.GetLength(0)];
+            }
+
+            if (this.BadTotals == null)
+            {
+                this.BadTotals = new int[vectors.GetLength(0)];
+            }
+
+            if (this.OnlyGoodTotals == null)
+            {
+                this.OnlyGoodTotals = new int[vectors.GetLength(0)];
+            }
+
+            if (this.OnlyBadTotals == null)
+            {
+                this.OnlyBadTotals = new int[vectors.GetLength(0)];
+            }
+
+            if (this.Rankings == null)
+            {
+                this.Rankings = new List<(List<int>, List<int>)>();
+            }
+
+            var targetAngle = this.TargetAngle;
+            var oppositeAngle = this.OppositeAngle;
+            bool[] goodDiffs = new bool[vectors.GetLength(0)];
+            double magnitudeTotal = 0d;
+            double[] magnitudes = new double[vectors.GetLength(0)];
+            for (int i = 0; i < vectors.GetLength(0); i++)
+            {
+                var vectorMagnitude = vectors[i, 0];
+                magnitudes[i] = vectorMagnitude;
+                magnitudeTotal += vectorMagnitude;
+                var vectorAngle = vectors[i, 1];
+                var angleTargetDiff = Math.Abs(vectorAngle - targetAngle);
+                var angleOppositeDiff = Math.Abs(vectorAngle - oppositeAngle);
+                goodDiffs[i] = angleTargetDiff > angleOppositeDiff ? false : true;
+
+                //if (i == 67 || i == 282)
+                //{
+                //    double adiff = (Math.Abs(this.TargetAngle - this.OppositeAngle) / 2d);
+                //    Console.WriteLine(i + ": magnitude:" + vectorMagnitude + " angle: " + vectorAngle + " target: " + this.TargetAngle + " mid: " + (this.TargetAngle > this.OppositeAngle ? this.OppositeAngle + adiff : this.TargetAngle + adiff));
+                //}
+            }
+
+            var thresholdMagnitude = magnitudeTotal / vectors.GetLength(0) / 4d;
+
+            List<int> goodIndices = new List<int>();
+            List<int> badIndices = new List<int>();
+            for (int i = 0; i < vectors.GetLength(0); ++i)
+            {
+                var magnitude = magnitudes[i];
+                if (magnitude > thresholdMagnitude)
+                {
+                    if (goodDiffs[i])
+                    {
+                        goodIndices.Add(i);
+                        this.GoodTotals[i]++;
+                        if (this.OnlyBadTotals[i] > 0)
+                        {
+                            this.OnlyBadTotals[i] = -1;
+                        }
+
+                        if (this.OnlyGoodTotals[i] != -1)
+                        {
+                            this.OnlyGoodTotals[i]++;
+                        }
+                    } else
+                    {
+                        badIndices.Add(i);
+                        this.BadTotals[i]++;
+                        if (this.OnlyGoodTotals[i] > 0)
+                        {
+                            this.OnlyGoodTotals[i] = -1;
+                        }
+
+                        if (this.OnlyBadTotals[i] != -1)
+                        {
+                            this.OnlyBadTotals[i]++;
+                        }
+                    }
+                }
+            }
+
+            LastGoodIndices = goodIndices.ToList();
+
+            List<int> onlyGoodIndices = new List<int>();
+            List<int> onlyBadIndices = new List<int>();
+            for (int i = 0; i < vectors.GetLength(0); ++i)
+            {
+                if (this.OnlyGoodTotals[i] > 0)
+                {
+                    onlyGoodIndices.Add(i);
+                }
+
+                if (this.OnlyBadTotals[i] > 0)
+                {
+                    onlyBadIndices.Add(i);
+                }
+            }
+
+            if (onlyGoodIndices.Count > 0 || onlyBadIndices.Count > 0)
+            {
+                this.Rankings.Add((onlyGoodIndices.ToList(), onlyBadIndices.ToList()));
+            }
+
+         }
+
+        public (double, double) SumVectors(List<int> indices, double[,] vectors)
+        {
+            double sumX = 0d;
+            double sumY = 0d;
+            foreach (var index in indices)
+            {
+                var polarMagnitude = vectors[index, 0];
+                var polarAngle = vectors[index, 1];
+                var x = polarMagnitude * Math.Cos(polarAngle);
+                var y = polarMagnitude * Math.Sin(polarAngle);
+                sumX += x;
+                sumY += y;
+            }
+
+            double combinedPolarMagnitude = Math.Sqrt((sumX * sumX) + (sumY * sumY));
+            double combinedPolarAngle = Math.Atan2(sumY, sumX);
+
+            return (combinedPolarMagnitude, combinedPolarAngle);
+        }
 
         /// <summary>
         /// Initializes the computation graph of the convolutional neural network.
