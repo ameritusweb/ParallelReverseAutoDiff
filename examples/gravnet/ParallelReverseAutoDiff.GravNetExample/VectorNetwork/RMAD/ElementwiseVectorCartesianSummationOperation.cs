@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using ParallelReverseAutoDiff.GravNetExample.VectorNetwork;
     using System;
     using System.Threading.Tasks;
 
@@ -56,6 +57,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double[] summationY = new double[input1.Rows];
             double[,] perturbationX = new double[input1.Rows, input1.Cols / 2];
             double[,] perturbationY = new double[input1.Rows, input1.Cols / 2];
+            double[,] resultVectors = new double[input1.Rows * (input1.Cols / 2), 2];
             Parallel.For(0, input1.Rows, i =>
             {
                 double sumX = 0.0d;
@@ -85,6 +87,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     resultMagnitudes[j] = resultMagnitude;
                     double resultAngle = Math.Atan2(sumy, sumx);
                     resultAngles[j] = resultAngle;
+                    resultVectors[(i * (input1.Cols / 2)) + j, 0] = resultMagnitude;
+                    resultVectors[(i * (input1.Cols / 2)) + j, 1] = resultAngle;
 
                     sumX += resultMagnitude * Math.Cos(resultAngle);
                     sumY += resultMagnitude * Math.Sin(resultAngle);
@@ -134,6 +138,9 @@ namespace ParallelReverseAutoDiff.RMAD
 
             this.summationX = summationX;
             this.summationY = summationY;
+
+            VectorVisualizer visualizer = new VectorVisualizer();
+            visualizer.Draw(resultVectors, string.Empty + Guid.NewGuid().GetHashCode());
 
             this.Output[0, 0] = this.summationX.Sum();
             this.Output[0, 1] = this.summationY.Sum();

@@ -48,7 +48,44 @@ namespace ParallelReverseAutoDiff.GravNetExample
                                 var firstMomentMatrix = firstMoment as Matrix ?? throw new InvalidOperationException("First moment cannot be null.");
                                 var secondMomentMatrix = secondMoment as Matrix ?? throw new InvalidOperationException("Second moment cannot be null.");
                                 var gradientMatrix = gradient as Matrix ?? throw new InvalidOperationException("Gradient cannot be null.");
-                                this.UpdateWeightWithAdam(weightMatrix, firstMomentMatrix, secondMomentMatrix, gradientMatrix, this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon);
+                                double frobeniusBefore = weightMatrix.FrobeniusNorm();
+                                Dictionary<double, (int, int)> positiveChanges = new Dictionary<double, (int, int)>();
+                                Dictionary<double, (int, int)> negativeChanges = new Dictionary<double, (int, int)>();
+                                this.UpdateWeightWithAdam(weightMatrix, firstMomentMatrix, secondMomentMatrix, gradientMatrix, this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon, ref positiveChanges, ref negativeChanges);
+                                double frobeniusAfter = weightMatrix.FrobeniusNorm();
+                                double newFrobenius = 0.0d;
+                                int index = 0;
+                                if (frobeniusAfter > frobeniusBefore)
+                                {
+                                    var list1 = positiveChanges.OrderBy(x => x.Key).ToList();
+                                    var list2 = negativeChanges.OrderByDescending(x => x.Key).ToList();
+                                    var list3 = positiveChanges.OrderByDescending(x => x.Key).ToList();
+                                    var list4 = negativeChanges.OrderBy(x => x.Key).ToList();
+                                    do
+                                    {
+                                        for (int k = index; k < index + 100; ++k)
+                                        {
+                                            var (key1, (i1, j1)) = list1[k];
+                                            var (key2, (i2, j2)) = list2[k];
+                                            weightMatrix[i1][j1] += key1;
+                                            weightMatrix[i2][j2] += key2;
+                                        }
+                                        for (int k = index; k < index + 100; ++k)
+                                        {
+                                            var (key1, (i1, j1)) = list3[k];
+                                            var (key2, (i2, j2)) = list4[k];
+                                            weightMatrix[i1][j1] -= key1;
+                                            weightMatrix[i2][j2] -= key2;
+                                        }
+                                        newFrobenius = weightMatrix.FrobeniusNorm();
+                                        index += 100;
+                                        if ((index + 100) >= Math.Min(positiveChanges.Count, negativeChanges.Count))
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    while (newFrobenius > frobeniusBefore);
+                                }
                                 break;
                             }
 
@@ -60,7 +97,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
                                 var gradientMatrix = gradient as DeepMatrix ?? throw new InvalidOperationException("Gradient cannot be null.");
                                 for (int d = 0; d < dimensions[0]; ++d)
                                 {
-                                    this.UpdateWeightWithAdam(weightMatrix[d], firstMomentMatrix[d], secondMomentMatrix[d], gradientMatrix[d], this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon);
+                                    Dictionary<double, (int, int)> positiveChanges = new Dictionary<double, (int, int)>();
+                                    Dictionary<double, (int, int)> negativeChanges = new Dictionary<double, (int, int)>();
+                                    this.UpdateWeightWithAdam(weightMatrix[d], firstMomentMatrix[d], secondMomentMatrix[d], gradientMatrix[d], this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon, ref positiveChanges, ref negativeChanges);
                                 }
 
                                 break;
@@ -76,7 +115,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
                                 {
                                     for (int d2 = 0; d2 < dimensions[1]; ++d2)
                                     {
-                                        this.UpdateWeightWithAdam(weightMatrix[d1][d2], firstMomentMatrix[d1][d2], secondMomentMatrix[d1][d2], gradientMatrix[d1][d2], this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon);
+                                        Dictionary<double, (int, int)> positiveChanges = new Dictionary<double, (int, int)>();
+                                        Dictionary<double, (int, int)> negativeChanges = new Dictionary<double, (int, int)>();
+                                        this.UpdateWeightWithAdam(weightMatrix[d1][d2], firstMomentMatrix[d1][d2], secondMomentMatrix[d1][d2], gradientMatrix[d1][d2], this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon, ref positiveChanges, ref negativeChanges);
                                     }
                                 }
 
@@ -189,7 +230,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             }
         }
 
-        private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon)
+        private void UpdateWeightWithAdam(Matrix w, Matrix mW, Matrix vW, Matrix gradient, double beta1, double beta2, double epsilon, ref Dictionary<double, (int, int)> positiveChanges, ref Dictionary<double, (int, int)> negativeChanges)
         {
             // Update biased first moment estimate
             var firstMoment = MatrixUtils.MatrixAdd(MatrixUtils.ScalarMultiply(beta1, mW), MatrixUtils.ScalarMultiply(1 - beta1, gradient));
@@ -209,6 +250,20 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 for (int j = 0; j < w[0].Length; j++)
                 {
                     double weightReductionValue = this.network.Parameters.LearningRate * mW_hat[i][j] / (Math.Sqrt(vW_hat[i][j]) + epsilon);
+
+                    if (w[i][j] > 0.0d)
+                    {
+                        if (!positiveChanges.ContainsKey(weightReductionValue))
+                        {
+                            positiveChanges.Add(weightReductionValue, (i, j));
+                        }
+                    } else if (w[i][j] < 0.0d)
+                    {
+                        if (!negativeChanges.ContainsKey(weightReductionValue))
+                        {
+                            negativeChanges.Add(weightReductionValue, (i, j));
+                        }
+                    }
 
                     if (double.IsNaN(weightReductionValue))
                     {

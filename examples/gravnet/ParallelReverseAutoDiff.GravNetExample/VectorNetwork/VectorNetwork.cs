@@ -58,11 +58,6 @@
         public Matrix Output { get; private set; }
 
         /// <summary>
-        /// Gets the output matrix.
-        /// </summary>
-        public Matrix OutputTwo { get; private set; }
-
-        /// <summary>
         /// Gets the model layers of the neural network.
         /// </summary>
         public IEnumerable<IModelLayer> ModelLayers
@@ -136,27 +131,6 @@
             {
                 var parameters = this.LookupParameters(op);
 
-                if (op.Id == "deep_concatenate")
-                {
-                    var objArray = parameters[0] as object[] ?? throw new InvalidOperationException("Array should not be null.");
-                    Matrix[] matrixArray = new Matrix[objArray.Length];
-                    for (int i = 0; i < objArray.Length; ++i)
-                    {
-                        var obj = objArray[i];
-                        if (obj is Matrix m)
-                        {
-                            matrixArray[i] = m;
-                        }
-                    }
-
-                    parameters[0] = new DeepMatrix(matrixArray);
-                }
-
-                if (op.Id == "vector_attention")
-                {
-
-                }
-
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
                 {
@@ -168,14 +142,6 @@
                 var deepOutput = op.GetDeepOutput();
                 if (output != null)
                 {
-                    if (op.Id == "vector_softmax")
-                    {
-
-                    }
-                    if (op.Id == "vector_queries_act")
-                    {
-
-                    }
                     if (double.IsNaN(output[0][0]))
                     {
                     }

@@ -90,7 +90,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double theta = Math.Acos(normalizedDotProduct);
             double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
 
-            double gradXOutput = -2 * xTarget * theta / denominator;
+            double gradXOutput = 2 * xTarget * theta / denominator;
             return gradXOutput;
         }
 
@@ -102,7 +102,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double theta = Math.Acos(normalizedDotProduct);
             double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
 
-            double gradYOutput = -2 * yTarget * theta / denominator;
+            double gradYOutput = 2 * yTarget * theta / denominator;
             return gradYOutput;
         }
     }

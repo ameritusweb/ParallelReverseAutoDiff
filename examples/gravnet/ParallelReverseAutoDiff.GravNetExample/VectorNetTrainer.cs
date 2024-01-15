@@ -15,12 +15,16 @@ namespace ParallelReverseAutoDiff.GravNetExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                VectorNet net = new VectorNet(17, 446, 3, 0.01d, 4d);
+                VectorNet net = new VectorNet(17, 446, 3, 0.0001d, 4d);
                 await net.Initialize();
                 net.ApplyWeights();
 
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
 
+                double sumResultAngleA = 0d;
+                double numResultAngleA = 0d;
+                double sumResultAngleB = 0d;
+                double numResultAngleB = 0d;
                 Random random = new Random(Guid.NewGuid().GetHashCode());
                 var files = jsonFiles.OrderBy(x => random.Next()).ToArray();
                 int i = 0;
@@ -57,8 +61,19 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     var y = output[0][1];
                     double resultMagnitude = Math.Sqrt((x * x) + (y * y));
                     double resultAngle = Math.Atan2(y, x);
+                    if (sub == "A")
+                    {
+                        sumResultAngleA += resultAngle;
+                        numResultAngleA += 1d;
+                    } else if (sub == "B")
+                    {
+                        sumResultAngleB += resultAngle;
+                        numResultAngleB += 1d;
+                    }
 
                     Console.WriteLine($"Iteration {i} {sub} Mag: {resultMagnitude}, Angle: {resultAngle}, TargetAngle: {targetAngle}, Gradient: {gradient[0][0]}, {gradient[0][1]} Loss: {loss[0][0]}");
+                    Console.WriteLine($"Average Result Angle A: {sumResultAngleA / (numResultAngleA + 1E-9)}");
+                    Console.WriteLine($"Average Result Angle B: {sumResultAngleB / (numResultAngleB + 1E-9)}");
 
                     await net.Backward(gradient);
                     net.ApplyGradients();
