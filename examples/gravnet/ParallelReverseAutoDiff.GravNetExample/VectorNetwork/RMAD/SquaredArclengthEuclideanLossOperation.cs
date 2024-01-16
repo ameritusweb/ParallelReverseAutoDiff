@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SquaredArclengthLossOperation.cs" author="ameritusweb" date="7/1/2023">
+// <copyright file="SquaredArclengthEuclideanLossOperation.cs" author="ameritusweb" date="7/1/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -8,9 +8,9 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
 
     /// <summary>
-    /// Squared arclength loss operation.
+    /// Squared arclength euclidean loss operation.
     /// </summary>
-    public class SquaredArclengthLossOperation
+    public class SquaredArclengthEuclideanLossOperation
     {
         private double dotProduct;
         private double xOutput;
@@ -28,9 +28,9 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="net">The neural network.</param>
         /// <returns>The instantiated operation.</returns>
-        public static SquaredArclengthLossOperation Instantiate(NeuralNetwork net)
+        public static SquaredArclengthEuclideanLossOperation Instantiate(NeuralNetwork net)
         {
-            return new SquaredArclengthLossOperation();
+            return new SquaredArclengthEuclideanLossOperation();
         }
 
         /// <summary>
@@ -74,8 +74,10 @@ namespace ParallelReverseAutoDiff.RMAD
             double theta = Math.Acos(normalizedDotProduct);
             this.theta = theta;
 
+            double distanceCubed = Math.Pow(xOutput - xTarget, 3) + Math.Pow(yOutput - yTarget, 3);
+
             // Compute the squared magnitude of the loss
-            double lossMagnitude = Math.Pow(radius * theta, 2);
+            double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceCubed) / 2d;
 
             var output = new Matrix(1, 1);
             output[0, 0] = lossMagnitude;
@@ -92,34 +94,20 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix dPredictions = new Matrix(1, 2);
             var gradX = GradientWrtXOutput();
             var gradY = GradientWrtYOutput();
-            (dPredictions[0, 0], dPredictions[0, 1]) = GradientWrtOutput();
-            dPredictions[0, 0] = gradX;
-            dPredictions[0, 1] = gradY;
+            var (eX, eY) = EuclideanGradientWrtOutput();
+            dPredictions[0, 0] = gradX + eX;
+            dPredictions[0, 1] = gradY + eY;
             return dPredictions;
         }
 
-        public (double GradX, double GradY) GradientWrtOutput()
+        public (double GradX, double GradY) EuclideanGradientWrtOutput()
         {
             double X = this.xOutput;
             double Y = this.yOutput;
 
-            // double dMagnitude_dX = X / this.magnitude;
-            // double dXTarget_dMagnitude = Math.Cos(this.targetAngle);
-
-            // double dMagnitude_dY = Y / this.magnitude;
-            // double dYTarget_dMagnitude = Math.Sin(this.targetAngle);
-
-            double dDotProduct_dX = (X * (X * Math.Cos(this.targetAngle) / this.magnitude)) + this.xTarget; // dXOutputTimesXTarget_dXOutput
-            double dDotProduct_dY = (Y * (Y * Math.Sin(this.targetAngle) / this.magnitude)) + this.yTarget; // dYOutputTimesYTarget_dYOutput
-
-            // double dNormalizedDotProduct_dDotProduct = 1d / (this.radius * this.radius);
-            double dTheta_dNormalizedDotProduct = -1d / Math.Sqrt(1d - (this.normalizedDotProduct * this.normalizedDotProduct));
-            // double dLossMagnitude_dTheta = 2d * (this.radius * this.radius) * this.theta;
-
-            // Simplified:
-            double dLossMagnitude_dX = -2d * this.theta * dTheta_dNormalizedDotProduct * dDotProduct_dX;
-            double dLossMagnitude_dY = -2d * this.theta * dTheta_dNormalizedDotProduct * dDotProduct_dY;
-            return (dLossMagnitude_dX, dLossMagnitude_dY);
+            double dLoss_dX = -1d * (X - xTarget) * (3d/2d);
+            double dLoss_dY = -1d * (Y - yTarget) * (3d/2d);
+            return (dLoss_dX, dLoss_dY);
         }
 
         public double GradientWrtXOutput()
@@ -130,7 +118,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double theta = Math.Acos(normalizedDotProduct);
             double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
 
-            double gradXOutput = 2 * xTarget * theta / denominator;
+            double gradXOutput = xTarget * theta / denominator;
             return gradXOutput;
         }
 
@@ -142,7 +130,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double theta = Math.Acos(normalizedDotProduct);
             double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
 
-            double gradYOutput = 2 * yTarget * theta / denominator;
+            double gradYOutput = yTarget * theta / denominator;
             return gradYOutput;
         }
     }

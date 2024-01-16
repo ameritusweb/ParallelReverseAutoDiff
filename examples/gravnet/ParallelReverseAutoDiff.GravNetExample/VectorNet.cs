@@ -73,7 +73,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 4992;
+            var initialAdamIteration = 6090;
             var model = new VectorNetwork.VectorNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.vectorNetwork = model;
@@ -113,7 +113,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "b1f52036-57b1-4478-96f5-8b07c0782f23_4992";
+            var guid = "7a7d9096-8c9e-450a-9c37-7e06ef557ca4_6090";
             var dir = $"E:\\vnnstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -149,7 +149,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
 
-            SquaredArclengthLossOperation arclengthLoss = SquaredArclengthLossOperation.Instantiate(gatNet);
+            SquaredArclengthEuclideanLossOperation arclengthLoss = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
             var loss = arclengthLoss.Forward(output, targetAngle);
             var gradient = arclengthLoss.Backward();
 
