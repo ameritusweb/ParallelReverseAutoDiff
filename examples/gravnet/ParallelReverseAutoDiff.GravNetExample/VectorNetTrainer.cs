@@ -52,8 +52,8 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     i++;
 
-                    double targetAngle = sub == "A" ? Math.PI / 4d : ((Math.PI / 2) + (Math.PI / 4));
-                    double oppositeAngle = sub == "A" ? ((Math.PI / 2) + (Math.PI / 4)) : Math.PI / 4d;
+                    double targetAngle = sub == "A" ? Math.PI / 4d : Math.PI;
+                    double oppositeAngle = sub == "A" ? Math.PI : Math.PI / 4d;
                     var res = net.Forward(matrix, targetAngle, oppositeAngle);
                     var gradient = res.Item1;
                     var output = res.Item2;
@@ -76,13 +76,17 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     Console.WriteLine($"Average Result Angle A: {sumResultAngleA / (numResultAngleA + 1E-9)}");
                     Console.WriteLine($"Average Result Angle B: {sumResultAngleB / (numResultAngleB + 1E-9)}");
 
-                    //await net.Backward(gradient);
-                    //net.ApplyGradients();
+                    await net.Backward(gradient);
+                    net.ApplyGradients();
                     await net.Reset();
                     Thread.Sleep(1000);
                     if (i % 100 == 99)
                     {
-                        //net.SaveWeights();
+                        sumResultAngleA = 0d;
+                        numResultAngleA = 0d;
+                        sumResultAngleB = 0d;
+                        numResultAngleB = 0d;
+                        net.SaveWeights();
                     }
                 }
             }

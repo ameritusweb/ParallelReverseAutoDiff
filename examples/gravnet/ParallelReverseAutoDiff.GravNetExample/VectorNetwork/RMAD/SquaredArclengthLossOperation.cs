@@ -13,9 +13,15 @@ namespace ParallelReverseAutoDiff.RMAD
     public class SquaredArclengthLossOperation
     {
         private double dotProduct;
+        private double xOutput;
+        private double yOutput;
         private double xTarget;
         private double yTarget;
         private double radius;
+        private double normalizedDotProduct;
+        private double theta;
+        private double magnitude;
+        private double targetAngle;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -35,10 +41,15 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The scalar loss value.</returns>
         public Matrix Forward(Matrix predictions, double targetAngle)
         {
+            this.targetAngle = targetAngle;
+
             var xOutput = predictions[0, 0];
+            this.xOutput = xOutput;
             var yOutput = predictions[0, 1];
+            this.yOutput = yOutput;
 
             double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
+            this.magnitude = magnitude;
 
             var xTarget = Math.Cos(targetAngle) * magnitude;
             this.xTarget = xTarget;
@@ -57,9 +68,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
             // Clamp the normalized dot product to the range [-1, 1] to avoid numerical issues with arccos
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
+            this.normalizedDotProduct = normalizedDotProduct;
 
             // Compute the angular difference using arccosine of the normalized dot product
             double theta = Math.Acos(normalizedDotProduct);
+            this.theta = theta;
 
             // Compute the squared magnitude of the loss
             double lossMagnitude = Math.Pow(radius * theta, 2);
@@ -77,9 +90,36 @@ namespace ParallelReverseAutoDiff.RMAD
         public Matrix Backward()
         {
             Matrix dPredictions = new Matrix(1, 2);
-            dPredictions[0, 0] = GradientWrtXOutput();
-            dPredictions[0, 1] = GradientWrtYOutput();
+            var gradX = GradientWrtXOutput();
+            var gradY = GradientWrtYOutput();
+            (dPredictions[0, 0], dPredictions[0, 1]) = GradientWrtOutput();
+            dPredictions[0, 0] = gradX;
+            dPredictions[0, 1] = gradY;
             return dPredictions;
+        }
+
+        public (double GradX, double GradY) GradientWrtOutput()
+        {
+            double X = this.xOutput;
+            double Y = this.yOutput;
+
+            // double dMagnitude_dX = X / this.magnitude;
+            // double dXTarget_dMagnitude = Math.Cos(this.targetAngle);
+
+            // double dMagnitude_dY = Y / this.magnitude;
+            // double dYTarget_dMagnitude = Math.Sin(this.targetAngle);
+
+            double dDotProduct_dX = (X * (X * Math.Cos(this.targetAngle) / this.magnitude)) + this.xTarget; // dXOutputTimesXTarget_dXOutput
+            double dDotProduct_dY = (Y * (Y * Math.Sin(this.targetAngle) / this.magnitude)) + this.yTarget; // dYOutputTimesYTarget_dYOutput
+
+            // double dNormalizedDotProduct_dDotProduct = 1d / (this.radius * this.radius);
+            double dTheta_dNormalizedDotProduct = -1d / Math.Sqrt(1d - (this.normalizedDotProduct * this.normalizedDotProduct));
+            // double dLossMagnitude_dTheta = 2d * (this.radius * this.radius) * this.theta;
+
+            // Simplified:
+            double dLossMagnitude_dX = -2d * this.theta * dTheta_dNormalizedDotProduct * dDotProduct_dX;
+            double dLossMagnitude_dY = -2d * this.theta * dTheta_dNormalizedDotProduct * dDotProduct_dY;
+            return (dLossMagnitude_dX, dLossMagnitude_dY);
         }
 
         public double GradientWrtXOutput()
