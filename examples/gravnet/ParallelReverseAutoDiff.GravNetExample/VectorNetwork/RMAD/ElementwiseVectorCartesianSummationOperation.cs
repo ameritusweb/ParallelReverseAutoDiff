@@ -69,9 +69,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 double sumX = 0.0d;
                 double sumY = 0.0d;
-                double[] resultMagnitudes = new double[input1.Cols / 2];
-                double[] resultAngles = new double[input1.Cols / 2];
-                for (int j = 0; j < input1.Cols / 2; j++)
+                (double, double)[] resultMagnitudes = new (double, double)[input1.Cols / 2];
+                for (int j = 0; j < (input1.Cols / 2); j++)
                 {
                     // Accessing the magnitudes and angles from the concatenated matrices
                     double magnitude = input1[i, j];
@@ -91,9 +90,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     // Compute resultant vector magnitude and angle
                     double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
-                    resultMagnitudes[j] = resultMagnitude;
                     double resultAngle = Math.Atan2(sumy, sumx);
-                    resultAngles[j] = resultAngle;
+                    resultMagnitudes[j] = (resultMagnitude, resultAngle);
                     resultVectors[(i * (input1.Cols / 2)) + j, 0] = resultMagnitude;
                     resultVectors[(i * (input1.Cols / 2)) + j, 1] = resultAngle;
 
@@ -105,13 +103,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 for (int j = 0; j < input1.Cols / 2; j++)
                 {
-                    double perturbedResultMagnitude = resultMagnitudes[j] == 0.0d ? 0.0001d : (resultMagnitudes[j] + (resultMagnitudes[j] * 0.0001d));
-                    double rx = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x * Math.Cos(resultAngles[j]));
-                    rx += perturbedResultMagnitude * Math.Cos(resultAngles[j]);
-                    double ry = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x * Math.Sin(resultAngles[j]));
-                    ry += perturbedResultMagnitude * Math.Sin(resultAngles[j]);
+                    double perturbedResultMagnitude = resultMagnitudes[j].Item1 == 0.0d ? 0.0001d : (resultMagnitudes[j].Item1 + (resultMagnitudes[j].Item1 * 0.0001d));
+                    double rx = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x.Item1 * Math.Cos(x.Item2));
+                    rx += perturbedResultMagnitude * Math.Cos(resultMagnitudes[j].Item2);
+                    double ry = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x.Item1 * Math.Sin(x.Item2));
+                    ry += perturbedResultMagnitude * Math.Sin(resultMagnitudes[j].Item2);
 
-                    double resultMagnitudeChange = perturbedResultMagnitude - resultMagnitudes[j];
+                    double resultMagnitudeChange = perturbedResultMagnitude - resultMagnitudes[j].Item1;
                     double sumXChange = rx - sumX;
 
                     double slopeX = sumXChange / resultMagnitudeChange;
@@ -127,21 +125,6 @@ namespace ParallelReverseAutoDiff.RMAD
                 summationX[i] = sumX;
                 summationY[i] = sumY;
             });
-
-            double maxX = this.slopesX.ToArray().SelectMany(x => x).Max();
-            double maxY = this.slopesY.ToArray().SelectMany(x => x).Max();
-            double max = Math.Min(10000, Math.Max(maxX, maxY));
-            if (max > 4d)
-            {
-                Parallel.For(0, input1.Rows, i =>
-                {
-                    for (int j = 0; j < input1.Cols / 2; ++j)
-                    {
-                        this.slopesX[i, j] = this.slopesX[i, j] / max;
-                        this.slopesY[i, j] = this.slopesY[i, j] / max;
-                    }
-                });
-            }
 
             this.summationX = summationX;
             this.summationY = summationY;
