@@ -105,7 +105,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                 for (int j = 0; j < input1.Cols / 2; j++)
                 {
-                    double perturbedResultMagnitude = resultMagnitudes[j] == 0.0d ? 0.0001d : (resultMagnitudes[j] * 0.0001d);
+                    double perturbedResultMagnitude = resultMagnitudes[j] == 0.0d ? 0.0001d : (resultMagnitudes[j] + (resultMagnitudes[j] * 0.0001d));
                     double rx = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x * Math.Cos(resultAngles[j]));
                     rx += perturbedResultMagnitude * Math.Cos(resultAngles[j]);
                     double ry = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x * Math.Sin(resultAngles[j]));
@@ -128,20 +128,20 @@ namespace ParallelReverseAutoDiff.RMAD
                 summationY[i] = sumY;
             });
 
-            //double maxX = this.slopesX.ToArray().SelectMany(x => x).Max();
-            //double maxY = this.slopesY.ToArray().SelectMany(x => x).Max();
-            //double max = Math.Max(maxX, maxY);
-            //if (max > 4d)
-            //{
-            //    Parallel.For(0, input1.Rows, i =>
-            //    {
-            //        for (int j = 0; j < input1.Cols / 2; ++j)
-            //        {
-            //            this.slopesX[i, j] = this.slopesX[i, j] / max;
-            //            this.slopesY[i, j] = this.slopesY[i, j] / max;
-            //        }
-            //    });
-            //}
+            double maxX = this.slopesX.ToArray().SelectMany(x => x).Max();
+            double maxY = this.slopesY.ToArray().SelectMany(x => x).Max();
+            double max = Math.Min(10000, Math.Max(maxX, maxY));
+            if (max > 4d)
+            {
+                Parallel.For(0, input1.Rows, i =>
+                {
+                    for (int j = 0; j < input1.Cols / 2; ++j)
+                    {
+                        this.slopesX[i, j] = this.slopesX[i, j] / max;
+                        this.slopesY[i, j] = this.slopesY[i, j] / max;
+                    }
+                });
+            }
 
             this.summationX = summationX;
             this.summationY = summationY;

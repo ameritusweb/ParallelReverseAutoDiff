@@ -58,6 +58,11 @@ namespace ParallelReverseAutoDiff.GravNetExample
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
         }
 
+        public IModelLayer? GetModelLayer()
+        {
+            return this.vectorNetwork.ModelLayers.FirstOrDefault();
+        }
+
         /// <summary>
         /// Adjusts the learning rate.
         /// </summary>
@@ -73,7 +78,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 6090;
+            var initialAdamIteration = 6889;
             var model = new VectorNetwork.VectorNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.vectorNetwork = model;
@@ -113,7 +118,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "7a7d9096-8c9e-450a-9c37-7e06ef557ca4_6090";
+            var guid = "72972156-5ceb-41e2-a13e-de730882cf41_6889";
             var dir = $"E:\\vnnstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {

@@ -27,7 +27,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 double numResultAngleB = 0d;
                 double sumLoss = 0d;
                 double numLoss = 0d;
-                Random random = new Random(Guid.NewGuid().GetHashCode());
+                Random random = new Random(2);
                 var files = jsonFiles.OrderBy(x => random.Next()).ToArray();
                 int i = 0;
                 foreach (var jsonFile in files)
@@ -50,6 +50,12 @@ namespace ParallelReverseAutoDiff.GravNetExample
                         {
                             matrix[j, k] = data[j][k];
                         }
+                    }
+                    var layer = net.GetModelLayer();
+                    if (layer != null)
+                    {
+                        //var angles = layer.WeightMatrix("SummationWeights");
+                        //angles[0, 0] += 0.001d;
                     }
 
                     i++;
@@ -81,12 +87,12 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     Console.WriteLine($"Average Result Angle A: {sumResultAngleA / (numResultAngleA + 1E-9)}");
                     Console.WriteLine($"Average Result Angle B: {sumResultAngleB / (numResultAngleB + 1E-9)}");
 
-                    if (Math.Abs(loss[0][0]) >= 200d)
-                    {
+                    //if (Math.Abs(loss[0][0]) >= 200d)
+                    //{
                         Console.WriteLine($"Average loss: {avgloss}");
                         await net.Backward(gradient);
-                        net.ApplyGradients();
-                    }
+                        //net.ApplyGradients();
+                    //}
 
                     await net.Reset();
                     Thread.Sleep(1000);

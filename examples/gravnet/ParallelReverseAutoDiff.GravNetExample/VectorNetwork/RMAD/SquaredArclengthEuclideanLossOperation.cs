@@ -74,7 +74,10 @@ namespace ParallelReverseAutoDiff.RMAD
             double theta = Math.Acos(normalizedDotProduct);
             this.theta = theta;
 
-            double distanceCubed = Math.Pow(xOutput - xTarget, 3) + Math.Pow(yOutput - yTarget, 3);
+            double distanceX = Math.Pow(xOutput - xTarget, 3);
+            
+            double distanceY = Math.Pow(yOutput - yTarget, 3);
+            double distanceCubed = distanceX + distanceY;
 
             // Compute the squared magnitude of the loss
             double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceCubed) / 2d;
@@ -95,7 +98,7 @@ namespace ParallelReverseAutoDiff.RMAD
             var gradX = GradientWrtXOutput();
             var gradY = GradientWrtYOutput();
             var (eX, eY) = EuclideanGradientWrtOutput();
-            dPredictions[0, 0] = gradX + eX;
+            dPredictions[0, 0] = (-1d * gradX) + eX;
             dPredictions[0, 1] = gradY + eY;
             return dPredictions;
         }
@@ -105,8 +108,8 @@ namespace ParallelReverseAutoDiff.RMAD
             double X = this.xOutput;
             double Y = this.yOutput;
 
-            double dLoss_dX = -1d * (X - xTarget) * (3d/2d);
-            double dLoss_dY = -1d * (Y - yTarget) * (3d/2d);
+            double dLoss_dX = (X - xTarget) * (3d/2d);
+            double dLoss_dY = (Y - yTarget) * (3d/2d);
             return (dLoss_dX, dLoss_dY);
         }
 

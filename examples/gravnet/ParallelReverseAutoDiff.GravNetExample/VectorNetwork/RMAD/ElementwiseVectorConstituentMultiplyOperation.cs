@@ -90,7 +90,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     for (int k = 0; k < input1.Cols / 2; k++)
                     {
-                        double perturbedResultMagnitude = resultMagnitudes[k] == 0.0d ? 0.0001d : (resultMagnitudes[k] * 0.0001d);
+                        double perturbedResultMagnitude = resultMagnitudes[k] == 0.0d ? 0.0001d : (resultMagnitudes[k] + (resultMagnitudes[k] * 0.0001d));
                         double rx = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x * Math.Cos(resultAngles[k]));
                         rx += perturbedResultMagnitude * Math.Cos(resultAngles[k]);
                         double ry = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x * Math.Sin(resultAngles[k]));
