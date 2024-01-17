@@ -27,7 +27,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 double numResultAngleB = 0d;
                 double sumLoss = 0d;
                 double numLoss = 0d;
-                Random random = new Random(2);
+                Random random = new Random(4);
                 var files = jsonFiles.OrderBy(x => random.Next()).ToArray();
                 int i = 0;
                 foreach (var jsonFile in files)
