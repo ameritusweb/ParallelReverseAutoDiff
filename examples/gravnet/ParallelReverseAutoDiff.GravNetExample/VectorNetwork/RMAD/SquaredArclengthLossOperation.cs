@@ -73,7 +73,9 @@ namespace ParallelReverseAutoDiff.RMAD
 
             double lossY = radius * theta * yDiff;
 
-            double combinedLoss = (lossX * lossX) + (lossY * lossY);
+            double lossXCubed = lossX * lossX * lossX;
+
+            double lossYCubed = lossY * lossY * lossY;
 
             // Gradient calculations //
             double dXOutputMapped_dX = -radius * Math.Sin(outputTheta) * (-yOutput / ((xOutput * xOutput) + (yOutput * yOutput)));
@@ -85,19 +87,16 @@ namespace ParallelReverseAutoDiff.RMAD
             double dNormalizedDotProduct_dYOutputMapped = yTarget / (radius * radius);
 
             double dLossX_dNormalizedDotProduct = radius * xDiff * -1 / Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
-            
+
             double dLossY_dNormalizedDotProduct = radius * yDiff * -1 / Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
 
-            double dCombinedLoss_dLossX = 2 * lossX;
-
-            double dCombinedLoss_dLossY = 2 * lossY;
-
-            this.gradientX = dCombinedLoss_dLossX * dLossX_dNormalizedDotProduct * dNormalizedDotProduct_dXOutputMapped * dXOutputMapped_dX;
-            this.gradientY = dCombinedLoss_dLossY * dLossY_dNormalizedDotProduct * dNormalizedDotProduct_dYOutputMapped * dXOutputMapped_dY;
+            this.gradientX = (lossXCubed < 0.0d ? -1d : 1d) * dLossX_dNormalizedDotProduct * dNormalizedDotProduct_dXOutputMapped * dXOutputMapped_dX;
+            this.gradientY = (lossYCubed < 0.0d ? -1d : 1d) * dLossY_dNormalizedDotProduct * dNormalizedDotProduct_dYOutputMapped * dXOutputMapped_dY;
             ////////////////////////////////
 
-            var output = new Matrix(1, 1);
-            output[0, 0] = combinedLoss;
+            var output = new Matrix(1, 2);
+            output[0, 0] = lossXCubed;
+            output[0, 1] = lossYCubed;
 
             return output;
         }
