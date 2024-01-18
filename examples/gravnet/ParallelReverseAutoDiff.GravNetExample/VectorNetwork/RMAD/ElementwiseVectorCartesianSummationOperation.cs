@@ -168,11 +168,21 @@ namespace ParallelReverseAutoDiff.RMAD
                     dWeights[i, j] += dSumYOutput * dSumY_dLocalizedResultMagnitude * dLocalizedResultMagnitude_dWeightY;
 
                     // Apply chain rule to propagate back to dInput1 and dInput2
-                    dInput1[i, j] += dSumXOutput * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX1;
-                    dInput1[i, j + (this.input1.Cols / 2)] += dSumYOutput * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY1;
+                    double dSumXOutputDLocalDX1 = dSumXOutput * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX1;
+                    double dSumYOutputDLocalDY1 = dSumYOutput * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY1;
+                    dInput1[i, j] += dSumXOutputDLocalDX1 * this.calculatedValues[i, j].DX1DMagnitude;
+                    dInput1[i, j] += dSumYOutputDLocalDY1 * this.calculatedValues[i, j].DY1DMagnitude;
 
-                    dInput2[i, j] += dSumXOutput * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX2;
-                    dInput2[i, j + (this.input2.Cols / 2)] += dSumYOutput * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY2;
+                    dInput1[i, j + (this.input1.Cols / 2)] += dSumXOutputDLocalDX1 * this.calculatedValues[i, j].DX1DAngle;
+                    dInput1[i, j + (this.input1.Cols / 2)] += dSumYOutputDLocalDY1 * this.calculatedValues[i, j].DY1DAngle;
+
+                    double dSumXOutputDLocalDX2 = dSumXOutput * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX2;
+                    double dSumYOutputDLocalDY2 = dSumYOutput * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY2;
+                    dInput2[i, j] += dSumXOutputDLocalDX2 * this.calculatedValues[i, j].DX2DWMagnitude;
+                    dInput2[i, j] += dSumYOutputDLocalDY2 * this.calculatedValues[i, j].DY2DWMagnitude;
+
+                    dInput2[i, j + (this.input2.Cols / 2)] += dSumXOutputDLocalDX2 * this.calculatedValues[i, j].DX2DWAngle;
+                    dInput2[i, j + (this.input2.Cols / 2)] += dSumYOutputDLocalDY2 * this.calculatedValues[i, j].DY2DWAngle;
                 }
             });
 
@@ -205,6 +215,15 @@ namespace ParallelReverseAutoDiff.RMAD
             values.DResultMagnitudeLocalDX2 = combinedX * x2 * this.weights[i, j];
             values.DResultMagnitudeLocalDY2 = combinedY * y2 * this.weights[i, j];
 
+            values.DX1DAngle = -magnitude * Math.Sin(angle);
+            values.DX1DMagnitude = Math.Cos(angle);
+            values.DY1DAngle = magnitude * Math.Cos(angle);
+            values.DY1DMagnitude = Math.Sin(angle);
+            values.DX2DWAngle = -wMagnitude * Math.Sin(wAngle);
+            values.DX2DWMagnitude = Math.Cos(wAngle);
+            values.DY2DWAngle = wMagnitude * Math.Cos(wAngle);
+            values.DY2DWMagnitude = Math.Sin(wAngle);
+
             this.calculatedValues[i, j] = values;
         }
 
@@ -214,6 +233,15 @@ namespace ParallelReverseAutoDiff.RMAD
             public double DResultMagnitudeLocalDY1;
             public double DResultMagnitudeLocalDX2;
             public double DResultMagnitudeLocalDY2;
+
+            public double DX1DAngle;
+            public double DX1DMagnitude;
+            public double DY1DAngle;
+            public double DY1DMagnitude;
+            public double DX2DWAngle;
+            public double DX2DWMagnitude;
+            public double DY2DWAngle;
+            public double DY2DWMagnitude;
         }
     }
 }
