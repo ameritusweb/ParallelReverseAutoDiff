@@ -12,10 +12,6 @@ namespace ParallelReverseAutoDiff.RMAD
     /// </summary>
     public class SquaredArclengthLossOperation
     {
-        private double dotProduct;
-        private double xTarget;
-        private double yTarget;
-        private double radius;
         private double gradientX;
         private double gradientY;
 
@@ -37,7 +33,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The scalar loss value.</returns>
         public Matrix Forward(Matrix predictions, double targetAngle, double radius = 10d)
         {
-            predictions[0, 1] += 0.001d;
             var xOutput = predictions[0, 0];
             var yOutput = predictions[0, 1];
 
@@ -46,15 +41,11 @@ namespace ParallelReverseAutoDiff.RMAD
             var yOutputMapped = radius * Math.Sin(outputTheta);
 
             var xTarget = radius * Math.Cos(targetAngle);
-            this.xTarget = xTarget;
-            var yTarget = radius * Math.Sin(targetAngle);
-            this.yTarget = yTarget;
 
-            this.radius = radius;
+            var yTarget = radius * Math.Sin(targetAngle);
 
             // Calculate the dot product of the output and target vectors
             double dotProduct = (xOutputMapped * xTarget) + (yOutputMapped * yTarget);
-            this.dotProduct = dotProduct;
 
             // Normalize the dot product by the square of the radius
             double normalizedDotProduct = dotProduct / (radius * radius);
@@ -65,38 +56,42 @@ namespace ParallelReverseAutoDiff.RMAD
             // Compute the angular difference using arccosine of the normalized dot product
             double theta = Math.Acos(normalizedDotProduct);
 
-            double xDiff = Math.Sign(xOutputMapped - xTarget);
+            double xDiffSign = Math.Sign(xTarget - xOutputMapped);
 
-            double lossX = radius * theta * xDiff;
+            double lossX = radius * theta * xDiffSign;
 
-            double yDiff = Math.Sign(yOutputMapped - yTarget);
+            double yDiffSign = Math.Sign(yTarget - yOutputMapped);
 
-            double lossY = radius * theta * yDiff;
+            double lossY = radius * theta * yDiffSign;
 
-            double lossXCubed = lossX * lossX * lossX;
+            double lossXCubedDivide = lossX * lossX * lossX / 3d;
 
-            double lossYCubed = lossY * lossY * lossY;
+            double lossYCubedDivide = lossY * lossY * lossY / 3d;
 
             // Gradient calculations //
             double dXOutputMapped_dX = -radius * Math.Sin(outputTheta) * (-yOutput / ((xOutput * xOutput) + (yOutput * yOutput)));
 
-            double dXOutputMapped_dY = radius * Math.Cos(outputTheta) * (1 / ((xOutput * xOutput) + (yOutput * yOutput)));
+            double dYOutputMapped_dY = radius * Math.Cos(outputTheta) * (1 / ((xOutput * xOutput) + (yOutput * yOutput)));
 
             double dNormalizedDotProduct_dXOutputMapped = xTarget / (radius * radius);
 
             double dNormalizedDotProduct_dYOutputMapped = yTarget / (radius * radius);
 
-            double dLossX_dNormalizedDotProduct = radius * xDiff * -1 / Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
+            double dLossX_dNormalizedDotProduct = radius * -1 / Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
 
-            double dLossY_dNormalizedDotProduct = radius * yDiff * -1 / Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
+            double dLossY_dNormalizedDotProduct = radius * -1 / Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
 
-            this.gradientX = (lossXCubed < 0.0d ? -1d : 1d) * dLossX_dNormalizedDotProduct * dNormalizedDotProduct_dXOutputMapped * dXOutputMapped_dX;
-            this.gradientY = (lossYCubed < 0.0d ? -1d : 1d) * dLossY_dNormalizedDotProduct * dNormalizedDotProduct_dYOutputMapped * dXOutputMapped_dY;
+            double dLossXCubedDivide_dLossX = lossX * lossX;
+
+            double dLossYCubedDivide_dLossY = lossY * lossY;
+
+            this.gradientX = (targetAngle < (Math.PI / 2) ? -1d : 1d) * (yOutputMapped < 0.0d ? 1d : -1d) * (lossXCubedDivide < 0.0d ? -1d : 1d) * dLossXCubedDivide_dLossX * dLossX_dNormalizedDotProduct * dNormalizedDotProduct_dXOutputMapped * dXOutputMapped_dX;
+            this.gradientY = (targetAngle < 0 ? -1d : 1d) * (xOutputMapped < 0.0d ? -1d : 1d) * (lossYCubedDivide < 0.0d ? -1d : 1d) * dLossYCubedDivide_dLossY * dLossY_dNormalizedDotProduct * dNormalizedDotProduct_dYOutputMapped * dYOutputMapped_dY;
             ////////////////////////////////
 
             var output = new Matrix(1, 2);
-            output[0, 0] = lossXCubed;
-            output[0, 1] = lossYCubed;
+            output[0, 0] = lossXCubedDivide;
+            output[0, 1] = lossYCubedDivide;
 
             return output;
         }

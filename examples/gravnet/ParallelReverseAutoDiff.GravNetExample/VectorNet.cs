@@ -20,6 +20,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         private List<IModelLayer> modelLayers;
         private List<(string, string)> entities;
         private Matrix? prevOutputTwo;
+        private StochasticAdamOptimizer adamOptimize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VectorNetwork"/> class.
@@ -39,6 +40,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             this.modelLayers = new List<IModelLayer>();
             this.entities = new List<(string, string)>();
             this.vectorNetwork = new VectorNetwork.VectorNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
+            this.adamOptimize = new StochasticAdamOptimizer(this.vectorNetwork);
         }
 
         public VectorNetwork.VectorNetwork GraphAttentionNetwork => this.vectorNetwork;
@@ -78,7 +80,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 4594;
+            var initialAdamIteration = 6634;
             var model = new VectorNetwork.VectorNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.vectorNetwork = model;
@@ -102,6 +104,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void SaveWeights()
         {
+            this.adamOptimize.Reset();
             Guid guid = Guid.NewGuid();
             var dir = $"E:\\vnnstore\\{guid}_{this.vectorNetwork.Parameters.AdamIteration}";
             Directory.CreateDirectory(dir);
@@ -118,7 +121,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "508f21a6-3d4b-4d01-8b4c-d657a6eaf224_4594";
+            var guid = "4b0bd014-fb23-4862-b63a-c3981aa1b2d6_6634";
             var dir = $"E:\\vnnstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -136,7 +139,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         {
             var clipper = this.vectorNetwork.Utilities.GradientClipper;
             clipper.Clip(this.modelLayers.ToArray());
-            var adamOptimizer = new StochasticAdamOptimizer(this.vectorNetwork);
+            var adamOptimizer = this.adamOptimize;
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
