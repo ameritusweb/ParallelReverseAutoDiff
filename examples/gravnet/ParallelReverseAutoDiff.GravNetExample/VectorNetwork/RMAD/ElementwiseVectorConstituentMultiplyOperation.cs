@@ -170,13 +170,43 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dCombinedAngle_dSumX = -deltay / (deltax * deltax + deltay * deltay);
                         double dCombinedAngle_dSumY = deltax / (deltax * deltax + deltay * deltay);
 
+                        double dX1_dMagnitude = Math.Cos(angle);
+                        double dY1_dMagnitude = Math.Sin(angle);
+
                         // Apply chain rule for dInput1
-                        dInput1[i, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 + dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1);
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 + dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1);
+                        dInput1[i, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
+                        dInput1[i, j] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude);
+
+                        dInput1[i, j] += dOutput[i, j] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
+                        dInput1[i, j] += dOutput[i, j] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude);
+
+                        double dX1_dAngle = -magnitude * Math.Sin(angle);
+                        double dY1_dAngle = magnitude * Math.Cos(angle);
+
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle);
+
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle);
+
+                        double dX2_dWMagnitude = Math.Cos(wAngle);
+                        double dY2_dWMagnitude = Math.Sin(wAngle);
 
                         // Apply chain rule for dInput2
-                        dInput2[k, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 + dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2);
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 + dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2);
+                        dInput2[k, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
+                        dInput2[k, j] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude);
+
+                        dInput2[k, j] += dOutput[i, j] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
+                        dInput2[k, j] += dOutput[i, j] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude);
+
+                        double dX2_dWAngle = -wMagnitude * Math.Sin(wAngle);
+                        double dY2_dWAngle = wMagnitude * Math.Cos(wAngle);
+
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle);
+
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle);
 
                         // Derivatives of delta components with respect to weight
                         double dDeltaX_dWeight = (weights[k, j] > 0) ? (x2 - x1) : (x1 - x2);
