@@ -89,8 +89,8 @@ namespace ParallelReverseAutoDiff.RMAD
                         double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
                         double resultAngle = Math.Atan2(deltay, deltax);
 
-                        double dResultMagnitude_dDeltaX = deltax / Math.Sqrt(deltax * deltax + deltay * deltay);
-                        double dResultMagnitude_dDeltaY = deltay / Math.Sqrt(deltax * deltax + deltay * deltay);
+                        double dResultMagnitude_dDeltaX = (deltax * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
+                        double dResultMagnitude_dDeltaY = (deltay * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
                         double dResultAngle_dDeltaX = -deltay / (deltax * deltax + deltay * deltay);
                         double dResultAngle_dDeltaY = deltax / (deltax * deltax + deltay * deltay);
 

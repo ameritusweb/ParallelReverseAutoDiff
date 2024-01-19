@@ -7,7 +7,6 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using ParallelReverseAutoDiff.GravNetExample.VectorNetwork;
     using System;
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -20,8 +19,6 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix weights;
         private double[] summationX;
         private double[] summationY;
-        private Matrix slopesX;
-        private Matrix slopesY;
         private CalculatedValues[,] calculatedValues;
         private VectorNetwork vectorNetwork;
 
@@ -55,15 +52,10 @@ namespace ParallelReverseAutoDiff.RMAD
 
             this.Output = new Matrix(1, 2);
 
-            this.slopesX = new Matrix(input1.Rows, input1.Cols / 2);
-            this.slopesY = new Matrix(input1.Rows, input1.Cols / 2);
-
             this.calculatedValues = new CalculatedValues[this.input1.Rows, this.input1.Cols / 2];
 
             double[] summationX = new double[input1.Rows];
             double[] summationY = new double[input1.Rows];
-            double[,] perturbationX = new double[input1.Rows, input1.Cols / 2];
-            double[,] perturbationY = new double[input1.Rows, input1.Cols / 2];
             double[,] resultVectors = new double[input1.Rows * (input1.Cols / 2), 2];
             Parallel.For(0, input1.Rows, i =>
             {
@@ -88,38 +80,77 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumx = x1 + x2;
                     double sumy = y1 + y2;
 
+                    double dsumx_dAngle = -magnitude * Math.Sin(angle);
+                    double dsumx_dWAngle = -wMagnitude * Math.Sin(wAngle);
+                    double dsumy_dAngle = magnitude * Math.Cos(angle);
+                    double dsumy_dWAngle = wMagnitude * Math.Cos(wAngle);
+                    double dsumx_dMagnitude = Math.Cos(angle);
+                    double dsumx_dWMagnitude = Math.Cos(wAngle);
+                    double dsumy_dMagnitude = Math.Sin(angle);
+                    double dsumy_dWMagnitude = Math.Sin(wAngle);
+
                     // Compute resultant vector magnitude and angle
                     double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
                     double resultAngle = Math.Atan2(sumy, sumx);
-                    resultMagnitudes[j] = (resultMagnitude, resultAngle);
+
+                    double dResultMagnitude_dsumx = (sumx * weights[i, j]) / Math.Sqrt(sumx * sumx + sumy * sumy);
+                    double dResultMagnitude_dsumy = (sumy * weights[i, j]) / Math.Sqrt(sumx * sumx + sumy * sumy);
+                    double dResultAngle_dsumx = -sumy / (sumx * sumx + sumy * sumy);
+                    double dResultAngle_dsumy = sumx / (sumx * sumx + sumy * sumy);
+
+                    double dResultMagnitude_dAngle = dResultMagnitude_dsumx * dsumx_dAngle + dResultMagnitude_dsumy * dsumy_dAngle;
+                    double dResultMagnitude_dWAngle = dResultMagnitude_dsumx * dsumx_dWAngle + dResultMagnitude_dsumy * dsumy_dWAngle;
+                    double dResultAngle_dAngle = dResultAngle_dsumx * dsumx_dAngle + dResultAngle_dsumy * dsumy_dAngle;
+                    double dResultAngle_dWAngle = dResultAngle_dsumx * dsumx_dWAngle + dResultAngle_dsumy * dsumy_dWAngle;
+
+                    double dResultMagnitude_dMagnitude = dResultMagnitude_dsumx * dsumx_dMagnitude + dResultMagnitude_dsumy * dsumy_dMagnitude;
+                    double dResultMagnitude_dWMagnitude = dResultMagnitude_dsumx * dsumx_dWMagnitude + dResultMagnitude_dsumy * dsumy_dWMagnitude;
+                    double dResultAngle_dMagnitude = dResultAngle_dsumx * dsumx_dMagnitude + dResultAngle_dsumy * dsumy_dMagnitude;
+                    double dResultAngle_dWMagnitude = dResultAngle_dsumx * dsumx_dWMagnitude + dResultAngle_dsumy * dsumy_dWMagnitude;
+
                     resultVectors[(i * (input1.Cols / 2)) + j, 0] = resultMagnitude;
                     resultVectors[(i * (input1.Cols / 2)) + j, 1] = resultAngle;
 
-                    sumX += resultMagnitude * Math.Cos(resultAngle);
-                    sumY += resultMagnitude * Math.Sin(resultAngle);
+                    double localSumX = resultMagnitude * Math.Cos(resultAngle);
+                    double localSumY = resultMagnitude * Math.Sin(resultAngle);
 
-                    this.CalculateAndStoreValues(i, j);
-                }
+                    double localSumXFull = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * Math.Cos(resultAngle);
+                    double localSumYFull = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * Math.Sin(resultAngle);
 
-                for (int j = 0; j < input1.Cols / 2; j++)
-                {
-                    double perturbedResultMagnitude = resultMagnitudes[j].Item1 == 0.0d ? 0.0001d : (resultMagnitudes[j].Item1 + (resultMagnitudes[j].Item1 * 0.0001d));
-                    double rx = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x.Item1 * Math.Cos(x.Item2));
-                    rx += perturbedResultMagnitude * Math.Cos(resultMagnitudes[j].Item2);
-                    double ry = resultMagnitudes.Take(j).Concat(resultMagnitudes.Skip(j + 1)).Sum(x => x.Item1 * Math.Sin(x.Item2));
-                    ry += perturbedResultMagnitude * Math.Sin(resultMagnitudes[j].Item2);
+                    double dLocalSumX_dWeight = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * Math.Cos(resultAngle);
+                    double dLocalSumY_dWeight = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * Math.Sin(resultAngle);
 
-                    double resultMagnitudeChange = perturbedResultMagnitude - resultMagnitudes[j].Item1;
-                    double sumXChange = rx - sumX;
+                    this.calculatedValues[i, j].DLocalSumX_DWeight = dLocalSumX_dWeight;
+                    this.calculatedValues[i, j].DLocalSumY_DWeight = dLocalSumY_dWeight;
 
-                    double slopeX = sumXChange / resultMagnitudeChange;
+                    double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
+                    double dLocalSumX_dResultAngle = -resultMagnitude * Math.Sin(resultAngle);
+                    
+                    double dLocalSumX_dAngle = dLocalSumX_dResultMagnitude * dResultMagnitude_dAngle + dLocalSumX_dResultAngle * dResultAngle_dAngle;
+                    double dLocalSumX_dWAngle = dLocalSumX_dResultMagnitude * dResultMagnitude_dWAngle + dLocalSumX_dResultAngle * dResultAngle_dWAngle;
+                    double dLocalSumX_dMagnitude = dLocalSumX_dResultMagnitude * dResultMagnitude_dMagnitude + dLocalSumX_dResultAngle * dResultAngle_dMagnitude;
+                    double dLocalSumX_dWMagnitude = dLocalSumX_dResultMagnitude * dResultMagnitude_dWMagnitude + dLocalSumX_dResultAngle * dResultAngle_dWMagnitude;
 
-                    double sumYChange = ry - sumY;
+                    this.calculatedValues[i, j].DLocalSumX_DAngle = dLocalSumX_dAngle;
+                    this.calculatedValues[i, j].DLocalSumX_DWAngle = dLocalSumX_dWAngle;
+                    this.calculatedValues[i, j].DLocalSumX_DMagnitude = dLocalSumX_dMagnitude;
+                    this.calculatedValues[i, j].DLocalSumX_DWMagnitude = dLocalSumX_dWMagnitude;
 
-                    double slopeY = sumYChange / resultMagnitudeChange;
+                    double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
+                    double dLocalSumY_dResultAngle = resultMagnitude * Math.Cos(resultAngle);
+                    
+                    double dLocalSumY_dAngle = dLocalSumY_dResultMagnitude * dResultMagnitude_dAngle + dLocalSumY_dResultAngle * dResultAngle_dAngle;
+                    double dLocalSumY_dWAngle = dLocalSumY_dResultMagnitude * dResultMagnitude_dWAngle + dLocalSumY_dResultAngle * dResultAngle_dWAngle;
+                    double dLocalSumY_dMagnitude = dLocalSumY_dResultMagnitude * dResultMagnitude_dMagnitude + dLocalSumY_dResultAngle * dResultAngle_dMagnitude;
+                    double dLocalSumY_dWMagnitude = dLocalSumY_dResultMagnitude * dResultMagnitude_dWMagnitude + dLocalSumY_dResultAngle * dResultAngle_dWMagnitude;
 
-                    this.slopesX[i, j] = slopeX;
-                    this.slopesY[i, j] = slopeY;
+                    this.calculatedValues[i, j].DLocalSumY_DAngle = dLocalSumY_dAngle;
+                    this.calculatedValues[i, j].DLocalSumY_DWAngle = dLocalSumY_dWAngle;
+                    this.calculatedValues[i, j].DLocalSumY_DMagnitude = dLocalSumY_dMagnitude;
+                    this.calculatedValues[i, j].DLocalSumY_DWMagnitude = dLocalSumY_dWMagnitude;
+
+                    sumX += localSumX;
+                    sumY += localSumY;
                 }
 
                 summationX[i] = sumX;
@@ -147,42 +178,25 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix dInput2 = new Matrix(input2.Rows, input2.Cols);
             Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
 
-            double dSumXOutput = dOutput[0, 0]; // Gradient of the loss function with respect to the output X
-            double dSumYOutput = dOutput[0, 1];     // Gradient of the loss function with respect to the output Y
+            double dSummationXOutput = dOutput[0, 0]; // Gradient of the loss function with respect to the output X
+            double dSummationYOutput = dOutput[0, 1];     // Gradient of the loss function with respect to the output Y
 
             // Updating gradients with respect to resultMagnitude and resultAngle
             Parallel.For(0, this.input1.Rows, i =>
             {
                 for (int j = 0; j < this.input1.Cols / 2; j++)
                 {
-                    // Empirically determined derivatives
-                    double dSumX_dLocalizedResultMagnitude = this.slopesX[i, j]; // Calculated empirically
-                    double dSumY_dLocalizedResultMagnitude = this.slopesY[i, j]; // Calculated empirically
-
-                    // Chain rule for the angle contribution
-                    double dLocalizedResultMagnitude_dWeightX = this.calculatedValues[i, j].DResultMagnitudeLocalDX1 * this.weights[i, j]; // For X
-                    double dLocalizedResultMagnitude_dWeightY = this.calculatedValues[i, j].DResultMagnitudeLocalDY1 * this.weights[i, j]; // For Y
+                    var values = this.calculatedValues[i, j];
 
                     // Update dWeights with direct contributions from summationX and summationY
-                    dWeights[i, j] += dSumXOutput * dSumX_dLocalizedResultMagnitude * dLocalizedResultMagnitude_dWeightX;
-                    dWeights[i, j] += dSumYOutput * dSumY_dLocalizedResultMagnitude * dLocalizedResultMagnitude_dWeightY;
+                    dWeights[i, j] = dSummationXOutput * values.DLocalSumX_DWeight + dSummationYOutput * values.DLocalSumY_DWeight;
 
                     // Apply chain rule to propagate back to dInput1 and dInput2
-                    double dSumXOutputDLocalDX1 = dSumXOutput * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX1;
-                    double dSumYOutputDLocalDY1 = dSumYOutput * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY1;
-                    dInput1[i, j] += dSumXOutputDLocalDX1 * this.calculatedValues[i, j].DX1DMagnitude;
-                    dInput1[i, j] += dSumYOutputDLocalDY1 * this.calculatedValues[i, j].DY1DMagnitude;
+                    dInput1[i, j] = dSummationXOutput * values.DLocalSumX_DMagnitude + dSummationYOutput * values.DLocalSumY_DMagnitude;
+                    dInput1[i, j + (this.input1.Cols / 2)] = dSummationXOutput * values.DLocalSumX_DAngle + dSummationYOutput * values.DLocalSumY_DAngle;
 
-                    dInput1[i, j + (this.input1.Cols / 2)] += dSumXOutputDLocalDX1 * this.calculatedValues[i, j].DX1DAngle;
-                    dInput1[i, j + (this.input1.Cols / 2)] += dSumYOutputDLocalDY1 * this.calculatedValues[i, j].DY1DAngle;
-
-                    double dSumXOutputDLocalDX2 = dSumXOutput * dSumX_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDX2;
-                    double dSumYOutputDLocalDY2 = dSumYOutput * dSumY_dLocalizedResultMagnitude * this.calculatedValues[i, j].DResultMagnitudeLocalDY2;
-                    dInput2[i, j] += dSumXOutputDLocalDX2 * this.calculatedValues[i, j].DX2DWMagnitude;
-                    dInput2[i, j] += dSumYOutputDLocalDY2 * this.calculatedValues[i, j].DY2DWMagnitude;
-
-                    dInput2[i, j + (this.input2.Cols / 2)] += dSumXOutputDLocalDX2 * this.calculatedValues[i, j].DX2DWAngle;
-                    dInput2[i, j + (this.input2.Cols / 2)] += dSumYOutputDLocalDY2 * this.calculatedValues[i, j].DY2DWAngle;
+                    dInput2[i, j] = dSummationXOutput * values.DLocalSumX_DWMagnitude + dSummationYOutput * values.DLocalSumY_DWMagnitude;
+                    dInput2[i, j + (this.input2.Cols / 2)] = dSummationXOutput * values.DLocalSumX_DWAngle + dSummationYOutput * values.DLocalSumY_DWAngle;
                 }
             });
 
@@ -193,55 +207,20 @@ namespace ParallelReverseAutoDiff.RMAD
                 .Build();
         }
 
-        private void CalculateAndStoreValues(int i, int j)
-        {
-            // Calculate and store values
-            CalculatedValues values;
-            var magnitude = this.input1[i, j];
-            var angle = this.input1[i, j + (this.input1.Cols / 2)];
-            var wMagnitude = this.input2[i, j];
-            var wAngle = this.input2[i, j + (this.input2.Cols / 2)];
-
-            var x1 = magnitude * Math.Cos(angle);
-            var y1 = magnitude * Math.Sin(angle);
-            var x2 = wMagnitude * Math.Cos(wAngle);
-            var y2 = wMagnitude * Math.Sin(wAngle);
-
-            var combinedX = x1 + x2;
-            var combinedY = y1 + y2;
-
-            values.DResultMagnitudeLocalDX1 = combinedX * x1 * this.weights[i, j];
-            values.DResultMagnitudeLocalDY1 = combinedY * y1 * this.weights[i, j];
-            values.DResultMagnitudeLocalDX2 = combinedX * x2 * this.weights[i, j];
-            values.DResultMagnitudeLocalDY2 = combinedY * y2 * this.weights[i, j];
-
-            values.DX1DAngle = -magnitude * Math.Sin(angle);
-            values.DX1DMagnitude = Math.Cos(angle);
-            values.DY1DAngle = magnitude * Math.Cos(angle);
-            values.DY1DMagnitude = Math.Sin(angle);
-            values.DX2DWAngle = -wMagnitude * Math.Sin(wAngle);
-            values.DX2DWMagnitude = Math.Cos(wAngle);
-            values.DY2DWAngle = wMagnitude * Math.Cos(wAngle);
-            values.DY2DWMagnitude = Math.Sin(wAngle);
-
-            this.calculatedValues[i, j] = values;
-        }
-
         private struct CalculatedValues
         {
-            public double DResultMagnitudeLocalDX1;
-            public double DResultMagnitudeLocalDY1;
-            public double DResultMagnitudeLocalDX2;
-            public double DResultMagnitudeLocalDY2;
+            public double DLocalSumX_DAngle;
+            public double DLocalSumX_DWAngle;
+            public double DLocalSumX_DMagnitude;
+            public double DLocalSumX_DWMagnitude;
 
-            public double DX1DAngle;
-            public double DX1DMagnitude;
-            public double DY1DAngle;
-            public double DY1DMagnitude;
-            public double DX2DWAngle;
-            public double DX2DWMagnitude;
-            public double DY2DWAngle;
-            public double DY2DWMagnitude;
+            public double DLocalSumY_DAngle;
+            public double DLocalSumY_DWAngle;
+            public double DLocalSumY_DMagnitude;
+            public double DLocalSumY_DWMagnitude;
+
+            public double DLocalSumX_DWeight;
+            public double DLocalSumY_DWeight;
         }
     }
 }
