@@ -264,6 +264,21 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dWeight +
                             dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dWeight);
+
+                        double dResultMagnitude_dWeight = Math.Sqrt(deltax * deltax + deltay * deltay);
+                        double resultAngle = Math.Atan2(deltay, deltax);
+                        double dSumX_dResultMagnitude = Math.Cos(resultAngle);
+                        double dSumY_dResultMagnitude = Math.Sin(resultAngle);
+
+                        // Apply chain rule for weights for magnitude and angle
+                        dWeights[k, j] += dOutput[i, j] * (
+                            dCombinedMagnitude_dSumX * dSumX_dResultMagnitude * dResultMagnitude_dWeight +
+                            dCombinedMagnitude_dSumY * dSumY_dResultMagnitude * dResultMagnitude_dWeight);
+
+                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (
+                            dCombinedAngle_dSumX * dSumX_dResultMagnitude * dResultMagnitude_dWeight +
+                            dCombinedAngle_dSumY * dSumY_dResultMagnitude * dResultMagnitude_dWeight);
+
                     }
                 }
             });
