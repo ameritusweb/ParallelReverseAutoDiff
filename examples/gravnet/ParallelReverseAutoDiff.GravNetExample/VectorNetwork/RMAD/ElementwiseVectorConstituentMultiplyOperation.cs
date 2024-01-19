@@ -18,8 +18,10 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix weights;
         private Matrix sumX;
         private Matrix sumY;
-        private Matrix slopesX;
-        private Matrix slopesY;
+        private Matrix dSumXDDeltaX;
+        private Matrix dSumXDDeltaY;
+        private Matrix dSumYDDeltaX;
+        private Matrix dSumYDDeltaY;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -46,8 +48,11 @@ namespace ParallelReverseAutoDiff.RMAD
             this.Output = new Matrix(input1.Rows,input2.Cols);
             this.sumX = new Matrix(input1.Rows, input2.Cols / 2);
             this.sumY = new Matrix(input1.Rows, input2.Cols / 2);
-            this.slopesX = new Matrix(input1.Rows, input2.Cols / 2);
-            this.slopesY = new Matrix(input1.Rows, input2.Cols / 2);
+
+            this.dSumXDDeltaX = new Matrix(input1.Rows, input2.Cols / 2);
+            this.dSumXDDeltaY = new Matrix(input1.Rows, input2.Cols / 2);
+            this.dSumYDDeltaX = new Matrix(input1.Rows, input2.Cols / 2);
+            this.dSumYDDeltaY = new Matrix(input1.Rows, input2.Cols / 2);
 
             Parallel.For(0, input1.Rows, i =>
             {
@@ -56,7 +61,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumX = 0.0;
                     double sumY = 0.0;
 
-                    (double, double)[] resultMagnitudes = new (double, double)[input2.Rows / 2];
+                    double dSumX_dDeltaX = 0.0;
+                    double dSumX_dDeltaY = 0.0;
+                    double dSumY_dDeltaX = 0.0;
+                    double dSumY_dDeltaY = 0.0;
 
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
@@ -80,35 +88,39 @@ namespace ParallelReverseAutoDiff.RMAD
                         // Compute resultant vector magnitude and angle
                         double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
                         double resultAngle = Math.Atan2(deltay, deltax);
-                        resultMagnitudes[k] = (resultMagnitude, resultAngle);
 
-                        sumX += resultMagnitude * Math.Cos(resultAngle);
-                        sumY += resultMagnitude * Math.Sin(resultAngle);
-                    }
+                        double dResultMagnitude_dDeltaX = deltax / Math.Sqrt(deltax * deltax + deltay * deltay);
+                        double dResultMagnitude_dDeltaY = deltay / Math.Sqrt(deltax * deltax + deltay * deltay);
+                        double dResultAngle_dDeltaX = -deltay / (deltax * deltax + deltay * deltay);
+                        double dResultAngle_dDeltaY = deltax / (deltax * deltax + deltay * deltay);
 
-                    for (int k = 0; k < input1.Cols / 2; k++)
-                    {
-                        double perturbedResultMagnitude = resultMagnitudes[k].Item1 == 0.0d ? 0.0001d : (resultMagnitudes[k].Item1 + (resultMagnitudes[k].Item1 * 0.0001d));
-                        double rx = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x.Item1 * Math.Cos(x.Item2));
-                        rx += perturbedResultMagnitude * Math.Cos(resultMagnitudes[k].Item2);
-                        double ry = resultMagnitudes.Take(k).Concat(resultMagnitudes.Skip(k + 1)).Sum(x => x.Item1 * Math.Sin(x.Item2));
-                        ry += perturbedResultMagnitude * Math.Sin(resultMagnitudes[k].Item2);
+                        double localSumX = resultMagnitude * Math.Cos(resultAngle);
+                        double localSumY = resultMagnitude * Math.Sin(resultAngle);
+                        
+                        double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
+                        double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
 
-                        double resultMagnitudeChange = perturbedResultMagnitude - resultMagnitudes[k].Item1;
-                        double sumXChange = rx - sumX;
+                        double dLocalSumX_dDeltaX = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaX;
+                        double dLocalSumX_dDeltaY = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaY;
+                        double dLocalSumY_dDeltaX = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaX;
+                        double dLocalSumY_dDeltaY = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaY;
+                        
+                        sumX += localSumX;
+                        sumY += localSumY;
 
-                        double slopeX = sumXChange / resultMagnitudeChange;
-
-                        double sumYChange = ry - sumY;
-
-                        double slopeY = sumYChange / resultMagnitudeChange;
-
-                        this.slopesX[i, j] = slopeX;
-                        this.slopesY[i, j] = slopeY;
+                        dSumX_dDeltaX += dLocalSumX_dDeltaX;
+                        dSumX_dDeltaY += dLocalSumX_dDeltaY;
+                        dSumY_dDeltaX += dLocalSumY_dDeltaX;
+                        dSumY_dDeltaY += dLocalSumY_dDeltaY;
                     }
 
                     this.sumX[i, j] = sumX;
                     this.sumY[i, j] = sumY;
+
+                    this.dSumXDDeltaX[i, j] = dSumX_dDeltaX;
+                    this.dSumXDDeltaY[i, j] = dSumX_dDeltaY;
+                    this.dSumYDDeltaX[i, j] = dSumY_dDeltaX;
+                    this.dSumYDDeltaY[i, j] = dSumY_dDeltaY;
 
                     this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
                     this.Output[i, j + (input2.Rows / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
@@ -154,8 +166,10 @@ namespace ParallelReverseAutoDiff.RMAD
                         // Combined magnitude and angle as in the forward pass
                         double combinedMagnitude = Math.Sqrt(deltax * deltax + deltay * deltay);
 
-                        double dSumX_dDeltaX = this.slopesX[i, j]; // empirically determined
-                        double dSumY_dDeltaY = this.slopesY[i, j]; // empirically determined
+                        double dSumX_dDeltaX = this.dSumXDDeltaX[i, j];
+                        double dSumX_dDeltaY = this.dSumXDDeltaY[i, j];
+                        double dSumY_dDeltaX = this.dSumYDDeltaX[i, j];
+                        double dSumY_dDeltaY = this.dSumYDDeltaY[i, j];
 
                         // Derivatives of delta components with respect to inputs
                         double dDeltaX_dX1 = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign
@@ -174,53 +188,82 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dY1_dMagnitude = Math.Sin(angle);
 
                         // Apply chain rule for dInput1
-                        dInput1[i, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
-                        dInput1[i, j] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude);
+                        dInput1[i, j] += dOutput[i, j] * (
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
 
-                        dInput1[i, j] += dOutput[i, j] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
-                        dInput1[i, j] += dOutput[i, j] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude);
+                        dInput1[i, j] += dOutput[i, j + (input2.Rows / 2)] * (
+                            dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
 
                         double dX1_dAngle = -magnitude * Math.Sin(angle);
                         double dY1_dAngle = magnitude * Math.Cos(angle);
 
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle);
+                        // Applying the chain rule for the angle component of input1
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
 
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle);
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (
+                            dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
 
                         double dX2_dWMagnitude = Math.Cos(wAngle);
                         double dY2_dWMagnitude = Math.Sin(wAngle);
 
                         // Apply chain rule for dInput2
-                        dInput2[k, j] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
-                        dInput2[k, j] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude);
+                        dInput2[k, j] += dOutput[i, j] * (
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
 
-                        dInput2[k, j] += dOutput[i, j] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
-                        dInput2[k, j] += dOutput[i, j] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude);
+                        dInput2[k, j] += dOutput[i, j + (input2.Rows / 2)] * (
+                            dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
+
 
                         double dX2_dWAngle = -wMagnitude * Math.Sin(wAngle);
                         double dY2_dWAngle = wMagnitude * Math.Cos(wAngle);
 
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle);
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j] * (
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
 
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle);
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (
+                            dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
 
                         // Derivatives of delta components with respect to weight
                         double dDeltaX_dWeight = (weights[k, j] > 0) ? (x2 - x1) : (x1 - x2);
                         double dDeltaY_dWeight = (weights[k, j] > 0) ? (y2 - y1) : (y1 - y2);
 
                         // Apply chain rule for weights for magnitude and angle
-                        dWeights[k, j] += dOutput[i, j] *
-                                          (dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
-                                           dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dWeight);
+                        dWeights[k, j] += dOutput[i, j] * (
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dWeight +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dWeight +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dWeight);
 
-                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] *
-                                          (dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
-                                           dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight);
-
+                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (
+                            dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dWeight +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dWeight);
                     }
                 }
             });
