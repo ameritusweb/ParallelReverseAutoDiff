@@ -47,10 +47,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
             var aTile = SharedMemory.Allocate2D<double, Stride2D.DenseX>(new Index2D(TILESIZE, TILESIZE), new Stride2D.DenseX(TILESIZE));
             var bTile = SharedMemory.Allocate2D<double, Stride2D.DenseX>(new Index2D(TILESIZE, TILESIZE), new Stride2D.DenseX(TILESIZE));
-            var sum = 0.0d;
 
-            for (var i = 0; i < aView.IntExtent.X; i += TILESIZE)
+            var total = 0.0d; // Initialize accumulator for sums across tiles
+
+            for (var i = 0; i < aView.IntExtent.Y; i += TILESIZE)
             {
+                var sum = 0.0d;
+
                 if (global.X < aView.IntExtent.X && y + i < aView.IntExtent.Y)
                 {
                     aTile[x, y] = aView[global.X, y + i];
@@ -77,11 +80,13 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
 
                 Group.Barrier();
+
+                total += sum;
             }
 
             if (global.X < cView.IntExtent.X && global.Y < cView.IntExtent.Y)
             {
-                cView[global] = sum;
+                cView[global] = total;
             }
         }
 
