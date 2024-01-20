@@ -46,7 +46,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the element-wise vector summation operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2, Matrix weights)
         {
-            input1[0, 10] += 0.001d;
             this.input1 = input1;
             this.input2 = input2;
             this.weights = weights;
