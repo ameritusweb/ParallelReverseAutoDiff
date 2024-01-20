@@ -92,7 +92,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     //{
                         Console.WriteLine($"Average loss: {avgloss}");
                         await net.Backward(gradient);
-                        net.ApplyGradients();
+                        //net.ApplyGradients();
                     //}
 
                     await net.Reset();
@@ -105,7 +105,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                         numResultAngleB = 0d;
                         sumLoss = 0d;
                         numLoss = 0d;
-                        net.SaveWeights();
+                        //net.SaveWeights();
                     }
                 }
             }
