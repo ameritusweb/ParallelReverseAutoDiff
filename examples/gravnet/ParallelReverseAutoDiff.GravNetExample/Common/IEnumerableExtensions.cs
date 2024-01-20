@@ -52,5 +52,39 @@ namespace ParallelReverseAutoDiff.GravNetExample.Common
                 yield return (current, default);
             }
         }
+
+        public static void WithRepeat<T>(this IEnumerable<T> source, Action<T, RepeatToken> action)
+        {
+            var repeatToken = new RepeatToken();
+
+            foreach (var item in source)
+            {
+                do
+                {
+                    repeatToken.Decrement();
+                    action(item, repeatToken);
+                }
+                while (repeatToken.ShouldRepeat);
+            }
+        }
+
+        public static async Task WithRepeatAsync<T>(this IEnumerable<T> source, Func<T, RepeatToken, Task> action)
+        {
+            foreach (var item in source)
+            {
+                var repeatToken = new RepeatToken();
+                do
+                {
+                    repeatToken.Decrement();
+                    await action(item, repeatToken);
+
+                    if (repeatToken.ShouldContinue)
+                    {
+                        break; // Exit the current iteration immediately
+                    }
+                }
+                while (repeatToken.ShouldRepeat);
+            }
+        }
     }
 }

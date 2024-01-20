@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ParallelReverseAutoDiff.GravNetExample.Common;
 using ParallelReverseAutoDiff.RMAD;
 using System;
 using System.Collections.Generic;
@@ -27,12 +28,11 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 double numResultAngleB = 0d;
                 double sumLoss = 0d;
                 double numLoss = 0d;
-                Random random = new Random(11);
+                Random random = new Random(15);
                 var files = jsonFiles.OrderBy(x => random.Next()).ToArray();
                 int i = 0;
-                foreach (var jsonFile in files)
-                {
-                   
+                await files.WithRepeatAsync(async (jsonFile, token) =>
+                { 
                     var json = File.ReadAllText(jsonFile);
                     var data = JsonConvert.DeserializeObject<List<List<double>>>(json);
                     var file = jsonFile.Substring(jsonFile.LastIndexOf('\\') + 1);
@@ -40,7 +40,8 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     if (sub != "A" && sub != "B")
                     {
-                        continue;
+                        token.Continue();
+                        return;
                     }
 
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
@@ -90,9 +91,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     //if (Math.Abs(loss[0][0]) >= 200d)
                     //{
-                        Console.WriteLine($"Average loss: {avgloss}");
-                        await net.Backward(gradient);
-                        //net.ApplyGradients();
+                    Console.WriteLine($"Average loss: {avgloss}");
+                    await net.Backward(gradient);
+                    net.ApplyGradients();
                     //}
 
                     await net.Reset();
@@ -105,9 +106,14 @@ namespace ParallelReverseAutoDiff.GravNetExample
                         numResultAngleB = 0d;
                         sumLoss = 0d;
                         numLoss = 0d;
-                        //net.SaveWeights();
+                        net.SaveWeights();
                     }
-                }
+
+                    //if (token.UsageCount == 0)
+                    //{
+                    //    token.Repeat(2);
+                    //}
+                });
             }
             catch (Exception ex)
             {
