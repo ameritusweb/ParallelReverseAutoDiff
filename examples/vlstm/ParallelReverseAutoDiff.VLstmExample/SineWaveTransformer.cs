@@ -1,40 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//------------------------------------------------------------------------------
+// <copyright file="SineWaveTransformer.cs" author="ameritusweb" date="1/20/2024">
+// Copyright (c) 2024 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.VLstmExample
 {
-    public class SineWaveTransformer
+    /// <summary>
+    /// A sine wave transformer.
+    /// </summary>
+    public class SineWaveTransformer : ISineWaveTransformer
     {
-        public double Amplitude { get; set; }
-        public double Frequency { get; set; }
-        public double RotationAngleRadians { get; set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SineWaveTransformer"/> class.
+        /// </summary>
+        /// <param name="amplitude">The amplitude.</param>
+        /// <param name="frequency">The frequency.</param>
         public SineWaveTransformer(double amplitude, double frequency)
         {
-            Amplitude = amplitude;
-            Frequency = frequency;
+            this.Amplitude = amplitude;
+            this.Frequency = frequency;
         }
 
-        public (double, double) TransformPoint(double x)
-        {
-            double y = Amplitude * Math.Sin(Frequency * x);
-            double xPrime = x * Math.Cos(RotationAngleRadians) - y * Math.Sin(RotationAngleRadians);
-            double yPrime = x * Math.Sin(RotationAngleRadians) + y * Math.Cos(RotationAngleRadians);
-            return (xPrime, yPrime);
-        }
+        /// <summary>
+        /// Gets or sets the amplitude.
+        /// </summary>
+        public double Amplitude { get; set; }
 
-        public void UpdateRotationAngle(double angleRadians)
-        {
-            RotationAngleRadians = angleRadians;
-        }
+        /// <summary>
+        /// Gets or sets the frequency.
+        /// </summary>
+        public double Frequency { get; set; }
 
-        public double Transform(double x)
-        {
-            double y = Amplitude * Math.Sin(Frequency * x + RotationAngleRadians);
-            return y;
-        }
+        /// <summary>
+        /// Gets the rotation angle in radians.
+        /// </summary>
+        public double RotationAngleRadians { get; private set; }
+
+        /// <summary>
+        /// Updates the rotation angle.
+        /// </summary>
+        /// <param name="angleRadians">The angle in radians.</param>
+        public void UpdateRotationAngle(double angleRadians) => this.RotationAngleRadians = angleRadians;
+
+        /// <summary>
+        /// Transforms the input.
+        /// </summary>
+        /// <param name="x">The time step.</param>
+        /// <returns>The transformed data point.</returns>
+        public double Transform(double x) => this.Amplitude * Math.Sin((this.Frequency * x) + this.RotationAngleRadians);
     }
 }
