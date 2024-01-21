@@ -2,17 +2,286 @@
   "timeSteps": [
     {
       "startOperations": [
-
+        {
+          "id": "input_projection",
+          "type": "VectorProjectionOperation",
+          "inputs": [ "Input", "Vectors", "Weights" ],
+          "gradientResultTo": [ null, "DVectors", "DWeights" ]
+        },
+        {
+          "id": "input_polar_fft",
+          "type": "ElementwiseVectorPolarFftOperation",
+          "inputs": [ "input_projection", "PolarVectors", "PolarWeights" ],
+          "gradientResultTo": [ null, "DPolarVectors", "DPolarWeights" ]
+        }
       ],
       "layers": [
         {
           "operations": [
-
+            {
+              "id": "wf_currentInput",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "currentInput", "WForgetVectors", "WForgetWeights" ],
+              "gradientResultTo": [ null, "DWForgetVectors", "DWForgetWeights" ]
+            },
+            {
+              "id": "uf_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "UForgetVectors", "UForgetWeights" ],
+              "gradientResultTo": [ null, "DUForgetVectors", "DUForgetWeights" ]
+            },
+            {
+              "id": "f_add",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "wf_currentInput", "uf_previousHiddenState" ]
+            },
+            {
+              "id": "f_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "f_add", "FKeys" ],
+              "gradientResultTo": [ null, "DFKeys" ]
+            },
+            {
+              "id": "f_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "f_keys", "FKB" ],
+              "gradientResultTo": [ null, "DFKB" ]
+            },
+            {
+              "id": "f_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "f_keys_add_broadcasting" ]
+            },
+            {
+              "id": "f_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "f_keys_act" ]
+            },
+            {
+              "id": "f",
+              "description": "Compute the forget gate",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "f_add", "f_keys_softmax" ]
+            },
+            {
+              "id": "wi_currentInput",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "currentInput", "WInputVectors", "WInputWeights" ],
+              "gradientResultTo": [ null, "DWInputVectors", "DWInputWeights" ]
+            },
+            {
+              "id": "ui_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "UInputVectors", "UInputWeights" ],
+              "gradientResultTo": [ null, "DUInputVectors", "DUInputWeights" ]
+            },
+            {
+              "id": "i_add",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "wi_currentInput", "ui_previousHiddenState" ]
+            },
+            {
+              "id": "i_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "i_add", "IKeys" ],
+              "gradientResultTo": [ null, "DIKeys" ]
+            },
+            {
+              "id": "i_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "i_keys", "IKB" ],
+              "gradientResultTo": [ null, "DIKB" ]
+            },
+            {
+              "id": "i_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "i_keys_add_broadcasting" ]
+            },
+            {
+              "id": "i_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "i_keys_act" ]
+            },
+            {
+              "id": "i",
+              "description": "Compute the input gate",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "i_add", "i_keys_softmax" ]
+            },
+            {
+              "id": "wc_currentInput",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "currentInput", "WCVectors", "WCWeights" ],
+              "gradientResultTo": [ null, "DWCVectors", "DWCWeights" ]
+            },
+            {
+              "id": "uc_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "UCVectors", "UCWeights" ],
+              "gradientResultTo": [ null, "DUCVectors", "DUCWeights" ]
+            },
+            {
+              "id": "c_add",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "wc_currentInput", "uc_previousHiddenState" ]
+            },
+            {
+              "id": "c_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "c_add", "CKeys" ],
+              "gradientResultTo": [ null, "DCKeys" ]
+            },
+            {
+              "id": "c_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "c_keys", "CKB" ],
+              "gradientResultTo": [ null, "DCKB" ]
+            },
+            {
+              "id": "c_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "c_keys_add_broadcasting" ]
+            },
+            {
+              "id": "c_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "c_keys_act" ]
+            },
+            {
+              "id": "c",
+              "description": "Compute the candidate memory cell state",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "c_add", "c_keys_softmax" ]
+            },
+            {
+              "id": "f_previousMemoryCellState",
+              "type": "ElementwiseVectorPolarFftOperation",
+              "inputs": [ "f", "previousMemoryCellState", "PreviousWeights" ],
+              "gradientResultTo": [ null, null, "DPreviousWeights" ]
+            },
+            {
+              "id": "i_c",
+              "type": "ElementwiseVectorPolarFftOperation",
+              "inputs": [ "i", "c", "CWeights" ],
+              "gradientResultTo": [ null, null, "DCWeights" ]
+            },
+            {
+              "id": "newC",
+              "description": "Compute the memory cell state",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "f_previousMemoryCellState", "i_c" ]
+            },
+            {
+              "id": "wo_currentInput",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "currentInput", "WOutputVectors", "WOutputWeights" ],
+              "gradientResultTo": [ null, "DWOutputVectors", "DWOutputWeights" ]
+            },
+            {
+              "id": "uo_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "UOutputVectors", "UOutputWeights" ],
+              "gradientResultTo": [ null, "DUOutputVectors", "DUOutputWeights" ]
+            },
+            {
+              "id": "o_add",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "wo_currentInput", "uo_previousHiddenState" ]
+            },
+            {
+              "id": "o_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "o_add", "OKeys" ],
+              "gradientResultTo": [ null, "DOKeys" ]
+            },
+            {
+              "id": "o_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "o_keys", "OKB" ],
+              "gradientResultTo": [ null, "DOKB" ]
+            },
+            {
+              "id": "o_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "o_keys_add_broadcasting" ]
+            },
+            {
+              "id": "o_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "o_keys_act" ]
+            },
+            {
+              "id": "o",
+              "description": "Compute the output gate",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "o_add", "o_keys_softmax" ]
+            },
+            {
+              "id": "newH",
+              "type": "ElementwiseVectorPolarFftOperation",
+              "inputs": [ "o", "newC", "HiddenWeights" ],
+              "gradientResultTo": [ null, null, "DHiddenWeights" ]
+            },
+            {
+              "id": "newH_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "newH", "HKeys" ],
+              "gradientResultTo": [ null, "DHKeys" ]
+            },
+            {
+              "id": "newH_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "newH_keys", "HKB" ],
+              "gradientResultTo": [ null, "DHKB" ]
+            },
+            {
+              "id": "newH_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "newH_keys_add_broadcasting" ]
+            },
+            {
+              "id": "newH_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "newH_keys_act" ]
+            },
+            {
+              "id": "h",
+              "description": "Compute the hidden state",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "newH", "newH_keys_softmax" ]
+            }
           ]
         }
       ],
       "endOperations": [
-
+        {
+          "id": "output_values",
+          "type": "GpuMatrixMultiplyOperation",
+          "inputs": [ "hFromLastTimeStepAndLayer", "Values" ],
+          "gradientResultTo": [ null, "DValues" ]
+        },
+        {
+          "id": "output_values_add_broadcasting",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "output_values", "OutputB" ],
+          "gradientResultTo": [ null, "DOutputB" ]
+        },
+        {
+          "id": "output_values_act",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "output_values_add_broadcasting" ]
+        },
+        {
+          "id": "output_values_softmax",
+          "type": "PairwiseSineSoftmaxOperation",
+          "inputs": [ "output_values_act" ]
+        },
+        {
+          "id": "output",
+          "description": "Compute the output",
+          "type": "VectorAttentionOperation",
+          "inputs": [ "hFromLastTimeStepAndLayer", "output_values_softmax" ]
+        }
       ]
     }
   ]
