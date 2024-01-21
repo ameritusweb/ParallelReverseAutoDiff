@@ -3,32 +3,56 @@
     {
       "startOperations": [
         {
+          "id": "weights",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Weights" ],
+          "gradientResultTo": [ "DWeights" ]
+        },
+        {
+          "id": "polar_weights",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "PolarWeights" ],
+          "gradientResultTo": [ "DPolarWeights" ]
+        },
+        {
           "id": "input_projection",
           "type": "VectorProjectionOperation",
-          "inputs": [ "Input", "Vectors", "Weights" ],
-          "gradientResultTo": [ null, "DVectors", "DWeights" ]
+          "inputs": [ "Input", "Vectors", "weights" ],
+          "gradientResultTo": [ null, "DVectors", null ]
         },
         {
           "id": "input_polar_fft",
           "type": "ElementwiseVectorPolarFftOperation",
-          "inputs": [ "input_projection", "PolarVectors", "PolarWeights" ],
-          "gradientResultTo": [ null, "DPolarVectors", "DPolarWeights" ]
+          "inputs": [ "input_projection", "PolarVectors", "polar_weights" ],
+          "gradientResultTo": [ null, "DPolarVectors", null ]
         }
       ],
       "layers": [
         {
           "operations": [
             {
+              "id": "wf_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "WForgetWeights" ],
+              "gradientResultTo": [ "DWForgetWeights" ]
+            },
+            {
+              "id": "uf_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UForgetWeights" ],
+              "gradientResultTo": [ "DUForgetWeights" ]
+            },
+            {
               "id": "wf_currentInput",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "currentInput", "WForgetVectors", "WForgetWeights" ],
-              "gradientResultTo": [ null, "DWForgetVectors", "DWForgetWeights" ]
+              "inputs": [ "currentInput", "WForgetVectors", "wf_weights" ],
+              "gradientResultTo": [ null, "DWForgetVectors", null ]
             },
             {
               "id": "uf_previousHiddenState",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "previousHiddenState", "UForgetVectors", "UForgetWeights" ],
-              "gradientResultTo": [ null, "DUForgetVectors", "DUForgetWeights" ]
+              "inputs": [ "previousHiddenState", "UForgetVectors", "uf_weights" ],
+              "gradientResultTo": [ null, "DUForgetVectors", null ]
             },
             {
               "id": "f_add",
@@ -64,16 +88,28 @@
               "inputs": [ "f_add", "f_keys_softmax" ]
             },
             {
+              "id": "wi_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "WInputWeights" ],
+              "gradientResultTo": [ "DWInputWeights" ]
+            },
+            {
+              "id": "ui_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UInputWeights" ],
+              "gradientResultTo": [ "DUInputWeights" ]
+            },
+            {
               "id": "wi_currentInput",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "currentInput", "WInputVectors", "WInputWeights" ],
-              "gradientResultTo": [ null, "DWInputVectors", "DWInputWeights" ]
+              "inputs": [ "currentInput", "WInputVectors", "wi_weights" ],
+              "gradientResultTo": [ null, "DWInputVectors", null ]
             },
             {
               "id": "ui_previousHiddenState",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "previousHiddenState", "UInputVectors", "UInputWeights" ],
-              "gradientResultTo": [ null, "DUInputVectors", "DUInputWeights" ]
+              "inputs": [ "previousHiddenState", "UInputVectors", "ui_weights" ],
+              "gradientResultTo": [ null, "DUInputVectors", null ]
             },
             {
               "id": "i_add",
@@ -109,16 +145,28 @@
               "inputs": [ "i_add", "i_keys_softmax" ]
             },
             {
+              "id": "wc_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "WCWeights" ],
+              "gradientResultTo": [ "DWCWeights" ]
+            },
+            {
+              "id": "uc_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UCWeights" ],
+              "gradientResultTo": [ "DUCWeights" ]
+            },
+            {
               "id": "wc_currentInput",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "currentInput", "WCVectors", "WCWeights" ],
-              "gradientResultTo": [ null, "DWCVectors", "DWCWeights" ]
+              "inputs": [ "currentInput", "WCVectors", "wc_weights" ],
+              "gradientResultTo": [ null, "DWCVectors", null ]
             },
             {
               "id": "uc_previousHiddenState",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "previousHiddenState", "UCVectors", "UCWeights" ],
-              "gradientResultTo": [ null, "DUCVectors", "DUCWeights" ]
+              "inputs": [ "previousHiddenState", "UCVectors", "uc_weights" ],
+              "gradientResultTo": [ null, "DUCVectors", null ]
             },
             {
               "id": "c_add",
@@ -154,16 +202,26 @@
               "inputs": [ "c_add", "c_keys_softmax" ]
             },
             {
+              "id": "previous_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "PreviousWeights" ],
+              "gradientResultTo": [ "DPreviousWeights" ]
+            },
+            {
               "id": "f_previousMemoryCellState",
               "type": "ElementwiseVectorPolarFftOperation",
-              "inputs": [ "f", "previousMemoryCellState", "PreviousWeights" ],
-              "gradientResultTo": [ null, null, "DPreviousWeights" ]
+              "inputs": [ "f", "previousMemoryCellState", "previous_weights" ]
+            },
+            {
+              "id": "c_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "CWeights" ],
+              "gradientResultTo": [ "DCWeights" ]
             },
             {
               "id": "i_c",
               "type": "ElementwiseVectorPolarFftOperation",
-              "inputs": [ "i", "c", "CWeights" ],
-              "gradientResultTo": [ null, null, "DCWeights" ]
+              "inputs": [ "i", "c", "c_weights" ]
             },
             {
               "id": "newC",
@@ -172,16 +230,28 @@
               "inputs": [ "f_previousMemoryCellState", "i_c" ]
             },
             {
+              "id": "wo_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "WOutputWeights" ],
+              "gradientResultTo": [ "DWOutputWeights" ]
+            },
+            {
+              "id": "uo_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UOutputWeights" ],
+              "gradientResultTo": [ "DUOutputWeights" ]
+            },
+            {
               "id": "wo_currentInput",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "currentInput", "WOutputVectors", "WOutputWeights" ],
-              "gradientResultTo": [ null, "DWOutputVectors", "DWOutputWeights" ]
+              "inputs": [ "currentInput", "WOutputVectors", "wo_weights" ],
+              "gradientResultTo": [ null, "DWOutputVectors", null ]
             },
             {
               "id": "uo_previousHiddenState",
               "type": "ElementwiseVectorConstituentMultiplyOperation",
-              "inputs": [ "previousHiddenState", "UOutputVectors", "UOutputWeights" ],
-              "gradientResultTo": [ null, "DUOutputVectors", "DUOutputWeights" ]
+              "inputs": [ "previousHiddenState", "UOutputVectors", "uo_weights" ],
+              "gradientResultTo": [ null, "DUOutputVectors", null ]
             },
             {
               "id": "o_add",
@@ -217,10 +287,15 @@
               "inputs": [ "o_add", "o_keys_softmax" ]
             },
             {
+              "id": "hidden_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "HiddenWeights" ],
+              "gradientResultTo": [ "DHiddenWeights" ]
+            },
+            {
               "id": "newH",
               "type": "ElementwiseVectorPolarFftOperation",
-              "inputs": [ "o", "newC", "HiddenWeights" ],
-              "gradientResultTo": [ null, null, "DHiddenWeights" ]
+              "inputs": [ "o", "newC", "hidden_weights" ]
             },
             {
               "id": "newH_keys",

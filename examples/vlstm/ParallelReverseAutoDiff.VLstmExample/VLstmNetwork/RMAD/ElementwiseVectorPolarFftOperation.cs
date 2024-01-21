@@ -27,11 +27,12 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Performs the forward operation for the Hadamard product function.
+        /// Performs the forward operation for the vector polar FFT function.
         /// </summary>
-        /// <param name="input1">The first input to the Hadamard product operation.</param>
-        /// <param name="input2">The second input to the Hadamard product operation.</param>
-        /// <returns>The output of the Hadamard product operation.</returns>
+        /// <param name="input1">The first input to the vector polar FFT operation.</param>
+        /// <param name="input2">The second input to the vector polar FFT operation.</param>
+        /// <param name="weights">The weights for the vector polar FFT operation.</param>
+        /// <returns>The output of the vector polar FFT operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2, Matrix weights)
         {
             this.input1 = input1;
