@@ -230,6 +230,11 @@
               "inputs": [ "f_previousMemoryCellState", "i_c" ]
             },
             {
+              "id": "new_c_concat",
+              "type": "MatrixVerticalConcatenateOperation",
+              "inputs": [ "previousMemoryCellState", "newC" ]
+            },
+            {
               "id": "wo_weights",
               "type": "ElementwiseSquareOperation",
               "inputs": [ "WOutputWeights" ],
@@ -330,32 +335,9 @@
       ],
       "endOperations": [
         {
-          "id": "output_values",
-          "type": "GpuMatrixMultiplyOperation",
-          "inputs": [ "hFromLastTimeStepAndLayer", "Values" ],
-          "gradientResultTo": [ null, "DValues" ]
-        },
-        {
-          "id": "output_values_add_broadcasting",
-          "type": "MatrixAddBroadcastingOperation",
-          "inputs": [ "output_values", "OutputB" ],
-          "gradientResultTo": [ null, "DOutputB" ]
-        },
-        {
-          "id": "output_values_act",
-          "type": "LeakyReLUOperation",
-          "inputs": [ "output_values_add_broadcasting" ]
-        },
-        {
-          "id": "output_values_softmax",
-          "type": "PairwiseSineSoftmaxOperation",
-          "inputs": [ "output_values_act" ]
-        },
-        {
           "id": "output",
-          "description": "Compute the output",
-          "type": "VectorAttentionOperation",
-          "inputs": [ "hFromLastTimeStepAndLayer", "output_values_softmax" ]
+          "type": "ElementwiseVectorAddOperation",
+          "inputs": [ "hFromCurrentTimeStepAndFirstLayer", "hFromCurrentTimeStepAndSecondLayer" ]
         }
       ]
     }
