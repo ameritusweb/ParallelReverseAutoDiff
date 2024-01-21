@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="ElementwiseVectorConstituentMultiplyOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="ElementwiseVectorProjectionOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -9,9 +9,9 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Element-wise multiplication operation.
+    /// Element-wise vector projection operation.
     /// </summary>
-    public class ElementwiseVectorConstituentMultiplyOperation : Operation
+    public class ElementwiseVectorProjectionOperation : Operation
     {
         private Matrix input1;
         private Matrix input2;
@@ -30,7 +30,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new ElementwiseVectorConstituentMultiplyOperation();
+            return new ElementwiseVectorProjectionOperation();
         }
 
         /// <summary>
@@ -54,85 +54,75 @@ namespace ParallelReverseAutoDiff.RMAD
             this.dSumYDDeltaX = new Matrix(input1.Rows, input2.Cols / 2);
             this.dSumYDDeltaY = new Matrix(input1.Rows, input2.Cols / 2);
 
-            Parallel.For(0, input1.Rows, i =>
+            for (int j = 0; j < input2.Cols / 2; j++)
             {
-                for (int j = 0; j < input2.Cols / 2; j++)
+                double sumX = 0.0;
+                double sumY = 0.0;
+
+                double dSumX_dDeltaX = 0.0;
+                double dSumX_dDeltaY = 0.0;
+                double dSumY_dDeltaX = 0.0;
+                double dSumY_dDeltaY = 0.0;
+
+                for (int k = 0; k < input2.Rows / 2; k++)
                 {
-                    double sumX = 0.0;
-                    double sumY = 0.0;
+                    // Accessing the magnitudes and angles from the concatenated matrices
+                    double magnitude = input1[i, k];
+                    double angle = input1[i, k + (input1.Cols / 2)];
 
-                    double dSumX_dDeltaX = 0.0;
-                    double dSumX_dDeltaY = 0.0;
-                    double dSumY_dDeltaX = 0.0;
-                    double dSumY_dDeltaY = 0.0;
+                    double wMagnitude = input2[k, j];
+                    double wAngle = input2[k, j + (input2.Cols / 2)];
 
-                    for (int k = 0; k < input2.Rows / 2; k++)
-                    {
-                        // Accessing the magnitudes and angles from the concatenated matrices
-                        double magnitude = input1[i, k];
-                        double angle = input1[i, k + (input1.Cols / 2)];
+                    // Compute vector components
+                    double x1 = magnitude * Math.Cos(angle);
+                    double y1 = magnitude * Math.Sin(angle);
+                    double x2 = wMagnitude * Math.Cos(wAngle);
+                    double y2 = wMagnitude * Math.Sin(wAngle);
 
-                        double wMagnitude = input2[k, j];
-                        double wAngle = input2[k, j + (input2.Cols / 2)];
+                    // Select vector direction based on weight
+                    double deltax = weights[k, j] > 0 ? x2 - x1 : x1 - x2;
+                    double deltay = weights[k, j] > 0 ? y2 - y1 : y1 - y2;
 
-                        // Compute vector components
-                        double x1 = magnitude * Math.Cos(angle);
-                        double y1 = magnitude * Math.Sin(angle);
-                        double x2 = wMagnitude * Math.Cos(wAngle);
-                        double y2 = wMagnitude * Math.Sin(wAngle);
+                    // Compute resultant vector magnitude and angle
+                    double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
+                    double resultAngle = Math.Atan2(deltay, deltax);
 
-                        // Select vector direction based on weight
-                        double deltax = weights[k, j] > 0 ? x2 - x1 : x1 - x2;
-                        double deltay = weights[k, j] > 0 ? y2 - y1 : y1 - y2;
+                    double dResultMagnitude_dDeltaX = (deltax * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
+                    double dResultMagnitude_dDeltaY = (deltay * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
+                    double dResultAngle_dDeltaX = -deltay / (deltax * deltax + deltay * deltay);
+                    double dResultAngle_dDeltaY = deltax / (deltax * deltax + deltay * deltay);
 
-                        // Compute resultant vector magnitude and angle
-                        double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
-                        double resultAngle = Math.Atan2(deltay, deltax);
-
-                        double dResultMagnitude_dDeltaX = (deltax * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
-                        double dResultMagnitude_dDeltaY = (deltay * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
-                        double dResultAngle_dDeltaX = -deltay / (deltax * deltax + deltay * deltay);
-                        double dResultAngle_dDeltaY = deltax / (deltax * deltax + deltay * deltay);
-
-                        double localSumX = resultMagnitude * Math.Cos(resultAngle);
-                        double localSumY = resultMagnitude * Math.Sin(resultAngle);
+                    double localSumX = resultMagnitude * Math.Cos(resultAngle);
+                    double localSumY = resultMagnitude * Math.Sin(resultAngle);
                         
-                        double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
-                        double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
+                    double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
+                    double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
 
-                        double dLocalSumX_dResultAngle = -resultMagnitude * Math.Sin(resultAngle);
-                        double dLocalSumY_dResultAngle = resultMagnitude * Math.Cos(resultAngle);
-
-                        double dLocalSumX_dDeltaX = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaX
-                            + dLocalSumX_dResultAngle * dResultAngle_dDeltaX;
-                        double dLocalSumX_dDeltaY = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaY
-                            + dLocalSumX_dResultAngle * dResultAngle_dDeltaY;
-                        double dLocalSumY_dDeltaX = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaX
-                            + dLocalSumY_dResultAngle * dResultAngle_dDeltaX;
-                        double dLocalSumY_dDeltaY = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaY
-                            + dLocalSumY_dResultAngle * dResultAngle_dDeltaY;
+                    double dLocalSumX_dDeltaX = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaX;
+                    double dLocalSumX_dDeltaY = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaY;
+                    double dLocalSumY_dDeltaX = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaX;
+                    double dLocalSumY_dDeltaY = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaY;
                         
-                        sumX += localSumX;
-                        sumY += localSumY;
+                    sumX += localSumX;
+                    sumY += localSumY;
 
-                        dSumX_dDeltaX += dLocalSumX_dDeltaX;
-                        dSumX_dDeltaY += dLocalSumX_dDeltaY;
-                        dSumY_dDeltaX += dLocalSumY_dDeltaX;
-                        dSumY_dDeltaY += dLocalSumY_dDeltaY;
-                    }
-
-                    this.sumX[i, j] = sumX;
-                    this.sumY[i, j] = sumY;
-
-                    this.dSumXDDeltaX[i, j] = dSumX_dDeltaX;
-                    this.dSumXDDeltaY[i, j] = dSumX_dDeltaY;
-                    this.dSumYDDeltaX[i, j] = dSumY_dDeltaX;
-                    this.dSumYDDeltaY[i, j] = dSumY_dDeltaY;
-
-                    this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
-                    this.Output[i, j + (input2.Rows / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
+                    dSumX_dDeltaX += dLocalSumX_dDeltaX;
+                    dSumX_dDeltaY += dLocalSumX_dDeltaY;
+                    dSumY_dDeltaX += dLocalSumY_dDeltaX;
+                    dSumY_dDeltaY += dLocalSumY_dDeltaY;
                 }
-            });
+
+                this.sumX[i, j] = sumX;
+                this.sumY[i, j] = sumY;
+
+                this.dSumXDDeltaX[i, j] = dSumX_dDeltaX;
+                this.dSumXDDeltaY[i, j] = dSumX_dDeltaY;
+                this.dSumYDDeltaX[i, j] = dSumY_dDeltaX;
+                this.dSumYDDeltaY[i, j] = dSumY_dDeltaY;
+
+                this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
+                this.Output[i, j + (input2.Rows / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
+            }
 
             return this.Output;
         }
