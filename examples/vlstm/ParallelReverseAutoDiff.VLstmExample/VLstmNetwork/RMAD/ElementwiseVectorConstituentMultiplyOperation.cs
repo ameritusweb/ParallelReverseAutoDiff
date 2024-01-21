@@ -100,11 +100,18 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
                         double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
 
-                        double dLocalSumX_dDeltaX = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaX;
-                        double dLocalSumX_dDeltaY = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaY;
-                        double dLocalSumY_dDeltaX = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaX;
-                        double dLocalSumY_dDeltaY = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaY;
-                        
+                        double dLocalSumX_dResultAngle = -resultMagnitude * Math.Sin(resultAngle);
+                        double dLocalSumY_dResultAngle = resultMagnitude * Math.Cos(resultAngle);
+
+                        double dLocalSumX_dDeltaX = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaX
+                            + dLocalSumX_dResultAngle * dResultAngle_dDeltaX;
+                        double dLocalSumX_dDeltaY = dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaY
+                            + dLocalSumX_dResultAngle * dResultAngle_dDeltaY;
+                        double dLocalSumY_dDeltaX = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaX
+                            + dLocalSumY_dResultAngle * dResultAngle_dDeltaX;
+                        double dLocalSumY_dDeltaY = dLocalSumY_dResultMagnitude * dResultMagnitude_dDeltaY
+                            + dLocalSumY_dResultAngle * dResultAngle_dDeltaY;
+
                         sumX += localSumX;
                         sumY += localSumY;
 
