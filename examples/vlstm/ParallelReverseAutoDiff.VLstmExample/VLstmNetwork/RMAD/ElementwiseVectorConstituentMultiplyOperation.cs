@@ -67,7 +67,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dSumY_dDeltaX = 0.0;
                     double dSumY_dDeltaY = 0.0;
 
-                    for (int k = 0; k < input2.Rows / 2; k++)
+                    for (int k = 0; k < input1.Cols / 2; k++)
                     {
                         // Accessing the magnitudes and angles from the concatenated matrices
                         double magnitude = input1[i, k];
@@ -153,7 +153,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < input2.Cols / 2; j++)
                 {
                     // Nested loop for each element in input2
-                    for (int k = 0; k < input2.Rows / 2; k++)
+                    for (int k = 0; k < input1.Cols / 2; k++)
                     {
                         double magnitude = input1[i, j];
                         double angle = input1[i, j + input1.Cols / 2];

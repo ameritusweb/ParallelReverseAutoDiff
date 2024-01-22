@@ -64,7 +64,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 double dSumY_dDeltaX = 0.0;
                 double dSumY_dDeltaY = 0.0;
 
-                for (int k = 0; k < input2.Rows / 2; k++)
+                for (int k = 0; k < input2.Rows; k++)
                 {
                     // Accessing the magnitudes and angles from the concatenated matrices
                     double magnitude = input1[0, 0];
@@ -80,11 +80,11 @@ namespace ParallelReverseAutoDiff.RMAD
                     double y2 = wMagnitude * Math.Sin(wAngle);
 
                     // Select vector direction based on weight
-                    double deltax = weights[k, j] > 0 ? x2 - x1 : x1 - x2;
-                    double deltay = weights[k, j] > 0 ? y2 - y1 : y1 - y2;
+                    double deltax = weights[j, k] > 0 ? x2 - x1 : x1 - x2;
+                    double deltay = weights[j, k] > 0 ? y2 - y1 : y1 - y2;
 
                     // Compute resultant vector magnitude and angle
-                    double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[k, j];
+                    double resultMagnitude = Math.Sqrt((deltax * deltax) + (deltay * deltay)) * weights[j, k];
                     double resultAngle = Math.Atan2(deltay, deltax);
 
                     double dResultMagnitude_dDeltaX = (deltax * weights[k, j]) / Math.Sqrt(deltax * deltax + deltay * deltay);
@@ -138,7 +138,7 @@ namespace ParallelReverseAutoDiff.RMAD
         public override BackwardResult Backward(Matrix dOutput)
         {
             // Initialize gradient matrices
-            Matrix dInput1 = new Matrix(this.input1.Rows, this.input1.Cols);
+            Matrix dInput1 = new Matrix(1, 2);
             Matrix dInput2 = new Matrix(this.input2.Rows, this.input2.Cols);
             Matrix dWeights = new Matrix(this.weights.Rows, this.weights.Cols);
 
@@ -146,10 +146,10 @@ namespace ParallelReverseAutoDiff.RMAD
             Parallel.For(0, this.input2.Cols / 2, j =>
             {
                 // Nested loop for each element in input2
-                for (int k = 0; k < this.input2.Rows / 2; k++)
+                for (int k = 0; k < this.input2.Rows; k++)
                 {
-                    double magnitude = this.input1[0, j];
-                    double angle = this.input1[0, j + this.input1.Cols / 2];
+                    double magnitude = this.input1[0, 0];
+                    double angle = this.input1[0, 1];
 
                     double wMagnitude = this.input2[k, j];
                     double wAngle = this.input2[k, j + this.input2.Cols / 2];
@@ -161,8 +161,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     double y2 = wMagnitude * Math.Sin(wAngle);
 
                     // Delta calculations as in the forward pass
-                    double deltax = this.weights[k, j] > 0 ? x2 - x1 : x1 - x2;
-                    double deltay = this.weights[k, j] > 0 ? y2 - y1 : y1 - y2;
+                    double deltax = this.weights[j, k] > 0 ? x2 - x1 : x1 - x2;
+                    double deltay = this.weights[j, k] > 0 ? y2 - y1 : y1 - y2;
 
                     double dSumX_dDeltaX = this.dSumXDDeltaX[0, j];
                     double dSumX_dDeltaY = this.dSumXDDeltaY[0, j];
@@ -170,10 +170,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dSumY_dDeltaY = this.dSumYDDeltaY[0, j];
 
                     // Derivatives of delta components with respect to inputs
-                    double dDeltaX_dX1 = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign
-                    double dDeltaY_dY1 = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign
-                    double dDeltaX_dX2 = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
-                    double dDeltaY_dY2 = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
+                    double dDeltaX_dX1 = this.weights[j, k] > 0 ? -1 : 1; // Depending on weight sign
+                    double dDeltaY_dY1 = this.weights[j, k] > 0 ? -1 : 1; // Depending on weight sign
+                    double dDeltaX_dX2 = this.weights[j, k] > 0 ? 1 : -1; // Depending on weight sign
+                    double dDeltaY_dY2 = this.weights[j, k] > 0 ? 1 : -1; // Depending on weight sign
 
                     // Analytically determined gradients for combined magnitude
                     double dCombinedMagnitude_dSumX = this.sumX[0, j] / Math.Sqrt(this.sumX[0, j] * this.sumX[0, j] + this.sumY[0, j] * this.sumY[0, j]);
@@ -186,13 +186,13 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dY1_dMagnitude = Math.Sin(angle);
 
                     // Apply chain rule for dInput1
-                    dInput1[0, j] += dOutput[0, j] * (
+                    dInput1[0, 0] += dOutput[0, j] * (
                         dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
                         dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                         dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                         dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
 
-                    dInput1[0, j] += dOutput[0, j + (this.input2.Rows / 2)] * (
+                    dInput1[0, 0] += dOutput[0, j + (this.input2.Rows / 2)] * (
                         dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
                         dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                         dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
@@ -202,13 +202,13 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dY1_dAngle = magnitude * Math.Cos(angle);
 
                     // Applying the chain rule for the angle component of input1
-                    dInput1[0, j + this.input1.Cols / 2] += dOutput[0, j] * (
+                    dInput1[0, 1] += dOutput[0, j] * (
                         dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
                         dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                         dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                         dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
 
-                    dInput1[0, j + this.input1.Cols / 2] += dOutput[0, j + (this.input2.Rows / 2)] * (
+                    dInput1[0, 1] += dOutput[0, j + (this.input2.Rows / 2)] * (
                         dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
                         dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                         dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
@@ -247,8 +247,8 @@ namespace ParallelReverseAutoDiff.RMAD
                         dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
 
                     // Derivatives of delta components with respect to weight
-                    double dDeltaX_dWeight = (this.weights[k, j] > 0) ? (x2 - x1) : (x1 - x2);
-                    double dDeltaY_dWeight = (this.weights[k, j] > 0) ? (y2 - y1) : (y1 - y2);
+                    double dDeltaX_dWeight = (this.weights[j, k] > 0) ? (x2 - x1) : (x1 - x2);
+                    double dDeltaY_dWeight = (this.weights[j, k] > 0) ? (y2 - y1) : (y1 - y2);
 
                     // Apply chain rule for weights for magnitude and angle
                     dWeights[k, j] += dOutput[0, j] * (

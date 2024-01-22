@@ -10,39 +10,81 @@
         private const string ARCHITECTURE = "vlstmnet";
 
         private readonly IModelLayer inputLayer;
+        private readonly List<IModelLayer> nestedLayers;
+        private readonly IModelLayer outputLayer;
 
         private VectorLstmComputationGraph computationGraph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VectorLstmNetwork"/> class.
         /// </summary>
+        /// <param name="numTimeSteps">The number of time steps.</param>
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="numNodes">The number of nodes.</param>
         /// <param name="numFeatures">The number of features.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public VectorLstmNetwork(int numLayers, int numNodes, int numFeatures, double learningRate, double clipValue)
+        public VectorLstmNetwork(int numTimeSteps, int numLayers, int numNodes, int numFeatures, double learningRate, double clipValue)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumNodes = numNodes;
             this.NumFeatures = numFeatures;
+            this.Parameters.NumTimeSteps = numTimeSteps;
 
             int numInputOutputFeatures = this.NumFeatures;
             var inputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("Angles", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("WeightVectors2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("Weights", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("Weights2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("Keys", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("Queries", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("QB", new[] { 1, numInputOutputFeatures }, InitializationType.Xavier)
-                .AddModelElementGroup("SummationWeights", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier);
+                .AddModelElementGroup("Weights", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
+                .AddModelElementGroup("Vectors", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier)
+                .AddModelElementGroup("PolarWeights", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
+                .AddModelElementGroup("PolarVectors", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier);
             var inputLayer = inputLayerBuilder.Build();
             this.inputLayer = inputLayer;
+
+            this.nestedLayers = new List<IModelLayer>();
+            int numNestedOutputFeatures = this.NumFeatures;
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                var nestedLayerBuilder = new ModelLayerBuilder(this)
+                    .AddModelElementGroup("WForgetWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UForgetWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("WForgetVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UForgetVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("FKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("FKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("WInputWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UInputWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("WInputVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UInputVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("IKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("IKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("WCWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UCWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("WCVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UCVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("CKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("CKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("PreviousWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("CWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("WOutputWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UOutputWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("WOutputVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UOutputVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("OKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("OKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("HiddenWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("HKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("HKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier);
+                var nestedLayer = nestedLayerBuilder.Build();
+                this.nestedLayers.Add(nestedLayer);
+            }
+
+            int numOutputFeatures = this.NumFeatures;
+            var outputLayerBuilder = new ModelLayerBuilder(this)
+                .AddModelElementGroup("RowSumWeights", new[] { numTimeSteps, numInputOutputFeatures / 2 }, InitializationType.Xavier);
+            var outputLayer = outputLayerBuilder.Build();
+            this.outputLayer = outputLayer;
 
             this.InitializeState();
         }
@@ -56,6 +98,8 @@
         /// Gets the output matrix.
         /// </summary>
         public Matrix Output { get; private set; }
+
+        public Matrix SoftmaxDecision { get; private set; }
 
         public double TargetAngle { get; set; }
 
@@ -371,8 +415,9 @@
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
-            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
+            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, this.NumFeatures).ToArray());
+            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
+            var softmaxDecision = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, this.Parameters.NumTimeSteps).ToArray());
 
             if (this.Output == null)
             {
@@ -390,6 +435,15 @@
             else
             {
                 this.Input.Replace(input.ToArray());
+            }
+
+            if (this.SoftmaxDecision == null)
+            {
+                this.SoftmaxDecision = softmaxDecision;
+            }
+            else
+            {
+                this.SoftmaxDecision.Replace(softmaxDecision.ToArray());
             }
         }
 
