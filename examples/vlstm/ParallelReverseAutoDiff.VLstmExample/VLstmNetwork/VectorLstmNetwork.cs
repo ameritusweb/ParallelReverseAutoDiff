@@ -65,14 +65,14 @@
                     .AddModelElementGroup("UCVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("CKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("CKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("PreviousWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("CWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("WOutputWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("UOutputWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("WOutputVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("UOutputVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("OKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("OKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("PreviousWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("CWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("HiddenWeights", new[] { numNodes, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("HKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("HKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier);
@@ -400,7 +400,7 @@
                 opVisitor.Reset();
             }
 
-            IOperationBase? backwardEndOperation = this.computationGraph["weight_vectors_square_0_0"];
+            IOperationBase? backwardEndOperation = this.computationGraph["weights_0_0"];
             if (backwardEndOperation.CalculatedGradient[0] == null)
             {
                 return gradient;
@@ -462,35 +462,153 @@
         /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
-            var angles = this.inputLayer.WeightMatrix("Angles");
-            var anglesGradient = this.inputLayer.GradientMatrix("Angles");
-
-            var weightVectors = this.inputLayer.WeightMatrix("WeightVectors");
-            var weightVectorsGradient = this.inputLayer.GradientMatrix("WeightVectors");
-
-            var weightVectors2 = this.inputLayer.WeightMatrix("WeightVectors2");
-            var weightVectors2Gradient = this.inputLayer.GradientMatrix("WeightVectors2");
-
             var weights = this.inputLayer.WeightMatrix("Weights");
             var weightsGradient = this.inputLayer.GradientMatrix("Weights");
+            var vectors = this.inputLayer.WeightMatrix("Vectors");
+            var vectorsGradient = this.inputLayer.GradientMatrix("Vectors");
+            var polarWeights = this.inputLayer.WeightMatrix("PolarWeights");
+            var polarWeightsGradient = this.inputLayer.GradientMatrix("PolarWeights");
+            var polarVectors = this.inputLayer.WeightMatrix("PolarVectors");
+            var polarVectorsGradient = this.inputLayer.GradientMatrix("PolarVectors");
 
-            var weights2 = this.inputLayer.WeightMatrix("Weights2");
-            var weights2Gradient = this.inputLayer.GradientMatrix("Weights2");
+            List<Matrix> wForgetWeights = new List<Matrix>();
+            List<Matrix> wForgetWeightsGradient = new List<Matrix>();
+            List<Matrix> uForgetWeights = new List<Matrix>();
+            List<Matrix> uForgetWeightsGradient = new List<Matrix>();
+            List<Matrix> wForgetVectors = new List<Matrix>();
+            List<Matrix> wForgetVectorsGradient = new List<Matrix>();
+            List<Matrix> uForgetVectors = new List<Matrix>();
+            List<Matrix> uForgetVectorsGradient = new List<Matrix>();
+            List<Matrix> fKeys = new List<Matrix>();
+            List<Matrix> fKeysGradient = new List<Matrix>();
+            List<Matrix> fKB = new List<Matrix>();
+            List<Matrix> fKBGradient = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                var layer = this.nestedLayers[i];
+                wForgetWeights.Add(layer.WeightMatrix("WForgetWeights"));
+                wForgetWeightsGradient.Add(layer.GradientMatrix("WForgetWeights"));
+                uForgetWeights.Add(layer.WeightMatrix("UForgetWeights"));
+                uForgetWeightsGradient.Add(layer.GradientMatrix("UForgetWeights"));
+                wForgetVectors.Add(layer.WeightMatrix("WForgetVectors"));
+                wForgetVectorsGradient.Add(layer.GradientMatrix("WForgetVectors"));
+                uForgetVectors.Add(layer.WeightMatrix("UForgetVectors"));
+                uForgetVectorsGradient.Add(layer.GradientMatrix("UForgetVectors"));
+                fKeys.Add(layer.WeightMatrix("FKeys"));
+                fKeysGradient.Add(layer.GradientMatrix("FKeys"));
+                fKB.Add(layer.WeightMatrix("FKB"));
+                fKBGradient.Add(layer.GradientMatrix("FKB"));
+            }
 
-            var keys = this.inputLayer.WeightMatrix("Keys");
-            var keysGradient = this.inputLayer.GradientMatrix("Keys");
+            List<Matrix> wInputWeights = new List<Matrix>();
+            List<Matrix> wInputWeightsGradient = new List<Matrix>();
+            List<Matrix> uInputWeights = new List<Matrix>();
+            List<Matrix> uInputWeightsGradient = new List<Matrix>();
+            List<Matrix> wInputVectors = new List<Matrix>();
+            List<Matrix> wInputVectorsGradient = new List<Matrix>();
+            List<Matrix> uInputVectors = new List<Matrix>();
+            List<Matrix> uInputVectorsGradient = new List<Matrix>();
+            List<Matrix> iKeys = new List<Matrix>();
+            List<Matrix> iKeysGradient = new List<Matrix>();
+            List<Matrix> iKB = new List<Matrix>();
+            List<Matrix> iKBGradient = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                var layer = this.nestedLayers[i];
+                wInputWeights.Add(layer.WeightMatrix("WInputWeights"));
+                wInputWeightsGradient.Add(layer.GradientMatrix("WInputWeights"));
+                uInputWeights.Add(layer.WeightMatrix("UInputWeights"));
+                uInputWeightsGradient.Add(layer.GradientMatrix("UInputWeights"));
+                wInputVectors.Add(layer.WeightMatrix("WInputVectors"));
+                wInputVectorsGradient.Add(layer.GradientMatrix("WInputVectors"));
+                uInputVectors.Add(layer.WeightMatrix("UInputVectors"));
+                uInputVectorsGradient.Add(layer.GradientMatrix("UInputVectors"));
+                iKeys.Add(layer.WeightMatrix("IKeys"));
+                iKeysGradient.Add(layer.GradientMatrix("IKeys"));
+                iKB.Add(layer.WeightMatrix("IKB"));
+                iKBGradient.Add(layer.GradientMatrix("IKB"));
+            }
 
-            var kb = this.inputLayer.WeightMatrix("KB");
-            var kbGradient = this.inputLayer.GradientMatrix("KB");
+            List<Matrix> wCWeights = new List<Matrix>();
+            List<Matrix> wCWeightsGradient = new List<Matrix>();
+            List<Matrix> uCWeights = new List<Matrix>();
+            List<Matrix> uCWeightsGradient = new List<Matrix>();
+            List<Matrix> wCVectors = new List<Matrix>();
+            List<Matrix> wCVectorsGradient = new List<Matrix>();
+            List<Matrix> uCVectors = new List<Matrix>();
+            List<Matrix> uCVectorsGradient = new List<Matrix>();
+            List<Matrix> cKeys = new List<Matrix>();
+            List<Matrix> cKeysGradient = new List<Matrix>();
+            List<Matrix> cKB = new List<Matrix>();
+            List<Matrix> cKBGradient = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                var layer = this.nestedLayers[i];
+                wCWeights.Add(layer.WeightMatrix("WCWeights"));
+                wCWeightsGradient.Add(layer.GradientMatrix("WCWeights"));
+                uCWeights.Add(layer.WeightMatrix("UCWeights"));
+                uCWeightsGradient.Add(layer.GradientMatrix("UCWeights"));
+                wCVectors.Add(layer.WeightMatrix("WCVectors"));
+                wCVectorsGradient.Add(layer.GradientMatrix("WCVectors"));
+                uCVectors.Add(layer.WeightMatrix("UCVectors"));
+                uCVectorsGradient.Add(layer.GradientMatrix("UCVectors"));
+                cKeys.Add(layer.WeightMatrix("CKeys"));
+                cKeysGradient.Add(layer.GradientMatrix("CKeys"));
+                cKB.Add(layer.WeightMatrix("CKB"));
+                cKBGradient.Add(layer.GradientMatrix("CKB"));
+            }
 
-            var queries = this.inputLayer.WeightMatrix("Queries");
-            var queriesGradient = this.inputLayer.GradientMatrix("Queries");
+            List<Matrix> wOutputWeights = new List<Matrix>();
+            List<Matrix> wOutputWeightsGradient = new List<Matrix>();
+            List<Matrix> uOutputWeights = new List<Matrix>();
+            List<Matrix> uOutputWeightsGradient = new List<Matrix>();
+            List<Matrix> wOutputVectors = new List<Matrix>();
+            List<Matrix> wOutputVectorsGradient = new List<Matrix>();
+            List<Matrix> uOutputVectors = new List<Matrix>();
+            List<Matrix> uOutputVectorsGradient = new List<Matrix>();
+            List<Matrix> oKeys = new List<Matrix>();
+            List<Matrix> oKeysGradient = new List<Matrix>();
+            List<Matrix> oKB = new List<Matrix>();
+            List<Matrix> oKBGradient = new List<Matrix>();
+            List<Matrix> hKeys = new List<Matrix>();
+            List<Matrix> hKeysGradient = new List<Matrix>();
+            List<Matrix> hKB = new List<Matrix>();
+            List<Matrix> hKBGradient = new List<Matrix>();
+            List<Matrix> previousWeights = new List<Matrix>();
+            List<Matrix> previousWeightsGradient = new List<Matrix>();
+            List<Matrix> cWeights = new List<Matrix>();
+            List<Matrix> cWeightsGradient = new List<Matrix>();
+            List<Matrix> hiddenWeights = new List<Matrix>();
+            List<Matrix> hiddenWeightsGradient = new List<Matrix>();
+            for (int i = 0; i < this.NumLayers; ++i)
+            {
+                var layer = this.nestedLayers[i];
+                wOutputWeights.Add(layer.WeightMatrix("WOutputWeights"));
+                wOutputWeightsGradient.Add(layer.GradientMatrix("WOutputWeights"));
+                uOutputWeights.Add(layer.WeightMatrix("UOutputWeights"));
+                uOutputWeightsGradient.Add(layer.GradientMatrix("UOutputWeights"));
+                wOutputVectors.Add(layer.WeightMatrix("WOutputVectors"));
+                wOutputVectorsGradient.Add(layer.GradientMatrix("WOutputVectors"));
+                uOutputVectors.Add(layer.WeightMatrix("UOutputVectors"));
+                uOutputVectorsGradient.Add(layer.GradientMatrix("UOutputVectors"));
+                oKeys.Add(layer.WeightMatrix("OKeys"));
+                oKeysGradient.Add(layer.GradientMatrix("OKeys"));
+                oKB.Add(layer.WeightMatrix("OKB"));
+                oKBGradient.Add(layer.GradientMatrix("OKB"));
+                hKeys.Add(layer.WeightMatrix("HKeys"));
+                hKeysGradient.Add(layer.GradientMatrix("HKeys"));
+                hKB.Add(layer.WeightMatrix("HKB"));
+                hKBGradient.Add(layer.GradientMatrix("HKB"));
+                previousWeights.Add(layer.WeightMatrix("PreviousWeights"));
+                previousWeightsGradient.Add(layer.GradientMatrix("PreviousWeights"));
+                cWeights.Add(layer.WeightMatrix("CWeights"));
+                cWeightsGradient.Add(layer.GradientMatrix("CWeights"));
+                hiddenWeights.Add(layer.WeightMatrix("HiddenWeights"));
+                hiddenWeightsGradient.Add(layer.GradientMatrix("HiddenWeights"));
+            }
 
-            var qb = this.inputLayer.WeightMatrix("QB");
-            var qbGradient = this.inputLayer.GradientMatrix("QB");
-
-            var summationWeights = this.inputLayer.WeightMatrix("SummationWeights");
-            var summationWeightsGradient = this.inputLayer.GradientMatrix("SummationWeights");
+            var rowSumWeights = this.outputLayer.WeightMatrix("RowSumWeights");
+            var rowSumWeightsGradient = this.inputLayer.GradientMatrix("RowSumWeights");
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
@@ -498,17 +616,42 @@
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
-                .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
-                .AddWeight("WeightVectors", x => weightVectors).AddGradient("DWeightVectors", x => weightVectorsGradient)
-                .AddWeight("WeightVectors2", x => weightVectors2).AddGradient("DWeightVectors2", x => weightVectors2Gradient)
+                .AddIntermediate("SoftmaxDecision", _ => this.SoftmaxDecision)
                 .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
-                .AddWeight("Weights2", x => weights2).AddGradient("DWeights2", x => weights2Gradient)
-                .AddWeight("Keys", x => keys).AddGradient("DKeys", x => keysGradient)
-                .AddWeight("KB", x => kb).AddGradient("DKB", x => kbGradient)
-                .AddWeight("Queries", x => queries).AddGradient("DQueries", x => queriesGradient)
-                .AddWeight("QB", x => qb).AddGradient("DQB", x => qbGradient)
-                .AddWeight("SummationWeights", x => summationWeights).AddGradient("DSummationWeights", x => summationWeightsGradient)
-                .ConstructFromArchitecture(jsonArchitecture);
+                .AddWeight("Vectors", x => vectors).AddGradient("DVectors", x => vectorsGradient)
+                .AddWeight("PolarWeights", x => polarWeights).AddGradient("DPolarWeights", x => polarWeightsGradient)
+                .AddWeight("PolarVectors", x => polarVectors).AddGradient("DPolarVectors", x => polarVectorsGradient)
+                .AddWeight("WForgetWeights", x => wForgetWeights[x.Layer]).AddGradient("DWForgetWeights", x => wForgetWeightsGradient[x.Layer])
+                .AddWeight("UForgetWeights", x => uForgetWeights[x.Layer]).AddGradient("DUForgetWeights", x => uForgetWeightsGradient[x.Layer])
+                .AddWeight("WForgetVectors", x => wForgetVectors[x.Layer]).AddGradient("DWForgetVectors", x => wForgetVectorsGradient[x.Layer])
+                .AddWeight("UForgetVectors", x => uForgetVectors[x.Layer]).AddGradient("DUForgetVectors", x => uForgetVectorsGradient[x.Layer])
+                .AddWeight("FKeys", x => fKeys[x.Layer]).AddGradient("DFKeys", x => fKeysGradient[x.Layer])
+                .AddWeight("FKB", x => fKB[x.Layer]).AddGradient("DFKB", x => fKBGradient[x.Layer])
+                .AddWeight("WInputWeights", x => wInputWeights[x.Layer]).AddGradient("DWInputWeights", x => wInputWeightsGradient[x.Layer])
+                .AddWeight("UInputWeights", x => uInputWeights[x.Layer]).AddGradient("DUInputWeights", x => uInputWeightsGradient[x.Layer])
+                .AddWeight("WInputVectors", x => wInputVectors[x.Layer]).AddGradient("DWInputVectors", x => wInputVectorsGradient[x.Layer])
+                .AddWeight("UInputVectors", x => uInputVectors[x.Layer]).AddGradient("DUInputVectors", x => uInputVectorsGradient[x.Layer])
+                .AddWeight("IKeys", x => iKeys[x.Layer]).AddGradient("DIKeys", x => iKeysGradient[x.Layer])
+                .AddWeight("IKB", x => iKB[x.Layer]).AddGradient("DIKB", x => iKBGradient[x.Layer])
+                .AddWeight("WCWeights", x => wCWeights[x.Layer]).AddGradient("DWCWeights", x => wCWeightsGradient[x.Layer])
+                .AddWeight("UCWeights", x => uCWeights[x.Layer]).AddGradient("DUCWeights", x => uCWeightsGradient[x.Layer])
+                .AddWeight("WCVectors", x => wCVectors[x.Layer]).AddGradient("DWCVectors", x => wCVectorsGradient[x.Layer])
+                .AddWeight("UCVectors", x => uCVectors[x.Layer]).AddGradient("DUCVectors", x => uCVectorsGradient[x.Layer])
+                .AddWeight("CKeys", x => cKeys[x.Layer]).AddGradient("DCKeys", x => cKeysGradient[x.Layer])
+                .AddWeight("CKB", x => cKB[x.Layer]).AddGradient("DCKB", x => cKBGradient[x.Layer])
+                .AddWeight("WOutputWeights", x => wOutputWeights[x.Layer]).AddGradient("DWOutputWeights", x => wOutputWeightsGradient[x.Layer])
+                .AddWeight("UOutputWeights", x => uOutputWeights[x.Layer]).AddGradient("DUOutputWeights", x => uOutputWeightsGradient[x.Layer])
+                .AddWeight("WOutputVectors", x => wOutputVectors[x.Layer]).AddGradient("DWOutputVectors", x => wOutputVectorsGradient[x.Layer])
+                .AddWeight("UOutputVectors", x => uOutputVectors[x.Layer]).AddGradient("DUOutputVectors", x => uOutputVectorsGradient[x.Layer])
+                .AddWeight("OKeys", x => oKeys[x.Layer]).AddGradient("DOKeys", x => oKeysGradient[x.Layer])
+                .AddWeight("OKB", x => oKB[x.Layer]).AddGradient("DOKB", x => oKBGradient[x.Layer])
+                .AddWeight("HKeys", x => hKeys[x.Layer]).AddGradient("DHKeys", x => hKeysGradient[x.Layer])
+                .AddWeight("HKB", x => hKB[x.Layer]).AddGradient("DHKB", x => hKBGradient[x.Layer])
+                .AddWeight("PreviousWeights", x => previousWeights[x.Layer]).AddGradient("DPreviousWeights", x => previousWeightsGradient[x.Layer])
+                .AddWeight("CWeights", x => cWeights[x.Layer]).AddGradient("DCWeights", x => cWeightsGradient[x.Layer])
+                .AddWeight("HiddenWeights", x => hiddenWeights[x.Layer]).AddGradient("DHiddenWeights", x => hiddenWeightsGradient[x.Layer])
+                .AddWeight("RowSumWeights", x => rowSumWeights).AddGradient("DRowSumWeights", x => rowSumWeightsGradient)
+                .ConstructFromArchitecture(jsonArchitecture, this.Parameters.NumTimeSteps, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
             backwardStartOperation = this.computationGraph["output_0_0"];

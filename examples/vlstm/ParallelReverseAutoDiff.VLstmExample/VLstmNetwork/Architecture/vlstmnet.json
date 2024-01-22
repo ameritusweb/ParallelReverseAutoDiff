@@ -390,7 +390,7 @@
         {
           "id": "output",
           "type": "SelectiveMemoryOperation",
-          "inputs": [ "hFromCurrentTimeStepAndLastLayer", "row_sum_dot_product_sigmoid", "hFromSelectedPreviousTimeStepAndLastLayer" ],
+          "inputs": [ "hFromCurrentTimeStepAndLastLayer", "hFromSelectedPreviousTimeStepAndLastLayer", "row_sum_dot_product_sigmoid" ],
           "setResultTo": "Output"
         }
       ]
