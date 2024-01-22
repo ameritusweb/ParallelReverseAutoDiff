@@ -230,11 +230,6 @@
               "inputs": [ "f_previousMemoryCellState", "i_c" ]
             },
             {
-              "id": "new_c_concat",
-              "type": "MatrixVerticalConcatenateOperation",
-              "inputs": [ "previousMemoryCellState", "newC" ]
-            },
-            {
               "id": "wo_weights",
               "type": "ElementwiseSquareOperation",
               "inputs": [ "WOutputWeights" ],
@@ -335,9 +330,68 @@
       ],
       "endOperations": [
         {
+          "id": "new_c_concat",
+          "type": "MatrixVerticalConcatenateOperation",
+          "inputs": [ "previousMemoryCellStateConcat", "newCFromLastLayer" ]
+        },
+        {
+          "id": "new_h_concat",
+          "type": "MatrixVerticalConcatenateOperation",
+          "inputs": [ "previousHiddenStateConcat", "hFromLastLayer" ]
+        },
+        {
+          "id": "row_sum_weights",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "RowSumWeights" ],
+          "gradientResultTo": [ "DRowSumWeights" ]
+        },
+        {
+          "id": "row_sum",
+          "type": "ElementwiseVectorCartesianRowSummationOperation",
+          "inputs": [ "new_c_concat", "new_h_concat", "row_sum_weights" ]
+        },
+        {
+          "id": "row_weights",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "RowWeights" ],
+          "gradientResultTo": [ "DRowWeights" ]
+        },
+        {
+          "id": "row_sum_dot_product",
+          "type": "ElementwiseVectorDotProductOperation",
+          "inputs": [ "row_sum", "row_weights" ]
+        },
+        {
+          "id": "row_sum_dot_product_transpose",
+          "type": "MatrixTransposeOperation",
+          "inputs": [ "row_sum_dot_product" ]
+        },
+        {
+          "id": "row_sum_dot_product_sine_softmax",
+          "type": "SineSoftmaxOperation",
+          "inputs": [ "row_sum_dot_product_transpose" ]
+        },
+        {
+          "id": "row_sum_dot_product_varied_softmax",
+          "type": "VariedSoftmaxOperation",
+          "inputs": [ "row_sum_dot_product_sine_softmax", "LowTemp" ]
+        },
+        {
+          "id": "row_sum_dot_product_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "row_sum_dot_product_varied_softmax" ]
+        },
+        {
+          "id": "row_sum_dot_product_sigmoid",
+          "type": "SigmoidOperation",
+          "inputs": [ "row_sum_dot_product_square" ],
+          "setResultTo": "SoftmaxDecision"
+        },
+        {
           "id": "output",
-          "type": "ElementwiseVectorAddOperation",
-          "inputs": [ "hFromCurrentTimeStepAndFirstLayer", "hFromCurrentTimeStepAndSecondLayer" ]
+          "type": "SelectiveMemoryOperation",
+          "inputs": [ "hFromCurrentTimeStepAndLastLayer", "row_sum_dot_product_sigmoid", "hFromSelectedPreviousTimeStepAndLastLayer" ],
+          "setResultTo": "Output"
         }
       ]
     }

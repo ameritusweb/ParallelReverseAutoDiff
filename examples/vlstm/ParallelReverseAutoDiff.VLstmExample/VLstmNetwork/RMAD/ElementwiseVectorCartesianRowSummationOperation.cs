@@ -29,12 +29,12 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Performs the forward operation for the element-wise vector cartestian row summation function.
+        /// Performs the forward operation for the element-wise vector cartesian row summation function.
         /// </summary>
-        /// <param name="input1">The first input to the element-wise vector cartestian row summation operation.</param>
-        /// <param name="input2">The second input to the element-wise vector cartestian row summation operation.</param>
-        /// <param name="weights">The weights for the element-wise vector cartestian row summation operation.</param>
-        /// <returns>The output of the element-wise vector cartestian row summation operation.</returns>
+        /// <param name="input1">The first input to the element-wise vector cartesian row summation operation.</param>
+        /// <param name="input2">The second input to the element-wise vector cartesian row summation operation.</param>
+        /// <param name="weights">The weights for the element-wise vector cartesian row summation operation.</param>
+        /// <returns>The output of the element-wise vector cartesian row summation operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2, Matrix weights)
         {
             this.input1 = input1;
