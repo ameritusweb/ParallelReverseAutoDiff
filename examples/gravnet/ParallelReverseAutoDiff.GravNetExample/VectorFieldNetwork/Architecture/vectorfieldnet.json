@@ -14,6 +14,23 @@
           "inputs": [ "Input", "angles_square" ]
         },
         {
+          "id": "projection_vectors_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "ProjectionVectors" ],
+          "gradientResultTo": [ "DProjectionVectors" ]
+        },
+        {
+          "id": "projection_weights_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "ProjectionWeights" ],
+          "gradientResultTo": [ "DProjectionWeights" ]
+        },
+        {
+          "id": "vector_projection",
+          "type": "ElementwiseVectorProjectionOperation",
+          "inputs": [ "vectorize_input", "projection_vectors_square", "projection_weights_square" ]
+        },
+        {
           "id": "weight_vectors_square",
           "type": "ElementwiseSquareOperation",
           "inputs": [ "WeightVectors" ],
@@ -40,12 +57,12 @@
         {
           "id": "start_solar_system",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "vectorize_input", "weight_vectors_square", "weight_square" ]
+          "inputs": [ "vector_projection", "weight_vectors_square", "weight_square" ]
         },
         {
           "id": "start_solar_system_2",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "vectorize_input", "weight_vectors_square2", "weight_square2" ]
+          "inputs": [ "vector_projection", "weight_vectors_square2", "weight_square2" ]
         },
         {
           "id": "vector_add",

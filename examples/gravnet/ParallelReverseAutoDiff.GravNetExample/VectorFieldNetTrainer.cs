@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                VectorFieldNet net = new VectorFieldNet(50, 50, 3, 0.0001d, 4d);
+                VectorFieldNet net = new VectorFieldNet(50, 1000, 3, 0.0001d, 4d);
                 await net.Initialize();
                 net.ApplyWeights();
 
