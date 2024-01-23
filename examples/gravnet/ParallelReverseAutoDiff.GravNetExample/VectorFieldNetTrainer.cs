@@ -11,9 +11,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                VectorFieldNet net = new VectorFieldNet(50, 1000, 3, 0.0001d, 4d);
+                VectorFieldNet net = new VectorFieldNet(50, 1000, 3, 0.01d, 4d);
                 await net.Initialize();
-                net.ApplyWeights();
+                //net.ApplyWeights();
 
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr3", "*.json");
 
@@ -33,11 +33,11 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     var file = jsonFile.Substring(jsonFile.LastIndexOf('\\') + 1);
                     var sub = file.Substring(16, 1);
 
-                    if (sub != "A" && sub != "B")
-                    {
-                        token.Continue();
-                        return;
-                    }
+                    //if (sub != "A" && sub != "B")
+                    //{
+                    //    token.Continue();
+                    //    return;
+                    //}
 
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)

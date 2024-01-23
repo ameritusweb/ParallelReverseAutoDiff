@@ -60,43 +60,43 @@ namespace ParallelReverseAutoDiff.GravNetExample
                                 Dictionary<double, (int, int)> positiveChanges = new Dictionary<double, (int, int)>();
                                 Dictionary<double, (int, int)> negativeChanges = new Dictionary<double, (int, int)>();
                                 this.UpdateWeightWithAdam(identifier, weightMatrix, firstMomentMatrix, secondMomentMatrix, gradientMatrix, this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon, ref positiveChanges, ref negativeChanges);
-                                double frobeniusAfter = weightMatrix.FrobeniusNorm();
-                                double newFrobenius = 0.0d;
-                                int index = 0;
-                                if (identifier != "Queries" && identifier != "Keys")
-                                {
-                                    if (frobeniusAfter > frobeniusBefore)
-                                    {
-                                        var list1 = positiveChanges.OrderBy(x => x.Key).ToList();
-                                        var list2 = negativeChanges.OrderByDescending(x => x.Key).ToList();
-                                        var list3 = positiveChanges.OrderByDescending(x => x.Key).ToList();
-                                        var list4 = negativeChanges.OrderBy(x => x.Key).ToList();
-                                        do
-                                        {
-                                            for (int k = index; k < index + 100; ++k)
-                                            {
-                                                var (key1, (i1, j1)) = list1[k];
-                                                var (key2, (i2, j2)) = list2[k];
-                                                weightMatrix[i1][j1] += key1;
-                                                weightMatrix[i2][j2] += key2;
-                                            }
-                                            for (int k = index; k < index + 100; ++k)
-                                            {
-                                                var (key1, (i1, j1)) = list3[k];
-                                                var (key2, (i2, j2)) = list4[k];
-                                                weightMatrix[i1][j1] -= key1;
-                                                weightMatrix[i2][j2] -= key2;
-                                            }
-                                            newFrobenius = weightMatrix.FrobeniusNorm();
-                                            index += 100;
-                                            if ((index + 100) >= Math.Min(positiveChanges.Count, negativeChanges.Count))
-                                            {
-                                                break;
-                                            }
-                                        }
-                                        while (newFrobenius > frobeniusBefore);
-                                    }
-                                }
+                                //double frobeniusAfter = weightMatrix.FrobeniusNorm();
+                                //double newFrobenius = 0.0d;
+                                //int index = 0;
+                                //if (identifier != "Queries" && identifier != "Keys")
+                                //{
+                                //    if (frobeniusAfter > frobeniusBefore)
+                                //    {
+                                //        var list1 = positiveChanges.OrderBy(x => x.Key).ToList();
+                                //        var list2 = negativeChanges.OrderByDescending(x => x.Key).ToList();
+                                //        var list3 = positiveChanges.OrderByDescending(x => x.Key).ToList();
+                                //        var list4 = negativeChanges.OrderBy(x => x.Key).ToList();
+                                //        do
+                                //        {
+                                //            for (int k = index; k < index + 100; ++k)
+                                //            {
+                                //                var (key1, (i1, j1)) = list1[k];
+                                //                var (key2, (i2, j2)) = list2[k];
+                                //                weightMatrix[i1][j1] += key1;
+                                //                weightMatrix[i2][j2] += key2;
+                                //            }
+                                //            for (int k = index; k < index + 100; ++k)
+                                //            {
+                                //                var (key1, (i1, j1)) = list3[k];
+                                //                var (key2, (i2, j2)) = list4[k];
+                                //                weightMatrix[i1][j1] -= key1;
+                                //                weightMatrix[i2][j2] -= key2;
+                                //            }
+                                //            newFrobenius = weightMatrix.FrobeniusNorm();
+                                //            index += 100;
+                                //            if ((index + 100) >= Math.Min(positiveChanges.Count, negativeChanges.Count))
+                                //            {
+                                //                break;
+                                //            }
+                                //        }
+                                //        while (newFrobenius > frobeniusBefore);
+                                //    }
+                                //}
                                 break;
                             }
 

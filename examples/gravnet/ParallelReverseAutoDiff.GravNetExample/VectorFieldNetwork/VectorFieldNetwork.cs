@@ -33,8 +33,8 @@
             var initial = this.NumFeatures / 10;
             var inputLayerBuilder = new ModelLayerBuilder(this)
                 .AddModelElementGroup("Angles", new[] { numNodes, initial / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("ProjectionVectors", new[] { numNodes, numInputOutputFeatures / 4 }, InitializationType.Xavier)
-                .AddModelElementGroup("ProjectionWeights", new[] { numNodes, initial / 2 }, InitializationType.Xavier)
+                .AddModelElementGroup("ProjectionVectors", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
+                .AddModelElementGroup("ProjectionWeights", new[] { numNodes, initial / 2 }, InitializationType.HeAdjacency)
                 .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("WeightVectors2", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
                 .AddModelElementGroup("Weights", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 2 }, InitializationType.Xavier)
@@ -414,6 +414,12 @@
             var angles = this.inputLayer.WeightMatrix("Angles");
             var anglesGradient = this.inputLayer.GradientMatrix("Angles");
 
+            var projectionVectors = this.inputLayer.WeightMatrix("ProjectionVectors");
+            var projectionVectorsGradient = this.inputLayer.GradientMatrix("ProjectionVectors");
+
+            var projectionWeights = this.inputLayer.WeightMatrix("ProjectionWeights");
+            var projectionWeightsGradient = this.inputLayer.GradientMatrix("ProjectionWeights");
+
             var weightVectors = this.inputLayer.WeightMatrix("WeightVectors");
             var weightVectorsGradient = this.inputLayer.GradientMatrix("WeightVectors");
 
@@ -448,6 +454,8 @@
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
                 .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
+                .AddWeight("ProjectionVectors", x => projectionVectors).AddGradient("DProjectionVectors", x => projectionVectorsGradient)
+                .AddWeight("ProjectionWeights", x => projectionWeights).AddGradient("DProjectionWeights", x => projectionWeightsGradient)
                 .AddWeight("WeightVectors", x => weightVectors).AddGradient("DWeightVectors", x => weightVectorsGradient)
                 .AddWeight("WeightVectors2", x => weightVectors2).AddGradient("DWeightVectors2", x => weightVectors2Gradient)
                 .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)

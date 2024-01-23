@@ -20,15 +20,10 @@
           "gradientResultTo": [ "DProjectionVectors" ]
         },
         {
-          "id": "projection_weights_square",
-          "type": "ElementwiseSquareOperation",
-          "inputs": [ "ProjectionWeights" ],
-          "gradientResultTo": [ "DProjectionWeights" ]
-        },
-        {
           "id": "vector_projection",
           "type": "ElementwiseVectorProjectionOperation",
-          "inputs": [ "vectorize_input", "projection_vectors_square", "projection_weights_square" ]
+          "inputs": [ "vectorize_input", "projection_vectors_square", "ProjectionWeights" ],
+          "gradientResultTo": [ null, null, "DProjectionWeights" ]
         },
         {
           "id": "weight_vectors_square",

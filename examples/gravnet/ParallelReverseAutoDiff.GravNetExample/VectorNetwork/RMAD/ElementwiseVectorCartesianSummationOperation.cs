@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using ParallelReverseAutoDiff.GravNetExample.VectorFieldNetwork;
     using ParallelReverseAutoDiff.GravNetExample.VectorNetwork;
     using System;
     using System.Threading.Tasks;
@@ -21,10 +22,21 @@ namespace ParallelReverseAutoDiff.RMAD
         private double[] summationY;
         private CalculatedValues[,] calculatedValues;
         private VectorNetwork vectorNetwork;
+        private VectorFieldNetwork vectorFieldNetwork;
 
         public ElementwiseVectorCartesianSummationOperation(VectorNetwork vectorNetwork)
         {
             this.vectorNetwork = vectorNetwork;
+        }
+
+        public ElementwiseVectorCartesianSummationOperation(VectorFieldNetwork vectorFieldNetwork)
+        {
+            this.vectorFieldNetwork = vectorFieldNetwork;
+        }
+
+        public ElementwiseVectorCartesianSummationOperation(NeuralNetwork net)
+        {
+
         }
 
         /// <summary>
@@ -34,7 +46,17 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new ElementwiseVectorCartesianSummationOperation(net as VectorNetwork);
+            if (net is VectorNetwork vectorNetwork)
+            {
+                return new ElementwiseVectorCartesianSummationOperation(vectorNetwork);
+            } else if (net is VectorFieldNetwork vectorFieldNetwork)
+            {
+                return new ElementwiseVectorCartesianSummationOperation(vectorFieldNetwork);
+            }
+            else
+            {
+                return new ElementwiseVectorCartesianSummationOperation(net);
+            }
         }
 
         /// <summary>
@@ -160,7 +182,10 @@ namespace ParallelReverseAutoDiff.RMAD
             this.summationX = summationX;
             this.summationY = summationY;
 
-            this.vectorNetwork.RecordVectors(resultVectors);
+            if (this.vectorNetwork != null)
+            {
+                this.vectorNetwork.RecordVectors(resultVectors);
+            }
 
             //VectorVisualizer visualizer = new VectorVisualizer();
             //visualizer.Draw(resultVectors, string.Empty + Guid.NewGuid().GetHashCode());
