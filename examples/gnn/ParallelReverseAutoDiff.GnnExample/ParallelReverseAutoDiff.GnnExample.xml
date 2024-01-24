@@ -1177,6 +1177,90 @@
             Gets or sets the messages from two hops away.
             </summary>
         </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GridVector">
+            <summary>
+            A grid vector.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVector.#ctor(System.String,System.String,System.String,System.String,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GridVector"/> class.
+            </summary>
+            <param name="startPiece">The start piece.</param>
+            <param name="endPiece">The end piece.</param>
+            <param name="start">The start.</param>
+            <param name="end">Tne end.</param>
+            <param name="angle">The angle.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GridVector.Start">
+            <summary>
+            Gets or sets the start.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GridVector.End">
+            <summary>
+            Gets or sets the end.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GridVector.StartPiece">
+            <summary>
+            Gets or sets the start piece.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GridVector.EndPiece">
+            <summary>
+            Gets or sets the end piece.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.GnnExample.GridVector.Angle">
+            <summary>
+            Gets or sets the angle.
+            </summary>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor">
+            <summary>
+            A grid vector distributor.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor.#ctor(System.Collections.Generic.List{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor"/> class.
+            </summary>
+            <param name="vectorStrings">The vector strings.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor.DistributeVectors">
+            <summary>
+            Distribute vectors.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor.PlaceVectorInGrid(ParallelReverseAutoDiff.GnnExample.GridVector)">
+            <summary>
+            Place vector in grid.
+            </summary>
+            <param name="vector">The vector.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor.ParseAndCalculateVectors(System.Collections.Generic.List{System.String})">
+            <summary>
+            Parse and calculate vectors.
+            </summary>
+            <param name="vectorStrings">The vector strings.</param>
+            <returns>The parsed vectors.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor.CalculateAngle(System.String,System.String)">
+            <summary>
+            Calculate angle.
+            </summary>
+            <param name="start">The start.</param>
+            <param name="end">The end.</param>
+            <returns>The angle.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.GridVectorDistributor.CalculateReverseAngle(System.Double)">
+            <summary>
+            Calculate reverse angle.
+            </summary>
+            <param name="originalAngle">The original angle.</param>
+            <returns>The reverse angle.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.LeelaReader">
             <summary>
             Reads from Leela.
@@ -1199,6 +1283,22 @@
             Gets chess openings.
             </summary>
             <returns>The map.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.GnnExample.ProjectionGenerator">
+            <summary>
+            A projection generator.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ProjectionGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.GnnExample.ProjectionGenerator"/> class.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.ProjectionGenerator.Generate">
+            <summary>
+            Generates a projection.
+            </summary>
+            <returns>Returns a task.</returns>
         </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.RebelReader">
             <summary>
@@ -1269,6 +1369,14 @@
             <param name="gameState">The game state.</param>
             <returns>The move and the next move.</returns>
         </member>
+        <member name="M:ParallelReverseAutoDiff.GnnExample.StockfishReader.ReadBestMoveScoreAsync(ParallelReverseAutoDiff.GnnExample.GameState,System.Int32)">
+            <summary>
+            Reads the best move from Stockfish.
+            </summary>
+            <param name="gameState">The game state.</param>
+            <param name="depth">The depth.</param>
+            <returns>The best move score.</returns>
+        </member>
         <member name="T:ParallelReverseAutoDiff.GnnExample.TrainingSetGenerator">
             <summary>
             A training set generator.
@@ -1331,6 +1439,113 @@
         <member name="M:ParallelReverseAutoDiff.GnnExample.TrainingSetLoader.LoadMiniBatch">
             <summary>
             Loads a mini-batch of training data.
+            </summary>
+            <returns>A task.</returns>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmComputationGraph">
+            <summary>
+            An LSTM computation graph.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmComputationGraph.#ctor(ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmComputationGraph"/> class.
+            </summary>
+            <param name="net">The neural network.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmComputationGraph.DependenciesSetup(ParallelReverseAutoDiff.RMAD.IOperationBase,ParallelReverseAutoDiff.RMAD.LayerInfo)">
+            <summary>
+            Lifecycle method to setup the dependencies of the computation graph.
+            </summary>
+            <param name="operation">The operation.</param>
+            <param name="layerInfo">The layer information.</param>
+        </member>
+        <member name="T:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork">
+            <summary>
+            An LSTM neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork"/> class.
+            </summary>
+            <param name="inputSize">The input size.</param>
+            <param name="hiddenSize">The hidden size.</param>
+            <param name="outputSize">The output size.</param>
+            <param name="numTimeSteps">The number of time steps.</param>
+            <param name="numLayers">The number of layers.</param>
+            <param name="learningRate">The learning rate.</param>
+            <param name="clipValue">The clip value.</param>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.OutputPathFeatures">
+            <summary>
+            Gets the output path features matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.Target">
+            <summary>
+            Gets the target matrix.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.Architecture">
+            <summary>
+            Gets the JSON architecture.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.ModelLayers">
+            <summary>
+            Gets the model layers of the LSTM neural network.
+            </summary>
+        </member>
+        <member name="P:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.NumLayers">
+            <summary>
+            Gets the number of layers of the neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.Initialize">
+            <summary>
+            Initializes the computation graph of the convolutional neural network.
+            </summary>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.StoreOperationIntermediates(System.Guid)">
+            <summary>
+            Stores the intermediate values of the computation graph for the given operation.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.RestoreOperationIntermediates(System.Guid)">
+            <summary>
+            Restores the intermediate values of the computation graph for the given operation.
+            </summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.AutomaticForwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The forward pass for the LSTM neural network.
+            </summary>
+            <param name="input">The input.</param>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.AutomaticBackwardPropagate(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
+            <summary>
+            The backward pass for the LSTM neural network.
+            </summary>
+            <param name="gradient">The gradient of the loss.</param>
+            <returns>The gradient.</returns>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.InitializeState">
+            <summary>
+            Initialize the state of the LSTM neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.ClearState">
+            <summary>
+            Clears the state of the LSTM neural network.
+            </summary>
+        </member>
+        <member name="M:ParallelReverseAutoDiff.Test.GraphAttentionLstm.LSTM.LstmNeuralNetwork.InitializeComputationGraph">
+            <summary>
+            Initializes the computation graph of the LSTM neural network.
             </summary>
             <returns>A task.</returns>
         </member>
