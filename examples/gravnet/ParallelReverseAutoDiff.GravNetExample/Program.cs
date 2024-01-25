@@ -4,8 +4,12 @@
     {
         static void Main(string[] args)
         {
-            VectorFieldNetTrainer trainer = new VectorFieldNetTrainer();
-            trainer.Train().Wait();
+            SyllableExtractor extrator = new SyllableExtractor();
+            extrator.Extract();
+            var syll = Syllabifier.Syllabify("through");
+
+            // VectorFieldNetTrainer trainer = new VectorFieldNetTrainer();
+            // trainer.Train().Wait();
         }
     }
 }
