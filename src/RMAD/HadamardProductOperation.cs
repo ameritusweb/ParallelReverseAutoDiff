@@ -6,6 +6,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Numerics;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -58,7 +59,19 @@ namespace ParallelReverseAutoDiff.RMAD
             // Parallelize the outer loop
             Parallel.For(0, numRows, i =>
             {
-                for (int j = 0; j < numCols; j++)
+                int vectorSize = Vector<double>.Count;
+                int j = 0;
+
+                // SIMD-accelerated loop
+                for (; j <= numCols - vectorSize; j += vectorSize)
+                {
+                    var v1 = new Vector<double>(this.input1[i], j);
+                    var v2 = new Vector<double>(this.input2[i], j);
+                    (v1 * v2).CopyTo(this.Output[i], j);
+                }
+
+                // Handle remaining elements
+                for (; j < numCols; j++)
                 {
                     this.Output[i][j] = input1[i][j] * input2[i][j];
                 }
