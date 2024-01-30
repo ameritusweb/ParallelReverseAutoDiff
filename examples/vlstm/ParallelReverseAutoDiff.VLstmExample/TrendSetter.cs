@@ -10,7 +10,6 @@ namespace ParallelReverseAutoDiff.VLstmExample
     /// </summary>
     public class TrendSetter
     {
-        private TrendModel model;
 
         /// <summary>
         /// Sets the trend.
@@ -22,7 +21,6 @@ namespace ParallelReverseAutoDiff.VLstmExample
             var semiAnnualTransformer = new SineWaveTransformer(1, 2 * Math.PI / 6); // Semi-annual trend
             var monthlyTransformer = new SineWaveTransformer(1, 2 * Math.PI); // Monthly trend
             TrendModel model = new TrendModel(mainTransformer, yearlyTransformer, semiAnnualTransformer, monthlyTransformer); // Example amplitude and frequency
-            this.model = model;
 
             double startValue = 100d; // Example starting value
 

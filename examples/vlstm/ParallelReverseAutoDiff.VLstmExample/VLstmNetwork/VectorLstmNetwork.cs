@@ -80,7 +80,6 @@
                 this.nestedLayers.Add(nestedLayer);
             }
 
-            int numOutputFeatures = this.NumFeatures;
             var outputLayerBuilder = new ModelLayerBuilder(this)
                 .AddModelElementGroup("RowSumWeights", new[] { numTimeSteps, numInputOutputFeatures / 2 }, InitializationType.Xavier);
             var outputLayer = outputLayerBuilder.Build();

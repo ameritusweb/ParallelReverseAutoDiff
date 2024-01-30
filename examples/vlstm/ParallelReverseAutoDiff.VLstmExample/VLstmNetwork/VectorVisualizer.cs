@@ -13,8 +13,8 @@ namespace ParallelReverseAutoDiff.GravNetExample.VectorNetwork
         private const int BitmapWidth = 4000;  // Adjust as needed
         private const int BitmapHeight = 7000; // Adjust as needed
         private const float scaleFactor = 500f; // Adjust as needed
-        private Bitmap bitmap;
-        private Graphics graphics;
+        private readonly Bitmap bitmap;
+        private readonly Graphics graphics;
 
         public VectorVisualizer()
         {
