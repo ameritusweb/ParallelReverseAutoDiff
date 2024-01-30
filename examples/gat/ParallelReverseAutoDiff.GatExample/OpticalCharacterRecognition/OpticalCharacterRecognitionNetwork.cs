@@ -7,7 +7,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
 {
     using System;
     using System.IO;
-    using Microsoft.VisualBasic;
     using ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition.RMAD;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -160,24 +159,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
         {
             string char1 = f1.Substring(0, 1);
             string char2 = f2.Substring(0, 1);
-            //Dictionary<string, double> A = new Dictionary<string, double>() {
-            //    { "A", 0.1d },
-            //    { "B", 0.001d },
-            //    { "C", 0.0001d },
-            //    { "D", 0.00001d },
-            //    { "E", 0.000001d },
-            //};
-
-            //for (int i = 0; i < input.Rows; i++)
-            //{
-            //    double scaleFactor = i < 17 ? A[char1] : A[char2];
-
-            //    for (int j = 0; j < input.Cols; j++)
-            //    {
-            //        if (input[i][j] != -1d)
-            //            input[i][j] *= scaleFactor;
-            //    }
-            //}
 
             var gatNet = this.graphAttentionNetwork;
             gatNet.InitializeState();
@@ -187,16 +168,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             var outputLeft = gatNet.OutputLeft;
             var outputRight = gatNet.OutputRight;
             var preOutputAdd = gatNet.PreOutputAdd;
-            //var maskedOutputLeft = gatNet.MaskedOutputLeft;
-            //var maskedOutputRight = gatNet.MaskedOutputRight;
-            //var sorted1 = outputLeft[0].OrderByDescending(x => x).ToList();
-            //var sorted2 = outputRight[0].OrderByDescending(x => x).ToList();
-            //var sortedM1 = maskedOutputLeft[0].OrderByDescending(x => x).ToList();
-            //var sortedM2 = maskedOutputRight[0].OrderByDescending(x => x).ToList();
-            //var firstLL = outputLeft[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
-            //var firstLLM = maskedOutputLeft[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
-            //var secondLL = outputRight[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
-            //var secondLLM = maskedOutputRight[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
+
             var maxDiff = Math.Abs(outputLeft[0].Max() - outputRight[0].Max());
 
             if (maxDiff < 0.001d && preOutputAdd.Sum() > 30d)
@@ -237,30 +209,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                     sameStore.Add(maxDiff);
                 }
             }
-
-            var last = entities.LastOrDefault();
-            //double ddd = outputTwo[0][0] > outputTwo[0][1] ? (outputTwo[0][0] / outputTwo[0][1] * 100) : (outputTwo[0][1] / outputTwo[0][0] * 100);
-            //if (ddd > 105)
-            //{
-            //    // different
-            //    if (char1 == char2)
-            //    {
-            //        wrongs.Add($"1: {f1} {f2}");
-            //    } else
-            //    {
-            //        rights.Add($"2: {f1} {f2}");
-            //    }
-            //} else
-            //{
-            //    // same
-            //    if (char1 == char2)
-            //    {
-            //        rights.Add($"3: {f1} {f2}");
-            //    } else
-            //    {
-            //        wrongs.Add($"4: {f1} {f2}");
-            //    }
-            //}
 
             if (char1 == char2 && outputTwo[0][0] > outputTwo[0][1])
             {
@@ -313,49 +261,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
                 }
                 return (new Matrix(new double[][] { new double[] { 0.0d, 0.0d } }), outputTwo, new List<double>());
             }
-
-            if (last != default && char1 == char2 && (last.Item1 == char1 || last.Item2 == char1 || last.Item1 == char2 || last.Item2 == char2))
-            {
-                //var prev = prevOutputTwo[0].ToList();
-                //var prevDiff = Math.Abs(prev[0] - prev[1]);
-                //var currDiff = Math.Abs(outputTwo[0][0] - outputTwo[0][1]);
-                //if (prevDiff < currDiff)
-                //{
-                //    var avg = outputTwo[0].Sum() / 2d;
-                //    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-                //    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
-                //    var gradTwo = lossOperation2.Backward();
-                //    return (gradTwo, outputTwo, new List<double>());
-                //}
-            } else if (char1 == char2)
-            {
-                //if ((outputTwo[0][0] > (outputTwo[0][1] * 2d)) || (outputTwo[0][1] > (outputTwo[0][0] * 2d)))
-                //{
-                //    var avg = outputTwo[0].Sum() / 2d;
-                //    MeanSquaredErrorLossOperation lossOperation2 = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-                //    lossOperation2.Forward(outputTwo, new Matrix(new double[][] { new double[] { avg, avg } }));
-                //    var gradTwo = lossOperation2.Backward();
-                //    return (gradTwo, outputTwo, new List<double>());
-                //}
-            }
-
-            //var arrList = output[0].ToList();
-            //var rr = arrList.OrderByDescending(r => r).ToList();
-            //var scaled = ScaleValuesToMax(arrList, targetMax);
-            //var rrScaled = scaled.OrderByDescending(r => r).ToList();
-            //MeanSquaredErrorLossOperation lossOperation = MeanSquaredErrorLossOperation.Instantiate(this.graphAttentionNetwork);
-            //lossOperation.Forward(output, new Matrix(scaled.ToArray()));
-            //var gradient = lossOperation.Backward();
-            //Console.WriteLine("Gradient: " + gradient.SelectMany(x => x).Max() + " " + gradient.SelectMany(x => x).Min());
-            //if (gradient[0].Any(x => double.IsNaN(x)))
-            //{
-            //    Console.WriteLine("NaN");
-            //}
-
-            //entities.Add((char1, char2));
-            //prevOutputTwo = (Matrix)outputTwo.Clone();
-
-            //return (gradient, output, rr);
         }
 
         /// <summary>
@@ -376,47 +281,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition
             var rrr = res.Where(x => Math.Round(x, 3) == max).ToList();
 
             return max;
-
-            //List<int> indices = new List<int>();
-            //for (int i = 0; i < 17; ++i)
-            //{
-            //    var ind = res.ToList().FindIndex(x => x == rr[i]);
-            //    indices.Add(ind);
-            //}
-            //var ord = indices.OrderByDescending(x => x).ToList();
-
-            //// Create a list to store the original numbers and their ranks
-            //var numberRankPairs = new List<(int Number, int Rank)>();
-
-            //// Iterate through the original list and find each number's rank
-            //foreach (var number in indices)
-            //{
-            //    int rank = ord.IndexOf(number) + 1;
-            //    numberRankPairs.Add((number, rank));
-            //}
-
-            //var rrrr = rr.Select(x => Math.Round(x, 3)).Distinct().ToList();
-            //var scaled = ScaleValuesToMax(rrrr, 3d);
-
-
-            //return numberRankPairs;
-            //return rrr.ToArray();
-            //var sum = rr.Sum();
-            //var maxRounded = Math.Round(rr.Max(), 3);
-            //var minRounded = Math.Round(rr.Min(), 3);
-            //var indices = res.Select((r, i) => new { r, i }).Where(ri => Math.Round(ri.r, 3) == maxRounded).Select(ri => ri.i).ToList();
-            //List<double> list = new List<double>();
-            //foreach (var index in indices)
-            //{
-            //    list.Add(res[index]);
-            //}
-
-            //return output;
-            //CategoricalCrossEntropyLossOperation lossOperation = new CategoricalCrossEntropyLossOperation();
-            //lossOperation.Forward(output, this.maze.ToTrueLabel(output.Cols));
-            //var gradientOfLoss = lossOperation.Backward();
-
-            //return gradientOfLoss;
         }
 
         public List<double> ScaleValuesToMax(List<double> values, double newMax)

@@ -193,51 +193,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2.GraphA
                     parameters[0] = new DeepMatrix(matrixArray);
                 }
 
-                if (op.Id == "attention_weights_values")
-                {
-
-                }
-
-                if (op.Id == "attention_weights")
-                {
-
-                }
-
-                if (op.Id == "fully_connected")
-                {
-
-                }
-
-                if (op.Id == "inverse_residual_concat")
-                {
-
-                }
-
-                if (op.Id == "add_residual")
-                {
-
-                }
-
-                if (op.Id == "pre_output_act")
-                {
-
-                }
-
-                if (op.Id == "pre_output")
-                {
-
-                }
-
-                if (op.Id == "node_features_transform")
-                {
-
-                }
-
-                if (op.Id == "square_and_sum")
-                {
-
-                }
-
                 if (op.Id == "output")
                 {
                     Console.WriteLine((parameters[1] as Matrix)[0].Sum());
@@ -250,49 +205,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2.GraphA
                 }
 
                 forward.Invoke(op, parameters);
-                var output = op.GetOutput();
-                var deepOutput = op.GetDeepOutput();
-                if (output != null)
-                {
-                    if (op.Id == "square_and_sum")
-                    {
-                        Console.WriteLine("SAS: " + (output as Matrix)[0][0] + " " + (output as Matrix)[0][1]);
-                    }
-                    if (op.Id == "output")
-                    {
-                        var length = (output as Matrix)[0].Length;
-                        var p1 = (Matrix)(parameters[0] as Matrix).Clone();
-                        var p2 = (Matrix)(parameters[1] as Matrix).Clone();
-                        var first = new Matrix(p1[0].Take(length / 2).ToArray());
-                        object[] parametersFirst = new object[] { first, p2 };
-
-                        var op1 = VariedSoftmaxOperation.Instantiate(this);
-                        var forward1 = typeof(VariedSoftmaxOperation).GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
-
-                        var firstOutput = forward1.Invoke(op1, parametersFirst);
-                        var firstLL = (firstOutput as Matrix)[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
-                        var max1 = (firstOutput as Matrix)[0].Max();
-                        var second = new Matrix(p1[0].Skip(length / 2).Take(length / 2).ToArray());
-                        object[] parametersSecond = new object[] { second, p2 };
-                        var secondOutput = forward1.Invoke(op1, parametersSecond);
-                        var secondLL = (secondOutput as Matrix)[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
-                        var max2 = (secondOutput as Matrix)[0].Max();
-
-                        var sorted = (output as Matrix)[0].OrderByDescending(x => x).ToArray();
-                        var max = sorted.Max();
-                        var ll = (output as Matrix)[0].Select((value, index) => (value, index)).Where(tuple => tuple.value >= 0.01d).Select(tuple => tuple.index).ToList();
-                        Console.WriteLine(max1 + " " + max2 + " " + max + " " + Math.Abs(max1 - max2));
-                    }
-                    if (double.IsNaN(output[0][0]))
-                    {
-                    }
-                }
-                else if (deepOutput != null)
-                {
-                    if (double.IsNaN(deepOutput[0][0][0]))
-                    {
-                    }
-                }
 
                 if (op.ResultToName != null)
                 {
@@ -328,14 +240,14 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2.GraphA
             if (outputTwo)
             {
                 backwardStartOperation = this.computationGraph["square_and_sum_0_0"];
-                this.computationGraph["pre_output_act_0_0"].BackwardDependencyCounts = (new int[] { 2 }).ToList();
-                this.computationGraph["pre_output_add_0_0"].BackwardDependencyCounts = (new int[] { 2 }).ToList();
+                this.computationGraph["pre_output_act_0_0"].BackwardDependencyCounts = (new[] { 2 }).ToList();
+                this.computationGraph["pre_output_add_0_0"].BackwardDependencyCounts = (new[] { 2 }).ToList();
             }
             else
             {
                 backwardStartOperation = this.computationGraph["output_0_0"];
-                this.computationGraph["pre_output_act_0_0"].BackwardDependencyCounts = (new int[] { 1 }).ToList();
-                this.computationGraph["pre_output_add_0_0"].BackwardDependencyCounts = (new int[] { 1 }).ToList();
+                this.computationGraph["pre_output_act_0_0"].BackwardDependencyCounts = (new[] { 1 }).ToList();
+                this.computationGraph["pre_output_add_0_0"].BackwardDependencyCounts = (new[] { 1 }).ToList();
             }
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))

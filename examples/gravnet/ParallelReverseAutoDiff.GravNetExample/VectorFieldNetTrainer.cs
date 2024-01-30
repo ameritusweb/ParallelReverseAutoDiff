@@ -25,7 +25,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 double numLoss = 0d;
                 Random random = new Random(15);
                 var files = jsonFiles.OrderBy(x => random.Next()).ToArray();
-                int i = 0;
+                uint i = 0;
                 await files.WithRepeatAsync(async (jsonFile, token) =>
                 { 
                     var json = File.ReadAllText(jsonFile);

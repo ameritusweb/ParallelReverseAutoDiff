@@ -22,7 +22,7 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2
                 var jsonFiles = Directory.GetFiles(@"E:\images\inputs\ocr", "*.json");
                 var pairs = RandomPairGenerator.GenerateRandomPairs(jsonFiles.Length);
                 pairs = pairs.OrderBy(x => x.Item1).ThenBy(x => x.Item2).Skip(1000).ToList();
-                int i = 0;
+                uint i = 0;
                 List<double> targets = new List<double>();
                 foreach (var pair in pairs)
                 {
@@ -105,11 +105,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2
 
                     for (int j = 0; j < 500; ++j)
                     {
-                        var res = network.Forward(matrix, 0.25d, "A", "A");
-
-                        // calculator.AddDataPoint(res);
-                        // calculator.AddDataPoints(array);
-
                         Console.WriteLine($"Mean: {calculator.GetMean()}, StdDev: {calculator.GetStandardDeviation()}, Var: {calculator.GetVariance()}, Min: {calculator.GetMin()}, Max: {calculator.GetMax()}");
                         network.RandomizeWeights();
                         Thread.Sleep(10);

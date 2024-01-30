@@ -33,8 +33,15 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2
             }
             else
             {
-                if (x < min) min = x;
-                if (x > max) max = x;
+                if (x < min)
+                {
+                    min = x;
+                }
+
+                if (x > max)
+                {
+                    max = x;
+                }
             }
 
             // Calculate new mean

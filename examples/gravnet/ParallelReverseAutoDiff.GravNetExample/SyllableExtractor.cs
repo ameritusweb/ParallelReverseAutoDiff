@@ -49,8 +49,6 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     uniqueSyllables.Add(syllable);
                 }
             }
-
-            var ordered = uniqueSyllables.OrderBy(x => x).ToList();
         }
     }
 }

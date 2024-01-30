@@ -42,7 +42,6 @@ namespace ParallelReverseAutoDiff.GnnExample
             var moves = this.loader.LoadMoves(r);
             var name = this.loader.GetFileName(r).Replace(".pgn", string.Empty);
 
-            this.gameState = new GameState();
             try
             {
                 foreach ((Move move, Move? nextmove) in moves.WithNext())

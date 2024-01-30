@@ -18,9 +18,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
         private VectorFieldNetwork.VectorFieldNetwork vectorFieldNetwork;
 
         private List<IModelLayer> modelLayers;
-        private List<(string, string)> entities;
+        private readonly List<(string, string)> entities;
         private Matrix? prevOutputTwo;
-        private StochasticAdamOptimizer adamOptimize;
+        private readonly StochasticAdamOptimizer adamOptimize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VectorFieldNetwork"/> class.

@@ -10,8 +10,8 @@ namespace ParallelReverseAutoDiff.GnnExample
     /// </summary>
     public class GridVectorDistributor
     {
-        private List<List<GridVector>> grids;
-        private List<GridVector> vectors;
+        private readonly List<List<GridVector>> grids;
+        private readonly List<GridVector> vectors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GridVectorDistributor"/> class.
@@ -60,7 +60,7 @@ namespace ParallelReverseAutoDiff.GnnExample
         /// <returns>The parsed vectors.</returns>
         private List<GridVector> ParseAndCalculateVectors(List<string> vectorStrings)
         {
-            var vectors = new List<GridVector>();
+            var vectorsList = new List<GridVector>();
             foreach (var str in vectorStrings)
             {
                 var startPiece = str.Substring(0, 2);
@@ -68,11 +68,11 @@ namespace ParallelReverseAutoDiff.GnnExample
                 var end = str.Substring(4, 2);
                 var endPiece = str.Substring(6);
                 var angle = this.CalculateAngle(start, end);
-                vectors.Add(new GridVector(startPiece, endPiece, start, end, angle));
-                vectors.Add(new GridVector(endPiece, startPiece, end, start, this.CalculateReverseAngle(angle))); // Reverse vector
+                vectorsList.Add(new GridVector(startPiece, endPiece, start, end, angle));
+                vectorsList.Add(new GridVector(endPiece, startPiece, end, start, this.CalculateReverseAngle(angle))); // Reverse vector
             }
 
-            return vectors;
+            return vectorsList;
         }
 
         /// <summary>

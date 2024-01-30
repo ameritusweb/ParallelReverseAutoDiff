@@ -22,7 +22,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private double[] summationY;
         private CalculatedValues[,] calculatedValues;
         private VectorNetwork vectorNetwork;
-        private VectorFieldNetwork vectorFieldNetwork;
+        private readonly VectorFieldNetwork vectorFieldNetwork;
 
         public ElementwiseVectorCartesianSummationOperation(VectorNetwork vectorNetwork)
         {

@@ -112,6 +112,8 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2
                     var dimensions = layer.Dimensions(identifier) ?? throw new InvalidOperationException("Dimensions cannot be null.");
                     switch (dimensions.Length)
                     {
+                        default:
+                            throw new InvalidOperationException("Dimensions must be 2, 3, or 4.");
                         case 2:
                             {
                                 var weightMatrix = weight as Matrix ?? throw new InvalidOperationException("Weight cannot be null.");
@@ -223,8 +225,6 @@ namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2
                     w[i][j] -= weightReductionValue;
                 }
             }
-
-            var aaaa = 1;
 
             // Update first moment
             for (int i = 0; i < mW.Length; i++)

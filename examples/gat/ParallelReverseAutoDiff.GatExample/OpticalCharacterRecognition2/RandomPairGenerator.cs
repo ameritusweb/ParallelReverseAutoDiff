@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParallelReverseAutoDiff.GatExample.OpticalCharacterRecognition2
 {
-    class RandomPairGenerator
+    public static class RandomPairGenerator
     {
         public static List<Tuple<int, int>> GenerateRandomPairs(int numberOfFiles)
         {

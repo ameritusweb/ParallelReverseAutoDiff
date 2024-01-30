@@ -83,7 +83,7 @@
         {
             get
             {
-                return (new IModelLayer[] { this.inputLayer });
+                return (new[] { this.inputLayer });
             }
         }
 
