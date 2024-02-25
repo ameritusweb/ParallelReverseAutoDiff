@@ -34,7 +34,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Performs the forward operation for the mean squared error loss function.
+        /// Performs the forward operation for the squared arc length Euclidean distance loss function.
         /// </summary>
         /// <param name="predictions">The predictions matrix.</param>
         /// <param name="targetAngle">The target angle.</param>
@@ -89,7 +89,7 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Runs the backward operation for the mean squared error loss function.
+        /// Runs the backward operation for the squared arclength Euclidean distance loss function.
         /// </summary>
         /// <returns>The gradient with respect to the predictions.</returns>
         public Matrix Backward()

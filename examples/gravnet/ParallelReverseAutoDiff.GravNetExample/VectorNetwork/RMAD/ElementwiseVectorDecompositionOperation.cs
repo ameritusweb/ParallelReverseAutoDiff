@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="ElementwiseVectorProjectionOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="ElementwiseVectorDecompositionOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Element-wise vector projection operation.
     /// </summary>
-    public class ElementwiseVectorProjectionOperation : Operation
+    public class ElementwiseVectorDecompositionOperation : Operation
     {
         private Matrix input1;
         private Matrix input2;
@@ -25,7 +25,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new ElementwiseVectorProjectionOperation();
+            return new ElementwiseVectorDecompositionOperation();
         }
 
         /// <summary>

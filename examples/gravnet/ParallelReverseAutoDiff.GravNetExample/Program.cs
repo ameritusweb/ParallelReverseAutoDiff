@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            VectorFieldNetTrainer trainer = new VectorFieldNetTrainer();
+            GlyphNetTrainer trainer = new GlyphNetTrainer();
             trainer.Train().Wait();
         }
     }

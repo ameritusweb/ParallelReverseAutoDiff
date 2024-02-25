@@ -20,8 +20,8 @@
           "gradientResultTo": [ "DProjectionVectors" ]
         },
         {
-          "id": "vector_decomposition",
-          "type": "ElementwiseVectorDecompositionOperation",
+          "id": "vector_projection",
+          "type": "ElementwiseVectorProjectionOperation",
           "inputs": [ "vectorize_input", "projection_vectors_square", "ProjectionWeights" ],
           "gradientResultTo": [ null, null, "DProjectionWeights" ]
         },
@@ -52,12 +52,12 @@
         {
           "id": "start_solar_system",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "vector_decomposition", "weight_vectors_square", "weight_square" ]
+          "inputs": [ "vector_projection", "weight_vectors_square", "weight_square" ]
         },
         {
           "id": "start_solar_system_2",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "vector_decomposition", "weight_vectors_square2", "weight_square2" ]
+          "inputs": [ "vector_projection", "weight_vectors_square2", "weight_square2" ]
         },
         {
           "id": "vector_add",
@@ -125,9 +125,14 @@
           "gradientResultTo": [ "DSummationWeights" ]
         },
         {
+          "id": "glyph",
+          "type": "ElementwiseVectorCartesianGlyphOperation",
+          "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ]
+        },
+        {
           "id": "output",
-          "type": "ElementwiseVectorCartesianSummationOperation",
-          "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ],
+          "type": "ElementwiseVectorCartesianRotationAndSumOperation",
+          "inputs": [ "glyph", "RotationTargets" ],
           "setResultTo": "Output"
         }
       ]
