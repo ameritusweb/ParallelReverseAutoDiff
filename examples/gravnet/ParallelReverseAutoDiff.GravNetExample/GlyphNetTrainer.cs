@@ -28,6 +28,13 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 uint i = 0;
                 await files.WithRepeatAsync(async (pngFile, token) =>
                 {
+
+                    if (!pngFile.Contains("_"))
+                    {
+                        token.Continue();
+                        return;
+                    }
+
                     Node[,] nodes = ImageSerializer.DeserializeImageWithAntiAlias(pngFile);
                     Node[,] interpolated = ImageSerializer.BilinearInterpolation(nodes, 512, 512);
                     List<List<double>> data = new List<List<double>>();
@@ -45,7 +52,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     int uIndex = file.IndexOf("_");
                     var prefix = file.Substring(0, uIndex);
 
-                    var glyphFile = pngFile.Replace(prefix, prefix + "_glyph");
+                    var glyphFile = pngFile.Replace(prefix, prefix + "_glyph").Replace("svg\\", "svg-glyph\\");
                     Node[,] glyphNodes = ImageSerializer.DeserializeImageWithoutAntiAlias(glyphFile);
                     Matrix rotationTargets = new Matrix(15, 15);
                     for (int k = 0; k < 15; ++k)
@@ -58,8 +65,6 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     var sub = file.Substring(16, 1);
 
-                    net.GraphAttentionNetwork.RotationTargets = rotationTargets;
-
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -71,7 +76,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     i++;
 
-                    var res = net.Forward(matrix, Math.PI / 2d);
+                    var res = net.Forward(matrix, rotationTargets, Math.PI / 2d);
                     var gradient = res.Item1;
                     var output = res.Item2;
                     var loss = res.Item3;

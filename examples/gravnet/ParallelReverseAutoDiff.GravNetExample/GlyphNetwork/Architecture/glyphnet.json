@@ -20,8 +20,8 @@
           "gradientResultTo": [ "DProjectionVectors" ]
         },
         {
-          "id": "vector_projection",
-          "type": "ElementwiseVectorProjectionOperation",
+          "id": "vector_decomposition",
+          "type": "ElementwiseVectorDecompositionOperation",
           "inputs": [ "vectorize_input", "projection_vectors_square", "ProjectionWeights" ],
           "gradientResultTo": [ null, null, "DProjectionWeights" ]
         },
@@ -52,12 +52,12 @@
         {
           "id": "start_solar_system",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "vector_projection", "weight_vectors_square", "weight_square" ]
+          "inputs": [ "vector_decomposition", "weight_vectors_square", "weight_square" ]
         },
         {
           "id": "start_solar_system_2",
           "type": "ElementwiseVectorConstituentMultiplyOperation",
-          "inputs": [ "vector_projection", "weight_vectors_square2", "weight_square2" ]
+          "inputs": [ "vector_decomposition", "weight_vectors_square2", "weight_square2" ]
         },
         {
           "id": "vector_add",

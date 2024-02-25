@@ -380,8 +380,8 @@
         {
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
-            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
             var rotationTargets = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(15, 15).ToArray());
+            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
 
             if (this.Output == null)
             {
