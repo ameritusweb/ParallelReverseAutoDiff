@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                GlyphNet net = new GlyphNet(512, 10240, 3, 0.01d, 4d);
+                GlyphNet net = new GlyphNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
                 //net.ApplyWeights();
 

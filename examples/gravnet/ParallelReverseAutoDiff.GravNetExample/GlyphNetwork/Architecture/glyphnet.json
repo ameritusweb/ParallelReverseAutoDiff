@@ -21,7 +21,7 @@
         },
         {
           "id": "vector_decomposition",
-          "type": "ElementwiseVectorDecompositionOperation",
+          "type": "ElementwiseVectorMiniDecompositionOperation",
           "inputs": [ "vectorize_input", "projection_vectors_square", "ProjectionWeights" ],
           "gradientResultTo": [ null, null, "DProjectionWeights" ]
         },

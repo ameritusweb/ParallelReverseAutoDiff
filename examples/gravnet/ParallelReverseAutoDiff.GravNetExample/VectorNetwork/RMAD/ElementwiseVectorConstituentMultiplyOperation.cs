@@ -130,7 +130,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.dSumYDDeltaY[i, j] = dSumY_dDeltaY;
 
                     this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
-                    this.Output[i, j + (input2.Rows / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
+                    this.Output[i, j + (input2.Cols / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
                 }
             });
 

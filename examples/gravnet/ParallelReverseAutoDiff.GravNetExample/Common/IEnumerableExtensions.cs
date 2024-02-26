@@ -86,5 +86,30 @@ namespace ParallelReverseAutoDiff.GravNetExample.Common
                 while (repeatToken.ShouldRepeat);
             }
         }
+
+        public static double[,] To2D(this IEnumerable<double[]> enumerable)
+        {
+            var list = enumerable.ToList();
+
+            if (!list.Any())
+            {
+                return new double[0, 0]; // Return an empty 2D array if the input is empty
+            }
+
+            int rows = list.Count;
+            int cols = list[0].Length;
+
+            double[,] twoDArray = new double[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    twoDArray[i, j] = list[i][j];
+                }
+            }
+
+            return twoDArray;
+        }
     }
 }

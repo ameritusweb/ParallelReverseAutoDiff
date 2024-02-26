@@ -34,8 +34,8 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.rotationTargets = rotationTargets;
 
-            double clockwise = Math.PI / 4;
-            double counterClockwise = -Math.PI / 4;
+            double clockwise = -Math.PI / 4;
+            double counterClockwise = Math.PI / 4;
 
             // Pre-calculate the cosine and sine for both rotation angles
             double cosClockwise = Math.Cos(clockwise);
@@ -84,8 +84,8 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
-            double clockwise = Math.PI / 4;
-            double counterClockwise = -Math.PI / 4;
+            double clockwise = -Math.PI / 4;
+            double counterClockwise = Math.PI / 4;
 
             // Initialize dInputVectors with the same shape as the forward input vectors
             Matrix dInputVectors = new Matrix(225, 2);
