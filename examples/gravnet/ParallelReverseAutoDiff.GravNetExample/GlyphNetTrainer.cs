@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 CudaBlas.Instance.Initialize();
                 GlyphNet net = new GlyphNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
-                //net.ApplyWeights();
+                net.ApplyWeights();
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
@@ -96,7 +96,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     //}
                     //double avgloss = sumLoss / (numLoss + 1E-9);
 
-                    //Console.WriteLine($"Iteration {i} {sub} Mag: {resultMagnitude}, Angle: {resultAngle}, TargetAngle: {targetAngle}, Gradient: {gradient[0][0]}, {gradient[0][1]} Loss: {absloss}");
+                    Console.WriteLine($"Iteration {i} Output X: {res.Item2[0, 0]}, Output Y: {res.Item2[0, 1]}, Grad: {res.Item1[0, 0]}, {res.Item1[0, 1]}");
                     //Console.WriteLine($"Average Result Angle A: {sumResultAngleA / (numResultAngleA + 1E-9)}");
                     //Console.WriteLine($"Average Result Angle B: {sumResultAngleB / (numResultAngleB + 1E-9)}");
 
@@ -109,7 +109,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     await net.Reset();
                     Thread.Sleep(1000);
-                    if (i % 20 == 10)
+                    if (i % 11 == 10)
                     {
                         //sumResultAngleA = 0d;
                         //numResultAngleA = 0d;
