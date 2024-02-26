@@ -63,8 +63,6 @@ namespace ParallelReverseAutoDiff.GravNetExample
                         }
                     }
 
-                    var sub = file.Substring(16, 1);
-
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
                     {
@@ -111,7 +109,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     await net.Reset();
                     Thread.Sleep(1000);
-                    if (i % 100 == 90)
+                    if (i % 20 == 10)
                     {
                         //sumResultAngleA = 0d;
                         //numResultAngleA = 0d;

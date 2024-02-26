@@ -244,60 +244,54 @@ namespace ParallelReverseAutoDiff.RMAD
                     dInput1[i, j + (this.input1.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dX * grad.dx_dAngle;
                     dInput1[i, j + (this.input1.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dY * grad.dy_dAngle;
 
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 1];
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 1 + (this.input1.Cols * 6 / 2)];
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 1];
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 1 + (this.input1.Cols * 6 / 2)];
 
-                    dInput2[i, j * 5 + 1] += dOutput[i, j * 6 + 2];
-                    dInput2[i, j * 5 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 2 + (this.input1.Cols * 6 / 2)];
+                    dInput2[i, j * 3 + 1] += dOutput[i, j * 6 + 2];
+                    dInput2[i, j * 3 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 2 + (this.input1.Cols * 6 / 2)];
 
-                    dInput2[i, j * 5 + 2] += dOutput[i, j * 6 + 3];
-                    dInput2[i, j * 5 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 3 + (this.input1.Cols * 6 / 2)];
+                    dInput2[i, j * 3 + 2] += dOutput[i, j * 6 + 3];
+                    dInput2[i, j * 3 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 3 + (this.input1.Cols * 6 / 2)];
 
-                    dInput2[i, j * 5 + 3] += dOutput[i, j * 6 + 4];
-                    dInput2[i, j * 5 + 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)];
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
 
-                    dInput2[i, j * 5 + 4] += dOutput[i, j * 6 + 5];
-                    dInput2[i, j * 5 + 4 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)];
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
 
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
 
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
 
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWMagnitudePivot;
-                    dInput2[i, j * 5] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWMagnitudePivot;
+                    dInput2[i, j * 3 + 1] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wMagnitude1;
+                    dInput2[i, j * 3 + 1] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wMagnitude1;
+                    dInput2[i, j * 3 + 1] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wMagnitude1;
+                    dInput2[i, j * 3 + 1] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wMagnitude1;
 
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dSumX * grad.dsumx_dXPivot * grad.dXPivot_dWAnglePivot;
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
-                    dInput2[i, j * 5 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dSumY * grad.dsumy_dYPivot * grad.dYPivot_dWAnglePivot;
+                    dInput2[i, j * 3 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wAngle1;
+                    dInput2[i, j * 3 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wAngle1;
+                    dInput2[i, j * 3 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wAngle1;
+                    dInput2[i, j * 3 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wAngle1;
 
-                    dInput2[i, j * 5 + 1] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wMagnitude1;
-                    dInput2[i, j * 5 + 1] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wMagnitude1;
-                    dInput2[i, j * 5 + 1] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wMagnitude1;
-                    dInput2[i, j * 5 + 1] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wMagnitude1;
+                    dInput2[i, j * 3 + 2] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wMagnitude2;
+                    dInput2[i, j * 3 + 2] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wMagnitude2;
+                    dInput2[i, j * 3 + 2] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wMagnitude2;
+                    dInput2[i, j * 3 + 2] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wMagnitude2;
 
-                    dInput2[i, j * 5 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wAngle1;
-                    dInput2[i, j * 5 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffX1 * grad.dDiffX1_dX1 * grad.dX1_wAngle1;
-                    dInput2[i, j * 5 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wAngle1;
-                    dInput2[i, j * 5 + 1 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 4 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle1_dDiffY1 * grad.dDiffY1_dY1 * grad.dY1_wAngle1;
-
-                    dInput2[i, j * 5 + 2] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wMagnitude2;
-                    dInput2[i, j * 5 + 2] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wMagnitude2;
-                    dInput2[i, j * 5 + 2] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wMagnitude2;
-                    dInput2[i, j * 5 + 2] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wMagnitude2;
-
-                    dInput2[i, j * 5 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wAngle2;
-                    dInput2[i, j * 5 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wAngle2;
-                    dInput2[i, j * 5 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wAngle2;
-                    dInput2[i, j * 5 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wAngle2;
+                    dInput2[i, j * 3 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wAngle2;
+                    dInput2[i, j * 3 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffX2 * grad.dDiffX2_dX2 * grad.dX2_wAngle2;
+                    dInput2[i, j * 3 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5] * grad.dResultMagnitude2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wAngle2;
+                    dInput2[i, j * 3 + 2 + (this.input2.Cols / 2)] += dOutput[i, j * 6 + 5 + (this.input1.Cols * 6 / 2)] * grad.dResultAngle2_dDiffY2 * grad.dDiffY2_dY2 * grad.dY2_wAngle2;
 
                     dWeights[i, j] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffX1 * grad.dDiffX1_dSumX * grad.dsumx_dWeight;
                     dWeights[i, j] += dOutput[i, j * 6 + 4] * grad.dResultMagnitude1_dDiffY1 * grad.dDiffY1_dSumY * grad.dsumy_dWeight;
