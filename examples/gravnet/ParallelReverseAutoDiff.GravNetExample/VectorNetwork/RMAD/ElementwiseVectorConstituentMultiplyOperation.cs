@@ -201,7 +201,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
 
-                        dInput1[i, j] += dOutput[i, j + (input2.Rows / 2)] * (
+                        dInput1[i, j] += dOutput[i, j + (input2.Cols / 2)] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
@@ -217,7 +217,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
 
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (
+                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j + (input2.Cols / 2)] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
@@ -233,7 +233,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude);
 
-                        dInput2[k, j] += dOutput[i, j + (input2.Rows / 2)] * (
+                        dInput2[k, j] += dOutput[i, j + (input2.Cols / 2)] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWMagnitude +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWMagnitude +
@@ -249,7 +249,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX2 * dX2_dWAngle);
 
-                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Rows / 2)] * (
+                        dInput2[k, j + input2.Cols / 2] += dOutput[i, j + (input2.Cols / 2)] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX2 * dX2_dWAngle +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY2 * dY2_dWAngle +
@@ -266,7 +266,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dWeight +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dWeight);
 
-                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (
+                        dWeights[k, j] += dOutput[i, j + input2.Cols / 2] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dWeight +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dWeight +
@@ -282,7 +282,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dResultMagnitude * dResultMagnitude_dWeight +
                             dCombinedMagnitude_dSumY * dSumY_dResultMagnitude * dResultMagnitude_dWeight);
 
-                        dWeights[k, j] += dOutput[i, j + input1.Cols / 2] * (
+                        dWeights[k, j] += dOutput[i, j + input2.Cols / 2] * (
                             dCombinedAngle_dSumX * dSumX_dResultMagnitude * dResultMagnitude_dWeight +
                             dCombinedAngle_dSumY * dSumY_dResultMagnitude * dResultMagnitude_dWeight);
 

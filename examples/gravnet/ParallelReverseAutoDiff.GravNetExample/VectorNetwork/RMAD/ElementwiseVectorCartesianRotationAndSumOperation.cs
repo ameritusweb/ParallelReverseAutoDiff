@@ -34,14 +34,11 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.rotationTargets = rotationTargets;
 
-            double clockwise = -Math.PI / 4;
-            double counterClockwise = Math.PI / 4;
+            double clockwise = -Math.PI / 2;
 
             // Pre-calculate the cosine and sine for both rotation angles
             double cosClockwise = Math.Cos(clockwise);
             double sinClockwise = Math.Sin(clockwise);
-            double cosCounterClockwise = Math.Cos(counterClockwise);
-            double sinCounterClockwise = Math.Sin(counterClockwise);
 
             // Initialize the summation vector
             double sumX = 0.0;
@@ -55,9 +52,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     double x = inputVectors[vectorIndex, 0];
                     double y = inputVectors[vectorIndex, 1];
 
-                    double rotation = rotationTargets[i, j] == 1 ? clockwise : counterClockwise;
-                    double cosTheta = rotation == clockwise ? cosClockwise : cosCounterClockwise;
-                    double sinTheta = rotation == clockwise ? sinClockwise : sinCounterClockwise;
+                    double cosTheta = rotationTargets[i, j] == 1 ? cosClockwise : 0d;
+                    double sinTheta = rotationTargets[i, j] == 1 ? sinClockwise : 0d;
 
                     // Apply rotation
                     double rotatedX = (x * cosTheta) - (y * sinTheta);
@@ -84,8 +80,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
-            double clockwise = -Math.PI / 4;
-            double counterClockwise = Math.PI / 4;
+            double clockwise = -Math.PI / 2;
 
             // Initialize dInputVectors with the same shape as the forward input vectors
             Matrix dInputVectors = new Matrix(225, 2);
@@ -95,7 +90,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < 15; j++)
                 {
-                    double rotation = this.rotationTargets[i, j] == 1 ? clockwise : counterClockwise;
+                    var rotation = rotationTargets[i, j] == 1 ? clockwise : 0d;
+
                     double cosTheta = Math.Cos(rotation);
                     double sinTheta = Math.Sin(rotation);
 

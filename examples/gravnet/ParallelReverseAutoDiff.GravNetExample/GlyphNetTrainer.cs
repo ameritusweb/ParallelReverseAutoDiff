@@ -76,7 +76,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     i++;
 
-                    var res = net.Forward(matrix, rotationTargets, Math.PI / 2d);
+                    var res = net.Forward(matrix, rotationTargets, Math.PI / 4d);
                     var gradient = res.Item1;
                     var output = res.Item2;
                     var loss = res.Item3;
@@ -119,7 +119,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                         //numResultAngleB = 0d;
                         //sumLoss = 0d;
                         //numLoss = 0d;
-                        // net.SaveWeights();
+                        net.SaveWeights();
                     }
 
                     //if (token.UsageCount == 0)

@@ -106,7 +106,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         {
             this.adamOptimize.Reset();
             Guid guid = Guid.NewGuid();
-            var dir = $"E:\\vnnstore\\field_{guid}_{this.GlyphNetwork.Parameters.AdamIteration}";
+            var dir = $"E:\\vnnstore\\glyph_{guid}_{this.GlyphNetwork.Parameters.AdamIteration}";
             Directory.CreateDirectory(dir);
             int index = 0;
             foreach (var modelLayer in this.modelLayers)

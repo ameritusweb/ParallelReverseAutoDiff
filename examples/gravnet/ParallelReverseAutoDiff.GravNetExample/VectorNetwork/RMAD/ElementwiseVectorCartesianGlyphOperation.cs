@@ -80,6 +80,10 @@ namespace ParallelReverseAutoDiff.RMAD
             int rows = input1.Rows;
             int cols = input1.Cols / 2; // Assuming cols are split between magnitudes and angles
 
+            this.input1 = input1;
+            this.input2 = input2;
+            this.weights = weights;
+
             this.calculatedValues = new CalculatedValues[rows, cols];
 
             // Initialize output structure for section sums
