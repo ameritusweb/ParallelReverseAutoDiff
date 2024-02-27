@@ -95,8 +95,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     double cosTheta = Math.Cos(rotation);
                     double sinTheta = Math.Sin(rotation);
 
-                    dInputVectors[vectorIndex, 0] = (dOutput[0, 0] * cosTheta) + (dOutput[0, 1] * sinTheta);
-                    dInputVectors[vectorIndex, 1] = (-dOutput[0, 0] * sinTheta) + (dOutput[0, 1] * cosTheta);
+                    dInputVectors[vectorIndex, 0] = (dOutput[0, 0] * cosTheta) + (-dOutput[0, 1] * sinTheta);
+                    dInputVectors[vectorIndex, 1] = (dOutput[0, 0] * sinTheta) + (dOutput[0, 1] * cosTheta);
 
                     vectorIndex++;
                 }

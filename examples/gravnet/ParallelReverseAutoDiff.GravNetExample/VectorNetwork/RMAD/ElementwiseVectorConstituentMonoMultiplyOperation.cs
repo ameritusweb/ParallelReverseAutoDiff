@@ -58,8 +58,6 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dSumX_dDeltaY = 0.0d;
                     double dSumY_dDeltaX = 0.0d;
                     double dSumY_dDeltaY = 0.0d;
-                    double dSumX_dResultMagnitude = 0.0d;
-                    double dSumY_dResultMagnitude = 0.0d;
 
                     double[] dDeltaX_dX1 = new double[input2.Rows / 2];
                     double[] dDeltaY_dY1 = new double[input2.Rows / 2];
@@ -75,6 +73,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     double[] dY2_dWMagnitude = new double[input2.Rows / 2];
                     double[] dX2_dWAngle = new double[input2.Rows / 2];
                     double[] dY2_dWAngle = new double[input2.Rows / 2];
+                    double[] dSumX_dResultMagnitude = new double[input2.Rows / 2];
+                    double[] dSumY_dResultMagnitude = new double[input2.Rows / 2];
                     double[] dResultMagnitude_dWeight = new double[input2.Rows / 2];
 
                     double dInputMag_dOutputMag = 0.0d;
@@ -167,8 +167,8 @@ namespace ParallelReverseAutoDiff.RMAD
                         dDeltaY_dWeight[k] = (weights[k, j] > 0) ? (y2 - y1) : (y1 - y2);
 
                         dResultMagnitude_dWeight[k] = Math.Sqrt(deltaXYSquared);
-                        dSumX_dResultMagnitude += Math.Cos(resultAngle);
-                        dSumY_dResultMagnitude += Math.Sin(resultAngle);
+                        dSumX_dResultMagnitude[k] = Math.Cos(resultAngle);
+                        dSumY_dResultMagnitude[k] = Math.Sin(resultAngle);
                     }
 
                     this.sumX[i, j] = sumX;
@@ -257,16 +257,16 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dWeight[k] +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dWeight[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dWeight[k] +
-                            dCombinedMagnitude_dSumX * dSumX_dResultMagnitude * dResultMagnitude_dWeight[k] +
-                            dCombinedMagnitude_dSumY * dSumY_dResultMagnitude * dResultMagnitude_dWeight[k];
+                            dCombinedMagnitude_dSumX * dSumX_dResultMagnitude[k] * dResultMagnitude_dWeight[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k];
 
                         dWeight_dOutputAngle +=
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dWeight[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight[k] +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dWeight[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dWeight[k] +
-                            dCombinedAngle_dSumX * dSumX_dResultMagnitude * dResultMagnitude_dWeight[k] +
-                            dCombinedAngle_dSumY * dSumY_dResultMagnitude * dResultMagnitude_dWeight[k];
+                            dCombinedAngle_dSumX * dSumX_dResultMagnitude[k] * dResultMagnitude_dWeight[k] +
+                            dCombinedAngle_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k];
                     }
 
                     this.calculatedValues[i, j].DInputMag_dOutputMag = dInputMag_dOutputMag;
