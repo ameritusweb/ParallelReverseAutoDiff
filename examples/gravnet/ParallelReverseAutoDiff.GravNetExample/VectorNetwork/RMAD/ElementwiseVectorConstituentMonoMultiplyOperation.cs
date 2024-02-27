@@ -54,15 +54,14 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumX = 0.0d;
                     double sumY = 0.0d;
 
-                    double dSumX_dDeltaX = 0.0d;
-                    double dSumX_dDeltaY = 0.0d;
-                    double dSumY_dDeltaX = 0.0d;
-                    double dSumY_dDeltaY = 0.0d;
-
                     double[] dDeltaX_dX1 = new double[input2.Rows / 2];
                     double[] dDeltaY_dY1 = new double[input2.Rows / 2];
                     double[] dDeltaX_dX2 = new double[input2.Rows / 2];
                     double[] dDeltaY_dY2 = new double[input2.Rows / 2];
+                    double[] dSumX_dDeltaX = new double[input2.Rows / 2];
+                    double[] dSumX_dDeltaY = new double[input2.Rows / 2];
+                    double[] dSumY_dDeltaX = new double[input2.Rows / 2];
+                    double[] dSumY_dDeltaY = new double[input2.Rows / 2];
                     double[] dDeltaX_dWeight = new double[input2.Rows / 2];
                     double[] dDeltaY_dWeight = new double[input2.Rows / 2];
                     double[] dX1_dMagnitude = new double[input2.Rows / 2];
@@ -139,10 +138,10 @@ namespace ParallelReverseAutoDiff.RMAD
                         sumX += localSumX;
                         sumY += localSumY;
 
-                        dSumX_dDeltaX += dLocalSumX_dDeltaX;
-                        dSumX_dDeltaY += dLocalSumX_dDeltaY;
-                        dSumY_dDeltaX += dLocalSumY_dDeltaX;
-                        dSumY_dDeltaY += dLocalSumY_dDeltaY;
+                        dSumX_dDeltaX[k] = dLocalSumX_dDeltaX;
+                        dSumX_dDeltaY[k] = dLocalSumX_dDeltaY;
+                        dSumY_dDeltaX[k] = dLocalSumY_dDeltaX;
+                        dSumY_dDeltaY[k] = dLocalSumY_dDeltaY;
 
                         // Derivatives of delta components with respect to inputs
                         dDeltaX_dX1[k] = this.weights[k, j] > 0 ? -1 : 1; // Depending on weight sign
@@ -182,89 +181,69 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dCombinedAngle_dSumX = -this.sumY[i, j] / magSumXY;
                     double dCombinedAngle_dSumY = this.sumX[i, j] / magSumXY;
 
-                    double a1 = dCombinedMagnitude_dSumX * dSumX_dDeltaX;
-                    double a2 = dCombinedMagnitude_dSumY * dSumY_dDeltaY;
-                    double a3 = dCombinedMagnitude_dSumX * dSumX_dDeltaY;
-                    double a4 = dCombinedMagnitude_dSumY * dSumY_dDeltaX;
-
-                    double b1 = dCombinedAngle_dSumX * dSumX_dDeltaX;
-                    double b2 = dCombinedAngle_dSumY * dSumY_dDeltaY;
-                    double b3 = dCombinedAngle_dSumX * dSumX_dDeltaY;
-                    double b4 = dCombinedAngle_dSumY * dSumY_dDeltaX;
-
-                    double c1 = dCombinedMagnitude_dSumX * dSumX_dDeltaX;
-                    double c2 = dCombinedMagnitude_dSumY * dSumY_dDeltaY;
-                    double c3 = dCombinedMagnitude_dSumX * dSumX_dDeltaY;
-                    double c4 = dCombinedMagnitude_dSumY * dSumY_dDeltaX;
-
-                    double d1 = dCombinedAngle_dSumX * dSumX_dDeltaX;
-                    double d2 = dCombinedAngle_dSumY * dSumY_dDeltaY;
-                    double d3 = dCombinedAngle_dSumX * dSumX_dDeltaY;
-                    double d4 = dCombinedAngle_dSumY * dSumY_dDeltaX;
-
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
                         dInputMag_dOutputMag +=
-                            a1 * dDeltaX_dX1[k] * dX1_dMagnitude[k] +
-                            a2 * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
-                            a3 * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
-                            a4 * dDeltaX_dX1[k] * dX1_dMagnitude[k];
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k];
 
-                        dInput2Mag_dOutputMag += 
-                            a1 * dDeltaX_dX1[k] * dX2_dWMagnitude[k] +
-                            a2 * dDeltaY_dY1[k] * dY2_dWMagnitude[k] +
-                            a3 * dDeltaY_dY1[k] * dY2_dWMagnitude[k] +
-                            a4 * dDeltaX_dX1[k] * dX2_dWMagnitude[k];
+                        dInput2Mag_dOutputMag +=
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX2_dWMagnitude[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY2_dWMagnitude[k] +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY2_dWMagnitude[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX2_dWMagnitude[k];
 
                         dInputMag_dOutputAngle +=
-                            b1 * dDeltaX_dX1[k] * dX1_dMagnitude[k] +
-                            b2 * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
-                            b3 * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
-                            b4 * dDeltaX_dX1[k] * dX1_dMagnitude[k];
+                            dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k];
 
                         dInput2Mag_dOutputAngle +=
-                            b1 * dDeltaX_dX2[k] * dX2_dWMagnitude[k] +
-                            b2 * dDeltaY_dY2[k] * dY2_dWMagnitude[k] +
-                            b3 * dDeltaY_dY2[k] * dY2_dWMagnitude[k] +
-                            b4 * dDeltaX_dX2[k] * dX2_dWMagnitude[k];
+                            dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWMagnitude[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWMagnitude[k] +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWMagnitude[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWMagnitude[k];
 
                         dInputAngle_dOutputMag +=
-                            c1 * dDeltaX_dX1[k] * dX1_dAngle[k] +
-                            c2 * dDeltaY_dY1[k] * dY1_dAngle[k] +
-                            c3 * dDeltaY_dY1[k] * dY1_dAngle[k] +
-                            c4 * dDeltaX_dX1[k] * dX1_dAngle[k];
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k];
 
                         dInput2Angle_dOutputMag +=
-                            c1 * dDeltaX_dX2[k] * dX2_dWAngle[k] +
-                            c2 * dDeltaY_dY2[k] * dY2_dWAngle[k] +
-                            c3 * dDeltaY_dY2[k] * dY2_dWAngle[k] +
-                            c4 * dDeltaX_dX2[k] * dX2_dWAngle[k];
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k];
 
                         dInputAngle_dOutputAngle +=
-                            d1 * dDeltaX_dX1[k] * dX1_dAngle[k] +
-                            d2 * dDeltaY_dY1[k] * dY1_dAngle[k] +
-                            d3 * dDeltaY_dY1[k] * dY1_dAngle[k] +
-                            d4 * dDeltaX_dX1[k] * dX1_dAngle[k];
+                            dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k];
 
                         dInput2Angle_dOutputAngle +=
-                            d1 * dDeltaX_dX2[k] * dX2_dWAngle[k] +
-                            d2 * dDeltaY_dY2[k] * dY2_dWAngle[k] +
-                            d3 * dDeltaY_dY2[k] * dY2_dWAngle[k] +
-                            d4 * dDeltaX_dX2[k] * dX2_dWAngle[k];
+                            dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k];
 
                         dWeight_dOutputMag +=
-                            dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dWeight[k] +
-                            dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dWeight[k] +
-                            dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dWeight[k] +
-                            dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dWeight[k] +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dWeight[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dWeight[k] +
+                            dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dWeight[k] +
+                            dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dWeight[k] +
                             dCombinedMagnitude_dSumX * dSumX_dResultMagnitude[k] * dResultMagnitude_dWeight[k] +
                             dCombinedMagnitude_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k];
 
                         dWeight_dOutputAngle +=
-                            dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dWeight[k] +
-                            dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dWeight[k] +
-                            dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dWeight[k] +
-                            dCombinedAngle_dSumY * dSumY_dDeltaX * dDeltaX_dWeight[k] +
+                            dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dWeight[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dWeight[k] +
+                            dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dWeight[k] +
+                            dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dWeight[k] +
                             dCombinedAngle_dSumX * dSumX_dResultMagnitude[k] * dResultMagnitude_dWeight[k] +
                             dCombinedAngle_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k];
                     }
