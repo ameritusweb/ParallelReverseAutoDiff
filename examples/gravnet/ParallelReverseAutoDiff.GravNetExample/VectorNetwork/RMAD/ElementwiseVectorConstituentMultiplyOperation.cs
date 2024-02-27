@@ -22,6 +22,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix dSumXDDeltaY;
         private Matrix dSumYDDeltaX;
         private Matrix dSumYDDeltaY;
+        private Matrix dSumXDResultMagnitude;
+        private Matrix dSumYDResultMagnitude;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -34,11 +36,11 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
-        /// Performs the forward operation for the Hadamard product function.
+        /// Performs the forward operation for the vector constituent multiply function.
         /// </summary>
-        /// <param name="input1">The first input to the Hadamard product operation.</param>
-        /// <param name="input2">The second input to the Hadamard product operation.</param>
-        /// <returns>The output of the Hadamard product operation.</returns>
+        /// <param name="input1">The first input to the vector constituent multiply operation.</param>
+        /// <param name="input2">The second input to the vector constituent multiply operation.</param>
+        /// <returns>The output of the vector constituent multiply operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2, Matrix weights)
         {
             this.input1 = input1;
@@ -53,18 +55,22 @@ namespace ParallelReverseAutoDiff.RMAD
             this.dSumXDDeltaY = new Matrix(input1.Rows, input2.Cols / 2);
             this.dSumYDDeltaX = new Matrix(input1.Rows, input2.Cols / 2);
             this.dSumYDDeltaY = new Matrix(input1.Rows, input2.Cols / 2);
+            this.dSumXDResultMagnitude = new Matrix(input1.Rows, input2.Cols / 2);
+            this.dSumYDResultMagnitude = new Matrix(input1.Rows, input2.Cols / 2);
 
             Parallel.For(0, input1.Rows, i =>
             {
                 for (int j = 0; j < input2.Cols / 2; j++)
                 {
-                    double sumX = 0.0;
-                    double sumY = 0.0;
+                    double sumX = 0.0d;
+                    double sumY = 0.0d;
 
-                    double dSumX_dDeltaX = 0.0;
-                    double dSumX_dDeltaY = 0.0;
-                    double dSumY_dDeltaX = 0.0;
-                    double dSumY_dDeltaY = 0.0;
+                    double dSumX_dDeltaX = 0.0d;
+                    double dSumX_dDeltaY = 0.0d;
+                    double dSumY_dDeltaX = 0.0d;
+                    double dSumY_dDeltaY = 0.0d;
+                    double dSumX_dResultMagnitude = 0.0d;
+                    double dSumY_dResultMagnitude = 0.0d;
 
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
@@ -119,6 +125,8 @@ namespace ParallelReverseAutoDiff.RMAD
                         dSumX_dDeltaY += dLocalSumX_dDeltaY;
                         dSumY_dDeltaX += dLocalSumY_dDeltaX;
                         dSumY_dDeltaY += dLocalSumY_dDeltaY;
+                        dSumX_dResultMagnitude += dLocalSumX_dResultMagnitude;
+                        dSumY_dResultMagnitude += dLocalSumY_dResultMagnitude;
                     }
 
                     this.sumX[i, j] = sumX;
@@ -128,6 +136,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.dSumXDDeltaY[i, j] = dSumX_dDeltaY;
                     this.dSumYDDeltaX[i, j] = dSumY_dDeltaX;
                     this.dSumYDDeltaY[i, j] = dSumY_dDeltaY;
+                    this.dSumXDResultMagnitude[i, j] = dSumX_dResultMagnitude;
+                    this.dSumYDResultMagnitude[i, j] = dSumY_dResultMagnitude;
 
                     this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
                     this.Output[i, j + (input2.Cols / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
@@ -185,11 +195,12 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dDeltaY_dY2 = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
 
                         // Analytically determined gradients for combined magnitude
-                        double dCombinedMagnitude_dSumX = this.sumX[i, j] / Math.Sqrt(this.sumX[i, j] * this.sumX[i, j] + this.sumY[i, j] * this.sumY[i, j]);
-                        double dCombinedMagnitude_dSumY = this.sumY[i, j] / Math.Sqrt(this.sumX[i, j] * this.sumX[i, j] + this.sumY[i, j] * this.sumY[i, j]);
+                        double magSumXY = (this.sumX[i, j] * this.sumX[i, j]) + (this.sumY[i, j] * this.sumY[i, j]);
+                        double dCombinedMagnitude_dSumX = this.sumX[i, j] / Math.Sqrt(magSumXY);
+                        double dCombinedMagnitude_dSumY = this.sumY[i, j] / Math.Sqrt(magSumXY);
 
-                        double dCombinedAngle_dSumX = -deltay / (deltax * deltax + deltay * deltay);
-                        double dCombinedAngle_dSumY = deltax / (deltax * deltax + deltay * deltay);
+                        double dCombinedAngle_dSumX = -this.sumY[i, j] / magSumXY;
+                        double dCombinedAngle_dSumY = this.sumX[i, j] / magSumXY;
 
                         double dX1_dMagnitude = Math.Cos(angle);
                         double dY1_dMagnitude = Math.Sin(angle);
@@ -274,8 +285,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
                         double dResultMagnitude_dWeight = Math.Sqrt(deltax * deltax + deltay * deltay);
                         double resultAngle = Math.Atan2(deltay, deltax);
-                        double dSumX_dResultMagnitude = Math.Cos(resultAngle);
-                        double dSumY_dResultMagnitude = Math.Sin(resultAngle);
+                        double dSumX_dResultMagnitude = this.dSumXDResultMagnitude[i, j];
+                        double dSumY_dResultMagnitude = this.dSumYDResultMagnitude[i, j];
 
                         // Apply chain rule for weights for magnitude and angle
                         dWeights[k, j] += dOutput[i, j] * (

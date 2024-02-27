@@ -51,12 +51,12 @@
         },
         {
           "id": "start_solar_system",
-          "type": "ElementwiseVectorConstituentMultiplyOperation",
+          "type": "ElementwiseVectorConstituentMonoMultiplyOperation",
           "inputs": [ "vector_decomposition", "weight_vectors_square", "weight_square" ]
         },
         {
           "id": "start_solar_system_2",
-          "type": "ElementwiseVectorConstituentMultiplyOperation",
+          "type": "ElementwiseVectorConstituentMonoMultiplyOperation",
           "inputs": [ "vector_decomposition", "weight_vectors_square2", "weight_square2" ]
         },
         {
