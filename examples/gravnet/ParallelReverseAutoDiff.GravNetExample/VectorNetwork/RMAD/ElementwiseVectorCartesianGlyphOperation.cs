@@ -20,6 +20,10 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix input2;
         private Matrix weights;
         private CalculatedValues[,] calculatedValues;
+        private double[] dNormX_dX;
+        private double[] dNormX_dY;
+        private double[] dNormY_dX;
+        private double[] dNormY_dY;
         private VectorNetwork vectorNetwork;
         private readonly VectorFieldNetwork vectorFieldNetwork;
         private readonly GlyphNetwork glyphNetwork;
@@ -92,6 +96,11 @@ namespace ParallelReverseAutoDiff.RMAD
             // Example structure to hold section sums, initialized to zero
             double[] sectionSumsX = new double[sectionCount];
             double[] sectionSumsY = new double[sectionCount];
+
+            this.dNormX_dX = new double[sectionCount];
+            this.dNormX_dY = new double[sectionCount];
+            this.dNormY_dX = new double[sectionCount];
+            this.dNormY_dY = new double[sectionCount];
 
             Parallel.For(0, rows, i =>
             {
@@ -228,8 +237,13 @@ namespace ParallelReverseAutoDiff.RMAD
             // Compile section sums into the output matrix
             for (int k = 0; k < sectionCount; k++)
             {
-                this.Output[k, 0] = sectionSumsX[k];
-                this.Output[k, 1] = sectionSumsY[k];
+                var magnitude = Math.Sqrt((sectionSumsX[k] * sectionSumsX[k]) + (sectionSumsY[k] * sectionSumsY[k]));
+                this.dNormX_dX[k] = (sectionSumsY[k] * sectionSumsY[k]) / (magnitude * magnitude * magnitude);
+                this.dNormY_dY[k] = (sectionSumsX[k] * sectionSumsX[k]) / (magnitude * magnitude * magnitude);
+                this.dNormX_dY[k] = -sectionSumsX[k] * sectionSumsY[k] / (magnitude * magnitude * magnitude);
+                this.dNormY_dX[k] = this.dNormX_dY[k];
+                this.Output[k, 0] = sectionSumsX[k] / magnitude;
+                this.Output[k, 1] = sectionSumsY[k] / magnitude;
             }
 
             return Output;
@@ -238,31 +252,49 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
+            int sectionCount = 225; // Total sections
+
             Matrix dInput1 = new Matrix(input1.Rows, input1.Cols);
             Matrix dInput2 = new Matrix(input2.Rows, input2.Cols);
             Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
 
-            double dGlyphXOutput = dOutput[0, 0]; // Gradient of the loss function with respect to the output X
-            double dGlyphYOutput = dOutput[0, 1];     // Gradient of the loss function with respect to the output Y
-
-            // Updating gradients with respect to resultMagnitude and resultAngle
-            Parallel.For(0, this.input1.Rows, i =>
+            // Iterate over the sections to compute gradients of section sums from dOutput
+            for (int k = 0; k < sectionCount; k++)
             {
-                for (int j = 0; j < this.input1.Cols / 2; j++)
+                // For each section, dOutput provides the gradient w.r.t. the normalized output vector's magnitude and angle
+                // These need to be related back to the unnormalized section sums (dSectionSumsX and dSectionSumsY)
+                double dNormX = dOutput[k, 0]; // Gradient w.r.t normalized X component of the output
+                double dNormY = dOutput[k, 1]; // Gradient w.r.t normalized Y component of the output
+
+                double nX = (dNormX * this.dNormX_dX[k]) + (dNormY * this.dNormY_dX[k]);
+                double nY = (dNormX * this.dNormX_dY[k]) + (dNormY * this.dNormY_dY[k]);
+
+                // Updating gradients with respect to resultMagnitude and resultAngle
+                Parallel.For(0, this.input1.Rows, i =>
                 {
-                    var values = this.calculatedValues[i, j];
+                    for (int j = 0; j < this.input1.Cols / 2; j++)
+                    {
+                        var values = this.calculatedValues[i, j];
 
-                    // Update dWeights with direct contributions from glyphX and glyphY
-                    dWeights[i, j] = dGlyphXOutput * (values.DSectionSumsX_dWeight + values.DSectionSumsY_dWeight);
+                        // Update dWeights with direct contributions from glyphX and glyphY
+                        dWeights[i, j] += nX * values.DSectionSumsX_dWeight;
+                        dWeights[i, j] += nY * values.DSectionSumsY_dWeight;
 
-                    // Apply chain rule to propagate back to dInput1 and dInput2
-                    dInput1[i, j] = dGlyphXOutput * values.DSectionSumsX_dMagnitude + dGlyphYOutput * values.DSectionSumsY_dMagnitude;
-                    dInput1[i, j + (this.input1.Cols / 2)] = dGlyphXOutput * values.DSectionSumsX_dAngle + dGlyphYOutput * values.DSectionSumsY_dAngle;
+                        // Apply chain rule to propagate back to dInput1 and dInput2
+                        dInput1[i, j] += nX * values.DSectionSumsX_dMagnitude;
+                        dInput1[i, j] += nY * values.DSectionSumsY_dMagnitude;
 
-                    dInput2[i, j] = dGlyphXOutput * values.DSectionSumsX_dWMagnitude + dGlyphYOutput * values.DSectionSumsY_dWMagnitude;
-                    dInput2[i, j + (this.input2.Cols / 2)] = dGlyphXOutput * values.DSectionSumsX_dWAngle + dGlyphYOutput * values.DSectionSumsY_dWAngle;
-                }
-            });
+                        dInput1[i, j + (this.input1.Cols / 2)] += nX * values.DSectionSumsX_dAngle;
+                        dInput1[i, j + (this.input1.Cols / 2)] += nY * values.DSectionSumsY_dAngle;
+
+                        dInput2[i, j] += (dNormX * this.dNormX_dX[k]) * nX * values.DSectionSumsX_dWMagnitude;
+                        dInput2[i, j] += (dNormY * this.dNormY_dX[k]) * nY * values.DSectionSumsY_dWMagnitude;
+
+                        dInput2[i, j + (this.input2.Cols / 2)] += nX * values.DSectionSumsX_dWAngle;
+                        dInput2[i, j + (this.input2.Cols / 2)] += nY * values.DSectionSumsY_dWAngle;
+                    }
+                });
+            }
 
             return new BackwardResultBuilder()
                 .AddInputGradient(dInput1)
