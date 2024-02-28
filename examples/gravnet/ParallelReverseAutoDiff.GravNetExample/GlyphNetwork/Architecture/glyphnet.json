@@ -127,7 +127,8 @@
         {
           "id": "glyph",
           "type": "ElementwiseVectorCartesianGlyphOperation",
-          "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ]
+          "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ],
+          "setResultTo": "Glyph"
         },
         {
           "id": "output",

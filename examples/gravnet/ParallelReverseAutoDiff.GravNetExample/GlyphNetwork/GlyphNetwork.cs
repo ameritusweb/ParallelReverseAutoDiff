@@ -61,6 +61,11 @@
         public Matrix Output { get; private set; }
 
         /// <summary>
+        /// Gets the glyph matrix.
+        /// </summary>
+        public Matrix Glyph { get; set; }
+
+        /// <summary>
         /// Gets the rotation targets matrix.
         /// </summary>
         public Matrix RotationTargets { get; set; }
@@ -381,6 +386,7 @@
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var rotationTargets = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(15, 15).ToArray());
+            var glyph = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
             var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
 
             if (this.Output == null)
@@ -390,6 +396,15 @@
             else
             {
                 this.Output.Replace(output.ToArray());
+            }
+
+            if (this.Glyph == null)
+            {
+                this.Glyph = glyph;
+            }
+            else
+            {
+                this.Glyph.Replace(glyph.ToArray());
             }
 
             if (this.RotationTargets == null)
@@ -468,6 +483,7 @@
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
+                .AddIntermediate("Glyph", _ => this.Glyph)
                 .AddIntermediate("RotationTargets", _ => this.RotationTargets)
                 .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
                 .AddWeight("ProjectionVectors", x => projectionVectors).AddGradient("DProjectionVectors", x => projectionVectorsGradient)

@@ -80,7 +80,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 84;
+            var initialAdamIteration = 291;
             var model = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.GlyphNetwork = model;
@@ -121,7 +121,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "020dc17b-cbf1-4a59-b6b8-f5b4e175338f_84";
+            var guid = "ca669e08-f20d-48f6-8315-85d2a53ceb92_291";
             var dir = $"E:\\vnnstore\\glyph_{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -147,7 +147,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, Matrix) Forward(Matrix input, Matrix rotationTargets, double targetAngle)
+        public (Matrix, Matrix, Matrix, Matrix) Forward(Matrix input, Matrix rotationTargets, double targetAngle)
         {
 
             var gatNet = this.GlyphNetwork;
@@ -156,11 +156,12 @@ namespace ParallelReverseAutoDiff.GravNetExample
             gatNet.RotationTargets.Replace(rotationTargets.ToArray());
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
+            var glyph = gatNet.Glyph;
             SquaredArclengthEuclideanLossOperation arclengthLoss = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
             var loss = arclengthLoss.Forward(output, targetAngle);
             var gradient = arclengthLoss.Backward();
 
-            return (gradient, output, loss);
+            return (gradient, output, glyph, loss);
         }
 
         /// <summary>
