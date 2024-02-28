@@ -287,8 +287,8 @@ namespace ParallelReverseAutoDiff.RMAD
                         dInput1[i, j + (this.input1.Cols / 2)] += nX * values.DSectionSumsX_dAngle;
                         dInput1[i, j + (this.input1.Cols / 2)] += nY * values.DSectionSumsY_dAngle;
 
-                        dInput2[i, j] += (dNormX * this.dNormX_dX[k]) * nX * values.DSectionSumsX_dWMagnitude;
-                        dInput2[i, j] += (dNormY * this.dNormY_dX[k]) * nY * values.DSectionSumsY_dWMagnitude;
+                        dInput2[i, j] += nX * values.DSectionSumsX_dWMagnitude;
+                        dInput2[i, j] += nY * values.DSectionSumsY_dWMagnitude;
 
                         dInput2[i, j + (this.input2.Cols / 2)] += nX * values.DSectionSumsX_dWAngle;
                         dInput2[i, j + (this.input2.Cols / 2)] += nY * values.DSectionSumsY_dWAngle;
