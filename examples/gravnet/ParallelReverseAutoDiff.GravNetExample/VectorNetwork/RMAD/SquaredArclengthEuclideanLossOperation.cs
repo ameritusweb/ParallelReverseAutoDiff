@@ -18,10 +18,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private double xTarget;
         private double yTarget;
         private double radius;
-        private double normalizedDotProduct;
-        private double theta;
-        private double magnitude;
-        private double targetAngle;
+        private double maxMagnitude;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -41,22 +38,22 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The scalar loss value.</returns>
         public Matrix Forward(Matrix predictions, double targetAngle)
         {
-            this.targetAngle = targetAngle;
-
             var xOutput = predictions[0, 0];
             this.xOutput = xOutput;
             var yOutput = predictions[0, 1];
             this.yOutput = yOutput;
 
-            double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
-            this.magnitude = magnitude;
+            // Maximum magnitude achievable by the summation of 225 unit vectors
+            double maxMagnitude = 225;
 
-            var xTarget = Math.Cos(targetAngle) * magnitude;
+            // Adjust target X and Y to represent the maximum magnitude in the target direction
+            var xTarget = Math.Cos(targetAngle) * maxMagnitude;
             this.xTarget = xTarget;
-            var yTarget = Math.Sin(targetAngle) * magnitude;
+            var yTarget = Math.Sin(targetAngle) * maxMagnitude;
             this.yTarget = yTarget;
 
-            var radius = magnitude;
+            // Recalculate the radius (magnitude) of the output vector
+            var radius = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
             this.radius = radius;
 
             // Calculate the dot product of the output and target vectors
@@ -68,19 +65,21 @@ namespace ParallelReverseAutoDiff.RMAD
 
             // Clamp the normalized dot product to the range [-1, 1] to avoid numerical issues with arccos
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
-            this.normalizedDotProduct = normalizedDotProduct;
 
             // Compute the angular difference using arccosine of the normalized dot product
             double theta = Math.Acos(normalizedDotProduct);
-            this.theta = theta;
 
-            double distanceX = Math.Pow(xOutput - xTarget, 3);
+            double distanceXQuad = (0.75d * Math.Pow(xOutput, 2)) - (1.5d * xOutput * xTarget);
             
-            double distanceY = Math.Pow(yOutput - yTarget, 3);
-            double distanceCubed = distanceX + distanceY;
+            double distanceYQuad = (0.75d * Math.Pow(yOutput, 2)) - (1.5d * yOutput * yTarget);
+            double distanceAccum = distanceXQuad + distanceYQuad;
+
+            // Example addition to the Forward method to emphasize magnitude
+            double actualMagnitude = Math.Sqrt(Math.Pow(xOutput, 2) + Math.Pow(yOutput, 2));
+            double magnitudeDiscrepancy = Math.Pow(maxMagnitude - actualMagnitude, 2);
 
             // Compute the squared magnitude of the loss
-            double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceCubed) / 2d;
+            double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceAccum + magnitudeDiscrepancy) / 3d;
 
             var output = new Matrix(1, 1);
             output[0, 0] = lossMagnitude;
@@ -98,8 +97,16 @@ namespace ParallelReverseAutoDiff.RMAD
             var gradX = GradientWrtXOutput();
             var gradY = GradientWrtYOutput();
             var (eX, eY) = EuclideanGradientWrtOutput();
-            dPredictions[0, 0] = (-1d * gradX) + eX;
-            dPredictions[0, 1] = gradY + eY;
+
+            // Calculate the additional magnitude discrepancy gradients
+            double actualMagnitude = Math.Sqrt((this.xOutput * this.xOutput) + (this.yOutput * this.yOutput));
+            double magDiscrepancyGradient = -2 * (maxMagnitude - actualMagnitude);
+
+            double dMagDiscrepancy_dX = magDiscrepancyGradient * (xOutput / actualMagnitude);
+            double dMagDiscrepancy_dY = magDiscrepancyGradient * (yOutput / actualMagnitude);
+
+            dPredictions[0, 0] = (-1d * gradX) + eX + dMagDiscrepancy_dX;
+            dPredictions[0, 1] = gradY + eY + dMagDiscrepancy_dY;
             return dPredictions;
         }
 
@@ -108,32 +115,32 @@ namespace ParallelReverseAutoDiff.RMAD
             double X = this.xOutput;
             double Y = this.yOutput;
 
-            double dLoss_dX = (X - xTarget) * (3d/2d);
-            double dLoss_dY = (Y - yTarget) * (3d/2d);
+            double dLoss_dX = (X - this.xTarget) * (3d/2d);
+            double dLoss_dY = (Y - this.yTarget) * (3d/2d);
             return (dLoss_dX, dLoss_dY);
         }
 
         public double GradientWrtXOutput()
         {
-            double normalizedDotProduct = dotProduct / (radius * radius);
+            double normalizedDotProduct = this.dotProduct / (this.radius * this.radius);
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
 
             double theta = Math.Acos(normalizedDotProduct);
-            double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
+            double denominator = Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
 
-            double gradXOutput = xTarget * theta / denominator;
+            double gradXOutput = this.xTarget * theta / denominator;
             return gradXOutput;
         }
 
         public double GradientWrtYOutput()
         {
-            double normalizedDotProduct = dotProduct / (radius * radius);
+            double normalizedDotProduct = this.dotProduct / (this.radius * this.radius);
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
 
             double theta = Math.Acos(normalizedDotProduct);
-            double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
+            double denominator = Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
 
-            double gradYOutput = yTarget * theta / denominator;
+            double gradYOutput = this.yTarget * theta / denominator;
             return gradYOutput;
         }
     }
