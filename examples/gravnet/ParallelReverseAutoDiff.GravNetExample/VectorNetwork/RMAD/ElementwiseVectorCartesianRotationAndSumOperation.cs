@@ -13,6 +13,7 @@ namespace ParallelReverseAutoDiff.RMAD
     public class ElementwiseVectorCartesianRotationAndSumOperation : Operation
     {
         private Matrix rotationTargets;
+        private Matrix inputVectors;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -32,6 +33,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the element-wise vector rotation and sum operation.</returns>
         public Matrix Forward(Matrix inputVectors, Matrix rotationTargets)
         {
+            this.inputVectors = inputVectors;
             this.rotationTargets = rotationTargets;
 
             double clockwise = -Math.PI / 2;
@@ -52,8 +54,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     double x = inputVectors[vectorIndex, 0];
                     double y = inputVectors[vectorIndex, 1];
 
-                    double cosTheta = rotationTargets[i, j] == 1 ? cosClockwise : 0d;
-                    double sinTheta = rotationTargets[i, j] == 1 ? sinClockwise : 0d;
+                    double cosTheta = rotationTargets[i, j] == 0 ? cosClockwise : 0d;
+                    double sinTheta = rotationTargets[i, j] == 0 ? sinClockwise : 0d;
 
                     // Apply rotation
                     double rotatedX = (x * cosTheta) - (y * sinTheta);
@@ -84,6 +86,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
             // Initialize dInputVectors with the same shape as the forward input vectors
             Matrix dInputVectors = new Matrix(225, 2);
+            var inputVectors = this.inputVectors;
 
             int vectorIndex = 0;
             for (int i = 0; i < 15; i++)
