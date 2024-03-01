@@ -93,7 +93,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < 15; j++)
                 {
-                    var rotation = rotationTargets[i, j] == 1 ? clockwise : 0d;
+                    var rotation = rotationTargets[i, j] == 0 ? clockwise : 0d;
 
                     double cosTheta = Math.Cos(rotation);
                     double sinTheta = Math.Sin(rotation);

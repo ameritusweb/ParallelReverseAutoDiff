@@ -80,7 +80,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 114;
+            var initialAdamIteration = 261;
             var model = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.GlyphNetwork = model;
@@ -121,7 +121,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "glyph_c4b10d8b-9965-4b3a-b810-7af235e2ca5c_114";
+            var guid = "glyph_9672fb58-807a-4bea-9e0d-4688ea27d72b_261";
             var dir = $"E:\\vnnstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
