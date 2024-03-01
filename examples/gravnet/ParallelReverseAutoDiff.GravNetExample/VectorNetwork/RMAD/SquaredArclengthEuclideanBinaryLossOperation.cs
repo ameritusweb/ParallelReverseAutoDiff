@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SquaredArclengthEuclideanLossOperation.cs" author="ameritusweb" date="7/1/2023">
+// <copyright file="SquaredArclengthEuclideanBinaryLossOperation.cs" author="ameritusweb" date="7/1/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -10,26 +10,27 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Squared arclength euclidean loss operation.
     /// </summary>
-    public class SquaredArclengthEuclideanLossOperation
+    public class SquaredArclengthEuclideanBinaryLossOperation
     {
         private double dotProduct;
         private double xOutput;
         private double yOutput;
         private double xTarget;
         private double yTarget;
-        private double xTargetUnnormalized;
-        private double yTargetUnnormalized;
         private double radius;
-        private double maxMagnitude;
+        private double normalizedDotProduct;
+        private double theta;
+        private double magnitude;
+        private double targetAngle;
 
         /// <summary>
         /// A common method for instantiating an operation.
         /// </summary>
         /// <param name="net">The neural network.</param>
         /// <returns>The instantiated operation.</returns>
-        public static SquaredArclengthEuclideanLossOperation Instantiate(NeuralNetwork net)
+        public static SquaredArclengthEuclideanBinaryLossOperation Instantiate(NeuralNetwork net)
         {
-            return new SquaredArclengthEuclideanLossOperation();
+            return new SquaredArclengthEuclideanBinaryLossOperation();
         }
 
         /// <summary>
@@ -40,27 +41,22 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The scalar loss value.</returns>
         public Matrix Forward(Matrix predictions, double targetAngle)
         {
+            this.targetAngle = targetAngle;
+
             var xOutput = predictions[0, 0];
             this.xOutput = xOutput;
             var yOutput = predictions[0, 1];
             this.yOutput = yOutput;
 
-            // Maximum magnitude achievable by the summation of 225 unit vectors
-            double maxMagnitude = 225;
-            this.maxMagnitude = maxMagnitude;
-
             double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
+            this.magnitude = magnitude;
 
             var xTarget = Math.Cos(targetAngle) * magnitude;
             this.xTarget = xTarget;
             var yTarget = Math.Sin(targetAngle) * magnitude;
             this.yTarget = yTarget;
 
-            this.xTargetUnnormalized = Math.Cos(targetAngle) * maxMagnitude;
-            this.yTargetUnnormalized = Math.Sin(targetAngle) * maxMagnitude;
-
-            // Recalculate the radius (magnitude) of the output vector
-            var radius = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
+            var radius = magnitude;
             this.radius = radius;
 
             // Calculate the dot product of the output and target vectors
@@ -72,21 +68,19 @@ namespace ParallelReverseAutoDiff.RMAD
 
             // Clamp the normalized dot product to the range [-1, 1] to avoid numerical issues with arccos
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
+            this.normalizedDotProduct = normalizedDotProduct;
 
             // Compute the angular difference using arccosine of the normalized dot product
             double theta = Math.Acos(normalizedDotProduct);
+            this.theta = theta;
 
-            double distanceXQuad = (0.75d * Math.Pow(xOutput, 2)) - (1.5d * xOutput * this.xTargetUnnormalized);
-            
-            double distanceYQuad = (0.75d * Math.Pow(yOutput, 2)) - (1.5d * yOutput * this.yTargetUnnormalized);
-            double distanceAccum = distanceXQuad + distanceYQuad;
+            double distanceX = Math.Pow(xOutput - xTarget, 3);
 
-            // Example addition to the Forward method to emphasize magnitude
-            double actualMagnitude = Math.Sqrt(Math.Pow(xOutput, 2) + Math.Pow(yOutput, 2));
-            double magnitudeDiscrepancy = Math.Pow(maxMagnitude - actualMagnitude, 2);
+            double distanceY = Math.Pow(yOutput - yTarget, 3);
+            double distanceCubed = distanceX + distanceY;
 
             // Compute the squared magnitude of the loss
-            double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceAccum + magnitudeDiscrepancy) / 3d;
+            double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceCubed) / 2d;
 
             var output = new Matrix(1, 1);
             output[0, 0] = lossMagnitude;
@@ -104,22 +98,8 @@ namespace ParallelReverseAutoDiff.RMAD
             var gradX = GradientWrtXOutput();
             var gradY = GradientWrtYOutput();
             var (eX, eY) = EuclideanGradientWrtOutput();
-
-            // Calculate the additional magnitude discrepancy gradients
-            double actualMagnitude = Math.Sqrt((this.xOutput * this.xOutput) + (this.yOutput * this.yOutput));
-            double magDiscrepancyGradient = -2 * (maxMagnitude - actualMagnitude);
-
-            double dMagDiscrepancy_dX = magDiscrepancyGradient * (xOutput / actualMagnitude);
-            double dMagDiscrepancy_dY = magDiscrepancyGradient * (yOutput / actualMagnitude);
-
-            dPredictions[0, 0] = (-1d * gradX) + eX + dMagDiscrepancy_dX;
-            dPredictions[0, 1] = gradY + eY + dMagDiscrepancy_dY;
-
-            if (double.IsNaN(dPredictions[0, 0]) || double.IsNaN(dPredictions[0, 1]))
-            {
-
-            }
-
+            dPredictions[0, 0] = (-1d * gradX) + eX;
+            dPredictions[0, 1] = gradY + eY;
             return dPredictions;
         }
 
@@ -128,32 +108,32 @@ namespace ParallelReverseAutoDiff.RMAD
             double X = this.xOutput;
             double Y = this.yOutput;
 
-            double dLoss_dX = (X - this.xTargetUnnormalized) * (3d/2d);
-            double dLoss_dY = (Y - this.yTargetUnnormalized) * (3d/2d);
+            double dLoss_dX = (X - xTarget) * (3d / 2d);
+            double dLoss_dY = (Y - yTarget) * (3d / 2d);
             return (dLoss_dX, dLoss_dY);
         }
 
         public double GradientWrtXOutput()
         {
-            double normalizedDotProduct = this.dotProduct / (this.radius * this.radius);
+            double normalizedDotProduct = dotProduct / (radius * radius);
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
 
             double theta = Math.Acos(normalizedDotProduct);
-            double denominator = Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
+            double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
 
-            double gradXOutput = this.xTarget * theta / denominator;
+            double gradXOutput = xTarget * theta / denominator;
             return gradXOutput;
         }
 
         public double GradientWrtYOutput()
         {
-            double normalizedDotProduct = this.dotProduct / (this.radius * this.radius);
+            double normalizedDotProduct = dotProduct / (radius * radius);
             normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
 
             double theta = Math.Acos(normalizedDotProduct);
-            double denominator = Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
+            double denominator = Math.Sqrt(1 - normalizedDotProduct * normalizedDotProduct);
 
-            double gradYOutput = this.yTarget * theta / denominator;
+            double gradYOutput = yTarget * theta / denominator;
             return gradYOutput;
         }
     }
