@@ -18,7 +18,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
-                Random random = new Random(2);
+                Random random = new Random(3);
                 var files = pngFiles.OrderBy(x => random.Next()).ToArray();
                 uint i = 0;
                 await files.WithRepeatAsync(async (pngFile, token) =>
@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     int uIndex = file.IndexOf("_");
                     var prefix = file.Substring(0, uIndex);
 
-                    var glyphFile = pngFile.Replace(prefix, prefix + "_glyph").Replace("svg\\", "svg-glyph\\");
+                    var glyphFile = pngFile.Replace("\\" + prefix, "\\" + prefix + "_glyph").Replace("svg\\", "svg-glyph\\");
                     Node[,] glyphNodes = ImageSerializer.DeserializeImageWithoutAntiAlias(glyphFile);
                     Matrix rotationTargets = new Matrix(15, 15);
                     Vector3[] glyphs = new Vector3[225];

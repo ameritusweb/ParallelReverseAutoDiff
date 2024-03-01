@@ -20,6 +20,8 @@ namespace ParallelReverseAutoDiff.RMAD
         private double xTargetUnnormalized;
         private double yTargetUnnormalized;
         private double radius;
+        private double actualAngle;
+        private double targetAngle;
         private double maxMagnitude;
 
         /// <summary>
@@ -40,6 +42,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The scalar loss value.</returns>
         public Matrix Forward(Matrix predictions, double targetAngle)
         {
+            this.targetAngle = targetAngle;
             var xOutput = predictions[0, 0];
             this.xOutput = xOutput;
             var yOutput = predictions[0, 1];
@@ -50,6 +53,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.maxMagnitude = maxMagnitude;
 
             double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
+            this.actualAngle = Math.Atan2(yOutput, xOutput);
 
             var xTarget = Math.Cos(targetAngle) * magnitude;
             this.xTarget = xTarget;
@@ -85,8 +89,10 @@ namespace ParallelReverseAutoDiff.RMAD
             double actualMagnitude = Math.Sqrt(Math.Pow(xOutput, 2) + Math.Pow(yOutput, 2));
             double magnitudeDiscrepancy = Math.Pow(maxMagnitude - actualMagnitude, 2);
 
+            double arcLength = Math.Pow(radius * theta, 2);
+
             // Compute the squared magnitude of the loss
-            double lossMagnitude = (Math.Pow(radius * theta, 2) + distanceAccum + magnitudeDiscrepancy) / 3d;
+            double lossMagnitude = (arcLength + distanceAccum + magnitudeDiscrepancy) / 3d;
 
             var output = new Matrix(1, 1);
             output[0, 0] = lossMagnitude;
@@ -112,8 +118,9 @@ namespace ParallelReverseAutoDiff.RMAD
             double dMagDiscrepancy_dX = magDiscrepancyGradient * (xOutput / actualMagnitude);
             double dMagDiscrepancy_dY = magDiscrepancyGradient * (yOutput / actualMagnitude);
 
-            dPredictions[0, 0] = (-1d * gradX) + eX + dMagDiscrepancy_dX;
-            dPredictions[0, 1] = gradY + eY + dMagDiscrepancy_dY;
+            (double cX, double cY) = CalculateCoefficient();
+            dPredictions[0, 0] = (cX * gradX) + eX + dMagDiscrepancy_dX;
+            dPredictions[0, 1] = (cY * gradY) + eY + dMagDiscrepancy_dY;
 
             if (double.IsNaN(dPredictions[0, 0]) || double.IsNaN(dPredictions[0, 1]))
             {
@@ -155,6 +162,72 @@ namespace ParallelReverseAutoDiff.RMAD
 
             double gradYOutput = this.yTarget * theta / denominator;
             return gradYOutput;
+        }
+
+        private (double, double) CalculateCoefficient()
+        {
+            var quadrant = GetQuadrant(this.actualAngle);
+            var oppositeAngle = CalculateOppositeAngle(this.targetAngle);
+            if (quadrant == 1)
+            {
+                if (this.actualAngle < this.targetAngle)
+                {
+                    return (1, -1); // x increase, y decrease
+                } else
+                {
+                    return (-1, 1); // x decrease, y increase
+                }
+            }
+            else if (quadrant == 2)
+            {
+                return (-1, -1); // x decrease, y decrease
+            }
+            else if (quadrant == 3)
+            {
+                if (this.actualAngle < oppositeAngle)
+                {
+                    return (1, -1); // x increase, y decrease
+                }
+                else
+                {
+                    return (-1, 1); // x decrease, y increase
+                }
+            }
+            else
+            {
+                return (-1, -1); // x decrease, y decrease
+            }
+        }
+
+        private int GetQuadrant(double angleInRadians)
+        {
+            // Normalize the angle to be within 0 to 2pi radians
+            double normalizedAngle = angleInRadians % (2 * Math.PI);
+            // Adjust if negative to ensure it falls within the 0 to 2pi range
+            if (normalizedAngle < 0)
+                normalizedAngle += 2 * Math.PI;
+
+            // Determine the quadrant
+            if (normalizedAngle >= 0 && normalizedAngle < Math.PI / 2)
+                return 1;
+            else if (normalizedAngle >= Math.PI / 2 && normalizedAngle < Math.PI)
+                return 2;
+            else if (normalizedAngle >= Math.PI && normalizedAngle < 3 * Math.PI / 2)
+                return 3;
+            else // normalizedAngle >= 3 * Math.PI / 2 && normalizedAngle < 2 * Math.PI
+                return 4;
+        }
+
+        private double CalculateOppositeAngle(double targetAngle)
+        {
+            // Add π to the target angle to find the opposite angle
+            double oppositeAngle = targetAngle + Math.PI;
+
+            // Normalize the opposite angle to be within [-2π, 2π]
+            if (oppositeAngle > 2 * Math.PI) oppositeAngle -= 2 * Math.PI;
+            else if (oppositeAngle < -2 * Math.PI) oppositeAngle += 2 * Math.PI;
+
+            return oppositeAngle;
         }
     }
 }

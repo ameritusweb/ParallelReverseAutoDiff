@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="VectorAttentionOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="VectorAttentionBinaryOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Vector attention operation.
     /// </summary>
-    public class VectorAttentionOperation : Operation
+    public class VectorAttentionBinaryOperation : Operation
     {
         private Matrix vectors;
         private Matrix probabilities;
@@ -23,7 +23,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new VectorAttentionOperation();
+            return new VectorAttentionBinaryOperation();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     // Adjust the angle based on the probability
                     double angle = vectors[i, j + M];
-                    double angleAdjustment = 1.5d * Math.PI * (1 - prob); // Ranges from 0 (at prob = 1) to 2π (at prob = 0)
+                    double angleAdjustment = Math.PI * (1 - prob); // Ranges from 0 (at prob = 1) to π (at prob = 0)
                     angle = (angle + angleAdjustment) % (2 * Math.PI);
 
                     this.Output[i, j] = magnitude;
@@ -74,16 +74,29 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < M; j++)
                 {
-                    double prob = probabilities[i, j];
-                    double dMagnitude_dProb = -dOutput[i, j] * vectors[i, j]; // Derivative of magnitude w.r.t probability
-                    double dAngle_dProb = -1.5d * Math.PI * dOutput[i, j + M]; // Derivative of angle w.r.t probability
+                    double prop1 = probabilities[i, j];
+                    // Gradient for magnitude
+                    dVectors[i, j] = dOutput[i, j] * (1.5d - prop1); // Assuming direct gradient flow for magnitude
 
-                    // Update gradients for vectors
-                    dVectors[i, j] = dOutput[i, j] * (1.5 - prob); // Corrected gradient flow for magnitude
-                    dVectors[i, j + M] = dOutput[i, j + M]; // Assuming direct gradient flow for angle is correct
+                    // Gradient for angle
+                    double dAngle = dOutput[i, j + M];
+                    dVectors[i, j + M] = dAngle; // Assuming direct gradient flow for angle
 
-                    // Aggregate gradients for probabilities
-                    dProbabilities[i, j] = dMagnitude_dProb + dAngle_dProb; // Correct aggregation of gradients
+                    double dAngle_dProb1 = -Math.PI;
+                    double dAngle_dProb2 = Math.PI;
+
+                    // Gradient for Prob1 (affects magnitude and angle)
+                    dProbabilities[i, j] = dAngle * dAngle_dProb1; // From derivative dAngle/dProb1 = -π
+
+                    // Gradient for Prob2 (affects only angle)
+                    dProbabilities[i, j + M] = dAngle * dAngle_dProb2; // From derivative dAngle/dProb2 = π
+
+                    double dMagnitude = dOutput[i, j];
+                    double originalMagnitude = this.vectors[i, j];
+
+                    // Compute gradients for probabilities related to magnitude
+                    dProbabilities[i, j] += -dMagnitude * originalMagnitude; // dMagnitude/dProb1
+                    dProbabilities[i, j + M] += dMagnitude * originalMagnitude; // dMagnitude/dProb2
                 }
             });
 
@@ -92,6 +105,5 @@ namespace ParallelReverseAutoDiff.RMAD
                 .AddInputGradient(dProbabilities)
                 .Build();
         }
-
     }
 }

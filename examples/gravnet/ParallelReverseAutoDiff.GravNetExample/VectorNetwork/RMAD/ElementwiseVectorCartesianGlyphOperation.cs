@@ -307,7 +307,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             // Define section sizes and total sections per row and column
             const int rowsPerRegularSection = 34;
-            const int colsPerRegularSection = 102;
+            const int colsPerRegularSection = 25;
             const int totalSectionsPerCol = 15; // Given by the problem statement
 
             // Determine the section row and column based on the input row and column

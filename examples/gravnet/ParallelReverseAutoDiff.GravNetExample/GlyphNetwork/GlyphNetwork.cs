@@ -35,15 +35,15 @@
                 .AddModelElementGroup("Angles", new[] { numNodes, initial / 2 }, InitializationType.Xavier)
                 .AddModelElementGroup("ProjectionVectors", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
                 .AddModelElementGroup("ProjectionWeights", new[] { numNodes, initial / 2 }, InitializationType.HeAdjacency)
-                .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("WeightVectors2", new[] { numInputOutputFeatures, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("Weights", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 4 }, InitializationType.Xavier)
-                .AddModelElementGroup("Weights2", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 4 }, InitializationType.Xavier)
-                .AddModelElementGroup("Keys", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("Queries", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("QB", new[] { 1, numInputOutputFeatures / 2 }, InitializationType.Xavier)
-                .AddModelElementGroup("SummationWeights", new[] { numNodes, numInputOutputFeatures / 4 }, InitializationType.Xavier);
+                .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures / 8 }, InitializationType.He, 5d)
+                .AddModelElementGroup("WeightVectors2", new[] { numInputOutputFeatures, numInputOutputFeatures / 8 }, InitializationType.He, 5d)
+                .AddModelElementGroup("Weights", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 16 }, InitializationType.Xavier)
+                .AddModelElementGroup("Weights2", new[] { numInputOutputFeatures / 2, numInputOutputFeatures / 16 }, InitializationType.Xavier)
+                .AddModelElementGroup("Keys", new[] { numInputOutputFeatures / 8, numInputOutputFeatures / 8 }, InitializationType.Xavier)
+                .AddModelElementGroup("KB", new[] { 1, numInputOutputFeatures / 8 }, InitializationType.Xavier)
+                .AddModelElementGroup("Queries", new[] { numInputOutputFeatures / 8, numInputOutputFeatures / 8 }, InitializationType.Xavier)
+                .AddModelElementGroup("QB", new[] { 1, numInputOutputFeatures / 8 }, InitializationType.Xavier)
+                .AddModelElementGroup("SummationWeights", new[] { numNodes, numInputOutputFeatures / 16 }, InitializationType.Xavier);
             var inputLayer = inputLayerBuilder.Build();
             this.inputLayer = inputLayer;
 
