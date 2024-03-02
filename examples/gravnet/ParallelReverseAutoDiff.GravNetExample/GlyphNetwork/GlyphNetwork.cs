@@ -66,6 +66,16 @@
         public Matrix Glyph { get; set; }
 
         /// <summary>
+        /// Targeted sum matrix.
+        /// </summary>
+        public Matrix TargetedSum0 { get; set; }
+
+        /// <summary>
+        /// Targeted sum matrix.
+        /// </summary>
+        public Matrix TargetedSum1 { get; set; }
+
+        /// <summary>
         /// Gets the rotation targets matrix.
         /// </summary>
         public Matrix RotationTargets { get; set; }
@@ -343,14 +353,38 @@
         /// </summary>
         /// <param name="gradient">The gradient of the loss.</param>
         /// <returns>The gradient.</returns>
-        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
+        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient, Matrix gradient0, Matrix gradient1)
         {
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_0_0"];
+            var output = this.computationGraph["output_0_0"];
+            var outputResult = (output as ElementwiseVectorCartesianRotationAndSumOperation).Backward(gradient).Results[0] as Matrix;
+
+            var targetedSum0 = this.computationGraph["targeted_sum_0_0_0"];
+            var targetedSum1 = this.computationGraph["targeted_sum_1_0_0"];
+
+            var glyph = this.computationGraph["glyph_0_0"] as ElementwiseVectorCartesianGlyphOperation;
+
+            var targetedResult0 = (targetedSum0 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient0).Results[0] as Matrix;
+            var targetedResult1 = (targetedSum1 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient1).Results[0] as Matrix;
+
+            Matrix gg = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
+            for (int i = 0; i < 225; i++)
+            {
+                gg[i, 0] = outputResult[i, 0] + targetedResult0[i, 0] + targetedResult1[i, 0];
+                gg[i, 1] = outputResult[i, 1] + targetedResult0[i, 1] + targetedResult1[i, 1];
+            }
+
+            for (int i = 0; i < 225; i++)
+            {
+                gg[i, 0] = targetedResult1[i, 0];
+                gg[i, 1] = targetedResult1[i, 1];
+            }
+
+            backwardStartOperation = glyph;
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
-                backwardStartOperation.BackwardInput = gradient;
+                backwardStartOperation.BackwardInput = gg;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
@@ -385,6 +419,8 @@
         {
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
+            var targetedSum0 = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
+            var targetedSum1 = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var rotationTargets = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(15, 15).ToArray());
             var glyph = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
             var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
@@ -396,6 +432,24 @@
             else
             {
                 this.Output.Replace(output.ToArray());
+            }
+
+            if (this.TargetedSum0 == null)
+            {
+                this.TargetedSum0 = targetedSum0;
+            }
+            else
+            {
+                this.TargetedSum0.Replace(targetedSum0.ToArray());
+            }
+
+            if (this.TargetedSum1 == null)
+            {
+                this.TargetedSum1 = targetedSum1;
+            }
+            else
+            {
+                this.TargetedSum1.Replace(targetedSum1.ToArray());
             }
 
             if (this.Glyph == null)
@@ -485,6 +539,10 @@
                 .AddIntermediate("Input", _ => this.Input)
                 .AddIntermediate("Glyph", _ => this.Glyph)
                 .AddIntermediate("RotationTargets", _ => this.RotationTargets)
+                .AddIntermediate("TargetedSum0", _ => this.TargetedSum0)
+                .AddIntermediate("TargetedSum1", _ => this.TargetedSum1)
+                .AddScalar("Target0", _ => 0)
+                .AddScalar("Target1", _ => 1)
                 .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
                 .AddWeight("ProjectionVectors", x => projectionVectors).AddGradient("DProjectionVectors", x => projectionVectorsGradient)
                 .AddWeight("ProjectionWeights", x => projectionWeights).AddGradient("DProjectionWeights", x => projectionWeightsGradient)

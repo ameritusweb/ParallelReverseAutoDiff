@@ -14,11 +14,11 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 CudaBlas.Instance.Initialize();
                 GlyphNet net = new GlyphNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
-                net.ApplyWeights();
+                //net.ApplyWeights();
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
-                Random random = new Random(6);
+                Random random = new Random(7);
                 var files = pngFiles.OrderBy(x => random.Next()).ToArray();
                 uint i = 0;
                 await files.WithRepeatAsync(async (pngFile, token) =>
@@ -75,9 +75,15 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     var res = net.Forward(matrix, rotationTargets, Math.PI / 4d);
                     var gradient = res.Item1;
-                    var output = res.Item2;
-                    var glyph = res.Item3;
-                    var loss = res.Item4;
+                    var gradient0 = res.Item2;
+                    var gradient1 = res.Item3;
+                    var output = res.Item4;
+                    var o0 = res.Item5;
+                    var o1 = res.Item6;
+                    var glyph = res.Item7;
+                    var loss = res.Item8;
+                    var loss0 = res.Item9;
+                    var loss1 = res.Item10;
 
                     for (int j = 0; j < 225; ++j)
                     {
@@ -86,9 +92,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     }
 
 
-                    Console.WriteLine($"Iteration {i} Output X: {res.Item2[0, 0]}, Output Y: {res.Item2[0, 1]}, Grad: {res.Item1[0, 0]}, {res.Item1[0, 1]}");
-                    Console.WriteLine($"Loss: {res.Item4[0, 0]}");
-                    await net.Backward(gradient);
+                    Console.WriteLine($"Iteration {i} Output X: {output[0, 0]}, Output Y: {output[0, 1]}, Grad: {gradient[0, 0]}, {gradient[0, 1]}");
+                    Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss: {loss[0, 0]}, {loss0[0, 0]}, {loss1[0, 0]}");
+                    await net.Backward(gradient, gradient0, gradient1);
                     net.ApplyGradients();
                     //}
 
