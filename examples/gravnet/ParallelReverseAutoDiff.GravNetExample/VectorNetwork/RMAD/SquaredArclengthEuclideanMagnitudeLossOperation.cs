@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SquaredArclengthEuclideanLossOperation.cs" author="ameritusweb" date="7/1/2023">
+// <copyright file="SquaredArclengthEuclideanMagnitudeLossOperation.cs" author="ameritusweb" date="7/1/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -8,9 +8,9 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
 
     /// <summary>
-    /// Squared arclength euclidean loss operation.
+    /// Squared arclength euclidean magnitude loss operation.
     /// </summary>
-    public class SquaredArclengthEuclideanLossOperation
+    public class SquaredArclengthEuclideanMagnitudeLossOperation
     {
         private double dotProduct;
         private double xOutput;
@@ -29,9 +29,9 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="net">The neural network.</param>
         /// <returns>The instantiated operation.</returns>
-        public static SquaredArclengthEuclideanLossOperation Instantiate(NeuralNetwork net)
+        public static SquaredArclengthEuclideanMagnitudeLossOperation Instantiate(NeuralNetwork net)
         {
-            return new SquaredArclengthEuclideanLossOperation();
+            return new SquaredArclengthEuclideanMagnitudeLossOperation();
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double arcLength = Math.Pow(radius * theta, 2);
 
             // Compute the squared magnitude of the loss
-            double lossMagnitude = (arcLength + distanceAccum) / 2d;
+            double lossMagnitude = (arcLength + distanceAccum + magnitudeDiscrepancy) / 3d;
 
             var output = new Matrix(1, 1);
             output[0, 0] = lossMagnitude;
@@ -119,8 +119,8 @@ namespace ParallelReverseAutoDiff.RMAD
             double dMagDiscrepancy_dY = magDiscrepancyGradient * (yOutput / actualMagnitude);
 
             (double cX, double cY) = CalculateCoefficient();
-            dPredictions[0, 0] = (cX * gradX) + eX;
-            dPredictions[0, 1] = (cY * gradY) + eY;
+            dPredictions[0, 0] = (cX * gradX) + eX + dMagDiscrepancy_dX;
+            dPredictions[0, 1] = (cY * gradY) + eY + dMagDiscrepancy_dY;
 
             if (double.IsNaN(dPredictions[0, 0]) || double.IsNaN(dPredictions[0, 1]))
             {
