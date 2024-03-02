@@ -1,0 +1,136 @@
+﻿{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "angles_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Angles" ],
+          "gradientResultTo": [ "DAngles" ]
+        },
+        {
+          "id": "vectorize_input",
+          "type": "VectorizeOperation",
+          "inputs": [ "Input", "angles_square" ]
+        },
+        {
+          "id": "projection_vectors_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "ProjectionVectors" ],
+          "gradientResultTo": [ "DProjectionVectors" ]
+        },
+        {
+          "id": "vector_decomposition",
+          "type": "ElementwiseVectorMiniDecompositionOperation",
+          "inputs": [ "vectorize_input", "projection_vectors_square", "ProjectionWeights" ],
+          "gradientResultTo": [ null, null, "DProjectionWeights" ]
+        },
+        {
+          "id": "weight_vectors_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "WeightVectors" ],
+          "gradientResultTo": [ "DWeightVectors" ]
+        },
+        {
+          "id": "weight_vectors_square2",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "WeightVectors2" ],
+          "gradientResultTo": [ "DWeightVectors2" ]
+        },
+        {
+          "id": "weight_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Weights" ],
+          "gradientResultTo": [ "DWeights" ]
+        },
+        {
+          "id": "weight_square2",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Weights2" ],
+          "gradientResultTo": [ "DWeights2" ]
+        },
+        {
+          "id": "start_solar_system",
+          "type": "ElementwiseVectorConstituentMonoMultiplyOperation",
+          "inputs": [ "vector_decomposition", "weight_vectors_square", "weight_square" ]
+        },
+        {
+          "id": "start_solar_system_2",
+          "type": "ElementwiseVectorConstituentMonoMultiplyOperation",
+          "inputs": [ "vector_decomposition", "weight_vectors_square2", "weight_square2" ]
+        },
+        {
+          "id": "vector_add",
+          "type": "ElementwiseVectorAddOperation",
+          "inputs": [ "start_solar_system", "start_solar_system_2" ]
+        },
+        {
+          "id": "vector_keys",
+          "type": "NewGpuMatrixMultiplyOperation",
+          "inputs": [ "vector_add", "Keys" ],
+          "gradientResultTo": [ null, "DKeys" ]
+        },
+        {
+          "id": "vector_add_broadcasting",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "vector_keys", "KB" ],
+          "gradientResultTo": [ null, "DKB" ]
+        },
+        {
+          "id": "vector_act",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "vector_add_broadcasting" ]
+        },
+        {
+          "id": "vector_queries",
+          "type": "NewGpuMatrixMultiplyOperation",
+          "inputs": [ "vector_add", "Queries" ],
+          "gradientResultTo": [ null, "DQueries" ]
+        },
+        {
+          "id": "vector_queries_add_broadcasting",
+          "type": "MatrixAddBroadcastingOperation",
+          "inputs": [ "vector_queries", "QB" ],
+          "gradientResultTo": [ null, "DQB" ]
+        },
+        {
+          "id": "vector_queries_act",
+          "type": "LeakyReLUOperation",
+          "inputs": [ "vector_queries_add_broadcasting" ]
+        },
+        {
+          "id": "vector_softmax",
+          "type": "PairwiseSineSoftmaxOperation",
+          "inputs": [ "vector_act" ]
+        },
+        {
+          "id": "vector_attention",
+          "type": "VectorAttentionOperation",
+          "inputs": [ "vector_add", "vector_softmax" ]
+        },
+        {
+          "id": "vector_queries_softmax",
+          "type": "PairwiseSineSoftmaxOperation",
+          "inputs": [ "vector_queries_act" ]
+        },
+        {
+          "id": "vector_queries_attention",
+          "type": "VectorAttentionOperation",
+          "inputs": [ "vector_add", "vector_queries_softmax" ]
+        },
+        {
+          "id": "summation_weights_square",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "SummationWeights" ],
+          "gradientResultTo": [ "DSummationWeights" ]
+        },
+        {
+          "id": "output",
+          "type": "ElementwiseVectorCartesianSummationOperation",
+          "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ],
+          "setResultTo": "Output"
+        }
+      ]
+    }
+  ]
+}

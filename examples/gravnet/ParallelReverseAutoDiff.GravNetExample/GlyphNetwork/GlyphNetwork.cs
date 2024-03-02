@@ -7,7 +7,7 @@
     public class GlyphNetwork : NeuralNetwork
     {
         private const string NAMESPACE = "ParallelReverseAutoDiff.GravNetExample.GlyphNetwork.Architecture";
-        private const string ARCHITECTURE = "glyphnet";
+        private readonly string ARCHITECTURE;
 
         private readonly IModelLayer inputLayer;
 
@@ -21,13 +21,14 @@
         /// <param name="numFeatures">The number of features.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip value.</param>
-        public GlyphNetwork(int numLayers, int numNodes, int numFeatures, double learningRate, double clipValue)
+        public GlyphNetwork(int numLayers, int numNodes, int numFeatures, double learningRate, double clipValue, string architecture)
         {
             this.Parameters.LearningRate = learningRate;
             this.Parameters.ClipValue = clipValue;
             this.NumLayers = numLayers;
             this.NumNodes = numNodes;
             this.NumFeatures = numFeatures;
+            this.ARCHITECTURE = architecture;
 
             int numInputOutputFeatures = this.NumFeatures;
             var initial = this.NumFeatures / 6;
@@ -357,30 +358,39 @@
         {
             IOperationBase? backwardStartOperation = null;
             var output = this.computationGraph["output_0_0"];
-            var outputResult = (output as ElementwiseVectorCartesianRotationAndSumOperation).Backward(gradient).Results[0] as Matrix;
+            Matrix gg = gradient;
 
-            var targetedSum0 = this.computationGraph["targeted_sum_0_0_0"];
-            var targetedSum1 = this.computationGraph["targeted_sum_1_0_0"];
-
-            var glyph = this.computationGraph["glyph_0_0"] as ElementwiseVectorCartesianGlyphOperation;
-
-            var targetedResult0 = (targetedSum0 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient0).Results[0] as Matrix;
-            var targetedResult1 = (targetedSum1 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient1).Results[0] as Matrix;
-
-            Matrix gg = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
-            for (int i = 0; i < 225; i++)
+            if (gradient0 != null)
             {
-                gg[i, 0] = outputResult[i, 0] + targetedResult0[i, 0] + targetedResult1[i, 0];
-                gg[i, 1] = outputResult[i, 1] + targetedResult0[i, 1] + targetedResult1[i, 1];
-            }
+                var outputResult = (output as ElementwiseVectorCartesianRotationAndSumOperation).Backward(gradient).Results[0] as Matrix;
 
-            for (int i = 0; i < 225; i++)
+                var targetedSum0 = this.computationGraph["targeted_sum_0_0_0"];
+                var targetedSum1 = this.computationGraph["targeted_sum_1_0_0"];
+
+                var glyph = this.computationGraph["glyph_0_0"] as ElementwiseVectorCartesianGlyphOperation;
+
+                var targetedResult0 = (targetedSum0 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient0).Results[0] as Matrix;
+                var targetedResult1 = (targetedSum1 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient1).Results[0] as Matrix;
+
+                gg = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
+                for (int i = 0; i < 225; i++)
+                {
+                    gg[i, 0] = outputResult[i, 0] + targetedResult0[i, 0] + targetedResult1[i, 0];
+                    gg[i, 1] = outputResult[i, 1] + targetedResult0[i, 1] + targetedResult1[i, 1];
+                }
+
+                for (int i = 0; i < 225; i++)
+                {
+                    gg[i, 0] = targetedResult1[i, 0];
+                    gg[i, 1] = targetedResult1[i, 1];
+                }
+
+                backwardStartOperation = glyph;
+            }
+            else
             {
-                gg[i, 0] = targetedResult1[i, 0];
-                gg[i, 1] = targetedResult1[i, 1];
+                backwardStartOperation = output;
             }
-
-            backwardStartOperation = glyph;
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {

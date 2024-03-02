@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            GlyphNetTrainer trainer = new GlyphNetTrainer();
+            SpatialNetTrainer trainer = new SpatialNetTrainer();
             trainer.Train().Wait();
         }
     }

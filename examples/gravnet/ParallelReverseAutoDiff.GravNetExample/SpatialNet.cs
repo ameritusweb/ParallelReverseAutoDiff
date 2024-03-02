@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParallelReverseAutoDiff.GravNetExample
 {
-    public class GlyphNet
+    public class SpatialNet
     {
         private readonly int numFeatures;
         private readonly int numNodes;
@@ -30,7 +30,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <param name="numLayers">The number of layers.</param>
         /// <param name="learningRate">The learning rate.</param>
         /// <param name="clipValue">The clip Value.</param>
-        public GlyphNet(int numNodes, int numFeatures, int numLayers, double learningRate, double clipValue)
+        public SpatialNet(int numNodes, int numFeatures, int numLayers, double learningRate, double clipValue)
         {
             this.numFeatures = numFeatures;
             this.numNodes = numNodes;
@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
             this.entities = new List<(string, string)>();
-            this.GlyphNetwork = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "glyphnet");
+            this.GlyphNetwork = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "spatialnet");
             this.adamOptimize = new StochasticAdamOptimizer(this.GlyphNetwork);
         }
 
@@ -80,8 +80,8 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 509;
-            var model = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "glyphnet");
+            var initialAdamIteration = 1;
+            var model = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "spatialnet");
             model.Parameters.AdamIteration = initialAdamIteration;
             this.GlyphNetwork = model;
             await this.GlyphNetwork.Initialize();
@@ -147,7 +147,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix) Forward(Matrix input, Matrix rotationTargets, double targetAngle)
+        public (Matrix, Matrix, Matrix) Forward(Matrix input, Matrix rotationTargets, double targetAngle)
         {
 
             var gatNet = this.GlyphNetwork;
@@ -156,23 +156,12 @@ namespace ParallelReverseAutoDiff.GravNetExample
             gatNet.RotationTargets.Replace(rotationTargets.ToArray());
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
-            var glyph = gatNet.Glyph;
-            var targetedSum0 = gatNet.TargetedSum0;
-            var targetedSum1 = gatNet.TargetedSum1;
-
-            SquaredArclengthEuclideanLossOperation arclengthLoss0 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss0 = arclengthLoss0.Forward(targetedSum0, (3 * Math.PI) / 4d);
-            var gradient0 = arclengthLoss0.Backward();
-
-            SquaredArclengthEuclideanLossOperation arclengthLoss1 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss1 = arclengthLoss1.Forward(targetedSum1, (1 * Math.PI) / 4d);
-            var gradient1 = arclengthLoss1.Backward();
 
             SquaredArclengthEuclideanLossOperation arclengthLoss = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
             var loss = arclengthLoss.Forward(output, targetAngle);
             var gradient = arclengthLoss.Backward();
 
-            return (gradient, gradient0, gradient1, output, targetedSum0, targetedSum1, glyph, loss, loss0, loss1);
+            return (gradient, output, loss);
         }
 
         /// <summary>
@@ -180,9 +169,9 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         /// <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
         /// <returns>A task.</returns>
-        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput, Matrix gradient0, Matrix gradient1)
+        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput)
         {
-            return await this.GlyphNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput, gradient0, gradient1);
+            return await this.GlyphNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput, null, null);
         }
     }
 }
