@@ -850,5 +850,66 @@ namespace ParallelReverseAutoDiff.GravNetExample.Common
         {
             matrix.Replace(value.ToArray());
         }
+
+        /// <summary>
+        /// Break a matrix into sections.
+        /// </summary>
+        /// <param name="matrix">The matrix to break.</param>
+        /// <param name="sectionsPerDimension">The number of sections per dimension.</param>
+        /// <returns>The broken up matrix.</returns>
+        public static Matrix[,] BreakIntoSections(Matrix matrix, int sectionsPerDimension)
+        {
+            int sectionRowCount = matrix.Rows / sectionsPerDimension;
+            int sectionColCount = matrix.Cols / sectionsPerDimension;
+
+            Matrix[,] sections = new Matrix[sectionsPerDimension, sectionsPerDimension];
+
+            for (int i = 0; i < sectionsPerDimension; i++)
+            {
+                for (int j = 0; j < sectionsPerDimension; j++)
+                {
+                    int startRow = i * sectionRowCount;
+                    int endRow = ((i + 1) * sectionRowCount) - 1;
+                    int startCol = j * sectionColCount;
+                    int endCol = ((j + 1) * sectionColCount) - 1;
+
+                    sections[i, j] = matrix.GetSection(startRow, startCol, endRow, endCol);
+                }
+            }
+
+            return sections;
+        }
+
+        /// <summary>
+        /// Piece together a matrix from sections.
+        /// </summary>
+        /// <param name="sections">The sections.</param>
+        /// <returns>The combined matrix.</returns>
+        public static Matrix PieceTogether(Matrix[,] sections)
+        {
+            int totalRows = sections.GetLength(0) * sections[0, 0].Rows;
+            int totalColumns = sections.GetLength(1) * sections[0, 0].Cols;
+            Matrix result = new Matrix(totalRows, totalColumns);
+
+            for (int sectionRow = 0; sectionRow < sections.GetLength(0); sectionRow++)
+            {
+                for (int sectionCol = 0; sectionCol < sections.GetLength(1); sectionCol++)
+                {
+                    Matrix section = sections[sectionRow, sectionCol];
+                    for (int row = 0; row < section.Rows; row++)
+                    {
+                        for (int col = 0; col < section.Cols; col++)
+                        {
+                            // Calculate the position in the resulting matrix
+                            int resultRow = (sectionRow * section.Rows) + row;
+                            int resultCol = (sectionCol * section.Cols) + col;
+                            result[resultRow, resultCol] = section[row, col];
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 }

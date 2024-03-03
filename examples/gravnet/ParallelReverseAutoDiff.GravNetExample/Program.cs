@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            SpatialNetTrainer trainer = new SpatialNetTrainer();
+            TiledNetTrainer trainer = new TiledNetTrainer();
             trainer.Train().Wait();
         }
     }

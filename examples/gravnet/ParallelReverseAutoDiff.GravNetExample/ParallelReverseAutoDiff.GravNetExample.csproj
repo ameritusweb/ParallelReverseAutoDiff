@@ -20,6 +20,7 @@
     <None Remove="GlyphNetwork\Architecture\glyphnet.json" />
     <None Remove="GlyphNetwork\Architecture\spatialnet.json" />
     <None Remove="stylecop.json" />
+    <None Remove="TiledNetwork\Architecture\tilednet.json" />
     <None Remove="VectorFieldNetwork\Architecture\vectorfieldnet.json" />
   </ItemGroup>
 
@@ -30,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="TiledNetwork\Architecture\tilednet.json" />
     <EmbeddedResource Include="GlyphNetwork\Architecture\spatialnet.json" />
     <EmbeddedResource Include="GlyphNetwork\Architecture\glyphnet.json" />
     <EmbeddedResource Include="VectorFieldNetwork\Architecture\vectorfieldnet.json" />
