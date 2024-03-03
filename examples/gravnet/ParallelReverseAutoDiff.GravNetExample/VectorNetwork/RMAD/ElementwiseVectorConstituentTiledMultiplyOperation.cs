@@ -49,6 +49,7 @@ namespace ParallelReverseAutoDiff.RMAD
             this.input1 = brokenInput1;
             this.input2 = brokenInput2;
             this.weights = brokenWeights;
+            this.calculatedValues = new CalculatedValues[brokenInput1.GetLength(0), brokenInput2.GetLength(1)][,];
 
             Parallel.For(0, brokenInput1.GetLength(0), i =>
             {
@@ -339,6 +340,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     dWeights[i, j] += dOutput[i, j + (input2.Cols / 2)] * calculatedValues.DWeight_dOutputAngle;
                 }
             }
+
+            this.dInput1[ii, jj] = dInput1;
+            this.dInput2[ii, jj] = dInput2;
+            this.dWeights[ii, jj] = dWeights;
         }
 
         private struct CalculatedValues
