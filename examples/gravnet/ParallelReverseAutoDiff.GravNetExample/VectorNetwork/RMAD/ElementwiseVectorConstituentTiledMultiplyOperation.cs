@@ -45,7 +45,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             var brokenInput1 = CommonMatrixUtils.BreakIntoSections(input1, 8);
             var brokenInput2 = CommonMatrixUtils.BreakIntoSections(input2, 8);
-            var brokenWeights = CommonMatrixUtils.BreakIntoSections(weights, 8);
+            var brokenWeights = CommonMatrixUtils.BreakIntoSectionsExactly(weights, 8);
             this.input1 = brokenInput1;
             this.input2 = brokenInput2;
             this.weights = brokenWeights;
@@ -85,7 +85,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return new BackwardResultBuilder()
                 .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput1))
                 .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput2))
-                .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dWeights))
+                .AddInputGradient(CommonMatrixUtils.PieceTogetherExactly(this.dWeights))
                 .Build();
         }
 

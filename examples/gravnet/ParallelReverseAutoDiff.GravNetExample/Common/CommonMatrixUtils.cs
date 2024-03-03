@@ -860,6 +860,86 @@ namespace ParallelReverseAutoDiff.GravNetExample.Common
         public static Matrix[,] BreakIntoSections(Matrix matrix, int sectionsPerDimension)
         {
             int sectionRowCount = matrix.Rows / sectionsPerDimension;
+            int sectionColCount = matrix.Cols / 2 / sectionsPerDimension; // Halve the column count for magnitude/angle split.
+            Matrix[,] sections = new Matrix[sectionsPerDimension, sectionsPerDimension];
+
+            for (int i = 0; i < sectionsPerDimension; i++)
+            {
+                for (int j = 0; j < sectionsPerDimension; j++)
+                {
+                    // Calculate section bounds for magnitudes and angles in a single loop.
+                    int startRow = i * sectionRowCount;
+                    int endRow = (i + 1) * sectionRowCount - 1;
+                    int startMagnitudeCol = j * sectionColCount;
+                    int endMagnitudeCol = (j + 1) * sectionColCount - 1;
+                    int startAngleCol = matrix.Cols / 2 + startMagnitudeCol; // Adjust starting column for angles.
+                    int endAngleCol = startAngleCol + sectionColCount - 1;
+
+                    // Extract magnitude and angle sections simultaneously.
+                    var magnitudes = matrix.GetSection(startRow, startMagnitudeCol, endRow, endMagnitudeCol);
+                    var angles = matrix.GetSection(startRow, startAngleCol, endRow, endAngleCol);
+
+                    // Concatenate magnitude and angle sections into a single matrix for this section.
+                    sections[i, j] = magnitudes.ConcatenateColumns(angles);
+                }
+            }
+
+            return sections;
+        }
+
+        /// <summary>
+        /// Combine sections.
+        /// </summary>
+        /// <param name="sections">The sections to combine.</param>
+        /// <returns>The result.</returns>
+        public static Matrix PieceTogether(Matrix[,] sections)
+        {
+            int sectionsPerDimension = sections.GetLength(0);
+            // Assuming each section is of equal size, use the first section to calculate the total size.
+            int sectionRows = sections[0, 0].Rows;
+            int sectionCols = sections[0, 0].Cols / 2; // Half the columns in each section are for magnitudes, half for angles.
+
+            // Calculate the size of the combined matrix.
+            int totalRows = sectionRows * sectionsPerDimension;
+            int totalCols = sectionCols * 2 * sectionsPerDimension; // Double the columns for magnitudes and angles.
+
+            Matrix combined = new Matrix(totalRows, totalCols);
+
+            for (int i = 0; i < sectionsPerDimension; i++)
+            {
+                for (int j = 0; j < sectionsPerDimension; j++)
+                {
+                    Matrix section = sections[i, j];
+                    // Calculate where to place the magnitude and angle parts in the combined matrix.
+                    int startRow = i * sectionRows;
+                    int startMagnitudeCol = j * sectionCols;
+                    int startAngleCol = (totalCols / 2) + (j * sectionCols);
+
+                    for (int row = 0; row < sectionRows; row++)
+                    {
+                        for (int col = 0; col < sectionCols; col++)
+                        {
+                            // Place magnitude part in the left half of the combined matrix.
+                            combined[startRow + row, startMagnitudeCol + col] = section[row, col];
+                            // Place angle part in the right half of the combined matrix.
+                            combined[startRow + row, startAngleCol + col] = section[row, col + sectionCols];
+                        }
+                    }
+                }
+            }
+
+            return combined;
+        }
+
+        /// <summary>
+        /// Break a matrix into sections.
+        /// </summary>
+        /// <param name="matrix">The matrix to break.</param>
+        /// <param name="sectionsPerDimension">The number of sections per dimension.</param>
+        /// <returns>The broken up matrix.</returns>
+        public static Matrix[,] BreakIntoSectionsExactly(Matrix matrix, int sectionsPerDimension)
+        {
+            int sectionRowCount = matrix.Rows / sectionsPerDimension;
             int sectionColCount = matrix.Cols / sectionsPerDimension;
 
             Matrix[,] sections = new Matrix[sectionsPerDimension, sectionsPerDimension];
@@ -885,7 +965,7 @@ namespace ParallelReverseAutoDiff.GravNetExample.Common
         /// </summary>
         /// <param name="sections">The sections.</param>
         /// <returns>The combined matrix.</returns>
-        public static Matrix PieceTogether(Matrix[,] sections)
+        public static Matrix PieceTogetherExactly(Matrix[,] sections)
         {
             int totalRows = sections.GetLength(0) * sections[0, 0].Rows;
             int totalColumns = sections.GetLength(1) * sections[0, 0].Cols;

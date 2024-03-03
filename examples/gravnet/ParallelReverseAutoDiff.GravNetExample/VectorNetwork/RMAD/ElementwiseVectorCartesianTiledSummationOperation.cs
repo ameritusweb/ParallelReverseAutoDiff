@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             Matrix[,] brokenInput1 = CommonMatrixUtils.BreakIntoSections(input1, 8);
             Matrix[,] brokenInput2 = CommonMatrixUtils.BreakIntoSections(input2, 8);
-            Matrix[,] brokenWeights = CommonMatrixUtils.BreakIntoSections(weights, 8);
+            Matrix[,] brokenWeights = CommonMatrixUtils.BreakIntoSectionsExactly(weights, 8);
             this.calculatedValues = new CalculatedValues[brokenInput1.GetLength(0), brokenInput1.GetLength(1)][,];
             this.summationX = new double[brokenInput1.GetLength(0), brokenInput1.GetLength(1)][];
             this.summationY = new double[brokenInput1.GetLength(0), brokenInput1.GetLength(1)][];
@@ -203,7 +203,7 @@ namespace ParallelReverseAutoDiff.RMAD
             return new BackwardResultBuilder()
                 .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput1))
                 .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput2))
-                .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dWeights))
+                .AddInputGradient(CommonMatrixUtils.PieceTogetherExactly(this.dWeights))
                 .Build();
         }
 
