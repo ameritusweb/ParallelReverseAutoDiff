@@ -66,7 +66,7 @@
         },
         {
           "id": "vector_keys",
-          "type": "NewGpuMatrixMultiplyOperation",
+          "type": "NewTiledGpuMatrixMultiplyOperation",
           "inputs": [ "vector_add", "Keys" ],
           "gradientResultTo": [ null, "DKeys" ]
         },
@@ -83,7 +83,7 @@
         },
         {
           "id": "vector_queries",
-          "type": "NewGpuMatrixMultiplyOperation",
+          "type": "NewTiledGpuMatrixMultiplyOperation",
           "inputs": [ "vector_add", "Queries" ],
           "gradientResultTo": [ null, "DQueries" ]
         },
