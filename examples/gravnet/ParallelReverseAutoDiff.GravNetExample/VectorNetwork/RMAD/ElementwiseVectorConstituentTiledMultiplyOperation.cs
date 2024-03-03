@@ -50,6 +50,9 @@ namespace ParallelReverseAutoDiff.RMAD
             this.input2 = brokenInput2;
             this.weights = brokenWeights;
             this.calculatedValues = new CalculatedValues[brokenInput1.GetLength(0), brokenInput2.GetLength(1)][,];
+            this.output = new Matrix[brokenInput1.GetLength(0), brokenInput2.GetLength(1)];
+            this.sumX = new Matrix[brokenInput1.GetLength(0), brokenInput2.GetLength(1)];
+            this.sumY = new Matrix[brokenInput1.GetLength(0), brokenInput2.GetLength(1)];
 
             Parallel.For(0, brokenInput1.GetLength(0), i =>
             {

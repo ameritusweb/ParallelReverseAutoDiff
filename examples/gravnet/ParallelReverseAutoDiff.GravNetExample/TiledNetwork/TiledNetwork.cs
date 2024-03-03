@@ -360,37 +360,7 @@
             var output = this.computationGraph["output_0_0"];
             Matrix gg = gradient;
 
-            if (gradient0 != null)
-            {
-                var outputResult = (output as ElementwiseVectorCartesianRotationAndSumOperation).Backward(gradient).Results[0] as Matrix;
-
-                var targetedSum0 = this.computationGraph["targeted_sum_0_0_0"];
-                var targetedSum1 = this.computationGraph["targeted_sum_1_0_0"];
-
-                var glyph = this.computationGraph["glyph_0_0"] as ElementwiseVectorCartesianTiledOperation;
-
-                var targetedResult0 = (targetedSum0 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient0).Results[0] as Matrix;
-                var targetedResult1 = (targetedSum1 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient1).Results[0] as Matrix;
-
-                gg = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
-                for (int i = 0; i < 225; i++)
-                {
-                    gg[i, 0] = outputResult[i, 0] + targetedResult0[i, 0] + targetedResult1[i, 0];
-                    gg[i, 1] = outputResult[i, 1] + targetedResult0[i, 1] + targetedResult1[i, 1];
-                }
-
-                for (int i = 0; i < 225; i++)
-                {
-                    gg[i, 0] = targetedResult1[i, 0];
-                    gg[i, 1] = targetedResult1[i, 1];
-                }
-
-                backwardStartOperation = glyph;
-            }
-            else
-            {
-                backwardStartOperation = output;
-            }
+            backwardStartOperation = output;
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {

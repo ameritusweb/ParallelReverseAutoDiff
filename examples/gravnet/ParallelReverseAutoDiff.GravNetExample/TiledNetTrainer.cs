@@ -35,6 +35,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     List<List<double>> data = new List<List<double>>();
                     int count = 0;
                     int totalCount = 0;
+                    double[,] values = new double[512, 512];
                     for (int i = 0; i < 512; ++i)
                     {
                         var subvect = new List<double>();
@@ -45,6 +46,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                             {
                                 count++;
                             }
+                            values[i, j] = value;
                             subvect.Add(value);
                             totalCount++;
                         }
@@ -56,20 +58,22 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     int uIndex = file.IndexOf("_");
                     var prefix = file.Substring(0, uIndex);
 
-                    var glyphFile = pngFile.Replace("\\" + prefix, "\\" + prefix + "_glyph").Replace("svg\\", "svg-glyph\\");
-                    Node[,] glyphNodes = ImageSerializer.DeserializeImageWithoutAntiAlias(glyphFile);
-                    Matrix rotationTargets = new Matrix(15, 15);
-                    Vector3[] glyphs = new Vector3[225];
-                    int m = 0;
-                    for (int k = 0; k < 15; ++k)
-                    {
-                        for (int l = 0; l < 15; ++l)
-                        {
-                            rotationTargets[k, l] = glyphNodes[k, l].IsForeground ? 1d : 0d;
-                            glyphs[m] = new Vector3(0f, 0f, (float)rotationTargets[k, l]);
-                            m++;
-                        }
-                    }
+                    var percentages = CalculatePercentagesAboveThreshold(values);
+
+                    //var glyphFile = pngFile.Replace("\\" + prefix, "\\" + prefix + "_glyph").Replace("svg\\", "svg-glyph\\");
+                    //Node[,] glyphNodes = ImageSerializer.DeserializeImageWithoutAntiAlias(glyphFile);
+                    //Matrix rotationTargets = new Matrix(15, 15);
+                    //Vector3[] glyphs = new Vector3[225];
+                    //int m = 0;
+                    //for (int k = 0; k < 15; ++k)
+                    //{
+                    //    for (int l = 0; l < 15; ++l)
+                    //    {
+                    //        rotationTargets[k, l] = glyphNodes[k, l].IsForeground ? 1d : 0d;
+                    //        glyphs[m] = new Vector3(0f, 0f, (float)rotationTargets[k, l]);
+                    //        m++;
+                    //    }
+                    //}
 
                     Matrix matrix = new Matrix(data.Count, data[0].Count);
                     for (int j = 0; j < data.Count; j++)
@@ -82,7 +86,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                     i++;
 
-                    var res = net.Forward(matrix, rotationTargets, perc > 35d ? 3 * Math.PI / 4d : Math.PI / 4d);
+                    var res = net.Forward(matrix, percentages);
                     var gradient = res.Item1;
                     var output = res.Item2;
                     var loss = res.Item3;
@@ -130,6 +134,38 @@ namespace ParallelReverseAutoDiff.GravNetExample
             {
                 CudaBlas.Instance.Dispose();
             }
+        }
+
+        private double[,] CalculatePercentagesAboveThreshold(double[,] input, double threshold = 0.5)
+        {
+            int inputWidth = input.GetLength(0); // 512
+            int inputHeight = input.GetLength(1); // 512
+            int sectionSize = inputWidth / 8; // Assuming the input is always 512x512 and output grid is 8x8
+
+            double[,] percentages = new double[8, 8];
+
+            for (int sectionX = 0; sectionX < 8; sectionX++)
+            {
+                for (int sectionY = 0; sectionY < 8; sectionY++)
+                {
+                    int aboveThresholdCount = 0;
+                    for (int x = sectionX * sectionSize; x < (sectionX + 1) * sectionSize; x++)
+                    {
+                        for (int y = sectionY * sectionSize; y < (sectionY + 1) * sectionSize; y++)
+                        {
+                            if (input[x, y] > threshold)
+                            {
+                                aboveThresholdCount++;
+                            }
+                        }
+                    }
+
+                    double totalValues = sectionSize * sectionSize;
+                    percentages[sectionX, sectionY] = (double)aboveThresholdCount / totalValues;
+                }
+            }
+
+            return percentages;
         }
     }
 }

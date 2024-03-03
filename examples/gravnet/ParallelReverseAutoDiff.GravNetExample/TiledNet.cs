@@ -147,18 +147,18 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, Matrix) Forward(Matrix input, Matrix rotationTargets, double targetAngle)
+        public (Matrix, Matrix, Matrix) Forward(Matrix input, double[,] percentages)
         {
 
             var gatNet = this.TiledNetwork;
-            gatNet.TargetAngle = targetAngle;
+            //gatNet.TargetAngle = targetAngle;
             gatNet.InitializeState();
-            gatNet.RotationTargets.Replace(rotationTargets.ToArray());
+            //gatNet.RotationTargets.Replace(rotationTargets.ToArray());
             gatNet.AutomaticForwardPropagate(input);
             var output = gatNet.Output;
 
             SquaredArclengthEuclideanLossOperation arclengthLoss = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss = arclengthLoss.Forward(output, targetAngle);
+            var loss = arclengthLoss.Forward(output, Math.PI / 4);
             var gradient = arclengthLoss.Backward();
 
             return (gradient, output, loss);
