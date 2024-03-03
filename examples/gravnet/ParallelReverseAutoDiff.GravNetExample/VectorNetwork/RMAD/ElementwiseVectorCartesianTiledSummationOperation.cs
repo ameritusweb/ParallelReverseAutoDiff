@@ -5,10 +5,10 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
-    using ParallelReverseAutoDiff.GravNetExample.Common;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using ParallelReverseAutoDiff.GravNetExample.Common;
 
     /// <summary>
     /// Element-wise cartesian tiled summation operation.
@@ -51,6 +51,10 @@ namespace ParallelReverseAutoDiff.RMAD
             this.calculatedValues = new CalculatedValues[brokenInput1.GetLength(0), brokenInput1.GetLength(1)][,];
             this.summationX = new double[brokenInput1.GetLength(0), brokenInput1.GetLength(1)][];
             this.summationY = new double[brokenInput1.GetLength(0), brokenInput1.GetLength(1)][];
+            this.input1 = new Matrix[brokenInput1.GetLength(0), brokenInput1.GetLength(1)];
+            this.input2 = new Matrix[brokenInput2.GetLength(0), brokenInput2.GetLength(1)];
+            this.weights = new Matrix[brokenWeights.GetLength(0), brokenWeights.GetLength(1)];
+            this.output = new Matrix[brokenInput1.GetLength(0), brokenInput1.GetLength(1)];
 
             Parallel.For(0, brokenInput1.GetLength(0), i =>
             {
@@ -60,7 +64,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            this.Output = CommonMatrixUtils.PieceTogether(this.output);
+            this.Output = CommonMatrixUtils.PieceTogetherExactly(this.output);
 
             return this.Output;
         }
@@ -76,7 +80,7 @@ namespace ParallelReverseAutoDiff.RMAD
             double[] summationX = new double[input1.Rows];
             double[] summationY = new double[input1.Rows];
             double[,] resultVectors = new double[input1.Rows * (input1.Cols / 2), 2];
-            Parallel.For(0, input1.Rows, i =>
+            for (int i = 0; i < input1.Rows; i++)
             {
                 double sumX = 0.0d;
                 double sumY = 0.0d;
@@ -169,17 +173,20 @@ namespace ParallelReverseAutoDiff.RMAD
                     calculatedValues.DLocalSumY_DMagnitude = dLocalSumY_dMagnitude;
                     calculatedValues.DLocalSumY_DWMagnitude = dLocalSumY_dWMagnitude;
 
+                    this.calculatedValues[ii, jj][i, j] = calculatedValues;
+
                     sumX += localSumX;
                     sumY += localSumY;
                 }
 
                 summationX[i] = sumX;
                 summationY[i] = sumY;
-            });
+            }
 
             this.summationX[ii, jj] = summationX;
             this.summationY[ii, jj] = summationY;
 
+            this.output[ii, jj] = new Matrix(1, 2);
             this.output[ii, jj][0, 0] = this.summationX[ii, jj].Sum();
             this.output[ii, jj][0, 1] = this.summationY[ii, jj].Sum();
         }
@@ -190,13 +197,13 @@ namespace ParallelReverseAutoDiff.RMAD
             this.dInput1 = new Matrix[this.input1.GetLength(0), this.input1.GetLength(1)];
             this.dInput2 = new Matrix[this.input2.GetLength(0), this.input2.GetLength(1)];
             this.dWeights = new Matrix[this.weights.GetLength(0), this.weights.GetLength(1)];
-            var dOutputSections = CommonMatrixUtils.BreakIntoSections(dOutput, 8);
+            var dOutputSections = CommonMatrixUtils.BreakIntoSectionsExactly(dOutput, 8);
 
             Parallel.For(0, this.dInput1.GetLength(0), i =>
             {
                 for (int j = 0; j < this.dInput2.GetLength(1); j++)
                 {
-                    this.InnerBackward(i, j, this.dInput1[i, j], this.dInput2[i, j], this.dWeights[i, j], dOutputSections[i, j]);
+                    this.InnerBackward(i, j, dOutputSections[i, j]);
                 }
             });
 
@@ -207,19 +214,19 @@ namespace ParallelReverseAutoDiff.RMAD
                 .Build();
         }
 
-        private void InnerBackward(int ii, int jj, Matrix input1, Matrix input2, Matrix weights, Matrix dOutput)
+        private void InnerBackward(int ii, int jj, Matrix dOutput)
         {
-            Matrix dInput1 = new Matrix(input1.Rows, input1.Cols);
-            Matrix dInput2 = new Matrix(input2.Rows, input2.Cols);
-            Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
+            Matrix dInput1 = new Matrix(this.input1[ii, jj].Rows, this.input1[ii, jj].Cols);
+            Matrix dInput2 = new Matrix(this.input2[ii, jj].Rows, this.input2[ii, jj].Cols);
+            Matrix dWeights = new Matrix(this.weights[ii, jj].Rows, this.weights[ii, jj].Cols);
 
             double dSummationXOutput = dOutput[0, 0]; // Gradient of the loss function with respect to the output X
             double dSummationYOutput = dOutput[0, 1];     // Gradient of the loss function with respect to the output Y
 
             // Updating gradients with respect to resultMagnitude and resultAngle
-            Parallel.For(0, input1.Rows, i =>
+            for (int i = 0; i < this.input1[ii, jj].Rows; i++)
             {
-                for (int j = 0; j < input1.Cols / 2; j++)
+                for (int j = 0; j < this.input1[ii, jj].Cols / 2; j++)
                 {
                     var values = this.calculatedValues[ii, jj][i, j];
 
@@ -228,12 +235,12 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     // Apply chain rule to propagate back to dInput1 and dInput2
                     dInput1[i, j] = dSummationXOutput * values.DLocalSumX_DMagnitude + dSummationYOutput * values.DLocalSumY_DMagnitude;
-                    dInput1[i, j + (input1.Cols / 2)] = dSummationXOutput * values.DLocalSumX_DAngle + dSummationYOutput * values.DLocalSumY_DAngle;
+                    dInput1[i, j + (this.input1[ii, jj].Cols / 2)] = dSummationXOutput * values.DLocalSumX_DAngle + dSummationYOutput * values.DLocalSumY_DAngle;
 
                     dInput2[i, j] = dSummationXOutput * values.DLocalSumX_DWMagnitude + dSummationYOutput * values.DLocalSumY_DWMagnitude;
-                    dInput2[i, j + (input2.Cols / 2)] = dSummationXOutput * values.DLocalSumX_DWAngle + dSummationYOutput * values.DLocalSumY_DWAngle;
+                    dInput2[i, j + (this.input2[ii, jj].Cols / 2)] = dSummationXOutput * values.DLocalSumX_DWAngle + dSummationYOutput * values.DLocalSumY_DWAngle;
                 }
-            });
+            }
 
             this.dInput1[ii, jj] = dInput1;
             this.dInput2[ii, jj] = dInput2;

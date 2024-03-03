@@ -87,9 +87,8 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     i++;
 
                     var res = net.Forward(matrix, percentages);
-                    var gradient = res.Item1;
-                    var output = res.Item2;
-                    var loss = res.Item3;
+                    var output = res.Item1;
+                    var lossAndGradient = res.Item2;
                     //var gradient0 = res.Item2;
                     //var gradient1 = res.Item3;
                     //var output = res.Item4;
@@ -107,10 +106,10 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     //}
 
 
-                    Console.WriteLine($"Iteration {i} Output X: {output[0, 0]}, Output Y: {output[0, 1]}, Grad: {gradient[0, 0]}, {gradient[0, 1]}");
-                    Console.WriteLine($"Loss: {loss[0, 0]}, Perc: {perc}");
+                    //Console.WriteLine($"Iteration {i} Output X: {output[0, 0]}, Output Y: {output[0, 1]}, Grad: {gradient[0, 0]}, {gradient[0, 1]}");
+                    //Console.WriteLine($"Loss: {loss[0, 0]}, Perc: {perc}");
                     //Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss: {loss[0, 0]}, {loss0[0, 0]}, {loss1[0, 0]}");
-                    await net.Backward(gradient);
+                    await net.Backward(lossAndGradient);
                     net.ApplyGradients();
                     //}
 

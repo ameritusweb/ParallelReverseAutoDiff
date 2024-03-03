@@ -354,15 +354,24 @@
         /// </summary>
         /// <param name="gradient">The gradient of the loss.</param>
         /// <returns>The gradient.</returns>
-        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient, Matrix gradient0, Matrix gradient1)
+        public async Task<Matrix> AutomaticBackwardPropagate((Matrix, Matrix)[,] lossAndGradient)
         {
+            Matrix[,] grad = new Matrix[lossAndGradient.GetLength(0), lossAndGradient.GetLength(1)];
+            for (int i = 0; i < lossAndGradient.GetLength(0); i++)
+            {
+                for (int j = 0; j < lossAndGradient.GetLength(1); j++)
+                {
+                    grad[i, j] = lossAndGradient[i, j].Item2;
+                }
+            }
+
             IOperationBase? backwardStartOperation = null;
             var output = this.computationGraph["output_0_0"];
-            Matrix gg = gradient;
+            Matrix gg = CommonMatrixUtils.PieceTogetherExactly(grad);
 
             backwardStartOperation = output;
 
-            if (!CommonMatrixUtils.IsAllZeroes(gradient))
+            if (!CommonMatrixUtils.IsAllZeroes(gg))
             {
                 backwardStartOperation.BackwardInput = gg;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
@@ -386,7 +395,7 @@
             IOperationBase? backwardEndOperation = this.computationGraph["weight_vectors_square_0_0"];
             if (backwardEndOperation.CalculatedGradient[0] == null)
             {
-                return gradient;
+                return gg;
             }
 
             return backwardEndOperation.CalculatedGradient[0] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
@@ -398,7 +407,7 @@
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
+            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(8, 16).ToArray());
             var targetedSum0 = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var targetedSum1 = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
             var rotationTargets = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(15, 15).ToArray());

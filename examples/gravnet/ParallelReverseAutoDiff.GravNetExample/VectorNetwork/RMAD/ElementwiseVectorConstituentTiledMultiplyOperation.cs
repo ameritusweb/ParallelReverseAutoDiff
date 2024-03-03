@@ -78,7 +78,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < this.dInput2.GetLength(1); j++)
                 {
-                    this.InnerBackward(i, j, this.dInput1[i, j], this.dInput2[i, j], this.dWeights[i, j], dOutputSections[i, j]);
+                    this.InnerBackward(i, j, dOutputSections[i, j]);
                 }
             });
 
@@ -315,32 +315,32 @@ namespace ParallelReverseAutoDiff.RMAD
             }
         }
 
-        private void InnerBackward(int ii, int jj, Matrix input1, Matrix input2, Matrix weights, Matrix dOutput)
+        private void InnerBackward(int ii, int jj, Matrix dOutput)
         {
             // Initialize gradient matrices
-            Matrix dInput1 = new Matrix(input1.Rows, input1.Cols);
-            Matrix dInput2 = new Matrix(input2.Rows, input2.Cols);
-            Matrix dWeights = new Matrix(weights.Rows, weights.Cols);
+            Matrix dInput1 = new Matrix(this.input1[ii, jj].Rows, this.input1[ii, jj].Cols);
+            Matrix dInput2 = new Matrix(this.input2[ii, jj].Rows, this.input2[ii, jj].Cols);
+            Matrix dWeights = new Matrix(this.weights[ii, jj].Rows, this.weights[ii, jj].Cols);
 
             // Loop through each element in input1
-            for (int i = 0; i < input1.Rows; ++i)
+            for (int i = 0; i < this.input1[ii, jj].Rows; ++i)
             {
                 // Loop through each half of the columns in input1 (representing magnitudes and angles)
-                for (int j = 0; j < input2.Cols / 2; j++)
+                for (int j = 0; j < this.input2[ii, jj].Cols / 2; j++)
                 {
                     var calculatedValues = this.calculatedValues[ii, jj][i, j];
                     dInput1[i, j] += dOutput[i, j] * calculatedValues.DInputMag_dOutputMag;
-                    dInput1[i, j] += dOutput[i, j + (input2.Cols / 2)] * calculatedValues.DInputMag_dOutputAngle;
-                    dInput1[i, j + (input1.Cols / 2)] += dOutput[i, j] * calculatedValues.DInputAngle_dOutputMag;
-                    dInput1[i, j + (input1.Cols / 2)] += dOutput[i, j + (input2.Cols / 2)] * calculatedValues.DInputAngle_dOutputAngle;
+                    dInput1[i, j] += dOutput[i, j + (this.input2[ii, jj].Cols / 2)] * calculatedValues.DInputMag_dOutputAngle;
+                    dInput1[i, j + (this.input1[ii, jj].Cols / 2)] += dOutput[i, j] * calculatedValues.DInputAngle_dOutputMag;
+                    dInput1[i, j + (this.input1[ii, jj].Cols / 2)] += dOutput[i, j + (this.input2[ii, jj].Cols / 2)] * calculatedValues.DInputAngle_dOutputAngle;
 
                     dInput2[i, j] += dOutput[i, j] * calculatedValues.DInput2Mag_dOutputMag;
-                    dInput2[i, j] += dOutput[i, j + (input2.Cols / 2)] * calculatedValues.DInput2Mag_dOutputAngle;
-                    dInput2[i, j + (input2.Cols / 2)] += dOutput[i, j] * calculatedValues.DInput2Angle_dOutputMag;
-                    dInput2[i, j + (input2.Cols / 2)] += dOutput[i, j + (input2.Cols / 2)] * calculatedValues.DInput2Angle_dOutputAngle;
+                    dInput2[i, j] += dOutput[i, j + (this.input2[ii, jj].Cols / 2)] * calculatedValues.DInput2Mag_dOutputAngle;
+                    dInput2[i, j + (this.input2[ii, jj].Cols / 2)] += dOutput[i, j] * calculatedValues.DInput2Angle_dOutputMag;
+                    dInput2[i, j + (this.input2[ii, jj].Cols / 2)] += dOutput[i, j + (this.input2[ii, jj].Cols / 2)] * calculatedValues.DInput2Angle_dOutputAngle;
 
                     dWeights[i, j] += dOutput[i, j] * calculatedValues.DWeight_dOutputMag;
-                    dWeights[i, j] += dOutput[i, j + (input2.Cols / 2)] * calculatedValues.DWeight_dOutputAngle;
+                    dWeights[i, j] += dOutput[i, j + (this.input2[ii, jj].Cols / 2)] * calculatedValues.DWeight_dOutputAngle;
                 }
             }
 
