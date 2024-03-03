@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 CudaBlas.Instance.Initialize();
                 TiledNet net = new TiledNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
-                //net.ApplyWeights();
+                net.ApplyWeights();
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
@@ -106,18 +106,20 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     //}
 
 
-                    //Console.WriteLine($"Iteration {i} Output X: {output[0, 0]}, Output Y: {output[0, 1]}, Grad: {gradient[0, 0]}, {gradient[0, 1]}");
-                    //Console.WriteLine($"Loss: {loss[0, 0]}, Perc: {perc}");
+                    Console.WriteLine($"Iteration {i}");
+                    Console.WriteLine($"Loss: {lossAndGradient[0, 0].Item1[0, 0]}, {lossAndGradient[0, 1].Item1[0, 0]}, {lossAndGradient[0, 2].Item1[0, 0]}");
+                    Console.WriteLine($"Loss: {lossAndGradient[1, 0].Item1[0, 0]}, {lossAndGradient[1, 1].Item1[0, 0]}, {lossAndGradient[1, 2].Item1[0, 0]}");
+                    Console.WriteLine($"Loss: {lossAndGradient[2, 0].Item1[0, 0]}, {lossAndGradient[2, 1].Item1[0, 0]}, {lossAndGradient[2, 2].Item1[0, 0]}");
                     //Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss: {loss[0, 0]}, {loss0[0, 0]}, {loss1[0, 0]}");
-                    await net.Backward(lossAndGradient);
-                    net.ApplyGradients();
+                    //await net.Backward(lossAndGradient);
+                    //net.ApplyGradients();
                     //}
 
                     await net.Reset();
                     Thread.Sleep(1000);
                     if (i % 11 == 10)
                     {
-                        net.SaveWeights();
+                        //net.SaveWeights();
                     }
 
                     //if (token.UsageCount == 0)

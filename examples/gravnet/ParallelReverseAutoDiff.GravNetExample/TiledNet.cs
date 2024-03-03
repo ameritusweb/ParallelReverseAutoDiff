@@ -81,7 +81,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1;
+            var initialAdamIteration = 462;
             var model = new TiledNetwork.TiledNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "tilednet");
             model.Parameters.AdamIteration = initialAdamIteration;
             this.TiledNetwork = model;
@@ -122,7 +122,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "tiled_05842a36-7e13-4ba8-a981-df0c5a2b50c5_11";
+            var guid = "tiled_0a7edd07-8034-4d91-b7fd-68fb84a22a48_462";
             var dir = $"E:\\vnnstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
