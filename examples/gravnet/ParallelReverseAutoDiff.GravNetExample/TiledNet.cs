@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
             this.clipValue = clipValue;
             this.modelLayers = new List<IModelLayer>();
             this.entities = new List<(string, string)>();
-            this.TiledNetwork = new TiledNetwork.TiledNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "spatialnet");
+            this.TiledNetwork = new TiledNetwork.TiledNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "tilednet");
             this.adamOptimize = new StochasticAdamOptimizer(this.TiledNetwork);
         }
 
@@ -81,7 +81,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         public async Task Initialize()
         {
             var initialAdamIteration = 1;
-            var model = new TiledNetwork.TiledNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "spatialnet");
+            var model = new TiledNetwork.TiledNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "tilednet");
             model.Parameters.AdamIteration = initialAdamIteration;
             this.TiledNetwork = model;
             await this.TiledNetwork.Initialize();

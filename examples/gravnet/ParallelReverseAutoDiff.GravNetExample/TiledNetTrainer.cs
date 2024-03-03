@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 CudaBlas.Instance.Initialize();
                 TiledNet net = new TiledNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
-                net.ApplyWeights();
+                //net.ApplyWeights();
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
