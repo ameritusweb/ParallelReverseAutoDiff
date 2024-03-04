@@ -80,7 +80,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 138;
+            var initialAdamIteration = 1;
             var model = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "glyphnet");
             model.Parameters.AdamIteration = initialAdamIteration;
             this.GlyphNetwork = model;

@@ -379,12 +379,6 @@
                     gg[i, 1] = outputResult[i, 1] + targetedResult0[i, 1] + targetedResult1[i, 1];
                 }
 
-                for (int i = 0; i < 225; i++)
-                {
-                    gg[i, 0] = targetedResult1[i, 0];
-                    gg[i, 1] = targetedResult1[i, 1];
-                }
-
                 backwardStartOperation = glyph;
             }
             else
