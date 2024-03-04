@@ -5,6 +5,8 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using ParallelReverseAutoDiff.GravNetExample.GlyphNetwork;
+
     /// <summary>
     /// Element-wise cartesian sum operation.
     /// </summary>
@@ -33,6 +35,8 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the element-wise vector rotation operation.</returns>
         public Matrix Forward(Matrix inputVectors, Matrix rotationTargets, int target)
         {
+            GlyphTrainingDynamics.Instance.PreviousTargetedSum[target] = GlyphTrainingDynamics.Instance.LastTargetedSum[target];
+            GlyphTrainingDynamics.Instance.LastTargetedSum[target] = inputVectors;
             this.inputVectors = inputVectors;
             this.rotationTargets = rotationTargets;
             this.target = target;

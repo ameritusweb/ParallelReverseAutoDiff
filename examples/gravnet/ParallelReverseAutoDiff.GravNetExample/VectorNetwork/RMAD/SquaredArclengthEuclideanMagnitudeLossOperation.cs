@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using ParallelReverseAutoDiff.GravNetExample.GlyphNetwork;
     using System;
 
     /// <summary>
@@ -90,6 +91,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
             double arcLength = Math.Pow(radius * theta, 2);
 
+            GlyphTrainingDynamics.Instance.PreviousAngleLoss = GlyphTrainingDynamics.Instance.AngleLoss;
+            GlyphTrainingDynamics.Instance.PreviousEuclideanLoss = GlyphTrainingDynamics.Instance.EuclideanLoss;
+            GlyphTrainingDynamics.Instance.PreviousMagnitudeLoss = GlyphTrainingDynamics.Instance.MagnitudeLoss;
+            GlyphTrainingDynamics.Instance.AngleLoss = arcLength;
+            GlyphTrainingDynamics.Instance.EuclideanLoss = distanceAccum;
+            GlyphTrainingDynamics.Instance.MagnitudeLoss = magnitudeDiscrepancy;
+
             // Compute the squared magnitude of the loss
             double lossMagnitude = (arcLength + distanceAccum + magnitudeDiscrepancy) / 3d;
 
@@ -120,6 +128,13 @@ namespace ParallelReverseAutoDiff.RMAD
             (double cX, double cY) = CalculateCoefficient();
             dPredictions[0, 0] = (cX * gradX) + eX + dMagDiscrepancy_dX;
             dPredictions[0, 1] = (cY * gradY) + eY + dMagDiscrepancy_dY;
+
+            GlyphTrainingDynamics.Instance.GradAngleLossX = cX * gradX;
+            GlyphTrainingDynamics.Instance.GradAngleLossY = cY * gradY;
+            GlyphTrainingDynamics.Instance.GradEuclideanLossX = eX;
+            GlyphTrainingDynamics.Instance.GradEuclideanLossY = eY;
+            GlyphTrainingDynamics.Instance.GradMagnitudeLossX = dMagDiscrepancy_dX;
+            GlyphTrainingDynamics.Instance.GradMagnitudeLossY = dMagDiscrepancy_dY;
 
             if (double.IsNaN(dPredictions[0, 0]) || double.IsNaN(dPredictions[0, 1]))
             {

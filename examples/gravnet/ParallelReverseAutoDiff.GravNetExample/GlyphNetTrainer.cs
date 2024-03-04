@@ -107,6 +107,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                         net.SaveWeights();
                     }
 
+                    token.Repeat();
                     //if (token.UsageCount == 0)
                     //{
                     //    token.Repeat(2);

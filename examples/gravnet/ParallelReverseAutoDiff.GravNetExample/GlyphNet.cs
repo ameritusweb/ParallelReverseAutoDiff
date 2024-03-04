@@ -179,12 +179,12 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
             Console.WriteLine($"Max Mag 0: {maxMag0}, Max Mag 1: {maxMag1}");
 
-            SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss0 = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
-            var loss0 = arclengthLoss0.Forward(targetedSum0, (3 * Math.PI) / 4d, maxMag0);
+            SquaredArclengthEuclideanLossOperation arclengthLoss0 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
+            var loss0 = arclengthLoss0.Forward(targetedSum0, (3 * Math.PI) / 4d);
             var gradient0 = arclengthLoss0.Backward();
 
-            SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss1 = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
-            var loss1 = arclengthLoss1.Forward(targetedSum1, (1 * Math.PI) / 4d, maxMag1);
+            SquaredArclengthEuclideanLossOperation arclengthLoss1 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
+            var loss1 = arclengthLoss1.Forward(targetedSum1, (1 * Math.PI) / 4d);
             var gradient1 = arclengthLoss1.Backward();
 
             SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
