@@ -12,6 +12,10 @@
 
         public Matrix[] LastTargetedSum { get; set; } = new Matrix[2];
 
+        public Matrix PreviousRotationAndSum { get; set; }
+
+        public Matrix LastRotationAndSum { get; set; }
+
         public double PreviousAngleLoss { get; set; }
 
         public double PreviousEuclideanLoss { get; set; }
