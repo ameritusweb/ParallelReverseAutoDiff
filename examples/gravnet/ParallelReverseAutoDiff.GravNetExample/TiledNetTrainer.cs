@@ -14,7 +14,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 CudaBlas.Instance.Initialize();
                 TiledNet net = new TiledNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
-                net.ApplyWeights();
+                //net.ApplyWeights();
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
@@ -112,7 +112,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     Console.WriteLine($"Loss: {lossAndGradient[2, 0].Item1[0, 0]}, {lossAndGradient[2, 1].Item1[0, 0]}, {lossAndGradient[2, 2].Item1[0, 0]}");
                     //Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss: {loss[0, 0]}, {loss0[0, 0]}, {loss1[0, 0]}");
                     await net.Backward(lossAndGradient);
-                    //net.ApplyGradients();
+                    net.ApplyGradients();
                     //}
 
                     await net.Reset();
