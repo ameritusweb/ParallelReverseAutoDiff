@@ -40,7 +40,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="predictions">The predictions matrix.</param>
         /// <param name="targetAngle">The target angle.</param>
         /// <returns>The scalar loss value.</returns>
-        public Matrix Forward(Matrix predictions, double targetAngle)
+        public Matrix Forward(Matrix predictions, double targetAngle, double maxMagnitude)
         {
             this.targetAngle = targetAngle;
             var xOutput = predictions[0, 0];
@@ -49,7 +49,6 @@ namespace ParallelReverseAutoDiff.RMAD
             this.yOutput = yOutput;
 
             // Maximum magnitude achievable by the summation of 225 unit vectors
-            double maxMagnitude = 225;
             this.maxMagnitude = maxMagnitude;
 
             double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);

@@ -80,7 +80,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 509;
+            var initialAdamIteration = 138;
             var model = new GlyphNetwork.GlyphNetwork(this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue, "glyphnet");
             model.Parameters.AdamIteration = initialAdamIteration;
             this.GlyphNetwork = model;
@@ -121,7 +121,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "glyph_be1b3edd-d423-4714-ae20-3552bdc5cc9f_509";
+            var guid = "glyph_c83acea3-57af-4909-adab-0c75768549de_138";
             var dir = $"E:\\vnnstore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -160,16 +160,35 @@ namespace ParallelReverseAutoDiff.GravNetExample
             var targetedSum0 = gatNet.TargetedSum0;
             var targetedSum1 = gatNet.TargetedSum1;
 
-            SquaredArclengthEuclideanLossOperation arclengthLoss0 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss0 = arclengthLoss0.Forward(targetedSum0, (3 * Math.PI) / 4d);
+            int maxMag0 = 0;
+            int maxMag1 = 0;
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    if (rotationTargets[i, j] == 1)
+                    {
+                        maxMag1++;
+                    }
+                    else
+                    {
+                        maxMag0++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"Max Mag 0: {maxMag0}, Max Mag 1: {maxMag1}");
+
+            SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss0 = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
+            var loss0 = arclengthLoss0.Forward(targetedSum0, (3 * Math.PI) / 4d, maxMag0);
             var gradient0 = arclengthLoss0.Backward();
 
-            SquaredArclengthEuclideanLossOperation arclengthLoss1 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss1 = arclengthLoss1.Forward(targetedSum1, (1 * Math.PI) / 4d);
+            SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss1 = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
+            var loss1 = arclengthLoss1.Forward(targetedSum1, (1 * Math.PI) / 4d, maxMag1);
             var gradient1 = arclengthLoss1.Backward();
 
-            SquaredArclengthEuclideanLossOperation arclengthLoss = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss = arclengthLoss.Forward(output, targetAngle);
+            SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
+            var loss = arclengthLoss.Forward(output, targetAngle, 225);
             var gradient = arclengthLoss.Backward();
 
             return (gradient, gradient0, gradient1, output, targetedSum0, targetedSum1, glyph, loss, loss0, loss1);

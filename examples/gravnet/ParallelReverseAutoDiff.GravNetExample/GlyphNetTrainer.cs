@@ -14,11 +14,11 @@ namespace ParallelReverseAutoDiff.GravNetExample
                 CudaBlas.Instance.Initialize();
                 GlyphNet net = new GlyphNet(512, 6144, 3, 0.01d, 4d);
                 await net.Initialize();
-                //net.ApplyWeights();
+                net.ApplyWeights();
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
-                Random random = new Random(7);
+                Random random = new Random(11);
                 var files = pngFiles.OrderBy(x => random.Next()).ToArray();
                 uint i = 0;
                 await files.WithRepeatAsync(async (pngFile, token) =>
@@ -93,14 +93,16 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
 
                     Console.WriteLine($"Iteration {i} Output X: {output[0, 0]}, Output Y: {output[0, 1]}, Grad: {gradient[0, 0]}, {gradient[0, 1]}");
-                    Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss: {loss[0, 0]}, {loss0[0, 0]}, {loss1[0, 0]}");
+                    Console.WriteLine($"Loss: {loss[0, 0]}");
+                    Console.WriteLine($"O0 X: {o0[0, 0]}, O0 Y: {o0[0, 1]}, Loss 0: {loss0[0, 0]}");
+                    Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss 1: {loss1[0, 0]}");
                     await net.Backward(gradient, gradient0, gradient1);
                     net.ApplyGradients();
                     //}
 
                     await net.Reset();
                     Thread.Sleep(1000);
-                    if (i % 11 == 2)
+                    if (i % 11 == 5)
                     {
                         net.SaveWeights();
                     }

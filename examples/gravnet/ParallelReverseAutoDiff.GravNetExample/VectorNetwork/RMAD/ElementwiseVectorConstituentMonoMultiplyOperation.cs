@@ -18,7 +18,7 @@ namespace ParallelReverseAutoDiff.RMAD
         private Matrix weights;
         private Matrix sumX;
         private Matrix sumY;
-        private CalculatedValues[,] calculatedValues;
+        private CalculatedValues calculatedValues;
 
         /// <summary>
         /// A common method for instantiating an operation.
@@ -41,11 +41,21 @@ namespace ParallelReverseAutoDiff.RMAD
             this.input1 = input1;
             this.input2 = input2;
             this.weights = weights;
-            this.calculatedValues = new CalculatedValues[input1.Rows, input2.Cols / 2];
 
             this.Output = new Matrix(input1.Rows,input2.Cols);
             this.sumX = new Matrix(input1.Rows, input2.Cols / 2);
             this.sumY = new Matrix(input1.Rows, input2.Cols / 2);
+
+            double[,] dInputMag_dOutputMag = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInputMag_dOutputAngle = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInputAngle_dOutputMag = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInputAngle_dOutputAngle = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInput2Mag_dOutputMag = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dInput2Mag_dOutputAngle = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dInput2Angle_dOutputMag = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dInput2Angle_dOutputAngle = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dWeight_dOutputMag = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dWeight_dOutputAngle = new double[input2.Rows / 2, input2.Cols / 2];
 
             Parallel.For(0, input1.Rows, i =>
             {
@@ -75,17 +85,6 @@ namespace ParallelReverseAutoDiff.RMAD
                     double[] dSumX_dResultMagnitude = new double[input2.Rows / 2];
                     double[] dSumY_dResultMagnitude = new double[input2.Rows / 2];
                     double[] dResultMagnitude_dWeight = new double[input2.Rows / 2];
-
-                    double[] dInputMag_dOutputMag = new double[input2.Rows / 2];
-                    double[] dInputMag_dOutputAngle = new double[input2.Rows / 2]; 
-                    double[] dInputAngle_dOutputMag = new double[input2.Rows / 2];
-                    double[] dInputAngle_dOutputAngle = new double[input2.Rows / 2];
-                    double[] dInput2Mag_dOutputMag = new double[input2.Rows / 2];
-                    double[] dInput2Mag_dOutputAngle = new double[input2.Rows / 2];
-                    double[] dInput2Angle_dOutputMag = new double[input2.Rows / 2];
-                    double[] dInput2Angle_dOutputAngle = new double[input2.Rows / 2];
-                    double[] dWeight_dOutputMag = new double[input2.Rows / 2];
-                    double[] dWeight_dOutputAngle = new double[input2.Rows / 2];
 
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
@@ -183,55 +182,55 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
-                        dInputMag_dOutputMag[k] =
+                        dInputMag_dOutputMag[i, k] +=
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k];
 
-                        dInput2Mag_dOutputMag[k] =
+                        dInput2Mag_dOutputMag[k, j] +=
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX2_dWMagnitude[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY2_dWMagnitude[k] +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY2_dWMagnitude[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX2_dWMagnitude[k];
 
-                        dInputMag_dOutputAngle[k] =
+                        dInputMag_dOutputAngle[i, k] +=
                             dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
                             dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dMagnitude[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k];
 
-                        dInput2Mag_dOutputAngle[k] =
+                        dInput2Mag_dOutputAngle[k, j] +=
                             dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWMagnitude[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWMagnitude[k] +
                             dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWMagnitude[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWMagnitude[k];
 
-                        dInputAngle_dOutputMag[k] =
+                        dInputAngle_dOutputMag[i, k] +=
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k];
 
-                        dInput2Angle_dOutputMag[k] =
+                        dInput2Angle_dOutputMag[k, j] +=
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k];
 
-                        dInputAngle_dOutputAngle[k] =
+                        dInputAngle_dOutputAngle[i, k] +=
                             dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
                             dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY1[k] * dY1_dAngle[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dAngle[k];
 
-                        dInput2Angle_dOutputAngle[k] =
+                        dInput2Angle_dOutputAngle[k, j] +=
                             dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
                             dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dY2[k] * dY2_dWAngle[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaX[k] * dDeltaX_dX2[k] * dX2_dWAngle[k];
 
-                        dWeight_dOutputMag[k] =
+                        dWeight_dOutputMag[k, j] +=
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dWeight[k] +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY[k] * dDeltaY_dWeight[k] +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY[k] * dDeltaY_dWeight[k] +
@@ -239,7 +238,7 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedMagnitude_dSumX * dSumX_dResultMagnitude[k] * dResultMagnitude_dWeight[k] +
                             dCombinedMagnitude_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k];
 
-                        dWeight_dOutputAngle[k] =
+                        dWeight_dOutputAngle[k, j] +=
                             dCombinedAngle_dSumX * dSumX_dDeltaX[k] * dDeltaX_dWeight[k] +
                             dCombinedAngle_dSumY * dSumY_dDeltaY[k] * dDeltaY_dWeight[k] +
                             dCombinedAngle_dSumX * dSumX_dDeltaY[k] * dDeltaY_dWeight[k] +
@@ -248,21 +247,24 @@ namespace ParallelReverseAutoDiff.RMAD
                             dCombinedAngle_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k];
                     }
 
-                    this.calculatedValues[i, j].DInputMag_dOutputMag = dInputMag_dOutputMag;
-                    this.calculatedValues[i, j].DInputMag_dOutputAngle = dInputMag_dOutputAngle;
-                    this.calculatedValues[i, j].DInputAngle_dOutputMag = dInputAngle_dOutputMag;
-                    this.calculatedValues[i, j].DInputAngle_dOutputAngle = dInputAngle_dOutputAngle;
-                    this.calculatedValues[i, j].DInput2Mag_dOutputMag = dInput2Mag_dOutputMag;
-                    this.calculatedValues[i, j].DInput2Mag_dOutputAngle = dInput2Mag_dOutputAngle;
-                    this.calculatedValues[i, j].DInput2Angle_dOutputMag = dInput2Angle_dOutputMag;
-                    this.calculatedValues[i, j].DInput2Angle_dOutputAngle = dInput2Angle_dOutputAngle;
-                    this.calculatedValues[i, j].DWeight_dOutputMag = dWeight_dOutputMag;
-                    this.calculatedValues[i, j].DWeight_dOutputAngle = dWeight_dOutputAngle;
-
                     this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
                     this.Output[i, j + (input2.Cols / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
                 }
             });
+
+            this.calculatedValues = new CalculatedValues
+            {
+                DInputMag_dOutputMag = dInputMag_dOutputMag,
+                DInputMag_dOutputAngle = dInputMag_dOutputAngle,
+                DInputAngle_dOutputMag = dInputAngle_dOutputMag,
+                DInputAngle_dOutputAngle = dInputAngle_dOutputAngle,
+                DInput2Mag_dOutputMag = dInput2Mag_dOutputMag,
+                DInput2Mag_dOutputAngle = dInput2Mag_dOutputAngle,
+                DInput2Angle_dOutputMag = dInput2Angle_dOutputMag,
+                DInput2Angle_dOutputAngle = dInput2Angle_dOutputAngle,
+                DWeight_dOutputMag = dWeight_dOutputMag,
+                DWeight_dOutputAngle = dWeight_dOutputAngle,
+            };
 
             return this.Output;
         }
@@ -278,24 +280,31 @@ namespace ParallelReverseAutoDiff.RMAD
             // Loop through each element in input1
             Parallel.For(0, this.input1.Rows, i =>
             {
-                // Loop through each half of the columns in input1 (representing magnitudes and angles)
+                for (int k = 0; k < this.input2.Rows / 2; k++)
+                {
+                    for (int j = 0; j < this.input2.Cols / 2; j++)
+                    {
+                        dInput1[i, k] += dOutput[i, j] * this.calculatedValues.DInputMag_dOutputMag[i, k];
+                        dInput1[i, k] += dOutput[i, j + (this.input2.Cols / 2)] * this.calculatedValues.DInputMag_dOutputAngle[i, k];
+                        dInput1[i, k + (this.input1.Cols / 2)] += dOutput[i, j] * this.calculatedValues.DInputAngle_dOutputMag[i, k];
+                        dInput1[i, k + (this.input1.Cols / 2)] += dOutput[i, j + (this.input2.Cols / 2)] * this.calculatedValues.DInputAngle_dOutputAngle[i, k];
+                    }
+                }
+            });
+
+            Parallel.For(0, this.input2.Rows / 2, k =>
+            {
                 for (int j = 0; j < this.input2.Cols / 2; j++)
                 {
-                    var calculatedValues = this.calculatedValues[i, j];
-                    for (int k = 0; k < this.input2.Rows / 2; k++)
+                    for (int i = 0; i < this.input1.Rows; ++i)
                     {
-                        dInput1[i, k] += dOutput[i, j] * calculatedValues.DInputMag_dOutputMag[k];
-                        dInput1[i, k] += dOutput[i, j + (this.input2.Cols / 2)] * calculatedValues.DInputMag_dOutputAngle[k];
-                        dInput1[i, k + (this.input1.Cols / 2)] += dOutput[i, j] * calculatedValues.DInputAngle_dOutputMag[k];
-                        dInput1[i, k + (this.input1.Cols / 2)] += dOutput[i, j + (this.input2.Cols / 2)] * calculatedValues.DInputAngle_dOutputAngle[k];
+                        dInput2[k, j] += dOutput[i, j] * this.calculatedValues.DInput2Mag_dOutputMag[k, j];
+                        dInput2[k, j] += dOutput[i, j + (this.input2.Cols / 2)] * this.calculatedValues.DInput2Mag_dOutputAngle[k, j];
+                        dInput2[k, j + (this.input2.Cols / 2)] += dOutput[i, j] * this.calculatedValues.DInput2Angle_dOutputMag[k, j];
+                        dInput2[k, j + (this.input2.Cols / 2)] += dOutput[i, j + (this.input2.Cols / 2)] * this.calculatedValues.DInput2Angle_dOutputAngle[k, j];
 
-                        dInput2[k, j] += dOutput[i, j] * calculatedValues.DInput2Mag_dOutputMag[k];
-                        dInput2[k, j] += dOutput[i, j + (this.input2.Cols / 2)] * calculatedValues.DInput2Mag_dOutputAngle[k];
-                        dInput2[k, j + (this.input2.Cols / 2)] += dOutput[i, j] * calculatedValues.DInput2Angle_dOutputMag[k];
-                        dInput2[k, j + (this.input2.Cols / 2)] += dOutput[i, j + (this.input2.Cols / 2)] * calculatedValues.DInput2Angle_dOutputAngle[k];
-
-                        dWeights[k, j] += dOutput[i, j] * calculatedValues.DWeight_dOutputMag[k];
-                        dWeights[k, j] += dOutput[i, j + (this.input2.Cols / 2)] * calculatedValues.DWeight_dOutputAngle[k];
+                        dWeights[k, j] += dOutput[i, j] * this.calculatedValues.DWeight_dOutputMag[k, j];
+                        dWeights[k, j] += dOutput[i, j + (this.input2.Cols / 2)] * this.calculatedValues.DWeight_dOutputAngle[k, j];
                     }
                 }
             });
@@ -309,25 +318,25 @@ namespace ParallelReverseAutoDiff.RMAD
 
         private struct CalculatedValues
         {
-            public double[] DInputMag_dOutputMag { get; internal set; }
+            public double[,] DInputMag_dOutputMag { get; internal set; }
 
-            public double[] DInputMag_dOutputAngle { get; internal set; }
+            public double[,] DInputMag_dOutputAngle { get; internal set; }
 
-            public double[] DInputAngle_dOutputMag { get; internal set; }
+            public double[,] DInputAngle_dOutputMag { get; internal set; }
 
-            public double[] DInputAngle_dOutputAngle { get; internal set; }
+            public double[,] DInputAngle_dOutputAngle { get; internal set; }
 
-            public double[] DInput2Mag_dOutputMag { get; internal set; }
+            public double[,] DInput2Mag_dOutputMag { get; internal set; }
 
-            public double[] DInput2Mag_dOutputAngle { get; internal set; }
+            public double[,] DInput2Mag_dOutputAngle { get; internal set; }
 
-            public double[] DInput2Angle_dOutputMag { get; internal set; }
+            public double[,] DInput2Angle_dOutputMag { get; internal set; }
 
-            public double[] DInput2Angle_dOutputAngle { get; internal set; }
+            public double[,] DInput2Angle_dOutputAngle { get; internal set; }
 
-            public double[] DWeight_dOutputMag { get; internal set; }
+            public double[,] DWeight_dOutputMag { get; internal set; }
 
-            public double[] DWeight_dOutputAngle { get; internal set; }
+            public double[,] DWeight_dOutputAngle { get; internal set; }
         }
     }
 }
