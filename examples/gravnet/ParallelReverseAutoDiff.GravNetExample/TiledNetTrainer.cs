@@ -18,7 +18,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
                 var pngFiles = Directory.GetFiles(@"E:\images\inputs\svg", "*.png");
 
-                Random random = new Random(8);
+                Random random = new Random(9);
                 var files = pngFiles.OrderBy(x => random.Next()).ToArray();
                 uint i = 0;
                 await files.WithRepeatAsync(async (pngFile, token) =>
@@ -111,7 +111,7 @@ namespace ParallelReverseAutoDiff.GravNetExample
                     Console.WriteLine($"Loss: {lossAndGradient[1, 0].Item1[0, 0]}, {lossAndGradient[1, 1].Item1[0, 0]}, {lossAndGradient[1, 2].Item1[0, 0]}");
                     Console.WriteLine($"Loss: {lossAndGradient[2, 0].Item1[0, 0]}, {lossAndGradient[2, 1].Item1[0, 0]}, {lossAndGradient[2, 2].Item1[0, 0]}");
                     //Console.WriteLine($"O1 X: {o1[0, 0]}, O1 Y: {o1[0, 1]}, Loss: {loss[0, 0]}, {loss0[0, 0]}, {loss1[0, 0]}");
-                    //await net.Backward(lossAndGradient);
+                    await net.Backward(lossAndGradient);
                     //net.ApplyGradients();
                     //}
 

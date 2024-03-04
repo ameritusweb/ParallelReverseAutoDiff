@@ -151,9 +151,12 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
+            var di1 = CommonMatrixUtils.PieceTogether(this.dInput1);
+            var di2 = CommonMatrixUtils.PieceTogether(this.dInput2);
+
             return new BackwardResultBuilder()
-                .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput1))
-                .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput2))
+                .AddInputGradient(di1)
+                .AddInputGradient(di2)
                 .Build();
         }
 

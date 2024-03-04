@@ -207,10 +207,14 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
+            var di1 = CommonMatrixUtils.PieceTogether(this.dInput1);
+            var di2 = CommonMatrixUtils.PieceTogether(this.dInput2);
+            var dw = CommonMatrixUtils.PieceTogetherExactly(this.dWeights);
+
             return new BackwardResultBuilder()
-                .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput1))
-                .AddInputGradient(CommonMatrixUtils.PieceTogether(this.dInput2))
-                .AddInputGradient(CommonMatrixUtils.PieceTogetherExactly(this.dWeights))
+                .AddInputGradient(di1)
+                .AddInputGradient(di2)
+                .AddInputGradient(dw)
                 .Build();
         }
 

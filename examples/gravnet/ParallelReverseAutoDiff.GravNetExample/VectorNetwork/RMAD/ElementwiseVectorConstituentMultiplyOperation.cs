@@ -164,8 +164,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     // Nested loop for each element in input2
                     for (int k = 0; k < input2.Rows / 2; k++)
                     {
-                        double magnitude = input1[i, j];
-                        double angle = input1[i, j + input1.Cols / 2];
+                        double magnitude = input1[i, k];
+                        double angle = input1[i, k + input1.Cols / 2];
 
                         double wMagnitude = input2[k, j];
                         double wAngle = input2[k, j + input2.Cols / 2];
@@ -206,13 +206,13 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dY1_dMagnitude = Math.Sin(angle);
 
                         // Apply chain rule for dInput1
-                        dInput1[i, j] += dOutput[i, j] * (
+                        dInput1[i, k] += dOutput[i, j] * (
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude);
 
-                        dInput1[i, j] += dOutput[i, j + (input2.Cols / 2)] * (
+                        dInput1[i, k] += dOutput[i, j + (input2.Cols / 2)] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dMagnitude +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dMagnitude +
@@ -222,13 +222,13 @@ namespace ParallelReverseAutoDiff.RMAD
                         double dY1_dAngle = magnitude * Math.Cos(angle);
 
                         // Applying the chain rule for the angle component of input1
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j] * (
+                        dInput1[i, k + input1.Cols / 2] += dOutput[i, j] * (
                             dCombinedMagnitude_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                             dCombinedMagnitude_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                             dCombinedMagnitude_dSumY * dSumY_dDeltaX * dDeltaX_dX1 * dX1_dAngle);
 
-                        dInput1[i, j + input1.Cols / 2] += dOutput[i, j + (input2.Cols / 2)] * (
+                        dInput1[i, k + input1.Cols / 2] += dOutput[i, j + (input2.Cols / 2)] * (
                             dCombinedAngle_dSumX * dSumX_dDeltaX * dDeltaX_dX1 * dX1_dAngle +
                             dCombinedAngle_dSumY * dSumY_dDeltaY * dDeltaY_dY1 * dY1_dAngle +
                             dCombinedAngle_dSumX * dSumX_dDeltaY * dDeltaY_dY1 * dY1_dAngle +

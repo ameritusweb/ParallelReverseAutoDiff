@@ -361,7 +361,14 @@
             {
                 for (int j = 0; j < lossAndGradient.GetLength(1); j++)
                 {
-                    grad[i, j] = lossAndGradient[i, j].Item2;
+                    if ((i == 0 && j == 0) || (i == 0 && j == 1))
+                    {
+                        grad[i, j] = lossAndGradient[i, j].Item2;
+                    }
+                    else
+                    {
+                        grad[i, j] = new Matrix(1, 2);
+                    }
                 }
             }
 

@@ -76,7 +76,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     double prob = probabilities[i, j];
                     double dMagnitude_dProb = -dOutput[i, j] * vectors[i, j]; // Derivative of magnitude w.r.t probability
+                    double dMagnitude_dProb2 = dOutput[i, j] * vectors[i, j]; // Derivative of magnitude w.r.t probability 2
                     double dAngle_dProb = -1.5d * Math.PI * dOutput[i, j + M]; // Derivative of angle w.r.t probability
+                    double dAngle_dProb2 = 1.5d * Math.PI * dOutput[i, j + M]; // Derivative of angle w.r.t probability 2
 
                     // Update gradients for vectors
                     dVectors[i, j] = dOutput[i, j] * (1.5 - prob); // Corrected gradient flow for magnitude
@@ -84,6 +86,7 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     // Aggregate gradients for probabilities
                     dProbabilities[i, j] = dMagnitude_dProb + dAngle_dProb; // Correct aggregation of gradients
+                    dProbabilities[i, j + M] = dMagnitude_dProb2 + dAngle_dProb2; // Correct aggregation of gradients 2
                 }
             });
 
