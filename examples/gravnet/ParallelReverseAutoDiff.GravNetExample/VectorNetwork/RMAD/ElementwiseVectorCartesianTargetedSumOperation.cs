@@ -79,6 +79,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             // Initialize dInputVectors with the same shape as the forward input vectors
             Matrix dInputVectors = new Matrix(225, 2);
+            var inputVectors = this.inputVectors;
 
             int vectorIndex = 0;
             for (int i = 0; i < 15; i++)
@@ -89,6 +90,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     {
                         dInputVectors[vectorIndex, 0] = dOutput[0, 0];
                         dInputVectors[vectorIndex, 1] = dOutput[0, 1];
+
+                        var gradientDirection = GlyphTrainingDynamics.Instance.CalculateGradientDirection(inputVectors[vectorIndex, 0], inputVectors[vectorIndex, 1], this.target);
+                        dInputVectors[vectorIndex, 0] = Math.Abs(dInputVectors[vectorIndex, 0]) * gradientDirection.Item1;
+                        dInputVectors[vectorIndex, 1] = Math.Abs(dInputVectors[vectorIndex, 1]) * gradientDirection.Item2;
                     }
 
                     vectorIndex++;

@@ -104,6 +104,10 @@ namespace ParallelReverseAutoDiff.RMAD
                     dInputVectors[vectorIndex, 0] = (dOutput[0, 0] * cosTheta) + (-dOutput[0, 1] * sinTheta);
                     dInputVectors[vectorIndex, 1] = (dOutput[0, 0] * sinTheta) + (dOutput[0, 1] * cosTheta);
 
+                    var gradientDirection = GlyphTrainingDynamics.Instance.CalculateGradientDirection(inputVectors[vectorIndex, 0], inputVectors[vectorIndex, 1], (int) rotationTargets[i, j]);
+                    dInputVectors[vectorIndex, 0] = Math.Abs(dInputVectors[vectorIndex, 0]) * gradientDirection.Item1;
+                    dInputVectors[vectorIndex, 1] = Math.Abs(dInputVectors[vectorIndex, 1]) * gradientDirection.Item2;
+
                     vectorIndex++;
                 }
             }

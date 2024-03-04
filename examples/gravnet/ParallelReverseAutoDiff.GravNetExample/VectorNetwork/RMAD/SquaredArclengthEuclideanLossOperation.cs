@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using ParallelReverseAutoDiff.GravNetExample.GlyphNetwork;
     using System;
 
     /// <summary>
@@ -39,8 +40,9 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="predictions">The predictions matrix.</param>
         /// <param name="targetAngle">The target angle.</param>
+        /// <param name="targetIndex">The target index.</param>
         /// <returns>The scalar loss value.</returns>
-        public Matrix Forward(Matrix predictions, double targetAngle)
+        public Matrix Forward(Matrix predictions, double targetAngle, int targetIndex = -1)
         {
             this.targetAngle = targetAngle;
             var xOutput = predictions[0, 0];
@@ -54,6 +56,15 @@ namespace ParallelReverseAutoDiff.RMAD
 
             double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
             this.actualAngle = Math.Atan2(yOutput, xOutput);
+            if (targetIndex == 0)
+            {
+                GlyphTrainingDynamics.Instance.ActualAngleTarget0 = this.actualAngle;
+                GlyphTrainingDynamics.Instance.TargetAngle0 = targetAngle;
+            } else if (targetIndex == 1)
+            {
+                GlyphTrainingDynamics.Instance.ActualAngleTarget1 = this.actualAngle;
+                GlyphTrainingDynamics.Instance.TargetAngle1 = targetAngle;
+            }
 
             var xTarget = Math.Cos(targetAngle) * magnitude;
             this.xTarget = xTarget;

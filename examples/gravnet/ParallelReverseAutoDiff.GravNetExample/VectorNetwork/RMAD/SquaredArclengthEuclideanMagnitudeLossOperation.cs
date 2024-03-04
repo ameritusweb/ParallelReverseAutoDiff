@@ -54,6 +54,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
             double magnitude = Math.Sqrt(xOutput * xOutput + yOutput * yOutput);
             this.actualAngle = Math.Atan2(yOutput, xOutput);
+            GlyphTrainingDynamics.Instance.ActualAngle = this.actualAngle;
+            GlyphTrainingDynamics.Instance.TargetAngle = targetAngle;
 
             var xTarget = Math.Cos(targetAngle) * magnitude;
             this.xTarget = xTarget;
