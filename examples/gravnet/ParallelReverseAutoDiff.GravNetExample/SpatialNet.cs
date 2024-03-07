@@ -171,7 +171,8 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// <returns>A task.</returns>
         public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput)
         {
-            return await this.GlyphNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput, null, null);
+            return gradientOfLossWrtOutput;
+            //return await this.GlyphNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput, null, null);
         }
     }
 }

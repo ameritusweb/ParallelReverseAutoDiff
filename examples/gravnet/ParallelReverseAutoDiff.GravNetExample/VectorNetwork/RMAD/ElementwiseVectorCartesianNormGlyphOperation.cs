@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="ElementwiseVectorCartesianGlyphOperation.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="ElementwiseVectorCartesianNormGlyphOperation.cs" author="ameritusweb" date="5/2/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -14,32 +14,36 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Element-wise cartesian glyph operation.
     /// </summary>
-    public class ElementwiseVectorCartesianGlyphOperation : Operation
+    public class ElementwiseVectorCartesianNormGlyphOperation : Operation
     {
         private Matrix input1;
         private Matrix input2;
         private Matrix weights;
         private CalculatedValues[,] calculatedValues;
+        private double[] dNormX_dX;
+        private double[] dNormX_dY;
+        private double[] dNormY_dX;
+        private double[] dNormY_dY;
         private VectorNetwork vectorNetwork;
         private readonly VectorFieldNetwork vectorFieldNetwork;
         private readonly GlyphNetwork glyphNetwork;
 
-        public ElementwiseVectorCartesianGlyphOperation(VectorNetwork vectorNetwork)
+        public ElementwiseVectorCartesianNormGlyphOperation(VectorNetwork vectorNetwork)
         {
             this.vectorNetwork = vectorNetwork;
         }
 
-        public ElementwiseVectorCartesianGlyphOperation(VectorFieldNetwork vectorFieldNetwork)
+        public ElementwiseVectorCartesianNormGlyphOperation(VectorFieldNetwork vectorFieldNetwork)
         {
             this.vectorFieldNetwork = vectorFieldNetwork;
         }
 
-        public ElementwiseVectorCartesianGlyphOperation(GlyphNetwork glyphNetwork)
+        public ElementwiseVectorCartesianNormGlyphOperation(GlyphNetwork glyphNetwork)
         {
             this.glyphNetwork = glyphNetwork;
         }
 
-        public ElementwiseVectorCartesianGlyphOperation(NeuralNetwork net)
+        public ElementwiseVectorCartesianNormGlyphOperation(NeuralNetwork net)
         {
 
         }
@@ -53,17 +57,17 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             if (net is VectorNetwork vectorNetwork)
             {
-                return new ElementwiseVectorCartesianGlyphOperation(vectorNetwork);
+                return new ElementwiseVectorCartesianNormGlyphOperation(vectorNetwork);
             } else if (net is VectorFieldNetwork vectorFieldNetwork)
             {
-                return new ElementwiseVectorCartesianGlyphOperation(vectorFieldNetwork);
+                return new ElementwiseVectorCartesianNormGlyphOperation(vectorFieldNetwork);
             } else if (net is GlyphNetwork glyphNetwork)
             {
-                return new ElementwiseVectorCartesianGlyphOperation(glyphNetwork);
+                return new ElementwiseVectorCartesianNormGlyphOperation(glyphNetwork);
             }
             else
             {
-                return new ElementwiseVectorCartesianGlyphOperation(net);
+                return new ElementwiseVectorCartesianNormGlyphOperation(net);
             }
         }
 
@@ -76,7 +80,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The output of the element-wise vector glyph operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2, Matrix weights)
         {
-            int sectionCount = 64; // Total sections
+            int sectionCount = 225; // Total sections
             int rows = input1.Rows;
             int cols = input1.Cols / 2; // Assuming cols are split between magnitudes and angles
 
@@ -92,6 +96,11 @@ namespace ParallelReverseAutoDiff.RMAD
             // Example structure to hold section sums, initialized to zero
             double[] sectionSumsX = new double[sectionCount];
             double[] sectionSumsY = new double[sectionCount];
+
+            this.dNormX_dX = new double[sectionCount];
+            this.dNormX_dY = new double[sectionCount];
+            this.dNormY_dX = new double[sectionCount];
+            this.dNormY_dY = new double[sectionCount];
 
             Parallel.For(0, rows, i =>
             {
@@ -228,8 +237,13 @@ namespace ParallelReverseAutoDiff.RMAD
             // Compile section sums into the output matrix
             for (int k = 0; k < sectionCount; k++)
             {
-                this.Output[k, 0] = sectionSumsX[k];
-                this.Output[k, 1] = sectionSumsY[k];
+                var magnitude = Math.Sqrt((sectionSumsX[k] * sectionSumsX[k]) + (sectionSumsY[k] * sectionSumsY[k]));
+                this.dNormX_dX[k] = (sectionSumsY[k] * sectionSumsY[k]) / (magnitude * magnitude * magnitude);
+                this.dNormY_dY[k] = (sectionSumsX[k] * sectionSumsX[k]) / (magnitude * magnitude * magnitude);
+                this.dNormX_dY[k] = -sectionSumsX[k] * sectionSumsY[k] / (magnitude * magnitude * magnitude);
+                this.dNormY_dX[k] = this.dNormX_dY[k];
+                this.Output[k, 0] = sectionSumsX[k] / magnitude;
+                this.Output[k, 1] = sectionSumsY[k] / magnitude;
             }
 
             return Output;
@@ -238,7 +252,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
-            int sectionCount = 64; // Total sections
+            int sectionCount = 225; // Total sections
 
             Matrix dInput1 = new Matrix(input1.Rows, input1.Cols);
             Matrix dInput2 = new Matrix(input2.Rows, input2.Cols);
@@ -249,8 +263,11 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 // For each section, dOutput provides the gradient w.r.t. the normalized output vector's magnitude and angle
                 // These need to be related back to the unnormalized section sums (dSectionSumsX and dSectionSumsY)
-                double nX = dOutput[k, 0]; // Gradient w.r.t normalized X component of the output
-                double nY = dOutput[k, 1]; // Gradient w.r.t normalized Y component of the output
+                double dNormX = dOutput[k, 0]; // Gradient w.r.t normalized X component of the output
+                double dNormY = dOutput[k, 1]; // Gradient w.r.t normalized Y component of the output
+
+                double nX = (dNormX * this.dNormX_dX[k]) + (dNormY * this.dNormY_dX[k]);
+                double nY = (dNormX * this.dNormX_dY[k]) + (dNormY * this.dNormY_dY[k]);
 
                 // Updating gradients with respect to resultMagnitude and resultAngle
                 Parallel.For(0, this.input1.Rows, i =>
@@ -289,23 +306,23 @@ namespace ParallelReverseAutoDiff.RMAD
         private int DetermineSectionIndex(int row, int col)
         {
             // Define section sizes and total sections per row and column
-            const int rowsPerRegularSection = 64;
-            const int colsPerRegularSection = 48;
-            const int totalSectionsPerCol = 8; // Given by the problem statement
+            const int rowsPerRegularSection = 34;
+            const int colsPerRegularSection = 25;
+            const int totalSectionsPerCol = 15; // Given by the problem statement
 
             // Determine the section row and column based on the input row and column
             int sectionRow = row / rowsPerRegularSection;
             int sectionCol = col / colsPerRegularSection;
 
             // Adjust for the special-sized sections
-            if (row >= 7 * rowsPerRegularSection)
+            if (row >= 14 * rowsPerRegularSection)
             {
-                sectionRow = 7; // Last row section
+                sectionRow = 14; // Last row section
             }
 
-            if (col >= 7 * colsPerRegularSection)
+            if (col >= 14 * colsPerRegularSection)
             {
-                sectionCol = 7; // Last column section
+                sectionCol = 14; // Last column section
             }
 
             // Calculate the flat section index

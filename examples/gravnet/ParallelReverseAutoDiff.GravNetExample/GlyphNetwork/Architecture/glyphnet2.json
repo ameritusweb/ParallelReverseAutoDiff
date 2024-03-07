@@ -129,6 +129,24 @@
           "type": "ElementwiseVectorCartesianGlyphOperation",
           "inputs": [ "vector_attention", "vector_queries_attention", "summation_weights_square" ],
           "setResultTo": "Glyph"
+        },
+        {
+          "id": "targeted_sum_0",
+          "type": "ElementwiseVectorCartesianTargetedSumOperation",
+          "inputs": [ "glyph", "RotationTargets", "Target0" ],
+          "setResultTo": "TargetedSum0"
+        },
+        {
+          "id": "targeted_sum_1",
+          "type": "ElementwiseVectorCartesianTargetedSumOperation",
+          "inputs": [ "glyph", "RotationTargets", "Target1" ],
+          "setResultTo": "TargetedSum1"
+        },
+        {
+          "id": "output",
+          "type": "ElementwiseVectorCartesianRotationAndSumOperation",
+          "inputs": [ "glyph", "RotationTargets" ],
+          "setResultTo": "Output"
         }
       ]
     }

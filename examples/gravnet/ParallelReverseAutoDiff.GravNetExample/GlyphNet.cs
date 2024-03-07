@@ -147,24 +147,20 @@ namespace ParallelReverseAutoDiff.GravNetExample
         /// Make a forward pass through the computation graph.
         /// </summary>
         /// <returns>The gradient of the loss wrt the output.</returns>
-        public (Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix, Matrix) Forward(Matrix input, Matrix rotationTargets, double targetAngle)
+        public (Matrix, (Matrix Loss, Matrix Gradient)[]) Forward(Matrix input, Matrix rotationTargets)
         {
 
             var gatNet = this.GlyphNetwork;
-            gatNet.TargetAngle = targetAngle;
             gatNet.InitializeState();
             gatNet.RotationTargets.Replace(rotationTargets.ToArray());
             gatNet.AutomaticForwardPropagate(input);
-            var output = gatNet.Output;
             var glyph = gatNet.Glyph;
-            var targetedSum0 = gatNet.TargetedSum0;
-            var targetedSum1 = gatNet.TargetedSum1;
 
             int maxMag0 = 0;
             int maxMag1 = 0;
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < 8; j++)
                 {
                     if (rotationTargets[i, j] == 1)
                     {
@@ -179,29 +175,30 @@ namespace ParallelReverseAutoDiff.GravNetExample
 
             Console.WriteLine($"Max Mag 0: {maxMag0}, Max Mag 1: {maxMag1}");
 
-            SquaredArclengthEuclideanLossOperation arclengthLoss0 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss0 = arclengthLoss0.Forward(targetedSum0, (3 * Math.PI) / 4d, 0);
-            var gradient0 = arclengthLoss0.Backward();
+            (Matrix Loss, Matrix Gradient)[] values = new (Matrix Loss, Matrix Gradient)[64];
+            for (int i = 0; i < 64; ++i)
+            {
+                Matrix m = new Matrix(1, 2);
+                m[0, 0] = glyph[i, 0];
+                m[0, 1] = glyph[i, 1];
+                SquaredArclengthEuclideanLossOperation arclengthLoss = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
+                var loss = arclengthLoss.Forward(m, rotationTargets[i / 8, i % 8] == 1 ? (3 * Math.PI) / 4d : Math.PI / 4d);
+                var gradient = arclengthLoss.Backward();
+                values[i].Loss = loss;
+                values[i].Gradient = gradient;
+            }
 
-            SquaredArclengthEuclideanLossOperation arclengthLoss1 = SquaredArclengthEuclideanLossOperation.Instantiate(gatNet);
-            var loss1 = arclengthLoss1.Forward(targetedSum1, (1 * Math.PI) / 4d, 1);
-            var gradient1 = arclengthLoss1.Backward();
-
-            SquaredArclengthEuclideanMagnitudeLossOperation arclengthLoss = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gatNet);
-            var loss = arclengthLoss.Forward(output, targetAngle, 225);
-            var gradient = arclengthLoss.Backward();
-
-            return (gradient, gradient0, gradient1, output, targetedSum0, targetedSum1, glyph, loss, loss0, loss1);
+            return (glyph, values);
         }
 
         /// <summary>
         /// The backward pass through the computation graph.
         /// </summary>
-        /// <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
+        /// <param name="gradients">The gradient of the loss wrt the output.</param>
         /// <returns>A task.</returns>
-        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput, Matrix gradient0, Matrix gradient1)
+        public async Task<Matrix> Backward((Matrix Loss, Matrix Gradient)[] gradients)
         {
-            return await this.GlyphNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput, gradient0, gradient1);
+            return await this.GlyphNetwork.AutomaticBackwardPropagate(gradients);
         }
     }
 }

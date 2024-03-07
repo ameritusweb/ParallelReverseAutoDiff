@@ -354,39 +354,21 @@
         /// </summary>
         /// <param name="gradient">The gradient of the loss.</param>
         /// <returns>The gradient.</returns>
-        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient, Matrix gradient0, Matrix gradient1)
+        public async Task<Matrix> AutomaticBackwardPropagate((Matrix Loss, Matrix Gradient)[] gradients)
         {
             IOperationBase? backwardStartOperation = null;
-            var output = this.computationGraph["output_0_0"];
-            Matrix gg = gradient;
+            var output = this.computationGraph["glyph_0_0"];
 
-            if (gradient0 != null)
+            Matrix gg = new Matrix(64, 2);
+            for (int i = 0; i < 64; ++i)
             {
-                var outputResult = (output as ElementwiseVectorCartesianRotationAndSumOperation).Backward(gradient).Results[0] as Matrix;
-
-                var targetedSum0 = this.computationGraph["targeted_sum_0_0_0"];
-                var targetedSum1 = this.computationGraph["targeted_sum_1_0_0"];
-
-                var glyph = this.computationGraph["glyph_0_0"] as ElementwiseVectorCartesianGlyphOperation;
-
-                var targetedResult0 = (targetedSum0 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient0).Results[0] as Matrix;
-                var targetedResult1 = (targetedSum1 as ElementwiseVectorCartesianTargetedSumOperation).Backward(gradient1).Results[0] as Matrix;
-
-                gg = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(225, 2).ToArray());
-                for (int i = 0; i < 225; i++)
-                {
-                    gg[i, 0] = outputResult[i, 0] + targetedResult0[i, 0] + targetedResult1[i, 0];
-                    gg[i, 1] = outputResult[i, 1] + targetedResult0[i, 1] + targetedResult1[i, 1];
-                }
-
-                backwardStartOperation = glyph;
-            }
-            else
-            {
-                backwardStartOperation = output;
+                gg[i, 0] = gradients[i].Gradient[0, 0];
+                gg[i, 1] = gradients[i].Gradient[0, 1];
             }
 
-            if (!CommonMatrixUtils.IsAllZeroes(gradient))
+            backwardStartOperation = output;
+
+            if (!CommonMatrixUtils.IsAllZeroes(gg))
             {
                 backwardStartOperation.BackwardInput = gg;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
@@ -410,7 +392,7 @@
             IOperationBase? backwardEndOperation = this.computationGraph["weight_vectors_square_0_0"];
             if (backwardEndOperation.CalculatedGradient[0] == null)
             {
-                return gradient;
+                return gg;
             }
 
             return backwardEndOperation.CalculatedGradient[0] as Matrix ?? throw new InvalidOperationException("Calculated gradient should not be null.");
@@ -562,7 +544,7 @@
                 .ConstructFromArchitecture(jsonArchitecture);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_0_0"];
+            backwardStartOperation = this.computationGraph["glyph_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);

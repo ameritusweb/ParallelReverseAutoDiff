@@ -130,8 +130,8 @@ namespace ParallelReverseAutoDiff.RMAD
             double dMagDiscrepancy_dY = magDiscrepancyGradient * (yOutput / actualMagnitude);
 
             (double cX, double cY) = CalculateCoefficient();
-            dPredictions[0, 0] = (cX * gradX) + eX;
-            dPredictions[0, 1] = (cY * gradY) + eY;
+            dPredictions[0, 0] = cX * Math.Abs(gradX + eX);
+            dPredictions[0, 1] = cY * Math.Abs(gradY + eY);
 
             if (double.IsNaN(dPredictions[0, 0]) || double.IsNaN(dPredictions[0, 1]))
             {
