@@ -127,6 +127,8 @@ MatrixConcatenateOperation
 
 MatrixDiagonalFilterOperation
 
+MatrixHorizontalConcatenateOperation
+
 MatrixMultiplyOperation
 
 MatrixMultiplyAndSumOperation
@@ -196,6 +198,30 @@ DeepReLUOperation
 DeepScaleAndShiftOperation
 
 FlattenOperation
+
+### Vector Neural Network (VNN) Operations
+These types of operations typically operate on instances of the Matrix class where the left half are magnitudes and the right half are angles in radians.
+Learn more about Vector Neural Networks [here](https://www.amazon.com/Vector-Neural-Networks-Geometric-Tensors-ebook/dp/B0CXBV3DY5/ref=sr_1_1).
+
+ElementwiseSquareOperation
+
+ElementwiseVectorAddOperation
+
+ElementwiseVectorCartesianSummationOperation
+
+ElementwiseVectorConstituentMultiplyOperation
+
+ElementwiseVectorDecompositionOperation
+
+ElementwiseVectorMiniDecompositionOperation
+
+PairwiseSineSoftmaxOperation
+
+VectorAttentionBinaryOperation
+
+VectorAttentionOperation
+
+VectorizeOperation
 
 ### Neural Network Parameters
 

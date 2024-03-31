@@ -39,11 +39,11 @@ namespace ParallelReverseAutoDiff.RMAD
 
             this.Output = new Matrix(vectors.Rows, vectors.Cols);
 
-            int M = vectors.Cols / 2;
+            int m = vectors.Cols / 2;
 
             Parallel.For(0, vectors.Rows, i =>
             {
-                for (int j = 0; j < M; j++)
+                for (int j = 0; j < m; j++)
                 {
                     // Calculate the scaling factor for the magnitude
                     double prob = probabilities[i, j];
@@ -51,12 +51,12 @@ namespace ParallelReverseAutoDiff.RMAD
                     double magnitude = vectors[i, j] * magnitudeScale;
 
                     // Adjust the angle based on the probability
-                    double angle = vectors[i, j + M];
+                    double angle = vectors[i, j + m];
                     double angleAdjustment = 1.5d * Math.PI * (1 - prob); // Ranges from 0 (at prob = 1) to 2π (at prob = 0)
                     angle = (angle + angleAdjustment) % (2 * Math.PI);
 
                     this.Output[i, j] = magnitude;
-                    this.Output[i, j + M] = angle;
+                    this.Output[i, j + m] = angle;
                 }
             });
 
@@ -66,27 +66,27 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <inheritdoc />
         public override BackwardResult Backward(Matrix dOutput)
         {
-            Matrix dVectors = new Matrix(vectors.Rows, vectors.Cols);
-            Matrix dProbabilities = new Matrix(probabilities.Rows, probabilities.Cols);
+            Matrix dVectors = new Matrix(this.vectors.Rows, this.vectors.Cols);
+            Matrix dProbabilities = new Matrix(this.probabilities.Rows, this.probabilities.Cols);
 
-            int M = vectors.Cols / 2;
-            Parallel.For(0, vectors.Rows, i =>
+            int m = this.vectors.Cols / 2;
+            Parallel.For(0, this.vectors.Rows, i =>
             {
-                for (int j = 0; j < M; j++)
+                for (int j = 0; j < m; j++)
                 {
-                    double prob = probabilities[i, j];
-                    double dMagnitude_dProb = -dOutput[i, j] * vectors[i, j]; // Derivative of magnitude w.r.t probability
-                    double dMagnitude_dProb2 = dOutput[i, j] * vectors[i, j]; // Derivative of magnitude w.r.t probability 2
-                    double dAngle_dProb = -1.5d * Math.PI * dOutput[i, j + M]; // Derivative of angle w.r.t probability
-                    double dAngle_dProb2 = 1.5d * Math.PI * dOutput[i, j + M]; // Derivative of angle w.r.t probability 2
+                    double prob = this.probabilities[i, j];
+                    double dMagnitude_dProb = -dOutput[i, j] * this.vectors[i, j]; // Derivative of magnitude w.r.t probability
+                    double dMagnitude_dProb2 = dOutput[i, j] * this.vectors[i, j]; // Derivative of magnitude w.r.t probability 2
+                    double dAngle_dProb = -1.5d * Math.PI * dOutput[i, j + m]; // Derivative of angle w.r.t probability
+                    double dAngle_dProb2 = 1.5d * Math.PI * dOutput[i, j + m]; // Derivative of angle w.r.t probability 2
 
                     // Update gradients for vectors
                     dVectors[i, j] = dOutput[i, j] * (1.5 - prob); // Corrected gradient flow for magnitude
-                    dVectors[i, j + M] = dOutput[i, j + M]; // Assuming direct gradient flow for angle is correct
+                    dVectors[i, j + m] = dOutput[i, j + m]; // Direct gradient flow for angle is correct
 
                     // Aggregate gradients for probabilities
                     dProbabilities[i, j] = dMagnitude_dProb + dAngle_dProb; // Correct aggregation of gradients
-                    dProbabilities[i, j + M] = dMagnitude_dProb2 + dAngle_dProb2; // Correct aggregation of gradients 2
+                    dProbabilities[i, j + m] = dMagnitude_dProb2 + dAngle_dProb2; // Correct aggregation of gradients 2
                 }
             });
 
