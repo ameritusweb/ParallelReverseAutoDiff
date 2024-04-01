@@ -7,6 +7,7 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.AdamOptimizer.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
   - ParallelReverseAutoDiff.RMAD.AdamOptimizer.Optimize(ParallelReverseAutoDiff.RMAD.IModelLayer[])
+  - ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])
   langs:
   - csharp
   - vb
@@ -110,6 +111,41 @@ items:
   nameWithType.vb: AdamOptimizer.Optimize(IModelLayer())
   fullName.vb: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Optimize(ParallelReverseAutoDiff.RMAD.IModelLayer())
   name.vb: Optimize(IModelLayer())
+- uid: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])
+  commentId: M:ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])
+  id: Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])
+  parent: ParallelReverseAutoDiff.RMAD.AdamOptimizer
+  langs:
+  - csharp
+  - vb
+  name: Revert(IModelLayer[])
+  nameWithType: AdamOptimizer.Revert(IModelLayer[])
+  fullName: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/AdamOptimizer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Revert
+    path: ../../src/RMAD/AdamOptimizer.cs
+    startLine: 96
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Revert the last update. Be sure to decrement the AdamIteration before calling this function.
+  example: []
+  syntax:
+    content: public void Revert(IModelLayer[] layers)
+    parameters:
+    - id: layers
+      type: ParallelReverseAutoDiff.RMAD.IModelLayer[]
+      description: The model layers.
+    content.vb: Public Sub Revert(layers As IModelLayer())
+  overload: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert*
+  nameWithType.vb: AdamOptimizer.Revert(IModelLayer())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer())
+  name.vb: Revert(IModelLayer())
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -420,3 +456,9 @@ references:
     href: ParallelReverseAutoDiff.RMAD.IModelLayer.html
   - name: (
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert
+  href: ParallelReverseAutoDiff.RMAD.AdamOptimizer.html#ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert(ParallelReverseAutoDiff.RMAD.IModelLayer[])
+  name: Revert
+  nameWithType: AdamOptimizer.Revert
+  fullName: ParallelReverseAutoDiff.RMAD.AdamOptimizer.Revert

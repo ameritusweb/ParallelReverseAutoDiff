@@ -6,9 +6,11 @@ items:
   parent: ParallelReverseAutoDiff.RMAD
   children:
   - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.#ctor(System.String,ParallelReverseAutoDiff.RMAD.IOperationBase,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
   - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id
   - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Reset
   - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.RunSequentially
+  - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
   - ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TraverseAsync
   langs:
   - csharp
@@ -24,7 +26,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: OperationNeuralNetworkVisitor
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 16
+    startLine: 17
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -61,7 +63,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 30
+    startLine: 34
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -102,7 +104,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: RunSequentially
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 56
+    startLine: 62
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -115,6 +117,68 @@ items:
       type: System.Boolean
     content.vb: Public Property RunSequentially As Boolean
   overload: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.RunSequentially*
+- uid: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
+  id: AggregateException
+  parent: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor
+  langs:
+  - csharp
+  - vb
+  name: AggregateException
+  nameWithType: OperationNeuralNetworkVisitor.AggregateException
+  fullName: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationNeuralNetworkVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AggregateException
+    path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
+    startLine: 78
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the exceptions that occurred during the traversal.
+  example: []
+  syntax:
+    content: public AggregateException? AggregateException { get; }
+    parameters: []
+    return:
+      type: System.AggregateException
+    content.vb: Public ReadOnly Property AggregateException As AggregateException
+  overload: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException*
+- uid: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
+  commentId: P:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
+  id: TimeoutInMinutes
+  parent: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor
+  langs:
+  - csharp
+  - vb
+  name: TimeoutInMinutes
+  nameWithType: OperationNeuralNetworkVisitor.TimeoutInMinutes
+  fullName: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/OperationNeuralNetworkVisitor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: TimeoutInMinutes
+    path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
+    startLine: 94
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the timeout in minutes.
+  example: []
+  syntax:
+    content: public double TimeoutInMinutes { get; set; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public Property TimeoutInMinutes As Double
+  overload: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes*
 - uid: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id
   commentId: P:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id
   id: Id
@@ -133,7 +197,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Id
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 72
+    startLine: 110
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -164,7 +228,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: TraverseAsync
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 84
+    startLine: 122
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -195,7 +259,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Reset
     path: ../../src/RMAD/OperationNeuralNetworkVisitor.cs
-    startLine: 92
+    startLine: 130
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -526,6 +590,37 @@ references:
   nameWithType.vb: Boolean
   fullName.vb: Boolean
   name.vb: Boolean
+- uid: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
+  href: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.html#ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
+  name: AggregateException
+  nameWithType: OperationNeuralNetworkVisitor.AggregateException
+  fullName: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.AggregateException
+- uid: System.AggregateException
+  commentId: T:System.AggregateException
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.aggregateexception
+  name: AggregateException
+  nameWithType: AggregateException
+  fullName: System.AggregateException
+- uid: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
+  href: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.html#ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
+  name: TimeoutInMinutes
+  nameWithType: OperationNeuralNetworkVisitor.TimeoutInMinutes
+  fullName: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.TimeoutInMinutes
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
 - uid: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id
   href: ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.html#ParallelReverseAutoDiff.RMAD.OperationNeuralNetworkVisitor.Id

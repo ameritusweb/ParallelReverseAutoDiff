@@ -21,7 +21,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientClipper
     path: ../../src/RMAD/GradientClipper.cs
-    startLine: 14
+    startLine: 13
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -58,7 +58,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/GradientClipper.cs
-    startLine: 22
+    startLine: 21
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -93,7 +93,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clip
     path: ../../src/RMAD/GradientClipper.cs
-    startLine: 31
+    startLine: 30
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

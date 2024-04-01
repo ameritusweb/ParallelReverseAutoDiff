@@ -32,7 +32,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CudaBlas
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 23
+    startLine: 24
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -71,7 +71,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Instance
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 69
+    startLine: 70
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -102,7 +102,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: IsInitialized
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 80
+    startLine: 81
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -133,7 +133,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AreDeviceVariablesInitialized
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 91
+    startLine: 92
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -164,7 +164,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeviceId
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 102
+    startLine: 103
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -195,7 +195,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Accelerator
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 107
+    startLine: 108
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -226,7 +226,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 118
+    startLine: 119
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -254,7 +254,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Dispose
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 141
+    startLine: 142
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -284,7 +284,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: InitializeDeviceVariables
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 164
+    startLine: 165
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -334,7 +334,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DisposeDeviceVariables
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 202
+    startLine: 203
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -362,7 +362,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: MatrixMultiply
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 218
+    startLine: 219
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -409,7 +409,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: MatrixMultiply
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 271
+    startLine: 272
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -468,7 +468,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: WriteMatricesToSharedMemory
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 315
+    startLine: 316
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -515,7 +515,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CudaThreadMethod
     path: ../../src/RMAD/CudaBlas.cs
-    startLine: 351
+    startLine: 352
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

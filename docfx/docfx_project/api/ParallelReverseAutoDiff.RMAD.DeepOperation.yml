@@ -34,9 +34,11 @@ items:
   - ParallelReverseAutoDiff.RMAD.OperationBase
   derivedClasses:
   - ParallelReverseAutoDiff.RMAD.DeepBatchNormalizationOperation
+  - ParallelReverseAutoDiff.RMAD.DeepConcatenateOperation
   - ParallelReverseAutoDiff.RMAD.DeepConvolutionOperation
   - ParallelReverseAutoDiff.RMAD.DeepLeakyReLUOperation
   - ParallelReverseAutoDiff.RMAD.DeepMaxPoolOperation
+  - ParallelReverseAutoDiff.RMAD.DeepPairwiseAttentionOperation
   - ParallelReverseAutoDiff.RMAD.DeepReLUOperation
   - ParallelReverseAutoDiff.RMAD.DeepScaleAndShiftOperation
   implements:

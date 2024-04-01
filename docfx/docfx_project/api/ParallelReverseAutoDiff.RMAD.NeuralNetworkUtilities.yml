@@ -22,7 +22,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: NeuralNetworkUtilities
     path: ../../src/RMAD/NeuralNetworkUtilities.cs
-    startLine: 12
+    startLine: 10
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -59,7 +59,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/NeuralNetworkUtilities.cs
-    startLine: 22
+    startLine: 20
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -94,7 +94,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AdamOptimizer
     path: ../../src/RMAD/NeuralNetworkUtilities.cs
-    startLine: 30
+    startLine: 28
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -125,7 +125,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientClipper
     path: ../../src/RMAD/NeuralNetworkUtilities.cs
-    startLine: 41
+    startLine: 39
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

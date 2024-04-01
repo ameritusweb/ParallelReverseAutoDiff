@@ -6,6 +6,7 @@ items:
   parent: ParallelReverseAutoDiff.RMAD
   children:
   - ParallelReverseAutoDiff.RMAD.InitializationType.He
+  - ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
   - ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
   - ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
   langs:
@@ -113,6 +114,34 @@ items:
   example: []
   syntax:
     content: Zeroes = 2
+    return:
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
+  commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
+  id: HeAdjacency
+  parent: ParallelReverseAutoDiff.RMAD.InitializationType
+  langs:
+  - csharp
+  - vb
+  name: HeAdjacency
+  nameWithType: InitializationType.HeAdjacency
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/InitializationType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: HeAdjacency
+    path: ../../src/RMAD/InitializationType.cs
+    startLine: 30
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: He initialization for adjacency matrices.
+  example: []
+  syntax:
+    content: HeAdjacency = 3
     return:
       type: ParallelReverseAutoDiff.RMAD.InitializationType
 references:

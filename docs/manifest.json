@@ -165,10 +165,50 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchDeepMatrixElementwiseAddOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchDeepMatrixElementwiseAddOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchElementwiseMultiplyAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchElementwiseMultiplyAndSumOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation.yml",
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchEmbeddingOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchFeatureAggregationOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchFeatureAggregationOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchGpuMatrixMultiplyAndSumOperation.html"
         }
       },
       "version": ""
@@ -275,6 +315,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyAndSumOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyOperation.yml",
       "output": {
         ".html": {
@@ -289,6 +339,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixMultiplyScalarOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixRowConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixRowConcatenateOperation.html"
         }
       },
       "version": ""
@@ -325,6 +385,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixVerticalConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchMatrixVerticalConcatenateOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation.yml",
       "output": {
         ".html": {
@@ -339,6 +409,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchOperation-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchPaddingMaskOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.BatchPaddingMaskOperation.html"
         }
       },
       "version": ""
@@ -415,6 +495,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.CosineProjectionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.CosineProjectionOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.CosineScalingOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.CosineScalingOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.CudaBlas.yml",
       "output": {
         ".html": {
@@ -439,6 +539,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepBatchNormalizationOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepConcatenateOperation.html"
         }
       },
       "version": ""
@@ -475,6 +585,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepMatrixElementWiseMultiplySumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepMatrixElementWiseMultiplySumOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepMatrixElementwiseAddOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepMatrixElementwiseAddOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepMatrixJsonConverter.yml",
       "output": {
         ".html": {
@@ -499,6 +629,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepPairwiseAttentionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.DeepPairwiseAttentionOperation.html"
         }
       },
       "version": ""
@@ -575,10 +715,100 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseMultiplyAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseMultiplyAndSumOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseSquareAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseSquareAndSumOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseSquareOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseSquareOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorAddOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorAddOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorCartesianSummationOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorCartesianSummationOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorConstituentMultiplyOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorConstituentMultiplyOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorDecompositionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorDecompositionOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorMiniDecompositionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ElementwiseVectorMiniDecompositionOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.EmbeddingOperation.yml",
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.EmbeddingOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.FeatureAggregationOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.FeatureAggregationOperation.html"
         }
       },
       "version": ""
@@ -619,6 +849,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.GELUOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyAndSumOperation.html"
         }
       },
       "version": ""
@@ -675,10 +915,60 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.GraphAttentionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.GraphAttentionOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.GravitationalInfluenceOnWeightsOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.GravitationalInfluenceOnWeightsOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.GravitationalInfluenceOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.GravitationalInfluenceOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.HadamardProductOperation.yml",
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.HadamardProductOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.HadamardScaledProductOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.HadamardScaledProductOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.HierarchicalScalingOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.HierarchicalScalingOperation.html"
         }
       },
       "version": ""
@@ -845,6 +1135,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixAddScalarOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixAddScalarOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation.yml",
       "output": {
         ".html": {
@@ -885,10 +1185,50 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixDiagonalFilterOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixDiagonalFilterOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixHorizontalConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixHorizontalConcatenateOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixJsonConverter.yml",
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixJsonConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixMultiplyAndSumOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixMultiplyAndSumOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixMultiplyAndSumRowsOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixMultiplyAndSumRowsOperation.html"
         }
       },
       "version": ""
@@ -909,6 +1249,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixRowConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixRowConcatenateOperation.html"
         }
       },
       "version": ""
@@ -965,6 +1315,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixVerticalConcatenateOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MatrixVerticalConcatenateOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ModelElementType.yml",
       "output": {
         ".html": {
@@ -979,6 +1339,36 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.ModifiedSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.ModifiedSoftmaxOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MultiQuerySelfAttentionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MultiQuerySelfAttentionOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.MultiRowModifiedSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.MultiRowModifiedSoftmaxOperation.html"
         }
       },
       "version": ""
@@ -1085,6 +1475,36 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.PaddingMaskOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.PaddingMaskOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.PairwiseSineSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.PairwiseSineSoftmaxOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.PiecewiseActivationOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.PiecewiseActivationOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.RMSNormOperation.yml",
       "output": {
         ".html": {
@@ -1119,6 +1539,16 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.SigmoidOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.SigmoidShiftOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.SigmoidShiftOperation.html"
         }
       },
       "version": ""
@@ -1185,6 +1615,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.TakeLeftOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.TakeLeftOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.TakeRightOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.TakeRightOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.TanhOperation.yml",
       "output": {
         ".html": {
@@ -1219,6 +1669,66 @@
       "output": {
         ".html": {
           "relative_path": "api/ParallelReverseAutoDiff.RMAD.TripleLayersTimeStep.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.VariedMaskedIterativeSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.VariedMaskedIterativeSoftmaxOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.VariedMaskedSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.VariedMaskedSoftmaxOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.VariedSoftmaxOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.VariedSoftmaxOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.VectorAttentionBinaryOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.VectorAttentionBinaryOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.VectorAttentionOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.VectorAttentionOperation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ParallelReverseAutoDiff.RMAD.VectorizeOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ParallelReverseAutoDiff.RMAD.VectorizeOperation.html"
         }
       },
       "version": ""

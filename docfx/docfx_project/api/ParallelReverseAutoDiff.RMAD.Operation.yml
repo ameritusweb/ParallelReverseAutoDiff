@@ -37,36 +37,77 @@ items:
   - ParallelReverseAutoDiff.RMAD.AmplifiedSigmoidOperation
   - ParallelReverseAutoDiff.RMAD.ApplyDropoutOperation
   - ParallelReverseAutoDiff.RMAD.BatchNormalizationOperation
+  - ParallelReverseAutoDiff.RMAD.CosineProjectionOperation
+  - ParallelReverseAutoDiff.RMAD.CosineScalingOperation
   - ParallelReverseAutoDiff.RMAD.CudaMatrixMultiplyOperation
+  - ParallelReverseAutoDiff.RMAD.DeepMatrixElementwiseAddOperation
+  - ParallelReverseAutoDiff.RMAD.DeepMatrixElementWiseMultiplySumOperation
   - ParallelReverseAutoDiff.RMAD.DualWeightedOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseMultiplyAndSumOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseSquareAndSumOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseSquareOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseVectorAddOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseVectorCartesianSummationOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseVectorConstituentMultiplyOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseVectorDecompositionOperation
+  - ParallelReverseAutoDiff.RMAD.ElementwiseVectorMiniDecompositionOperation
   - ParallelReverseAutoDiff.RMAD.EmbeddingOperation
+  - ParallelReverseAutoDiff.RMAD.FeatureAggregationOperation
   - ParallelReverseAutoDiff.RMAD.FlattenOperation
   - ParallelReverseAutoDiff.RMAD.GELUOperation
+  - ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyAndSumOperation
   - ParallelReverseAutoDiff.RMAD.GpuMatrixMultiplyOperation
+  - ParallelReverseAutoDiff.RMAD.GraphAttentionOperation
+  - ParallelReverseAutoDiff.RMAD.GravitationalInfluenceOnWeightsOperation
+  - ParallelReverseAutoDiff.RMAD.GravitationalInfluenceOperation
   - ParallelReverseAutoDiff.RMAD.HadamardProductOperation
+  - ParallelReverseAutoDiff.RMAD.HadamardScaledProductOperation
+  - ParallelReverseAutoDiff.RMAD.HierarchicalScalingOperation
   - ParallelReverseAutoDiff.RMAD.LayerNormalizationOperation
   - ParallelReverseAutoDiff.RMAD.LeakyReLUOperation
   - ParallelReverseAutoDiff.RMAD.MatrixAddBroadcastingOperation
   - ParallelReverseAutoDiff.RMAD.MatrixAddOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixAddScalarOperation
   - ParallelReverseAutoDiff.RMAD.MatrixAddThreeOperation
   - ParallelReverseAutoDiff.RMAD.MatrixAverageOperation
   - ParallelReverseAutoDiff.RMAD.MatrixBroadcastOperation
   - ParallelReverseAutoDiff.RMAD.MatrixConcatenateOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixDiagonalFilterOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixHorizontalConcatenateOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixMultiplyAndSumOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixMultiplyAndSumRowsOperation
   - ParallelReverseAutoDiff.RMAD.MatrixMultiplyOperation
   - ParallelReverseAutoDiff.RMAD.MatrixMultiplyScalarOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixRowConcatenateOperation
   - ParallelReverseAutoDiff.RMAD.MatrixSumOperation
   - ParallelReverseAutoDiff.RMAD.MatrixTransposeOperation
   - ParallelReverseAutoDiff.RMAD.MatrixVectorConcatenateOperation
+  - ParallelReverseAutoDiff.RMAD.MatrixVerticalConcatenateOperation
+  - ParallelReverseAutoDiff.RMAD.ModifiedSoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.MultiQuerySelfAttentionOperation
+  - ParallelReverseAutoDiff.RMAD.MultiRowModifiedSoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.PaddingMaskOperation
+  - ParallelReverseAutoDiff.RMAD.PairwiseSineSoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.PiecewiseActivationOperation
   - ParallelReverseAutoDiff.RMAD.ReLUOperation
   - ParallelReverseAutoDiff.RMAD.RMSNormOperation
   - ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
   - ParallelReverseAutoDiff.RMAD.SigmoidOperation
+  - ParallelReverseAutoDiff.RMAD.SigmoidShiftOperation
   - ParallelReverseAutoDiff.RMAD.SineSoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.SoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.StretchedSigmoidOperation
   - ParallelReverseAutoDiff.RMAD.SwigLUOperation
   - ParallelReverseAutoDiff.RMAD.SwishOperation
+  - ParallelReverseAutoDiff.RMAD.TakeLeftOperation
+  - ParallelReverseAutoDiff.RMAD.TakeRightOperation
   - ParallelReverseAutoDiff.RMAD.TanhOperation
+  - ParallelReverseAutoDiff.RMAD.VariedMaskedIterativeSoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.VariedMaskedSoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.VariedSoftmaxOperation
+  - ParallelReverseAutoDiff.RMAD.VectorAttentionBinaryOperation
+  - ParallelReverseAutoDiff.RMAD.VectorAttentionOperation
+  - ParallelReverseAutoDiff.RMAD.VectorizeOperation
   implements:
   - ParallelReverseAutoDiff.RMAD.IOperation
   - ParallelReverseAutoDiff.RMAD.IOperationBase

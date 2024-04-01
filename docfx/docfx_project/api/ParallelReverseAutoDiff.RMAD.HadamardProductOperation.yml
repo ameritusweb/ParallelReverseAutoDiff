@@ -24,7 +24,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: HadamardProductOperation
     path: ../../src/RMAD/HadamardProductOperation.cs
-    startLine: 13
+    startLine: 14
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -115,7 +115,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Instantiate
     path: ../../src/RMAD/HadamardProductOperation.cs
-    startLine: 23
+    startLine: 24
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -150,7 +150,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Store
     path: ../../src/RMAD/HadamardProductOperation.cs
-    startLine: 29
+    startLine: 30
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -183,7 +183,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Restore
     path: ../../src/RMAD/HadamardProductOperation.cs
-    startLine: 35
+    startLine: 36
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -216,7 +216,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Forward
     path: ../../src/RMAD/HadamardProductOperation.cs
-    startLine: 48
+    startLine: 49
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -254,7 +254,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Backward
     path: ../../src/RMAD/HadamardProductOperation.cs
-    startLine: 70
+    startLine: 83
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

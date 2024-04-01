@@ -19,6 +19,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Dimension
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType)
+  - ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeArray(System.Int32,System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.InitializeDoubleArray(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.DeepMatrix.Item(System.Int32)
@@ -1001,6 +1002,44 @@ items:
       description: The initialization type.
     content.vb: Public Sub Initialize(initializationType As InitializationType)
   overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize*
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
+  id: Initialize(ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  langs:
+  - csharp
+  - vb
+  name: Initialize(InitializationType, double)
+  nameWithType: DeepMatrix.Initialize(InitializationType, double)
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType, double)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/DeepMatrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Initialize
+    path: ../../src/RMAD/DeepMatrix.cs
+    startLine: 366
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes the matrix with He or Xavier initialization.
+  example: []
+  syntax:
+    content: public void Initialize(InitializationType initializationType, double scalingFactor)
+    parameters:
+    - id: initializationType
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+      description: The initialization type.
+    - id: scalingFactor
+      type: System.Double
+      description: The scaling factor.
+    content.vb: Public Sub Initialize(initializationType As InitializationType, scalingFactor As Double)
+  overload: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize*
+  nameWithType.vb: DeepMatrix.Initialize(InitializationType, Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.DeepMatrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType, Double)
+  name.vb: Initialize(InitializationType, Double)
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
   commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.GetEnumerator
   id: GetEnumerator
@@ -1019,7 +1058,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/DeepMatrix.cs
-    startLine: 362
+    startLine: 387
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

@@ -7,6 +7,7 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.#ctor(ParallelReverseAutoDiff.RMAD.NeuralNetwork)
   - ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(System.String,System.Int32[],ParallelReverseAutoDiff.RMAD.InitializationType)
+  - ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(System.String,System.Int32[],ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
   - ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.Build
   langs:
   - csharp
@@ -120,6 +121,53 @@ items:
   nameWithType.vb: ModelLayerBuilder.AddModelElementGroup(String, Integer(), InitializationType)
   fullName.vb: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(String, Integer(), ParallelReverseAutoDiff.RMAD.InitializationType)
   name.vb: AddModelElementGroup(String, Integer(), InitializationType)
+- uid: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(System.String,System.Int32[],ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(System.String,System.Int32[],ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
+  id: AddModelElementGroup(System.String,System.Int32[],ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+  langs:
+  - csharp
+  - vb
+  name: AddModelElementGroup(string, int[], InitializationType, double)
+  nameWithType: ModelLayerBuilder.AddModelElementGroup(string, int[], InitializationType, double)
+  fullName: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(string, int[], ParallelReverseAutoDiff.RMAD.InitializationType, double)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/ModelLayerBuilder.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddModelElementGroup
+    path: ../../src/RMAD/ModelLayerBuilder.cs
+    startLine: 104
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add model element group.
+  example: []
+  syntax:
+    content: public ModelLayerBuilder AddModelElementGroup(string id, int[] dimensions, InitializationType initialization, double scalingFactor)
+    parameters:
+    - id: id
+      type: System.String
+      description: The identifier.
+    - id: dimensions
+      type: System.Int32[]
+      description: The dimensions.
+    - id: initialization
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
+      description: The type of initialization.
+    - id: scalingFactor
+      type: System.Double
+      description: The scaling factor.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder
+      description: The model layer builder.
+    content.vb: Public Function AddModelElementGroup(id As String, dimensions As Integer(), initialization As InitializationType, scalingFactor As Double) As ModelLayerBuilder
+  overload: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup*
+  nameWithType.vb: ModelLayerBuilder.AddModelElementGroup(String, Integer(), InitializationType, Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.AddModelElementGroup(String, Integer(), ParallelReverseAutoDiff.RMAD.InitializationType, Double)
+  name.vb: AddModelElementGroup(String, Integer(), InitializationType, Double)
 - uid: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.Build
   commentId: M:ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.Build
   id: Build
@@ -138,7 +186,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Build
     path: ../../src/RMAD/ModelLayerBuilder.cs
-    startLine: 100
+    startLine: 172
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -481,6 +529,17 @@ references:
   name: InitializationType
   nameWithType: InitializationType
   fullName: ParallelReverseAutoDiff.RMAD.InitializationType
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
 - uid: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.Build*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.Build
   href: ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.html#ParallelReverseAutoDiff.RMAD.ModelLayerBuilder.Build

@@ -19,6 +19,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeights(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMoments(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.LoadWeightsAndMomentsBinary(System.IO.FileInfo)
+  - ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights
   - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeights(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMoments(System.IO.FileInfo)
   - ParallelReverseAutoDiff.RMAD.IModelLayer.SaveWeightsAndMomentsBinary(System.IO.FileInfo)
@@ -386,6 +387,37 @@ items:
   nameWithType.vb: IModelLayer.Dimensions(String)
   fullName.vb: ParallelReverseAutoDiff.RMAD.IModelLayer.Dimensions(String)
   name.vb: Dimensions(String)
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights
+  commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights
+  id: RandomizeWeights
+  parent: ParallelReverseAutoDiff.RMAD.IModelLayer
+  langs:
+  - csharp
+  - vb
+  name: RandomizeWeights()
+  nameWithType: IModelLayer.RandomizeWeights()
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/IModelLayer.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: RandomizeWeights
+    path: ../../src/RMAD/IModelLayer.cs
+    startLine: 81
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Randomizes the weights.
+  example: []
+  syntax:
+    content: IModelLayer RandomizeWeights()
+    return:
+      type: ParallelReverseAutoDiff.RMAD.IModelLayer
+      description: The randomized weights.
+    content.vb: Function RandomizeWeights() As IModelLayer
+  overload: ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights*
 - uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
   commentId: M:ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
   id: Clone
@@ -404,7 +436,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 81
+    startLine: 87
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -435,7 +467,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ApplyGradients
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 87
+    startLine: 93
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -470,7 +502,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ApplyWeights
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 93
+    startLine: 99
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -505,7 +537,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 99
+    startLine: 105
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -537,7 +569,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AverageGradients
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 105
+    startLine: 111
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -569,7 +601,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SaveWeights
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 111
+    startLine: 117
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -601,7 +633,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LoadWeights
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 117
+    startLine: 123
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -633,11 +665,14 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SaveWeightsAndMomentsBinary
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 123
+    startLine: 130
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
-  summary: Save the weights and moments to a binary file.
+  summary: >-
+    Save the weights and moments to a binary file.
+
+    If binary serialization is unsuccessful, it will fall back to JSON serialization.
   example: []
   syntax:
     content: void SaveWeightsAndMomentsBinary(FileInfo file)
@@ -665,7 +700,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LoadWeightsAndMomentsBinary
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 129
+    startLine: 136
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -697,7 +732,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SaveWeightsAndMoments
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 135
+    startLine: 142
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -729,7 +764,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: LoadWeightsAndMoments
     path: ../../src/RMAD/IModelLayer.cs
-    startLine: 141
+    startLine: 148
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1017,12 +1052,12 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.int32
   - name: (
   - name: )
-- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
-  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
-  name: Clone
-  nameWithType: IModelLayer.Clone
-  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights
+  name: RandomizeWeights
+  nameWithType: IModelLayer.RandomizeWeights
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.RandomizeWeights
 - uid: ParallelReverseAutoDiff.RMAD.IModelLayer
   commentId: T:ParallelReverseAutoDiff.RMAD.IModelLayer
   parent: ParallelReverseAutoDiff.RMAD
@@ -1030,6 +1065,12 @@ references:
   name: IModelLayer
   nameWithType: IModelLayer
   fullName: ParallelReverseAutoDiff.RMAD.IModelLayer
+- uid: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
+  name: Clone
+  nameWithType: IModelLayer.Clone
+  fullName: ParallelReverseAutoDiff.RMAD.IModelLayer.Clone
 - uid: ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients
   href: ParallelReverseAutoDiff.RMAD.IModelLayer.html#ParallelReverseAutoDiff.RMAD.IModelLayer.ApplyGradients(System.Collections.Generic.List{System.Object})
