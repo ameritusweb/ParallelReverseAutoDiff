@@ -1,0 +1,229 @@
+{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "weights",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Weights" ],
+          "gradientResultTo": [ "DWeights" ]
+        },
+        {
+          "id": "input_projection",
+          "type": "ElementwiseVectorDecompositionOperation",
+          "inputs": [ "Input", "Vectors", "weights" ],
+          "gradientResultTo": [ null, "DVectors", null ]
+        }
+      ],
+      "layers": [
+        {
+          "operations": [
+            {
+              "id": "wz_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "WUpdateWeights" ],
+              "gradientResultTo": [ "DWUpdateWeights" ]
+            },
+            {
+              "id": "uz_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UUpdateWeights" ],
+              "gradientResultTo": [ "DUUpdateWeights" ]
+            },
+            {
+              "id": "wz_currentInput",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "currentInput", "WUpdateVectors", "wz_weights" ],
+              "gradientResultTo": [ null, "DWUpdateVectors", null ]
+            },
+            {
+              "id": "uz_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "UUpdateVectors", "uz_weights" ],
+              "gradientResultTo": [ null, "DUUpdateVectors", null ]
+            },
+            {
+              "id": "z_add",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "wz_currentInput", "uz_previousHiddenState" ]
+            },
+            {
+              "id": "z_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "z_add", "ZKeys" ],
+              "gradientResultTo": [ null, "DZKeys" ]
+            },
+            {
+              "id": "z_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "z_keys", "ZKB" ],
+              "gradientResultTo": [ null, "DZKB" ]
+            },
+            {
+              "id": "z_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "z_keys_add_broadcasting" ]
+            },
+            {
+              "id": "z_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "z_keys_act" ]
+            },
+            {
+              "id": "z",
+              "description": "Compute the update gate",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "z_add", "z_keys_softmax" ]
+            },
+            {
+              "id": "wr_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "WResetWeights" ],
+              "gradientResultTo": [ "DWResetWeights" ]
+            },
+            {
+              "id": "ur_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UResetWeights" ],
+              "gradientResultTo": [ "DUResetWeights" ]
+            },
+            {
+              "id": "wr_currentInput",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "currentInput", "WResetVectors", "wr_weights" ],
+              "gradientResultTo": [ null, "DWResetVectors", null ]
+            },
+            {
+              "id": "ur_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "UResetVectors", "ur_weights" ],
+              "gradientResultTo": [ null, "DUResetVectors", null ]
+            },
+            {
+              "id": "r_add",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "wr_currentInput", "ur_previousHiddenState" ]
+            },
+            {
+              "id": "r_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "r_add", "RKeys" ],
+              "gradientResultTo": [ null, "DRKeys" ]
+            },
+            {
+              "id": "r_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "r_keys", "RKB" ],
+              "gradientResultTo": [ null, "DRKB" ]
+            },
+            {
+              "id": "r_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "r_keys_add_broadcasting" ]
+            },
+            {
+              "id": "r_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "r_keys_act" ]
+            },
+            {
+              "id": "r",
+              "description": "Compute the reset gate",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "r_add", "r_keys_softmax" ]
+            },
+            {
+              "id": "uc_weights",
+              "type": "ElementwiseSquareOperation",
+              "inputs": [ "UCWeights" ],
+              "gradientResultTo": [ "DUCWeights" ]
+            },
+            {
+              "id": "uc_previousHiddenState",
+              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "inputs": [ "previousHiddenState", "r", "uc_weights" ],
+              "gradientResultTo": [ null, null, null ]
+            },
+            {
+              "id": "input_attention",
+              "type": "VectorAttentionOperation",
+              "inputs": [ "currentInput", "Probabilities" ]
+            },
+            {
+              "id": "candidate_hidden",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "input_attention", "uc_previousHiddenState" ],
+              "gradientResultTo": [ null, null ]
+            },
+            {
+              "id": "ch_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "candidate_hidden", "CHKeys" ],
+              "gradientResultTo": [ null, "DCHKeys" ]
+            },
+            {
+              "id": "ch_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "ch_keys", "CHKB" ],
+              "gradientResultTo": [ null, "DCHKB" ]
+            },
+            {
+              "id": "ch_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "ch_keys_add_broadcasting" ]
+            },
+            {
+              "id": "probabilities",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "ch_keys_act" ]
+            },
+            {
+              "id": "scale_z_by_probabilities",
+              "type": "ElementwiseVectorScalingOperation",
+              "inputs": [ "z", "probabilities" ]
+            },
+            {
+              "id": "complement_probabilities",
+              "type": "ElementwiseInversionOperation",
+              "inputs": [ "probabilities" ]
+            },
+            {
+              "id": "scale_z_by_complement_probabilities",
+              "type": "ElementwiseVectorScalingOperation",
+              "inputs": [ "z", "complement_probabilities" ]
+            },
+            {
+              "id": "scale_previous_by_modulated_z",
+              "type": "ElementwiseVectorScalingOperation",
+              "inputs": [ "previousHiddenState", "scale_z_by_probabilities" ]
+            },
+            {
+              "id": "scale_candidate_by_complement_modulated_z",
+              "type": "ElementwiseVectorScalingOperation",
+              "inputs": [ "candidate_hidden", "scale_z_by_complement_probabilities" ]
+            },
+            {
+              "id": "compute_new_hidden_state",
+              "type": "ElementwiseVectorAddOperation",
+              "inputs": [ "scale_previous_by_modulated_z", "scale_candidate_by_complement_modulated_z" ]
+            }
+          ]
+        }
+      ],
+      "endOperations": [
+        {
+          "id": "row_sum_weights",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "RowSumWeights" ],
+          "gradientResultTo": [ "DRowSumWeights" ]
+        },
+        {
+          "id": "output",
+          "type": "ElementwiseVectorCartesianSummationOperation",
+          "inputs": [ "newHFromLastLayer", "newHFromFirstLayer", "row_sum_weights" ],
+          "setResultTo": "Output"
+        }
+      ]
+    }
+  ]
+}
