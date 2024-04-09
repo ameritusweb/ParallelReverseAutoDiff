@@ -145,9 +145,31 @@
               "gradientResultTo": [ null, null, null ]
             },
             {
+              "id": "i_keys",
+              "type": "GpuMatrixMultiplyOperation",
+              "inputs": [ "currentInput", "IKeys" ],
+              "gradientResultTo": [ null, "DIKeys" ]
+            },
+            {
+              "id": "i_keys_add_broadcasting",
+              "type": "MatrixAddBroadcastingOperation",
+              "inputs": [ "i_keys", "IKB" ],
+              "gradientResultTo": [ null, "DIKB" ]
+            },
+            {
+              "id": "i_keys_act",
+              "type": "LeakyReLUOperation",
+              "inputs": [ "i_keys_add_broadcasting" ]
+            },
+            {
+              "id": "i_keys_softmax",
+              "type": "PairwiseSineSoftmaxOperation",
+              "inputs": [ "i_keys_act" ]
+            },
+            {
               "id": "input_attention",
               "type": "VectorAttentionOperation",
-              "inputs": [ "currentInput", "Probabilities" ]
+              "inputs": [ "currentInput", "i_keys_softmax" ]
             },
             {
               "id": "candidate_hidden",

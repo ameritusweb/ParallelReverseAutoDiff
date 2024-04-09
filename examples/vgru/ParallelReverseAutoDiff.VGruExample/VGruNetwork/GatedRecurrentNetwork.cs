@@ -54,27 +54,29 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("WUpdateWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("UUpdateWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("WUpdateVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("UUpdateVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("ZKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("ZKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("WResetWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("UResetWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("WResetVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("UResetVectors", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("RKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("RKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("UCWeights", new[] { numNestedOutputFeatures / 2, numNestedOutputFeatures / 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("CHKeys", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("CHKB", new[] { 1, numNestedOutputFeatures }, InitializationType.Xavier);
+                    .AddModelElementGroup("WUpdateWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UUpdateWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("WUpdateVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UUpdateVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("ZKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("ZKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("WResetWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UResetWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("WResetVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UResetVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("RKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("RKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("IKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("IKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("UCWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("CHKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
+                    .AddModelElementGroup("CHKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
             }
 
             var outputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("RowSumWeights", new[] { numTimeSteps, numInputOutputFeatures / 2 }, InitializationType.Xavier);
+                .AddModelElementGroup("RowSumWeights", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier);
             var outputLayer = outputLayerBuilder.Build();
             this.outputLayer = outputLayer;
 
@@ -339,6 +341,10 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             List<Matrix> rKeysGradient = new List<Matrix>();
             List<Matrix> rKB = new List<Matrix>();
             List<Matrix> rKBGradient = new List<Matrix>();
+            List<Matrix> iKeys = new List<Matrix>();
+            List<Matrix> iKeysGradient = new List<Matrix>();
+            List<Matrix> iKB = new List<Matrix>();
+            List<Matrix> iKBGradient = new List<Matrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var layer = this.nestedLayers[i];
@@ -354,6 +360,10 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 rKeysGradient.Add(layer.GradientMatrix("RKeys"));
                 rKB.Add(layer.WeightMatrix("RKB"));
                 rKBGradient.Add(layer.GradientMatrix("RKB"));
+                iKeys.Add(layer.WeightMatrix("IKeys"));
+                iKeysGradient.Add(layer.GradientMatrix("IKeys"));
+                iKB.Add(layer.WeightMatrix("IKB"));
+                iKBGradient.Add(layer.GradientMatrix("IKB"));
             }
 
             List<Matrix> uCWeights = new List<Matrix>();
@@ -374,15 +384,15 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             }
 
             var rowSumWeights = this.outputLayer.WeightMatrix("RowSumWeights");
-            var rowSumWeightsGradient = this.inputLayer.GradientMatrix("RowSumWeights");
+            var rowSumWeightsGradient = this.outputLayer.GradientMatrix("RowSumWeights");
 
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new GatedRecurrentComputationGraph(this);
-            var zeroMatrixHiddenState = new Matrix(this.NumNodes, 1);
+            var zeroMatrixHiddenState = new Matrix(this.NumNodes, this.NumFeatures * 2);
             this.computationGraph
-                .AddIntermediate("Output", _ => this.Output)
-                .AddIntermediate("Input", _ => this.Input)
+                .AddIntermediate("Output", x => this.Output[x.TimeStep])
+                .AddIntermediate("Input", x => this.Input[x.TimeStep])
                 .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
                 .AddWeight("Vectors", x => vectors).AddGradient("DVectors", x => vectorsGradient)
                 .AddWeight("WUpdateWeights", x => wUpdateWeights[x.Layer]).AddGradient("DWUpdateWeights", x => wUpdateWeightsGradient[x.Layer])
@@ -395,8 +405,10 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 .AddWeight("UResetWeights", x => uResetWeights[x.Layer]).AddGradient("DUResetWeights", x => uResetWeightsGradient[x.Layer])
                 .AddWeight("WResetVectors", x => wResetVectors[x.Layer]).AddGradient("DWResetVectors", x => wResetVectorsGradient[x.Layer])
                 .AddWeight("UResetVectors", x => uResetVectors[x.Layer]).AddGradient("DUResetVectors", x => uResetVectorsGradient[x.Layer])
-                .AddWeight("RKeys", x => rKeys[x.Layer]).AddGradient("DIKeys", x => rKeysGradient[x.Layer])
-                .AddWeight("RKB", x => rKB[x.Layer]).AddGradient("DIKB", x => rKBGradient[x.Layer])
+                .AddWeight("RKeys", x => rKeys[x.Layer]).AddGradient("DRKeys", x => rKeysGradient[x.Layer])
+                .AddWeight("RKB", x => rKB[x.Layer]).AddGradient("DRKB", x => rKBGradient[x.Layer])
+                .AddWeight("IKeys", x => iKeys[x.Layer]).AddGradient("DIKeys", x => iKeysGradient[x.Layer])
+                .AddWeight("IKB", x => iKB[x.Layer]).AddGradient("DIKB", x => iKBGradient[x.Layer])
                 .AddWeight("UCWeights", x => uCWeights[x.Layer]).AddGradient("DUCWeights", x => uCWeightsGradient[x.Layer])
                 .AddWeight("CHKeys", x => chKeys[x.Layer]).AddGradient("DCHKeys", x => chKeysGradient[x.Layer])
                 .AddWeight("CHKB", x => chKB[x.Layer]).AddGradient("DCHKB", x => chKBGradient[x.Layer])

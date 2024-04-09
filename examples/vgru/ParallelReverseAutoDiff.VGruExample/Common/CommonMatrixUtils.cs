@@ -852,7 +852,11 @@ namespace ParallelReverseAutoDiff.VLstmExample.Common
         /// <param name="value">The values to replace the matrix values with.</param>
         public static void SetInPlaceReplace(DeepMatrix matrices, DeepMatrix value)
         {
-            matrices.Replace(value.ToArray());
+            var arr = matrices.ToArray();
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                arr[i].Replace(value[i].ToArray());
+            }
         }
 
         /// <summary>
