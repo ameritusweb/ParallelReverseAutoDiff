@@ -220,12 +220,12 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
         {
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_0_0"];
+            backwardStartOperation = this.computationGraph[$"output_{this.Parameters.NumTimeSteps - 1}_0"];
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
-                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+                OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, this.Parameters.NumTimeSteps - 1);
                 opVisitor.RunSequentially = true;
                 await opVisitor.TraverseAsync();
                 if (opVisitor.AggregateException != null)
@@ -420,8 +420,8 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 .ConstructFromArchitecture(jsonArchitecture, this.Parameters.NumTimeSteps, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph["output_0_0"];
-            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
+            backwardStartOperation = this.computationGraph[$"output_{this.Parameters.NumTimeSteps - 1}_0"];
+            OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, this.Parameters.NumTimeSteps - 1);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);
         }

@@ -27,14 +27,19 @@ namespace ParallelReverseAutoDiff.VGruExample
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
+                Random random = new Random(1);
 
                 // net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
-                    var vectors = vectorGenerator.GenerateWaveWithVectors(101, 10);
+                    int samples = random.Next(101, 201);
+                    int cycles = random.Next((int)(samples / 20d), (int)(samples / 5d));
+                    var vectors = vectorGenerator.GenerateWaveWithVectors(samples, cycles);
+                    var sectionCount = 0;
 
-                    for (int j = 0; j < 100; j += numTimeSteps)
+                    for (int j = 0; j < (samples - 1); j += numTimeSteps)
                     {
+                        sectionCount++;
                         var matrices = new Matrix[numTimeSteps];
                         for (int k = 0; k < numTimeSteps; ++k)
                         {
@@ -46,7 +51,9 @@ namespace ParallelReverseAutoDiff.VGruExample
                         var input = new DeepMatrix(matrices);
                         var lastVector = vectors[j + numTimeSteps].Vector;
 
-                        var (gradient, output, sorted) = net.Forward(input, lastVector.Direction, lastVector.Magnitude);
+                        var (gradient, output, loss) = net.Forward(input, lastVector.Direction, lastVector.Magnitude);
+
+                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 
                         var inputGradient = await net.Backward(gradient);
 
@@ -57,7 +64,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         Thread.Sleep(1000);
                         if (i % 5 == 4 && j == 0)
                         {
-                            // net.SaveWeights();
+                            net.SaveWeights();
                         }
                     }
                 }
