@@ -27,9 +27,9 @@ namespace ParallelReverseAutoDiff.VGruExample
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
-                Random random = new Random(1);
+                Random random = new Random(2);
 
-                // net.ApplyWeights();
+                net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -37,7 +37,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                     var vectors = vectorGenerator.GenerateWaveWithVectors(samples, cycles);
                     var sectionCount = 0;
 
-                    for (int j = 0; j < (samples - 1); j += numTimeSteps)
+                    for (int j = 0; j < (samples - numTimeSteps - 1); j += numTimeSteps)
                     {
                         sectionCount++;
                         var matrices = new Matrix[numTimeSteps];
@@ -53,7 +53,12 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                         var (gradient, output, loss) = net.Forward(input, lastVector.Direction, lastVector.Magnitude);
 
-                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
+                        double x = output[0, 0];
+                        double y = output[0, 1];
+                        double resultMagnitude = Math.Sqrt((x * x) + (y * y));
+                        double resultAngle = Math.Atan2(y, x);
+
+                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Result: [{resultMagnitude}, {resultAngle}], Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 
                         var inputGradient = await net.Backward(gradient);
 
@@ -62,7 +67,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         await net.Reset();
 
                         Thread.Sleep(1000);
-                        if (i % 5 == 4 && j == 0)
+                        if (i % 5 == 0 && j == 0)
                         {
                             net.SaveWeights();
                         }

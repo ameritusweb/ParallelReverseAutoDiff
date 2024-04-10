@@ -248,7 +248,73 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD
                     }
                     else
                     {
-                        return (1, -1); // x decrease, y decrease
+                        return (-1, -1); // x decrease, y decrease
+                    }
+                }
+            }
+            else if (targetQuadrant == 3)
+            {
+                if (quadrant == 1)
+                {
+                    if (actualAngle < oppositeAngle)
+                    {
+                        return (-1, 1); // x decrease, y increase
+                    }
+                    else
+                    {
+                        return (1, -1); // x increase, y decrease
+                    }
+                }
+                else if (quadrant == 2)
+                {
+                    return (1, 1); // x increase, y increase
+                }
+                else if (quadrant == 3)
+                {
+                    if (actualAngle < targetAngle)
+                    {
+                        return (-1, 1); // x decrease, y increase
+                    }
+                    else
+                    {
+                        return (1, -1); // x increase, y decrease
+                    }
+                }
+                else
+                {
+                    return (1, 1); // x increase, y increase
+                }
+            }
+            else if (targetQuadrant == 4)
+            {
+                if (quadrant == 1)
+                {
+                    return (-1, 1); // x decrease, y increase
+                }
+                else if (quadrant == 2)
+                {
+                    if (actualAngle < oppositeAngle)
+                    {
+                        return (-1, -1); // x decrease, y decrease
+                    }
+                    else
+                    {
+                        return (1, 1); // x increase, y increase
+                    }
+                }
+                else if (quadrant == 3)
+                {
+                    return (-1, 1); // x decrease, y increase
+                }
+                else
+                {
+                    if (actualAngle < targetAngle)
+                    {
+                        return (-1, -1); // x decrease, y decrease
+                    }
+                    else
+                    {
+                        return (1, 1); // x increase, y increase
                     }
                 }
             }
