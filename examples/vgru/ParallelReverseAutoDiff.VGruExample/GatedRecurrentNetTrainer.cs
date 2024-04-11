@@ -23,13 +23,13 @@ namespace ParallelReverseAutoDiff.VGruExample
             {
                 CudaBlas.Instance.Initialize();
                 int numTimeSteps = 12;
-                GatedRecurrentNet net = new GatedRecurrentNet(numTimeSteps, 1, 10, 2, 0.0001d, 4d);
+                GatedRecurrentNet net = new GatedRecurrentNet(numTimeSteps, 1, 10, 2, 0.01d, 14d);
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
                 Random random = new Random(2);
 
-                net.ApplyWeights();
+                // net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -57,6 +57,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         double y = output[0, 1];
                         double resultMagnitude = Math.Sqrt((x * x) + (y * y));
                         double resultAngle = Math.Atan2(y, x);
+                        double oLoss = loss[0, 0];
 
                         Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Result: [{resultMagnitude}, {resultAngle}], Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 
@@ -67,9 +68,9 @@ namespace ParallelReverseAutoDiff.VGruExample
                         await net.Reset();
 
                         Thread.Sleep(1000);
-                        if (i % 5 == 0 && j == 0)
+                        if (i % 4 == 0 && j == 0)
                         {
-                            net.SaveWeights();
+                            // net.SaveWeights();
                         }
                     }
                 }

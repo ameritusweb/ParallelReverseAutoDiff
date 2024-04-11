@@ -22,6 +22,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         private readonly double clipValue;
 
         private readonly StochasticAdamOptimizer adamOptimize;
+        private readonly DynamicGradientClipper clipper;
 
         private VGruNetwork.GatedRecurrentNetwork gatedRecurrentNetwork;
 
@@ -47,6 +48,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             this.modelLayers = new List<IModelLayer>();
             this.gatedRecurrentNetwork = new VGruNetwork.GatedRecurrentNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             this.adamOptimize = new StochasticAdamOptimizer(this.gatedRecurrentNetwork);
+            this.clipper = new DynamicGradientClipper(this.gatedRecurrentNetwork);
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1571;
+            var initialAdamIteration = 1;
             var model = new VGruNetwork.GatedRecurrentNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
@@ -133,7 +135,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "dbfbbb88-36eb-4e1f-bdb1-ab9d4ad6ebcb_1571";
+            var guid = "c82dc8be-53b9-4724-acb0-8e3377099c38_465";
             var dir = $"E:\\vgrustore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -149,7 +151,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyGradients()
         {
-            var clipper = this.gatedRecurrentNetwork.Utilities.GradientClipper;
+            var clipper = this.clipper;
             clipper.Clip(this.modelLayers.ToArray());
             var adamOptimizer = this.adamOptimize;
             adamOptimizer.Optimize(this.modelLayers.ToArray());
@@ -173,7 +175,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
             var result = output[numTimeSteps - 1];
 
-            SquaredArclengthEuclideanMagnitudeLossOperation lossOp = SquaredArclengthEuclideanMagnitudeLossOperation.Instantiate(gruNet);
+            SquaredArclengthEuclideanMagnitudeLossOperation3 lossOp = SquaredArclengthEuclideanMagnitudeLossOperation3.Instantiate(gruNet);
             var loss = lossOp.Forward(result, targetAngle, targetMagnitude);
             var gradient = lossOp.Backward();
 
