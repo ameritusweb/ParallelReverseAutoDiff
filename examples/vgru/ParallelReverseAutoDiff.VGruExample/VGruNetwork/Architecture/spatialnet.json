@@ -9,9 +9,15 @@
           "gradientResultTo": [ "DWeights" ]
         },
         {
+          "id": "angles",
+          "type": "ElementwiseSquareOperation",
+          "inputs": [ "Angles" ],
+          "gradientResultTo": [ "DAngles" ]
+        },
+        {
           "id": "input_vectorize",
           "type": "VectorizeOperation",
-          "inputs": [ "Input" ],
+          "inputs": [ "Input", "angles" ]
         },
         {
           "id": "input_projection",
@@ -145,7 +151,7 @@
             },
             {
               "id": "uc_previousHiddenState",
-              "type": "ElementwiseVectorConstituentMultiplyOperation2",
+              "type": "ElementwiseVectorWeightedAddOperation",
               "inputs": [ "previousHiddenState", "r", "uc_weights" ],
               "gradientResultTo": [ null, null, null ]
             },
@@ -246,7 +252,7 @@
         },
         {
           "id": "output",
-          "type": "ElementwiseVectorScalingOperation",
+          "type": "ElementwiseVectorCompositionOperation",
           "inputs": [ "newHFromLastLayer", "row_sum_weights" ],
           "setResultTo": "Output"
         }

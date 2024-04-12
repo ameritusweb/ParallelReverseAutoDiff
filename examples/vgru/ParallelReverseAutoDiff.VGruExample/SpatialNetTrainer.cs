@@ -23,7 +23,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             {
                 CudaBlas.Instance.Initialize();
                 int numTimeSteps = 12;
-                SpatialNet net = new SpatialNet(numTimeSteps, 1, 10, 2, 0.01d, 14d);
+                SpatialNet net = new SpatialNet(numTimeSteps, 11, 110, 2, 0.01d, 14d);
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
@@ -43,9 +43,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         var matrices = new Matrix[numTimeSteps];
                         for (int k = 0; k < numTimeSteps; ++k)
                         {
-                            matrices[k] = new Matrix(1, 2);
-                            matrices[k][0, 0] = vectors[j + k].Vector.Magnitude;
-                            matrices[k][0, 1] = vectors[j + k].Vector.Direction;
+                            matrices[k] = VectorToMatrix.CreateLine(vectors[j + k].Vector.Direction, 11);
                         }
 
                         var input = new DeepMatrix(matrices);

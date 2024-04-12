@@ -44,7 +44,8 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
 
             int numInputOutputFeatures = this.NumFeatures;
             var inputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("Weights", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
+                .AddModelElementGroup("Weights", new[] { numNodes, numInputOutputFeatures / 10 }, InitializationType.Xavier)
+                .AddModelElementGroup("Angles", new[] { numInputOutputFeatures / 10, numInputOutputFeatures / 10 }, InitializationType.Xavier)
                 .AddModelElementGroup("Vectors", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier);
             var inputLayer = inputLayerBuilder.Build();
             this.inputLayer = inputLayer;
@@ -68,7 +69,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                     .AddModelElementGroup("RKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("IKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("IKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("UCWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
+                    .AddModelElementGroup("UCWeights", new[] { numNodes, numNestedOutputFeatures }, InitializationType.Xavier)
                     .AddModelElementGroup("CHKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
                     .AddModelElementGroup("CHKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier);
                 var nestedLayer = nestedLayerBuilder.Build();
@@ -258,8 +259,8 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, 1, this.NumFeatures));
-            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, 1, this.NumFeatures));
+            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.NumNodes, this.NumNodes * 2));
+            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.NumNodes, this.NumFeatures));
 
             if (this.Output == null)
             {
@@ -297,6 +298,8 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         {
             var weights = this.inputLayer.WeightMatrix("Weights");
             var weightsGradient = this.inputLayer.GradientMatrix("Weights");
+            var angles = this.inputLayer.WeightMatrix("Angles");
+            var anglesGradient = this.inputLayer.GradientMatrix("Angles");
             var vectors = this.inputLayer.WeightMatrix("Vectors");
             var vectorsGradient = this.inputLayer.GradientMatrix("Vectors");
 
@@ -394,6 +397,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 .AddIntermediate("Output", x => this.Output[x.TimeStep])
                 .AddIntermediate("Input", x => this.Input[x.TimeStep])
                 .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
+                .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
                 .AddWeight("Vectors", x => vectors).AddGradient("DVectors", x => vectorsGradient)
                 .AddWeight("WUpdateWeights", x => wUpdateWeights[x.Layer]).AddGradient("DWUpdateWeights", x => wUpdateWeightsGradient[x.Layer])
                 .AddWeight("UUpdateWeights", x => uUpdateWeights[x.Layer]).AddGradient("DUUpdateWeights", x => uUpdateWeightsGradient[x.Layer])
