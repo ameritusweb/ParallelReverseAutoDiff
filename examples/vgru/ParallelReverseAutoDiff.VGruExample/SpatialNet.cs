@@ -175,19 +175,22 @@ namespace ParallelReverseAutoDiff.VGruExample
 
             var result = output[numTimeSteps - 1];
 
-            var matrix = VectorToMatrix.CreateLine(targetAngle, 11);
+            ContributionLossOperation contributionOp = ContributionLossOperation.Instantiate(gruNet);
+            var loss = contributionOp.Forward(result, targetAngle);
+            var gradient = contributionOp.Backward();
 
-            ElementwiseVectorContributionOperation contributionOp = ElementwiseVectorContributionOperation.Instantiate(gruNet);
-            var res = contributionOp.Forward(result, matrix);
+            // var matrix = VectorToMatrix.CreateLine(targetAngle, 11);
 
-            SquaredArclengthEuclideanMagnitudeLossOperation4 lossOp = SquaredArclengthEuclideanMagnitudeLossOperation4.Instantiate(gruNet);
-            var loss = lossOp.Forward(res, targetAngle, targetMagnitude);
-            var gradientFinal = lossOp.Backward();
+            // ElementwiseVectorContributionOperation contributionOp = ElementwiseVectorContributionOperation.Instantiate(gruNet);
+            // var res = contributionOp.Forward(result, matrix);
 
-            var gradientResult = contributionOp.Backward(gradientFinal);
-            var gradient = gradientResult.Item1 as Matrix;
+            // SquaredArclengthEuclideanMagnitudeLossOperation4 lossOp = SquaredArclengthEuclideanMagnitudeLossOperation4.Instantiate(gruNet);
+            // var loss = lossOp.Forward(res, targetAngle, targetMagnitude);
+            // var gradientFinal = lossOp.Backward();
 
-            return (gradient ?? new Matrix(), res, loss);
+            // var gradientResult = contributionOp.Backward(gradientFinal);
+            // var gradient = gradientResult.Item1 as Matrix;
+            return (gradient ?? new Matrix(), result, loss);
         }
 
         /// <summary>

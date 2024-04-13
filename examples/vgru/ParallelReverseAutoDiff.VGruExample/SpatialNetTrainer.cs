@@ -68,7 +68,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         Thread.Sleep(1000);
                         if (i % 4 == 0 && j == 0)
                         {
-                            // net.SaveWeights();
+                            net.SaveWeights();
                         }
                     }
                 }
