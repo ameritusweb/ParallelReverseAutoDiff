@@ -374,6 +374,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 case InitializationType.Xavier:
                     this.InitializeXavier(scalingFactor);
                     break;
+                case InitializationType.XavierUniform:
+                    this.InitializeXavierUniform(scalingFactor);
+                    break;
                 case InitializationType.Zeroes:
                     break;
                 default:
@@ -427,6 +430,29 @@ namespace ParallelReverseAutoDiff.RMAD
                     for (int j = 0; j < this.Cols; j++)
                     {
                         this[d, i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols)) * scalingFactor;
+                    }
+                }
+            });
+        }
+
+        private void InitializeXavierUniform(double scalingFactor = 1.0)
+        {
+            Matrix weights = new Matrix(this.Rows, this.Cols);
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    weights[i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols)) * scalingFactor;
+                }
+            }
+
+            Parallel.For(0, this.Depth, d =>
+            {
+                for (int i = 0; i < this.Rows; i++)
+                {
+                    for (int j = 0; j < this.Cols; j++)
+                    {
+                        this[d, i, j] = weights[i, j];
                     }
                 }
             });

@@ -26,6 +26,11 @@ namespace ParallelReverseAutoDiff.RMAD
         Zeroes,
 
         /// <summary>
+        /// Xavier/Glorot initialization uniform across each layer.
+        /// </summary>
+        XavierUniform,
+
+        /// <summary>
         /// He initialization for adjacency matrices.
         /// </summary>
         HeAdjacency,
