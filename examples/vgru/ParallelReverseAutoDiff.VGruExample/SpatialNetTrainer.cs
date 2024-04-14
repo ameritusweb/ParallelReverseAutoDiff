@@ -99,6 +99,10 @@ namespace ParallelReverseAutoDiff.VGruExample
                             double max = 0d;
                             int r = 0;
                             int c = 0;
+                            double totalCC = 0d;
+                            double min = 1000d;
+                            int rMin = 0;
+                            int cMin = 0;
                             for (int k = 0; k < 11; ++k)
                             {
                                 for (int l = 0; l < 1; ++l)
@@ -109,11 +113,29 @@ namespace ParallelReverseAutoDiff.VGruExample
                                         r = k;
                                         c = l;
                                     }
+
+                                    if (cc[k, l] < min)
+                                    {
+                                        min = cc[k, l];
+                                        rMin = k;
+                                        cMin = l;
+                                    }
+
+                                    if (cc[k, l] >= 0.4d || cc[k, l] <= -0.4d)
+                                    {
+                                        Console.WriteLine($"Correlation {k} {l}: {cc[k, l]}");
+                                    }
+
+                                    totalCC += cc[k, l];
                                 }
                             }
 
-                            Console.WriteLine($"Correlation: {max} {r} {c}");
-                            Console.WriteLine($"Correlation 1 0: {cc[1, 0]}");
+                            double avgCC = totalCC / 11d;
+                            Console.WriteLine($"Average Correlation: {avgCC}");
+
+                            Console.WriteLine($"Max Correlation: {max} {r} {c}");
+
+                            Console.WriteLine($"Min Correlation: {min} {rMin} {cMin}");
                         }
 
                         Matrix diffMatrix = new Matrix(11, 22);
@@ -132,7 +154,6 @@ namespace ParallelReverseAutoDiff.VGruExample
                         var inputGradient = await net.Backward(gradient);
 
                         net.ApplyGradients();
-
                         await net.Reset();
 
                         Thread.Sleep(1000);

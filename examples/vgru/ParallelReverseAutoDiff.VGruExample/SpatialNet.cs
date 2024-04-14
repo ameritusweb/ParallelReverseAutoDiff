@@ -95,7 +95,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 548;
+            var initialAdamIteration = 530;
             var model = new VGruNetwork.SpatialNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
@@ -135,7 +135,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "spatial_d89ada97-5d0b-4af5-8ec0-fad6e6ff4a72_548";
+            var guid = "spatial_f8e117dd-45a1-49c1-9ec0-52b3912c01a6_530";
             var dir = $"E:\\vgrustore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -176,8 +176,12 @@ namespace ParallelReverseAutoDiff.VGruExample
             var result = output[numTimeSteps - 1];
 
             ContributionLossOperation contributionOp = ContributionLossOperation.Instantiate(gruNet);
-            var loss = contributionOp.Forward(result, targetAngle);
-            var gradient = contributionOp.Backward();
+            var loss1 = contributionOp.Forward(result, targetAngle);
+            var gradient1 = contributionOp.Backward();
+
+            CascadingLossOperation cascadingLossOperation = CascadingLossOperation.Instantiate(gruNet);
+            var loss = cascadingLossOperation.Forward(result, targetAngle);
+            var gradient = cascadingLossOperation.Backward();
 
             // var matrix = VectorToMatrix.CreateLine(targetAngle, 11);
 
