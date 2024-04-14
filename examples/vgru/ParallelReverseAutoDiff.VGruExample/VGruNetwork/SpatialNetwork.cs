@@ -55,23 +55,23 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
-                    .AddModelElementGroup("WUpdateWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("UUpdateWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("WUpdateVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("UUpdateVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("ZKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("ZKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("WResetWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("UResetWeights", new[] { numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("WResetVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("UResetVectors", new[] { numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("RKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("RKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("IKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("IKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("UCWeights", new[] { numNodes, numNestedOutputFeatures }, InitializationType.Xavier)
-                    .AddModelElementGroup("CHKeys", new[] { numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.Xavier)
-                    .AddModelElementGroup("CHKB", new[] { 1, numNestedOutputFeatures * 2 }, InitializationType.Xavier);
+                    .AddModelElementGroup("WUpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UUpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("WUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("ZKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("ZKB", new[] { numTimeSteps, 1, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("WResetWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UResetWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("WResetVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UResetVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("RKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("RKB", new[] { numTimeSteps, 1, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("IKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("IKB", new[] { numTimeSteps, 1, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UCWeights", new[] { numTimeSteps, numNodes, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("CHKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("CHKB", new[] { numTimeSteps, 1, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d);
                 var nestedLayer = nestedLayerBuilder.Build();
                 this.nestedLayers.Add(nestedLayer);
             }
@@ -303,87 +303,87 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             var vectors = this.inputLayer.WeightMatrix("Vectors");
             var vectorsGradient = this.inputLayer.GradientMatrix("Vectors");
 
-            List<Matrix> wUpdateWeights = new List<Matrix>();
-            List<Matrix> wUpdateWeightsGradient = new List<Matrix>();
-            List<Matrix> uUpdateWeights = new List<Matrix>();
-            List<Matrix> uUpdateWeightsGradient = new List<Matrix>();
-            List<Matrix> wUpdateVectors = new List<Matrix>();
-            List<Matrix> wUpdateVectorsGradient = new List<Matrix>();
-            List<Matrix> uUpdateVectors = new List<Matrix>();
-            List<Matrix> uUpdateVectorsGradient = new List<Matrix>();
-            List<Matrix> zKeys = new List<Matrix>();
-            List<Matrix> zKeysGradient = new List<Matrix>();
-            List<Matrix> zKB = new List<Matrix>();
-            List<Matrix> zKBGradient = new List<Matrix>();
+            List<DeepMatrix> wUpdateWeights = new List<DeepMatrix>();
+            List<DeepMatrix> wUpdateWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> uUpdateWeights = new List<DeepMatrix>();
+            List<DeepMatrix> uUpdateWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> wUpdateVectors = new List<DeepMatrix>();
+            List<DeepMatrix> wUpdateVectorsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> uUpdateVectors = new List<DeepMatrix>();
+            List<DeepMatrix> uUpdateVectorsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> zKeys = new List<DeepMatrix>();
+            List<DeepMatrix> zKeysGradient = new List<DeepMatrix>();
+            List<DeepMatrix> zKB = new List<DeepMatrix>();
+            List<DeepMatrix> zKBGradient = new List<DeepMatrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var layer = this.nestedLayers[i];
-                wUpdateWeights.Add(layer.WeightMatrix("WUpdateWeights"));
-                wUpdateWeightsGradient.Add(layer.GradientMatrix("WUpdateWeights"));
-                uUpdateWeights.Add(layer.WeightMatrix("UUpdateWeights"));
-                uUpdateWeightsGradient.Add(layer.GradientMatrix("UUpdateWeights"));
-                wUpdateVectors.Add(layer.WeightMatrix("WUpdateVectors"));
-                wUpdateVectorsGradient.Add(layer.GradientMatrix("WUpdateVectors"));
-                uUpdateVectors.Add(layer.WeightMatrix("UUpdateVectors"));
-                uUpdateVectorsGradient.Add(layer.GradientMatrix("UUpdateVectors"));
-                zKeys.Add(layer.WeightMatrix("ZKeys"));
-                zKeysGradient.Add(layer.GradientMatrix("ZKeys"));
-                zKB.Add(layer.WeightMatrix("ZKB"));
-                zKBGradient.Add(layer.GradientMatrix("ZKB"));
+                wUpdateWeights.Add(layer.WeightDeepMatrix("WUpdateWeights"));
+                wUpdateWeightsGradient.Add(layer.GradientDeepMatrix("WUpdateWeights"));
+                uUpdateWeights.Add(layer.WeightDeepMatrix("UUpdateWeights"));
+                uUpdateWeightsGradient.Add(layer.GradientDeepMatrix("UUpdateWeights"));
+                wUpdateVectors.Add(layer.WeightDeepMatrix("WUpdateVectors"));
+                wUpdateVectorsGradient.Add(layer.GradientDeepMatrix("WUpdateVectors"));
+                uUpdateVectors.Add(layer.WeightDeepMatrix("UUpdateVectors"));
+                uUpdateVectorsGradient.Add(layer.GradientDeepMatrix("UUpdateVectors"));
+                zKeys.Add(layer.WeightDeepMatrix("ZKeys"));
+                zKeysGradient.Add(layer.GradientDeepMatrix("ZKeys"));
+                zKB.Add(layer.WeightDeepMatrix("ZKB"));
+                zKBGradient.Add(layer.GradientDeepMatrix("ZKB"));
             }
 
-            List<Matrix> wResetWeights = new List<Matrix>();
-            List<Matrix> wResetWeightsGradient = new List<Matrix>();
-            List<Matrix> uResetWeights = new List<Matrix>();
-            List<Matrix> uResetWeightsGradient = new List<Matrix>();
-            List<Matrix> wResetVectors = new List<Matrix>();
-            List<Matrix> wResetVectorsGradient = new List<Matrix>();
-            List<Matrix> uResetVectors = new List<Matrix>();
-            List<Matrix> uResetVectorsGradient = new List<Matrix>();
-            List<Matrix> rKeys = new List<Matrix>();
-            List<Matrix> rKeysGradient = new List<Matrix>();
-            List<Matrix> rKB = new List<Matrix>();
-            List<Matrix> rKBGradient = new List<Matrix>();
-            List<Matrix> iKeys = new List<Matrix>();
-            List<Matrix> iKeysGradient = new List<Matrix>();
-            List<Matrix> iKB = new List<Matrix>();
-            List<Matrix> iKBGradient = new List<Matrix>();
+            List<DeepMatrix> wResetWeights = new List<DeepMatrix>();
+            List<DeepMatrix> wResetWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> uResetWeights = new List<DeepMatrix>();
+            List<DeepMatrix> uResetWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> wResetVectors = new List<DeepMatrix>();
+            List<DeepMatrix> wResetVectorsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> uResetVectors = new List<DeepMatrix>();
+            List<DeepMatrix> uResetVectorsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> rKeys = new List<DeepMatrix>();
+            List<DeepMatrix> rKeysGradient = new List<DeepMatrix>();
+            List<DeepMatrix> rKB = new List<DeepMatrix>();
+            List<DeepMatrix> rKBGradient = new List<DeepMatrix>();
+            List<DeepMatrix> iKeys = new List<DeepMatrix>();
+            List<DeepMatrix> iKeysGradient = new List<DeepMatrix>();
+            List<DeepMatrix> iKB = new List<DeepMatrix>();
+            List<DeepMatrix> iKBGradient = new List<DeepMatrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var layer = this.nestedLayers[i];
-                wResetWeights.Add(layer.WeightMatrix("WResetWeights"));
-                wResetWeightsGradient.Add(layer.GradientMatrix("WResetWeights"));
-                uResetWeights.Add(layer.WeightMatrix("UResetWeights"));
-                uResetWeightsGradient.Add(layer.GradientMatrix("UResetWeights"));
-                wResetVectors.Add(layer.WeightMatrix("WResetVectors"));
-                wResetVectorsGradient.Add(layer.GradientMatrix("WResetVectors"));
-                uResetVectors.Add(layer.WeightMatrix("UResetVectors"));
-                uResetVectorsGradient.Add(layer.GradientMatrix("UResetVectors"));
-                rKeys.Add(layer.WeightMatrix("RKeys"));
-                rKeysGradient.Add(layer.GradientMatrix("RKeys"));
-                rKB.Add(layer.WeightMatrix("RKB"));
-                rKBGradient.Add(layer.GradientMatrix("RKB"));
-                iKeys.Add(layer.WeightMatrix("IKeys"));
-                iKeysGradient.Add(layer.GradientMatrix("IKeys"));
-                iKB.Add(layer.WeightMatrix("IKB"));
-                iKBGradient.Add(layer.GradientMatrix("IKB"));
+                wResetWeights.Add(layer.WeightDeepMatrix("WResetWeights"));
+                wResetWeightsGradient.Add(layer.GradientDeepMatrix("WResetWeights"));
+                uResetWeights.Add(layer.WeightDeepMatrix("UResetWeights"));
+                uResetWeightsGradient.Add(layer.GradientDeepMatrix("UResetWeights"));
+                wResetVectors.Add(layer.WeightDeepMatrix("WResetVectors"));
+                wResetVectorsGradient.Add(layer.GradientDeepMatrix("WResetVectors"));
+                uResetVectors.Add(layer.WeightDeepMatrix("UResetVectors"));
+                uResetVectorsGradient.Add(layer.GradientDeepMatrix("UResetVectors"));
+                rKeys.Add(layer.WeightDeepMatrix("RKeys"));
+                rKeysGradient.Add(layer.GradientDeepMatrix("RKeys"));
+                rKB.Add(layer.WeightDeepMatrix("RKB"));
+                rKBGradient.Add(layer.GradientDeepMatrix("RKB"));
+                iKeys.Add(layer.WeightDeepMatrix("IKeys"));
+                iKeysGradient.Add(layer.GradientDeepMatrix("IKeys"));
+                iKB.Add(layer.WeightDeepMatrix("IKB"));
+                iKBGradient.Add(layer.GradientDeepMatrix("IKB"));
             }
 
-            List<Matrix> uCWeights = new List<Matrix>();
-            List<Matrix> uCWeightsGradient = new List<Matrix>();
-            List<Matrix> chKeys = new List<Matrix>();
-            List<Matrix> chKeysGradient = new List<Matrix>();
-            List<Matrix> chKB = new List<Matrix>();
-            List<Matrix> chKBGradient = new List<Matrix>();
+            List<DeepMatrix> uCWeights = new List<DeepMatrix>();
+            List<DeepMatrix> uCWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> chKeys = new List<DeepMatrix>();
+            List<DeepMatrix> chKeysGradient = new List<DeepMatrix>();
+            List<DeepMatrix> chKB = new List<DeepMatrix>();
+            List<DeepMatrix> chKBGradient = new List<DeepMatrix>();
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var layer = this.nestedLayers[i];
-                uCWeights.Add(layer.WeightMatrix("UCWeights"));
-                uCWeightsGradient.Add(layer.GradientMatrix("UCWeights"));
-                chKeys.Add(layer.WeightMatrix("CHKeys"));
-                chKeysGradient.Add(layer.GradientMatrix("CHKeys"));
-                chKB.Add(layer.WeightMatrix("CHKB"));
-                chKBGradient.Add(layer.GradientMatrix("CHKB"));
+                uCWeights.Add(layer.WeightDeepMatrix("UCWeights"));
+                uCWeightsGradient.Add(layer.GradientDeepMatrix("UCWeights"));
+                chKeys.Add(layer.WeightDeepMatrix("CHKeys"));
+                chKeysGradient.Add(layer.GradientDeepMatrix("CHKeys"));
+                chKB.Add(layer.WeightDeepMatrix("CHKB"));
+                chKBGradient.Add(layer.GradientDeepMatrix("CHKB"));
             }
 
             var rowSumWeights = this.outputLayer.WeightMatrix("RowSumWeights");
@@ -399,23 +399,23 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
                 .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
                 .AddWeight("Vectors", x => vectors).AddGradient("DVectors", x => vectorsGradient)
-                .AddWeight("WUpdateWeights", x => wUpdateWeights[x.Layer]).AddGradient("DWUpdateWeights", x => wUpdateWeightsGradient[x.Layer])
-                .AddWeight("UUpdateWeights", x => uUpdateWeights[x.Layer]).AddGradient("DUUpdateWeights", x => uUpdateWeightsGradient[x.Layer])
-                .AddWeight("WUpdateVectors", x => wUpdateVectors[x.Layer]).AddGradient("DWUpdateVectors", x => wUpdateVectorsGradient[x.Layer])
-                .AddWeight("UUpdateVectors", x => uUpdateVectors[x.Layer]).AddGradient("DUUpdateVectors", x => uUpdateVectorsGradient[x.Layer])
-                .AddWeight("ZKeys", x => zKeys[x.Layer]).AddGradient("DZKeys", x => zKeysGradient[x.Layer])
-                .AddWeight("ZKB", x => zKB[x.Layer]).AddGradient("DZKB", x => zKBGradient[x.Layer])
-                .AddWeight("WResetWeights", x => wResetWeights[x.Layer]).AddGradient("DWResetWeights", x => wResetWeightsGradient[x.Layer])
-                .AddWeight("UResetWeights", x => uResetWeights[x.Layer]).AddGradient("DUResetWeights", x => uResetWeightsGradient[x.Layer])
-                .AddWeight("WResetVectors", x => wResetVectors[x.Layer]).AddGradient("DWResetVectors", x => wResetVectorsGradient[x.Layer])
-                .AddWeight("UResetVectors", x => uResetVectors[x.Layer]).AddGradient("DUResetVectors", x => uResetVectorsGradient[x.Layer])
-                .AddWeight("RKeys", x => rKeys[x.Layer]).AddGradient("DRKeys", x => rKeysGradient[x.Layer])
-                .AddWeight("RKB", x => rKB[x.Layer]).AddGradient("DRKB", x => rKBGradient[x.Layer])
-                .AddWeight("IKeys", x => iKeys[x.Layer]).AddGradient("DIKeys", x => iKeysGradient[x.Layer])
-                .AddWeight("IKB", x => iKB[x.Layer]).AddGradient("DIKB", x => iKBGradient[x.Layer])
-                .AddWeight("UCWeights", x => uCWeights[x.Layer]).AddGradient("DUCWeights", x => uCWeightsGradient[x.Layer])
-                .AddWeight("CHKeys", x => chKeys[x.Layer]).AddGradient("DCHKeys", x => chKeysGradient[x.Layer])
-                .AddWeight("CHKB", x => chKB[x.Layer]).AddGradient("DCHKB", x => chKBGradient[x.Layer])
+                .AddWeight("WUpdateWeights", x => wUpdateWeights[x.Layer][x.TimeStep]).AddGradient("DWUpdateWeights", x => wUpdateWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("UUpdateWeights", x => uUpdateWeights[x.Layer][x.TimeStep]).AddGradient("DUUpdateWeights", x => uUpdateWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("WUpdateVectors", x => wUpdateVectors[x.Layer][x.TimeStep]).AddGradient("DWUpdateVectors", x => wUpdateVectorsGradient[x.Layer][x.TimeStep])
+                .AddWeight("UUpdateVectors", x => uUpdateVectors[x.Layer][x.TimeStep]).AddGradient("DUUpdateVectors", x => uUpdateVectorsGradient[x.Layer][x.TimeStep])
+                .AddWeight("ZKeys", x => zKeys[x.Layer][x.TimeStep]).AddGradient("DZKeys", x => zKeysGradient[x.Layer][x.TimeStep])
+                .AddWeight("ZKB", x => zKB[x.Layer][x.TimeStep]).AddGradient("DZKB", x => zKBGradient[x.Layer][x.TimeStep])
+                .AddWeight("WResetWeights", x => wResetWeights[x.Layer][x.TimeStep]).AddGradient("DWResetWeights", x => wResetWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("UResetWeights", x => uResetWeights[x.Layer][x.TimeStep]).AddGradient("DUResetWeights", x => uResetWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("WResetVectors", x => wResetVectors[x.Layer][x.TimeStep]).AddGradient("DWResetVectors", x => wResetVectorsGradient[x.Layer][x.TimeStep])
+                .AddWeight("UResetVectors", x => uResetVectors[x.Layer][x.TimeStep]).AddGradient("DUResetVectors", x => uResetVectorsGradient[x.Layer][x.TimeStep])
+                .AddWeight("RKeys", x => rKeys[x.Layer][x.TimeStep]).AddGradient("DRKeys", x => rKeysGradient[x.Layer][x.TimeStep])
+                .AddWeight("RKB", x => rKB[x.Layer][x.TimeStep]).AddGradient("DRKB", x => rKBGradient[x.Layer][x.TimeStep])
+                .AddWeight("IKeys", x => iKeys[x.Layer][x.TimeStep]).AddGradient("DIKeys", x => iKeysGradient[x.Layer][x.TimeStep])
+                .AddWeight("IKB", x => iKB[x.Layer][x.TimeStep]).AddGradient("DIKB", x => iKBGradient[x.Layer][x.TimeStep])
+                .AddWeight("UCWeights", x => uCWeights[x.Layer][x.TimeStep]).AddGradient("DUCWeights", x => uCWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("CHKeys", x => chKeys[x.Layer][x.TimeStep]).AddGradient("DCHKeys", x => chKeysGradient[x.Layer][x.TimeStep])
+                .AddWeight("CHKB", x => chKB[x.Layer][x.TimeStep]).AddGradient("DCHKB", x => chKBGradient[x.Layer][x.TimeStep])
                 .AddWeight("RowSumWeights", x => rowSumWeights).AddGradient("DRowSumWeights", x => rowSumWeightsGradient)
                 .AddOperationFinder("newHFromLastLayer", x => this.computationGraph[$"compute_new_hidden_state_{x.TimeStep}_{this.NumLayers - 1}"])
                 .AddOperationFinder("newHFromFirstLayer", x => this.computationGraph[$"compute_new_hidden_state_{x.TimeStep}_0"])
