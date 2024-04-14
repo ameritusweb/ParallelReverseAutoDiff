@@ -47,7 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 int k = 0;
                 for (int j = 0; j < input1.Cols / 2; j += 10)
                 {
-                    var calcedValues = this.calculatedValues[i, k++];
+                    var calcedValues = default(CalculatedValues);
 
                     double magnitude1 = input1[i, j] * weights[i, j];
                     double angle1 = input1[i, j + (input1.Cols / 2)];
@@ -273,6 +273,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     calcedValues.CV_dResultMagnitude_dY = dResultMagnitude_dY;
                     calcedValues.CV_dResultAngle_dX = dResultAngle_dX;
                     calcedValues.CV_dResultAngle_dY = dResultAngle_dY;
+
+                    this.calculatedValues[i, k++] = calcedValues;
 
                     this.Output[i, j / 10] = resultMagnitude;
                     this.Output[i, (j / 10) + (this.input1.Cols / 20)] = resultAngle;

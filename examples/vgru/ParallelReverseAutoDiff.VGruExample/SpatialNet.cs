@@ -95,7 +95,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 530;
+            var initialAdamIteration = 1;
             var model = new VGruNetwork.SpatialNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
@@ -135,7 +135,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "spatial_f8e117dd-45a1-49c1-9ec0-52b3912c01a6_530";
+            var guid = "spatial_4796a8bb-e191-4387-a9d1-df3d56503e41_639";
             var dir = $"E:\\vgrustore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {

@@ -39,6 +39,7 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.input1 = input1;
             this.input2 = input2;
+
             this.weights = weights;
 
             this.Output = new Matrix(this.input1.Rows, this.input1.Cols * 10);

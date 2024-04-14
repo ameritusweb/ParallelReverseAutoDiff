@@ -27,14 +27,14 @@ namespace ParallelReverseAutoDiff.VGruExample
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
-                Random random = new Random(4);
+                Random random = new Random(5);
 
                 Matrix lastMatrix = new Matrix(11, 22);
                 List<Matrix> outputMatrices = new List<Matrix>();
                 List<double> targetAngles = new List<double>();
                 List<double[,]> correlations = new List<double[,]>();
 
-                net.ApplyWeights();
+                // net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
