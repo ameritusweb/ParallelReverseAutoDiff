@@ -95,7 +95,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1;
+            var initialAdamIteration = 318;
             var model = new VGruNetwork.SpatialNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
@@ -135,7 +135,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "spatial_4796a8bb-e191-4387-a9d1-df3d56503e41_639";
+            var guid = "spatial_4b6a0088-0c65-4ea6-893d-ee71d7dc46ad_318";
             var dir = $"E:\\vgrustore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
@@ -176,12 +176,12 @@ namespace ParallelReverseAutoDiff.VGruExample
             var result = output[numTimeSteps - 1];
 
             ContributionLossOperation contributionOp = ContributionLossOperation.Instantiate(gruNet);
-            var loss1 = contributionOp.Forward(result, targetAngle);
-            var gradient1 = contributionOp.Backward();
+            var loss = contributionOp.Forward(result, targetAngle);
+            var gradient = contributionOp.Backward();
 
-            CascadingLossOperation cascadingLossOperation = CascadingLossOperation.Instantiate(gruNet);
-            var loss = cascadingLossOperation.Forward(result, targetAngle);
-            var gradient = cascadingLossOperation.Backward();
+            // CascadingLossOperation cascadingLossOperation = CascadingLossOperation.Instantiate(gruNet);
+            // var loss = cascadingLossOperation.Forward(result, targetAngle);
+            // var gradient = cascadingLossOperation.Backward();
 
             // var matrix = VectorToMatrix.CreateLine(targetAngle, 11);
 
@@ -201,9 +201,21 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// The backward pass through the computation graph.
         /// </summary>
         /// <param name="gradientOfLossWrtOutput">The gradient of the loss wrt the output.</param>
+        /// <param name="cGradient">The cascading gradient.</param>
         /// <returns>A task.</returns>
-        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput)
+        public async Task<Matrix> Backward(Matrix gradientOfLossWrtOutput, Matrix? cGradient)
         {
+            if (cGradient != null)
+            {
+                for (int i = 0; i < 11; ++i)
+                {
+                    for (int j = 0; j < 11; ++j)
+                    {
+                        gradientOfLossWrtOutput[i, j] = cGradient[i, j];
+                    }
+                }
+            }
+
             return await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput);
         }
     }

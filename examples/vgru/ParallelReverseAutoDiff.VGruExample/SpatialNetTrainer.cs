@@ -27,14 +27,15 @@ namespace ParallelReverseAutoDiff.VGruExample
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
-                Random random = new Random(5);
+                Random random = new Random(6);
 
                 Matrix lastMatrix = new Matrix(11, 22);
                 List<Matrix> outputMatrices = new List<Matrix>();
+                List<Matrix> fullOutputMatrices = new List<Matrix>();
                 List<double> targetAngles = new List<double>();
                 List<double[,]> correlations = new List<double[,]>();
 
-                // net.ApplyWeights();
+                net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -71,11 +72,17 @@ namespace ParallelReverseAutoDiff.VGruExample
                         double oLoss = loss[0, 0];
 
                         Matrix magMatrix = new Matrix(11, 1);
+                        Matrix mMatrix = new Matrix(11, 11);
                         for (int k = 0; k < 11; ++k)
                         {
                             for (int l = 0; l < 1; ++l)
                             {
                                 magMatrix[k, l] = output[k].Sum();
+                            }
+
+                            for (int l = 0; l < 11; ++l)
+                            {
+                                mMatrix[k, l] = output[k, l];
                             }
                         }
 
@@ -86,6 +93,16 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                         outputMatrices.Add(magMatrix);
 
+                        if (fullOutputMatrices.Count > 9)
+                        {
+                            fullOutputMatrices.RemoveAt(0);
+                        }
+
+                        fullOutputMatrices.Add(mMatrix);
+
+                        Matrix? cGradient = null;
+                        double cLoss = 0d;
+
                         if (outputMatrices.Count >= 10)
                         {
                             if (correlations.Count > 9)
@@ -93,7 +110,13 @@ namespace ParallelReverseAutoDiff.VGruExample
                                 correlations.RemoveAt(0);
                             }
 
-                            var cc = CorrelationCalculator.PearsonCorrelation(outputMatrices.ToArray(), targetAngles.ToArray());
+                            var cc1 = CorrelationCalculator.PearsonCorrelationLoss(outputMatrices.ToArray(), targetAngles.ToArray());
+                            var cc = cc1.Correlations;
+
+                            var cc2 = CorrelationCalculator.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
+                            cGradient = cc2.Gradient;
+                            cLoss = cc2.Loss;
+
                             correlations.Add(cc);
 
                             double max = 0d;
@@ -147,19 +170,19 @@ namespace ParallelReverseAutoDiff.VGruExample
                             }
                         }
 
-                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Result: [{resultMagnitude}, {resultAngle}], Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
+                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {cLoss}, Result: [{resultMagnitude}, {resultAngle}], Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 
                         lastMatrix.Replace(output.ToArray());
 
-                        var inputGradient = await net.Backward(gradient);
+                        // var inputGradient = await net.Backward(gradient, cGradient);
 
-                        net.ApplyGradients();
+                        // net.ApplyGradients();
                         await net.Reset();
 
                         Thread.Sleep(1000);
-                        if (i % 4 == 1 && j == 0)
+                        if (i % 4 == 3 && j == 0)
                         {
-                            net.SaveWeights();
+                            // net.SaveWeights();
                         }
                     }
                 }
