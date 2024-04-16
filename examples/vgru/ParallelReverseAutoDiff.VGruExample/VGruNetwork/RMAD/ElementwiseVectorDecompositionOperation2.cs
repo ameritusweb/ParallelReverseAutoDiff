@@ -84,6 +84,9 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dYPivot_dWMagnitudePivot = Math.Sin(wAnglePivot);
                     double dYPivot_dWAnglePivot = wMagnitudePivot * Math.Cos(wAnglePivot);
 
+                    double weight = this.weights[i, j] >= 0d && this.weights[i, j] <= 0.01d ? 0.01d : this.weights[i, j];
+                    weight = this.weights[i, j] < 0d && this.weights[i, j] >= -0.01d ? -0.01d : weight;
+
                     this.calculatedValues[i, j] = new CalculatedValues()
                     {
                         CV_dx_dMagnitude = dx_dMagnitude,
@@ -148,15 +151,15 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.calculatedValues[i, j].CV_dY4_wMagnitude4 = dY4_wMagnitude4;
                     this.calculatedValues[i, j].CV_dY4_wAngle4 = dY4_wAngle4;
 
-                    double sumx = (x + xPivot) / (this.weights[i, j] + 1E-9);
-                    double sumy = (y + yPivot) / (this.weights[i, j] + 1E-9);
+                    double sumx = (x + xPivot) / (weight + 1E-9);
+                    double sumy = (y + yPivot) / (weight + 1E-9);
 
-                    double dsumx_dX = 1d / (this.weights[i, j] + 1E-9);
-                    double dsumx_dXPivot = 1d / (this.weights[i, j] + 1E-9);
-                    double dsumx_dWeight = -(x + xPivot) / ((this.weights[i, j] + 1E-9) * (this.weights[i, j] + 1E-9));
-                    double dsumy_dY = 1d / (this.weights[i, j] + 1E-9);
-                    double dsumy_dYPivot = 1d / (this.weights[i, j] + 1E-9);
-                    double dsumy_dWeight = -(y + yPivot) / ((this.weights[i, j] + 1E-9) * (this.weights[i, j] + 1E-9));
+                    double dsumx_dX = 1d / (weight + 1E-9);
+                    double dsumx_dXPivot = 1d / (weight + 1E-9);
+                    double dsumx_dWeight = -(x + xPivot) / ((weight + 1E-9) * (weight + 1E-9));
+                    double dsumy_dY = 1d / (weight + 1E-9);
+                    double dsumy_dYPivot = 1d / (weight + 1E-9);
+                    double dsumy_dWeight = -(y + yPivot) / ((weight + 1E-9) * (weight + 1E-9));
 
                     this.calculatedValues[i, j].CV_dsumx_dX = dsumx_dX;
                     this.calculatedValues[i, j].CV_dsumx_dXPivot = dsumx_dXPivot;

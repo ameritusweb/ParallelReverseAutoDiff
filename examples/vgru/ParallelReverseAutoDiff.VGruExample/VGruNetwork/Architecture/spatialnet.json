@@ -55,8 +55,9 @@
             },
             {
               "id": "z_add",
-              "type": "ElementwiseVectorAddOperation",
-              "inputs": [ "wz_currentInput", "uz_previousHiddenState" ]
+              "type": "ElementwiseVectorWeightedAddOperation",
+              "inputs": [ "wz_currentInput", "uz_previousHiddenState", "UpdateWeights" ],
+              "gradientResultTo": [ null, null, "DUpdateWeights" ]
             },
             {
               "id": "z_keys",
@@ -112,8 +113,9 @@
             },
             {
               "id": "r_add",
-              "type": "ElementwiseVectorAddOperation",
-              "inputs": [ "wr_currentInput", "ur_previousHiddenState" ]
+              "type": "ElementwiseVectorWeightedAddOperation",
+              "inputs": [ "wr_currentInput", "ur_previousHiddenState", "ResetWeights" ],
+              "gradientResultTo": [ null, null, "DResetWeights" ]
             },
             {
               "id": "r_keys",
@@ -184,9 +186,9 @@
             },
             {
               "id": "candidate_hidden",
-              "type": "ElementwiseVectorAddOperation",
-              "inputs": [ "input_attention", "uc_previousHiddenState" ],
-              "gradientResultTo": [ null, null ]
+              "type": "ElementwiseVectorWeightedAddOperation",
+              "inputs": [ "input_attention", "uc_previousHiddenState", "CandidateWeights" ],
+              "gradientResultTo": [ null, null, "DCandidateWeights" ]
             },
             {
               "id": "ch_keys",
@@ -237,8 +239,9 @@
             },
             {
               "id": "compute_new_hidden_state",
-              "type": "ElementwiseVectorAddOperation",
-              "inputs": [ "scale_previous_by_modulated_z", "scale_candidate_by_complement_modulated_z" ]
+              "type": "ElementwiseVectorWeightedAddOperation",
+              "inputs": [ "scale_previous_by_modulated_z", "scale_candidate_by_complement_modulated_z", "HiddenWeights" ],
+              "gradientResultTo": [ null, null, "DHiddenWeights" ]
             }
           ]
         }

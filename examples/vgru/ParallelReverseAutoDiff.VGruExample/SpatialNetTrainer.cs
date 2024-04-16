@@ -27,7 +27,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
-                Random random = new Random(6);
+                Random random = new Random(10);
 
                 Matrix lastMatrix = new Matrix(11, 22);
                 List<Matrix> outputMatrices = new List<Matrix>();
@@ -102,6 +102,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                         Matrix? cGradient = null;
                         double cLoss = 0d;
+                        double cLossRow = 0d;
 
                         if (outputMatrices.Count >= 10)
                         {
@@ -113,21 +114,38 @@ namespace ParallelReverseAutoDiff.VGruExample
                             var cc1 = CorrelationCalculator.PearsonCorrelationLoss(outputMatrices.ToArray(), targetAngles.ToArray());
                             var cc = cc1.Correlations;
 
-                            var cc2 = CorrelationCalculator.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
+                            var cc2 = CorrelationCalculator2.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
                             cGradient = cc2.Gradient;
-                            cLoss = cc2.Loss;
+                            cLossRow = cc2.Loss;
+
+                            var cc3 = CorrelationCalculator.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
+                            cLoss = cc3.Loss;
+                            var ccFull = cc3.Correlations;
 
                             correlations.Add(cc);
 
                             double max = 0d;
+                            double maxFull = 0d;
                             int r = 0;
                             int c = 0;
                             double totalCC = 0d;
                             double min = 1000d;
                             int rMin = 0;
                             int cMin = 0;
+                            int rFull = 0;
+                            int cFull = 0;
                             for (int k = 0; k < 11; ++k)
                             {
+                                for (int l = 0; l < 11; ++l)
+                                {
+                                    if (ccFull[k, l] > maxFull)
+                                    {
+                                        maxFull = ccFull[k, l];
+                                        rFull = k;
+                                        cFull = l;
+                                    }
+                                }
+
                                 for (int l = 0; l < 1; ++l)
                                 {
                                     if (cc[k, l] > max)
@@ -159,6 +177,8 @@ namespace ParallelReverseAutoDiff.VGruExample
                             Console.WriteLine($"Max Correlation: {max} {r} {c}");
 
                             Console.WriteLine($"Min Correlation: {min} {rMin} {cMin}");
+
+                            Console.WriteLine($"Max Full Correlation: {maxFull} {rFull} {cFull}");
                         }
 
                         Matrix diffMatrix = new Matrix(11, 22);
@@ -170,19 +190,23 @@ namespace ParallelReverseAutoDiff.VGruExample
                             }
                         }
 
-                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {cLoss}, Result: [{resultMagnitude}, {resultAngle}], Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
+                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {cLoss}, LossRow: {cLossRow}, Result: [{resultMagnitude}, {resultAngle}], Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 
                         lastMatrix.Replace(output.ToArray());
 
-                        // var inputGradient = await net.Backward(gradient, cGradient);
+                        if (outputMatrices.Count >= 9)
+                        {
+                            var inputGradient = await net.Backward(gradient, cGradient);
 
-                        // net.ApplyGradients();
+                            net.ApplyGradients();
+                        }
+
                         await net.Reset();
 
                         Thread.Sleep(1000);
                         if (i % 4 == 3 && j == 0)
                         {
-                            // net.SaveWeights();
+                            net.SaveWeights();
                         }
                     }
                 }

@@ -44,9 +44,9 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
 
             int numInputOutputFeatures = this.NumFeatures;
             var inputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("Weights", new[] { numNodes, numInputOutputFeatures / 10 }, InitializationType.Xavier)
-                .AddModelElementGroup("Angles", new[] { numInputOutputFeatures / 10, numInputOutputFeatures / 10 }, InitializationType.Xavier)
-                .AddModelElementGroup("Vectors", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier);
+                .AddModelElementGroup("Weights", new[] { numTimeSteps, numNodes, numInputOutputFeatures / 10 }, InitializationType.XavierUniform, 1.0d)
+                .AddModelElementGroup("Angles", new[] { numTimeSteps, numInputOutputFeatures / 10, numInputOutputFeatures / 10 }, InitializationType.XavierUniform, 1.0d)
+                .AddModelElementGroup("Vectors", new[] { numTimeSteps, numNodes, numInputOutputFeatures }, InitializationType.XavierUniform, 1.0d);
             var inputLayer = inputLayerBuilder.Build();
             this.inputLayer = inputLayer;
 
@@ -55,6 +55,10 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var nestedLayerBuilder = new ModelLayerBuilder(this)
+                    .AddModelElementGroup("UpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("ResetWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("CandidateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("HiddenWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("WUpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("UUpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("WUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
@@ -296,13 +300,21 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
-            var weights = this.inputLayer.WeightMatrix("Weights");
-            var weightsGradient = this.inputLayer.GradientMatrix("Weights");
-            var angles = this.inputLayer.WeightMatrix("Angles");
-            var anglesGradient = this.inputLayer.GradientMatrix("Angles");
-            var vectors = this.inputLayer.WeightMatrix("Vectors");
-            var vectorsGradient = this.inputLayer.GradientMatrix("Vectors");
+            var weights = this.inputLayer.WeightDeepMatrix("Weights");
+            var weightsGradient = this.inputLayer.GradientDeepMatrix("Weights");
+            var angles = this.inputLayer.WeightDeepMatrix("Angles");
+            var anglesGradient = this.inputLayer.GradientDeepMatrix("Angles");
+            var vectors = this.inputLayer.WeightDeepMatrix("Vectors");
+            var vectorsGradient = this.inputLayer.GradientDeepMatrix("Vectors");
 
+            List<DeepMatrix> updateWeights = new List<DeepMatrix>();
+            List<DeepMatrix> updateWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> resetWeights = new List<DeepMatrix>();
+            List<DeepMatrix> resetWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> candidateWeights = new List<DeepMatrix>();
+            List<DeepMatrix> candidateWeightsGradient = new List<DeepMatrix>();
+            List<DeepMatrix> hiddenWeights = new List<DeepMatrix>();
+            List<DeepMatrix> hiddenWeightsGradient = new List<DeepMatrix>();
             List<DeepMatrix> wUpdateWeights = new List<DeepMatrix>();
             List<DeepMatrix> wUpdateWeightsGradient = new List<DeepMatrix>();
             List<DeepMatrix> uUpdateWeights = new List<DeepMatrix>();
@@ -318,6 +330,14 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             for (int i = 0; i < this.NumLayers; ++i)
             {
                 var layer = this.nestedLayers[i];
+                updateWeights.Add(layer.WeightDeepMatrix("UpdateWeights"));
+                updateWeightsGradient.Add(layer.GradientDeepMatrix("UpdateWeights"));
+                resetWeights.Add(layer.WeightDeepMatrix("ResetWeights"));
+                resetWeightsGradient.Add(layer.GradientDeepMatrix("ResetWeights"));
+                candidateWeights.Add(layer.WeightDeepMatrix("CandidateWeights"));
+                candidateWeightsGradient.Add(layer.GradientDeepMatrix("CandidateWeights"));
+                hiddenWeights.Add(layer.WeightDeepMatrix("HiddenWeights"));
+                hiddenWeightsGradient.Add(layer.GradientDeepMatrix("HiddenWeights"));
                 wUpdateWeights.Add(layer.WeightDeepMatrix("WUpdateWeights"));
                 wUpdateWeightsGradient.Add(layer.GradientDeepMatrix("WUpdateWeights"));
                 uUpdateWeights.Add(layer.WeightDeepMatrix("UUpdateWeights"));
@@ -396,9 +416,13 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             this.computationGraph
                 .AddIntermediate("Output", x => this.Output[x.TimeStep])
                 .AddIntermediate("Input", x => this.Input[x.TimeStep])
-                .AddWeight("Weights", x => weights).AddGradient("DWeights", x => weightsGradient)
-                .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
-                .AddWeight("Vectors", x => vectors).AddGradient("DVectors", x => vectorsGradient)
+                .AddWeight("Weights", x => weights[x.TimeStep]).AddGradient("DWeights", x => weightsGradient[x.TimeStep])
+                .AddWeight("Angles", x => angles[x.TimeStep]).AddGradient("DAngles", x => anglesGradient[x.TimeStep])
+                .AddWeight("Vectors", x => vectors[x.TimeStep]).AddGradient("DVectors", x => vectorsGradient[x.TimeStep])
+                .AddWeight("UpdateWeights", x => updateWeights[x.Layer][x.TimeStep]).AddGradient("DUpdateWeights", x => updateWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("ResetWeights", x => resetWeights[x.Layer][x.TimeStep]).AddGradient("DResetWeights", x => resetWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("CandidateWeights", x => candidateWeights[x.Layer][x.TimeStep]).AddGradient("DCandidateWeights", x => candidateWeightsGradient[x.Layer][x.TimeStep])
+                .AddWeight("HiddenWeights", x => hiddenWeights[x.Layer][x.TimeStep]).AddGradient("DHiddenWeights", x => hiddenWeightsGradient[x.Layer][x.TimeStep])
                 .AddWeight("WUpdateWeights", x => wUpdateWeights[x.Layer][x.TimeStep]).AddGradient("DWUpdateWeights", x => wUpdateWeightsGradient[x.Layer][x.TimeStep])
                 .AddWeight("UUpdateWeights", x => uUpdateWeights[x.Layer][x.TimeStep]).AddGradient("DUUpdateWeights", x => uUpdateWeightsGradient[x.Layer][x.TimeStep])
                 .AddWeight("WUpdateVectors", x => wUpdateVectors[x.Layer][x.TimeStep]).AddGradient("DWUpdateVectors", x => wUpdateVectorsGradient[x.Layer][x.TimeStep])

@@ -45,6 +45,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                     var corr = correlations[row, col];
                     var sign = Math.Sign(corr);
                     gradients[row, col] *= sign;
+
                     loss -= Math.Abs(corr);
                 }
             }
@@ -66,6 +67,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             int numColumns = magnitudes[0].Cols;
 
             Matrix dMagnitudes = new Matrix(numRows, numColumns);
+            Matrix dMagnitudes2 = new Matrix(numRows, numColumns);
 
             double meanTarget = targetAngle.Average();
 
@@ -95,7 +97,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                     double denominator = Math.Sqrt((varianceData * targetAngle.Length) + epsilon);
 
-                    for (int t = timeSteps - 1; t < timeSteps; t++)
+                    for (int t = 0; t < timeSteps; t++)
                     {
                         double gradCov = diffTarget[t];
                         double gradVar = 2 * diffData[t];
@@ -104,8 +106,17 @@ namespace ParallelReverseAutoDiff.VGruExample
                         double gradDenom = gradVar / (2 * denominator);  // Adjust to reflect the change in variance and its impact on the square root
 
                         // Correctly apply the quotient rule to compute the gradient
-                        double gradient = (((gradCov * denominator) - (covariance * gradVar)) / Math.Pow(denominator, 2)) - (covariance * gradDenom / Math.Pow(denominator, 2));
-                        dMagnitudes[row, col] += gradient;  // Sum up the gradients from all correlations
+                        double gradient = ((gradCov * denominator) - (covariance * gradDenom)) / Math.Pow(denominator, 2);
+
+                        if (t == timeSteps - 1)
+                        {
+                            dMagnitudes2[row, col] += gradient;  // Sum up the gradients from all correlations
+                        }
+
+                        if (t > 0)
+                        {
+                            dMagnitudes[row, col] += gradient;
+                        }
                     }
                 }
             }
