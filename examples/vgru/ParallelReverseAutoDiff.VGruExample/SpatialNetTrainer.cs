@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.VGruExample
 {
     using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD;
 
     /// <summary>
     /// A gated recurrent network trainer.
@@ -35,7 +36,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 List<double> targetAngles = new List<double>();
                 List<double[,]> correlations = new List<double[,]>();
 
-                net.ApplyWeights();
+                // net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -103,6 +104,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         Matrix? cGradient = null;
                         double cLoss = 0d;
                         double cLossRow = 0d;
+                        Dictionary<int, double> correlationsMap = new Dictionary<int, double>();
 
                         if (outputMatrices.Count >= 10)
                         {
@@ -115,37 +117,42 @@ namespace ParallelReverseAutoDiff.VGruExample
                             var cc = cc1.Correlations;
 
                             var cc2 = CorrelationCalculator2.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
-                            cGradient = cc2.Gradient;
+
+                            // cGradient = cc2.Gradient;
                             cLossRow = cc2.Loss;
 
-                            var cc3 = CorrelationCalculator.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
-                            cLoss = cc3.Loss;
-                            var ccFull = cc3.Correlations;
+                            CorrelationLossOperation correlationLossOperation = CorrelationLossOperation.Instantiate(net);
+                            cLoss = correlationLossOperation.Forward(fullOutputMatrices.ToArray(), targetAngles.ToArray())[0, 0];
+                            cGradient = correlationLossOperation.Backward();
 
+                            // var cc3 = CorrelationCalculator.PearsonCorrelationLoss(fullOutputMatrices.ToArray(), targetAngles.ToArray());
+                            // cLoss = cc3.Loss;
+                            // var ccFull = cc3.Correlations;
                             correlations.Add(cc);
 
                             double max = 0d;
-                            double maxFull = 0d;
+
+                            // double maxFull = 0d;
                             int r = 0;
                             int c = 0;
                             double totalCC = 0d;
                             double min = 1000d;
                             int rMin = 0;
                             int cMin = 0;
-                            int rFull = 0;
-                            int cFull = 0;
+
+                            // int rFull = 0;
+                            // int cFull = 0;
                             for (int k = 0; k < 11; ++k)
                             {
-                                for (int l = 0; l < 11; ++l)
-                                {
-                                    if (ccFull[k, l] > maxFull)
-                                    {
-                                        maxFull = ccFull[k, l];
-                                        rFull = k;
-                                        cFull = l;
-                                    }
-                                }
-
+                                // for (int l = 0; l < 11; ++l)
+                                // {
+                                //    if (ccFull[k, l] > maxFull)
+                                //    {
+                                //        maxFull = ccFull[k, l];
+                                //        rFull = k;
+                                //        cFull = l;
+                                //    }
+                                // }
                                 for (int l = 0; l < 1; ++l)
                                 {
                                     if (cc[k, l] > max)
@@ -161,6 +168,8 @@ namespace ParallelReverseAutoDiff.VGruExample
                                         rMin = k;
                                         cMin = l;
                                     }
+
+                                    correlationsMap.Add(k, cc[k, l]);
 
                                     if (cc[k, l] >= 0.4d || cc[k, l] <= -0.4d)
                                     {
@@ -178,7 +187,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                             Console.WriteLine($"Min Correlation: {min} {rMin} {cMin}");
 
-                            Console.WriteLine($"Max Full Correlation: {maxFull} {rFull} {cFull}");
+                            // Console.WriteLine($"Max Full Correlation: {maxFull} {rFull} {cFull}");
                         }
 
                         Matrix diffMatrix = new Matrix(11, 22);

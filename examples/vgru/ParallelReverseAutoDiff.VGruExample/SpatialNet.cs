@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.VGruExample
     /// <summary>
     /// A gated recurrent network.
     /// </summary>
-    public class SpatialNet
+    public class SpatialNet : NeuralNetwork
     {
         private readonly int numTimeSteps;
         private readonly int numFeatures;
@@ -95,7 +95,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 2286;
+            var initialAdamIteration = 1;
             var model = new VGruNetwork.SpatialNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
@@ -135,7 +135,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "spatial_9a8549b5-03e2-4bc1-a363-b88efb75b1fd_2286";
+            var guid = "spatial_650f3fb3-e67d-41bb-be2c-45ddd3ad4d58_3610";
             var dir = $"E:\\vgrustore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
