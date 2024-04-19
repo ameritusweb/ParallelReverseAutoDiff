@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.VGruExample
     {
         private static void Main(string[] args)
         {
-            SpatialNetTrainer trainer = new SpatialNetTrainer();
+            FusionNetTrainer trainer = new FusionNetTrainer();
             Task.Run(async () => await trainer.Train()).Wait();
         }
     }
