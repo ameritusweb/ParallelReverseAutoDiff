@@ -41,7 +41,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             int numInputOutputFeatures = this.NumFeatures;
             var initial = this.NumFeatures / 10;
             var inputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("Angles", new[] { numNodes, initial / 2 }, InitializationType.Xavier)
                 .AddModelElementGroup("ProjectionVectors", new[] { numNodes, numInputOutputFeatures / 2 }, InitializationType.Xavier)
                 .AddModelElementGroup("ProjectionWeights", new[] { numNodes, initial / 2 }, InitializationType.HeAdjacency)
                 .AddModelElementGroup("WeightVectors", new[] { numInputOutputFeatures, numInputOutputFeatures }, InitializationType.Xavier)
@@ -229,7 +228,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 opVisitor.Reset();
             }
 
-            IOperationBase? backwardEndOperation = this.computationGraph["weight_vectors_square_0_0"];
+            IOperationBase? backwardEndOperation = this.computationGraph["vector_decomposition_0_0"];
             if (backwardEndOperation.CalculatedGradient[0] == null)
             {
                 return gradient;
@@ -245,7 +244,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         {
             // Clear intermediates
             var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(1, 2).ToArray());
-            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 2).ToArray());
+            var input = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures / 10).ToArray());
 
             if (this.Output == null)
             {
@@ -281,9 +280,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <returns>A task.</returns>
         private async Task InitializeComputationGraph()
         {
-            var angles = this.inputLayer.WeightMatrix("Angles");
-            var anglesGradient = this.inputLayer.GradientMatrix("Angles");
-
             var projectionVectors = this.inputLayer.WeightMatrix("ProjectionVectors");
             var projectionVectorsGradient = this.inputLayer.GradientMatrix("ProjectionVectors");
 
@@ -323,7 +319,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             this.computationGraph
                 .AddIntermediate("Output", _ => this.Output)
                 .AddIntermediate("Input", _ => this.Input)
-                .AddWeight("Angles", x => angles).AddGradient("DAngles", x => anglesGradient)
                 .AddWeight("ProjectionVectors", x => projectionVectors).AddGradient("DProjectionVectors", x => projectionVectorsGradient)
                 .AddWeight("ProjectionWeights", x => projectionWeights).AddGradient("DProjectionWeights", x => projectionWeightsGradient)
                 .AddWeight("WeightVectors", x => weightVectors).AddGradient("DWeightVectors", x => weightVectorsGradient)

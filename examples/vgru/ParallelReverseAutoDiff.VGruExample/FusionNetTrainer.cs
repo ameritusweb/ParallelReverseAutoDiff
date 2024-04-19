@@ -36,7 +36,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 List<double> targetAngles = new List<double>();
                 List<double[,]> correlations = new List<double[,]>();
 
-                // net.ApplyWeights();
+                net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -55,8 +55,9 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                         var input = new DeepMatrix(matrices);
                         var lastVector = vectors[j + numTimeSteps].Vector;
+                        var targetAngle = lastVector.Direction < 0d ? Math.PI / 4d : 3 * Math.PI / 4d;
 
-                        var (gradient, output, loss) = net.Forward(input, lastVector.Direction, lastVector.Magnitude);
+                        var (gradient, output, loss) = net.Forward(input, targetAngle, lastVector.Magnitude);
 
                         Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 

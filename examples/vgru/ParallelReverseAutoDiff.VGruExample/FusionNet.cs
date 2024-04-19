@@ -49,7 +49,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             this.gruLayers = new List<IModelLayer>();
             this.vnnLayers = new List<IModelLayer>();
             this.gatedRecurrentNetwork = new VGruNetwork.SpatialNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
-            this.vectorFieldNetwork = new VGruNetwork.VectorFieldNetwork(2, 33, 440, this.learningRate, this.clipValue);
+            this.vectorFieldNetwork = new VGruNetwork.VectorFieldNetwork(2, 33, 880, this.learningRate, this.clipValue);
             this.adamOptimize = new StochasticAdamOptimizer(this.gatedRecurrentNetwork);
         }
 
@@ -87,14 +87,14 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1;
+            var initialAdamIteration = 92;
             var model = new VGruNetwork.SpatialNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
             await this.gatedRecurrentNetwork.Initialize();
             this.gruLayers = this.gruLayers.Concat(this.gatedRecurrentNetwork.ModelLayers).ToList();
 
-            var model2 = new VGruNetwork.VectorFieldNetwork(2, 33, 440, this.learningRate, this.clipValue);
+            var model2 = new VGruNetwork.VectorFieldNetwork(2, 33, 880, this.learningRate, this.clipValue);
             model2.Parameters.AdamIteration = initialAdamIteration;
             this.vectorFieldNetwork = model2;
             await this.vectorFieldNetwork.Initialize();
@@ -131,8 +131,8 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var gg = "650f3fb3-e67d-41bb-be2c-45ddd3ad4d58";
-            var ii = 1;
+            var gg = "9d6738a7-29e7-4c66-bc5f-0d76ba23ae11";
+            var ii = 92;
             var guid = $"spatial_{gg}_{ii}";
             var dir = $"E:\\vgrustore\\{guid}";
             for (int i = 0; i < this.gruLayers.Count; ++i)
@@ -148,7 +148,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             for (int i = 0; i < this.vnnLayers.Count; ++i)
             {
                 var modelLayer = this.vnnLayers[i];
-                var file = new FileInfo($"{dir}\\layer{i}");
+                var file = new FileInfo($"{dir2}\\layer{i}");
                 modelLayer.LoadWeightsAndMomentsBinary(file);
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
             }
@@ -181,7 +181,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             gruNet.AutomaticForwardPropagate(input);
             var output = gruNet.Output;
 
-            Matrix largeMatrix = new Matrix(33, 44);
+            Matrix largeMatrix = new Matrix(33, 88);
 
             // Fill the large matrix with small matrices
             for (int row = 0; row < 3; row++)
@@ -192,9 +192,10 @@ namespace ParallelReverseAutoDiff.VGruExample
                     Matrix small = output[index];
                     for (int i = 0; i < small.Rows; i++)
                     {
-                        for (int j = 0; j < small.Cols; j++)
+                        for (int j = 0; j < small.Cols / 2; j++)
                         {
                             largeMatrix[(row * 11) + i, (col * 11) + j] = small[i, j];
+                            largeMatrix[(row * 11) + i, (col * 11) + j + 44] = small[i, j + (small.Cols / 2)];
                         }
                     }
                 }
@@ -204,6 +205,8 @@ namespace ParallelReverseAutoDiff.VGruExample
             vnnNet.InitializeState();
             vnnNet.AutomaticForwardPropagate(largeMatrix);
             var result = vnnNet.Output;
+
+            Console.WriteLine($"Result: {result[0, 0]} {result[0, 1]}");
 
             SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(vnnNet);
             var loss = lossOp.Forward(result, targetAngle);

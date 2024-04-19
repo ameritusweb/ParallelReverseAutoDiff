@@ -3,17 +3,6 @@
     {
       "startOperations": [
         {
-          "id": "angles_square",
-          "type": "ElementwiseSquareOperation",
-          "inputs": [ "Angles" ],
-          "gradientResultTo": [ "DAngles" ]
-        },
-        {
-          "id": "vectorize_input",
-          "type": "VectorizeOperation",
-          "inputs": [ "Input", "angles_square" ]
-        },
-        {
           "id": "projection_vectors_square",
           "type": "ElementwiseSquareOperation",
           "inputs": [ "ProjectionVectors" ],
@@ -22,7 +11,7 @@
         {
           "id": "vector_decomposition",
           "type": "ElementwiseVectorDecompositionOperation",
-          "inputs": [ "vectorize_input", "projection_vectors_square", "ProjectionWeights" ],
+          "inputs": [ "Input", "projection_vectors_square", "ProjectionWeights" ],
           "gradientResultTo": [ null, null, "DProjectionWeights" ]
         },
         {
@@ -83,7 +72,7 @@
         },
         {
           "id": "vector_queries",
-          "type": "NewGpuMatrixMultiplyOperation",
+          "type": "GpuMatrixMultiplyOperation",
           "inputs": [ "vector_add", "Queries" ],
           "gradientResultTo": [ null, "DQueries" ]
         },
