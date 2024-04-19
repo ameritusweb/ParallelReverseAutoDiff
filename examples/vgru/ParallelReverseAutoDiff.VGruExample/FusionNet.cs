@@ -157,12 +157,14 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <summary>
         /// Apply the gradients to update the weights.
         /// </summary>
-        public void ApplyGradients()
+        /// <param name="changeOfSign">A value indicating whether there is a change of sign.</param>
+        public void ApplyGradients(bool changeOfSign)
         {
             var clipper = this.vectorFieldNetwork.Utilities.GradientClipper;
             clipper.Clip(this.gruLayers.ToArray());
             clipper.Clip(this.vnnLayers.ToArray());
             var adamOptimizer = this.adamOptimize;
+            adamOptimizer.IsChangeOfDirection = changeOfSign;
             adamOptimizer.Optimize(this.gruLayers.ToArray());
             adamOptimizer.Optimize(this.vnnLayers.ToArray());
         }

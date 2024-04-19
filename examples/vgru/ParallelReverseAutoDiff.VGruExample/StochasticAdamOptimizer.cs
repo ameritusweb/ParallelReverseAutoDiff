@@ -17,6 +17,8 @@ namespace ParallelReverseAutoDiff.VGruExample
         private readonly RandomNumberGenerator randGen = new RandomNumberGenerator();
         private Dictionary<string, int> counts = new Dictionary<string, int>();
         private Dictionary<string, (int, double)> countValues = new Dictionary<string, (int, double)>();
+        private Dictionary<string, double> weightReductionValues = new Dictionary<string, double>();
+        private int DiffCounts = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StochasticAdamOptimizer"/> class.
@@ -28,11 +30,17 @@ namespace ParallelReverseAutoDiff.VGruExample
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the direction has changed.
+        /// </summary>
+        public bool IsChangeOfDirection { get; set; }
+
+        /// <summary>
         /// Optimize the layers.
         /// </summary>
         /// <param name="layers">The layers to optimize.</param>
         public void Optimize(IModelLayer[] layers)
         {
+            this.DiffCounts = 0;
             for (int i = 0; i < layers.Length; i++)
             {
                 var layer = layers[i];
@@ -116,7 +124,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                                 {
                                     Dictionary<double, (int, int)> positiveChanges = new Dictionary<double, (int, int)>();
                                     Dictionary<double, (int, int)> negativeChanges = new Dictionary<double, (int, int)>();
-                                    this.UpdateWeightWithAdam(identifier, weightMatrix[d], firstMomentMatrix[d], secondMomentMatrix[d], gradientMatrix[d], this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon, ref positiveChanges, ref negativeChanges);
+                                    this.UpdateWeightWithAdam(identifier + d, weightMatrix[d], firstMomentMatrix[d], secondMomentMatrix[d], gradientMatrix[d], this.network.Parameters.AdamBeta1, this.network.Parameters.AdamBeta2, this.network.Parameters.AdamEpsilon, ref positiveChanges, ref negativeChanges);
                                 }
 
                                 break;
@@ -142,6 +150,11 @@ namespace ParallelReverseAutoDiff.VGruExample
                             }
                     }
                 }
+            }
+
+            if (this.IsChangeOfDirection)
+            {
+                Console.WriteLine($"DiffCounts: {this.DiffCounts}");
             }
         }
 
@@ -250,6 +263,25 @@ namespace ParallelReverseAutoDiff.VGruExample
                         }
                     }
 
+                    // if (this.weightReductionValues.ContainsKey(identifier + i + j))
+                    // {
+                    //    if (this.IsChangeOfDirection)
+                    //    {
+                    //        var value = this.weightReductionValues[identifier + i + j];
+                    //        if (Math.Sign(value) != Math.Sign(weightReductionValue))
+                    //        {
+                    //            this.DiffCounts++;
+                    //            weightReductionValue = -1d * value;
+                    //        }
+                    //        else
+                    //        {
+                    //            weightReductionValue *= 10d;
+                    //        }
+                    //    }
+                    //    this.weightReductionValues.Remove(identifier + i + j);
+                    // }
+
+                    // this.weightReductionValues.Add(identifier + i + j, weightReductionValue);
                     w[i][j] -= weightReductionValue;
                 }
             }

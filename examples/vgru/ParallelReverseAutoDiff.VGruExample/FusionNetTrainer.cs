@@ -24,7 +24,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             {
                 CudaBlas.Instance.Initialize();
                 int numTimeSteps = 12;
-                FusionNet net = new FusionNet(numTimeSteps, 11, 110, 2, 0.01d, 4d);
+                FusionNet net = new FusionNet(numTimeSteps, 11, 110, 2, 0.001d, 4d);
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
@@ -43,6 +43,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                     int cycles = random.Next((int)(samples / 20d), (int)(samples / 5d));
                     var vectors = vectorGenerator.GenerateWaveWithVectors(samples, cycles);
                     var sectionCount = 0;
+                    double lastTargetAngle = double.MinValue;
 
                     for (int j = 0; j < (samples - numTimeSteps - 1); j += numTimeSteps)
                     {
@@ -55,7 +56,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                         var input = new DeepMatrix(matrices);
                         var lastVector = vectors[j + numTimeSteps].Vector;
-                        var targetAngle = lastVector.Direction < 0d ? Math.PI / 4d : 3 * Math.PI / 4d;
+                        var targetAngle = (3d * Math.PI / 4d) / (1 + Math.Exp(-lastVector.Direction));
 
                         var (gradient, output, loss) = net.Forward(input, targetAngle, lastVector.Magnitude);
 
@@ -63,7 +64,9 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                         var inputGradient = await net.Backward(gradient);
 
-                        net.ApplyGradients();
+                        net.ApplyGradients(lastTargetAngle != double.MinValue && Math.Sign(lastTargetAngle) != Math.Sign(lastVector.Direction));
+
+                        lastTargetAngle = lastVector.Direction;
 
                         await net.Reset();
 
