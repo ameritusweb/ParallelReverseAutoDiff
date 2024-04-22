@@ -119,7 +119,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         public void SaveWeights()
         {
             Guid guid = Guid.NewGuid();
-            var dir = $"E:\\vgrustore\\spatial_{guid}_{this.gatedRecurrentNetwork.Parameters.AdamIteration}";
+            var dir = $"E:\\mazestore\\{guid}_{this.gatedRecurrentNetwork.Parameters.AdamIteration}";
             Directory.CreateDirectory(dir);
             int index = 0;
             foreach (var modelLayer in this.modelLayers)
@@ -134,8 +134,8 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "spatial_650f3fb3-e67d-41bb-be2c-45ddd3ad4d58_3610";
-            var dir = $"E:\\vgrustore\\{guid}";
+            var guid = "650f3fb3-e67d-41bb-be2c-45ddd3ad4d58_3610";
+            var dir = $"E:\\mazestore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {
                 var modelLayer = this.modelLayers[i];
@@ -156,6 +156,29 @@ namespace ParallelReverseAutoDiff.VGruExample
             adamOptimizer.Optimize(this.modelLayers.ToArray());
         }
 
+        /// <summary>
+        /// Train the network.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="targetAngles">The target angles.</param>
+        public void Train(DeepMatrix input, double[] targetAngles)
+        {
+            int[,] structure = new int[7, 7];
+            structure[3, 3] = 1;
+            var depth = input.Depth;
+            for (int i = 0; i < depth; ++i)
+            {
+                var gruInput = input[i];
+                var targetAngle = targetAngles[i];
+
+                var gruNet = this.gatedRecurrentNetwork;
+                gruNet.InitializeState();
+                gruNet.AutomaticForwardPropagate(gruInput);
+                var output = gruNet.Output;
+            }
+        }
+
+        /*
         /// <summary>
         /// Make a forward pass through the computation graph.
         /// </summary>
@@ -205,5 +228,6 @@ namespace ParallelReverseAutoDiff.VGruExample
         {
             return await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradientOfLossWrtOutput);
         }
+        */
     }
 }

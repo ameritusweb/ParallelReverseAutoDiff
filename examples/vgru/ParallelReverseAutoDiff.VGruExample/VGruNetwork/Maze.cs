@@ -215,7 +215,23 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         {
             this.Structure = new int[7, 7];
             this.Structure[3, 3] = 1;
-            this.Structure[3, 4] = 1;
+        }
+
+        /// <summary>
+        /// Reinitialize the structure.
+        /// </summary>
+        /// <param name="structure">The structure.</param>
+        public void ReinitializeAndUpdate(int[,] structure)
+        {
+            for (int i = 0; i < 7; ++i)
+            {
+                for (int j = 0; j < 7; ++j)
+                {
+                    this.Structure[i, j] = structure[i, j];
+                }
+            }
+
+            this.SetWeightsFromStructure();
         }
 
         private void UpdateLayerWeights(IModelLayer layer, int layerIndex, string[] identifiers)

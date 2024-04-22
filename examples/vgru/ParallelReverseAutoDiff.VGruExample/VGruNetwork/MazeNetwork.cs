@@ -85,7 +85,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             }
 
             var outputLayerBuilder = new ModelLayerBuilder(this)
-                .AddModelElementGroup("RowSumWeights", new[] { numNodes, numInputOutputFeatures }, InitializationType.Xavier);
+                .AddModelElementGroup("RowSumWeights", new[] { numTimeSteps, numNodes, numInputOutputFeatures }, InitializationType.Xavier);
             var outputLayer = outputLayerBuilder.Build();
             this.outputLayer = outputLayer;
 
@@ -99,12 +99,22 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <summary>
         /// Gets the input matrices.
         /// </summary>
-        public DeepMatrix Input { get; private set; }
+        public Matrix Input { get; private set; }
 
         /// <summary>
         /// Gets the output matrices.
         /// </summary>
-        public DeepMatrix Output { get; private set; }
+        public Matrix Output { get; private set; }
+
+        /// <summary>
+        /// Gets the hidden state.
+        /// </summary>
+        public Matrix HiddenState { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the previous hidden state.
+        /// </summary>
+        public Matrix PreviousHiddenState { get; set; }
 
         /// <summary>
         /// Gets or sets the current time step.
@@ -147,6 +157,18 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         }
 
         /// <summary>
+        /// Reinitializes the maze network.
+        /// </summary>
+        /// <param name="structure">The structure.</param>
+        /// <returns>The task.</returns>
+        public async Task Reinitialize(int[,] structure)
+        {
+            this.maze.ReinitializeAndUpdate(structure);
+
+            await this.InitializeComputationGraph();
+        }
+
+        /// <summary>
         /// Store the operation intermediates.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -165,10 +187,10 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         }
 
         /// <summary>
-        /// The forward pass of the edge attention neural network.
+        /// The forward pass of the maze neural network.
         /// </summary>
         /// <param name="input">The input.</param>
-        public void AutomaticForwardPropagate(DeepMatrix input)
+        public void AutomaticForwardPropagate(Matrix input)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
@@ -276,8 +298,9 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         public void InitializeState()
         {
             // Clear intermediates
-            var output = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.NumNodes, this.NumNodes * 2));
-            var input = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(this.Parameters.NumTimeSteps, this.NumNodes, this.NumFeatures));
+            var output = CommonMatrixUtils.InitializeZeroMatrix(1, 2);
+            var input = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures);
+            var hiddenState = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures * 2);
 
             if (this.Output == null)
             {
@@ -295,6 +318,15 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             else
             {
                 CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
+            }
+
+            if (this.HiddenState == null)
+            {
+                this.HiddenState = hiddenState;
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlaceReplace(this.HiddenState, hiddenState);
             }
         }
 
@@ -318,8 +350,10 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             this.computationGraph = new MazeComputationGraph(this);
             var zeroMatrixHiddenState = new Matrix(this.NumNodes, this.NumFeatures * 2);
             this.computationGraph
-                .AddIntermediate("Output", x => this.Output[x.TimeStep])
-                .AddIntermediate("Input", x => this.Input[x.TimeStep])
+                .AddIntermediate("Output", x => this.Output)
+                .AddIntermediate("Input", x => this.Input)
+                .AddIntermediate("HiddenState", x => this.HiddenState)
+                .AddIntermediate("previousHiddenState", x => this.PreviousHiddenState == null ? zeroMatrixHiddenState : this.PreviousHiddenState)
                 .AddWeight("Weights", x => this.maze.Weights[0]).AddGradient("DWeights", x => this.maze.Weights[1])
                 .AddWeight("Angles", x => this.maze.Angles[0]).AddGradient("DAngles", x => this.maze.Angles[1])
                 .AddWeight("Vectors", x => this.maze.Vectors[0]).AddGradient("DVectors", x => this.maze.Vectors[1])
@@ -345,14 +379,13 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 .AddWeight("CHKeys", x => this.maze.Layers[x.Layer].CHKeys[0]).AddGradient("DCHKeys", x => this.maze.Layers[x.Layer].CHKeys[1])
                 .AddWeight("CHKB", x => this.maze.Layers[x.Layer].CHKB[0]).AddGradient("DCHKB", x => this.maze.Layers[x.Layer].CHKB[1])
                 .AddWeight("RowSumWeights", x => this.maze.RowSumWeights[0]).AddGradient("DRowSumWeights", x => this.maze.RowSumWeights[1])
-                .AddOperationFinder("newHFromLastLayer", x => this.computationGraph[$"compute_new_hidden_state_{x.TimeStep}_{this.NumLayers - 1}"])
-                .AddOperationFinder("newHFromFirstLayer", x => this.computationGraph[$"compute_new_hidden_state_{x.TimeStep}_0"])
-                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"input_projection_{x.TimeStep}_0"] : this.computationGraph[$"compute_new_hidden_state_{x.TimeStep}_{x.Layer - 1}"])
-                .AddOperationFinder("previousHiddenState", x => x.TimeStep == 0 ? zeroMatrixHiddenState : this.computationGraph[$"compute_new_hidden_state_{x.TimeStep - 1}_{x.Layer}"])
-                .ConstructFromArchitecture(jsonArchitecture, this.Parameters.NumTimeSteps, this.NumLayers);
+                .AddOperationFinder("newHFromLastLayer", x => this.computationGraph[$"compute_new_hidden_state_0_{this.NumLayers - 1}"])
+                .AddOperationFinder("newHFromFirstLayer", x => this.computationGraph[$"compute_new_hidden_state_0_0"])
+                .AddOperationFinder("currentInput", x => x.Layer == 0 ? this.computationGraph[$"input_projection_0_0"] : this.computationGraph[$"compute_new_hidden_state_0_{x.Layer - 1}"])
+                .ConstructFromArchitecture(jsonArchitecture, this.NumLayers);
 
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph[$"output_{this.Parameters.NumTimeSteps - 1}_0"];
+            backwardStartOperation = this.computationGraph[$"output_0_0"];
             OperationGraphVisitor opVisitor = new OperationGraphVisitor(Guid.NewGuid().ToString(), backwardStartOperation, this.Parameters.NumTimeSteps - 1);
             await opVisitor.TraverseAsync();
             await opVisitor.ResetVisitedCountsAsync(backwardStartOperation);

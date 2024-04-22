@@ -241,7 +241,8 @@
               "id": "compute_new_hidden_state",
               "type": "ElementwiseVectorWeightedAddOperation",
               "inputs": [ "scale_previous_by_modulated_z", "scale_candidate_by_complement_modulated_z", "HiddenWeights" ],
-              "gradientResultTo": [ null, null, "DHiddenWeights" ]
+              "gradientResultTo": [ null, null, "DHiddenWeights" ],
+              "setResultTo": "HiddenState"
             }
           ]
         }

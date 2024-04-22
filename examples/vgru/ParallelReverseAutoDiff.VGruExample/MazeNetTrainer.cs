@@ -36,7 +36,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 List<double> targetAngles = new List<double>();
                 List<double[,]> correlations = new List<double[,]>();
 
-                net.ApplyWeights();
+                // net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -52,20 +52,25 @@ namespace ParallelReverseAutoDiff.VGruExample
                         for (int k = 0; k < numTimeSteps; ++k)
                         {
                             matrices[k] = VectorToMatrix.CreateLine(vectors[j + k].Vector.Direction, 11);
+                            if (k > 0)
+                            {
+                                targetAngles.Add((3d * Math.PI / 4d) / (1 + Math.Exp(-vectors[j + k].Vector.Direction)));
+                            }
                         }
 
                         var input = new DeepMatrix(matrices);
                         var lastVector = vectors[j + numTimeSteps].Vector;
                         var targetAngle = (3d * Math.PI / 4d) / (1 + Math.Exp(-lastVector.Direction));
+                        targetAngles.Add(targetAngle);
 
-                        var (gradient, output, loss) = net.Forward(input, targetAngle, lastVector.Magnitude);
+                        net.Train(input, targetAngles.ToArray());
 
-                        Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
+                        // var (gradient, output, loss) = net.Forward(input, targetAngle, lastVector.Magnitude);
 
-                        var inputGradient = await net.Backward(gradient);
+                        // Console.WriteLine($"Iteration {i}_{sectionCount}, Loss: {loss[0, 0]}, Last: [{lastVector.Magnitude}, {lastVector.Direction}]");
 
-                        net.ApplyGradients();
-
+                        // var inputGradient = await net.Backward(gradient);
+                        // net.ApplyGradients();
                         lastTargetAngle = lastVector.Direction;
 
                         await net.Reset();
