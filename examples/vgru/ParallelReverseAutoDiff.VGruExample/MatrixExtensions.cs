@@ -127,7 +127,8 @@ namespace ParallelReverseAutoDiff.VGruExample
 
         private static void CopyInto(Matrix source, Matrix target, int targetStartRow, int targetStartCol, int sourceStartCol = 0, int sourceEndCol = -1)
         {
-            if (sourceEndCol == -1) // If no end column specified, assume copying the whole row
+            // If no end column specified, assume copying the whole row
+            if (sourceEndCol == -1)
             {
                 sourceEndCol = source.Cols;
             }
