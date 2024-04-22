@@ -325,8 +325,15 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <summary>
         /// Initialize the state of the edge attention neural network.
         /// </summary>
-        public void InitializeState()
+        /// <param name="inputMatrix">The input matrix.</param>
+        public void InitializeState(Matrix? inputMatrix = null)
         {
+            if (inputMatrix != null)
+            {
+                this.NumNodes = inputMatrix.Rows;
+                this.NumFeatures = inputMatrix.Cols * 10;
+            }
+
             // Clear intermediates
             var output = CommonMatrixUtils.InitializeZeroMatrix(1, 2);
             var input = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures);

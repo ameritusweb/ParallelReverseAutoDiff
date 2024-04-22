@@ -210,7 +210,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                     var appendedInput1 = gruInput.Append(previousInput!, AppendDirection.Left);
 
                     await gruNet.Reinitialize(structure);
-                    gruNet.InitializeState();
+                    gruNet.InitializeState(appendedInput1);
                     gruNet.AutomaticForwardPropagate(appendedInput1, previousHiddenState[0]);
                     var output1 = gruNet.Output;
                     var hiddenState1 = gruNet.HiddenState;
@@ -229,7 +229,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                     var appendedInput2 = gruInput.Append(previousInput!, AppendDirection.Right);
 
                     await gruNet.Reinitialize(structure);
-                    gruNet.InitializeState();
+                    gruNet.InitializeState(appendedInput2);
                     gruNet.AutomaticForwardPropagate(appendedInput2, previousHiddenState[1]);
                     var output2 = gruNet.Output;
                     var hiddenState2 = gruNet.HiddenState;
