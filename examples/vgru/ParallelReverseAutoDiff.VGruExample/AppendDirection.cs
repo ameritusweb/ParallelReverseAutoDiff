@@ -30,5 +30,15 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// Down direction.
         /// </summary>
         Down,
+
+        /// <summary>
+        /// Vector left direction.
+        /// </summary>
+        VectorLeft,
+
+        /// <summary>
+        /// Vector right direction.
+        /// </summary>
+        VectorRight,
     }
 }

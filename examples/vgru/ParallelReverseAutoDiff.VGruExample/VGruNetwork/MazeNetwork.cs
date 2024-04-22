@@ -109,7 +109,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <summary>
         /// Gets the hidden state.
         /// </summary>
-        public Matrix HiddenState { get; private set; }
+        public DeepMatrix HiddenState { get; private set; }
 
         /// <summary>
         /// Gets or sets the previous hidden state.
@@ -129,6 +129,22 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             get
             {
                 return new IModelLayer[] { this.inputLayer }.Concat(this.nestedLayers).Append(this.outputLayer);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the computation graph.
+        /// </summary>
+        public MazeComputationGraph ComputationGraph
+        {
+            get
+            {
+                return this.computationGraph;
+            }
+
+            set
+            {
+                this.computationGraph = value;
             }
         }
 
@@ -314,7 +330,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             // Clear intermediates
             var output = CommonMatrixUtils.InitializeZeroMatrix(1, 2);
             var input = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures);
-            var hiddenState = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures * 2);
+            var hiddenState = new DeepMatrix(CommonMatrixUtils.InitializeZeroMatrix(2, this.NumNodes, this.NumFeatures * 2));
             var previousHiddenState = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures * 2);
 
             if (this.Output == null)
@@ -375,7 +391,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             this.computationGraph
                 .AddIntermediate("Output", x => this.Output)
                 .AddIntermediate("Input", x => this.Input)
-                .AddIntermediate("HiddenState", x => this.HiddenState)
+                .AddIntermediate("HiddenState", x => this.HiddenState[x.Layer])
                 .AddIntermediate("previousHiddenState", x => this.PreviousHiddenState)
                 .AddWeight("Weights", x => this.maze.Weights[0]).AddGradient("DWeights", x => this.maze.Weights[1])
                 .AddWeight("Angles", x => this.maze.Angles[0]).AddGradient("DAngles", x => this.maze.Angles[1])

@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 {
     using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.VGruExample.VGruNetwork;
     using ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD;
 
     /// <summary>
@@ -169,7 +170,8 @@ namespace ParallelReverseAutoDiff.VGruExample
             structure[3, 3] = 1;
             var depth = input.Depth;
             Matrix? previousInput = null;
-            Matrix? previousHiddenState = null;
+            Matrix[] previousHiddenState = new Matrix[4];
+            List<MazeComputationGraph> computationGraphs = new List<MazeComputationGraph>();
             for (int i = 0; i < depth; ++i)
             {
                 var gruInput = input[i];
@@ -179,9 +181,16 @@ namespace ParallelReverseAutoDiff.VGruExample
                 {
                     var gruNet = this.gatedRecurrentNetwork;
                     gruNet.InitializeState();
+
                     gruNet.AutomaticForwardPropagate(gruInput, null);
+
+                    computationGraphs.Add(gruNet.ComputationGraph);
+
                     var output = gruNet.Output;
-                    previousHiddenState = gruNet.HiddenState;
+                    previousHiddenState[0] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.VectorRight);
+                    previousHiddenState[1] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.VectorLeft);
+                    previousHiddenState[2] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.Up);
+                    previousHiddenState[3] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.Down);
 
                     SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
                     var loss = lossOp.Forward(output, targetAngle);
@@ -202,7 +211,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                     await gruNet.Reinitialize(structure);
                     gruNet.InitializeState();
-                    gruNet.AutomaticForwardPropagate(appendedInput1, previousHiddenState);
+                    gruNet.AutomaticForwardPropagate(appendedInput1, previousHiddenState[0]);
                     var output1 = gruNet.Output;
                     var hiddenState1 = gruNet.HiddenState;
 
@@ -221,7 +230,7 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                     await gruNet.Reinitialize(structure);
                     gruNet.InitializeState();
-                    gruNet.AutomaticForwardPropagate(appendedInput2, previousHiddenState);
+                    gruNet.AutomaticForwardPropagate(appendedInput2, previousHiddenState[1]);
                     var output2 = gruNet.Output;
                     var hiddenState2 = gruNet.HiddenState;
 
