@@ -6,6 +6,7 @@
 
 namespace ParallelReverseAutoDiff.VGruExample
 {
+    using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD;
 
@@ -161,20 +162,77 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="targetAngles">The target angles.</param>
-        public void Train(DeepMatrix input, double[] targetAngles)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task Train(DeepMatrix input, double[] targetAngles)
         {
             int[,] structure = new int[7, 7];
             structure[3, 3] = 1;
             var depth = input.Depth;
+            Matrix? previousInput = null;
+            Matrix? previousHiddenState = null;
             for (int i = 0; i < depth; ++i)
             {
                 var gruInput = input[i];
                 var targetAngle = targetAngles[i];
 
-                var gruNet = this.gatedRecurrentNetwork;
-                gruNet.InitializeState();
-                gruNet.AutomaticForwardPropagate(gruInput);
-                var output = gruNet.Output;
+                if (i == 0)
+                {
+                    var gruNet = this.gatedRecurrentNetwork;
+                    gruNet.InitializeState();
+                    gruNet.AutomaticForwardPropagate(gruInput, null);
+                    var output = gruNet.Output;
+                    previousHiddenState = gruNet.HiddenState;
+
+                    SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
+                    var loss = lossOp.Forward(output, targetAngle);
+                    var gradient = lossOp.Backward();
+
+                    await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient);
+
+                    this.gatedRecurrentNetwork.UpdateModelLayers();
+
+                    previousInput = gruInput;
+                }
+                else if (i == 1)
+                {
+                    var gruNet = this.gatedRecurrentNetwork;
+                    structure[3, 4] = 1;
+
+                    var appendedInput1 = gruInput.Append(previousInput!, AppendDirection.Left);
+
+                    await gruNet.Reinitialize(structure);
+                    gruNet.InitializeState();
+                    gruNet.AutomaticForwardPropagate(appendedInput1, previousHiddenState);
+                    var output1 = gruNet.Output;
+                    var hiddenState1 = gruNet.HiddenState;
+
+                    SquaredArclengthEuclideanLossOperation lossOp1 = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
+                    var loss1 = lossOp1.Forward(output1, targetAngle);
+                    var gradient1 = lossOp1.Backward();
+
+                    await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient1);
+
+                    this.gatedRecurrentNetwork.UpdateModelLayers();
+
+                    structure[3, 4] = 0;
+                    structure[3, 2] = 1;
+
+                    var appendedInput2 = gruInput.Append(previousInput!, AppendDirection.Right);
+
+                    await gruNet.Reinitialize(structure);
+                    gruNet.InitializeState();
+                    gruNet.AutomaticForwardPropagate(appendedInput2, previousHiddenState);
+                    var output2 = gruNet.Output;
+                    var hiddenState2 = gruNet.HiddenState;
+
+                    SquaredArclengthEuclideanLossOperation lossOp2 = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
+                    var loss2 = lossOp2.Forward(output2, targetAngle);
+                    var gradient2 = lossOp2.Backward();
+
+                    await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient2);
+
+                    this.gatedRecurrentNetwork.UpdateModelLayers();
+                }
             }
         }
 

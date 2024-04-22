@@ -169,6 +169,14 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         }
 
         /// <summary>
+        /// Updates model layers.
+        /// </summary>
+        public void UpdateModelLayers()
+        {
+            this.maze.UpdateModelLayers();
+        }
+
+        /// <summary>
         /// Store the operation intermediates.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -190,12 +198,18 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// The forward pass of the maze neural network.
         /// </summary>
         /// <param name="input">The input.</param>
-        public void AutomaticForwardPropagate(Matrix input)
+        /// <param name="previousHiddenState">The previous hidden state.</param>
+        public void AutomaticForwardPropagate(Matrix input, Matrix? previousHiddenState)
         {
             // Initialize hidden state, gradients, biases, and intermediates
             this.ClearState();
 
             CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
+            if (previousHiddenState != null)
+            {
+                CommonMatrixUtils.SetInPlaceReplace(this.PreviousHiddenState, previousHiddenState);
+            }
+
             var op = this.computationGraph.StartOperation;
             if (op == null)
             {
@@ -260,7 +274,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
         {
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph[$"output_{this.Parameters.NumTimeSteps - 1}_0"];
+            backwardStartOperation = this.computationGraph[$"output_0_0"];
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
@@ -283,8 +297,8 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 opVisitor.Reset();
             }
 
-            IOperationBase? backwardEndOperation = this.computationGraph["weights_0_0"];
-            if (backwardEndOperation.CalculatedGradient[0] == null)
+            IOperationBase? backwardEndOperation = this.computationGraph["scale_previous_by_modulated_z_0_0"];
+            if (backwardEndOperation.CalculatedGradient[0] != null)
             {
                 return gradient;
             }
@@ -301,6 +315,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             var output = CommonMatrixUtils.InitializeZeroMatrix(1, 2);
             var input = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures);
             var hiddenState = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures * 2);
+            var previousHiddenState = CommonMatrixUtils.InitializeZeroMatrix(this.NumNodes, this.NumFeatures * 2);
 
             if (this.Output == null)
             {
@@ -328,6 +343,15 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             {
                 CommonMatrixUtils.SetInPlaceReplace(this.HiddenState, hiddenState);
             }
+
+            if (this.PreviousHiddenState == null)
+            {
+                this.PreviousHiddenState = previousHiddenState;
+            }
+            else
+            {
+                CommonMatrixUtils.SetInPlaceReplace(this.PreviousHiddenState, previousHiddenState);
+            }
         }
 
         /// <summary>
@@ -348,12 +372,11 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             string json = EmbeddedResource.ReadAllJson(NAMESPACE, ARCHITECTURE);
             var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json) ?? throw new InvalidOperationException("There was a problem deserialzing the JSON architecture.");
             this.computationGraph = new MazeComputationGraph(this);
-            var zeroMatrixHiddenState = new Matrix(this.NumNodes, this.NumFeatures * 2);
             this.computationGraph
                 .AddIntermediate("Output", x => this.Output)
                 .AddIntermediate("Input", x => this.Input)
                 .AddIntermediate("HiddenState", x => this.HiddenState)
-                .AddIntermediate("previousHiddenState", x => this.PreviousHiddenState == null ? zeroMatrixHiddenState : this.PreviousHiddenState)
+                .AddIntermediate("previousHiddenState", x => this.PreviousHiddenState)
                 .AddWeight("Weights", x => this.maze.Weights[0]).AddGradient("DWeights", x => this.maze.Weights[1])
                 .AddWeight("Angles", x => this.maze.Angles[0]).AddGradient("DAngles", x => this.maze.Angles[1])
                 .AddWeight("Vectors", x => this.maze.Vectors[0]).AddGradient("DVectors", x => this.maze.Vectors[1])

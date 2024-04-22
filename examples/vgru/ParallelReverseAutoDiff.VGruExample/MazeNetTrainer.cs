@@ -63,7 +63,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                         var targetAngle = (3d * Math.PI / 4d) / (1 + Math.Exp(-lastVector.Direction));
                         targetAngles.Add(targetAngle);
 
-                        net.Train(input, targetAngles.ToArray());
+                        await net.Train(input, targetAngles.ToArray());
 
                         // var (gradient, output, loss) = net.Forward(input, targetAngle, lastVector.Magnitude);
 
