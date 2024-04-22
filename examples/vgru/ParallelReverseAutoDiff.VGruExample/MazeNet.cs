@@ -189,8 +189,8 @@ namespace ParallelReverseAutoDiff.VGruExample
                     var output = gruNet.Output;
                     previousHiddenState[0] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.VectorRight);
                     previousHiddenState[1] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.VectorLeft);
-                    previousHiddenState[2] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.Up);
-                    previousHiddenState[3] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.Down);
+                    previousHiddenState[2] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.Down);
+                    previousHiddenState[3] = (Matrix)gruNet.HiddenState.ConcatItself(AppendDirection.Up);
 
                     SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
                     var loss = lossOp.Forward(output, targetAngle);
@@ -239,6 +239,25 @@ namespace ParallelReverseAutoDiff.VGruExample
                     var gradient2 = lossOp2.Backward();
 
                     await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient2);
+
+                    this.gatedRecurrentNetwork.UpdateModelLayers();
+
+                    structure[3, 2] = 0;
+                    structure[4, 3] = 1;
+
+                    var appendedInput3 = gruInput.Append(previousInput!, AppendDirection.Down);
+
+                    await gruNet.Reinitialize(structure);
+                    gruNet.InitializeState(appendedInput3);
+                    gruNet.AutomaticForwardPropagate(appendedInput3, previousHiddenState[2]);
+                    var output3 = gruNet.Output;
+                    var hiddenState3 = gruNet.HiddenState;
+
+                    SquaredArclengthEuclideanLossOperation lossOp3 = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
+                    var loss3 = lossOp3.Forward(output3, targetAngle);
+                    var gradient3 = lossOp3.Backward();
+
+                    await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient3);
 
                     this.gatedRecurrentNetwork.UpdateModelLayers();
                 }
