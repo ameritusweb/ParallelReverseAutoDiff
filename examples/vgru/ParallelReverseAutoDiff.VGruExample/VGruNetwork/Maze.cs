@@ -170,16 +170,16 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 this.Layers[i].WUpdateVectors = this.InitializeWeights(this.hiddenLayers[i], "WUpdateVectors");
                 this.Layers[i].UUpdateVectors = this.InitializeWeights(this.hiddenLayers[i], "UUpdateVectors");
                 this.Layers[i].ZKeys = this.InitializeWeightsSquare(this.hiddenLayers[i], "ZKeys");
-                this.Layers[i].ZKB = this.InitializeWeights(this.hiddenLayers[i], "ZKB");
-                this.Layers[i].CHKB = this.InitializeWeights(this.hiddenLayers[i], "CHKB");
+                this.Layers[i].ZKB = this.InitializeWeightsBias(this.hiddenLayers[i], "ZKB");
+                this.Layers[i].CHKB = this.InitializeWeightsBias(this.hiddenLayers[i], "CHKB");
                 this.Layers[i].WResetVectors = this.InitializeWeights(this.hiddenLayers[i], "WResetVectors");
                 this.Layers[i].UResetVectors = this.InitializeWeights(this.hiddenLayers[i], "UResetVectors");
                 this.Layers[i].WResetWeights = this.InitializeWeights(this.hiddenLayers[i], "WResetWeights");
                 this.Layers[i].UResetWeights = this.InitializeWeights(this.hiddenLayers[i], "UResetWeights");
                 this.Layers[i].CHKeys = this.InitializeWeightsSquare(this.hiddenLayers[i], "CHKeys");
-                this.Layers[i].IKB = this.InitializeWeights(this.hiddenLayers[i], "IKB");
+                this.Layers[i].IKB = this.InitializeWeightsBias(this.hiddenLayers[i], "IKB");
                 this.Layers[i].IKeys = this.InitializeWeightsSquare(this.hiddenLayers[i], "IKeys");
-                this.Layers[i].RKB = this.InitializeWeights(this.hiddenLayers[i], "RKB");
+                this.Layers[i].RKB = this.InitializeWeightsBias(this.hiddenLayers[i], "RKB");
                 this.Layers[i].RKeys = this.InitializeWeightsSquare(this.hiddenLayers[i], "RKeys");
             }
 
@@ -199,8 +199,12 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 {
                     "UCWeights", "UpdateWeights", "ResetWeights", "CandidateWeights",
                     "HiddenWeights", "WUpdateWeights", "UUpdateWeights", "WUpdateVectors",
-                    "UUpdateVectors", "ZKB", "CHKB", "WResetVectors", "UResetVectors",
-                    "WResetWeights", "UResetWeights", "IKB", "RKB",
+                    "UUpdateVectors", "WResetVectors", "UResetVectors",
+                    "WResetWeights", "UResetWeights",
+                });
+                this.UpdateLayerGradientsBias(layer, i, new string[]
+                {
+                    "ZKB", "CHKB", "IKB", "RKB",
                 });
                 this.UpdateLayerGradientsSquare(layer, i, new string[]
                 {
@@ -265,6 +269,33 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             }
         }
 
+        private void UpdateLayerGradientsBias(IModelLayer layer, int layerIndex, string[] identifiers)
+        {
+            foreach (var identifier in identifiers)
+            {
+                Matrix[] matrices = layerIndex == -1 ? this[identifier] : this.Layers[layerIndex][identifier];
+                int numRows = 1;
+                int numCols = this.NumCols;
+                int[] indices = this.Indices;
+                int k = 0;
+
+                for (int i = 0; i < numRows; ++i)
+                {
+                    for (int j = 0; j < numCols; ++j)
+                    {
+                        var index = indices[k++];
+
+                        // var weights = layer.WeightDeepMatrix(identifier)[index];
+                        // var subWeights = this.GetSubMatrix(matrices[0], i * weights.Rows, j * weights.Cols, weights.Rows, weights.Cols);
+                        // weights.Replace(subWeights.ToArray());
+                        var gradients = layer.GradientDeepMatrix(identifier)[index];
+                        var subGradients = this.GetSubMatrix(matrices[1], i * gradients.Rows, j * gradients.Cols, gradients.Rows, gradients.Cols);
+                        gradients.Accumulate(subGradients.ToArray());
+                    }
+                }
+            }
+        }
+
         private void UpdateLayerGradientsSquare(IModelLayer layer, int layerIndex, string[] identifiers)
         {
             foreach (var identifier in identifiers)
@@ -301,6 +332,30 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         private Matrix[] InitializeWeights(IModelLayer layer, string identifier)
         {
             int numRows = this.NumRows;
+            int numCols = this.NumCols;
+            int[] indices = this.Indices;
+            var mWeights = new Matrix[2];
+            var weights = layer.WeightDeepMatrix(identifier)[0];
+            mWeights[0] = new Matrix(numRows * weights.Rows, numCols * weights.Cols);
+            mWeights[1] = new Matrix(numRows * weights.Rows, numCols * weights.Cols);
+            int k = 0;
+            for (int i = 0; i < numRows; ++i)
+            {
+                for (int j = 0; j < numCols; ++j)
+                {
+                    var index = indices[k++];
+                    this.SetSubMatrix(mWeights[0], layer.WeightDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
+
+                    // this.SetSubMatrix(mWeights[1], layer.GradientDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
+                }
+            }
+
+            return mWeights;
+        }
+
+        private Matrix[] InitializeWeightsBias(IModelLayer layer, string identifier)
+        {
+            int numRows = 1;
             int numCols = this.NumCols;
             int[] indices = this.Indices;
             var mWeights = new Matrix[2];

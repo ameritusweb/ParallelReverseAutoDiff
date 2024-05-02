@@ -297,6 +297,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
+                var op1 = this.computationGraph["z_add_0_0"];
                 await opVisitor.TraverseAsync();
                 if (opVisitor.AggregateException != null)
                 {

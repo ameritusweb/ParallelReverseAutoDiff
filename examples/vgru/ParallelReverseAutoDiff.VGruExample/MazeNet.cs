@@ -6,7 +6,6 @@
 
 namespace ParallelReverseAutoDiff.VGruExample
 {
-    using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
     using ParallelReverseAutoDiff.VGruExample.VGruNetwork;
     using ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD;
@@ -166,6 +165,11 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task Train(DeepMatrix input, double[] targetAngles)
         {
+            TileGrid tileGrid = new TileGrid(this.gatedRecurrentNetwork, input.ToArray().ToList(), targetAngles.ToList());
+            await tileGrid.RunTimeStep();
+            await tileGrid.RunTimeStep();
+
+            /*
             int[,] structure = new int[7, 7];
             structure[3, 3] = 1;
             var depth = input.Depth;
@@ -260,8 +264,27 @@ namespace ParallelReverseAutoDiff.VGruExample
                     await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient3);
 
                     this.gatedRecurrentNetwork.UpdateModelLayers();
+
+                    structure[4, 3] = 0;
+                    structure[2, 3] = 1;
+
+                    var appendedInput4 = gruInput.Append(previousInput!, AppendDirection.Up);
+
+                    await gruNet.Reinitialize(structure);
+                    gruNet.InitializeState(appendedInput4);
+                    gruNet.AutomaticForwardPropagate(appendedInput4, previousHiddenState[3]);
+                    var output4 = gruNet.Output;
+                    var hiddenState4 = gruNet.HiddenState;
+
+                    SquaredArclengthEuclideanLossOperation lossOp4 = SquaredArclengthEuclideanLossOperation.Instantiate(gruNet);
+                    var loss4 = lossOp4.Forward(output4, targetAngle);
+                    var gradient4 = lossOp4.Backward();
+
+                    await this.gatedRecurrentNetwork.AutomaticBackwardPropagate(gradient4);
+
+                    this.gatedRecurrentNetwork.UpdateModelLayers();
                 }
-            }
+            }*/
         }
 
         /*
