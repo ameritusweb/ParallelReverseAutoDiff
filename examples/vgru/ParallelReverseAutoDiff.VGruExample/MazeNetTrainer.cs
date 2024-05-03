@@ -23,8 +23,8 @@ namespace ParallelReverseAutoDiff.VGruExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                int numTimeSteps = 49;
-                MazeNet net = new MazeNet(numTimeSteps, 11, 110, 2, 0.001d, 4d);
+                int numTimeSteps = 7;
+                MazeNet net = new MazeNet(49, 11, 110, 2, 0.001d, 4d);
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);

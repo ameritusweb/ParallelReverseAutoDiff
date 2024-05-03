@@ -42,7 +42,6 @@ namespace ParallelReverseAutoDiff.VGruExample
             this.TotalTimeSteps = inputs.Count;
             this.targets = targets;
             this.InitializeGrid();
-            this.InitializeHiddenStates();
             this.UpdateMaxDimensions();
         }
 
@@ -64,8 +63,19 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void RunFirstTimeStep()
         {
-            var simulatedGrid = new Dictionary<(int, int), Tile>(this.grid);
-            this.SimulateForwardPass(simulatedGrid);
+            this.SimulateForwardPass(this.hiddenStates, this.GetInput());
+
+            var hiddenStateKey = (this.currentTileX, this.currentTileY);
+            if (!this.hiddenStates.ContainsKey(hiddenStateKey))
+            {
+                this.hiddenStates[hiddenStateKey] = new Tile();
+            }
+
+            var hiddenStateTile = this.hiddenStates[(this.currentTileX, this.currentTileY)];
+            hiddenStateTile.Matrix = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
+
+            this.mazeComputationGraphs.Add(this.mazeNetwork.ComputationGraph);
+            this.timeStep++;
         }
 
         /// <summary>
@@ -74,7 +84,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>A task.</returns>
         public async Task RunTimeStep()
         {
-            var bestExpansion = this.FindBestExpansion();
+            var bestExpansion = await this.FindBestExpansion();
             if (bestExpansion.HasValue)
             {
                 this.ApplyExpansion(bestExpansion.Value.Position, bestExpansion.Value.Direction);
@@ -110,15 +120,6 @@ namespace ParallelReverseAutoDiff.VGruExample
             this.grid[(center, center)] = new Tile(matrix: input);  // Assuming Tile holds vector and state information
             this.currentTileX = center;
             this.currentTileY = center;
-        }
-
-        private void InitializeHiddenStates()
-        {
-            // Initialize hidden states with the same dimensions as the initial grid
-            foreach (var key in this.grid.Keys)
-            {
-                this.hiddenStates[key] = new Tile();  // Initialize hidden state
-            }
         }
 
         private void UpdateMaxDimensions()
@@ -159,10 +160,13 @@ namespace ParallelReverseAutoDiff.VGruExample
         }
 
         // Assuming this is part of the network operations
-        private ((int X, int T) Position, AppendDirection Direction)? FindBestExpansion()
+        private async Task<((int X, int T) Position, AppendDirection Direction)?> FindBestExpansion()
         {
             double minLoss = double.MaxValue;
             ((int X, int Y), AppendDirection)? bestExpansion = null;
+            MazeComputationGraph? bestComputationGraph = null;
+            Dictionary<(int X, int Y), Tile>? bestGrid = null;
+            Matrix? bestHiddenState = null;
 
             foreach (var tile in this.GetPerimeterTiles())
             {
@@ -171,41 +175,91 @@ namespace ParallelReverseAutoDiff.VGruExample
                     if (this.IsValidExpansion(tile, direction))
                     {
                         var simulatedGrid = new Dictionary<(int, int), Tile>(this.grid);
-                        this.AddTile(simulatedGrid, tile, direction);
-                        double loss = this.SimulateForwardPass(simulatedGrid);
+                        var simulatedHiddenStates = new Dictionary<(int, int), Tile>(this.hiddenStates);
+                        this.AddTile(simulatedGrid, simulatedHiddenStates, tile, direction);
+                        await this.ReinitializeNetwork(simulatedGrid);
+                        Matrix input = this.ConcatenateInput(simulatedGrid);
+                        double loss = this.SimulateForwardPass(simulatedHiddenStates, input);
 
                         if (loss < minLoss)
                         {
                             minLoss = loss;
                             bestExpansion = (tile, direction);
+                            bestComputationGraph = this.mazeNetwork.ComputationGraph;
+                            bestGrid = simulatedGrid;
+                            bestHiddenState = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
                         }
                     }
                 }
             }
 
+            if (bestComputationGraph != null && bestGrid != null && bestHiddenState != null)
+            {
+                this.mazeComputationGraphs.Add(bestComputationGraph);
+                this.grid = bestGrid;
+                this.UpdateMaxDimensions();
+                this.UpdateHiddenStateTiles(bestHiddenState);
+            }
+
             return bestExpansion;
         }
 
-        private void AddTile(Dictionary<(int X, int Y), Tile> grid, (int X, int Y) position, AppendDirection direction)
+        private void UpdateHiddenStateTiles(Matrix bestHiddenState)
+        {
+            var rows = this.maxHeight;
+            var cols = this.maxWidth;
+            var hiddenStateTileMatrices = bestHiddenState.BreakMatrixIntoTiles(rows, cols);
+            int minX = this.grid.Keys.Min(x => x.Item1);
+            int minY = this.grid.Keys.Min(x => x.Item2);
+            for (int i = minX; i < minX + rows; i++)
+            {
+                for (int j = minY; j < minY + cols; j++)
+                {
+                    this.hiddenStates[(i, j)].Matrix = hiddenStateTileMatrices[i - minX][j - minY];
+                }
+            }
+        }
+
+        private Matrix ConcatenateInput(Dictionary<(int X, int Y), Tile> grid)
+        {
+            return this.MergeTilesIntoMatrix(grid);
+        }
+
+        private async Task ReinitializeNetwork(Dictionary<(int X, int Y), Tile> simulatedGrid)
+        {
+            int[,] structure = new int[GridSize, GridSize];
+            foreach (var pair in simulatedGrid)
+            {
+                var key = pair.Key;
+                var value = pair.Value;
+                structure[key.X, key.Y] = value.IsPlaceholder ? 2 : 1;
+            }
+
+            await this.mazeNetwork.Reinitialize(structure);
+        }
+
+        private bool AddTile(Dictionary<(int X, int Y), Tile> grid, Dictionary<(int X, int Y), Tile> hiddenStates, (int X, int Y) position, AppendDirection direction)
         {
             var newPos = this.GetNewPosition(position, direction);
             if (!grid.ContainsKey(newPos))
             {
                 grid[newPos] = new Tile();
+                grid[newPos].Matrix = this.GetInput();
+
+                hiddenStates[newPos] = new Tile(isPlaceholder: true);
+                return true;
             }
+
+            return false;
         }
 
-        private double SimulateForwardPass(Dictionary<(int X, int Y), Tile> simulatedGrid)
+        private double SimulateForwardPass(Dictionary<(int X, int Y), Tile> hiddenStates, Matrix input)
         {
-            var input = this.GetInput();
-            this.mazeNetwork.InitializeState();
-            this.mazeNetwork.AutomaticForwardPropagate(input, this.GetPreviousHiddenState(this.hiddenStates));
-            this.mazeComputationGraphs.Add(this.mazeNetwork.ComputationGraph);
+            this.mazeNetwork.InitializeState(input);
+            var prevHiddenState = this.GetPreviousHiddenState(hiddenStates);
+            this.mazeNetwork.AutomaticForwardPropagate(input, prevHiddenState);
 
             var output = this.mazeNetwork.Output;
-            var hiddenState = this.mazeNetwork.HiddenState;
-            var hiddenStateTile = this.hiddenStates[(this.currentTileX, this.currentTileY)];
-            hiddenStateTile.Matrix = hiddenState.ToArray().Last();
 
             SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(this.mazeNetwork);
             var target = this.GetTarget();
