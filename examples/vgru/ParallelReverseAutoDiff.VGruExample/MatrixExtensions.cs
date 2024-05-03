@@ -14,6 +14,56 @@ namespace ParallelReverseAutoDiff.VGruExample
     public static class MatrixExtensions
     {
         /// <summary>
+        /// Gets a sub matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="startRow">The start row.</param>
+        /// <param name="startCol">The start column.</param>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="cols">The number of columns.</param>
+        /// <returns>The result.</returns>
+        public static Matrix GetSubMatrix(this Matrix matrix, int startRow, int startCol, int rows, int cols)
+        {
+            Matrix result = new Matrix(rows, cols);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    result[i, j] = matrix[startRow + i, startCol + j];
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Break a matrix into tiles.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="tileRows">The tile rows.</param>
+        /// <param name="tileCols">The tile columns.</param>
+        /// <returns>The result.</returns>
+        public static Matrix[][] BreakMatrixIntoTiles(this Matrix matrix, int tileRows, int tileCols)
+        {
+            int chunkRowSize = matrix.Rows / tileRows;
+            int chunkColSize = matrix.Cols / tileCols;
+
+            Matrix[][] matrixTiles = new Matrix[tileRows][];
+            for (int i = 0; i < tileRows; i++)
+            {
+                matrixTiles[i] = new Matrix[tileCols];
+                for (int j = 0; j < tileCols; j++)
+                {
+                    int startRow = i * chunkRowSize;
+                    int startCol = j * chunkColSize;
+                    matrixTiles[i][j] = matrix.GetSubMatrix(startRow, startCol, chunkRowSize, chunkColSize);
+                }
+            }
+
+            return matrixTiles;
+        }
+
+        /// <summary>
         /// Concatenate a deep matrix.
         /// </summary>
         /// <param name="deepMatrix">The deep matrix.</param>

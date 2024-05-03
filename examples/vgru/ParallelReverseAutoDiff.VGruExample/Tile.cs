@@ -4,10 +4,10 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using ParallelReverseAutoDiff.RMAD;
-
 namespace ParallelReverseAutoDiff.VGruExample
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// A tile.
     /// </summary>

@@ -166,8 +166,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         public async Task Train(DeepMatrix input, double[] targetAngles)
         {
             TileGrid tileGrid = new TileGrid(this.gatedRecurrentNetwork, input.ToArray().ToList(), targetAngles.ToList());
-            await tileGrid.RunTimeStep();
-            await tileGrid.RunTimeStep();
+            await tileGrid.RunTimeSteps();
 
             /*
             int[,] structure = new int[7, 7];

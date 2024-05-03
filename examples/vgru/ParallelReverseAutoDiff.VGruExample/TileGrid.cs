@@ -16,6 +16,7 @@ namespace ParallelReverseAutoDiff.VGruExample
     public class TileGrid
     {
         private const int GridSize = 7;
+        private readonly int TotalTimeSteps;
         private Dictionary<(int, int), Tile> grid = new Dictionary<(int, int), Tile>();
         private Dictionary<(int, int), Tile> hiddenStates = new Dictionary<(int, int), Tile>();
         private List<MazeComputationGraph> mazeComputationGraphs = new List<MazeComputationGraph>();
@@ -25,6 +26,8 @@ namespace ParallelReverseAutoDiff.VGruExample
         private int timeStep = 0;
         private int maxWidth;
         private int maxHeight;
+        private int currentTileX;
+        private int currentTileY;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TileGrid"/> class.
@@ -36,10 +39,33 @@ namespace ParallelReverseAutoDiff.VGruExample
         {
             this.mazeNetwork = mazeNetwork;
             this.inputs = inputs;
+            this.TotalTimeSteps = inputs.Count;
             this.targets = targets;
             this.InitializeGrid();
             this.InitializeHiddenStates();
             this.UpdateMaxDimensions();
+        }
+
+        /// <summary>
+        /// Run time steps.
+        /// </summary>
+        /// <returns>A task.</returns>
+        public async Task RunTimeSteps()
+        {
+            this.RunFirstTimeStep();
+            for (int i = 1; i < this.TotalTimeSteps; ++i)
+            {
+                await this.RunTimeStep();
+            }
+        }
+
+        /// <summary>
+        /// Runs the first time step.
+        /// </summary>
+        public void RunFirstTimeStep()
+        {
+            var simulatedGrid = new Dictionary<(int, int), Tile>(this.grid);
+            this.SimulateForwardPass(simulatedGrid);
         }
 
         /// <summary>
@@ -82,6 +108,8 @@ namespace ParallelReverseAutoDiff.VGruExample
             var input = this.GetInput();
             var center = (GridSize - 1) / 2;
             this.grid[(center, center)] = new Tile(matrix: input);  // Assuming Tile holds vector and state information
+            this.currentTileX = center;
+            this.currentTileY = center;
         }
 
         private void InitializeHiddenStates()
@@ -171,15 +199,28 @@ namespace ParallelReverseAutoDiff.VGruExample
         {
             var input = this.GetInput();
             this.mazeNetwork.InitializeState();
-            this.mazeNetwork.AutomaticForwardPropagate(input, null);
+            this.mazeNetwork.AutomaticForwardPropagate(input, this.GetPreviousHiddenState(this.hiddenStates));
             this.mazeComputationGraphs.Add(this.mazeNetwork.ComputationGraph);
 
             var output = this.mazeNetwork.Output;
+            var hiddenState = this.mazeNetwork.HiddenState;
+            var hiddenStateTile = this.hiddenStates[(this.currentTileX, this.currentTileY)];
+            hiddenStateTile.Matrix = hiddenState.ToArray().Last();
 
             SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(this.mazeNetwork);
             var target = this.GetTarget();
             var loss = lossOp.Forward(output, target);
             return loss[0, 0];
+        }
+
+        private Matrix? GetPreviousHiddenState(Dictionary<(int X, int Y), Tile> simulatedGrid)
+        {
+            if (simulatedGrid.Keys.Count == 0)
+            {
+                return null;
+            }
+
+            return this.MergeTilesIntoMatrix(simulatedGrid);
         }
 
         private bool IsValidExpansion((int X, int Y) tile, AppendDirection direction)
@@ -224,6 +265,57 @@ namespace ParallelReverseAutoDiff.VGruExample
                 AppendDirection.Right => (position.X, position.Y + 1),
                 _ => position,
             };
+        }
+
+        private Matrix MergeTilesIntoMatrix(Dictionary<(int X, int Y), Tile> hiddenStates)
+        {
+            // Determine the size of the matrix from the keys in the dictionary
+            int minRow = hiddenStates.Keys.Min(k => k.X);
+            int maxRow = hiddenStates.Keys.Max(k => k.X);
+            int minCol = hiddenStates.Keys.Min(k => k.Y);
+            int maxCol = hiddenStates.Keys.Max(k => k.Y);
+
+            // Assume each tile has the same size of matrix
+            int tileRows = hiddenStates.First().Value.Matrix.Rows;
+            int tileCols = hiddenStates.First().Value.Matrix.Cols;
+
+            int totalRows = (maxRow - minRow + 1) * tileRows;
+            int totalCols = (maxCol - minCol + 1) * tileCols;
+
+            Matrix resultMatrix = new Matrix(totalRows, totalCols);
+
+            // Fill the result matrix with the matrices from the tiles
+            foreach (var key in hiddenStates.Keys)
+            {
+                Tile tile = hiddenStates[key];
+                int startRow = (key.X - minRow) * tileRows;
+                int startCol = (key.Y - minCol) * tileCols;
+
+                if (tile.IsPlaceholder)
+                {
+                    // Fill this tile's area with zeros
+                    for (int i = 0; i < tileRows; i++)
+                    {
+                        for (int j = 0; j < tileCols; j++)
+                        {
+                            resultMatrix[startRow + i, startCol + j] = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    // Copy this tile's matrix into the appropriate location in the result matrix
+                    for (int i = 0; i < tileRows; i++)
+                    {
+                        for (int j = 0; j < tileCols; j++)
+                        {
+                            resultMatrix[startRow + i, startCol + j] = tile.Matrix[i, j];
+                        }
+                    }
+                }
+            }
+
+            return resultMatrix;
         }
     }
 }
