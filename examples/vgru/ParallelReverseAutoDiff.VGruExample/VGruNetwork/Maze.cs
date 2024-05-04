@@ -118,9 +118,9 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             var endCol = -1;
             var m = 0;
             List<int> ii = new List<int>();
-            for (int a = 0; a < 7; ++a)
+            for (int a = 0; a < 9; ++a)
             {
-                for (int b = 0; b < 7; ++b)
+                for (int b = 0; b < 9; ++b)
                 {
                     if (this.Structure[a, b] > 0)
                     {
@@ -221,8 +221,8 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// </summary>
         public void InitializeStructure()
         {
-            this.Structure = new int[7, 7];
-            this.Structure[3, 3] = 1;
+            this.Structure = new int[9, 9];
+            this.Structure[4, 4] = 1;
         }
 
         /// <summary>
@@ -231,9 +231,9 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <param name="structure">The structure.</param>
         public void ReinitializeAndUpdate(int[,] structure)
         {
-            for (int i = 0; i < 7; ++i)
+            for (int i = 0; i < 9; ++i)
             {
-                for (int j = 0; j < 7; ++j)
+                for (int j = 0; j < 9; ++j)
                 {
                     this.Structure[i, j] = structure[i, j];
                 }
@@ -258,9 +258,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                     {
                         var index = indices[k++];
 
-                        // var weights = layer.WeightDeepMatrix(identifier)[index];
-                        // var subWeights = this.GetSubMatrix(matrices[0], i * weights.Rows, j * weights.Cols, weights.Rows, weights.Cols);
-                        // weights.Replace(subWeights.ToArray());
                         var gradients = layer.GradientDeepMatrix(identifier)[index];
                         var subGradients = this.GetSubMatrix(matrices[1], i * gradients.Rows, j * gradients.Cols, gradients.Rows, gradients.Cols);
                         gradients.Accumulate(subGradients.ToArray());
@@ -285,9 +282,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                     {
                         var index = indices[k++];
 
-                        // var weights = layer.WeightDeepMatrix(identifier)[index];
-                        // var subWeights = this.GetSubMatrix(matrices[0], i * weights.Rows, j * weights.Cols, weights.Rows, weights.Cols);
-                        // weights.Replace(subWeights.ToArray());
                         var gradients = layer.GradientDeepMatrix(identifier)[index];
                         var subGradients = this.GetSubMatrix(matrices[1], i * gradients.Rows, j * gradients.Cols, gradients.Rows, gradients.Cols);
                         gradients.Accumulate(subGradients.ToArray());
@@ -318,9 +312,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                     {
                         var index = indices[k++];
 
-                        // var weights = layer.WeightDeepMatrix(identifier)[index];
-                        // var subWeights = this.GetSubMatrix(matrices[0], i * weights.Rows, j * weights.Cols, weights.Rows, weights.Cols);
-                        // weights.Replace(subWeights.ToArray());
                         var gradients = layer.GradientDeepMatrix(identifier)[index];
                         var subGradients = this.GetSubMatrix(matrices[1], i * gradients.Rows, j * gradients.Cols, gradients.Rows, gradients.Cols);
                         gradients.Accumulate(subGradients.ToArray());
@@ -345,8 +336,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 {
                     var index = indices[k++];
                     this.SetSubMatrix(mWeights[0], layer.WeightDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
-
-                    // this.SetSubMatrix(mWeights[1], layer.GradientDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
                 }
             }
 
@@ -369,8 +358,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 {
                     var index = indices[k++];
                     this.SetSubMatrix(mWeights[0], layer.WeightDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
-
-                    // this.SetSubMatrix(mWeights[1], layer.GradientDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
                 }
             }
 
@@ -394,6 +381,16 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                     var ii = new int[] { indices[0], indices[1], indices[2], indices[0] + 7, indices[1] + 7, indices[2] + 7, indices[0] + 14, indices[1] + 14, indices[2] + 14 };
                     indices = ii;
                 }
+                else if (numCols == 4)
+                {
+                    var ii = new int[] { indices[0], indices[1], indices[2], indices[3], indices[0] + 7, indices[1] + 7, indices[2] + 7, indices[3] + 7, indices[0] + 14, indices[1] + 14, indices[2] + 14, indices[3] + 14, indices[0] + 21, indices[1] + 21, indices[2] + 21, indices[3] + 21 };
+                    indices = ii;
+                }
+                else if (numCols == 5)
+                {
+                    var ii = new int[] { indices[0], indices[1], indices[2], indices[3], indices[4], indices[0] + 7, indices[1] + 7, indices[2] + 7, indices[3] + 7, indices[4] + 7, indices[0] + 14, indices[1] + 14, indices[2] + 14, indices[3] + 14, indices[4] + 14, indices[0] + 21, indices[1] + 21, indices[2] + 21, indices[3] + 21, indices[4] + 21, indices[0] + 28, indices[1] + 28, indices[2] + 28, indices[3] + 28, indices[4] + 28 };
+                    indices = ii;
+                }
             }
 
             var mWeights = new Matrix[2];
@@ -407,8 +404,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 {
                     var index = indices[k++];
                     this.SetSubMatrix(mWeights[0], layer.WeightDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
-
-                    // this.SetSubMatrix(mWeights[1], layer.GradientDeepMatrix(identifier)[index], i * weights.Rows, j * weights.Cols);
                 }
             }
 

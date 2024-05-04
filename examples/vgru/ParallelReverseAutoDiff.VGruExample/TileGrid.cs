@@ -15,7 +15,7 @@ namespace ParallelReverseAutoDiff.VGruExample
     /// </summary>
     public class TileGrid
     {
-        private const int GridSize = 7;
+        private const int GridSize = 9;
         private readonly int TotalTimeSteps;
         private Dictionary<(int, int), Tile> grid = new Dictionary<(int, int), Tile>();
         private Dictionary<(int, int), Tile> hiddenStates = new Dictionary<(int, int), Tile>();
@@ -129,9 +129,13 @@ namespace ParallelReverseAutoDiff.VGruExample
         {
             var minX = grid.Keys.Min(p => p.X);
             var minY = grid.Keys.Min(p => p.Y);
-            for (int i = minX; i < minX + this.maxHeight; i++)
+            var maxX = grid.Keys.Max(p => p.X);
+            var maxY = grid.Keys.Max(p => p.Y);
+            var maxHeight = maxX - minX + 1;
+            var maxWidth = maxY - minY + 1;
+            for (int i = minX; i < minX + maxHeight; i++)
             {
-                for (int j = minY; j < minY + this.maxWidth; j++)
+                for (int j = minY; j < minY + maxWidth; j++)
                 {
                     if (!grid.ContainsKey((i, j)))
                     {
@@ -240,6 +244,16 @@ namespace ParallelReverseAutoDiff.VGruExample
         {
             var newPos = this.GetNewPosition(position, direction);
             if (!grid.ContainsKey(newPos))
+            {
+                grid[newPos] = new Tile();
+                grid[newPos].Matrix = this.GetInput();
+
+                hiddenStates[newPos] = new Tile(isPlaceholder: true);
+                this.currentTileX = newPos.X;
+                this.currentTileY = newPos.Y;
+                return true;
+            }
+            else if (grid[newPos].IsPlaceholder)
             {
                 grid[newPos] = new Tile();
                 grid[newPos].Matrix = this.GetInput();
