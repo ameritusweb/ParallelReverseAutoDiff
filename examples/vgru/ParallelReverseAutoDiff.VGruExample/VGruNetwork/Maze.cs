@@ -384,8 +384,16 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             int[] indices = this.Indices;
             if (indices.Length < numCols * numCols)
             {
-                var ii = new int[] { indices[0], indices[1], indices[0] + 7, indices[1] + 7 };
-                indices = ii;
+                if (numCols == 2)
+                {
+                    var ii = new int[] { indices[0], indices[1], indices[0] + 7, indices[1] + 7 };
+                    indices = ii;
+                }
+                else if (numCols == 3)
+                {
+                    var ii = new int[] { indices[0], indices[1], indices[2], indices[0] + 7, indices[1] + 7, indices[2] + 7, indices[0] + 14, indices[1] + 14, indices[2] + 14 };
+                    indices = ii;
+                }
             }
 
             var mWeights = new Matrix[2];

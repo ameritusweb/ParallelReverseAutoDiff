@@ -85,15 +85,8 @@ namespace ParallelReverseAutoDiff.VGruExample
         public async Task RunTimeStep()
         {
             var bestExpansion = await this.FindBestExpansion();
-            if (bestExpansion.HasValue)
-            {
-                this.ApplyExpansion(bestExpansion.Value.Position, bestExpansion.Value.Direction);
-                this.UpdateHiddenStatesForExpansion(bestExpansion.Value.Position, bestExpansion.Value.Direction);
-            }
 
-            this.UpdateMaxDimensions();
-            this.FillPlaceholders();  // Ensure the grid and hidden states remain rectangular
-            await this.Backpropagate();
+            this.FillPlaceholders(this.grid, this.hiddenStates);  // Ensure the grid and hidden states remain rectangular
             this.timeStep++;
         }
 
@@ -124,36 +117,26 @@ namespace ParallelReverseAutoDiff.VGruExample
 
         private void UpdateMaxDimensions()
         {
-            this.maxWidth = this.grid.Keys.Max(p => p.Item1) + 1;
-            this.maxHeight = this.grid.Keys.Max(p => p.Item2) + 1;
+            var maxX = this.grid.Keys.Max(p => p.Item1);
+            var maxY = this.grid.Keys.Max(p => p.Item2);
+            var minX = this.grid.Keys.Min(p => p.Item1);
+            var minY = this.grid.Keys.Min(p => p.Item2);
+            this.maxWidth = maxY - minY + 1;
+            this.maxHeight = maxX - minX + 1;
         }
 
-        private void UpdateHiddenStatesForExpansion((int X, int Y) position, AppendDirection direction)
+        private void FillPlaceholders(Dictionary<(int X, int Y), Tile> grid, Dictionary<(int X, int Y), Tile> hiddenStates)
         {
-            // Add new tiles to hidden states where the grid has expanded
-            this.ExpandHiddenStates(position, direction);
-        }
-
-        private void ExpandHiddenStates((int X, int Y) position, AppendDirection direction)
-        {
-            var newPosition = this.GetNewPosition(position, direction);
-            if (!this.hiddenStates.ContainsKey(newPosition))
+            var minX = grid.Keys.Min(p => p.X);
+            var minY = grid.Keys.Min(p => p.Y);
+            for (int i = minX; i < minX + this.maxHeight; i++)
             {
-                // Initialize new hidden state tiles as placeholders
-                this.hiddenStates[newPosition] = new Tile(isPlaceholder: true);
-            }
-        }
-
-        private void FillPlaceholders()
-        {
-            for (int i = 0; i < this.maxHeight; i++)
-            {
-                for (int j = 0; j < this.maxWidth; j++)
+                for (int j = minY; j < minY + this.maxWidth; j++)
                 {
-                    if (!this.grid.ContainsKey((i, j)))
+                    if (!grid.ContainsKey((i, j)))
                     {
-                        this.grid[(i, j)] = new Tile(isPlaceholder: true);
-                        this.hiddenStates[(i, j)] = new Tile(isPlaceholder: true);
+                        grid[(i, j)] = new Tile(isPlaceholder: true);
+                        hiddenStates[(i, j)] = new Tile(isPlaceholder: true);
                     }
                 }
             }
@@ -167,34 +150,44 @@ namespace ParallelReverseAutoDiff.VGruExample
             MazeComputationGraph? bestComputationGraph = null;
             Dictionary<(int X, int Y), Tile>? bestGrid = null;
             Matrix? bestHiddenState = null;
+            (int X, int Y)? bestNextTile = null;
 
-            foreach (var tile in this.GetPerimeterTiles())
+            (int X, int Y) currentTile = (this.currentTileX, this.currentTileY);
+
+            foreach (AppendDirection direction in Enum.GetValues(typeof(AppendDirection)))
             {
-                foreach (AppendDirection direction in Enum.GetValues(typeof(AppendDirection)))
+                if (this.IsValidExpansion(currentTile, direction))
                 {
-                    if (this.IsValidExpansion(tile, direction))
+                    var simulatedGrid = new Dictionary<(int, int), Tile>(this.grid);
+                    var simulatedHiddenStates = new Dictionary<(int, int), Tile>(this.hiddenStates);
+                    bool couldAdd = this.AddTile(simulatedGrid, simulatedHiddenStates, currentTile, direction);
+                    if (!couldAdd)
                     {
-                        var simulatedGrid = new Dictionary<(int, int), Tile>(this.grid);
-                        var simulatedHiddenStates = new Dictionary<(int, int), Tile>(this.hiddenStates);
-                        this.AddTile(simulatedGrid, simulatedHiddenStates, tile, direction);
-                        await this.ReinitializeNetwork(simulatedGrid);
-                        Matrix input = this.ConcatenateInput(simulatedGrid);
-                        double loss = this.SimulateForwardPass(simulatedHiddenStates, input);
+                        continue;
+                    }
 
-                        if (loss < minLoss)
-                        {
-                            minLoss = loss;
-                            bestExpansion = (tile, direction);
-                            bestComputationGraph = this.mazeNetwork.ComputationGraph;
-                            bestGrid = simulatedGrid;
-                            bestHiddenState = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
-                        }
+                    this.FillPlaceholders(simulatedGrid, simulatedHiddenStates);
+
+                    await this.ReinitializeNetwork(simulatedGrid);
+                    Matrix input = this.ConcatenateInput(simulatedGrid);
+                    double loss = this.SimulateForwardPass(simulatedHiddenStates, input);
+
+                    if (loss < minLoss)
+                    {
+                        bestNextTile = this.GetNewPosition(currentTile, direction);
+                        minLoss = loss;
+                        bestExpansion = (currentTile, direction);
+                        bestComputationGraph = this.mazeNetwork.ComputationGraph;
+                        bestGrid = simulatedGrid;
+                        bestHiddenState = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
                     }
                 }
             }
 
-            if (bestComputationGraph != null && bestGrid != null && bestHiddenState != null)
+            if (bestComputationGraph != null && bestGrid != null && bestHiddenState != null && bestNextTile != null)
             {
+                this.currentTileX = bestNextTile.Value.X;
+                this.currentTileY = bestNextTile.Value.Y;
                 this.mazeComputationGraphs.Add(bestComputationGraph);
                 this.grid = bestGrid;
                 this.UpdateMaxDimensions();
@@ -215,6 +208,11 @@ namespace ParallelReverseAutoDiff.VGruExample
             {
                 for (int j = minY; j < minY + cols; j++)
                 {
+                    if (!this.hiddenStates.ContainsKey((i, j)))
+                    {
+                        this.hiddenStates[(i, j)] = new Tile();
+                    }
+
                     this.hiddenStates[(i, j)].Matrix = hiddenStateTileMatrices[i - minX][j - minY];
                 }
             }
@@ -247,6 +245,8 @@ namespace ParallelReverseAutoDiff.VGruExample
                 grid[newPos].Matrix = this.GetInput();
 
                 hiddenStates[newPos] = new Tile(isPlaceholder: true);
+                this.currentTileX = newPos.X;
+                this.currentTileY = newPos.Y;
                 return true;
             }
 
@@ -279,37 +279,16 @@ namespace ParallelReverseAutoDiff.VGruExample
 
         private bool IsValidExpansion((int X, int Y) tile, AppendDirection direction)
         {
+            if (direction == AppendDirection.VectorLeft || direction == AppendDirection.VectorRight)
+            {
+                return false;
+            }
+
             // Placeholder logic to check if expansion in this direction is valid
             return true;
         }
 
-        private List<(int X, int Y)> GetPerimeterTiles()
-        {
-            return this.grid.Keys.Where(key => this.IsPerimeterTile(key)).ToList();
-        }
-
-        private bool IsPerimeterTile((int X, int Y) position)
-        {
-            foreach (AppendDirection direction in Enum.GetValues(typeof(AppendDirection)))
-            {
-                var newPos = this.GetNewPosition(position, direction);
-                if (!this.grid.ContainsKey(newPos))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private void ApplyExpansion((int X, int T) position, AppendDirection direction)
-        {
-            // Apply expansion logic to the grid
-            var newPos = this.GetNewPosition(position, direction);
-            this.grid[newPos] = new Tile();  // Add new tile to the grid
-        }
-
-        private (int X, int T) GetNewPosition((int X, int Y) position, AppendDirection direction)
+        private (int X, int Y) GetNewPosition((int X, int Y) position, AppendDirection direction)
         {
             return direction switch
             {
