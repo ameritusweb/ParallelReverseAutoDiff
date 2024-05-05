@@ -65,14 +65,14 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                     .AddModelElementGroup("HiddenWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("WUpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("UUpdateWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
-                    .AddModelElementGroup("WUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
-                    .AddModelElementGroup("UUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("WUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UUpdateVectors", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("ZKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("ZKB", new[] { numTimeSteps, 1, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("WResetWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("UResetWeights", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures }, InitializationType.XavierUniform, 1.0d)
-                    .AddModelElementGroup("WResetVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
-                    .AddModelElementGroup("UResetVectors", new[] { numTimeSteps, numNestedOutputFeatures, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("WResetVectors", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
+                    .AddModelElementGroup("UResetVectors", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("RKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("RKB", new[] { numTimeSteps, 1, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
                     .AddModelElementGroup("IKeys", new[] { numTimeSteps, numNestedOutputFeatures * 2, numNestedOutputFeatures * 2 }, InitializationType.XavierUniform, 1.0d)
@@ -185,6 +185,33 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         }
 
         /// <summary>
+        /// Reset the maze.
+        /// </summary>
+        public void ResetMaze()
+        {
+            this.maze.InitializeStructure();
+            this.maze.SetWeightsFromStructure();
+        }
+
+        /// <summary>
+        /// Set the maze.
+        /// </summary>
+        /// <param name="maze">The maze.</param>
+        public void SetMaze(Maze maze)
+        {
+            this.maze = maze;
+        }
+
+        /// <summary>
+        /// Clone the maze.
+        /// </summary>
+        /// <returns>The cloned maze.</returns>
+        public Maze CloneMaze()
+        {
+            return (Maze)this.maze.Clone();
+        }
+
+        /// <summary>
         /// Updates model layers.
         /// </summary>
         public void UpdateModelLayers()
@@ -217,9 +244,6 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <param name="previousHiddenState">The previous hidden state.</param>
         public void AutomaticForwardPropagate(Matrix input, Matrix? previousHiddenState)
         {
-            // Initialize hidden state, gradients, biases, and intermediates
-            this.ClearState();
-
             CommonMatrixUtils.SetInPlaceReplace(this.Input, input);
             if (previousHiddenState != null)
             {
@@ -236,6 +260,18 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
             do
             {
                 var parameters = this.LookupParameters(op);
+
+                for (int i = 0; i < parameters.Length; ++i)
+                {
+                    if (parameters[i] is Matrix m)
+                    {
+                        parameters[i] = m.Clone();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Parameters should be matrices.");
+                    }
+                }
 
                 var forward = op.OperationType.GetMethod("Forward", parameters.Select(x => x.GetType()).ToArray());
                 if (forward == null)
@@ -286,18 +322,19 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// The backward pass of the edge attention neural network.
         /// </summary>
         /// <param name="gradient">The gradient of the loss.</param>
+        /// <param name="computationGraph">The computation graph.</param>
         /// <returns>The gradient.</returns>
-        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient)
+        public async Task<Matrix> AutomaticBackwardPropagate(Matrix gradient, MazeComputationGraph computationGraph)
         {
             IOperationBase? backwardStartOperation = null;
-            backwardStartOperation = this.computationGraph[$"output_0_0"];
+            backwardStartOperation = computationGraph[$"output_0_0"];
 
             if (!CommonMatrixUtils.IsAllZeroes(gradient))
             {
                 backwardStartOperation.BackwardInput = gradient;
                 OperationNeuralNetworkVisitor opVisitor = new OperationNeuralNetworkVisitor(Guid.NewGuid().ToString(), backwardStartOperation, 0);
                 opVisitor.RunSequentially = true;
-                var op1 = this.computationGraph["z_add_0_0"];
+                var op1 = computationGraph["z_add_0_0"];
                 await opVisitor.TraverseAsync();
                 if (opVisitor.AggregateException != null)
                 {
@@ -314,7 +351,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
                 opVisitor.Reset();
             }
 
-            IOperationBase? backwardEndOperation = this.computationGraph["scale_previous_by_modulated_z_0_0"];
+            IOperationBase? backwardEndOperation = computationGraph["scale_previous_by_modulated_z_0_0"];
             if (backwardEndOperation.CalculatedGradient[0] != null)
             {
                 return gradient;
@@ -381,7 +418,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork
         /// <summary>
         /// Clear the state of the edge attention neural network.
         /// </summary>
-        private void ClearState()
+        public void ClearState()
         {
             GradientClearer clearer = new GradientClearer();
             clearer.Clear(this.ModelLayers.ToArray());

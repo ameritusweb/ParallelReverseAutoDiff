@@ -20,7 +20,11 @@ namespace ParallelReverseAutoDiff.VGruExample
         private Dictionary<(int, int), Tile> grid = new Dictionary<(int, int), Tile>();
         private Dictionary<(int, int), Tile> hiddenStates = new Dictionary<(int, int), Tile>();
         private List<MazeComputationGraph> mazeComputationGraphs = new List<MazeComputationGraph>();
+        private List<MazeComputationGraph> moreGraphs = new List<MazeComputationGraph>();
         private MazeNetwork mazeNetwork;
+        private Matrix lastGradient;
+        private double lastActualAngle;
+        private Maze lastMaze;
         private List<Matrix> inputs;
         private List<double> targets;
         private int timeStep = 0;
@@ -51,7 +55,8 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>A task.</returns>
         public async Task RunTimeSteps()
         {
-            this.RunFirstTimeStep();
+            this.mazeNetwork.ClearState();
+            await this.RunFirstTimeStep();
             for (int i = 1; i < this.TotalTimeSteps; ++i)
             {
                 await this.RunTimeStep();
@@ -61,9 +66,10 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <summary>
         /// Runs the first time step.
         /// </summary>
-        public void RunFirstTimeStep()
+        /// <returns>A task.</returns>
+        public async Task RunFirstTimeStep()
         {
-            this.SimulateForwardPass(this.hiddenStates, this.GetInput());
+            this.SimulateForwardPass(this.hiddenStates, this.GetInput(), AppendDirection.VectorLeft);
 
             var hiddenStateKey = (this.currentTileX, this.currentTileY);
             if (!this.hiddenStates.ContainsKey(hiddenStateKey))
@@ -75,6 +81,9 @@ namespace ParallelReverseAutoDiff.VGruExample
             hiddenStateTile.Matrix = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
 
             this.mazeComputationGraphs.Add(this.mazeNetwork.ComputationGraph);
+
+            await this.Backpropagate(this.mazeComputationGraphs.Last());
+
             this.timeStep++;
         }
 
@@ -87,13 +96,25 @@ namespace ParallelReverseAutoDiff.VGruExample
             var bestExpansion = await this.FindBestExpansion();
 
             this.FillPlaceholders(this.grid, this.hiddenStates);  // Ensure the grid and hidden states remain rectangular
+
+            await this.Backpropagate(this.mazeComputationGraphs.Last());
+
             this.timeStep++;
         }
 
-        private async Task Backpropagate()
+        private async Task Backpropagate(MazeComputationGraph computationGraph)
         {
-            Matrix gradient = new Matrix();
-            await this.mazeNetwork.AutomaticBackwardPropagate(gradient);
+            Matrix gradient = this.lastGradient;
+            Maze maze = this.lastMaze;
+            await this.mazeNetwork.AutomaticBackwardPropagate(gradient, computationGraph);
+
+            if (maze != null)
+            {
+                maze.UpdateModelLayers();
+                return;
+            }
+
+            this.mazeNetwork.UpdateModelLayers();
         }
 
         private Matrix GetInput()
@@ -154,6 +175,9 @@ namespace ParallelReverseAutoDiff.VGruExample
             MazeComputationGraph? bestComputationGraph = null;
             Dictionary<(int X, int Y), Tile>? bestGrid = null;
             Matrix? bestHiddenState = null;
+            Matrix? bestGradient = null;
+            double? bestActualAngle = null;
+            Maze? bestMaze = null;
             (int X, int Y)? bestNextTile = null;
 
             (int X, int Y) currentTile = (this.currentTileX, this.currentTileY);
@@ -172,9 +196,19 @@ namespace ParallelReverseAutoDiff.VGruExample
 
                     this.FillPlaceholders(simulatedGrid, simulatedHiddenStates);
 
-                    await this.ReinitializeNetwork(simulatedGrid);
+                    try
+                    {
+                        await this.ReinitializeNetwork(simulatedGrid);
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+
                     Matrix input = this.ConcatenateInput(simulatedGrid);
-                    double loss = this.SimulateForwardPass(simulatedHiddenStates, input);
+                    double loss = this.SimulateForwardPass(simulatedHiddenStates, input, direction);
+
+                    this.moreGraphs.Add(this.mazeNetwork.ComputationGraph);
 
                     if (loss < minLoss)
                     {
@@ -182,20 +216,26 @@ namespace ParallelReverseAutoDiff.VGruExample
                         minLoss = loss;
                         bestExpansion = (currentTile, direction);
                         bestComputationGraph = this.mazeNetwork.ComputationGraph;
+                        bestGradient = this.lastGradient;
+                        bestActualAngle = this.lastActualAngle;
                         bestGrid = simulatedGrid;
                         bestHiddenState = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
+                        bestMaze = this.mazeNetwork.CloneMaze();
                     }
                 }
             }
 
-            if (bestComputationGraph != null && bestGrid != null && bestHiddenState != null && bestNextTile != null)
+            if (bestComputationGraph != null && bestGrid != null && bestHiddenState != null && bestNextTile != null && bestGradient != null && bestMaze != null && bestActualAngle != null)
             {
+                Console.WriteLine($"Best expansion: {bestExpansion}, Loss: {minLoss}, Actual Angle: {bestActualAngle}");
                 this.currentTileX = bestNextTile.Value.X;
                 this.currentTileY = bestNextTile.Value.Y;
                 this.mazeComputationGraphs.Add(bestComputationGraph);
                 this.grid = bestGrid;
                 this.UpdateMaxDimensions();
                 this.UpdateHiddenStateTiles(bestHiddenState);
+                this.lastGradient = (Matrix)bestGradient.Clone();
+                this.lastMaze = bestMaze;
             }
 
             return bestExpansion;
@@ -267,7 +307,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             return false;
         }
 
-        private double SimulateForwardPass(Dictionary<(int X, int Y), Tile> hiddenStates, Matrix input)
+        private double SimulateForwardPass(Dictionary<(int X, int Y), Tile> hiddenStates, Matrix input, AppendDirection direction)
         {
             this.mazeNetwork.InitializeState(input);
             var prevHiddenState = this.GetPreviousHiddenState(hiddenStates);
@@ -278,6 +318,13 @@ namespace ParallelReverseAutoDiff.VGruExample
             SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(this.mazeNetwork);
             var target = this.GetTarget();
             var loss = lossOp.Forward(output, target);
+
+            // Console.WriteLine($"Loss: {loss[0, 0]}, Direction: {direction.ToString()}, Actual Angle: {lossOp.ActualAngle}");
+            var gradient = lossOp.Backward();
+            this.lastGradient = gradient;
+
+            this.lastActualAngle = lossOp.ActualAngle;
+
             return loss[0, 0];
         }
 

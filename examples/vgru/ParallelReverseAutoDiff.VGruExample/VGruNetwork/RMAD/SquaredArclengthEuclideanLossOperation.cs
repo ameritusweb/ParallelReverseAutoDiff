@@ -26,6 +26,11 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD
         private double maxMagnitude;
 
         /// <summary>
+        /// Gets the actual angle.
+        /// </summary>
+        public double ActualAngle => this.actualAngle;
+
+        /// <summary>
         /// A common method for instantiating an operation.
         /// </summary>
         /// <param name="net">The neural network.</param>
@@ -50,7 +55,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD
             this.yOutput = yOutput;
 
             // Maximum magnitude achievable by the summation of 225 unit vectors
-            double maxMagnitude = 225;
+            double maxMagnitude = 1d;
             this.maxMagnitude = maxMagnitude;
 
             double magnitude = Math.Sqrt((xOutput * xOutput) + (yOutput * yOutput));
@@ -95,6 +100,7 @@ namespace ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD
             // Compute the squared magnitude of the loss
             double lossMagnitude = (arcLength + distanceAccum) / 2d;
 
+            // Console.WriteLine($"{this.targetAngle} {this.actualAngle} {arcLength} {distanceAccum}");
             var output = new Matrix(1, 1);
             output[0, 0] = lossMagnitude;
 

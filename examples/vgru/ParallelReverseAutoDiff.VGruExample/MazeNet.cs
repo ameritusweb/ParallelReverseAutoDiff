@@ -63,6 +63,7 @@ namespace ParallelReverseAutoDiff.VGruExample
             GradientClearer clearer = new GradientClearer();
             clearer.Clear(this.modelLayers.ToArray());
 
+            this.gatedRecurrentNetwork.ResetMaze();
             await this.gatedRecurrentNetwork.Initialize();
             this.gatedRecurrentNetwork.Parameters.AdamIteration++;
 
@@ -93,7 +94,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>The task.</returns>
         public async Task Initialize()
         {
-            var initialAdamIteration = 1;
+            var initialAdamIteration = 463;
             var model = new VGruNetwork.MazeNetwork(this.numTimeSteps, this.numLayers, this.numNodes, this.numFeatures, this.learningRate, this.clipValue);
             model.Parameters.AdamIteration = initialAdamIteration;
             this.gatedRecurrentNetwork = model;
@@ -135,7 +136,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// </summary>
         public void ApplyWeights()
         {
-            var guid = "650f3fb3-e67d-41bb-be2c-45ddd3ad4d58_3610";
+            var guid = "9ef3e964-308f-4d15-b93f-ebede401b996_463";
             var dir = $"E:\\mazestore\\{guid}";
             for (int i = 0; i < this.modelLayers.Count; ++i)
             {

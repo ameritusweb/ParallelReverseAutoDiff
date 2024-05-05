@@ -47,16 +47,16 @@ namespace ParallelReverseAutoDiff.RMAD
             this.sumX = new Matrix(input1.Rows, input2.Cols / 2);
             this.sumY = new Matrix(input1.Rows, input2.Cols / 2);
 
-            double[,] dInputMag_dOutputMag = new double[input1.Rows, input2.Rows];
-            double[,] dInputMag_dOutputAngle = new double[input1.Rows, input2.Rows];
-            double[,] dInputAngle_dOutputMag = new double[input1.Rows, input2.Rows];
-            double[,] dInputAngle_dOutputAngle = new double[input1.Rows, input2.Rows];
-            double[,] dInput2Mag_dOutputMag = new double[input2.Rows, input2.Cols / 2];
-            double[,] dInput2Mag_dOutputAngle = new double[input2.Rows, input2.Cols / 2];
-            double[,] dInput2Angle_dOutputMag = new double[input2.Rows, input2.Cols / 2];
-            double[,] dInput2Angle_dOutputAngle = new double[input2.Rows, input2.Cols / 2];
-            double[,] dWeight_dOutputMag = new double[input2.Rows, input2.Cols / 2];
-            double[,] dWeight_dOutputAngle = new double[input2.Rows, input2.Cols / 2];
+            double[,] dInputMag_dOutputMag = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInputMag_dOutputAngle = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInputAngle_dOutputMag = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInputAngle_dOutputAngle = new double[input1.Rows, input2.Rows / 2];
+            double[,] dInput2Mag_dOutputMag = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dInput2Mag_dOutputAngle = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dInput2Angle_dOutputMag = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dInput2Angle_dOutputAngle = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dWeight_dOutputMag = new double[input2.Rows / 2, input2.Cols / 2];
+            double[,] dWeight_dOutputAngle = new double[input2.Rows / 2, input2.Cols / 2];
 
             Parallel.For(0, input1.Rows, i =>
             {
@@ -65,29 +65,29 @@ namespace ParallelReverseAutoDiff.RMAD
                     double sumX = 0.0d;
                     double sumY = 0.0d;
 
-                    double[] dDeltaX_dX1 = new double[input2.Rows];
-                    double[] dDeltaY_dY1 = new double[input2.Rows];
-                    double[] dDeltaX_dX2 = new double[input2.Rows];
-                    double[] dDeltaY_dY2 = new double[input2.Rows];
-                    double[] dSumX_dDeltaX = new double[input2.Rows];
-                    double[] dSumX_dDeltaY = new double[input2.Rows];
-                    double[] dSumY_dDeltaX = new double[input2.Rows];
-                    double[] dSumY_dDeltaY = new double[input2.Rows];
-                    double[] dDeltaX_dWeight = new double[input2.Rows];
-                    double[] dDeltaY_dWeight = new double[input2.Rows];
-                    double[] dX1_dMagnitude = new double[input2.Rows];
-                    double[] dY1_dMagnitude = new double[input2.Rows];
-                    double[] dX1_dAngle = new double[input2.Rows];
-                    double[] dY1_dAngle = new double[input2.Rows];
-                    double[] dX2_dWMagnitude = new double[input2.Rows];
-                    double[] dY2_dWMagnitude = new double[input2.Rows];
-                    double[] dX2_dWAngle = new double[input2.Rows];
-                    double[] dY2_dWAngle = new double[input2.Rows];
-                    double[] dSumX_dResultMagnitude = new double[input2.Rows];
-                    double[] dSumY_dResultMagnitude = new double[input2.Rows];
-                    double[] dResultMagnitude_dWeight = new double[input2.Rows];
+                    double[] dDeltaX_dX1 = new double[input2.Rows / 2];
+                    double[] dDeltaY_dY1 = new double[input2.Rows / 2];
+                    double[] dDeltaX_dX2 = new double[input2.Rows / 2];
+                    double[] dDeltaY_dY2 = new double[input2.Rows / 2];
+                    double[] dSumX_dDeltaX = new double[input2.Rows / 2];
+                    double[] dSumX_dDeltaY = new double[input2.Rows / 2];
+                    double[] dSumY_dDeltaX = new double[input2.Rows / 2];
+                    double[] dSumY_dDeltaY = new double[input2.Rows / 2];
+                    double[] dDeltaX_dWeight = new double[input2.Rows / 2];
+                    double[] dDeltaY_dWeight = new double[input2.Rows / 2];
+                    double[] dX1_dMagnitude = new double[input2.Rows / 2];
+                    double[] dY1_dMagnitude = new double[input2.Rows / 2];
+                    double[] dX1_dAngle = new double[input2.Rows / 2];
+                    double[] dY1_dAngle = new double[input2.Rows / 2];
+                    double[] dX2_dWMagnitude = new double[input2.Rows / 2];
+                    double[] dY2_dWMagnitude = new double[input2.Rows / 2];
+                    double[] dX2_dWAngle = new double[input2.Rows / 2];
+                    double[] dY2_dWAngle = new double[input2.Rows / 2];
+                    double[] dSumX_dResultMagnitude = new double[input2.Rows / 2];
+                    double[] dSumY_dResultMagnitude = new double[input2.Rows / 2];
+                    double[] dResultMagnitude_dWeight = new double[input2.Rows / 2];
 
-                    for (int k = 0; k < input2.Rows; k++)
+                    for (int k = 0; k < input2.Rows / 2; k++)
                     {
                         // Accessing the magnitudes and angles from the concatenated matrices
                         double magnitude = input1[i, k];
@@ -181,7 +181,7 @@ namespace ParallelReverseAutoDiff.RMAD
                     double dCombinedAngle_dSumX = -this.sumY[i, j] / magSumXY;
                     double dCombinedAngle_dSumY = this.sumX[i, j] / magSumXY;
 
-                    for (int k = 0; k < input2.Rows; k++)
+                    for (int k = 0; k < input2.Rows / 2; k++)
                     {
                         dInputMag_dOutputMag[i, k] +=
                             (dCombinedMagnitude_dSumX * dSumX_dDeltaX[k] * dDeltaX_dX1[k] * dX1_dMagnitude[k]) +
@@ -281,7 +281,7 @@ namespace ParallelReverseAutoDiff.RMAD
             // Loop through each element in input1
             Parallel.For(0, this.input1.Rows, i =>
             {
-                for (int k = 0; k < this.input2.Rows; k++)
+                for (int k = 0; k < this.input2.Rows / 2; k++)
                 {
                     for (int j = 0; j < this.input2.Cols / 2; j++)
                     {
@@ -293,7 +293,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             });
 
-            Parallel.For(0, this.input2.Rows, k =>
+            Parallel.For(0, this.input2.Rows / 2, k =>
             {
                 for (int j = 0; j < this.input2.Cols / 2; j++)
                 {

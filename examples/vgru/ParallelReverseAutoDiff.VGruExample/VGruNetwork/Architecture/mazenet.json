@@ -43,13 +43,13 @@
             },
             {
               "id": "wz_currentInput",
-              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "type": "ElementwiseVectorConstituentMultiplyOperation2",
               "inputs": [ "currentInput", "WUpdateVectors", "wz_weights" ],
               "gradientResultTo": [ null, "DWUpdateVectors", null ]
             },
             {
               "id": "uz_previousHiddenState",
-              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "type": "ElementwiseVectorConstituentMultiplyOperation2",
               "inputs": [ "previousHiddenState", "UUpdateVectors", "uz_weights" ],
               "gradientResultTo": [ null, "DUUpdateVectors", null ]
             },
@@ -101,13 +101,13 @@
             },
             {
               "id": "wr_currentInput",
-              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "type": "ElementwiseVectorConstituentMultiplyOperation2",
               "inputs": [ "currentInput", "WResetVectors", "wr_weights" ],
               "gradientResultTo": [ null, "DWResetVectors", null ]
             },
             {
               "id": "ur_previousHiddenState",
-              "type": "ElementwiseVectorConstituentMultiplyOperation",
+              "type": "ElementwiseVectorConstituentMultiplyOperation2",
               "inputs": [ "previousHiddenState", "UResetVectors", "ur_weights" ],
               "gradientResultTo": [ null, "DUResetVectors", null ]
             },

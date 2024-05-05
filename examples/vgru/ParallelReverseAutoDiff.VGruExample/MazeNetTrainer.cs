@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.VGruExample
 {
     using ParallelReverseAutoDiff.RMAD;
+    using ParallelReverseAutoDiff.VGruExample.VGruNetwork;
     using ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD;
 
     /// <summary>
@@ -23,12 +24,12 @@ namespace ParallelReverseAutoDiff.VGruExample
             try
             {
                 CudaBlas.Instance.Initialize();
-                int numTimeSteps = 7;
+                int numTimeSteps = 6;
                 MazeNet net = new MazeNet(81, 11, 110, 2, 0.001d, 4d);
                 await net.Initialize();
 
                 SineWaveVectorGenerator vectorGenerator = new SineWaveVectorGenerator(1d, 1d, 0d);
-                Random random = new Random(10);
+                Random random = new Random(12);
 
                 Matrix lastMatrix = new Matrix(11, 22);
                 List<Matrix> outputMatrices = new List<Matrix>();
@@ -36,7 +37,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 List<double> targetAngles = new List<double>();
                 List<double[,]> correlations = new List<double[,]>();
 
-                // net.ApplyWeights();
+                net.ApplyWeights();
                 for (int i = 0; i < 1000; ++i)
                 {
                     int samples = random.Next(101, 201);
@@ -63,6 +64,8 @@ namespace ParallelReverseAutoDiff.VGruExample
                         var targetAngle = (3d * Math.PI / 4d) / (1 + Math.Exp(-lastVector.Direction));
                         targetAngles.Add(targetAngle);
 
+                        Console.WriteLine($"Iteration {i}_{sectionCount}, Target Angle: {targetAngle}");
+
                         await net.Train(input, targetAngles.ToArray());
 
                         // var (gradient, output, loss) = net.Forward(input, targetAngle, lastVector.Magnitude);
@@ -73,12 +76,16 @@ namespace ParallelReverseAutoDiff.VGruExample
                         // net.ApplyGradients();
                         lastTargetAngle = lastVector.Direction;
 
+                        // net.ApplyGradients();
                         await net.Reset();
 
+                        targetAngles.Clear();
+
                         Thread.Sleep(1000);
-                        if (i % 4 == 3 && j == 0)
+
+                        if (sectionCount % 4 == 3)
                         {
-                            net.SaveWeights();
+                            // net.SaveWeights();
                         }
                     }
                 }
