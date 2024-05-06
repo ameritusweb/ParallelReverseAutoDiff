@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="TileGrid.cs" author="ameritusweb" date="5/2/2024">
+// <copyright file="MusicGrid.cs" author="ameritusweb" date="5/2/2024">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -11,24 +11,24 @@ namespace ParallelReverseAutoDiff.VGruExample
     using ParallelReverseAutoDiff.VGruExample.VGruNetwork.RMAD;
 
     /// <summary>
-    /// A tile grid.
+    /// A music grid.
     /// </summary>
-    public class TileGrid : TileGridBase
+    public class MusicGrid : TileGridBase
     {
-        private List<MazeComputationGraph> mazeComputationGraphs = new List<MazeComputationGraph>();
-        private List<MazeComputationGraph> moreGraphs = new List<MazeComputationGraph>();
-        private MazeNetwork mazeNetwork;
+        private List<MusicComputationGraph> musicComputationGraphs = new List<MusicComputationGraph>();
+        private List<MusicComputationGraph> moreGraphs = new List<MusicComputationGraph>();
+        private MusicNetwork musicNetwork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TileGrid"/> class.
+        /// Initializes a new instance of the <see cref="MusicGrid"/> class.
         /// </summary>
-        /// <param name="mazeNetwork">The maze network.</param>
+        /// <param name="musicNetwork">The music network.</param>
         /// <param name="inputs">The inputs.</param>
         /// <param name="targets">The targets.</param>
-        public TileGrid(MazeNetwork mazeNetwork, List<Matrix> inputs, List<double> targets)
+        public MusicGrid(MusicNetwork musicNetwork, List<Matrix> inputs, List<double> targets)
             : base(inputs)
         {
-            this.mazeNetwork = mazeNetwork;
+            this.musicNetwork = musicNetwork;
             this.Inputs = inputs;
             this.Targets = targets;
         }
@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         /// <returns>A task.</returns>
         public async Task RunTimeSteps()
         {
-            this.mazeNetwork.ClearState();
+            this.musicNetwork.ClearState();
             await this.RunFirstTimeStep();
             for (int i = 1; i < this.TotalTimeSteps; ++i)
             {
@@ -62,11 +62,11 @@ namespace ParallelReverseAutoDiff.VGruExample
             }
 
             var hiddenStateTile = this.HiddenStates[(this.CurrentTileX, this.CurrentTileY)];
-            hiddenStateTile.Matrix = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
+            hiddenStateTile.Matrix = (Matrix)this.musicNetwork.HiddenState.ToArray().Last().Clone();
 
-            this.mazeComputationGraphs.Add(this.mazeNetwork.ComputationGraph);
+            this.musicComputationGraphs.Add(this.musicNetwork.ComputationGraph);
 
-            await this.Backpropagate(this.mazeComputationGraphs.Last());
+            await this.Backpropagate(this.musicComputationGraphs.Last());
 
             this.TimeStep++;
         }
@@ -81,20 +81,20 @@ namespace ParallelReverseAutoDiff.VGruExample
 
             this.FillPlaceholders(this.Grid, this.HiddenStates);  // Ensure the grid and hidden states remain rectangular
 
-            await this.Backpropagate(this.mazeComputationGraphs.Last());
+            await this.Backpropagate(this.musicComputationGraphs.Last());
 
             this.TimeStep++;
         }
 
         private double SimulateForwardPass(Dictionary<(int X, int Y), Tile> hiddenStates, Matrix input, AppendDirection direction)
         {
-            this.mazeNetwork.InitializeState(input);
+            this.musicNetwork.InitializeState(input);
             var prevHiddenState = this.GetPreviousHiddenState(hiddenStates);
-            this.mazeNetwork.AutomaticForwardPropagate(input, prevHiddenState);
+            this.musicNetwork.AutomaticForwardPropagate(input, prevHiddenState);
 
-            var output = this.mazeNetwork.Output;
+            var output = this.musicNetwork.Output;
 
-            SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(this.mazeNetwork);
+            SquaredArclengthEuclideanLossOperation lossOp = SquaredArclengthEuclideanLossOperation.Instantiate(this.musicNetwork);
             var target = this.GetTarget();
             var loss = lossOp.Forward(output, target);
 
@@ -107,11 +107,11 @@ namespace ParallelReverseAutoDiff.VGruExample
             return loss[0, 0];
         }
 
-        private async Task Backpropagate(MazeComputationGraph computationGraph)
+        private async Task Backpropagate(MusicComputationGraph computationGraph)
         {
             Matrix gradient = this.LastGradient;
             Maze maze = this.LastMaze;
-            await this.mazeNetwork.AutomaticBackwardPropagate(gradient, computationGraph);
+            await this.musicNetwork.AutomaticBackwardPropagate(gradient, computationGraph);
 
             if (maze != null)
             {
@@ -119,7 +119,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 return;
             }
 
-            this.mazeNetwork.UpdateModelLayers();
+            this.musicNetwork.UpdateModelLayers();
         }
 
         // Assuming this is part of the network operations
@@ -127,7 +127,7 @@ namespace ParallelReverseAutoDiff.VGruExample
         {
             double minLoss = double.MaxValue;
             ((int X, int Y), AppendDirection)? bestExpansion = null;
-            MazeComputationGraph? bestComputationGraph = null;
+            MusicComputationGraph? bestComputationGraph = null;
             Dictionary<(int X, int Y), Tile>? bestGrid = null;
             Matrix? bestHiddenState = null;
             Matrix? bestGradient = null;
@@ -163,19 +163,19 @@ namespace ParallelReverseAutoDiff.VGruExample
                     Matrix input = this.ConcatenateInput(simulatedGrid);
                     double loss = this.SimulateForwardPass(simulatedHiddenStates, input, direction);
 
-                    this.moreGraphs.Add(this.mazeNetwork.ComputationGraph);
+                    this.moreGraphs.Add(this.musicNetwork.ComputationGraph);
 
                     if (loss < minLoss)
                     {
                         bestNextTile = this.GetNewPosition(currentTile, direction);
                         minLoss = loss;
                         bestExpansion = (currentTile, direction);
-                        bestComputationGraph = this.mazeNetwork.ComputationGraph;
+                        bestComputationGraph = this.musicNetwork.ComputationGraph;
                         bestGradient = this.LastGradient;
                         bestActualAngle = this.LastActualAngle;
                         bestGrid = simulatedGrid;
-                        bestHiddenState = (Matrix)this.mazeNetwork.HiddenState.ToArray().Last().Clone();
-                        bestMaze = this.mazeNetwork.CloneMaze();
+                        bestHiddenState = (Matrix)this.musicNetwork.HiddenState.ToArray().Last().Clone();
+                        bestMaze = this.musicNetwork.CloneMaze();
                     }
                 }
             }
@@ -185,7 +185,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 Console.WriteLine($"Best expansion: {bestExpansion}, Loss: {minLoss}, Actual Angle: {bestActualAngle}");
                 this.CurrentTileX = bestNextTile.Value.X;
                 this.CurrentTileY = bestNextTile.Value.Y;
-                this.mazeComputationGraphs.Add(bestComputationGraph);
+                this.musicComputationGraphs.Add(bestComputationGraph);
                 this.Grid = bestGrid;
                 this.UpdateMaxDimensions();
                 this.UpdateHiddenStateTiles(bestHiddenState);
@@ -206,7 +206,7 @@ namespace ParallelReverseAutoDiff.VGruExample
                 structure[key.X, key.Y] = value.IsPlaceholder ? 2 : 1;
             }
 
-            await this.mazeNetwork.Reinitialize(structure);
+            await this.musicNetwork.Reinitialize(structure);
         }
     }
 }
