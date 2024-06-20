@@ -22,6 +22,9 @@ namespace ParallelReverseAutoDiff.RMAD
     {
         private static readonly double MaxSafeValue = Math.Log(double.MaxValue);  // The maximum value for which e^x results in double.MaxValue
         private double[][] matrix;
+        private int[] shape;
+        private int numDimensions;
+        private long totalSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
@@ -45,6 +48,9 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+            this.shape = new[] { rows, cols };
+            this.numDimensions = 2;
+            this.totalSize = rows * cols;
         }
 
         /// <summary>
@@ -55,6 +61,9 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.matrix = matrix;
             this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+            this.shape = new[] { matrix.Length, matrix[0].Length };
+            this.numDimensions = 2;
+            this.totalSize = this.shape.Aggregate(1, (a, b) => a * b);
         }
 
         /// <summary>
@@ -67,6 +76,9 @@ namespace ParallelReverseAutoDiff.RMAD
             this.matrix[0] = new double[array.Length];
             Array.Copy(array, this.matrix[0], array.Length);
             this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+            this.shape = new[] { 1, array.Length };
+            this.numDimensions = 2;
+            this.totalSize = array.Length;
         }
 
         /// <summary>
@@ -78,6 +90,26 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             this.UniqueId = uniqueId;
             this.matrix = matrixValues;
+            this.shape = new[] { matrixValues.Length, matrixValues[0].Length };
+            this.numDimensions = 2;
+            this.totalSize = this.shape.Aggregate(1L, (a, b) => a * b);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
+        /// If the number of dimensions is greater than 2, the rows are stacked in the first dimension.
+        /// </summary>
+        /// <param name="uniqueId">The unique ID.</param>
+        /// <param name="matrixValues">The matrix values.</param>
+        /// <param name="shape">The shape of the matrix.</param>
+        /// <param name="numDimensions">The number of dimensions.</param>
+        public Matrix(int uniqueId, double[][] matrixValues, int[] shape, int numDimensions)
+        {
+            this.UniqueId = uniqueId;
+            this.matrix = matrixValues;
+            this.shape = shape;
+            this.numDimensions = numDimensions;
+            this.totalSize = this.shape.Aggregate(1L, (a, b) => a * b);
         }
 
         /// <summary>
@@ -107,6 +139,18 @@ namespace ParallelReverseAutoDiff.RMAD
         public int Count => this.matrix.Length;
 
         /// <summary>
+        /// Gets the shape of the matrix.
+        /// </summary>
+        [JsonProperty]
+        public int[] Shape => this.shape;
+
+        /// <summary>
+        /// Gets the number of dimensions of the matrix.
+        /// </summary>
+        [JsonProperty]
+        public int NumDimensions => this.numDimensions;
+
+        /// <summary>
         /// Gets the matrix values.
         /// </summary>
         [JsonProperty]
@@ -133,6 +177,34 @@ namespace ParallelReverseAutoDiff.RMAD
         {
             get { return this.matrix[row]; }
             set { this.matrix[row] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the value at the specified indices.
+        /// </summary>
+        /// <param name="indices">The indices.</param>
+        /// <returns>The value at the specified indices.</returns>
+        public double this[int[] indices]
+        {
+            get
+            {
+                if (indices.Length != this.numDimensions)
+                {
+                    throw new ArgumentException("Number of indices must match the number of dimensions.");
+                }
+
+                return this.matrix[indices[0]][indices[1]];
+            }
+
+            set
+            {
+                if (indices.Length != this.numDimensions)
+                {
+                    throw new ArgumentException("Number of indices must match the number of dimensions.");
+                }
+
+                this.matrix[indices[0]][indices[1]] = value;
+            }
         }
 
         /// <summary>

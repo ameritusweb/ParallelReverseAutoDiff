@@ -6,7 +6,6 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
-    using System.Linq;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -39,6 +38,10 @@ namespace ParallelReverseAutoDiff.RMAD
             serializer.Serialize(writer, matrix.UniqueId);
             writer.WritePropertyName("MatrixValues");
             serializer.Serialize(writer, matrix.MatrixValues);
+            writer.WritePropertyName("Shape");
+            serializer.Serialize(writer, matrix.Shape);
+            writer.WritePropertyName("NumDimensions");
+            serializer.Serialize(writer, matrix.NumDimensions);
             writer.WriteEndObject();
         }
 
@@ -55,7 +58,16 @@ namespace ParallelReverseAutoDiff.RMAD
             JObject item = JObject.Load(reader);
             int? uniqueId = item["UniqueId"]?.ToObject<int>();
             double[][]? matrixValues = item["MatrixValues"]?.ToObject<double[][]>();
-            return new Matrix(uniqueId!.Value, matrixValues!);
+            int[]? shape = item["Shape"]?.ToObject<int[]>();
+            int? numDimensions = item["NumDimensions"]?.ToObject<int>();
+            if (shape == null || numDimensions == null)
+            {
+                return new Matrix(uniqueId!.Value, matrixValues!);
+            }
+            else
+            {
+                return new Matrix(uniqueId!.Value, matrixValues!, shape, numDimensions!.Value);
+            }
         }
     }
 }
