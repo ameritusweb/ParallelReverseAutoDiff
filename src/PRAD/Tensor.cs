@@ -273,8 +273,22 @@ namespace ParallelReverseAutoDiff.PRAD
 
             debugInfo.AppendLine($"Calculated strides: [{string.Join(", ", strides)}]");
 
+            int ComputeOutputIndex(int[] indices, int[] shape)
+            {
+                int index = 0;
+                int stride = 1;
+                for (int i = shape.Length - 1; i >= 0; i--)
+                {
+                    index += indices[i] * stride;
+                    stride *= shape[i];
+                }
+
+                return index;
+            }
+
             // Gather data
-            Parallel.For(0, result.Data.Length, i =>
+            ParallelOptions options = new ParallelOptions() { MaxDegreeOfParallelism = 1 };
+            Parallel.For(0, result.Data.Length, options, i =>
             {
                 int[] resultIndices = new int[resultShape.Length];
                 int temp = i;
@@ -284,32 +298,41 @@ namespace ParallelReverseAutoDiff.PRAD
                     temp /= resultShape[j];
                 }
 
-                int inputIndex = 0;
+                int[] inputIndices = new int[this.Shape.Length];
                 for (int j = 0; j < this.Shape.Length; j++)
                 {
                     if (j == axis)
                     {
-                        inputIndex += indicesData[resultIndices[j]] * strides[j];
+                        inputIndices[j] = indicesData[resultIndices[j]];
                     }
                     else if (j < axis)
                     {
-                        inputIndex += resultIndices[j] * strides[j];
+                        inputIndices[j] = resultIndices[j];
                     }
                     else
                     {
-                        inputIndex += resultIndices[j + indices.Shape.Length - 1] * strides[j];
+                        inputIndices[j] = resultIndices[j + indices.Shape.Length - 1];
                     }
                 }
 
-                result.Data[i] = this.Data[inputIndex];
+                int inputIndex = ComputeOutputIndex(inputIndices, this.Shape);
+                int outputIndex = ComputeOutputIndex(resultIndices, resultShape);
 
-                // Debug output for first few iterations
-                if (i < 10)
+                result.Data[outputIndex] = this.Data[inputIndex];
+
+                // Inside the Parallel.For loop
+                if (i < 30)
                 {
+                    var batchIndex = resultIndices[0];
+                    var gatherIndex = resultIndices[1];
+                    var innerIndex = resultIndices[2];
+                    var actualGatherIndex = indicesData[gatherIndex % indices.Shape[0]];
                     debugInfo.AppendLine($"Iteration {i}:");
                     debugInfo.AppendLine($"  Result indices: [{string.Join(", ", resultIndices)}]");
+                    debugInfo.AppendLine($"  Batch: {batchIndex}, Gather: {gatherIndex}, Inner: {innerIndex}");
+                    debugInfo.AppendLine($"  Actual Gather Index: {actualGatherIndex}");
                     debugInfo.AppendLine($"  Input index: {inputIndex}");
-                    debugInfo.AppendLine($"  Value: {result.Data[i]}");
+                    debugInfo.AppendLine($"  Value: {this.Data[inputIndex]}");
                 }
             });
 
