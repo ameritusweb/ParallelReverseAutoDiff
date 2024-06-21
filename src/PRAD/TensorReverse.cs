@@ -300,19 +300,20 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
         /// <param name="indices">The indices of elements that were gathered.</param>
         /// <param name="axis">The axis along which slices were gathered.</param>
-        /// <param name="batchDims">The number of batch dimensions.</param>
         /// <returns>The gradient with respect to the input tensor.</returns>
-        public Tensor GatherReverse(Tensor upstreamGradient, Tensor indices, int axis = 0, int batchDims = 0)
+        public Tensor GatherReverse(Tensor upstreamGradient, Tensor indices, int axis = 0)
         {
             Tensor inputTensor = this.TransformedTensors[0];
             int[] inputShape = inputTensor.Shape;
-            int[] gradShape = inputShape.ToArray();
-            Tensor grad = new Tensor(gradShape);
+            Tensor grad = new Tensor(inputShape);
 
-            // Handle negative indices
+            if (axis < 0 || axis >= inputShape.Length)
+            {
+                throw new ArgumentException("Axis value is out of bounds.");
+            }
+
+            // Handle negative indices and validate
             var indicesData = indices.Data.Select(i => i < 0 ? inputShape[axis] + (int)i : (int)i).ToArray();
-
-            // Validate indices
             foreach (var index in indicesData)
             {
                 if (index < 0 || index >= inputShape[axis])
@@ -321,27 +322,50 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
 
-            Parallel.For(0, indicesData.Length, i =>
+            // Calculate strides for the input tensor
+            int[] strides = new int[inputShape.Length];
+            strides[inputShape.Length - 1] = 1;
+            for (int i = inputShape.Length - 2; i >= 0; i--)
             {
-                int[] indicesForGather = new int[inputShape.Length];
-                int[] gradIndices = new int[inputShape.Length];
+                strides[i] = strides[i + 1] * inputShape[i + 1];
+            }
 
+            // Calculate the shape of the upstream gradient
+            int[] upstreamShape = new int[inputShape.Length + indices.Shape.Length - 1];
+            Array.Copy(inputShape, 0, upstreamShape, 0, axis);
+            Array.Copy(indices.Shape, 0, upstreamShape, axis, indices.Shape.Length);
+            Array.Copy(inputShape, axis + 1, upstreamShape, axis + indices.Shape.Length, inputShape.Length - axis - 1);
+
+            Parallel.For(0, upstreamGradient.Data.Length, i =>
+            {
+                int[] upstreamIndices = new int[upstreamShape.Length];
+                int temp = i;
+                for (int j = upstreamShape.Length - 1; j >= 0; j--)
+                {
+                    upstreamIndices[j] = temp % upstreamShape[j];
+                    temp /= upstreamShape[j];
+                }
+
+                int gradIndex = 0;
+                int upstreamIdx = 0;
                 for (int j = 0; j < inputShape.Length; j++)
                 {
                     if (j == axis)
                     {
-                        indicesForGather[j] = indicesData[i];
-                        gradIndices[j] = indicesData[i];
+                        gradIndex += indicesData[upstreamIndices[upstreamIdx]] * strides[j];
+                        upstreamIdx++;
                     }
                     else
                     {
-                        indicesForGather[j] = i;
-                        gradIndices[j] = i;
+                        gradIndex += upstreamIndices[upstreamIdx] * strides[j];
+                        upstreamIdx++;
                     }
                 }
 
-                double gradValue = upstreamGradient[i];
-                grad[gradIndices] += gradValue;
+                lock (grad.Data)
+                {
+                    grad.Data[gradIndex] += upstreamGradient.Data[i];
+                }
             });
 
             return grad;
@@ -390,7 +414,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             Tensor originalTensor = this.TransformedTensors[0];
-
             if (multiples.Length != originalTensor.Shape.Length)
             {
                 throw new ArgumentException("Length of multiples must match the number of dimensions of the tensor.");
@@ -409,39 +432,33 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             Tensor grad = new Tensor(originalShape);
+            int[] originalIndices = new int[originalShape.Length];
+            int[] tiledIndices = new int[tiledShape.Length];
 
-            int[] indices = new int[originalShape.Length];
-            int[] tiledIndices = new int[originalShape.Length];
-
-            void AggregateGradient(int dim)
+            do
             {
-                if (dim == originalShape.Length)
+                // Calculate corresponding indices in the original tensor
+                for (int i = 0; i < originalShape.Length; i++)
                 {
-                    double value = 0.0;
-                    for (int i = 0; i < multiples[dim - 1]; i++)
+                    originalIndices[i] = tiledIndices[i] % originalShape[i];
+                }
+
+                // Accumulate gradient
+                grad[originalIndices] += upstreamGradient[tiledIndices];
+
+                // Move to the next index in the tiled tensor
+                for (int i = tiledShape.Length - 1; i >= 0; i--)
+                {
+                    if (++tiledIndices[i] < tiledShape[i])
                     {
-                        Array.Copy(indices, tiledIndices, dim);
-                        tiledIndices[dim - 1] += i * originalShape[dim - 1];
-                        value += upstreamGradient[tiledIndices];
+                        break;
                     }
 
-                    grad[indices] = value;
-                }
-                else
-                {
-                    for (int i = 0; i < originalShape[dim]; i++)
-                    {
-                        indices[dim] = i;
-                        for (int j = 0; j < multiples[dim]; j++)
-                        {
-                            tiledIndices[dim] = i + (j * originalShape[dim]);
-                            AggregateGradient(dim + 1);
-                        }
-                    }
+                    tiledIndices[i] = 0;
                 }
             }
+            while (!tiledIndices.All(x => x == 0));
 
-            AggregateGradient(0);
             return grad;
         }
 
@@ -450,9 +467,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
         /// <param name="indices">The tensor containing the indices.</param>
-        /// <param name="batchDims">The number of batch dimensions.</param>
         /// <returns>The gradient with respect to the input tensor.</returns>
-        public Tensor GatherNdReverse(Tensor upstreamGradient, Tensor indices, int batchDims = 0)
+        public Tensor GatherNdReverse(Tensor upstreamGradient, Tensor indices)
         {
             Tensor inputTensor = this.TransformedTensors[0];
 

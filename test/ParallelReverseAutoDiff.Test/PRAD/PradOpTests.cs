@@ -30,7 +30,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradients[0].Data);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradients[0].Data);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 2, 2, 2, 2 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 2, 2, 2, 2 }, result.Gradients[0].Data);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 1, 0, -1, 0 }, result.Gradient.Data, new DoubleArrayEqualityComparer(5d));
+            Assert.Equal(new double[] { 1, 0, -1, 0 }, result.Gradients[0].Data, new DoubleArrayEqualityComparer(5d));
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 0, -1, 0, 1 }, result.Gradient.Data, new DoubleArrayEqualityComparer(5d));
+            Assert.Equal(new double[] { 0, -1, 0, 1 }, result.Gradients[0].Data, new DoubleArrayEqualityComparer(5d));
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 4, 1 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradients[0].Data);
         }
 
         [Fact]
@@ -135,25 +135,25 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 4, 4 }, new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 4, 4, 4, 4 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 4, 4, 4, 4 }, result.Gradients[0].Data);
         }
 
         [Fact]
         public void TestGather()
         {
-            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
-            var indices = new Tensor(new int[] { 2 }, new double[] { 0, 1 });
+            var seed = new Tensor(new int[] { 3, 2 }, new double[] { 1, 2, 3, 4, 5, 6 });
+            var indices = new Tensor(new int[] { 2 }, new double[] { 2, 0 });
             var pradOp = new PradOp(seed);
 
             var result = pradOp.Gather(indices, axis: 0);
 
-            Assert.Equal(new double[] { 1, 2, 3, 4 }, result.Result.Data);
+            Assert.Equal(new double[] { 5, 6, 1, 2 }, result.Result.Data);
 
             // Perform backpropagation
             var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 1, 1, 0, 0, 1, 1 }, result.Gradients[0].Data);
         }
 
         [Fact]
@@ -170,7 +170,25 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 2, 1 }, new double[] { 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 1, 0, 1, 0 }, result.Gradient.Data);
+            Assert.Equal(new double[] { 1, 0, 1, 0 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestGatherNd()
+        {
+            var seed = new Tensor(new int[] { 3, 3 }, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var indices = new Tensor(new int[] { 2, 2 }, new double[] { 0, 1, 2, 0 });
+            var pradOp = new PradOp(seed);
+
+            var result = pradOp.GatherNd(indices);
+
+            Assert.Equal(new double[] { 2, 7 }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2 }, new double[] { 1, 1 });
+            pradOp.Back(upstreamGradient);
+
+            Assert.Equal(new double[] { 0, 1, 0, 0, 0, 0, 1, 0, 0 }, result.Gradients[0].Data);
         }
     }
 }

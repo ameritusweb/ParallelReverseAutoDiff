@@ -128,6 +128,23 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Create a tensor array.
+        /// </summary>
+        /// <param name="count">The number of tensors.</param>
+        /// <param name="shape">The shape of each tensor.</param>
+        /// <returns>The resultant tensor array.</returns>
+        public static Tensor[] ToTensorArray(int count, int[] shape)
+        {
+            var tensorArray = new Tensor[count];
+            for (int i = 0; i < count; i++)
+            {
+                tensorArray[i] = new Tensor(shape);
+            }
+
+            return tensorArray;
+        }
+
+        /// <summary>
         /// Concatenates a list of tensors along a specified axis.
         /// </summary>
         /// <param name="tensors">The tensors.</param>
@@ -203,19 +220,16 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="indices">The indices of elements to gather.</param>
         /// <param name="axis">The axis along which to gather slices.</param>
-        /// <param name="batchDims">The number of batch dimensions.</param>
         /// <returns>A new tensor with the gathered slices.</returns>
-        public Tensor Gather(Tensor indices, int axis = 0, int batchDims = 0)
+        public Tensor Gather(Tensor indices, int axis = 0)
         {
-            if (batchDims < 0 || batchDims > axis || batchDims >= this.Shape.Length || batchDims >= indices.Shape.Length)
+            if (axis < 0 || axis >= this.Shape.Length)
             {
-                throw new ArgumentException("Invalid batch dimensions.");
+                throw new ArgumentException("Axis value is out of bounds.");
             }
 
-            // Handle negative indices
+            // Handle negative indices and validate
             var indicesData = indices.Data.Select(i => i < 0 ? this.Shape[axis] + (int)i : (int)i).ToArray();
-
-            // Validate indices
             foreach (var index in indicesData)
             {
                 if (index < 0 || index >= this.Shape[axis])
@@ -224,38 +238,50 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
 
-            // Prepare the shape of the result tensor
-            var resultShape = new int[indices.Shape.Length + this.Shape.Length - 1];
-            for (int i = 0; i < axis; i++)
-            {
-                resultShape[i] = this.Shape[i];
-            }
-
-            resultShape[axis] = indices.Shape[axis];
-            for (int i = axis + 1; i < this.Shape.Length; i++)
-            {
-                resultShape[i + indices.Shape.Length - 1] = this.Shape[i];
-            }
+            // Calculate the result shape
+            var resultShape = new int[this.Shape.Length + indices.Shape.Length - 1];
+            Array.Copy(this.Shape, 0, resultShape, 0, axis);
+            Array.Copy(indices.Shape, 0, resultShape, axis, indices.Shape.Length);
+            Array.Copy(this.Shape, axis + 1, resultShape, axis + indices.Shape.Length, this.Shape.Length - axis - 1);
 
             var result = new Tensor(resultShape);
 
-            // Gather data
-            Parallel.For(0, indicesData.Length, i =>
+            // Calculate strides for the original tensor
+            int[] strides = new int[this.Shape.Length];
+            strides[this.Shape.Length - 1] = 1;
+            for (int i = this.Shape.Length - 2; i >= 0; i--)
             {
-                int[] indicesForGather = new int[this.Shape.Length];
+                strides[i] = strides[i + 1] * this.Shape[i + 1];
+            }
+
+            // Gather data
+            Parallel.For(0, result.Data.Length, i =>
+            {
+                int[] resultIndices = new int[resultShape.Length];
+                int temp = i;
+                for (int j = resultShape.Length - 1; j >= 0; j--)
+                {
+                    resultIndices[j] = temp % resultShape[j];
+                    temp /= resultShape[j];
+                }
+
+                int inputIndex = 0;
+                int resultIdx = 0;
                 for (int j = 0; j < this.Shape.Length; j++)
                 {
                     if (j == axis)
                     {
-                        indicesForGather[j] = indicesData[i];
+                        inputIndex += indicesData[resultIndices[resultIdx]] * strides[j];
+                        resultIdx++;
                     }
                     else
                     {
-                        indicesForGather[j] = i;
+                        inputIndex += resultIndices[resultIdx] * strides[j];
+                        resultIdx++;
                     }
                 }
 
-                result.Data[i] = this[indicesForGather];
+                result.Data[i] = this.Data[inputIndex];
             });
 
             return result;
@@ -297,12 +323,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 if (dim == this.Shape.Length)
                 {
                     double value = this[indices];
-                    for (int i = 0; i < multiples[dim - 1]; i++)
-                    {
-                        Array.Copy(indices, resultIndices, dim);
-                        resultIndices[dim - 1] += i * this.Shape[dim - 1];
-                        result[resultIndices] = value;
-                    }
+                    result[resultIndices] = value;
                 }
                 else
                 {
@@ -417,9 +438,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gathers slices from the tensor along the specified indices.
         /// </summary>
         /// <param name="indices">The tensor containing the indices.</param>
-        /// <param name="batchDims">The number of batch dimensions.</param>
         /// <returns>A new tensor with the gathered slices.</returns>
-        public Tensor GatherNd(Tensor indices, int batchDims = 0)
+        public Tensor GatherNd(Tensor indices)
         {
             if (indices.Shape[^1] != this.Shape.Length)
             {

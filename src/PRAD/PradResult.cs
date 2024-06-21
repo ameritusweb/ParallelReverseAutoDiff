@@ -15,11 +15,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Initializes a new instance of the <see cref="PradResult"/> class.
         /// </summary>
         /// <param name="result">The tensor result.</param>
-        /// <param name="gradient">The gradient tensor.</param>
-        public PradResult(Tensor result, Tensor gradient)
+        /// <param name="gradients">The gradient tensors.</param>
+        public PradResult(Tensor result, Tensor[] gradients)
         {
             this.Result = result;
-            this.Gradient = gradient;
+            this.Gradients = gradients;
         }
 
         /// <summary>
@@ -30,6 +30,6 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Gets the gradient of the input.
         /// </summary>
-        public Tensor Gradient { get; }
+        public Tensor[] Gradients { get; }
     }
 }
