@@ -593,6 +593,25 @@ namespace ParallelReverseAutoDiff.PRAD
             return new Tensor(new int[] { shape[0], 1 }, resultData);
         }
 
+        /// <summary>
+        /// Gets the multi-dimensional indices.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="shape">The shape.</param>
+        /// <returns>The multi-dimensional indices.</returns>
+        internal int[] GetMultiDimensionalIndices(int index, int[] shape)
+        {
+            int[] indices = new int[shape.Length];
+            int stride = 1;
+            for (int i = shape.Length - 1; i >= 0; i--)
+            {
+                indices[i] = (index / stride) % shape[i];
+                stride *= shape[i];
+            }
+
+            return indices;
+        }
+
         private int GetTotalSize(int[] shape)
         {
             int total = 1;
@@ -620,19 +639,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return index;
-        }
-
-        private int[] GetMultiDimensionalIndices(int index, int[] shape)
-        {
-            int[] indices = new int[shape.Length];
-            int stride = 1;
-            for (int i = shape.Length - 1; i >= 0; i--)
-            {
-                indices[i] = (index / stride) % shape[i];
-                stride *= shape[i];
-            }
-
-            return indices;
         }
 
         private void CheckShapeCompatibility(Tensor other)
