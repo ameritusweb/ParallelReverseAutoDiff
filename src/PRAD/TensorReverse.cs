@@ -249,46 +249,41 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new InvalidOperationException("The input list of transformed tensors cannot be empty.");
             }
 
-            // Get the shape of the individual tensors
-            var shape = this.TransformedTensors[0].Shape;
+            int numTensors = this.TransformedTensors.Length;
+            int[] gradShape = upstreamGradient.Shape;
 
             // Handle negative axis
             if (axis < 0)
             {
-                axis = shape.Length + 1 + axis;
+                axis = gradShape.Length + axis;
             }
 
             // Validate axis
-            if (axis < 0 || axis > shape.Length)
+            if (axis < 0 || axis >= gradShape.Length)
             {
                 throw new ArgumentException("Axis value is out of bounds.");
             }
 
-            // Calculate the shapes and slices for each tensor
-            int numTensors = this.TransformedTensors.Length;
-            var tensorShape = new int[shape.Length];
-            Array.Copy(shape, 0, tensorShape, 0, axis);
-            Array.Copy(shape, axis, tensorShape, axis + 1, shape.Length - axis);
+            // Calculate the shape of individual gradient tensors
+            int[] tensorShape = new int[gradShape.Length - 1];
+            Array.Copy(gradShape, 0, tensorShape, 0, axis);
+            Array.Copy(gradShape, axis + 1, tensorShape, axis, gradShape.Length - axis - 1);
 
+            // Initialize gradient tensors
             var gradients = new Tensor[numTensors];
             for (int i = 0; i < numTensors; i++)
             {
                 gradients[i] = new Tensor(tensorShape);
             }
 
-            int[] strides = new int[shape.Length + 1];
-            strides[shape.Length] = 1;
-            for (int i = shape.Length - 1; i >= 0; i--)
-            {
-                strides[i] = strides[i + 1] * upstreamGradient.Shape[i + 1];
-            }
+            // Calculate the size of each individual tensor
+            int tensorSize = tensorShape.Aggregate(1, (a, b) => a * b);
 
+            // Distribute the gradient
             Parallel.For(0, numTensors, i =>
             {
-                int start = i * strides[axis];
-                int size = strides[axis];
-                var slice = this.Slice(upstreamGradient.Data, start, size, strides[axis + 1]);
-                Buffer.BlockCopy(slice, 0, gradients[i].Data, 0, slice.Length * sizeof(double));
+                int start = i * tensorSize;
+                Array.Copy(upstreamGradient.Data, start, gradients[i].Data, 0, tensorSize);
             });
 
             return gradients;

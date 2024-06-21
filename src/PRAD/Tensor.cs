@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using MKLNET;
 
@@ -52,6 +53,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the shape of the tensor.
         /// </summary>
         public int[] Shape { get; private set; }
+
+        /// <summary>
+        /// Gets the debug info.
+        /// </summary>
+        public string DebugInfo { get; private set; }
 
         /// <summary>
         /// An indexer.
@@ -223,18 +229,28 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>A new tensor with the gathered slices.</returns>
         public Tensor Gather(Tensor indices, int axis = 0)
         {
+            var debugInfo = new StringBuilder();
+
+            debugInfo.AppendLine($"Starting Gather operation on axis {axis}");
+            debugInfo.AppendLine($"Input tensor shape: [{string.Join(", ", this.Shape)}]");
+            debugInfo.AppendLine($"Input tensor data: [{string.Join(", ", this.Data)}]");
+            debugInfo.AppendLine($"Indices shape: [{string.Join(", ", indices.Shape)}]");
+            debugInfo.AppendLine($"Indices data: [{string.Join(", ", indices.Data)}]");
+
             if (axis < 0 || axis >= this.Shape.Length)
             {
-                throw new ArgumentException("Axis value is out of bounds.");
+                throw new ArgumentException($"Axis value {axis} is out of bounds for tensor with {this.Shape.Length} dimensions.");
             }
 
             // Handle negative indices and validate
             var indicesData = indices.Data.Select(i => i < 0 ? this.Shape[axis] + (int)i : (int)i).ToArray();
+            debugInfo.AppendLine($"Processed indices: [{string.Join(", ", indicesData)}]");
+
             foreach (var index in indicesData)
             {
                 if (index < 0 || index >= this.Shape[axis])
                 {
-                    throw new ArgumentException("Index out of bounds.");
+                    throw new ArgumentException($"Index {index} is out of bounds for axis {axis} with size {this.Shape[axis]}.");
                 }
             }
 
@@ -243,6 +259,7 @@ namespace ParallelReverseAutoDiff.PRAD
             Array.Copy(this.Shape, 0, resultShape, 0, axis);
             Array.Copy(indices.Shape, 0, resultShape, axis, indices.Shape.Length);
             Array.Copy(this.Shape, axis + 1, resultShape, axis + indices.Shape.Length, this.Shape.Length - axis - 1);
+            debugInfo.AppendLine($"Calculated result shape: [{string.Join(", ", resultShape)}]");
 
             var result = new Tensor(resultShape);
 
@@ -253,6 +270,8 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 strides[i] = strides[i + 1] * this.Shape[i + 1];
             }
+
+            debugInfo.AppendLine($"Calculated strides: [{string.Join(", ", strides)}]");
 
             // Gather data
             Parallel.For(0, result.Data.Length, i =>
@@ -266,23 +285,40 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 int inputIndex = 0;
-                int resultIdx = 0;
                 for (int j = 0; j < this.Shape.Length; j++)
                 {
                     if (j == axis)
                     {
-                        inputIndex += indicesData[resultIndices[resultIdx]] * strides[j];
-                        resultIdx++;
+                        inputIndex += indicesData[resultIndices[j]] * strides[j];
+                    }
+                    else if (j < axis)
+                    {
+                        inputIndex += resultIndices[j] * strides[j];
                     }
                     else
                     {
-                        inputIndex += resultIndices[resultIdx] * strides[j];
-                        resultIdx++;
+                        inputIndex += resultIndices[j + indices.Shape.Length - 1] * strides[j];
                     }
                 }
 
                 result.Data[i] = this.Data[inputIndex];
+
+                // Debug output for first few iterations
+                if (i < 10)
+                {
+                    debugInfo.AppendLine($"Iteration {i}:");
+                    debugInfo.AppendLine($"  Result indices: [{string.Join(", ", resultIndices)}]");
+                    debugInfo.AppendLine($"  Input index: {inputIndex}");
+                    debugInfo.AppendLine($"  Value: {result.Data[i]}");
+                }
             });
+
+            debugInfo.AppendLine("Gather operation completed");
+            debugInfo.AppendLine($"Result tensor shape: [{string.Join(", ", result.Shape)}]");
+            debugInfo.AppendLine($"Result tensor data: [{string.Join(", ", result.Data)}]");
+
+            // Store the debug info in the result tensor
+            result.DebugInfo = debugInfo.ToString();
 
             return result;
         }
@@ -413,6 +449,18 @@ namespace ParallelReverseAutoDiff.PRAD
             var result = new Tensor(this.Shape);
             Vml.Cos(this.Data.Length, this.Data, result.Data);
             return result;
+        }
+
+        /// <summary>
+        /// Prints the tensor as C# code.
+        /// </summary>
+        /// <returns>The code.</returns>
+        public string PrintCode()
+        {
+            var shapeStr = string.Join(", ", this.Shape);
+            var dataStr = string.Join(", ", this.Data.Select(d => d.ToString("G17"))); // G17 for full double precision
+
+            return $"new Tensor(new int[] {{ {shapeStr} }}, new double[] {{ {dataStr} }})";
         }
 
         /// <summary>

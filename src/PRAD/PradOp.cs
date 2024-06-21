@@ -31,6 +31,15 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Print code for the current tensor.
+        /// </summary>
+        /// <returns>The C# code.</returns>
+        public string PrintCodeForCurrentTensor()
+        {
+            return this.currentTensor.PrintCode();
+        }
+
+        /// <summary>
         /// Adds two tensors element-wise and records the operation for backpropagation.
         /// </summary>
         /// <param name="tensor">The tensor to add.</param>
@@ -269,6 +278,72 @@ namespace ParallelReverseAutoDiff.PRAD
             };
 
             var pradResult = new PradResult(result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Stacks the current tensor with other tensors along a new axis and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="tensors">The tensors to stack.</param>
+        /// <param name="axis">The axis along which to stack.</param>
+        /// <returns>The stacked tensor along with the gradient placeholders.</returns>
+        public PradResult Stack(Tensor[] tensors, int axis = 0)
+        {
+            var combinedTensors = new Tensor[tensors.Length + 1];
+            combinedTensors[0] = this.currentTensor;
+            Array.Copy(tensors, 0, combinedTensors, 1, tensors.Length);
+
+            var result = Tensor.Stack(combinedTensors, axis);
+            var tensorReverse = new TensorReverse(combinedTensors);
+
+            var grads = combinedTensors.Select(t => new Tensor(t.Shape)).ToArray();
+            Func<Tensor, Tensor> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.StackReverse(upstreamGrad, axis);
+                for (int i = 0; i < gradients.Length; i++)
+                {
+                    Buffer.BlockCopy(gradients[i].Data, 0, grads[i].Data, 0, gradients[i].Data.Length * sizeof(double));
+                }
+
+                return gradients[0];
+            };
+
+            var pradResult = new PradResult(result, grads);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Concatenates the current tensor with other tensors along a specified axis and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="tensors">The tensors to concatenate.</param>
+        /// <param name="axis">The axis along which to concatenate.</param>
+        /// <returns>The concatenated tensor along with the gradient placeholders.</returns>
+        public PradResult Concat(Tensor[] tensors, int axis = 0)
+        {
+            var combinedTensors = new Tensor[tensors.Length + 1];
+            combinedTensors[0] = this.currentTensor;
+            Array.Copy(tensors, 0, combinedTensors, 1, tensors.Length);
+
+            var result = Tensor.Concat(combinedTensors, axis);
+            var tensorReverse = new TensorReverse(combinedTensors);
+
+            var grads = combinedTensors.Select(t => new Tensor(t.Shape)).ToArray();
+            Func<Tensor, Tensor> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.ConcatReverse(upstreamGrad, axis);
+                for (int i = 0; i < gradients.Length; i++)
+                {
+                    Buffer.BlockCopy(gradients[i].Data, 0, grads[i].Data, 0, gradients[i].Data.Length * sizeof(double));
+                }
+
+                return gradients[0];
+            };
+
+            var pradResult = new PradResult(result, grads);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
