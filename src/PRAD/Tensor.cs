@@ -336,6 +336,19 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise subtraction of two tensors using MKL.NET.
+        /// </summary>
+        /// <param name="other">The other tensor.</param>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor ElementwiseSub(Tensor other)
+        {
+            this.CheckShapeCompatibility(other);
+            var result = new Tensor(this.Shape);
+            Vml.Sub(this.Data.Length, this.Data, other.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
         /// Computes the element-wise multiplication of two tensors using MKL.NET.
         /// </summary>
         /// <param name="other">The other tensor.</param>
