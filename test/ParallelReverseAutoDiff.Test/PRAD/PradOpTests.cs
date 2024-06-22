@@ -568,6 +568,66 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestMassiveVNNOperation()
+        {
+            // Create massive tensors (2000x4000)
+            var seed = new Tensor(new int[] { 2000, 4000 }, Enumerable.Range(0, 8000000).Select(i => (double)i).ToArray());
+            var other = new Tensor(new int[] { 2000, 4000 }, Enumerable.Range(0, 8000000).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 2000, 2000 }, Enumerable.Range(0, 4000000).Select(i => (double)(i % 10)).ToArray());
+
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            var opSeed = new PradOp(seed);
+            var opOther = new PradOp(other);
+
+            var clonedOpSeed = opSeed.DeepClone();
+            var clonedOther = opOther.DeepClone();
+
+            // Slice operations
+            var anglesSeed = opSeed.Slice(new int[] { 0, 2000 }, new int[] { 2000, 2000 }).Result;
+            var anglesOther = opOther.Slice(new int[] { 0, 2000 }, new int[] { 2000, 2000 }).Result;
+
+            // Concatenation
+            var concatAngles = opSeed.Concat(new[] { anglesOther }, axis: 1).Result;
+
+            // Reshape
+            var flatAngles = opSeed.Reshape(new int[] { 1, 8000000 }).Result;
+
+            // Trigonometric operations
+            var clonedFlatAnglesOp = opSeed.DeepClone();
+            var sinAngles = opSeed.Sin().Result;
+            var cosAngles = clonedFlatAnglesOp.Cos().Result;
+
+            // More slicing
+            var magnitudesSeed = clonedOpSeed.Slice(new int[] { 0, 0 }, new int[] { 2000, 2000 }).Result;
+            var magnitudesOther = clonedOther.Slice(new int[] { 0, 0 }, new int[] { 2000, 2000 }).Result;
+
+            // Another concatenation
+            var concatMagnitudes = clonedOpSeed.Concat(new[] { magnitudesOther }, axis: 1).Result;
+
+            // Another reshape
+            var flatMagnitudes = clonedOpSeed.Reshape(new int[] { 1, 8000000 }).Result;
+
+            // Multiplication operations
+            var clonedFlatMagnitudesOp = clonedOpSeed.DeepClone();
+            var Ys = clonedOpSeed.Mul(sinAngles).Result;
+            var Xs = clonedFlatMagnitudesOp.Mul(cosAngles).Result;
+
+            stopwatch.Stop();
+            Console.WriteLine($"Total execution time: {stopwatch.ElapsedMilliseconds} ms");
+
+            // Assertions
+            Assert.Equal(new int[] { 2000, 4000 }, concatAngles.Shape);
+            Assert.Equal(new int[] { 1, 8000000 }, flatAngles.Shape);
+            Assert.Equal(new int[] { 1, 8000000 }, sinAngles.Shape);
+            Assert.Equal(new int[] { 1, 8000000 }, cosAngles.Shape);
+            Assert.Equal(new int[] { 2000, 4000 }, concatMagnitudes.Shape);
+            Assert.Equal(new int[] { 1, 8000000 }, flatMagnitudes.Shape);
+            Assert.Equal(new int[] { 1, 8000000 }, Ys.Shape);
+            Assert.Equal(new int[] { 1, 8000000 }, Xs.Shape);
+        }
+
+        [Fact]
         public void TestVNNOperation()
         {
             // Create large tensors (200x400)
