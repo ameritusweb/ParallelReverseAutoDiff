@@ -915,16 +915,5 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
         }
-
-        private double[] Slice(double[] data, int start, int size, int stride)
-        {
-            var result = new double[size];
-            for (int i = 0; i < size; i++)
-            {
-                result[i] = data[start + (i * stride)];
-            }
-
-            return result;
-        }
     }
 }
