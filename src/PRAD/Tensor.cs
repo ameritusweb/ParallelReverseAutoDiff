@@ -165,7 +165,6 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("The input list of tensors must contain at least two tensors.");
             }
 
-            // Ensure all tensors have the same shape except along the concatenation axis
             var shape = tensors[0].Shape;
             int rank = shape.Length;
 
@@ -206,17 +205,34 @@ namespace ParallelReverseAutoDiff.PRAD
             Array.Copy(shape, outputShape, rank);
             outputShape[axis] = concatDimSize;
 
-            var totalSize = outputShape.Aggregate((a, b) => a * b);
-            var outputData = new double[totalSize];
+            var outputData = new double[outputShape.Aggregate((a, b) => a * b)];
             var outputTensor = new Tensor(outputShape, outputData);
 
-            // Concatenate the data
-            int offset = 0;
-            foreach (var tensor in tensors)
+            // Calculate the size of each slice along the concatenation axis
+            int sliceSize = 1;
+            for (int i = axis + 1; i < rank; i++)
             {
-                int tensorSize = tensor.Data.Length;
-                Buffer.BlockCopy(tensor.Data, 0, outputData, offset * sizeof(double), tensorSize * sizeof(double));
-                offset += tensorSize;
+                sliceSize *= outputShape[i];
+            }
+
+            // Calculate the number of slices
+            int numSlices = 1;
+            for (int i = 0; i < axis; i++)
+            {
+                numSlices *= outputShape[i];
+            }
+
+            // Concatenate the data
+            int outputOffset = 0;
+            for (int slice = 0; slice < numSlices; slice++)
+            {
+                foreach (var tensor in tensors)
+                {
+                    int tensorSliceSize = sliceSize * tensor.Shape[axis];
+                    int inputOffset = slice * tensorSliceSize;
+                    Buffer.BlockCopy(tensor.Data, inputOffset * sizeof(double), outputData, outputOffset * sizeof(double), tensorSliceSize * sizeof(double));
+                    outputOffset += tensorSliceSize;
+                }
             }
 
             return outputTensor;

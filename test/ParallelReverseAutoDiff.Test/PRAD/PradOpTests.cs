@@ -568,6 +568,98 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestVNNOperation()
+        {
+            // Create large tensors (200x400)
+            var seed = new Tensor(new int[] { 200, 400 }, Enumerable.Range(0, 80000).Select(i => (double)i).ToArray());
+            var other = new Tensor(new int[] { 200, 400 }, Enumerable.Range(0, 80000).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 200, 200 }, Enumerable.Range(0, 40000).Select(i => (double)(i % 10)).ToArray());
+
+            var opSeed = new PradOp(seed);
+            var opOther = new PradOp(other);
+
+            var clonedOpSeed = opSeed.DeepClone();
+            var clonedOther = opOther.DeepClone();
+
+            // Slice operations
+            var anglesSeed = opSeed.Slice(new int[] { 0, 200 }, new int[] { 200, 200 }).Result;
+            var anglesOther = opOther.Slice(new int[] { 0, 200 }, new int[] { 200, 200 }).Result;
+
+            // Concatenation
+            var concatAngles = opSeed.Concat(new[] { anglesOther }, axis: 1).Result;
+
+            // Reshape
+            var flatAngles = opSeed.Reshape(new int[] { 1, 80000 }).Result;
+
+            // Trigonometric operations
+            var clonedFlatAnglesOp = opSeed.DeepClone();
+            var sinAngles = opSeed.Sin().Result;
+            var cosAngles = clonedFlatAnglesOp.Cos().Result;
+
+            // More slicing
+            var magnitudesSeed = clonedOpSeed.Slice(new int[] { 0, 0 }, new int[] { 200, 200 }).Result;
+            var magnitudesOther = clonedOther.Slice(new int[] { 0, 0 }, new int[] { 200, 200 }).Result;
+
+            // Another concatenation
+            var concatMagnitudes = clonedOpSeed.Concat(new[] { magnitudesOther }, axis: 1).Result;
+
+            // Another reshape
+            var flatMagnitudes = clonedOpSeed.Reshape(new int[] { 1, 80000 }).Result;
+
+            // Multiplication operations
+            var clonedFlatMagnitudesOp = clonedOpSeed.DeepClone();
+            var Ys = clonedOpSeed.Mul(sinAngles).Result;
+            var Xs = clonedFlatMagnitudesOp.Mul(cosAngles).Result;
+
+            // ...
+
+        }
+
+        [Fact]
+        public void TestConcatAlongAxis1()
+        {
+            // Create initial tensor
+            var seed = new Tensor(new int[] { 3, 2 }, new double[] { 1, 2, 3, 4, 5, 6 });
+            var pradOp = new PradOp(seed);
+
+            // Create tensor to concatenate
+            var tensorToConcat = new Tensor(new int[] { 3, 3 }, new double[] { 7, 8, 9, 10, 11, 12, 13, 14, 15 });
+
+            // Perform concatenation along axis 1
+            var result = pradOp.Concat(new Tensor[] { tensorToConcat }, axis: 1);
+
+            // Assert the shape of the result
+            Assert.Equal(new int[] { 3, 5 }, result.Result.Shape);
+
+            // Assert the values of the concatenated tensor
+            Assert.Equal(new double[] {
+                1, 2, 7, 8, 9,
+                3, 4, 10, 11, 12,
+                5, 6, 13, 14, 15
+            }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 3, 5 }, new double[] {
+                1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1
+            });
+            pradOp.Back(upstreamGradient);
+
+            // Assert the gradients for the original tensor
+            Assert.Equal(new double[] { 1, 1, 1, 1, 1, 1 }, result.Gradients[0].Data);
+
+            // Assert the gradients for the concatenated tensor
+            Assert.Equal(new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1 }, result.Gradients[1].Data);
+
+            // Print the result for debugging
+            Console.WriteLine($"Result shape: [{string.Join(", ", result.Result.Shape)}]");
+            Console.WriteLine($"Result data: [{string.Join(", ", result.Result.Data)}]");
+            Console.WriteLine($"Gradient 0 data: [{string.Join(", ", result.Gradients[0].Data)}]");
+            Console.WriteLine($"Gradient 1 data: [{string.Join(", ", result.Gradients[1].Data)}]");
+        }
+
+        [Fact]
         public void TestCustomOperation()
         {
             var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });

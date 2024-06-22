@@ -15,8 +15,8 @@ namespace ParallelReverseAutoDiff.PRAD
     /// </summary>
     public class PradOp
     {
-        private readonly List<(Func<Tensor, Tensor[]> backpropStep, PradResult result)> backpropagationSteps;
         private readonly Tensor seed;
+        private List<(Func<Tensor, Tensor[]> backpropStep, PradResult result)> backpropagationSteps;
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
 
@@ -38,6 +38,41 @@ namespace ParallelReverseAutoDiff.PRAD
         public string PrintCodeForCurrentTensor()
         {
             return this.currentTensor.PrintCode();
+        }
+
+        /// <summary>
+        /// Creates a deep clone of the current PradOp object.
+        /// </summary>
+        /// <returns>A new PradOp object that is a deep copy of the current instance.</returns>
+        public PradOp DeepClone()
+        {
+            // Create a new PradOp instance with a deep clone of the seed tensor
+            var clonedOp = new PradOp(this.seed.DeepClone());
+
+            // Deep clone the current tensor
+            clonedOp.currentTensor = this.currentTensor.DeepClone();
+
+            // Deep clone the backpropagation steps
+            clonedOp.backpropagationSteps = new List<(Func<Tensor, Tensor[]> backpropStep, PradResult result)>();
+            foreach (var (backpropStep, result) in this.backpropagationSteps)
+            {
+                var clonedResult = new PradResult(
+                    result.Result.DeepClone(),
+                    result.Gradients.Select(g => g.DeepClone()).ToArray());
+                clonedOp.backpropagationSteps.Add((backpropStep, clonedResult));
+            }
+
+            // Deep clone the split step if it exists
+            if (this.splitStep.HasValue)
+            {
+                var (splitStep, splitResult) = this.splitStep.Value;
+                var clonedSplitResult = new PradSplitResult(
+                    splitResult.Results.Select(r => r.DeepClone()).ToArray(),
+                    splitResult.Gradients.Select(g => g.DeepClone()).ToArray());
+                clonedOp.splitStep = (splitStep, clonedSplitResult);
+            }
+
+            return clonedOp;
         }
 
         /// <summary>
