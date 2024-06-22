@@ -222,6 +222,32 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Creates a flat array from the tensors along the specified indices.
+        /// </summary>
+        /// <param name="tensors">The tensors.</param>
+        /// <param name="indices">The indices.</param>
+        /// <returns>The flat array.</returns>
+        public static Tensor CreateFlatArray(Tensor[] tensors, int[] indices)
+        {
+            int[] shape = tensors[0].Shape;
+            double[] flatArray = new double[tensors.Length * indices.Length * shape[0]];
+            int flatIndex = 0;
+
+            foreach (var tensor in tensors)
+            {
+                foreach (var index in indices)
+                {
+                    for (int i = 0; i < shape[0]; i++)
+                    {
+                        flatArray[flatIndex++] = tensor[i, index];
+                    }
+                }
+            }
+
+            return new Tensor(new int[] { 1, flatArray.Length }, flatArray);
+        }
+
+        /// <summary>
         /// Gathers slices from the tensor along the specified axis.
         /// </summary>
         /// <param name="indices">The indices of elements to gather.</param>
@@ -454,13 +480,37 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise division of two tensors using MKL.NET.
+        /// </summary>
+        /// <param name="other">The other tensor.</param>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor ElementwiseDivide(Tensor other)
+        {
+            this.CheckShapeCompatibility(other);
+            var result = new Tensor(this.Shape);
+            Vml.Div(this.Data.Length, this.Data, other.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
         /// Computes the element-wise square of the tensor using MKL.NET.
         /// </summary>
         /// <returns>A new tensor with the result.</returns>
         public Tensor ElementwiseSquare()
         {
             var result = new Tensor(this.Shape);
-            Vml.Sqr(this.Data.Length, this.Data, result.Data);
+            Vml.Mul(this.Data.Length, this.Data, this.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the element-wise square root of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor ElementwiseSquareRoot()
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Sqrt(this.Data.Length, this.Data, result.Data);
             return result;
         }
 
@@ -650,32 +700,6 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return result;
-        }
-
-        /// <summary>
-        /// Creates a flat array from the tensors along the specified indices.
-        /// </summary>
-        /// <param name="tensors">The tensors.</param>
-        /// <param name="indices">The indices.</param>
-        /// <returns>The flat array.</returns>
-        public Tensor CreateFlatArray(Tensor[] tensors, int[] indices)
-        {
-            int[] shape = tensors[0].Shape;
-            double[] flatArray = new double[tensors.Length * indices.Length * shape[0]];
-            int flatIndex = 0;
-
-            foreach (var tensor in tensors)
-            {
-                foreach (var index in indices)
-                {
-                    for (int i = 0; i < shape[0]; i++)
-                    {
-                        flatArray[flatIndex++] = tensor[i, index];
-                    }
-                }
-            }
-
-            return new Tensor(new int[] { 1, flatArray.Length }, flatArray);
         }
 
         /// <summary>

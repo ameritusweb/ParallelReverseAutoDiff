@@ -106,6 +106,31 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise square root operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor ElementwiseSquareRootReverse(Tensor upstreamGradient)
+        {
+            if (this.TransformedTensors.Length != 1)
+            {
+                throw new InvalidOperationException("ElementwiseSquareRootReverse expects exactly one transformed tensor.");
+            }
+
+            Tensor y = this.TransformedTensors[0]; // The output of the square root operation
+
+            this.CheckShapeCompatibility(y, upstreamGradient);
+
+            var gradX = new Tensor(y.Shape);
+
+            // Compute gradX = upstreamGradient / (2 * y)
+            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, y.Data, gradX.Data);
+            Blas.scal(0.5, gradX.Data);
+
+            return gradX;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise sine.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -510,6 +535,48 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise division operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="other">The other tensor used in the division operation.</param>
+        /// <returns>The gradients with respect to the input tensors.</returns>
+        /// <exception cref="ArgumentException">If the shapes of the tensors are not compatible.</exception>
+        public Tensor[] ElementwiseDivideReverse(Tensor upstreamGradient, Tensor other)
+        {
+            if (this.TransformedTensors.Length != 1)
+            {
+                throw new InvalidOperationException("ElementwiseDivideReverse expects exactly one transformed tensor.");
+            }
+
+            Tensor a = this.TransformedTensors[0];
+            Tensor b = other;
+
+            this.CheckShapeCompatibility(a, upstreamGradient);
+            this.CheckShapeCompatibility(a, b);
+
+            var gradA = new Tensor(a.Shape);
+            var gradB = new Tensor(b.Shape);
+
+            // Compute gradA = upstreamGradient / b
+            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, b.Data, gradA.Data);
+
+            // Compute gradB = -upstreamGradient * a / (b * b)
+            var aDivB = new Tensor(a.Shape);
+            Vml.Div(a.Data.Length, a.Data, b.Data, aDivB.Data);
+
+            Vml.Mul(aDivB.Data.Length, aDivB.Data, upstreamGradient.Data, gradB.Data);
+
+            // Element-wise multiplication of upstreamGradient with -aDivB
+            Blas.scal(-1.0, gradB.Data);
+
+            var bSquared = new Tensor(b.Shape);
+            Vml.Mul(b.Data.Length, b.Data, b.Data, bSquared.Data);
+            Vml.Div(gradB.Data.Length, gradB.Data, bSquared.Data, gradB.Data);
+
+            return new Tensor[] { gradA, gradB };
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the Tile operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -677,6 +744,76 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return inputGradient;
+        }
+
+        /// <summary>
+        /// Reverses the split operation.
+        /// </summary>
+        /// <param name="upstreamGradients">The gradients from the split tensors.</param>
+        /// <param name="axis">The axis along which the tensor was split.</param>
+        /// <returns>The gradient with respect to the input tensor before splitting.</returns>
+        /// <exception cref="ArgumentException">If the shapes of the upstream gradients are not compatible.</exception>
+        public Tensor SplitReverse(Tensor[] upstreamGradients, int axis = 0)
+        {
+            if (upstreamGradients == null || upstreamGradients.Length == 0)
+            {
+                throw new ArgumentException("The input list of upstream gradients cannot be empty.");
+            }
+
+            int[] gradShape = upstreamGradients[0].Shape;
+            int rank = gradShape.Length + 1;
+            int numTensors = upstreamGradients.Length;
+
+            // Handle negative axis
+            if (axis < 0)
+            {
+                axis = rank + axis;
+            }
+
+            // Validate axis
+            if (axis < 0 || axis >= rank)
+            {
+                throw new ArgumentException("Axis value is out of bounds.");
+            }
+
+            // Determine the shape of the resulting gradient tensor
+            int[] resultShape = new int[rank];
+            Array.Copy(gradShape, resultShape, axis);
+            resultShape[axis] = gradShape[axis - 1] * numTensors;
+            Array.Copy(gradShape, axis, resultShape, axis + 1, gradShape.Length - axis);
+
+            // Calculate the total size of the result gradient tensor
+            int totalSize = resultShape.Aggregate(1, (a, b) => a * b);
+            double[] resultData = new double[totalSize];
+            var result = new Tensor(resultShape, resultData);
+
+            int[] strides = new int[rank];
+            strides[rank - 1] = 1;
+            for (int i = rank - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * resultShape[i + 1];
+            }
+
+            Parallel.For(0, numTensors, i =>
+            {
+                int start = i * strides[axis];
+                var gradient = upstreamGradients[i].Data;
+
+                for (int j = 0; j < gradient.Length; j++)
+                {
+                    int temp = j;
+                    int resultIndex = start;
+                    for (int k = gradShape.Length - 1; k >= 0; k--)
+                    {
+                        resultIndex += (temp % gradShape[k]) * strides[k + 1];
+                        temp /= gradShape[k];
+                    }
+
+                    resultData[resultIndex] = gradient[j];
+                }
+            });
+
+            return result;
         }
 
         /// <summary>
