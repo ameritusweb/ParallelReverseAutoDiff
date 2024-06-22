@@ -487,6 +487,18 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise atan2 of the tensor using MKL.NET.
+        /// </summary>
+        /// <param name="x">The other tensor.</param>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor ElementwiseAtan2(Tensor x)
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Atan2(this.Data.Length, this.Data, x.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
         /// Prints the tensor as C# code.
         /// </summary>
         /// <returns>The code.</returns>
@@ -707,6 +719,90 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return new Tensor(new int[] { shape[0], 1 }, resultData);
+        }
+
+        /// <summary>
+        /// Unstacks the tensor along a specified axis.
+        /// </summary>
+        /// <param name="axis">The axis along which to unstack.</param>
+        /// <returns>An array of tensors resulting from the unstack operation.</returns>
+        /// <exception cref="ArgumentException">If the axis is out of bounds.</exception>
+        public Tensor[] Unstack(int axis = 0)
+        {
+            int[] shape = this.Shape;
+            int rank = shape.Length;
+
+            // Handle negative axis
+            if (axis < 0)
+            {
+                axis = rank + axis;
+            }
+
+            // Validate axis
+            if (axis < 0 || axis >= rank)
+            {
+                throw new ArgumentException("Axis value is out of bounds.");
+            }
+
+            // Determine the output shape for each unstacked tensor
+            int[] outputShape = new int[rank - 1];
+            for (int i = 0, j = 0; i < rank; i++)
+            {
+                if (i != axis)
+                {
+                    outputShape[j++] = shape[i];
+                }
+            }
+
+            int numTensors = shape[axis];
+            Tensor[] result = new Tensor[numTensors];
+
+            // Calculate the strides for the tensor
+            int[] strides = new int[rank];
+            strides[rank - 1] = 1;
+            for (int i = rank - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * shape[i + 1];
+            }
+
+            Parallel.For(0, numTensors, i =>
+            {
+                var dataSize = this.Data.Length / numTensors;
+                double[] data = new double[dataSize];
+                var resultTensor = new Tensor(outputShape, data);
+
+                int[] sourceIndices = new int[rank];
+                int[] resultIndices = new int[outputShape.Length];
+
+                int sourceIndex = i * strides[axis];
+                for (int j = 0; j < dataSize; j++)
+                {
+                    int temp = j;
+                    for (int k = outputShape.Length - 1; k >= 0; k--)
+                    {
+                        resultIndices[k] = temp % outputShape[k];
+                        temp /= outputShape[k];
+                    }
+
+                    for (int k = 0, l = 0; k < rank; k++)
+                    {
+                        if (k == axis)
+                        {
+                            sourceIndices[k] = i;
+                        }
+                        else
+                        {
+                            sourceIndices[k] = resultIndices[l++];
+                        }
+                    }
+
+                    resultTensor.Data[j] = this.Data[this.GetIndex(sourceIndices)];
+                }
+
+                result[i] = resultTensor;
+            });
+
+            return result;
         }
 
         /// <summary>

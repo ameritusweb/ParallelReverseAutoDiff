@@ -155,6 +155,51 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise atan2 operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="x">The other tensor used in the atan2 operation.</param>
+        /// <returns>The gradients with respect to the input tensors.</returns>
+        /// <exception cref="ArgumentException">If the shapes of the tensors are not compatible.</exception>
+        public Tensor[] ElementwiseAtan2Reverse(Tensor upstreamGradient, Tensor x)
+        {
+            if (this.TransformedTensors.Length != 1)
+            {
+                throw new InvalidOperationException("ElementwiseAtan2Reverse expects exactly one transformed tensor.");
+            }
+
+            Tensor y = this.TransformedTensors[0];
+
+            this.CheckShapeCompatibility(y, upstreamGradient);
+            this.CheckShapeCompatibility(y, x);
+
+            var gradY = new Tensor(y.Shape);
+            var gradX = new Tensor(x.Shape);
+
+            var ySquared = new Tensor(y.Shape);
+            var xSquared = new Tensor(x.Shape);
+            var denominator = new Tensor(y.Shape);
+
+            // Compute y^2 and x^2
+            Vml.Pow(y.Data.Length, y.Data, Enumerable.Repeat(2.0, y.Data.Length).ToArray(), ySquared.Data);
+            Vml.Pow(x.Data.Length, x.Data, Enumerable.Repeat(2.0, x.Data.Length).ToArray(), xSquared.Data);
+
+            // Compute denominator = y^2 + x^2
+            Vml.Add(ySquared.Data.Length, ySquared.Data, xSquared.Data, denominator.Data);
+
+            // Compute gradY = upstreamGradient * x / denominator
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, x.Data, gradY.Data);
+            Vml.Div(gradY.Data.Length, gradY.Data, denominator.Data, gradY.Data);
+
+            // Compute gradX = -upstreamGradient * y / denominator
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, y.Data, gradX.Data);
+            Vml.Div(gradX.Data.Length, gradX.Data, denominator.Data, gradX.Data);
+            Blas.scal(-1.0, gradX.Data);
+
+            return new Tensor[] { gradY, gradX };
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for concatenation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -287,6 +332,75 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return gradients;
+        }
+
+        /// <summary>
+        /// The reverse unstack operation.
+        /// </summary>
+        /// <param name="upstreamGradients">The upstream gradients from the unstacked tensors.</param>
+        /// <param name="axis">The axis along which the tensor was unstacked.</param>
+        /// <returns>The gradient with respect to the input tensor before unstacking.</returns>
+        /// <exception cref="ArgumentException">If the axis is out of bounds or upstream gradients are empty.</exception>
+        public Tensor UnstackReverse(Tensor[] upstreamGradients, int axis = 0)
+        {
+            if (upstreamGradients == null || upstreamGradients.Length == 0)
+            {
+                throw new ArgumentException("The input list of upstream gradients cannot be empty.");
+            }
+
+            int[] gradShape = upstreamGradients[0].Shape;
+            int numTensors = upstreamGradients.Length;
+            int rank = gradShape.Length;
+
+            // Handle negative axis
+            if (axis < 0)
+            {
+                axis = rank + axis;
+            }
+
+            // Validate axis
+            if (axis < 0 || axis > rank)
+            {
+                throw new ArgumentException("Axis value is out of bounds.");
+            }
+
+            // Determine the shape of the resulting gradient tensor
+            int[] resultShape = new int[rank + 1];
+            Array.Copy(gradShape, resultShape, rank);
+            resultShape[axis] = numTensors;
+
+            // Calculate the total size of the result gradient tensor
+            int totalSize = resultShape.Aggregate(1, (a, b) => a * b);
+            double[] resultData = new double[totalSize];
+            var result = new Tensor(resultShape, resultData);
+
+            int[] strides = new int[rank + 1];
+            strides[rank] = 1;
+            for (int i = rank - 1; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * resultShape[i + 1];
+            }
+
+            Parallel.For(0, numTensors, i =>
+            {
+                int start = i * strides[axis];
+                var gradient = upstreamGradients[i].Data;
+
+                for (int j = 0; j < gradient.Length; j++)
+                {
+                    int temp = j;
+                    int resultIndex = start;
+                    for (int k = rank - 1; k >= 0; k--)
+                    {
+                        resultIndex += (temp % gradShape[k]) * strides[k];
+                        temp /= gradShape[k];
+                    }
+
+                    resultData[resultIndex] += gradient[j];
+                }
+            });
+
+            return result;
         }
 
         /// <summary>

@@ -555,7 +555,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             // Check gradients
             // The first tensor participates in concat only
-            Assert.Equal(40, concatenated.Gradients[0].Data.Length);
+            Assert.Equal(400, concatenated.Gradients[0].Data.Length);
+            Assert.Equal(40, concatenated.Gradients[1].Data.Length);
             Assert.All(concatenated.Gradients[0].Data, grad => Assert.Equal(1.0, grad));
 
             // The other tensors participate in stack, reshape, and concat
