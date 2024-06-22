@@ -249,6 +249,18 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Deep clone the tensor.
+        /// </summary>
+        /// <returns>The tensor.</returns>
+        public Tensor DeepClone()
+        {
+            int[] newShape = (int[])this.Shape.Clone();
+            double[] newData = (double[])this.Data.Clone();
+
+            return new Tensor(newShape, newData);
+        }
+
+        /// <summary>
         /// Converts to a Matrix.
         /// </summary>
         /// <returns>A matrix.</returns>

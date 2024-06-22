@@ -71,6 +71,53 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Applies a custom operation to the current tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="operation">The function that performs the operation.</param>
+        /// <param name="reverseOperation">The function that computes the gradient of the operation.</param>
+        /// <param name="numGradients">The number of gradients to compute.</param>
+        /// <param name="outputShape">The shape of the output tensor.</param>
+        /// <returns>The result of the custom operation along with the gradient placeholders.</returns>
+        public PradResult CustomOperation(
+            Func<Tensor, Tensor> operation,
+            Func<Tensor, Tensor, Tensor, Tensor[]> reverseOperation,
+            int numGradients,
+            int[] outputShape)
+        {
+            var input = this.currentTensor.DeepClone();
+
+            // Apply the operation to the current tensor
+            var result = operation(this.currentTensor);
+
+            // Initialize gradient tensors
+            var grad = Tensor.ToTensorArray(numGradients, outputShape);
+
+            // Define the backpropagation step function
+            Func<Tensor, Tensor[]> backpropStep = upstreamGrad =>
+            {
+                // Compute gradients using the reverse operation
+                var gradients = reverseOperation(input, result, upstreamGrad);
+                for (int i = 0; i < numGradients; ++i)
+                {
+                    Buffer.BlockCopy(gradients[i].Data, 0, grad[i].Data, 0, gradients[i].Data.Length * sizeof(double));
+                }
+
+                return gradients;
+            };
+
+            // Create the PradResult object with the result and gradient placeholders
+            var pradResult = new PradResult(result, grad);
+
+            // Record the backpropagation step
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+
+            // Update the current tensor
+            this.currentTensor = result;
+
+            return pradResult;
+        }
+
+        /// <summary>
         /// Adds two tensors element-wise and records the operation for backpropagation.
         /// </summary>
         /// <param name="tensor">The tensor to add.</param>

@@ -566,5 +566,34 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 Assert.All(concatenated.Gradients[i].Data, grad => Assert.Equal(1.0, grad));
             }
         }
+
+        [Fact]
+        public void TestCustomOperation()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+            var pradOp = new PradOp(seed);
+
+            // Define a custom operation (e.g., element-wise square)
+            Func<Tensor, Tensor> operation = tensor => tensor.ElementwiseSquare();
+            Func<Tensor, Tensor, Tensor, Tensor[]> reverseOperation = (input, output, upstreamGrad) =>
+            {
+                var grad = new Tensor(input.Shape);
+                for (int i = 0; i < input.Data.Length; i++)
+                {
+                    grad.Data[i] = 2 * input.Data[i] * upstreamGrad.Data[i];
+                }
+                return new Tensor[] { grad };
+            };
+
+            var result = pradOp.CustomOperation(operation, reverseOperation, 1, new int[] { 2, 2 });
+
+            Assert.Equal(new double[] { 1, 4, 9, 16 }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            pradOp.Back(upstreamGradient);
+
+            Assert.Equal(new double[] { 2, 4, 6, 8 }, result.Gradients[0].Data);
+        }
     }
 }
