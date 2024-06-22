@@ -346,51 +346,6 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 // Copy the data from the input tensor to the result tensor
                 result.Data[outputIndex] = this.Data[inputIndex];
-
-                // Debug logging for the first 30 iterations
-                if (i < 30)
-                {
-                    // Extract individual indices for easier debugging
-                    var batchIndex = resultIndices[0];
-                    var gatherIndex = resultIndices[1];
-                    var innerIndex = resultIndices[2];
-
-                    // Calculate the actual gather index used (may be redundant with earlier calculation)
-                    var actualGatherIndex = indicesData[gatherIndex % indices.Shape[0]];
-
-                    // Log detailed information about this iteration
-                    debugInfo.AppendLine($"Iteration {i}:");
-
-                    // Expected: Iterations from 0 to 29
-                    debugInfo.AppendLine($" Result indices: [{string.Join(", ", resultIndices)}]");
-
-                    // Expected: [0,0,0] to [0,0,4], then [0,1,0] to [0,1,4], then [0,2,0] to [0,2,4],
-                    //           then [1,0,0] to [1,0,4], then [1,1,0] to [1,1,4], then [1,2,0] to [1,2,4]
-                    debugInfo.AppendLine($" Input indices: [{string.Join(", ", inputIndices)}]");
-
-                    // Expected: [0,0,0] to [0,0,4], then [0,2,0] to [0,2,4], then [0,3,0] to [0,3,4],
-                    //           then [1,0,0] to [1,0,4], then [1,2,0] to [1,2,4], then [1,3,0] to [1,3,4]
-                    debugInfo.AppendLine($" Batch: {batchIndex}, Gather: {gatherIndex}, Inner: {innerIndex}");
-
-                    // Expected: Batch: 0 for first 15 iterations, then 1 for next 15
-                    //           Gather: Should cycle 0,1,2 for each batch
-                    //           Inner: Should cycle 0,1,2,3,4 for each Gather index
-                    debugInfo.AppendLine($" Actual Gather Index: {actualGatherIndex}");
-
-                    // Expected: Should cycle 0,2,3 (matching indicesData) for each set of 5 iterations
-                    debugInfo.AppendLine($" Input index: {inputIndex}");
-
-                    // Expected: Should match the pattern: 0-4, 10-14, 15-19, 20-24, 30-34, 35-39
-                    debugInfo.AppendLine($" Value: {this.Data[inputIndex]}");
-
-                    // Expected values of this.Data[inputIndex] for each iteration:
-                    // Iterations 0-4:   20, 21, 22, 23, 24  (First batch, first gathered slice)
-                    // Iterations 5-9:   30, 31, 32, 33, 34  (First batch, second gathered slice)
-                    // Iterations 10-14: 35, 36, 37, 38, 39  (First batch, third gathered slice)
-                    // Iterations 15-19: 40, 41, 42, 43, 44  (Second batch, first gathered slice)
-                    // Iterations 20-24: 50, 51, 52, 53, 54  (Second batch, second gathered slice)
-                    // Iterations 25-29: 55, 56, 57, 58, 59  (Second batch, third gathered slice)
-                }
             });
 
             debugInfo.AppendLine("Gather operation completed");
