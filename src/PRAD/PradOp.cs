@@ -324,6 +324,30 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Transposes the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="permutations">The permutations.</param>
+        /// <returns>The transposed tensor along with the gradient placeholders.</returns>
+        public PradResult Transpose(params int[] permutations)
+        {
+            var result = this.currentTensor.Transpose(permutations);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, Tensor[]> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.TransposeReverse(upstreamGrad, permutations);
+                Buffer.BlockCopy(gradient.Data, 0, grad[0].Data, 0, gradient.Data.Length * sizeof(double));
+                return new Tensor[] { gradient };
+            };
+
+            var pradResult = new PradResult(result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Splits the tensor into multiple tensors along the specified axis and records the operation for backpropagation.
         /// </summary>
         /// <param name="groupSize">The group size.</param>

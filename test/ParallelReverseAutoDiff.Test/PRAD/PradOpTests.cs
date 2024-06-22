@@ -1,4 +1,5 @@
-﻿using ParallelReverseAutoDiff.PRAD;
+﻿using MKLNET;
+using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.Test.Common;
 using Xunit;
 
@@ -630,10 +631,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestVNNOperation()
         {
+            Random rand = new Random(3);
+
             // Create large tensors (200x400)
             var seed = new Tensor(new int[] { 200, 400 }, Enumerable.Range(0, 80000).Select(i => (double)i).ToArray());
             var other = new Tensor(new int[] { 200, 400 }, Enumerable.Range(0, 80000).Select(i => (double)(i * 2)).ToArray());
-            var weights = new Tensor(new int[] { 200, 200 }, Enumerable.Range(0, 40000).Select(i => (double)(i % 10)).ToArray());
+            var weights = new Tensor(new int[] { 200, 200 }, Enumerable.Range(0, 40000).Select(i => (i % 10) + rand.NextDouble()).ToArray());
 
             var opSeed = new PradOp(seed);
             var opOther = new PradOp(other);
@@ -671,8 +674,103 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var Ys = clonedOpSeed.Mul(sinAngles).Result;
             var Xs = clonedFlatMagnitudesOp.Mul(cosAngles).Result;
 
-            // ...
+            var reshapedYs = clonedOpSeed.Reshape(new int[] { 200, 400 }).Result;
 
+            var reshapedOp = clonedOpSeed.DeepClone();
+
+            var y1s = clonedOpSeed.Slice(new int[] { 0, 0 }, new int[] { 200, 200 }).Result;
+
+            var y2s = reshapedOp.Slice(new int[] { 0, 200 }, new int[] { 200, 200 }).Result;
+
+            var reshapedXs = clonedFlatMagnitudesOp.Reshape(new int[] { 200, 400 }).Result;
+            
+            var reshapedOp2 = clonedFlatMagnitudesOp.DeepClone();
+
+            var x1s = clonedFlatMagnitudesOp.Slice(new int[] { 0, 0 }, new int[] { 200, 200 }).Result;
+
+            var x2s = reshapedOp2.Slice(new int[] { 0, 200 }, new int[] { 200, 200 }).Result;
+
+            var transposedY2s = reshapedOp.Transpose(1, 0).Result;
+
+            var transposedX2s = reshapedOp2.Transpose(1, 0).Result;
+
+            var tiledY2s = reshapedOp.Tile(new int[] { 1, 3 }).Result;
+
+            var tiledX2s = reshapedOp2.Tile(new int[] { 1, 3 }).Result;
+
+            var flatY2s = reshapedOp.Reshape(new int[] { 1, 120000 }).Result;
+
+            var flatX2s = reshapedOp2.Reshape(new int[] { 1, 120000 }).Result;
+
+            var tiledY1s = clonedOpSeed.Tile(new int[] { 1, 3 }).Result;
+
+            var tiledX1s = clonedFlatMagnitudesOp.Tile(new int[] { 1, 3 }).Result;
+
+            var flatY1s = clonedOpSeed.Reshape(new int[] { 1, 120000 }).Result;
+
+            var flatX1s = clonedFlatMagnitudesOp.Reshape(new int[] { 1, 120000 }).Result;
+
+            var deltaY = reshapedOp.Sub(flatY1s).Result;
+
+            var deltaYOp = reshapedOp.DeepClone();
+
+            var deltaX = reshapedOp2.Sub(flatX1s).Result;
+
+            var squaredY = reshapedOp.Mul(deltaY).Result;
+
+            var squaredX = reshapedOp2.Mul(deltaX).Result;
+
+            var addedYX = reshapedOp.Add(squaredX).Result;
+
+            var unweightedMagnitude = reshapedOp.SquareRoot().Result;
+
+            var opWeights = new PradOp(weights);
+
+            var transposedWeights = opWeights.Transpose(1, 0).Result;
+
+            var tiledWeights = opWeights.Tile(new int[] { 1, 3 }).Result;
+
+            var flattenedWeights = opWeights.Reshape(new int[] { 1, 120000 }).Result;
+
+            var magnitudes = opWeights.Mul(unweightedMagnitude).Result;
+
+            var magnitudesOp = opWeights.DeepClone();
+
+            var angles = deltaYOp.Atan2(deltaX).Result;
+
+            var anglesOp = deltaYOp.DeepClone();    
+
+            var sinAngles2 = deltaYOp.Sin().Result;
+
+            var cosAngles2 = anglesOp.Cos().Result;
+
+            var yOverall = opWeights.Mul(sinAngles2).Result;
+
+            var xOverall = magnitudesOp.Mul(cosAngles2).Result;
+
+            var reshapedYOverall = opWeights.Reshape(new int[] { 40000, 3 }).Result;
+
+            var reshapedXOverall = magnitudesOp.Reshape(new int[] { 40000, 3 }).Result;
+
+            var sumRowsY = opWeights.SumRows().Result;
+
+            var sumRowsX = magnitudesOp.SumRows().Result;
+
+            var flattenedSumRowsY = opWeights.Reshape(new int[] { 1, 40000 }).Result;
+
+            var flattenedSumRowsYOp = opWeights.DeepClone();
+
+            var flattenedSumRowsX = magnitudesOp.Reshape(new int[] { 1, 40000 }).Result;
+
+            var flattenedYSquared = opWeights.Mul(flattenedSumRowsY).Result;
+
+            var flattenedXSquared = magnitudesOp.Mul(flattenedSumRowsX).Result;
+
+            var addedYXOverall = opWeights.Add(flattenedXSquared).Result;
+
+            var magnitudesOverall = opWeights.SquareRoot().Result;
+
+            var anglesOverall = flattenedSumRowsYOp.Atan2(flattenedSumRowsX).Result;
         }
 
         [Fact]

@@ -848,6 +848,49 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Transposes the tensor according to the specified permutation of axes.
+        /// </summary>
+        /// <param name="permutation">The permutation of the axes.</param>
+        /// <returns>A new tensor that is the transposed version of the original tensor.</returns>
+        /// <exception cref="ArgumentException">If the permutation is invalid.</exception>
+        public Tensor Transpose(params int[] permutation)
+        {
+            if (permutation.Length != this.Shape.Length)
+            {
+                throw new ArgumentException("The permutation must have the same length as the number of dimensions of the tensor.");
+            }
+
+            if (permutation.Distinct().Count() != permutation.Length || permutation.Any(p => p < 0 || p >= this.Shape.Length))
+            {
+                throw new ArgumentException("The permutation must be a valid permutation of the dimensions.");
+            }
+
+            // Calculate the new shape after transposition
+            var newShape = permutation.Select(p => this.Shape[p]).ToArray();
+            var result = new Tensor(newShape);
+
+            // Calculate strides for both the original and transposed tensors
+            var originalStrides = CalculateStrides(this.Shape);
+            var transposedStrides = CalculateStrides(newShape);
+
+            // Perform the transposition
+            Parallel.For(0, result.Data.Length, i =>
+            {
+                int[] newIndices = this.GetMultiDimensionalIndices(i, newShape);
+                int[] oldIndices = new int[newIndices.Length];
+                for (int j = 0; j < newIndices.Length; j++)
+                {
+                    oldIndices[permutation[j]] = newIndices[j];
+                }
+
+                int oldIndex = this.GetIndex(oldIndices);
+                result.Data[i] = this.Data[oldIndex];
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Unstacks the tensor along a specified axis.
         /// </summary>
         /// <param name="axis">The axis along which to unstack.</param>
@@ -932,6 +975,30 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Gets the index based on the indices.
+        /// </summary>
+        /// <param name="indices">The indices.</param>
+        /// <returns>The index.</returns>
+        /// <exception cref="ArgumentException">Indices length invalid.</exception>
+        internal int GetIndex(int[] indices)
+        {
+            if (indices.Length != this.Shape.Length)
+            {
+                throw new ArgumentException("Indices length does not match tensor shape.");
+            }
+
+            int index = 0;
+            int stride = 1;
+            for (int i = this.Shape.Length - 1; i >= 0; i--)
+            {
+                index += indices[i] * stride;
+                stride *= this.Shape[i];
+            }
+
+            return index;
+        }
+
+        /// <summary>
         /// Gets the multi-dimensional indices.
         /// </summary>
         /// <param name="index">The index.</param>
@@ -950,6 +1017,18 @@ namespace ParallelReverseAutoDiff.PRAD
             return indices;
         }
 
+        private static int[] CalculateStrides(int[] shape)
+        {
+            var strides = new int[shape.Length];
+            strides[shape.Length - 1] = 1;
+            for (int i = shape.Length - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * shape[i + 1];
+            }
+
+            return strides;
+        }
+
         private int GetTotalSize(int[] shape)
         {
             int total = 1;
@@ -959,24 +1038,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return total;
-        }
-
-        private int GetIndex(int[] indices)
-        {
-            if (indices.Length != this.Shape.Length)
-            {
-                throw new ArgumentException("Indices length does not match tensor shape.");
-            }
-
-            int index = 0;
-            int stride = 1;
-            for (int i = this.Shape.Length - 1; i >= 0; i--)
-            {
-                index += indices[i] * stride;
-                stride *= this.Shape[i];
-            }
-
-            return index;
         }
 
         private void CheckShapeCompatibility(Tensor other)

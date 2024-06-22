@@ -847,6 +847,59 @@ namespace ParallelReverseAutoDiff.PRAD
             return grad;
         }
 
+        /// <summary>
+        /// Computes the reverse gradient for the transpose operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="permutation">The permutation of the axes used in the forward transpose operation.</param>
+        /// <returns>The gradient with respect to the input tensor before transposition.</returns>
+        public Tensor TransposeReverse(Tensor upstreamGradient, int[] permutation)
+        {
+            if (this.TransformedTensors.Length != 1)
+            {
+                throw new InvalidOperationException("TransposeReverse expects exactly one transformed tensor.");
+            }
+
+            Tensor originalTensor = this.TransformedTensors[0];
+
+            if (permutation.Length != originalTensor.Shape.Length)
+            {
+                throw new ArgumentException("The permutation must have the same length as the number of dimensions of the tensor.");
+            }
+
+            if (permutation.Distinct().Count() != permutation.Length || permutation.Any(p => p < 0 || p >= originalTensor.Shape.Length))
+            {
+                throw new ArgumentException("The permutation must be a valid permutation of the dimensions.");
+            }
+
+            // Calculate the inverse permutation
+            int[] inversePermutation = new int[permutation.Length];
+            for (int i = 0; i < permutation.Length; i++)
+            {
+                inversePermutation[permutation[i]] = i;
+            }
+
+            // Calculate the shape of the result tensor
+            var newShape = permutation.Select(p => originalTensor.Shape[p]).ToArray();
+            var result = new Tensor(newShape);
+
+            // Perform the reverse transposition
+            Parallel.For(0, result.Data.Length, i =>
+            {
+                int[] newIndices = result.GetMultiDimensionalIndices(i, newShape);
+                int[] oldIndices = new int[newIndices.Length];
+                for (int j = 0; j < newIndices.Length; j++)
+                {
+                    oldIndices[permutation[j]] = newIndices[j];
+                }
+
+                int oldIndex = originalTensor.GetIndex(oldIndices);
+                result.Data[i] = upstreamGradient.Data[oldIndex];
+            });
+
+            return result;
+        }
+
         private int GetTotalSize(int[] shape)
         {
             return shape.Aggregate(1, (a, b) => a * b);
