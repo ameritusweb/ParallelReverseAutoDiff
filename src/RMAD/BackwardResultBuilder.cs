@@ -7,6 +7,7 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Collections.Generic;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// The backward result builder.
@@ -28,6 +29,19 @@ namespace ParallelReverseAutoDiff.RMAD
             this.inputGradientCount++;
             this.resultTypes.Add(typeof(Matrix));
             this.backwardResults.Add(matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Add input gradient to the backward result.
+        /// </summary>
+        /// <param name="tensor">The tensor to add.</param>
+        /// <returns>The backward result builder.</returns>
+        public BackwardResultBuilder AddInputGradient(Tensor tensor)
+        {
+            this.inputGradientCount++;
+            this.resultTypes.Add(typeof(Matrix));
+            this.backwardResults.Add(tensor.ToMatrix());
             return this;
         }
 

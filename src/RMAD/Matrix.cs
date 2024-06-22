@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.Interprocess;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// A matrix class used for matrix operations.
@@ -63,6 +64,21 @@ namespace ParallelReverseAutoDiff.RMAD
             this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
             this.shape = new[] { matrix.Length, matrix[0].Length };
             this.numDimensions = 2;
+            this.totalSize = this.shape.Aggregate(1, (a, b) => a * b);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
+        /// </summary>
+        /// <param name="matrix">The matrix to initialize with.</param>
+        /// <param name="shape">The shape of the matrix.</param>
+        /// <param name="numDimensions">The number of dimensions.</param>
+        public Matrix(double[][] matrix, int[] shape, int numDimensions)
+        {
+            this.matrix = matrix;
+            this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+            this.shape = shape;
+            this.numDimensions = numDimensions;
             this.totalSize = this.shape.Aggregate(1, (a, b) => a * b);
         }
 
@@ -334,6 +350,22 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return flatMatrix;
+        }
+
+        /// <summary>
+        /// Converts a matrix to a tensor.
+        /// </summary>
+        /// <returns>The tensor.</returns>
+        public Tensor ToTensor()
+        {
+            double[] tensorData = new double[this.totalSize];
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                Array.Copy(this.matrix[i], 0, tensorData, i * this.Cols, this.Cols);
+            }
+
+            return new Tensor(this.shape, tensorData);
         }
 
         /// <summary>

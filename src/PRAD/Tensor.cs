@@ -11,6 +11,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Text;
     using System.Threading.Tasks;
     using MKLNET;
+    using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A flat tensor.
@@ -245,6 +246,79 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return new Tensor(new int[] { 1, flatArray.Length }, flatArray);
+        }
+
+        /// <summary>
+        /// Converts to a Matrix.
+        /// </summary>
+        /// <returns>A matrix.</returns>
+        public Matrix ToMatrix()
+        {
+            int totalSize = this.GetTotalSize(this.Shape);
+            double[][] matrixData;
+
+            if (this.Shape.Length == 1)
+            {
+                // 1D Tensor
+                matrixData = new double[1][];
+                matrixData[0] = new double[totalSize];
+                Array.Copy(this.Data, matrixData[0], totalSize);
+            }
+            else
+            {
+                // ND Tensor
+                int rows = 1;
+                for (int i = 0; i < this.Shape.Length - 1; i++)
+                {
+                    rows *= this.Shape[i];
+                }
+
+                int cols = this.Shape[this.Shape.Length - 1];
+                matrixData = new double[rows][];
+
+                for (int i = 0; i < rows; i++)
+                {
+                    matrixData[i] = new double[cols];
+                    Array.Copy(this.Data, i * cols, matrixData[i], 0, cols);
+                }
+            }
+
+            return new Matrix(matrixData, this.Shape, this.Shape.Length);
+        }
+
+        /// <summary>
+        /// Converts the Tensor to a DeepMatrix.
+        /// Assumes the first dimension of the Tensor represents the depth of the DeepMatrix.
+        /// </summary>
+        /// <returns>The DeepMatrix.</returns>
+        public DeepMatrix ToDeepMatrix()
+        {
+            if (this.Shape.Length != 3)
+            {
+                throw new InvalidOperationException("Tensor must have exactly 3 dimensions to convert to DeepMatrix (depth, rows, cols).");
+            }
+
+            int depth = this.Shape[0];
+            int rows = this.Shape[1];
+            int cols = this.Shape[2];
+
+            Matrix[] matrices = new Matrix[depth];
+            Parallel.For(0, depth, d =>
+            {
+                double[][] matrixData = new double[rows][];
+                for (int r = 0; r < rows; r++)
+                {
+                    matrixData[r] = new double[cols];
+                    for (int c = 0; c < cols; c++)
+                    {
+                        matrixData[r][c] = this[d, r, c];
+                    }
+                }
+
+                matrices[d] = new Matrix(matrixData);
+            });
+
+            return new DeepMatrix(matrices);
         }
 
         /// <summary>

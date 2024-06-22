@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using ParallelReverseAutoDiff.Interprocess;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// A deep matrix class used for deep matrix operations.
@@ -243,6 +244,32 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             return instance;
+        }
+
+        /// <summary>
+        /// Converts the DeepMatrix to a Tensor.
+        /// </summary>
+        /// <returns>The Tensor.</returns>
+        public Tensor ToTensor()
+        {
+            int depth = this.Depth;
+            int rows = this.Rows;
+            int cols = this.Cols;
+
+            double[] tensorData = new double[depth * rows * cols];
+            Parallel.For(0, depth, d =>
+            {
+                int index = d * rows * cols;
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        tensorData[index++] = this[d, r, c];
+                    }
+                }
+            });
+
+            return new Tensor(new int[] { depth, rows, cols }, tensorData);
         }
 
         /// <summary>
