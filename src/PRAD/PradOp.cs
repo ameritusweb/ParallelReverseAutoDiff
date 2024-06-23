@@ -299,6 +299,30 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Slices the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="indices">The indices of the elements to slice.</param>
+        /// <returns>The result of the slice operation along with the gradient placeholders.</returns>
+        public PradResult Indexer(params string[] indices)
+        {
+            var result = this.currentTensor.Indexer(indices);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, Tensor[]> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.IndexerReverse(upstreamGrad, indices);
+                Buffer.BlockCopy(gradient.Data, 0, grad[0].Data, 0, gradient.Data.Length * sizeof(double));
+                return new Tensor[] { gradient };
+            };
+
+            var pradResult = new PradResult(result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Reshapes the tensor and records the operation for backpropagation.
         /// </summary>
         /// <param name="newShape">The new shape of the tensor.</param>

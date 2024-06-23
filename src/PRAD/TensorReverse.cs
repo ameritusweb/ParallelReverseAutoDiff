@@ -900,6 +900,79 @@ namespace ParallelReverseAutoDiff.PRAD
             return result;
         }
 
+        /// <summary>
+        /// Computes the reverse gradient for the Indexer operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="indices">The indices used in the Indexer operation.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor IndexerReverse(Tensor upstreamGradient, params string[] indices)
+        {
+            Tensor inputTensor = this.TransformedTensors[0];
+
+            if (indices.Length != inputTensor.Shape.Length)
+            {
+                throw new ArgumentException($"Number of indices ({indices.Length}) does not match tensor rank ({inputTensor.Shape.Length})");
+            }
+
+            int[] start = new int[inputTensor.Shape.Length];
+            int[] end = new int[inputTensor.Shape.Length];
+            int[] step = new int[inputTensor.Shape.Length];
+            bool[] isSlice = new bool[inputTensor.Shape.Length];
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                inputTensor.ParseIndex(indices[i], inputTensor.Shape[i], out start[i], out end[i], out step[i], out isSlice[i]);
+            }
+
+            int[] newShape = inputTensor.CalculateNewShape(start, end, step, isSlice);
+            Tensor result = new Tensor(inputTensor.Shape);
+
+            this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, new int[result.Shape.Length], new int[newShape.Length]);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Recursively copies data from the upstream gradient tensor to the input gradient tensor.
+        /// </summary>
+        /// <param name="source">The source tensor (upstream gradient).</param>
+        /// <param name="dest">The destination tensor (input gradient).</param>
+        /// <param name="start">The start indices.</param>
+        /// <param name="end">The end indices.</param>
+        /// <param name="step">The step sizes.</param>
+        /// <param name="isSlice">Array indicating if each dimension is sliced.</param>
+        /// <param name="sourceIndices">Current indices in the source tensor.</param>
+        /// <param name="destIndices">Current indices in the destination tensor.</param>
+        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices)
+        {
+            if (sourceIndices.Length == start.Length)
+            {
+                dest[sourceIndices] += source[destIndices];
+                return;
+            }
+
+            int dim = sourceIndices.Length;
+            int sourceStart = start[dim];
+            int sourceEnd = end[dim];
+            int sourceStep = step[dim];
+
+            if (isSlice[dim])
+            {
+                for (int i = sourceStart; i < sourceEnd; i += sourceStep)
+                {
+                    int[] newSourceIndices = sourceIndices.Concat(new[] { i }).ToArray();
+                    int[] newDestIndices = destIndices.Concat(new[] { (i - sourceStart) / sourceStep }).ToArray();
+                    this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices);
+                }
+            }
+            else
+            {
+                int[] newSourceIndices = sourceIndices.Concat(new[] { sourceStart }).ToArray();
+                this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, destIndices);
+            }
+        }
+
         private int GetTotalSize(int[] shape)
         {
             return shape.Aggregate(1, (a, b) => a * b);

@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -975,6 +976,37 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// An indexer for the tensor.
+        /// </summary>
+        /// <param name="indices">The indices used to slice.</param>
+        /// <returns>The sliced tensor.</returns>
+        /// <exception cref="ArgumentException">Number of indices does not match rank.</exception>
+        public Tensor Indexer(params string[] indices)
+        {
+            if (indices.Length != this.Shape.Length)
+            {
+                throw new ArgumentException($"Number of indices ({indices.Length}) does not match tensor rank ({this.Shape.Length})");
+            }
+
+            int[] start = new int[this.Shape.Length];
+            int[] end = new int[this.Shape.Length];
+            int[] step = new int[this.Shape.Length];
+            bool[] isSlice = new bool[this.Shape.Length];
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                this.ParseIndex(indices[i], this.Shape[i], out start[i], out end[i], out step[i], out isSlice[i]);
+            }
+
+            int[] newShape = this.CalculateNewShape(start, end, step, isSlice);
+            Tensor result = new Tensor(newShape);
+
+            this.CopyData(this, result, start, end, step, isSlice, new int[this.Shape.Length], new int[newShape.Length], 0);
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets the index based on the indices.
         /// </summary>
         /// <param name="indices">The indices.</param>
@@ -1017,6 +1049,112 @@ namespace ParallelReverseAutoDiff.PRAD
             return indices;
         }
 
+        /// <summary>
+        /// Parse a single index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="dimSize">The dimension size.</param>
+        /// <returns>The single index.</returns>
+        internal int ParseSingleIndex(string index, int dimSize)
+        {
+            int result = int.Parse(index);
+            return result < 0 ? dimSize + result : result;
+        }
+
+        /// <summary>
+        /// Parse an index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="dimSize">The dimension size.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="step">The step size.</param>
+        /// <param name="isSlice">Is slice.</param>
+        /// <exception cref="ArgumentException">Step is zero.</exception>
+        internal void ParseIndex(string index, int dimSize, out int start, out int end, out int step, out bool isSlice)
+        {
+            isSlice = index.Contains(':') || index == "...";
+            step = 1;
+            start = 0;
+            end = dimSize;
+
+            if (index == "...")
+            {
+                return;
+            }
+
+            string[] parts = index.Split(':');
+
+            if (parts.Length == 1)
+            {
+                // Single index
+                start = end = this.ParseSingleIndex(parts[0], dimSize);
+                isSlice = false;
+            }
+            else if (parts.Length == 2)
+            {
+                // Start:End
+                start = string.IsNullOrEmpty(parts[0]) ? 0 : this.ParseSingleIndex(parts[0], dimSize);
+                end = string.IsNullOrEmpty(parts[1]) ? dimSize : this.ParseSingleIndex(parts[1], dimSize);
+            }
+            else if (parts.Length == 3)
+            {
+                // Start:End:Step
+                start = string.IsNullOrEmpty(parts[0]) ? 0 : this.ParseSingleIndex(parts[0], dimSize);
+                end = string.IsNullOrEmpty(parts[1]) ? dimSize : this.ParseSingleIndex(parts[1], dimSize);
+                step = string.IsNullOrEmpty(parts[2]) ? 1 : int.Parse(parts[2]);
+            }
+
+            if (step == 0)
+            {
+                throw new ArgumentException("Step cannot be zero");
+            }
+
+            if (step < 0)
+            {
+                if (start == 0)
+                {
+                    start = dimSize - 1;
+                }
+
+                if (end == dimSize)
+                {
+                    end = -1;
+                }
+            }
+
+            // Adjust negative indices
+            start = start < 0 ? dimSize + start : start;
+            end = end < 0 ? dimSize + end : end;
+
+            // Clamp to valid range
+            start = Math.Max(0, Math.Min(start, dimSize - 1));
+            end = Math.Max(0, Math.Min(end, dimSize));
+        }
+
+        /// <summary>
+        /// Calculate the new shape.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="step">The step size.</param>
+        /// <param name="isSlice">Is slice.</param>
+        /// <returns>The new shape.</returns>
+        internal int[] CalculateNewShape(int[] start, int[] end, int[] step, bool[] isSlice)
+        {
+            List<int> newShape = new List<int>();
+            for (int i = 0; i < this.Shape.Length; i++)
+            {
+                if (isSlice[i])
+                {
+                    int size = (int)Math.Ceiling((double)(end[i] - start[i]) / step[i]);
+                    newShape.Add(size);
+                }
+            }
+
+            return newShape.ToArray();
+        }
+
         private static int[] CalculateStrides(int[] shape)
         {
             var strides = new int[shape.Length];
@@ -1027,6 +1165,42 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        private void CopyData(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices, int currentDim)
+        {
+            if (currentDim == source.Shape.Length)
+            {
+                dest[destIndices] = source[sourceIndices];
+                return;
+            }
+
+            int sourceStart = start[currentDim];
+            int sourceEnd = end[currentDim];
+            int sourceStep = step[currentDim];
+
+            if (isSlice[currentDim])
+            {
+                int destIndex = 0;
+                for (int i = sourceStart; i < sourceEnd; i += sourceStep)
+                {
+                    int[] newSourceIndices = (int[])sourceIndices.Clone();
+                    newSourceIndices[currentDim] = i;
+
+                    int[] newDestIndices = (int[])destIndices.Clone();
+                    newDestIndices[currentDim] = destIndex;
+
+                    this.CopyData(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
+                    destIndex++;
+                }
+            }
+            else
+            {
+                int[] newSourceIndices = (int[])sourceIndices.Clone();
+                newSourceIndices[currentDim] = sourceStart;
+
+                this.CopyData(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
+            }
         }
 
         private int GetTotalSize(int[] shape)

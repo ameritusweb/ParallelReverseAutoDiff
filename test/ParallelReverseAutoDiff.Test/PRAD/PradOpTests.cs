@@ -1,5 +1,6 @@
 ﻿using MKLNET;
 using ParallelReverseAutoDiff.PRAD;
+using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
 using Xunit;
 
@@ -626,6 +627,226 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Assert.Equal(new int[] { 1, 8000000 }, flatMagnitudes.Shape);
             Assert.Equal(new int[] { 1, 8000000 }, Ys.Shape);
             Assert.Equal(new int[] { 1, 8000000 }, Xs.Shape);
+        }
+
+        [Fact]
+        public void TestVNNOperationUsingIndexer()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            ElementwiseVectorConstituentMultiplyOperation op = new ElementwiseVectorConstituentMultiplyOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var clonedOpInput1 = opInput1.DeepClone();
+            var clonedOpInput2 = opInput2.DeepClone();
+
+            //rows = tf.shape(input1)[1]
+            //cols = tf.shape(input1)[2]
+            //half_cols = cols // 2
+
+            var rows = input1.Shape[0];
+            var cols = input1.Shape[1];
+            var halfCols = cols / 2;
+
+            //# Slice operations
+            //angles_seed = input1[:, :, half_cols:]
+            //angles_other = input2[:, :, half_cols:]
+
+            var anglesSeed = opInput1.Indexer(":", $"{halfCols}:").Result;
+            var anglesOther = opInput2.Indexer(":", $"{halfCols}:").Result;
+
+            //# Concatenation
+            //concat_angles = tf.concat([angles_seed, angles_other], axis = 2)
+
+            var concatAngles = opInput1.Concat(new[] { anglesOther }, axis: 1).Result;
+
+            //# Reshape
+            //flat_angles = tf.reshape(concat_angles, [batch_size, 1, -1])
+
+            var flatAngles = opInput1.Reshape(new int[] { 1, -1 }).Result;
+            var flatAnglesOp = opInput1.DeepClone();
+
+            //# Trigonometric operations
+            //sin_angles = tf.sin(flat_angles)
+            //cos_angles = tf.cos(flat_angles)
+
+            var sinAngles = opInput1.Sin().Result;
+            var cosAngles = flatAnglesOp.Cos().Result;
+
+            //# More slicing
+            //magnitudes_seed = input1[:, :, :half_cols]
+            //magnitudes_other = input2[:, :, :half_cols]
+
+            var magnitudesSeed = clonedOpInput1.Indexer(":", $":{halfCols}").Result;
+            var magnitudesOther = clonedOpInput2.Indexer(":", $":{halfCols}").Result;
+
+            //# Another concatenation
+            //concat_magnitudes = tf.concat([magnitudes_seed, magnitudes_other], axis = 2)
+
+            var concatMagnitudes = clonedOpInput1.Concat(new[] { magnitudesOther }, axis: 1).Result;
+
+            //# Another reshape
+            //flat_magnitudes = tf.reshape(concat_magnitudes, [batch_size, 1, -1])
+
+            var flatMagnitudes = clonedOpInput1.Reshape(new int[] { 1, -1 }).Result;
+            var flatMagnitudesOp = clonedOpInput1.DeepClone();
+
+            //# Multiplication operations
+            //Ys = flat_magnitudes * sin_angles
+            //Xs = flat_magnitudes * cos_angles
+
+            var ys = clonedOpInput1.Mul(sinAngles).Result;
+            var xs = flatMagnitudesOp.Mul(cosAngles).Result;
+
+            //reshaped_Ys = tf.reshape(Ys, [batch_size, rows, cols])
+            //reshaped_Xs = tf.reshape(Xs, [batch_size, rows, cols])
+
+            var reshapedYs = clonedOpInput1.Reshape(new int[] { rows, cols }).Result;
+            var reshapedXs = flatMagnitudesOp.Reshape(new int[] { rows, cols }).Result;
+            var reshapedYsOp = clonedOpInput1.DeepClone();
+            var reshapedXsOp = flatMagnitudesOp.DeepClone();
+
+            //y1s = reshaped_Ys[:, :, :half_cols]
+            //y2s = reshaped_Ys[:, :, half_cols:]
+            //x1s = reshaped_Xs[:, :, :half_cols]
+            //x2s = reshaped_Xs[:, :, half_cols:]
+
+            var y1s = clonedOpInput1.Indexer(":", $":{halfCols}").Result;
+            var y2s = reshapedYsOp.Indexer(":", $"{halfCols}:").Result;
+            var x1s = flatMagnitudesOp.Indexer(":", $":{halfCols}").Result;
+            var x2s = reshapedXsOp.Indexer(":", $"{halfCols}:").Result;
+
+            //transposed_Y2s = tf.transpose(y2s, [0, 2, 1])
+            //transposed_X2s = tf.transpose(x2s, [0, 2, 1])
+
+            var transposedY2s = reshapedYsOp.Transpose(new int[] { 1, 0 }).Result;
+            var transposedX2s = reshapedXsOp.Transpose(new int[] { 1, 0 }).Result;
+
+            //tiled_Y2s = tf.tile(transposed_Y2s, [1, 1, 3])
+            //tiled_X2s = tf.tile(transposed_X2s, [1, 1, 3])
+
+            var tiledY2s = reshapedYsOp.Tile(new int[] { 1, 3 }).Result;
+            var tiledX2s = reshapedXsOp.Tile(new int[] { 1, 3 }).Result;
+
+            //flat_Y2s = tf.reshape(tiled_Y2s, [batch_size, 1, -1])
+            //flat_X2s = tf.reshape(tiled_X2s, [batch_size, 1, -1])
+
+            var flatY2s = reshapedYsOp.Reshape(new int[] { 1, -1 }).Result;
+            var flatX2s = reshapedXsOp.Reshape(new int[] { 1, -1 }).Result;
+
+            //tiled_Y1s = tf.tile(y1s, [1, 1, 3])
+            //tiled_X1s = tf.tile(x1s, [1, 1, 3])
+
+            var tiledY1s = clonedOpInput1.Tile(new int[] { 1, 3 }).Result;
+            var tiledX1s = flatMagnitudesOp.Tile(new int[] { 1, 3 }).Result;
+
+            //flat_Y1s = tf.reshape(tiled_Y1s, [batch_size, 1, -1])
+            //flat_X1s = tf.reshape(tiled_X1s, [batch_size, 1, -1])
+
+            var flatY1s = clonedOpInput1.Reshape(new int[] { 1, -1 }).Result;
+            var flatX1s = flatMagnitudesOp.Reshape(new int[] { 1, -1 }).Result;
+
+            //delta_Y = flat_Y2s - flat_Y1s
+            //delta_X = flat_X2s - flat_X1s
+
+            var deltaY = reshapedYsOp.Sub(flatY1s).Result;
+            var deltaX = reshapedXsOp.Sub(flatX1s).Result;
+            var deltaYOp = reshapedYsOp.DeepClone();
+
+            //squared_Y = delta_Y * delta_Y
+            //squared_X = delta_X * delta_X
+
+            var squaredY = reshapedYsOp.Mul(deltaY).Result;
+            var squaredX = reshapedXsOp.Mul(deltaX).Result;
+
+            //added_YX = squared_Y + squared_X
+
+            var addedYX = reshapedYsOp.Add(squaredX).Result;
+
+            //unweighted_magnitude = tf.sqrt(added_YX)
+
+            var unweightedMagnitude = reshapedYsOp.SquareRoot().Result;
+
+            //transposed_weights = tf.transpose(weights, [0, 2, 1])
+            //tiled_weights = tf.tile(transposed_weights, [1, 1, 3])
+            //flattened_weights = tf.reshape(tiled_weights, [batch_size, 1, -1])
+
+            var transposedWeights = opWeights.Transpose(new int[] { 1, 0 }).Result;
+            var tiledWeights = opWeights.Tile(new int[] { 1, 3 }).Result;
+            var flattenedWeights = opWeights.Reshape(new int[] { 1, -1 }).Result;
+            var flattenedWeightsOp = opWeights.DeepClone();
+
+            //magnitudes = flattened_weights * unweighted_magnitude
+
+            var magnitudes = opWeights.Mul(unweightedMagnitude).Result;
+
+            //angles = tf.atan2(delta_Y, delta_X)
+
+            var angles = deltaYOp.Atan2(deltaX).Result;
+            var anglesOp = deltaYOp.DeepClone();
+
+            //sin_angles2 = tf.sin(angles)
+            //cos_angles2 = tf.cos(angles)
+
+            var sinAngles2 = deltaYOp.Sin().Result;
+            var cosAngles2 = anglesOp.Cos().Result;
+
+            //y_overall = flattened_weights * sin_angles2
+            //x_overall = magnitudes * cos_angles2
+
+            var yOverall = flattenedWeightsOp.Mul(sinAngles2).Result;
+            var xOverall = opWeights.Mul(cosAngles2).Result;
+
+            //reshaped_Y_overall = tf.reshape(y_overall, [batch_size, rows * half_cols, 3])
+            //reshaped_X_overall = tf.reshape(x_overall, [batch_size, rows * half_cols, 3])
+
+            var reshapedYOverall = flattenedWeightsOp.Reshape(new int[] { rows * halfCols, 3 }).Result;
+            var reshapedXOverall = opWeights.Reshape(new int[] { rows * halfCols, 3 }).Result;
+
+            //sum_rows_Y = tf.reduce_sum(reshaped_Y_overall, axis = 2)
+            //sum_rows_X = tf.reduce_sum(reshaped_X_overall, axis = 2)
+
+            var sumRowsY = flattenedWeightsOp.SumRows().Result;
+            var sumRowsX = opWeights.SumRows().Result;
+
+            //flattened_sum_rows_Y = tf.reshape(sum_rows_Y, [batch_size, 1, -1])
+            //flattened_sum_rows_X = tf.reshape(sum_rows_X, [batch_size, 1, -1])
+
+            var flattenedSumRowsY = flattenedWeightsOp.Reshape(new int[] { 1, -1 }).Result;
+            var flattenedSumRowsX = opWeights.Reshape(new int[] { 1, -1 }).Result;
+            var flattenedSumRowsYOp = flattenedWeightsOp.DeepClone();
+
+            //flattened_Y_squared = flattened_sum_rows_Y * flattened_sum_rows_Y
+            //flattened_X_squared = flattened_sum_rows_X * flattened_sum_rows_X
+
+            var flattenedYSquared = flattenedWeightsOp.Mul(flattenedSumRowsY).Result;
+            var flattenedXSquared = opWeights.Mul(flattenedSumRowsX).Result;
+
+            //added_YX_overall = flattened_Y_squared + flattened_X_squared
+            var addedYXOverall = flattenedWeightsOp.Add(flattenedXSquared).Result;
+
+            //magnitudes_overall = tf.sqrt(added_YX_overall)
+            //angles_overall = tf.atan2(flattened_sum_rows_Y, flattened_sum_rows_X)
+
+            var magnitudesOverall = flattenedWeightsOp.SquareRoot().Result;
+            var anglesOverall = flattenedSumRowsYOp.Atan2(flattenedSumRowsX).Result;
+
+            //output_tensor = tf.concat([magnitudes_overall, angles_overall], axis = 2)
+            //output_tensor = tf.reshape(output_tensor, [batch_size, rows, cols])
+
+            var outputTensor = flattenedWeightsOp.Concat(new[] { anglesOverall }, axis: 1).Result;
+            var output = flattenedWeightsOp.Reshape(new int[] { rows, cols }).Result;
+
+            var naiveOutput = resultTensor;
+
         }
 
         [Fact]
