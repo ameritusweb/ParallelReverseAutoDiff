@@ -654,11 +654,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Prints the tensor as C# code.
         /// </summary>
+        /// <param name="decimals">The number of decimal places to round to.</param>
         /// <returns>The code.</returns>
-        public string PrintCode()
+        public string PrintCode(int decimals = 4)
         {
             var shapeStr = string.Join(", ", this.Shape);
-            var dataStr = string.Join(", ", this.Data.Select(d => d.ToString("G17"))); // G17 for full double precision
+            var dataStr = string.Join(", ", this.Data.Select(d => Math.Round(d, decimals).ToString().PadRight(decimals + 6, ' ')));
 
             return $"new Tensor(new int[] {{ {shapeStr} }}, new double[] {{ {dataStr} }})";
         }
