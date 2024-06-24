@@ -904,7 +904,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Computes the reverse gradient for the Indexer operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
-        /// <param name="indices">The indices used in the Indexer operation.</param>
+        /// <param name="indices">The indices used to slice.</param>
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor IndexerReverse(Tensor upstreamGradient, params string[] indices)
         {
@@ -928,48 +928,56 @@ namespace ParallelReverseAutoDiff.PRAD
             int[] newShape = inputTensor.CalculateNewShape(start, end, step, isSlice);
             Tensor result = new Tensor(inputTensor.Shape);
 
-            this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, new int[result.Shape.Length], new int[newShape.Length]);
+            this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, new int[inputTensor.Shape.Length], new int[newShape.Length], 0);
 
             return result;
         }
 
         /// <summary>
-        /// Recursively copies data from the upstream gradient tensor to the input gradient tensor.
+        /// Copies data from the upstream gradient to the result tensor in reverse operation.
         /// </summary>
         /// <param name="source">The source tensor (upstream gradient).</param>
-        /// <param name="dest">The destination tensor (input gradient).</param>
-        /// <param name="start">The start indices.</param>
-        /// <param name="end">The end indices.</param>
-        /// <param name="step">The step sizes.</param>
-        /// <param name="isSlice">Array indicating if each dimension is sliced.</param>
-        /// <param name="sourceIndices">Current indices in the source tensor.</param>
-        /// <param name="destIndices">Current indices in the destination tensor.</param>
-        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices)
+        /// <param name="dest">The destination tensor (original gradient).</param>
+        /// <param name="start">The start indices for slicing.</param>
+        /// <param name="end">The end indices for slicing.</param>
+        /// <param name="step">The step sizes for slicing.</param>
+        /// <param name="isSlice">Indicates whether the dimension is sliced.</param>
+        /// <param name="sourceIndices">The current indices in the source tensor.</param>
+        /// <param name="destIndices">The current indices in the destination tensor.</param>
+        /// <param name="currentDim">The current dimension being processed.</param>
+        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices, int currentDim)
         {
-            if (sourceIndices.Length == start.Length)
+            if (currentDim == dest.Shape.Length)
             {
-                dest[sourceIndices] += source[destIndices];
+                dest[destIndices] += source[sourceIndices];
                 return;
             }
 
-            int dim = sourceIndices.Length;
-            int sourceStart = start[dim];
-            int sourceEnd = end[dim];
-            int sourceStep = step[dim];
+            int sourceStart = start[currentDim];
+            int sourceEnd = end[currentDim];
+            int sourceStep = step[currentDim];
 
-            if (isSlice[dim])
+            if (isSlice[currentDim])
             {
+                int destIndex = 0;
                 for (int i = sourceStart; i < sourceEnd; i += sourceStep)
                 {
-                    int[] newSourceIndices = sourceIndices.Concat(new[] { i }).ToArray();
-                    int[] newDestIndices = destIndices.Concat(new[] { (i - sourceStart) / sourceStep }).ToArray();
-                    this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices);
+                    int[] newSourceIndices = (int[])sourceIndices.Clone();
+                    newSourceIndices[currentDim] = destIndex;
+
+                    int[] newDestIndices = (int[])destIndices.Clone();
+                    newDestIndices[currentDim] = i;
+
+                    this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
+                    destIndex++;
                 }
             }
             else
             {
-                int[] newSourceIndices = sourceIndices.Concat(new[] { sourceStart }).ToArray();
-                this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, destIndices);
+                int[] newSourceIndices = (int[])sourceIndices.Clone();
+                newSourceIndices[currentDim] = sourceStart;
+
+                this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
             }
         }
 
