@@ -41,5 +41,16 @@ namespace ParallelReverseAutoDiff.RMAD
                 return this.Results[1];
             }
         }
+
+        /// <summary>
+        /// Gets the third item.
+        /// </summary>
+        public object? Item3
+        {
+            get
+            {
+                return this.Results[2];
+            }
+        }
     }
 }

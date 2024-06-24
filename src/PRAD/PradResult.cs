@@ -6,6 +6,8 @@
 
 namespace ParallelReverseAutoDiff.PRAD
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The result of the computation.
     /// </summary>
@@ -31,5 +33,10 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the gradient of the input.
         /// </summary>
         public Tensor[] Gradients { get; }
+
+        /// <summary>
+        /// Gets or sets the branches.
+        /// </summary>
+        public List<PradOp> Branches { get; set; } = new List<PradOp>();
     }
 }

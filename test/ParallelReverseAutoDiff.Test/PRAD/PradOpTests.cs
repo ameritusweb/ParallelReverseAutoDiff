@@ -631,6 +631,45 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestVNNOperationBack()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (i * 2) + rand.NextDouble()).ToArray());
+            var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+            var gradientOfLoss = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => rand.NextDouble()).ToArray());
+
+            ElementwiseVectorConstituentMultiplyOperation op = new ElementwiseVectorConstituentMultiplyOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+            var backResult = op.Backward(gradientOfLoss.ToMatrix());
+            var gradientOfInput1 = (backResult.Item1 as Matrix)!.ToTensor();
+            var gradientOfInput2 = (backResult.Item2 as Matrix)!.ToTensor();
+            var gradientOfWeights = (backResult.Item3 as Matrix)!.ToTensor();
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+
+            var rows = input1.Shape[0];
+            var cols = input1.Shape[1];
+            var halfCols = cols / 2;
+
+            var anglesSeed = opInput1.Indexer(":", $"{halfCols}:");
+            var anglesOther = opInput2.Indexer(":", $"{halfCols}:");
+
+            var concatAngles = opInput1.Concat(new[] { anglesOther.Result }, axis: 1);
+
+            var flatAngles = opInput1.Reshape(new int[] { 1, -1 });
+            var flatAnglesOp = opInput1.Branch();
+            flatAnglesOp.SetUpstreamGradient(new Tensor(new int[] { 1, 18 }, Enumerable.Range(0, 18).Select(x => rand.NextDouble()).ToArray()));
+
+            var sinAngles = opInput1.Sin();
+            var cosAngles = flatAnglesOp.Cos();
+
+            var dInput1 = opInput1.Back(new Tensor(new int[] { 1, 18 }, Enumerable.Range(0, 18).Select(x => rand.NextDouble()).ToArray()));
+        }
+
+        [Fact]
         public void TestVNNOperationUsingIndexer()
         {
             Random rand = new Random(3);
@@ -640,7 +679,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
 
             ElementwiseVectorConstituentMultiplyOperation op = new ElementwiseVectorConstituentMultiplyOperation();
-            var resultTensor = op.Forward2(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
 
             var opInput1 = new PradOp(input1);
             var opInput2 = new PradOp(input2);
