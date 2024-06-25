@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>ParallelReverseAutoDiff</id>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <authors>ameritusweb</authors>
     <owners>ameritusweb</owners>
     <license type="expression">LGPL-2.1-only</license>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for parallelized reverse mode automatic differentiation in C# for custom neural network development.</description>
 	<repository type="git" url="https://github.com/ameritusweb/ParallelReverseAutoDiff.git" commit="0a9bbd18f45c4f4434160a7c064539f29f3a3c67" />
-    <releaseNotes>Add XavierUniform.</releaseNotes>
+    <releaseNotes>Add PradOp.</releaseNotes>
     <copyright>ameritusweb, 2024</copyright>
     <tags>autodiff automatic-differentiation parallel reverse-mode differentiation C# neural network</tags>
     <dependencies>
@@ -22,6 +22,10 @@
 			<dependency id="Newtonsoft.Json" version="13.0.3" />
 			<dependency id="ILGPU" version="1.5.0" />
 			<dependency id="ILGPU.Algorithms" version="1.5.0" />
+			<dependency id="MKL.NET" version="1.5.0" />
+			<dependency id="MKL.NET.linux-x64" version="2022.0.1.117" />
+			<dependency id="MKL.NET.osx-x64" version="2022.0.0.105" />
+			<dependency id="MKL.NET.win-x64" version="2022.0.0.115" />
 		</group>
     </dependencies>
     <readme>README.md</readme>

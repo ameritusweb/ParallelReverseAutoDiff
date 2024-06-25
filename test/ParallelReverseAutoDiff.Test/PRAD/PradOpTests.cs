@@ -1,4 +1,5 @@
 ﻿using ILGPU.Runtime.Cuda;
+using ManagedCuda.VectorTypes;
 using MKLNET;
 using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
@@ -632,6 +633,87 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestMultipleBranches()
+        {
+            Matrix input1 = new Matrix(100, 200);
+            input1.Initialize(InitializationType.Xavier);
+
+            Matrix input2 = new Matrix(100, 200);
+            input2.Initialize(InitializationType.Xavier);
+
+            var pradOp1 = new PradOp(input1.ToTensor());
+            var pradOp2 = new PradOp(input2.ToTensor());
+
+            var sinCosRes1 = pradOp1.Sin()
+                .Then(PradOp.CosOp);
+
+            var sinCosRes2 = pradOp2.Sin()
+                .Then(PradOp.CosOp);
+
+            var addRes = sinCosRes1.PradOp.Add(sinCosRes2.Result);
+        }
+
+        [Fact]
+        public void TestSplitAndBack()
+        {
+            Matrix input1 = new Matrix(100, 200);
+            input1.Initialize(InitializationType.Xavier);
+
+            var pradOp = new PradOp(input1.ToTensor());
+
+            var half = input1.Cols / 2;
+
+            var (magnitudes, angles) = pradOp.Split(half, 1);
+
+            var (anglesCos, anglesSin) = angles.DoParallel(
+                a => a.Cos(),
+                a => a.Sin());
+
+            var (x, y) = magnitudes.DoParallel(
+                m => m.Mul(anglesCos.Result),
+                m => m.Mul(anglesSin.Result));
+
+            x.Then(PradOp.SquareRootOp).Then(PradOp.AddOp, y.Result);
+        }
+
+        [Fact]
+        public void TestElementwiseVectorAddOperation()
+        {
+            Matrix input1 = new Matrix(100, 200);
+            input1.Initialize(InitializationType.Xavier);
+
+            Matrix input2 = new Matrix(100, 200);
+            input2.Initialize(InitializationType.He);
+
+            var pradOp = new PradOp(input1.ToTensor());
+            var input2Tensor = input2.ToTensor();
+
+            var half = input1.Cols / 2;
+
+            var (magnitudes1, angles1) = pradOp.Split(half);
+            var (magnitudes2, angles2) = input2Tensor.Split(half).Select(t => new PradOp(t)).ToArray();
+
+            var (x1, y1) = magnitudes1.DoParallel(
+                m => m.Mul(angles1.Cos().Result),
+                m => m.Mul(angles1.Sin().Result));
+
+            var (x2, y2) = magnitudes2.DoParallel(
+                m => m.Mul(angles2.Cos().Result),
+                m => m.Mul(angles2.Sin().Result));
+
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumY = y1.Then(PradOp.AddOp, y2.Result);
+
+            var resultMagnitude = sumX.Then(PradOp.SquareOp)
+                                      .Then(PradOp.AddOp, sumY.Then(PradOp.SquareOp).Result)
+                                      .Then(PradOp.SquareRootOp);
+
+            var resultAngle = sumY.Then(PradOp.Atan2Op, sumX.Result);
+
+            var output = resultMagnitude.Then(PradOp.StackOp, new Tensor[] { resultAngle.Result }, axis: 1).Result.ToMatrix();
+        }
+
+        [Fact]
         public void TestVNNOperationBack()
         {
             Random rand = new Random(3);
@@ -747,29 +829,29 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var cosAngles = opInput1Branch.Cos();
             var sinAngles = anglesBranch.Sin();
 
-            var (x, y) = opInput1.DoMultiple(
+            var (x, y) = opInput1.DoParallel(
                 x => x.Mul(cosAngles.Result), 
                 x => x.Mul(sinAngles.Result));
 
             //        x_pivot = w_magnitude_pivot * tf.math.cos(w_angle_pivot)
             //        y_pivot = w_magnitude_pivot * tf.math.sin(w_angle_pivot)
 
-            var (cosPivot, sinPivot) = opInput2Branch.DoMultiple(
+            var (cosPivot, sinPivot) = opInput2Branch.DoParallel(
                 x => x.Cos(),
                 x => x.Sin());
 
-            var (xPivot, yPivot) = opInput2.DoMultiple(
+            var (xPivot, yPivot) = opInput2.DoParallel(
                 x => x.Mul(cosPivot.Result),
                 x => x.Mul(sinPivot.Result));
 
             //        x_w = w_magnitudes * tf.math.cos(w_angles)
             //        y_w = w_magnitudes * tf.math.sin(w_angles)
 
-            var (cosAngles_w, sinAngles_w) = w_angles.DoMultiple(
+            var (cosAngles_w, sinAngles_w) = w_angles.DoParallel(
                 x => x.Cos(),
                 x => x.Sin());
 
-            var (x_w, y_w) = w_magnitudes.DoMultiple(
+            var (x_w, y_w) = w_magnitudes.DoParallel(
                 x => x.Mul(cosAngles_w.Result),
                 x => x.Mul(sinAngles_w.Result));
 

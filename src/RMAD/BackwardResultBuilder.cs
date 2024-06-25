@@ -55,7 +55,25 @@ namespace ParallelReverseAutoDiff.RMAD
             foreach (var mat in matrix)
             {
                 this.inputGradientCount++;
-                this.resultTypes.Add(typeof(DeepMatrix));
+                this.resultTypes.Add(typeof(Matrix));
+                this.backwardResults.Add(mat);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Add input gradient array to the backward result.
+        /// </summary>
+        /// <param name="matrix">The 3-D tensor to add.</param>
+        /// <returns>The backward result builder.</returns>
+        public BackwardResultBuilder AddInputGradientArray(Tensor matrix)
+        {
+            var deepMatrix = matrix.ToDeepMatrix();
+            foreach (var mat in deepMatrix)
+            {
+                this.inputGradientCount++;
+                this.resultTypes.Add(typeof(Matrix));
                 this.backwardResults.Add(mat);
             }
 
@@ -72,6 +90,19 @@ namespace ParallelReverseAutoDiff.RMAD
             this.deepInputGradientCount++;
             this.resultTypes.Add(typeof(DeepMatrix));
             this.backwardResults.Add(matrix);
+            return this;
+        }
+
+        /// <summary>
+        /// Add deep input gradient to the backward result.
+        /// </summary>
+        /// <param name="matrix">The 3-D tensor to add.</param>
+        /// <returns>The backward result builder.</returns>
+        public BackwardResultBuilder AddDeepInputGradient(Tensor matrix)
+        {
+            this.deepInputGradientCount++;
+            this.resultTypes.Add(typeof(DeepMatrix));
+            this.backwardResults.Add(matrix.ToDeepMatrix());
             return this;
         }
 

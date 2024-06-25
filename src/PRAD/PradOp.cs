@@ -18,6 +18,7 @@ namespace ParallelReverseAutoDiff.PRAD
     public class PradOp
     {
         private readonly Tensor seed;
+        private readonly Dictionary<Delegate, Delegate> operations;
         private List<(Func<Tensor, Tensor[]> backpropStep, PradResult result)> backpropagationSteps;
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
@@ -32,7 +33,81 @@ namespace ParallelReverseAutoDiff.PRAD
             this.seed = seed;
             this.currentTensor = seed;
             this.backpropagationSteps = new List<(Func<Tensor, Tensor[]>, PradResult)>();
+            this.operations = new Dictionary<Delegate, Delegate>();
+            this.InitializeOperations();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PradOp"/> class.
+        /// </summary>
+        internal PradOp()
+        {
+        }
+
+        /// <summary>
+        /// Gets the square root op.
+        /// </summary>
+        public static Func<PradResult> SquareRootOp => FuncOp.SquareRoot;
+
+        /// <summary>
+        /// Gets the add op.
+        /// </summary>
+        public static Func<Tensor, PradResult> AddOp => FuncOp.Add;
+
+        /// <summary>
+        /// Gets the mul op.
+        /// </summary>
+        public static Func<Tensor, PradResult> MulOp => FuncOp.Mul;
+
+        /// <summary>
+        /// Gets the sub op.
+        /// </summary>
+        public static Func<Tensor, PradResult> SubOp => FuncOp.Sub;
+
+        /// <summary>
+        /// Gets the div op.
+        /// </summary>
+        public static Func<Tensor, PradResult> DivOp => FuncOp.Div;
+
+        /// <summary>
+        /// Gets the sin op.
+        /// </summary>
+        public static Func<PradResult> SinOp => FuncOp.Sin;
+
+        /// <summary>
+        /// Gets the cos op.
+        /// </summary>
+        public static Func<PradResult> CosOp => FuncOp.Cos;
+
+        /// <summary>
+        /// Gets the GatherNd op.
+        /// </summary>
+        public static Func<Tensor, PradResult> GatherNdOp => FuncOp.GatherNd;
+
+        /// <summary>
+        /// Gets the add op.
+        /// </summary>
+        public static Func<PradResult> SumRowsOp => FuncOp.SumRows;
+
+        /// <summary>
+        /// Gets the square op.
+        /// </summary>
+        public static Func<PradResult> SquareOp => FuncOp.Square;
+
+        /// <summary>
+        /// Gets the atan2 op.
+        /// </summary>
+        public static Func<Tensor, PradResult> Atan2Op => FuncOp.Atan2;
+
+        /// <summary>
+        /// Gets the stack op.
+        /// </summary>
+        public static Func<Tensor[], int, PradResult> StackOp => FuncOp.Stack;
+
+        /// <summary>
+        /// Gets the concat op.
+        /// </summary>
+        public static Func<Tensor[], int, PradResult> ConcatOp => FuncOp.Concat;
 
         /// <summary>
         /// Gets the upstream gradient.
@@ -40,9 +115,19 @@ namespace ParallelReverseAutoDiff.PRAD
         public Tensor UpstreamGradient { get; private set; }
 
         /// <summary>
+        /// Gets the seed gradient.
+        /// </summary>
+        public Tensor SeedGradient { get; internal set; }
+
+        /// <summary>
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
         /// </summary>
         public bool IsDependentBranch => this.parentResult != null;
+
+        /// <summary>
+        /// Gets an operation to get a func.
+        /// </summary>
+        internal static PradOp FuncOp => new PradOp();
 
         /// <summary>
         /// Sets the upstream gradient.
@@ -186,6 +271,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="tensor">The tensor to add.</param>
         /// <returns>The result of the addition along with the gradient placeholder.</returns>
+        [PradOperation(nameof(AddOp))]
         public PradResult Add(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseAdd(tensor);
@@ -208,6 +294,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="tensor">The tensor to subtract.</param>
         /// <returns>The result of the subtraction along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SubOp))]
         public PradResult Sub(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseSub(tensor);
@@ -230,6 +317,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="tensor">The tensor to multiply with.</param>
         /// <returns>The result of the multiplication along with the gradient placeholders.</returns>
+        [PradOperation(nameof(MulOp))]
         public PradResult Mul(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseMultiply(tensor);
@@ -252,6 +340,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="tensor">The tensor to divide with.</param>
         /// <returns>The result of the division along with the gradient placeholders.</returns>
+        [PradOperation(nameof(DivOp))]
         public PradResult Div(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseDivide(tensor);
@@ -273,6 +362,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Computes the sine of each element of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the sine operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SinOp))]
         public PradResult Sin()
         {
             var result = this.currentTensor.ElementwiseSin();
@@ -295,6 +385,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Computes the cosine of each element of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the cosine operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(CosOp))]
         public PradResult Cos()
         {
             var result = this.currentTensor.ElementwiseCos();
@@ -457,6 +548,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="indices">The indices of elements to gather.</param>
         /// <returns>The gathered tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(GatherNdOp))]
         public PradResult GatherNd(Tensor indices)
         {
             var result = this.currentTensor.GatherNd(indices);
@@ -505,6 +597,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="tensor">The tensor to use as the divisor.</param>
         /// <returns>The result of the atan2 operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(Atan2Op))]
         public PradResult Atan2(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseAtan2(tensor);
@@ -526,6 +619,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Computes the element-wise square of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the square operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SquareOp))]
         public PradResult Square()
         {
             var result = this.currentTensor.ElementwiseSquare();
@@ -548,6 +642,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Computes the element-wise square root of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the square root operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SquareRootOp))]
         public PradResult SquareRoot()
         {
             var result = this.currentTensor.ElementwiseSquareRoot();
@@ -570,6 +665,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Sums the rows of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The tensor with summed rows along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SumRowsOp))]
         public PradResult SumRows()
         {
             var result = this.currentTensor.SumRows();
@@ -594,6 +690,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="tensors">The tensors to stack.</param>
         /// <param name="axis">The axis along which to stack.</param>
         /// <returns>The stacked tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(StackOp))]
         public PradResult Stack(Tensor[] tensors, int axis = 0)
         {
             var combinedTensors = new Tensor[tensors.Length + 1];
@@ -621,6 +718,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="tensors">The tensors to concatenate.</param>
         /// <param name="axis">The axis along which to concatenate.</param>
         /// <returns>The concatenated tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(ConcatOp))]
         public PradResult Concat(Tensor[] tensors, int axis = 0)
         {
             var combinedTensors = new Tensor[tensors.Length + 1];
@@ -645,10 +743,10 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Executes multiple operations in parallel and returns the results.
         /// </summary>
-        /// <param name="operations">The operations to perform.</param>
+        /// <param name="operations">The operations to perform in parallel.</param>
         /// <returns>The results.</returns>
         /// <exception cref="ArgumentException">No operation provided.</exception>
-        public PradResult[] DoMultiple(params Func<PradOp, PradResult>[] operations)
+        public PradResult[] DoParallel(params Func<PradOp, PradResult>[] operations)
         {
             if (operations == null || operations.Length == 0)
             {
@@ -756,6 +854,48 @@ namespace ParallelReverseAutoDiff.PRAD
                 {
                     result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the current tensor.
+        /// </summary>
+        /// <returns>The current tensor.</returns>
+        internal Tensor GetCurrentTensor()
+        {
+            return this.currentTensor;
+        }
+
+        /// <summary>
+        /// Gets the operation delegate for the specified operation.
+        /// </summary>
+        /// <typeparam name="T">The type of the delegate.</typeparam>
+        /// <param name="operation">The operation func.</param>
+        /// <returns>The operation delegate.</returns>
+        internal T GetOperation<T>(Delegate operation)
+            where T : Delegate
+        {
+            if (this.operations.TryGetValue(operation, out var instanceOperation))
+            {
+                return (T)instanceOperation;
+            }
+
+            throw new KeyNotFoundException("Operation not found.");
+        }
+
+        /// <summary>
+        /// Initializes the operations dictionary using reflection.
+        /// </summary>
+        private void InitializeOperations()
+        {
+            var methods = this.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(m => m.GetCustomAttribute<PradOperationAttribute>() != null);
+
+            foreach (var method in methods)
+            {
+                var attr = method.GetCustomAttribute<PradOperationAttribute>();
+                var instanceDelegate = Delegate.CreateDelegate(attr.DelegateType, this, method);
+                this.operations[attr.StaticDelegate] = instanceDelegate;
             }
         }
     }
