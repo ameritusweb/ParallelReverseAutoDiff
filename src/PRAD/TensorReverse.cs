@@ -19,16 +19,16 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Initializes a new instance of the <see cref="TensorReverse"/> class.
         /// </summary>
-        /// <param name="tensors">The transformed tensors.</param>
+        /// <param name="tensors">The initial tensors.</param>
         public TensorReverse(Tensor[] tensors)
         {
-            this.TransformedTensors = tensors;
+            this.InitialTensors = tensors;
         }
 
         /// <summary>
-        /// Gets the transformed tensors.
+        /// Gets the initial tensors.
         /// </summary>
-        public Tensor[] TransformedTensors { get; private set; }
+        public Tensor[] InitialTensors { get; private set; }
 
         /// <summary>
         /// Computes the reverse gradient for element-wise addition.
@@ -37,13 +37,13 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensors.</returns>
         public Tensor[] ElementwiseAddReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 2)
+            if (this.InitialTensors.Length != 2)
             {
-                throw new InvalidOperationException("ElementwiseAddReverse expects exactly two transformed tensors.");
+                throw new InvalidOperationException("ElementwiseAddReverse expects exactly two initial tensors.");
             }
 
-            Tensor tensorA = this.TransformedTensors[0];
-            Tensor tensorB = this.TransformedTensors[1];
+            Tensor tensorA = this.InitialTensors[0];
+            Tensor tensorB = this.InitialTensors[1];
 
             this.CheckShapeCompatibility(tensorA, upstreamGradient);
             this.CheckShapeCompatibility(tensorB, upstreamGradient);
@@ -62,13 +62,13 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensors.</returns>
         public Tensor[] ElementwiseMultiplyReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 2)
+            if (this.InitialTensors.Length != 2)
             {
-                throw new InvalidOperationException("ElementwiseMultiplyReverse expects exactly two transformed tensors.");
+                throw new InvalidOperationException("ElementwiseMultiplyReverse expects exactly two initial tensors.");
             }
 
-            Tensor tensorA = this.TransformedTensors[0];
-            Tensor tensorB = this.TransformedTensors[1];
+            Tensor tensorA = this.InitialTensors[0];
+            Tensor tensorB = this.InitialTensors[1];
 
             this.CheckShapeCompatibility(tensorA, upstreamGradient);
             this.CheckShapeCompatibility(tensorB, upstreamGradient);
@@ -89,12 +89,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor ElementwiseSquareReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("ElementwiseSquareReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("ElementwiseSquareReverse expects exactly one initial tensor.");
             }
 
-            Tensor tensorA = this.TransformedTensors[0];
+            Tensor tensorA = this.InitialTensors[0];
 
             this.CheckShapeCompatibility(tensorA, upstreamGradient);
 
@@ -112,19 +112,22 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor ElementwiseSquareRootReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("ElementwiseSquareRootReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("ElementwiseSquareRootReverse expects exactly one initial tensor.");
             }
 
-            Tensor y = this.TransformedTensors[0]; // The output of the square root operation
+            Tensor x = this.InitialTensors[0]; // The input to the square root operation
+            this.CheckShapeCompatibility(x, upstreamGradient);
 
-            this.CheckShapeCompatibility(y, upstreamGradient);
+            var gradX = new Tensor(x.Shape);
+            var sqrtX = new Tensor(x.Shape);
 
-            var gradX = new Tensor(y.Shape);
+            // Compute sqrt(x)
+            Vml.Sqrt(x.Data.Length, x.Data, sqrtX.Data);
 
-            // Compute gradX = upstreamGradient / (2 * y)
-            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, y.Data, gradX.Data);
+            // Compute gradX = upstreamGradient / (2 * sqrt(x))
+            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, sqrtX.Data, gradX.Data);
             Blas.scal(0.5, gradX.Data);
 
             return gradX;
@@ -137,12 +140,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor ElementwiseSinReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("ElementwiseSinReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("ElementwiseSinReverse expects exactly one initial tensor.");
             }
 
-            Tensor tensorA = this.TransformedTensors[0];
+            Tensor tensorA = this.InitialTensors[0];
 
             this.CheckShapeCompatibility(tensorA, upstreamGradient);
 
@@ -161,12 +164,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor ElementwiseCosReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("ElementwiseCosReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("ElementwiseCosReverse expects exactly one initial tensor.");
             }
 
-            Tensor tensorA = this.TransformedTensors[0];
+            Tensor tensorA = this.InitialTensors[0];
 
             this.CheckShapeCompatibility(tensorA, upstreamGradient);
 
@@ -188,12 +191,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">If the shapes of the tensors are not compatible.</exception>
         public Tensor[] ElementwiseAtan2Reverse(Tensor upstreamGradient, Tensor x)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("ElementwiseAtan2Reverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("ElementwiseAtan2Reverse expects exactly one initial tensor.");
             }
 
-            Tensor y = this.TransformedTensors[0];
+            Tensor y = this.InitialTensors[0];
 
             this.CheckShapeCompatibility(y, upstreamGradient);
             this.CheckShapeCompatibility(y, x);
@@ -232,10 +235,10 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>An array of tensors representing the gradients for each input tensor.</returns>
         public Tensor[] ConcatReverse(Tensor upstreamGradient, int axis)
         {
-            int numTensors = this.TransformedTensors.Length;
+            int numTensors = this.InitialTensors.Length;
             Tensor[] gradients = new Tensor[numTensors];
 
-            int[] shape = this.TransformedTensors[0].Shape;
+            int[] shape = this.InitialTensors[0].Shape;
             int rank = shape.Length;
 
             // Handle negative axis
@@ -255,7 +258,7 @@ namespace ParallelReverseAutoDiff.PRAD
             for (int i = 0; i < numTensors; i++)
             {
                 int[] gradShape = (int[])shape.Clone();
-                gradShape[axis] = this.TransformedTensors[i].Shape[axis];
+                gradShape[axis] = this.InitialTensors[i].Shape[axis];
 
                 int gradSize = gradShape.Aggregate((a, b) => a * b);
                 double[] gradData = new double[gradSize];
@@ -276,8 +279,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensors.</returns>
         public Tensor[] CreateFlatArrayReverse(Tensor upstreamGradient, int[] indices)
         {
-            int numTensors = this.TransformedTensors.Length;
-            int[] shape = this.TransformedTensors[0].Shape;
+            int numTensors = this.InitialTensors.Length;
+            int[] shape = this.InitialTensors[0].Shape;
 
             // Initialize the gradient tensors for each input tensor
             Tensor[] gradients = new Tensor[numTensors];
@@ -290,7 +293,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             for (int t = 0; t < numTensors; t++)
             {
-                Tensor tensor = this.TransformedTensors[t];
+                Tensor tensor = this.InitialTensors[t];
 
                 foreach (var index in indices)
                 {
@@ -314,12 +317,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">Out of bounds axis.</exception>
         public Tensor[] StackReverse(Tensor upstreamGradient, int axis = 0)
         {
-            if (this.TransformedTensors == null || this.TransformedTensors.Length == 0)
+            if (this.InitialTensors == null || this.InitialTensors.Length == 0)
             {
-                throw new InvalidOperationException("The input list of transformed tensors cannot be empty.");
+                throw new InvalidOperationException("The input list of initial tensors cannot be empty.");
             }
 
-            int numTensors = this.TransformedTensors.Length;
+            int numTensors = this.InitialTensors.Length;
             int[] gradShape = upstreamGradient.Shape;
 
             // Handle negative axis
@@ -375,7 +378,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             int[] gradShape = upstreamGradients[0].Shape;
             int numTensors = upstreamGradients.Length;
-            int rank = gradShape.Length;
+            int rank = gradShape.Length + 1; // We're adding back the unstacked dimension
 
             // Handle negative axis
             if (axis < 0)
@@ -384,24 +387,34 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             // Validate axis
-            if (axis < 0 || axis > rank)
+            if (axis < 0 || axis >= rank)
             {
                 throw new ArgumentException("Axis value is out of bounds.");
             }
 
             // Determine the shape of the resulting gradient tensor
-            int[] resultShape = new int[rank + 1];
-            Array.Copy(gradShape, resultShape, rank);
-            resultShape[axis] = numTensors;
+            int[] resultShape = new int[rank];
+            int gradIndex = 0;
+            for (int i = 0; i < rank; i++)
+            {
+                if (i == axis)
+                {
+                    resultShape[i] = numTensors;
+                }
+                else
+                {
+                    resultShape[i] = gradShape[gradIndex++];
+                }
+            }
 
             // Calculate the total size of the result gradient tensor
             int totalSize = resultShape.Aggregate(1, (a, b) => a * b);
             double[] resultData = new double[totalSize];
             var result = new Tensor(resultShape, resultData);
 
-            int[] strides = new int[rank + 1];
-            strides[rank] = 1;
-            for (int i = rank - 1; i >= 0; i--)
+            int[] strides = new int[rank];
+            strides[rank - 1] = 1;
+            for (int i = rank - 2; i >= 0; i--)
             {
                 strides[i] = strides[i + 1] * resultShape[i + 1];
             }
@@ -413,12 +426,25 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 for (int j = 0; j < gradient.Length; j++)
                 {
+                    int[] indices = new int[rank];
                     int temp = j;
-                    int resultIndex = start;
+                    int gradDim = 0;
                     for (int k = rank - 1; k >= 0; k--)
                     {
-                        resultIndex += (temp % gradShape[k]) * strides[k];
-                        temp /= gradShape[k];
+                        if (k != axis)
+                        {
+                            indices[k] = temp % gradShape[gradDim];
+                            temp /= gradShape[gradDim];
+                            gradDim++;
+                        }
+                    }
+
+                    indices[axis] = i;
+
+                    int resultIndex = 0;
+                    for (int k = 0; k < rank; k++)
+                    {
+                        resultIndex += indices[k] * strides[k];
                     }
 
                     resultData[resultIndex] += gradient[j];
@@ -437,7 +463,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor GatherReverse(Tensor upstreamGradient, Tensor indices, int axis = 0)
         {
-            Tensor inputTensor = this.TransformedTensors[0];
+            Tensor inputTensor = this.InitialTensors[0];
             int[] inputShape = inputTensor.Shape;
             Tensor grad = new Tensor(inputShape);
 
@@ -512,13 +538,13 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensors.</returns>
         public Tensor[] ElementwiseSubReverse(Tensor upstreamGradient)
         {
-            if (this.TransformedTensors.Length != 2)
+            if (this.InitialTensors.Length != 2)
             {
-                throw new InvalidOperationException("ElementwiseSubReverse expects exactly two transformed tensors.");
+                throw new InvalidOperationException("ElementwiseSubReverse expects exactly two initial tensors.");
             }
 
-            Tensor tensorA = this.TransformedTensors[0];
-            Tensor tensorB = this.TransformedTensors[1];
+            Tensor tensorA = this.InitialTensors[0];
+            Tensor tensorB = this.InitialTensors[1];
 
             this.CheckShapeCompatibility(tensorA, upstreamGradient);
             this.CheckShapeCompatibility(tensorB, upstreamGradient);
@@ -543,12 +569,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">If the shapes of the tensors are not compatible.</exception>
         public Tensor[] ElementwiseDivideReverse(Tensor upstreamGradient, Tensor other)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("ElementwiseDivideReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("ElementwiseDivideReverse expects exactly one initial tensor.");
             }
 
-            Tensor a = this.TransformedTensors[0];
+            Tensor a = this.InitialTensors[0];
             Tensor b = other;
 
             this.CheckShapeCompatibility(a, upstreamGradient);
@@ -561,17 +587,12 @@ namespace ParallelReverseAutoDiff.PRAD
             Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, b.Data, gradA.Data);
 
             // Compute gradB = -upstreamGradient * a / (b * b)
-            var aDivB = new Tensor(a.Shape);
-            Vml.Div(a.Data.Length, a.Data, b.Data, aDivB.Data);
-
-            Vml.Mul(aDivB.Data.Length, aDivB.Data, upstreamGradient.Data, gradB.Data);
-
-            // Element-wise multiplication of upstreamGradient with -aDivB
-            Blas.scal(-1.0, gradB.Data);
-
             var bSquared = new Tensor(b.Shape);
             Vml.Mul(b.Data.Length, b.Data, b.Data, bSquared.Data);
+
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, a.Data, gradB.Data);
             Vml.Div(gradB.Data.Length, gradB.Data, bSquared.Data, gradB.Data);
+            Blas.scal(-1.0, gradB.Data);
 
             return new Tensor[] { gradA, gradB };
         }
@@ -584,12 +605,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor TileReverse(Tensor upstreamGradient, int[] multiples)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("TileReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("TileReverse expects exactly one initial tensor.");
             }
 
-            Tensor originalTensor = this.TransformedTensors[0];
+            Tensor originalTensor = this.InitialTensors[0];
             if (multiples.Length != originalTensor.Shape.Length)
             {
                 throw new ArgumentException("Length of multiples must match the number of dimensions of the tensor.");
@@ -608,32 +629,22 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             Tensor grad = new Tensor(originalShape);
-            int[] originalIndices = new int[originalShape.Length];
-            int[] tiledIndices = new int[tiledShape.Length];
 
-            do
+            // Iterate over all elements in the upstream gradient
+            for (int i = 0; i < upstreamGradient.Data.Length; i++)
             {
+                int[] tiledIndices = this.GetMultiDimensionalIndices(i, tiledShape);
+                int[] originalIndices = new int[originalShape.Length];
+
                 // Calculate corresponding indices in the original tensor
-                for (int i = 0; i < originalShape.Length; i++)
+                for (int j = 0; j < originalShape.Length; j++)
                 {
-                    originalIndices[i] = tiledIndices[i] % originalShape[i];
+                    originalIndices[j] = tiledIndices[j] % originalShape[j];
                 }
 
                 // Accumulate gradient
-                grad[originalIndices] += upstreamGradient[tiledIndices];
-
-                // Move to the next index in the tiled tensor
-                for (int i = tiledShape.Length - 1; i >= 0; i--)
-                {
-                    if (++tiledIndices[i] < tiledShape[i])
-                    {
-                        break;
-                    }
-
-                    tiledIndices[i] = 0;
-                }
+                grad[originalIndices] += upstreamGradient.Data[i];
             }
-            while (!tiledIndices.All(x => x == 0));
 
             return grad;
         }
@@ -646,7 +657,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor GatherNdReverse(Tensor upstreamGradient, Tensor indices)
         {
-            Tensor inputTensor = this.TransformedTensors[0];
+            Tensor inputTensor = this.InitialTensors[0];
 
             if (indices.Shape[^1] != inputTensor.Shape.Length)
             {
@@ -711,7 +722,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor SliceReverse(Tensor upstreamGradient, int[] begin, int[] size, int[]? strides = null)
         {
-            Tensor inputTensor = this.TransformedTensors[0];
+            Tensor inputTensor = this.InitialTensors[0];
 
             if (begin.Length != inputTensor.Shape.Length || size.Length != inputTensor.Shape.Length || (strides != null && strides.Length != inputTensor.Shape.Length))
             {
@@ -761,7 +772,7 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             int[] gradShape = upstreamGradients[0].Shape;
-            int rank = gradShape.Length + 1;
+            int rank = gradShape.Length;
             int numTensors = upstreamGradients.Length;
 
             // Handle negative axis
@@ -778,9 +789,8 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Determine the shape of the resulting gradient tensor
             int[] resultShape = new int[rank];
-            Array.Copy(gradShape, resultShape, axis);
-            resultShape[axis] = gradShape[axis - 1] * numTensors;
-            Array.Copy(gradShape, axis, resultShape, axis + 1, gradShape.Length - axis);
+            Array.Copy(gradShape, resultShape, rank);
+            resultShape[axis] *= numTensors;
 
             // Calculate the total size of the result gradient tensor
             int totalSize = resultShape.Aggregate(1, (a, b) => a * b);
@@ -796,17 +806,25 @@ namespace ParallelReverseAutoDiff.PRAD
 
             Parallel.For(0, numTensors, i =>
             {
-                int start = i * strides[axis];
+                int start = i * strides[axis] * gradShape[axis];
                 var gradient = upstreamGradients[i].Data;
 
                 for (int j = 0; j < gradient.Length; j++)
                 {
+                    int[] indices = new int[rank];
                     int temp = j;
-                    int resultIndex = start;
-                    for (int k = gradShape.Length - 1; k >= 0; k--)
+                    for (int k = rank - 1; k >= 0; k--)
                     {
-                        resultIndex += (temp % gradShape[k]) * strides[k + 1];
+                        indices[k] = temp % gradShape[k];
                         temp /= gradShape[k];
+                    }
+
+                    indices[axis] += i * gradShape[axis];
+
+                    int resultIndex = 0;
+                    for (int k = 0; k < rank; k++)
+                    {
+                        resultIndex += indices[k] * strides[k];
                     }
 
                     resultData[resultIndex] = gradient[j];
@@ -824,8 +842,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">Shape does not match.</exception>
         public Tensor SumRowsReverse(Tensor upstreamGradient)
         {
-            Tensor transformedTensor = this.TransformedTensors[0];
-            int[] originalShape = transformedTensor.Shape;
+            Tensor initialTensor = this.InitialTensors[0];
+            int[] originalShape = initialTensor.Shape;
 
             if (upstreamGradient.Shape.Length != 2 || upstreamGradient.Shape[0] != originalShape[0] || upstreamGradient.Shape[1] != 1)
             {
@@ -855,12 +873,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor before transposition.</returns>
         public Tensor TransposeReverse(Tensor upstreamGradient, int[] permutation)
         {
-            if (this.TransformedTensors.Length != 1)
+            if (this.InitialTensors.Length != 1)
             {
-                throw new InvalidOperationException("TransposeReverse expects exactly one transformed tensor.");
+                throw new InvalidOperationException("TransposeReverse expects exactly one initial tensor.");
             }
 
-            Tensor originalTensor = this.TransformedTensors[0];
+            Tensor originalTensor = this.InitialTensors[0];
 
             if (permutation.Length != originalTensor.Shape.Length)
             {
@@ -879,22 +897,21 @@ namespace ParallelReverseAutoDiff.PRAD
                 inversePermutation[permutation[i]] = i;
             }
 
-            // Calculate the shape of the result tensor
-            var newShape = permutation.Select(p => originalTensor.Shape[p]).ToArray();
-            var result = new Tensor(newShape);
+            // The shape of the result tensor should be the same as the original tensor
+            var result = new Tensor(originalTensor.Shape);
 
             // Perform the reverse transposition
             Parallel.For(0, result.Data.Length, i =>
             {
-                int[] newIndices = result.GetMultiDimensionalIndices(i, newShape);
-                int[] oldIndices = new int[newIndices.Length];
-                for (int j = 0; j < newIndices.Length; j++)
+                int[] originalIndices = originalTensor.GetMultiDimensionalIndices(i, originalTensor.Shape);
+                int[] transposedIndices = new int[originalIndices.Length];
+                for (int j = 0; j < originalIndices.Length; j++)
                 {
-                    oldIndices[permutation[j]] = newIndices[j];
+                    transposedIndices[inversePermutation[j]] = originalIndices[j];
                 }
 
-                int oldIndex = originalTensor.GetIndex(oldIndices);
-                result.Data[i] = upstreamGradient.Data[oldIndex];
+                int transposedIndex = upstreamGradient.GetIndex(transposedIndices);
+                result.Data[i] = upstreamGradient.Data[transposedIndex];
             });
 
             return result;
@@ -908,7 +925,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor IndexerReverse(Tensor upstreamGradient, params string[] indices)
         {
-            Tensor inputTensor = this.TransformedTensors[0];
+            Tensor inputTensor = this.InitialTensors[0];
 
             if (indices.Length != inputTensor.Shape.Length)
             {

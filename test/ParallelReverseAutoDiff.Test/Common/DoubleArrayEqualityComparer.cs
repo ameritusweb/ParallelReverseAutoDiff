@@ -8,6 +8,11 @@ namespace ParallelReverseAutoDiff.Test.Common
 
         public DoubleArrayEqualityComparer(double precision)
         {
+            if (precision >= 1d)
+            {
+                precision = 1d / Math.Pow(10d, precision);
+            }
+
             _precision = precision;
         }
 
