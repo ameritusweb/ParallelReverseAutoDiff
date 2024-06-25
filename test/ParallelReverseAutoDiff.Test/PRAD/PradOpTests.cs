@@ -1,4 +1,5 @@
-﻿using MKLNET;
+﻿using ILGPU.Runtime.Cuda;
+using MKLNET;
 using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
@@ -667,6 +668,163 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var cosAngles = flatAnglesOp.Cos();
 
             var dInput1 = opInput1.Back(new Tensor(new int[] { 1, 18 }, Enumerable.Range(0, 18).Select(x => rand.NextDouble()).ToArray()));
+        }
+
+        [Fact]
+        public void TestVNNDecompositionOperationUsingIndexer()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => i / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i * 2) / 100d).ToArray());
+            var weights = new Tensor(new int[] { 3, 2 }, Enumerable.Range(0, 6).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            ElementwiseVectorDecompositionOperation op = new ElementwiseVectorDecompositionOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+            var opInput1Branch = opInput1.Branch();
+            var opInput2Branch = opInput2.Branch();
+            var opInput2Branch2 = opInput2.Branch();
+
+            //            num_rows, num_cols = tf.shape(input1)[1], tf.shape(input1)[2] // 2
+
+            var num_rows = input1.Shape[0];
+            var num_cols = input1.Shape[1] / 2;
+
+            //        # Split input1 into magnitude and angle
+            //        magnitude = input1[:, :, :num_cols]
+            //        angle = input1[:, :, num_cols:]
+
+            var magnitudes = opInput1.Indexer(":", $":{num_cols}");
+            var angles = opInput1Branch.Indexer(":", $"{num_cols}:");
+            var anglesBranch = opInput1Branch.Branch();
+            var magnitudesBranch = opInput1.Branch();
+
+            //        # Extract components from input2
+            //        input2_cols = tf.shape(input2)[2]
+            //        half_cols = input2_cols // 2
+
+            var input2_cols = input2.Shape[1];
+            var half_cols = input2_cols / 2;
+
+            //        # Correctly extract w_magnitude_pivot and w_angle_pivot
+            //        w_magnitude_pivot = input2[:, :, :half_cols][:, :, ::5]
+            //        w_angle_pivot = input2[:, :, half_cols:][:, :, ::5]
+
+            var w_magnitude_pivot_half = opInput2.Indexer(":", $":{half_cols}");
+            var w_magnitude_pivot = opInput2.Indexer(":", $"::5");
+
+            var w_angle_pivot_half = opInput2Branch.Indexer(":", $"{half_cols}:");
+            var w_angle_pivot = opInput2Branch.Indexer(":", $"::5");
+
+            //        # Extract other components
+            //        w_magnitudes = tf.stack([input2[:, :, 1 + i:half_cols: 5] for i in range(4)], axis = -1)
+            //                w_angles = tf.stack([input2[:, :, half_cols + 1 + i::5] for i in range(4)], axis = -1)
+
+            var w_magnitudes_t = new Tensor[4];
+            var w_angles_t = new Tensor[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var branchM = opInput2Branch2.DeepClone();
+                w_magnitudes_t[i] = branchM.Indexer(":", $"{1 + i}:{half_cols}:5").Result;
+
+                var branchA = opInput2Branch2.DeepClone();
+                w_angles_t[i] = branchA.Indexer(":", $"{half_cols + 1 + i}::5").Result;
+            }
+            var w_magnitudes_stacked = new PradOp(w_magnitudes_t[0]).Stack(w_magnitudes_t.Skip(1).ToArray(), axis: -1);
+            var w_angles_stacked = new PradOp(w_angles_t[0]).Stack(w_angles_t.Skip(1).ToArray(), axis: -1);
+
+            var w_magnitudes = w_magnitudes_stacked.PradOp;
+            var w_angles = w_angles_stacked.PradOp;
+
+            //# Compute x and y components
+            //                x = magnitude * tf.math.cos(angle)
+            //        y = magnitude * tf.math.sin(angle)
+
+            var cosAngles = opInput1Branch.Cos();
+            var sinAngles = anglesBranch.Sin();
+
+            var (x, y) = opInput1.DoMultiple(
+                x => x.Mul(cosAngles.Result), 
+                x => x.Mul(sinAngles.Result));
+
+            //        x_pivot = w_magnitude_pivot * tf.math.cos(w_angle_pivot)
+            //        y_pivot = w_magnitude_pivot * tf.math.sin(w_angle_pivot)
+
+            var (cosPivot, sinPivot) = opInput2Branch.DoMultiple(
+                x => x.Cos(),
+                x => x.Sin());
+
+            var (xPivot, yPivot) = opInput2.DoMultiple(
+                x => x.Mul(cosPivot.Result),
+                x => x.Mul(sinPivot.Result));
+
+            //        x_w = w_magnitudes * tf.math.cos(w_angles)
+            //        y_w = w_magnitudes * tf.math.sin(w_angles)
+
+            var (cosAngles_w, sinAngles_w) = w_angles.DoMultiple(
+                x => x.Cos(),
+                x => x.Sin());
+
+            var (x_w, y_w) = w_magnitudes.DoMultiple(
+                x => x.Mul(cosAngles_w.Result),
+                x => x.Mul(sinAngles_w.Result));
+
+            //        # Adjust weights
+            //        weights = tf.where(tf.abs(weights) < 0.01, tf.sign(weights) * 0.01, weights)
+
+            //        # Compute sum components
+            //        sum_x = (x + x_pivot) / (weights + 1e-9)
+            //        sum_y = (y + y_pivot) / (weights + 1e-9)
+
+            //        # Compute differences
+            //        sum_x_expanded = tf.expand_dims(sum_x, -1)
+            //        sum_y_expanded = tf.expand_dims(sum_y, -1)
+
+
+            //        diff_x = tf.concat([
+            //            sum_x_expanded - x_w[:, :, :, 0:1],
+            //            -sum_x_expanded - x_w[:, :, :, 1:2],
+            //            sum_x_expanded - x_w[:, :, :, 2:3],
+            //            -sum_x_expanded - x_w[:, :, :, 3:4]
+            //        ], axis = -1)
+
+
+            //        diff_y = tf.concat([
+            //            sum_y_expanded - y_w[:, :, :, 0:1],
+            //            -sum_y_expanded - y_w[:, :, :, 1:2],
+            //            sum_y_expanded - y_w[:, :, :, 2:3],
+            //            -sum_y_expanded - y_w[:, :, :, 3:4]
+            //        ], axis = -1)
+
+            //        # Compute result magnitudes and angles
+            //        result_magnitudes = tf.math.sqrt(diff_x * *2 + diff_y * *2)
+            //        result_angles = tf.math.atan2(diff_y, diff_x)
+
+            //        # Combine all results
+            //        output = tf.concat([
+            //            magnitude, w_magnitude_pivot,
+            //            tf.reshape(w_magnitudes, [batch_size, num_rows, -1]),
+            //            tf.reshape(result_magnitudes, [batch_size, num_rows, -1]),
+            //            angle, w_angle_pivot,
+            //            tf.reshape(w_angles, [batch_size, num_rows, -1]),
+            //            tf.reshape(result_angles, [batch_size, num_rows, -1])
+            //        ], axis = -1)
+
+
+
+            /*
+            var pradOpOutputCode = output.PrintCode();
+            var naiveOutputCode = naiveOutput.PrintCode();
+
+            Debug.WriteLine("pradOpOutput: " + pradOpOutputCode);
+            Debug.WriteLine("naiveOutput: " + naiveOutputCode);
+
+            Assert.Equal(naiveOutputCode, pradOpOutputCode);
+            */
         }
 
         [Fact]

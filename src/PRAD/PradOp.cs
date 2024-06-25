@@ -10,6 +10,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A lightweight reverse-mode automatic differentiation library.
@@ -96,6 +97,7 @@ namespace ParallelReverseAutoDiff.PRAD
             foreach (var (backpropStep, result) in this.backpropagationSteps)
             {
                 var clonedResult = new PradResult(
+                    clonedOp,
                     result.Result.DeepClone(),
                     result.Gradients.Select(g => g.DeepClone()).ToArray());
                 clonedOp.backpropagationSteps.Add((backpropStep, clonedResult));
@@ -132,7 +134,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.CreateFlatArrayReverse(upstreamGrad, indices);
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -168,7 +170,7 @@ namespace ParallelReverseAutoDiff.PRAD
             };
 
             // Create the PradResult object with the result and gradient placeholders
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
 
             // Record the backpropagation step
             this.backpropagationSteps.Add((backpropStep, pradResult));
@@ -195,7 +197,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.ElementwiseAddReverse(upstreamGrad);
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -217,7 +219,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.ElementwiseSubReverse(upstreamGrad);
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -239,7 +241,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.ElementwiseMultiplyReverse(upstreamGrad);
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -261,7 +263,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.ElementwiseDivideReverse(upstreamGrad, tensor);
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -283,7 +285,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -305,7 +307,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -328,7 +330,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -352,7 +354,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -375,7 +377,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -420,7 +422,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -444,7 +446,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -467,7 +469,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -492,7 +494,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -514,7 +516,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.ElementwiseAtan2Reverse(upstreamGrad, tensor);
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -536,7 +538,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -558,7 +560,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -580,7 +582,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new Tensor[] { gradient };
             };
 
-            var pradResult = new PradResult(result, grad);
+            var pradResult = new PradResult(this, result, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -607,7 +609,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.StackReverse(upstreamGrad, axis);
             };
 
-            var pradResult = new PradResult(result, grads);
+            var pradResult = new PradResult(this, result, grads);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
@@ -634,10 +636,43 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.ConcatReverse(upstreamGrad, axis);
             };
 
-            var pradResult = new PradResult(result, grads);
+            var pradResult = new PradResult(this, result, grads);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
             return pradResult;
+        }
+
+        /// <summary>
+        /// Executes multiple operations in parallel and returns the results.
+        /// </summary>
+        /// <param name="operations">The operations to perform.</param>
+        /// <returns>The results.</returns>
+        /// <exception cref="ArgumentException">No operation provided.</exception>
+        public PradResult[] DoMultiple(params Func<PradOp, PradResult>[] operations)
+        {
+            if (operations == null || operations.Length == 0)
+            {
+                throw new ArgumentException("At least one operation must be provided.", nameof(operations));
+            }
+
+            var pradOps = new PradOp[operations.Length];
+            pradOps[0] = this; // Use the calling PradOp for the first operation
+
+            // Create branched PradOps for subsequent operations
+            for (int i = 1; i < operations.Length; i++)
+            {
+                pradOps[i] = this.Branch();
+            }
+
+            var results = new PradResult[operations.Length];
+
+            // Use Parallel.For to execute operations in parallel
+            Parallel.For(0, operations.Length, i =>
+            {
+                results[i] = operations[i](pradOps[i]);
+            });
+
+            return results;
         }
 
         /// <summary>
