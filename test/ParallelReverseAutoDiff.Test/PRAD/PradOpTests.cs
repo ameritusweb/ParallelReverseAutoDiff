@@ -664,6 +664,29 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestDoParallel()
+        {
+            Matrix input1 = new Matrix(100, 200);
+            input1.Initialize(InitializationType.Xavier);
+
+            var pradOp = new PradOp(input1.ToTensor());
+
+            var (sinOp, cosOp) = pradOp.DoParallel(
+                op => op.Sin(),
+                op => op.Cos());
+
+            var addOp = sinOp.PradOp.Add(cosOp.Result);
+
+            Matrix gradientOfTheLoss = new Matrix(100, 200);
+            gradientOfTheLoss.Initialize(InitializationType.Xavier);
+
+            pradOp.Back(gradientOfTheLoss.ToTensor());
+
+            Assert.NotNull(pradOp.SeedGradient);
+            Assert.Equal(pradOp.SeedGradient.Shape, input1.Shape);
+        }
+
+        [Fact]
         public void TestSplitAndBack()
         {
             Matrix input1 = new Matrix(100, 200);
@@ -683,7 +706,17 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 m => m.Mul(anglesCos.Result),
                 m => m.Mul(anglesSin.Result));
 
-            x.Then(PradOp.SquareRootOp).Then(PradOp.AddOp, y.Result);
+            x.Then(PradOp.SquareRootOp)
+             .Then(PradOp.AddOp, y.Result)
+             .Then(PradOp.SquareOp);
+
+            var gradientOfTheLoss = new Matrix(100, 200);
+            gradientOfTheLoss.Initialize(InitializationType.Xavier);
+
+            pradOp.Back(gradientOfTheLoss.ToTensor());
+
+            Assert.NotNull(pradOp.SeedGradient);
+            Assert.Equal(pradOp.SeedGradient.Shape, input1.Shape);
         }
 
         [Fact]

@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.PRAD
     /// <summary>
     /// The result of the computation.
     /// </summary>
-    public class PradResult
+    public class PradResult : PradResultBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PradResult"/> class.
@@ -37,21 +37,6 @@ namespace ParallelReverseAutoDiff.PRAD
                 return new PradTensor(this.PradOp, this.ResultTensor);
             }
         }
-
-        /// <summary>
-        /// Gets the gradient of the input.
-        /// </summary>
-        public Tensor[] Gradients { get; }
-
-        /// <summary>
-        /// Gets the operation.
-        /// </summary>
-        public PradOp PradOp { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets the branches.
-        /// </summary>
-        public List<PradOp> Branches { get; set; } = new List<PradOp>();
 
         /// <summary>
         /// Gets or sets the result tensor.

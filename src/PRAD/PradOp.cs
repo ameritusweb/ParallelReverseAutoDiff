@@ -23,7 +23,7 @@ namespace ParallelReverseAutoDiff.PRAD
         private List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)> backpropagationSteps;
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
-        private PradResult parentResult;
+        private PradResultBase parentResult;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -152,8 +152,16 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradOp Branch()
         {
             var branchedOp = new PradOp(this.currentTensor);
-            branchedOp.parentResult = this.backpropagationSteps.Last().result;
-            branchedOp.parentResult.Branches.Add(branchedOp);
+            if (this.backpropagationSteps.Any())
+            {
+                branchedOp.parentResult = this.backpropagationSteps.Last().result;
+                branchedOp.parentResult.Branches.Add(branchedOp);
+            }
+            else if (this.splitStep.HasValue)
+            {
+                branchedOp.parentResult = this.splitStep.Value.result;
+            }
+
             return branchedOp;
         }
 
@@ -555,9 +563,14 @@ namespace ParallelReverseAutoDiff.PRAD
                 return tensorReverse.SplitReverse(upstreamGrad, axis);
             };
 
-            var ops = results.Select(x => new PradOp(x)).ToArray();
-            this.splitStep = (splitStep, new PradSplitResult(results, grad));
-            return ops;
+            var pradResult = new PradResult(this, results[0], grad);
+            var splitResult = new PradSplitResult(results, grad);
+            splitResult.PradOp = this;
+            this.splitStep = (splitStep, splitResult);
+            this.currentTensor = results[0];
+
+            var branch = this.Branch();
+            return new PradOp[] { this, branch };
         }
 
         /// <summary>

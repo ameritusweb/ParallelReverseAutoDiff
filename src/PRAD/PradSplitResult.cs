@@ -9,7 +9,7 @@ namespace ParallelReverseAutoDiff.PRAD
     /// <summary>
     /// The result of the computation.
     /// </summary>
-    public class PradSplitResult
+    public class PradSplitResult : PradResultBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PradSplitResult"/> class.
@@ -26,10 +26,5 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the result of the computation.
         /// </summary>
         public Tensor[] Results { get; }
-
-        /// <summary>
-        /// Gets the gradient of the input.
-        /// </summary>
-        public Tensor[] Gradients { get; }
     }
 }

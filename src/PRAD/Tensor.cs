@@ -814,13 +814,27 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The tensors.</returns>
         public Tensor[] Split(int groupSize, int axis = 0)
         {
+            if (axis < 0 || axis >= this.Shape.Length)
+            {
+                throw new ArgumentException("Axis is out of bounds for the tensor.");
+            }
+
+            if (this.Shape[axis] % groupSize != 0)
+            {
+                throw new ArgumentException("The specified axis dimension must be divisible by the group size.");
+            }
+
             int numGroups = this.Shape[axis] / groupSize;
             Tensor[] result = new Tensor[numGroups];
 
+            int[] begin = new int[this.Shape.Length];
+            int[] size = (int[])this.Shape.Clone();
+            size[axis] = groupSize;
+
             for (int i = 0; i < numGroups; i++)
             {
-                int start = i * groupSize;
-                result[i] = this.Slice(new int[] { start }, new int[] { groupSize }, new int[] { axis });
+                begin[axis] = i * groupSize;
+                result[i] = this.Slice(begin, size);
             }
 
             return result;
