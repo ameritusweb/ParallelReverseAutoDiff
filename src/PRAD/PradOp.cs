@@ -24,6 +24,8 @@ namespace ParallelReverseAutoDiff.PRAD
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
         private PradResultBase parentResult;
+        private PradResultBase initialResult;
+        private Tensor seedGradient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -33,6 +35,8 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             this.seed = seed;
             this.currentTensor = seed;
+            this.seedGradient = new Tensor(seed.Shape);
+            this.initialResult = new PradResult(this, seed, new Tensor[] { this.seedGradient });
             this.backpropagationSteps = new List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)>();
             this.operations = new Dictionary<Delegate, Delegate>();
             this.InitializeOperations();
@@ -118,7 +122,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Gets the seed gradient.
         /// </summary>
-        public Tensor SeedGradient { get; internal set; }
+        public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.seedGradient = value; }
 
         /// <summary>
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
@@ -160,6 +164,11 @@ namespace ParallelReverseAutoDiff.PRAD
             else if (this.splitStep.HasValue)
             {
                 branchedOp.parentResult = this.splitStep.Value.result;
+            }
+            else
+            {
+                branchedOp.parentResult = this.initialResult;
+                branchedOp.parentResult.Branches.Add(branchedOp);
             }
 
             return branchedOp;
@@ -949,12 +958,21 @@ namespace ParallelReverseAutoDiff.PRAD
                 Parallel.For(0, result.Gradients.Length, i =>
                 {
                     result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
-                    if (ops[i] != null && !ops[i]!.IsDependentBranch)
+                    if (ops[i] != null)
                     {
                         ops[i]?.SetUpstreamGradient(gradients[i]);
-                        ops[i]?.Back();
+                        if (!ops[i]!.IsDependentBranch)
+                        {
+                            ops[i]?.Back();
+                        }
                     }
                 });
+            }
+
+            foreach (var branch in this.initialResult.Branches)
+            {
+                var branchGradient = branch.Back();
+                currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
             }
 
             this.SeedGradient = currentUpstream;
