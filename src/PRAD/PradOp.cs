@@ -26,6 +26,7 @@ namespace ParallelReverseAutoDiff.PRAD
         private PradResultBase parentResult;
         private PradResultBase initialResult;
         private Tensor seedGradient;
+        private PradOp[] splitOps;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -572,13 +573,14 @@ namespace ParallelReverseAutoDiff.PRAD
             splitResult.PradOp = this;
             var split = (splitStep, splitResult);
             var currentTensor = results[0];
-            var newOp = new PradOp(currentTensor)
-            {
-                splitStep = split,
-            };
+            var newOp = new PradOp(currentTensor);
+
+            this.splitStep = split;
 
             var branch = newOp.Branch();
-            return new PradOp[] { newOp, branch };
+            var splitOps = new PradOp[] { newOp, branch };
+            this.splitOps = splitOps;
+            return splitOps;
         }
 
         /// <summary>
@@ -945,6 +947,17 @@ namespace ParallelReverseAutoDiff.PRAD
                 attribute?.Validate(this.IsDependentBranch, "Back should not be called on a dependent branch.");
             }
 
+            if (this.splitOps != null)
+            {
+                var gradientLeft = this.splitOps[0].Back(this.UpstreamGradient);
+                var gradientRight = this.splitOps[1].Back();
+
+                if (this.splitStep.HasValue)
+                {
+                    this.UpstreamGradient = this.splitStep.Value.splitStep(new Tensor[] { gradientLeft, gradientRight });
+                }
+            }
+
             Tensor currentUpstream = this.UpstreamGradient;
 
             // Reverse iterate over backpropagation steps to accumulate gradients
@@ -984,26 +997,6 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Computes the backpropagation to accumulate gradients.
-        /// </summary>
-        /// <param name="upstreamGradients">The upstream gradients flowing from the loss function.</param>
-        public void Back(Tensor[] upstreamGradients)
-        {
-            Tensor currentUpstream = this.splitStep!.Value.splitStep(upstreamGradients);
-
-            // Reverse iterate over backpropagation steps to accumulate gradients
-            foreach (var (step, result) in this.backpropagationSteps.AsEnumerable().Reverse())
-            {
-                var gradients = step(currentUpstream).Item1;
-                currentUpstream = gradients[0];
-                for (int i = 0; i < result.Gradients.Length; i++)
-                {
-                    result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
-                }
-            }
-        }
-
-        /// <summary>
         /// Branch to another prad op.
         /// </summary>
         /// <param name="originalOp">The original prad op.</param>
@@ -1016,13 +1009,13 @@ namespace ParallelReverseAutoDiff.PRAD
                 this.parentResult = parentResult;
                 parentResult.Branches.Add(this);
             }
-            else if (this.splitStep.HasValue)
-            {
-                var parentResult = originalOp.splitStep!.Value.result;
-                this.parentResult = parentResult;
-                parentResult.Branches.Add(this);
-            }
 
+            // else if (this.splitStep.HasValue)
+            // {
+            //    var parentResult = originalOp.splitStep!.Value.result;
+            //    this.parentResult = parentResult;
+            //    parentResult.Branches.Add(this);
+            // }
             return this;
         }
 
