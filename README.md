@@ -20,6 +20,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 - [Clipping the Gradients](#clipping-the-gradients)
 - [Updating the Weights](#updating-the-weights)
 - [Using CUDA Operations](#using-cuda-operations)
+- [PradOp](#pradop)
 - [Customization](#customization)
   - [Custom Neural Network Operations](#custom-neural-network-operations)
 - [Support Developer](#support-developer)
@@ -907,6 +908,224 @@ Cudablas.Instance.Initialize(); // initialize the CUDA library
 // ... <Run CUDA operations> ...
 Cudablas.Instance.Dispose(); // dispose the CUDA library
 ```
+
+## PradOp
+
+`PradOp` is a 'pretty rad' automatic differentiation operation class in the ParallelReverseAutoDiff (PRAD) library, providing a lightweight reverse-mode automatic differentiation implementation. It supports various tensor operations and manages the computation graph for efficient gradient calculations. It is meant to be used within both the Forward and Backward functions for custom neural network operations to simplify the code, especially the backward pass, by leveraging automatic differentiation.
+
+### Features
+
+- **Efficient Tensor Operations**: Leverages the Tensor class for fast, vectorized computations using the math kernel library (MKL.NET).
+- **Automatic Differentiation**: Records operations for both forward and backward passes.
+- **Parallelization**: Supports parallel execution of multiple operations for improved performance.
+- **Flexible Architecture**: Can be used as a standalone mini-computation graph or integrated into larger systems.
+- **Rich Operation Set**: Includes element-wise operations, reshaping, transposing, gathering, and more.
+- **Branching Support**: Allows for creation of complex computational graphs with branching paths.
+- **Gradient Accumulation**: Designed to work with systems that use gradient accumulation and optimization.
+- **Custom Operations**: Supports implementation of custom operations with automatic gradient computation.
+
+### Key Components
+
+#### PradOp
+
+- Manages the computational graph and operations.
+- Handles forward and backward passes.
+- Supports branching and splitting for complex graph structures.
+
+#### PradResult
+
+- Encapsulates the result of a computation.
+- Provides methods for backpropagation and chaining operations.
+
+### Constructor 
+
+```csharp 
+public PradOp(Tensor seed) 
+``` 
+
+Creates a new instance of the `PradOp` class with a seed tensor. 
+
+- `seed`: The initial tensor to start computations with. 
+
+### Properties 
+
+| Property | Type | Description | 
+|----------|------|-------------| 
+| `UpstreamGradient` | `Tensor` | Gets or sets the upstream gradient for backpropagation. | 
+| `SeedGradient` | `Tensor` | Gets or sets the gradient of the seed tensor. | 
+| `IsDependentBranch` | `bool` | Indicates whether this is a dependent branch in the computation graph. | 
+
+### Methods 
+
+#### Tensor Operations 
+
+| Method | Description | 
+|--------|-------------| 
+| `Add(Tensor tensor)` | Adds the given tensor to the current tensor element-wise. | 
+| `Sub(Tensor tensor)` | Subtracts the given tensor from the current tensor element-wise. | 
+| `Mul(Tensor tensor)` | Multiplies the current tensor by the given tensor element-wise. | 
+| `Div(Tensor tensor)` | Divides the current tensor by the given tensor element-wise. | 
+| `Sin()` | Computes the sine of each element in the current tensor. | 
+| `Cos()` | Computes the cosine of each element in the current tensor. | 
+| `Atan2(Tensor tensor)` | Computes the arctangent of the quotient of the current tensor and the given tensor. | 
+| `Square()` | Computes the square of each element in the current tensor. | 
+| `SquareRoot()` | Computes the square root of each element in the current tensor. | 
+| `SumRows()` | Sums the rows of the current tensor. | 
+
+#### Tensor Manipulation 
+
+| Method | Description | 
+|--------|-------------| 
+| `Indexer(params string[] indices)` | Slices the tensor using the given indices. | 
+| `Reshape(int[] newShape)` | Reshapes the current tensor to the specified shape. | 
+| `Transpose(params int[] permutations)` | Transposes the current tensor according to the given permutations. | 
+| `Split(int groupSize, int axis = 0)` | Splits the tensor into multiple tensors along the specified axis. | 
+| `Tile(int[] multiples)` | Tiles the tensor along each dimension according to the given multiples. | 
+| `Gather(Tensor indices, int axis = 0)` | Gathers slices from the tensor along the specified axis. | 
+| `GatherNd(Tensor indices)` | Gathers slices from the tensor using multidimensional indices. | 
+| `Slice(int[] begin, int[] size, int[]? strides = null)` | Extracts a slice from the tensor. | 
+| `Stack(Tensor[] tensors, int axis = 0)` | Stacks the current tensor with other tensors along a new axis. | 
+| `Concat(Tensor[] tensors, int axis = 0)` | Concatenates the current tensor with other tensors along a specified axis. | 
+
+#### Computation Graph Management 
+
+| Method | Description | 
+|--------|-------------| 
+| `Branch()` | Creates a new branch in the computation graph. | 
+| `DoParallel(params Func<PradOp, PradResult>[] operations)` | Executes multiple operations in parallel. | 
+| `Back(Tensor tensor)` | Initiates backpropagation with the given upstream gradient. | 
+| `Back()` | Computes backpropagation to accumulate gradients. | 
+
+### Static Operations 
+
+`PradOp` provides several static operation delegates that can be used with the `Then` method of `PradResult`: 
+
+- `SquareRootOp` 
+- `AddOp` 
+- `MulOp` 
+- `SubOp` 
+- `DivOp` 
+- `SinOp` 
+- `CosOp` 
+- `GatherNdOp` 
+- `SumRowsOp` 
+- `SquareOp` 
+- `Atan2Op` 
+- `StackOp` 
+- `ConcatOp` 
+
+### Usage Examples 
+
+Here are some examples of how to use `PradOp`: 
+
+```csharp 
+// Create a PradOp instance with a seed tensor 
+var seed = new Tensor(new double[,] { { 1, 2 }, { 3, 4 } }); 
+var op = new PradOp(seed); 
+
+// Perform operations 
+var result = op.Add(new Tensor(new double[,] { { 5, 6 }, { 7, 8 } })) 
+               .Then(PradOp.SquareRootOp) 
+               .Then(PradOp.MulOp, new Tensor(new double[,] { { 2, 2 }, { 2, 2 } })); 
+
+// Compute gradients 
+op.Back(new Tensor(new double[,] { { 1, 1 }, { 1, 1 } })); 
+
+// Access gradients
+var seedGradient = op.SeedGradient;
+```
+
+#### Chaining Operations
+
+PradResult allows for elegant chaining of operations:
+
+```csharp
+var x = new PradOp(inputTensor);
+var y = someOtherTensor;
+var result = x.SquareRoot().Then(PradOp.Add, y);
+```
+
+#### Parallel Operations
+
+PradOp supports parallel execution of multiple operations:
+
+```csharp -->
+var (result1, result2) = pradOp.DoParallel( 
+    x => x.Sin(), 
+    x => x.Cos()
+);
+```
+
+#### Custom Operations 
+
+PradOp allows you to define custom operations with their own forward and backward passes. Here's an example of a custom sigmoid operation: 
+
+```csharp 
+public PradResult CustomSigmoid() 
+{ 
+    return this.CustomOperation( 
+        operation: input =>  
+        { 
+            var result = new Tensor(input.Shape); 
+            for (int i = 0; i < input.Data.Length; i++) 
+            { 
+                result.Data[i] = 1 / (1 + Math.Exp(-input.Data[i])); 
+            } 
+            return result; 
+        }, 
+        reverseOperation: (input, output, upstreamGrad) =>  
+        { 
+            var gradient = new Tensor(input.Shape); 
+            for (int i = 0; i < input.Data.Length; i++) 
+            { 
+                gradient.Data[i] = output.Data[i] * (1 - output.Data[i]) * upstreamGrad.Data[i]; 
+            } 
+            return new[] { gradient }; 
+        }, 
+        outputShape: this.currentTensor.Shape 
+    ); 
+} 
+``` 
+
+Usage: 
+
+```csharp 
+var pradOp = new PradOp(inputTensor); 
+var result = pradOp.CustomSigmoid(); 
+var gradient = pradOp.Back(upstreamGradient); 
+``` 
+
+#### Branching 
+
+PradOp supports creating complex computational graphs with branching paths. Here's an example: 
+
+```csharp 
+var pradOp = new PradOp(inputTensor); 
+var branch = pradOp.Branch(); 
+
+var result1 = pradOp.Sin(); 
+var result2 = branch.Cos(); 
+
+var combinedResult = pradOp.Add(result2.Result); 
+var gradient = pradOp.Back(upstreamGradient); 
+``` 
+
+#### Splitting 
+
+PradOp allows you to split tensors and perform operations on the split parts. Here's an example: 
+
+```csharp 
+var pradOp = new PradOp(inputTensor); // Assume inputTensor has shape [4, 10] 
+var (leftHalf, rightHalf) = pradOp.Split(5, axis: 1); // Split along the second dimension 
+
+var processedLeft = leftHalf.Square(); 
+var processedRight = rightHalf.SquareRoot(); 
+
+var recombined = leftHalf.Stack(new[] { processedRight.Result }, axis: 1); 
+var gradient = pradOp.Back(upstreamGradient); 
+``` 
+
+These examples demonstrate the flexibility of PradOp in handling complex computational graphs, including custom operations, branching, and splitting/recombining tensors. The automatic differentiation system takes care of computing the correct gradients through these complex structures.
 
 ## Customization
 The ParallelReverseAutoDiff (PRAD) library is designed with customization at its core.
