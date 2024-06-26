@@ -651,6 +651,16 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 .Then(PradOp.CosOp);
 
             var addRes = sinCosRes1.PradOp.Add(sinCosRes2.Result);
+
+            Matrix gradientOfTheLoss = new Matrix(100, 200);
+            gradientOfTheLoss.Initialize(InitializationType.Xavier);
+
+            addRes.Back(gradientOfTheLoss.ToTensor());
+
+            Assert.NotNull(pradOp1.SeedGradient);
+            Assert.NotNull(pradOp2.SeedGradient);
+            Assert.Equal(pradOp1.SeedGradient.Shape, input1.Shape);
+            Assert.Equal(pradOp2.SeedGradient.Shape, input2.Shape);
         }
 
         [Fact]
@@ -1358,7 +1368,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 return new Tensor[] { grad };
             };
 
-            var result = pradOp.CustomOperation(operation, reverseOperation, 1, new int[] { 2, 2 });
+            var result = pradOp.CustomOperation(operation, reverseOperation, new int[] { 2, 2 });
 
             Assert.Equal(new double[] { 1, 4, 9, 16 }, result.Result.Data);
 
