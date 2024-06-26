@@ -491,7 +491,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradient = tensorReverse.IndexerReverse(upstreamGrad);
+                var gradient = tensorReverse.IndexerReverse(upstreamGrad, indices);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
@@ -1010,12 +1010,6 @@ namespace ParallelReverseAutoDiff.PRAD
                 parentResult.Branches.Add(this);
             }
 
-            // else if (this.splitStep.HasValue)
-            // {
-            //    var parentResult = originalOp.splitStep!.Value.result;
-            //    this.parentResult = parentResult;
-            //    parentResult.Branches.Add(this);
-            // }
             return this;
         }
 

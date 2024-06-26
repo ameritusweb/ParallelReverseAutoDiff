@@ -706,9 +706,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 m => m.Mul(anglesCos.Result),
                 m => m.Mul(anglesSin.Result));
 
-            x.Then(PradOp.AddOp, y.Result);
-
-             // .Then(PradOp.SquareOp);
+            x.Then(PradOp.AddOp, y.Result)
+             .Then(PradOp.SquareOp);
             var gradientOfTheLoss = new Matrix(100, 100);
             gradientOfTheLoss.Initialize(InitializationType.Xavier);
 
@@ -728,12 +727,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             input2.Initialize(InitializationType.He);
 
             var pradOp = new PradOp(input1.ToTensor());
-            var input2Tensor = input2.ToTensor();
+            var pradOp2 = new PradOp(input2.ToTensor());
 
             var half = input1.Cols / 2;
 
             var (magnitudes1, angles1) = pradOp.Split(half);
-            var (magnitudes2, angles2) = input2Tensor.Split(half).Select(t => new PradOp(t)).ToArray();
+            var (magnitudes2, angles2) = pradOp2.Split(half);
 
             var (x1, y1) = magnitudes1.DoParallel(
                 m => m.Mul(angles1.Cos().Result),
@@ -752,7 +751,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             var resultAngle = sumY.Then(PradOp.Atan2Op, sumX.Result);
 
-            var output = resultMagnitude.Then(PradOp.StackOp, new Tensor[] { resultAngle.Result }, axis: 1).Result.ToMatrix();
+            var output = resultMagnitude.Then(PradOp.ConcatOp, new Tensor[] { resultAngle.Result }, axis: 1).Result.ToMatrix();
         }
 
         [Fact]
