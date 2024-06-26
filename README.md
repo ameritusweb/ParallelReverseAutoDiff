@@ -1014,6 +1014,27 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `StackOp` 
 - `ConcatOp` 
 
+### PradResult.Then Method
+
+The `Then` method in `PradResult` is a powerful feature that allows for elegant chaining of operations in the computational graph. It provides a fluent interface for applying successive operations to the result of previous computations.
+
+#### Method Signatures
+
+```csharp
+public PradResult Then(Delegate operation, Tensor? other = null)
+public PradResult Then(Delegate operation, Tensor[] others, int axis = 0)
+```
+
+#### Functionality
+
+1. **Chaining Operations**: The `Then` method allows you to apply a new operation to the result of the previous operation. This creates a chain of operations that can be read from left to right, improving code readability.
+
+2. **Static Operation Delegates**: The method uses static operation delegates defined in `PradOp` (like `AddOp`, `MulOp`, `SinOp`, etc.) to determine which operation to apply. These static delegates act as keys to retrieve the corresponding instance method.
+
+3. **Flexible Input**: The method can handle operations that require no additional input, a single additional tensor, or multiple additional tensors and an axis.
+
+4. **Dynamic Dispatch**: The method uses the `GetOperation<T>` method of `PradOp` to dynamically retrieve the correct instance method based on the static delegate provided.
+
 ### Usage Examples 
 
 Here are some examples of how to use `PradOp`: 
