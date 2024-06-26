@@ -122,7 +122,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Gets the seed gradient.
         /// </summary>
-        public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.seedGradient = value; }
+        public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.initialResult.Gradients[0].ReplaceData(value.Data); }
 
         /// <summary>
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
@@ -150,6 +150,15 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Print code for the current tensor.
+        /// </summary>
+        /// <returns>The C# code.</returns>
+        public string PrintCodeForCurrentTensor()
+        {
+            return this.currentTensor.PrintCode();
+        }
+
+        /// <summary>
         /// Branch to another prad op.
         /// </summary>
         /// <returns>The other prad op.</returns>
@@ -165,22 +174,8 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 branchedOp.parentResult = this.splitStep.Value.result;
             }
-            else
-            {
-                branchedOp.parentResult = this.initialResult;
-                branchedOp.parentResult.Branches.Add(branchedOp);
-            }
 
             return branchedOp;
-        }
-
-        /// <summary>
-        /// Print code for the current tensor.
-        /// </summary>
-        /// <returns>The C# code.</returns>
-        public string PrintCodeForCurrentTensor()
-        {
-            return this.currentTensor.PrintCode();
         }
 
         /// <summary>
@@ -575,11 +570,15 @@ namespace ParallelReverseAutoDiff.PRAD
             var pradResult = new PradResult(this, results[0], grad);
             var splitResult = new PradSplitResult(results, grad);
             splitResult.PradOp = this;
-            this.splitStep = (splitStep, splitResult);
-            this.currentTensor = results[0];
+            var split = (splitStep, splitResult);
+            var currentTensor = results[0];
+            var newOp = new PradOp(currentTensor)
+            {
+                splitStep = split,
+            };
 
-            var branch = this.Branch();
-            return new PradOp[] { this, branch };
+            var branch = newOp.Branch();
+            return new PradOp[] { newOp, branch };
         }
 
         /// <summary>
@@ -886,7 +885,7 @@ namespace ParallelReverseAutoDiff.PRAD
             // Create branched PradOps for subsequent operations
             for (int i = 1; i < operations.Length; i++)
             {
-                pradOps[i] = this.Branch();
+                pradOps[i] = new PradOp(this.currentTensor);
             }
 
             var results = new PradResult[operations.Length];
@@ -896,6 +895,11 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 results[i] = operations[i](pradOps[i]);
             });
+
+            for (int i = 1; i < operations.Length; i++)
+            {
+                pradOps[i].RecordBranch(pradOps[0]);
+            }
 
             return results;
         }
@@ -997,6 +1001,29 @@ namespace ParallelReverseAutoDiff.PRAD
                     result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
                 }
             }
+        }
+
+        /// <summary>
+        /// Branch to another prad op.
+        /// </summary>
+        /// <param name="originalOp">The original prad op.</param>
+        /// <returns>The other prad op.</returns>
+        internal PradOp RecordBranch(PradOp originalOp)
+        {
+            if (this.backpropagationSteps.Any())
+            {
+                var parentResult = originalOp.backpropagationSteps.Last().result;
+                this.parentResult = parentResult;
+                parentResult.Branches.Add(this);
+            }
+            else if (this.splitStep.HasValue)
+            {
+                var parentResult = originalOp.splitStep!.Value.result;
+                this.parentResult = parentResult;
+                parentResult.Branches.Add(this);
+            }
+
+            return this;
         }
 
         /// <summary>

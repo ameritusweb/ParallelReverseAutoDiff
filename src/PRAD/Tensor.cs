@@ -278,6 +278,21 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Replace the data with new data.
+        /// </summary>
+        /// <param name="newData">New data.</param>
+        /// <exception cref="ArgumentException">Size doesn't match.</exception>
+        public void ReplaceData(double[] newData)
+        {
+            if (this.GetTotalSize(this.Shape) != newData.Length)
+            {
+                throw new ArgumentException("Data length does not match shape size.");
+            }
+
+            this.Data = newData;
+        }
+
+        /// <summary>
         /// Converts to a Matrix.
         /// </summary>
         /// <returns>A matrix.</returns>

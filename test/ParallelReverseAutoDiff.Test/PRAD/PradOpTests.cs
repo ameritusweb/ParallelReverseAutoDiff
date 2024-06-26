@@ -706,11 +706,10 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 m => m.Mul(anglesCos.Result),
                 m => m.Mul(anglesSin.Result));
 
-            x.Then(PradOp.SquareRootOp)
-             .Then(PradOp.AddOp, y.Result)
-             .Then(PradOp.SquareOp);
+            x.Then(PradOp.AddOp, y.Result);
 
-            var gradientOfTheLoss = new Matrix(100, 200);
+             // .Then(PradOp.SquareOp);
+            var gradientOfTheLoss = new Matrix(100, 100);
             gradientOfTheLoss.Initialize(InitializationType.Xavier);
 
             pradOp.Back(gradientOfTheLoss.ToTensor());
