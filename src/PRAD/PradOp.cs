@@ -171,10 +171,6 @@ namespace ParallelReverseAutoDiff.PRAD
                 branchedOp.parentResult = this.backpropagationSteps.Last().result;
                 branchedOp.parentResult.Branches.Add(branchedOp);
             }
-            else if (this.splitStep.HasValue)
-            {
-                branchedOp.parentResult = this.splitStep.Value.result;
-            }
 
             return branchedOp;
         }
@@ -577,7 +573,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             this.splitStep = split;
 
-            var branch = newOp.Branch();
+            var branch = newOp.SplitBranch();
             var splitOps = new PradOp[] { newOp, branch };
             this.splitOps = splitOps;
             return splitOps;
@@ -900,7 +896,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             for (int i = 1; i < operations.Length; i++)
             {
-                pradOps[i].RecordBranch(pradOps[0]);
+                pradOps[i].RecordSplitBranch(pradOps[0]);
             }
 
             return results;
@@ -970,8 +966,23 @@ namespace ParallelReverseAutoDiff.PRAD
                     currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
                 }
 
+                // Then, backpropagate through all split branches
+                List<Tensor> branchGradients = new List<Tensor>();
+                foreach (var branch in result.SplitBranches)
+                {
+                    var branchGradient = branch.Back();
+                    branchGradients.Add(branchGradient);
+                }
+
                 var (gradients, ops) = step(currentUpstream);
+
+                foreach (var branchGradient in branchGradients)
+                {
+                    gradients[0] = gradients[0].ElementwiseAdd(branchGradient);
+                }
+
                 currentUpstream = gradients[0];
+
                 Parallel.For(0, result.Gradients.Length, i =>
                 {
                     result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
@@ -999,15 +1010,35 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Branch to another prad op.
         /// </summary>
+        /// <returns>The other prad op.</returns>
+        internal PradOp SplitBranch()
+        {
+            var branchedOp = new PradOp(this.currentTensor);
+            if (this.backpropagationSteps.Any())
+            {
+                branchedOp.parentResult = this.backpropagationSteps.Last().result;
+                branchedOp.parentResult.SplitBranches.Add(branchedOp);
+            }
+            else if (this.splitStep.HasValue)
+            {
+                branchedOp.parentResult = this.splitStep.Value.result;
+            }
+
+            return branchedOp;
+        }
+
+        /// <summary>
+        /// Branch to another prad op.
+        /// </summary>
         /// <param name="originalOp">The original prad op.</param>
         /// <returns>The other prad op.</returns>
-        internal PradOp RecordBranch(PradOp originalOp)
+        internal PradOp RecordSplitBranch(PradOp originalOp)
         {
             if (this.backpropagationSteps.Any())
             {
                 var parentResult = originalOp.backpropagationSteps.Last().result;
                 this.parentResult = parentResult;
-                parentResult.Branches.Add(this);
+                parentResult.SplitBranches.Add(this);
             }
 
             return this;

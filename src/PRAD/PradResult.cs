@@ -7,7 +7,6 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// The result of the computation.
@@ -51,6 +50,15 @@ namespace ParallelReverseAutoDiff.PRAD
         public Tensor Back(Tensor upstreamGradient)
         {
             return this.PradOp.Back(upstreamGradient);
+        }
+
+        /// <summary>
+        /// Create a branch in the computation graph.
+        /// </summary>
+        /// <returns>A PradOp.</returns>
+        public PradOp Branch()
+        {
+            return this.PradOp.Branch();
         }
 
         /// <summary>

@@ -687,6 +687,60 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestBranch()
+        {
+            Matrix input1 = new Matrix(200, 200);
+            input1.Initialize(InitializationType.Xavier);
+
+            var pradOp = new PradOp(input1.ToTensor());
+
+            var (anglesCos, anglesSin) = pradOp.DoParallel(
+                a => a.Cos(),
+                a => a.Sin());
+
+            anglesCos.Then(PradOp.AddOp, anglesSin.Result)
+                .Then(PradOp.SquareOp);
+
+            var anotherBranch = anglesCos.Branch();
+
+            var anotherResult = anotherBranch.Transpose(new int[] { 1, 0 });
+
+            anglesCos.Then(PradOp.AddOp, anotherResult.Result);
+
+            var gradientOfTheLoss = new Matrix(200, 200);
+            gradientOfTheLoss.Initialize(InitializationType.Xavier);
+
+            pradOp.Back(gradientOfTheLoss.ToTensor());
+
+            Assert.NotNull(pradOp.SeedGradient);
+            Assert.Equal(pradOp.SeedGradient.Shape, input1.Shape);
+        }
+
+        [Fact]
+        public void TestDoParallel2()
+        {
+            Matrix input1 = new Matrix(100, 200);
+            input1.Initialize(InitializationType.Xavier);
+
+            var pradOp = new PradOp(input1.ToTensor());
+
+            var (anglesCos, anglesSin) = pradOp.DoParallel(
+                a => a.Cos(),
+                a => a.Sin());
+
+            anglesCos.Then(PradOp.AddOp, anglesSin.Result)
+                .Then(PradOp.SquareOp);
+
+            var gradientOfTheLoss = new Matrix(100, 200);
+            gradientOfTheLoss.Initialize(InitializationType.Xavier);
+
+            pradOp.Back(gradientOfTheLoss.ToTensor());
+
+            Assert.NotNull(pradOp.SeedGradient);
+            Assert.Equal(pradOp.SeedGradient.Shape, input1.Shape);
+        }
+
+        [Fact]
         public void TestSplitAndBack()
         {
             Matrix input1 = new Matrix(100, 200);
@@ -784,11 +838,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var concatAngles = opInput1.Concat(new[] { anglesOther.Result }, axis: 1);
 
             var flatAngles = opInput1.Reshape(new int[] { 1, -1 });
-            var flatAnglesOp = opInput1.Branch();
-            flatAnglesOp.SetUpstreamGradient(new Tensor(new int[] { 1, 18 }, Enumerable.Range(0, 18).Select(x => rand.NextDouble()).ToArray()));
+            
+            var (sinAngles, cosAngles) = opInput1.DoParallel(
+                a => a.Sin(),
+                a => a.Cos());
 
-            var sinAngles = opInput1.Sin();
-            var cosAngles = flatAnglesOp.Cos();
+            var add = sinAngles.Then(PradOp.AddOp, cosAngles.Result);
 
             var dInput1 = opInput1.Back(new Tensor(new int[] { 1, 18 }, Enumerable.Range(0, 18).Select(x => rand.NextDouble()).ToArray()));
         }

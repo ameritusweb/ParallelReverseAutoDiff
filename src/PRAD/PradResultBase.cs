@@ -27,5 +27,10 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets or sets the branches.
         /// </summary>
         public List<PradOp> Branches { get; set; } = new List<PradOp>();
+
+        /// <summary>
+        /// Gets or sets the split branches.
+        /// </summary>
+        public List<PradOp> SplitBranches { get; set; } = new List<PradOp>();
     }
 }
