@@ -63,7 +63,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
         /// <summary>
         /// Applies the following operation.
-        /// Allows for this: x.Apply(PradOp.SquareRoot).Apply(PradOp.Add, y);.
+        /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
         /// <param name="other">The other tensor, if needed.</param>
