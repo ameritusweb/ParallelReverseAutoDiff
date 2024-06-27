@@ -863,9 +863,6 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var opInput1 = new PradOp(input1);
             var opInput2 = new PradOp(input2);
             var opWeights = new PradOp(weights);
-            var opInput1Branch = opInput1.Branch();
-            var opInput2Branch = opInput2.Branch();
-            var opInput2Branch2 = opInput2.Branch();
 
             //            num_rows, num_cols = tf.shape(input1)[1], tf.shape(input1)[2] // 2
 
@@ -876,10 +873,9 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             //        magnitude = input1[:, :, :num_cols]
             //        angle = input1[:, :, num_cols:]
 
-            var magnitudes = opInput1.Indexer(":", $":{num_cols}");
-            var angles = opInput1Branch.Indexer(":", $"{num_cols}:");
-            var anglesBranch = opInput1Branch.Branch();
-            var magnitudesBranch = opInput1.Branch();
+            var (magnitudes, angles) = opInput1.DoParallel(
+                x => x.Indexer(":", $":{num_cols}"),
+                y => y.Indexer(":", $"{num_cols}:"));
 
             //        # Extract components from input2
             //        input2_cols = tf.shape(input2)[2]
@@ -888,66 +884,74 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var input2_cols = input2.Shape[1];
             var half_cols = input2_cols / 2;
 
-            //        # Correctly extract w_magnitude_pivot and w_angle_pivot
-            //        w_magnitude_pivot = input2[:, :, :half_cols][:, :, ::5]
-            //        w_angle_pivot = input2[:, :, half_cols:][:, :, ::5]
-
-            var w_magnitude_pivot_half = opInput2.Indexer(":", $":{half_cols}");
-            var w_magnitude_pivot = opInput2.Indexer(":", $"::5");
-
-            var w_angle_pivot_half = opInput2Branch.Indexer(":", $"{half_cols}:");
-            var w_angle_pivot = opInput2Branch.Indexer(":", $"::5");
-
             //        # Extract other components
             //        w_magnitudes = tf.stack([input2[:, :, 1 + i:half_cols: 5] for i in range(4)], axis = -1)
             //                w_angles = tf.stack([input2[:, :, half_cols + 1 + i::5] for i in range(4)], axis = -1)
+
+            var opInput2Branch = opInput2.Branch();
 
             var w_magnitudes_t = new Tensor[4];
             var w_angles_t = new Tensor[4];
             for (int i = 0; i < 4; i++)
             {
-                var branchM = opInput2Branch2.DeepClone();
-                w_magnitudes_t[i] = branchM.Indexer(":", $"{1 + i}:{half_cols}:5").Result;
+                var branchM = opInput2.Branch();
 
-                var branchA = opInput2Branch2.DeepClone();
-                w_angles_t[i] = branchA.Indexer(":", $"{half_cols + 1 + i}::5").Result;
+                var(w_magnitudes_tt, w_angles_tt) = branchM.DoParallel(
+                    x => x.Indexer(":", $"{1 + i}:{half_cols}:5"),
+                    y => y.Indexer(":", $"{half_cols + 1 + i}::5")
+                    );
+
+                w_magnitudes_t[i] = w_magnitudes_tt.Result;
+                w_angles_t[i] = w_angles_tt.Result;
             }
+
             var w_magnitudes_stacked = new PradOp(w_magnitudes_t[0]).Stack(w_magnitudes_t.Skip(1).ToArray(), axis: -1);
             var w_angles_stacked = new PradOp(w_angles_t[0]).Stack(w_angles_t.Skip(1).ToArray(), axis: -1);
 
-            var w_magnitudes = w_magnitudes_stacked.PradOp;
-            var w_angles = w_angles_stacked.PradOp;
+            var w_magnitudes = w_magnitudes_stacked;
+            var w_angles = w_angles_stacked;
+
+            //        # Correctly extract w_magnitude_pivot and w_angle_pivot
+            //        w_magnitude_pivot = input2[:, :, :half_cols][:, :, ::5]
+            //        w_angle_pivot = input2[:, :, half_cols:][:, :, ::5]
+
+            var (w_magnitude_pivot, w_angle_pivot) = opInput2Branch.DoParallel(
+                x => x.Indexer(":", $":{half_cols}").PradOp.Indexer(":", $"::5"),
+                y => y.Indexer(":", $"{half_cols}:").PradOp.Indexer(":", $"::5")
+            );
 
             //# Compute x and y components
             //                x = magnitude * tf.math.cos(angle)
             //        y = magnitude * tf.math.sin(angle)
 
-            var cosAngles = opInput1Branch.Cos();
-            var sinAngles = anglesBranch.Sin();
+            var (cosAngles, sinAngles) = angles.PradOp.DoParallel(
+                x => x.Cos(),
+                y => y.Sin()
+                );
 
-            var (x, y) = opInput1.DoParallel(
+            var (x, y) = magnitudes.PradOp.DoParallel(
                 x => x.Mul(cosAngles.Result), 
                 x => x.Mul(sinAngles.Result));
 
             //        x_pivot = w_magnitude_pivot * tf.math.cos(w_angle_pivot)
             //        y_pivot = w_magnitude_pivot * tf.math.sin(w_angle_pivot)
 
-            var (cosPivot, sinPivot) = opInput2Branch.DoParallel(
+            var (cosPivot, sinPivot) = w_angle_pivot.PradOp.DoParallel(
                 x => x.Cos(),
                 x => x.Sin());
 
-            var (xPivot, yPivot) = opInput2.DoParallel(
+            var (xPivot, yPivot) = w_magnitude_pivot.PradOp.DoParallel(
                 x => x.Mul(cosPivot.Result),
                 x => x.Mul(sinPivot.Result));
 
             //        x_w = w_magnitudes * tf.math.cos(w_angles)
             //        y_w = w_magnitudes * tf.math.sin(w_angles)
 
-            var (cosAngles_w, sinAngles_w) = w_angles.DoParallel(
+            var (cosAngles_w, sinAngles_w) = w_angles.PradOp.DoParallel(
                 x => x.Cos(),
                 x => x.Sin());
 
-            var (x_w, y_w) = w_magnitudes.DoParallel(
+            var (x_w, y_w) = w_magnitudes.PradOp.DoParallel(
                 x => x.Mul(cosAngles_w.Result),
                 x => x.Mul(sinAngles_w.Result));
 
