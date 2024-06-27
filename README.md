@@ -9,6 +9,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 
 ## Table of Contents
 - [Overview](#overview)
+- [ParallelReverseAutoDiffLite](#parallelreverseautodifflite)
 - [Building your Neural Network Model](#building-your-neural-network-model)
 - [Understanding the JSON Architecture](#understanding-the-json-architecture)
 - [Instantiating the Architecture](#instantiating-the-architecture)
@@ -74,6 +75,17 @@ PRAD's dynamic computational graph, constructed from JSON architecture, allows f
 
 ### Prerequisites
 Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
+
+### ParallelReverseAutoDiffLite
+ParallelReverseAutoDiffLite (PRADLite) is a lightweight version of PRAD that uses single-precision floating point numbers (float) instead of double-precision floating point numbers (double). This can lead to significant improvements in performance and memory efficiency, especially beneficial for large-scale models and datasets.
+
+#### Key Differences
+
+- **Precision**: PRADLite uses float for all computations, reducing memory footprint and potentially increasing computational speed at the cost of precision.
+- **Performance**: Due to the reduced memory requirements and computational overhead, PRADLite can perform faster on both CPUs and GPUs.
+- **Compatibility**: PRADLite retains the same API as PRAD, making it easy to switch between the two versions based on your performance needs.
+
+To use PRADLite, simply reference the `ParallelReverseAutoDiffLite` NuGet package in your project instead of `ParallelReverseAutoDiff`.
 
 ### Regular Operations
 AddGaussianNoiseOperation
