@@ -173,10 +173,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\src\docs\README.md" Link="docs\README.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EditorConfigFiles Remove="C:\parallel\ParallelReverseAutoDiff\ParallelReverseAutoDiff\lite\src\ParallelReverseAutoDiffLite\.editorconfig" />
   </ItemGroup>
 
