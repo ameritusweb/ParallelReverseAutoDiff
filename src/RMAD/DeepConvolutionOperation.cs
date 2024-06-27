@@ -101,7 +101,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 {
                     for (int j = 0; j < outputWidth; j++)
                     {
-                        double sum = 0;
+                        var sum = PradTools.Zero;
                         for (int k = 0; k < filterHeight; k++)
                         {
                             for (int l = 0; l < filterWidth; l++)

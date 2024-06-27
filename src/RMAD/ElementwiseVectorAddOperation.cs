@@ -43,24 +43,24 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < input1.Cols / 2; j++)
                 {
                     // Accessing the magnitudes and angles from the concatenated matrices
-                    double magnitude = input1[i, j];
-                    double angle = input1[i, j + (input1.Cols / 2)];
+                    var magnitude = input1[i, j];
+                    var angle = input1[i, j + (input1.Cols / 2)];
 
-                    double wMagnitude = input2[i, j];
-                    double wAngle = input2[i, j + (input2.Cols / 2)];
+                    var wMagnitude = input2[i, j];
+                    var wAngle = input2[i, j + (input2.Cols / 2)];
 
                     // Compute vector components
-                    double x1 = magnitude * Math.Cos(angle);
-                    double y1 = magnitude * Math.Sin(angle);
-                    double x2 = wMagnitude * Math.Cos(wAngle);
-                    double y2 = wMagnitude * Math.Sin(wAngle);
+                    var x1 = magnitude * PradMath.Cos(angle);
+                    var y1 = magnitude * PradMath.Sin(angle);
+                    var x2 = wMagnitude * PradMath.Cos(wAngle);
+                    var y2 = wMagnitude * PradMath.Sin(wAngle);
 
-                    double sumx = x1 + x2;
-                    double sumy = y1 + y2;
+                    var sumx = x1 + x2;
+                    var sumy = y1 + y2;
 
                     // Compute resultant vector magnitude and angle
-                    double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy));
-                    double resultAngle = Math.Atan2(sumy, sumx);
+                    var resultMagnitude = PradMath.Sqrt((sumx * sumx) + (sumy * sumy));
+                    var resultAngle = PradMath.Atan2(sumy, sumx);
 
                     this.Output[i, j] = resultMagnitude;
                     this.Output[i, j + (this.input1.Cols / 2)] = resultAngle;
@@ -85,31 +85,31 @@ namespace ParallelReverseAutoDiff.RMAD
                     var wMagnitude = this.input2[i, j];
                     var wAngle = this.input2[i, j + (this.input2.Cols / 2)];
 
-                    var x1 = magnitude * Math.Cos(angle);
-                    var y1 = magnitude * Math.Sin(angle);
-                    var x2 = wMagnitude * Math.Cos(wAngle);
-                    var y2 = wMagnitude * Math.Sin(wAngle);
+                    var x1 = magnitude * PradMath.Cos(angle);
+                    var y1 = magnitude * PradMath.Sin(angle);
+                    var x2 = wMagnitude * PradMath.Cos(wAngle);
+                    var y2 = wMagnitude * PradMath.Sin(wAngle);
 
                     var combinedX = x1 + x2;
                     var combinedY = y1 + y2;
 
                     // Compute gradients for magnitude and angle
-                    double dResultMagnitude_dX = combinedX / this.Output[i, j];
-                    double dResultMagnitude_dY = combinedY / this.Output[i, j];
+                    var dResultMagnitude_dX = combinedX / this.Output[i, j];
+                    var dResultMagnitude_dY = combinedY / this.Output[i, j];
 
-                    double dResultAngle_dX = -combinedY / ((combinedX * combinedX) + (combinedY * combinedY));
-                    double dResultAngle_dY = combinedX / ((combinedX * combinedX) + (combinedY * combinedY));
+                    var dResultAngle_dX = -combinedY / ((combinedX * combinedX) + (combinedY * combinedY));
+                    var dResultAngle_dY = combinedX / ((combinedX * combinedX) + (combinedY * combinedY));
 
                     // Chain rule to compute gradients for input vectors
-                    dInput1[i, j] = (dOutput[i, j] * dResultMagnitude_dX * Math.Cos(angle)) +
-                                    (dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dX * -Math.Sin(angle));
-                    dInput1[i, j + (this.input1.Cols / 2)] = (dOutput[i, j] * dResultMagnitude_dY * Math.Sin(angle)) +
-                                                             (dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dY * Math.Cos(angle));
+                    dInput1[i, j] = (dOutput[i, j] * dResultMagnitude_dX * PradMath.Cos(angle)) +
+                                    (dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dX * -PradMath.Sin(angle));
+                    dInput1[i, j + (this.input1.Cols / 2)] = (dOutput[i, j] * dResultMagnitude_dY * PradMath.Sin(angle)) +
+                                                             (dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dY * PradMath.Cos(angle));
 
-                    dInput2[i, j] = (dOutput[i, j] * dResultMagnitude_dX * Math.Cos(wAngle)) +
-                                    (dOutput[i, j + (this.input2.Cols / 2)] * dResultAngle_dX * -Math.Sin(wAngle));
-                    dInput2[i, j + (this.input2.Cols / 2)] = (dOutput[i, j] * dResultMagnitude_dY * Math.Sin(wAngle)) +
-                                                             (dOutput[i, j + (this.input2.Cols / 2)] * dResultAngle_dY * Math.Cos(wAngle));
+                    dInput2[i, j] = (dOutput[i, j] * dResultMagnitude_dX * PradMath.Cos(wAngle)) +
+                                    (dOutput[i, j + (this.input2.Cols / 2)] * dResultAngle_dX * -PradMath.Sin(wAngle));
+                    dInput2[i, j + (this.input2.Cols / 2)] = (dOutput[i, j] * dResultMagnitude_dY * PradMath.Sin(wAngle)) +
+                                                             (dOutput[i, j + (this.input2.Cols / 2)] * dResultAngle_dY * PradMath.Cos(wAngle));
                 }
             });
 

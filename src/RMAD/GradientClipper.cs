@@ -188,7 +188,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            double stdDev = Math.Sqrt(varianceSum / count);
+            double stdDev = PradMath.Sqrt(varianceSum / count);
 
             // Calculate the standardized matrix
             int depth = deepMatrix.Depth;
@@ -235,7 +235,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 }
             }
 
-            double stdDev = Math.Sqrt(varianceSum / count);
+            double stdDev = PradMath.Sqrt(varianceSum / count);
 
             // Calculate the standardized matrix
             int rows = matrix.Rows;

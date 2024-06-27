@@ -62,22 +62,22 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < m; j++)
                 {
-                    double a = this.input[i, j];
-                    double b = this.input[i, j + m];
-                    double expSinA = Math.Exp(Math.Sin(a));
-                    double expSinB = Math.Exp(Math.Sin(b));
+                    var a = this.input[i, j];
+                    var b = this.input[i, j + m];
+                    var expSinA = PradMath.Exp(PradMath.Sin(a));
+                    var expSinB = PradMath.Exp(PradMath.Sin(b));
 
-                    double f1 = expSinA;
-                    double fPrime1 = Math.Cos(a) * expSinA;
-                    double g1 = expSinA + expSinB;
-                    double gPrime1 = Math.Cos(a) * expSinA;
-                    double dSinSoftmaxj1 = ((fPrime1 * g1) - (f1 * gPrime1)) / Math.Pow(g1, 2d);
+                    var f1 = expSinA;
+                    var fPrime1 = PradMath.Cos(a) * expSinA;
+                    var g1 = expSinA + expSinB;
+                    var gPrime1 = PradMath.Cos(a) * expSinA;
+                    var dSinSoftmaxj1 = ((fPrime1 * g1) - (f1 * gPrime1)) / PradMath.Pow(g1, 2f);
 
-                    double f2 = expSinB;
-                    double fPrime2 = Math.Cos(b) * expSinB;
-                    double g2 = expSinA + expSinB;
-                    double gPrime2 = Math.Cos(b) * expSinB;
-                    double dSinSoftmaxj2 = ((fPrime2 * g2) - (f2 * gPrime2)) / Math.Pow(g2, 2d);
+                    var f2 = expSinB;
+                    var fPrime2 = PradMath.Cos(b) * expSinB;
+                    var g2 = expSinA + expSinB;
+                    var gPrime2 = PradMath.Cos(b) * expSinB;
+                    var dSinSoftmaxj2 = ((fPrime2 * g2) - (f2 * gPrime2)) / PradMath.Pow(g2, 2f);
 
                     dLdInput[i][j] = dLdOutput[i][j] * dSinSoftmaxj1;
                     dLdInput[i][j + m] = dLdOutput[i][j + m] * dSinSoftmaxj2;
@@ -101,12 +101,12 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < m; j++)
                 {
-                    double a = input[i, j];
-                    double b = input[i, j + m];
-                    double sumExp = Math.Exp(Math.Sin(a)) + Math.Exp(Math.Sin(b));
-                    double numerator1 = Math.Exp(Math.Sin(a));
+                    var a = input[i, j];
+                    var b = input[i, j + m];
+                    var sumExp = PradMath.Exp(PradMath.Sin(a)) + PradMath.Exp(PradMath.Sin(b));
+                    var numerator1 = PradMath.Exp(PradMath.Sin(a));
                     output[i, j] = numerator1 / sumExp;
-                    double numerator2 = Math.Exp(Math.Sin(b));
+                    var numerator2 = PradMath.Exp(PradMath.Sin(b));
                     output[i, j + m] = numerator2 / sumExp;
                 }
             }

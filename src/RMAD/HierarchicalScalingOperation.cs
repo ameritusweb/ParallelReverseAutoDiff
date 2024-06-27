@@ -160,7 +160,7 @@ namespace ParallelReverseAutoDiff.RMAD
             }
             else
             {
-                return Math.Exp(x);
+                return PradMath.Exp(x);
             }
         }
     }

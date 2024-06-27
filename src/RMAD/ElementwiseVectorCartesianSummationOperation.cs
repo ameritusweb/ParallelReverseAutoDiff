@@ -66,29 +66,29 @@ namespace ParallelReverseAutoDiff.RMAD
                     double wAngle = input2[i, j + (input2.Cols / 2)];
 
                     // Compute vector components
-                    double x1 = magnitude * Math.Cos(angle);
-                    double y1 = magnitude * Math.Sin(angle);
-                    double x2 = wMagnitude * Math.Cos(wAngle);
-                    double y2 = wMagnitude * Math.Sin(wAngle);
+                    double x1 = magnitude * PradMath.Cos(angle);
+                    double y1 = magnitude * PradMath.Sin(angle);
+                    double x2 = wMagnitude * PradMath.Cos(wAngle);
+                    double y2 = wMagnitude * PradMath.Sin(wAngle);
 
                     double sumx = x1 + x2;
                     double sumy = y1 + y2;
 
-                    double dsumx_dAngle = -magnitude * Math.Sin(angle);
-                    double dsumx_dWAngle = -wMagnitude * Math.Sin(wAngle);
-                    double dsumy_dAngle = magnitude * Math.Cos(angle);
-                    double dsumy_dWAngle = wMagnitude * Math.Cos(wAngle);
-                    double dsumx_dMagnitude = Math.Cos(angle);
-                    double dsumx_dWMagnitude = Math.Cos(wAngle);
-                    double dsumy_dMagnitude = Math.Sin(angle);
-                    double dsumy_dWMagnitude = Math.Sin(wAngle);
+                    double dsumx_dAngle = -magnitude * PradMath.Sin(angle);
+                    double dsumx_dWAngle = -wMagnitude * PradMath.Sin(wAngle);
+                    double dsumy_dAngle = magnitude * PradMath.Cos(angle);
+                    double dsumy_dWAngle = wMagnitude * PradMath.Cos(wAngle);
+                    double dsumx_dMagnitude = PradMath.Cos(angle);
+                    double dsumx_dWMagnitude = PradMath.Cos(wAngle);
+                    double dsumy_dMagnitude = PradMath.Sin(angle);
+                    double dsumy_dWMagnitude = PradMath.Sin(wAngle);
 
                     // Compute resultant vector magnitude and angle
-                    double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
-                    double resultAngle = Math.Atan2(sumy, sumx);
+                    double resultMagnitude = PradMath.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
+                    double resultAngle = PradMath.Atan2(sumy, sumx);
 
-                    double dResultMagnitude_dsumx = (sumx * weights[i, j]) / Math.Sqrt((sumx * sumx) + (sumy * sumy));
-                    double dResultMagnitude_dsumy = (sumy * weights[i, j]) / Math.Sqrt((sumx * sumx) + (sumy * sumy));
+                    double dResultMagnitude_dsumx = (sumx * weights[i, j]) / PradMath.Sqrt((sumx * sumx) + (sumy * sumy));
+                    double dResultMagnitude_dsumy = (sumy * weights[i, j]) / PradMath.Sqrt((sumx * sumx) + (sumy * sumy));
                     double dResultAngle_dsumx = -sumy / ((sumx * sumx) + (sumy * sumy));
                     double dResultAngle_dsumy = sumx / ((sumx * sumx) + (sumy * sumy));
 
@@ -105,20 +105,20 @@ namespace ParallelReverseAutoDiff.RMAD
                     resultVectors[(i * (input1.Cols / 2)) + j, 0] = resultMagnitude;
                     resultVectors[(i * (input1.Cols / 2)) + j, 1] = resultAngle;
 
-                    double localSumX = resultMagnitude * Math.Cos(resultAngle);
-                    double localSumY = resultMagnitude * Math.Sin(resultAngle);
+                    double localSumX = resultMagnitude * PradMath.Cos(resultAngle);
+                    double localSumY = resultMagnitude * PradMath.Sin(resultAngle);
 
-                    double localSumXFull = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * Math.Cos(resultAngle);
-                    double localSumYFull = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * Math.Sin(resultAngle);
+                    double localSumXFull = PradMath.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * PradMath.Cos(resultAngle);
+                    double localSumYFull = PradMath.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j] * PradMath.Sin(resultAngle);
 
-                    double dLocalSumX_dWeight = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * Math.Cos(resultAngle);
-                    double dLocalSumY_dWeight = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * Math.Sin(resultAngle);
+                    double dLocalSumX_dWeight = PradMath.Sqrt((sumx * sumx) + (sumy * sumy)) * PradMath.Cos(resultAngle);
+                    double dLocalSumY_dWeight = PradMath.Sqrt((sumx * sumx) + (sumy * sumy)) * PradMath.Sin(resultAngle);
 
                     this.calculatedValues[i, j].DLocalSumX_DWeight = dLocalSumX_dWeight;
                     this.calculatedValues[i, j].DLocalSumY_DWeight = dLocalSumY_dWeight;
 
-                    double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
-                    double dLocalSumX_dResultAngle = -resultMagnitude * Math.Sin(resultAngle);
+                    double dLocalSumX_dResultMagnitude = PradMath.Cos(resultAngle);
+                    double dLocalSumX_dResultAngle = -resultMagnitude * PradMath.Sin(resultAngle);
 
                     double dLocalSumX_dAngle = (dLocalSumX_dResultMagnitude * dResultMagnitude_dAngle) + (dLocalSumX_dResultAngle * dResultAngle_dAngle);
                     double dLocalSumX_dWAngle = (dLocalSumX_dResultMagnitude * dResultMagnitude_dWAngle) + (dLocalSumX_dResultAngle * dResultAngle_dWAngle);
@@ -130,8 +130,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.calculatedValues[i, j].DLocalSumX_DMagnitude = dLocalSumX_dMagnitude;
                     this.calculatedValues[i, j].DLocalSumX_DWMagnitude = dLocalSumX_dWMagnitude;
 
-                    double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
-                    double dLocalSumY_dResultAngle = resultMagnitude * Math.Cos(resultAngle);
+                    double dLocalSumY_dResultMagnitude = PradMath.Sin(resultAngle);
+                    double dLocalSumY_dResultAngle = resultMagnitude * PradMath.Cos(resultAngle);
 
                     double dLocalSumY_dAngle = (dLocalSumY_dResultMagnitude * dResultMagnitude_dAngle) + (dLocalSumY_dResultAngle * dResultAngle_dAngle);
                     double dLocalSumY_dWAngle = (dLocalSumY_dResultMagnitude * dResultMagnitude_dWAngle) + (dLocalSumY_dResultAngle * dResultAngle_dWAngle);

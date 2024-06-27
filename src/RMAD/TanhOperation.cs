@@ -49,7 +49,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    this.Output[i][j] = Math.Tanh(input[i][j]);
+                    this.Output[i][j] = PradMath.Tanh(input[i][j]);
                 }
             }
 
@@ -67,7 +67,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    double derivative = 1 - Math.Pow(this.Output[i][j], 2);
+                    var derivative = 1 - PradMath.Pow(this.Output[i][j], 2);
                     dInput[i][j] = dOutput[i][j] * derivative;
                 }
             }

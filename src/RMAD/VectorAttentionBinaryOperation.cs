@@ -46,14 +46,14 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < m; j++)
                 {
                     // Calculate the scaling factor for the magnitude
-                    double prob = probabilities[i, j];
-                    double magnitudeScale = 1.5 - prob; // Ranges from 1 (at prob = 0.5) to 2 (at prob = 0) to 0.5 (at prob = 1)
-                    double magnitude = vectors[i, j] * magnitudeScale;
+                    var prob = probabilities[i, j];
+                    var magnitudeScale = 1.5f - prob; // Ranges from 1 (at prob = 0.5) to 2 (at prob = 0) to 0.5 (at prob = 1)
+                    var magnitude = vectors[i, j] * magnitudeScale;
 
                     // Adjust the angle based on the probability
-                    double angle = vectors[i, j + m];
-                    double angleAdjustment = Math.PI * (1 - prob); // Ranges from 0 (at prob = 1) to π (at prob = 0)
-                    angle = (angle + angleAdjustment) % (2 * Math.PI);
+                    var angle = vectors[i, j + m];
+                    var angleAdjustment = PradMath.PI * (1f - prob); // Ranges from 0 (at prob = 1) to π (at prob = 0)
+                    angle = (angle + angleAdjustment) % (2f * PradMath.PI);
 
                     this.Output[i, j] = magnitude;
                     this.Output[i, j + m] = angle;
@@ -74,17 +74,17 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < m; j++)
                 {
-                    double prop1 = this.probabilities[i, j];
+                    var prop1 = this.probabilities[i, j];
 
                     // Gradient for magnitude
-                    dVectors[i, j] = dOutput[i, j] * (1.5d - prop1); // Direct gradient flow for magnitude
+                    dVectors[i, j] = dOutput[i, j] * (1.5f - prop1); // Direct gradient flow for magnitude
 
                     // Gradient for angle
-                    double dAngle = dOutput[i, j + m];
+                    var dAngle = dOutput[i, j + m];
                     dVectors[i, j + m] = dAngle; // Direct gradient flow for angle
 
-                    double dAngle_dProb1 = -Math.PI;
-                    double dAngle_dProb2 = Math.PI;
+                    var dAngle_dProb1 = -PradMath.PI;
+                    var dAngle_dProb2 = PradMath.PI;
 
                     // Gradient for Prob1 (affects magnitude and angle)
                     dProbabilities[i, j] = dAngle * dAngle_dProb1; // From derivative dAngle/dProb1 = -π
@@ -92,8 +92,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     // Gradient for Prob2 (affects only angle)
                     dProbabilities[i, j + m] = dAngle * dAngle_dProb2; // From derivative dAngle/dProb2 = π
 
-                    double dMagnitude = dOutput[i, j];
-                    double originalMagnitude = this.vectors[i, j];
+                    var dMagnitude = dOutput[i, j];
+                    var originalMagnitude = this.vectors[i, j];
 
                     // Compute gradients for probabilities related to magnitude
                     dProbabilities[i, j] += -dMagnitude * originalMagnitude; // dMagnitude/dProb1

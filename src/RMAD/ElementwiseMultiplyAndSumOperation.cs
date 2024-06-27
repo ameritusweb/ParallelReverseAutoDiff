@@ -59,7 +59,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 Matrix slice = b[q];
                 Matrix elementwiseMultiplied = a.ElementwiseMultiply(slice);
-                double sum = elementwiseMultiplied.Sum();
+                var sum = elementwiseMultiplied.Sum();
                 this.Output[0][q] = sum;
             }
 

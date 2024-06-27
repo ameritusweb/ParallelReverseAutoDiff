@@ -63,19 +63,19 @@ namespace ParallelReverseAutoDiff.RMAD
                     double wAngle2 = input2[i, (j * 3) + 2 + (input2.Cols / 2)];
 
                     // Compute vector components
-                    double x = magnitude * Math.Cos(angle);
-                    double y = magnitude * Math.Sin(angle);
-                    double xPivot = wMagnitudePivot * Math.Cos(wAnglePivot);
-                    double yPivot = wMagnitudePivot * Math.Sin(wAnglePivot);
+                    double x = magnitude * PradMath.Cos(angle);
+                    double y = magnitude * PradMath.Sin(angle);
+                    double xPivot = wMagnitudePivot * PradMath.Cos(wAnglePivot);
+                    double yPivot = wMagnitudePivot * PradMath.Sin(wAnglePivot);
 
-                    double dx_dMagnitude = Math.Cos(angle);
-                    double dx_dAngle = -magnitude * Math.Sin(angle);
-                    double dy_dMagnitude = Math.Sin(angle);
-                    double dy_dAngle = magnitude * Math.Cos(angle);
-                    double dXPivot_dWMagnitudePivot = Math.Cos(wAnglePivot);
-                    double dXPivot_dWAnglePivot = -wMagnitudePivot * Math.Sin(wAnglePivot);
-                    double dYPivot_dWMagnitudePivot = Math.Sin(wAnglePivot);
-                    double dYPivot_dWAnglePivot = wMagnitudePivot * Math.Cos(wAnglePivot);
+                    double dx_dMagnitude = PradMath.Cos(angle);
+                    double dx_dAngle = -magnitude * PradMath.Sin(angle);
+                    double dy_dMagnitude = PradMath.Sin(angle);
+                    double dy_dAngle = magnitude * PradMath.Cos(angle);
+                    double dXPivot_dWMagnitudePivot = PradMath.Cos(wAnglePivot);
+                    double dXPivot_dWAnglePivot = -wMagnitudePivot * PradMath.Sin(wAnglePivot);
+                    double dYPivot_dWMagnitudePivot = PradMath.Sin(wAnglePivot);
+                    double dYPivot_dWAnglePivot = wMagnitudePivot * PradMath.Cos(wAnglePivot);
 
                     this.calculatedValues[i, j] = new CalculatedValues()
                     {
@@ -89,26 +89,26 @@ namespace ParallelReverseAutoDiff.RMAD
                         CV_dYPivot_dWAnglePivot = dYPivot_dWAnglePivot,
                     };
 
-                    double x1 = wMagnitude1 * Math.Cos(wAngle1);
-                    double y1 = wMagnitude1 * Math.Sin(wAngle1);
+                    double x1 = wMagnitude1 * PradMath.Cos(wAngle1);
+                    double y1 = wMagnitude1 * PradMath.Sin(wAngle1);
 
-                    double dX1_wMagnitude1 = Math.Cos(wAngle1);
-                    double dX1_wAngle1 = -wMagnitude1 * Math.Sin(wAngle1);
-                    double dY1_wMagnitude1 = Math.Sin(wAngle1);
-                    double dY1_wAngle1 = wMagnitude1 * Math.Cos(wAngle1);
+                    double dX1_wMagnitude1 = PradMath.Cos(wAngle1);
+                    double dX1_wAngle1 = -wMagnitude1 * PradMath.Sin(wAngle1);
+                    double dY1_wMagnitude1 = PradMath.Sin(wAngle1);
+                    double dY1_wAngle1 = wMagnitude1 * PradMath.Cos(wAngle1);
 
                     this.calculatedValues[i, j].CV_dX1_wMagnitude1 = dX1_wMagnitude1;
                     this.calculatedValues[i, j].CV_dX1_wAngle1 = dX1_wAngle1;
                     this.calculatedValues[i, j].CV_dY1_wMagnitude1 = dY1_wMagnitude1;
                     this.calculatedValues[i, j].CV_dY1_wAngle1 = dY1_wAngle1;
 
-                    double x2 = wMagnitude2 * Math.Cos(wAngle2);
-                    double y2 = wMagnitude2 * Math.Sin(wAngle2);
+                    double x2 = wMagnitude2 * PradMath.Cos(wAngle2);
+                    double y2 = wMagnitude2 * PradMath.Sin(wAngle2);
 
-                    double dX2_wMagnitude2 = Math.Cos(wAngle2);
-                    double dX2_wAngle2 = -wMagnitude2 * Math.Sin(wAngle2);
-                    double dY2_wMagnitude2 = Math.Sin(wAngle2);
-                    double dY2_wAngle2 = wMagnitude2 * Math.Cos(wAngle2);
+                    double dX2_wMagnitude2 = PradMath.Cos(wAngle2);
+                    double dX2_wAngle2 = -wMagnitude2 * PradMath.Sin(wAngle2);
+                    double dY2_wMagnitude2 = PradMath.Sin(wAngle2);
+                    double dY2_wAngle2 = wMagnitude2 * PradMath.Cos(wAngle2);
 
                     this.calculatedValues[i, j].CV_dX2_wMagnitude2 = dX2_wMagnitude2;
                     this.calculatedValues[i, j].CV_dX2_wAngle2 = dX2_wAngle2;
@@ -159,8 +159,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.calculatedValues[i, j].CV_dDiffY2_dY2 = dDiffY2_dY2;
 
                     // Compute resultant vector magnitude and angle
-                    double resultMagnitude1 = Math.Sqrt((diffx1 * diffx1) + (diffy1 * diffy1));
-                    double resultAngle1 = Math.Atan2(diffy1, diffx1);
+                    double resultMagnitude1 = PradMath.Sqrt((diffx1 * diffx1) + (diffy1 * diffy1));
+                    double resultAngle1 = PradMath.Atan2(diffy1, diffx1);
 
                     double dResultMagnitude1_dDiffX1 = diffx1 / resultMagnitude1;
                     double dResultMagnitude1_dDiffY1 = diffy1 / resultMagnitude1;
@@ -172,8 +172,8 @@ namespace ParallelReverseAutoDiff.RMAD
                     this.calculatedValues[i, j].CV_dResultAngle1_dDiffX1 = dResultAngle1_dDiffX1;
                     this.calculatedValues[i, j].CV_dResultAngle1_dDiffY1 = dResultAngle1_dDiffY1;
 
-                    double resultMagnitude2 = Math.Sqrt((diffx2 * diffx2) + (diffy2 * diffy2));
-                    double resultAngle2 = Math.Atan2(diffy2, diffx2);
+                    double resultMagnitude2 = PradMath.Sqrt((diffx2 * diffx2) + (diffy2 * diffy2));
+                    double resultAngle2 = PradMath.Atan2(diffy2, diffx2);
 
                     double dResultMagnitude2_dDiffX2 = diffx2 / resultMagnitude2;
                     double dResultMagnitude2_dDiffY2 = diffy2 / resultMagnitude2;

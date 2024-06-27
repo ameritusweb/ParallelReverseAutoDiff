@@ -86,16 +86,16 @@ namespace ParallelReverseAutoDiff.RMAD
         private double GELU(double x)
         {
             double a = 0.5 * (1.0 + Math.Tanh(
-                Math.Sqrt(2 / Math.PI) * (x + (0.044715 * Math.Pow(x, 3)))));
+                PradMath.Sqrt(2 / Math.PI) * (x + (0.044715 * Math.Pow(x, 3)))));
 
             return a * x;
         }
 
         private double DerivativeGELU(double x)
         {
-            double b = Math.Tanh(Math.Sqrt(2 / Math.PI) * (x + (0.044715 * Math.Pow(x, 3))));
+            double b = Math.Tanh(PradMath.Sqrt(2 / Math.PI) * (x + (0.044715 * Math.Pow(x, 3))));
             double c = Math.Pow(1 - Math.Pow(b, 2), 2);
-            double d = Math.Sqrt(2 / Math.PI) * ((0.044715 * 3 * Math.Pow(x, 2)) + 1);
+            double d = PradMath.Sqrt(2 / Math.PI) * ((0.044715 * 3 * Math.Pow(x, 2)) + 1);
 
             return (0.5 * x * ((c * d) + b)) + (0.5 * (1 + b));
         }

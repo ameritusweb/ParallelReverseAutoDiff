@@ -82,7 +82,7 @@ namespace ParallelReverseAutoDiff.RMAD
                 dB[q].Initialize(InitializationType.Zeroes);
                 for (int i = 0; i < this.a.Rows; i++)
                 {
-                    double multiplier = dOutput[i][q]; // This is a scalar
+                    var multiplier = dOutput[i][q]; // This is a scalar
                     Matrix scaledSlice = slice * multiplier;  // This scales each element in slice
 
                     for (int j = 0; j < dA[i].Length; j++)

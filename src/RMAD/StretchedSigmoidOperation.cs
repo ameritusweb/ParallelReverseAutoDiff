@@ -52,7 +52,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    this.Output[i][j] = 1.0 / (1.0 + Math.Pow(Math.PI - 2, -input[i][j]));
+                    this.Output[i][j] = 1.0f / (1.0f + PradMath.Pow(PradMath.PI - 2, -input[i][j]));
                 }
             }
 
@@ -70,8 +70,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    double x = this.input[i][j];
-                    double dx = Math.Pow(Math.PI - 2, -x) * Math.Log(Math.PI - 2) / Math.Pow(1 + Math.Pow(Math.PI - 2, -x), 2);
+                    var x = this.input[i][j];
+                    var dx = PradMath.Pow(PradMath.PI - 2, -x) * PradMath.Log(PradMath.PI - 2) / PradMath.Pow(1 + PradMath.Pow(PradMath.PI - 2, -x), 2);
                     dLdInput[i][j] = dLdOutput[i][j] * dx;
                 }
             }

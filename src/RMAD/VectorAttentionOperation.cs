@@ -46,14 +46,14 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < m; j++)
                 {
                     // Calculate the scaling factor for the magnitude
-                    double prob = probabilities[i, j];
-                    double magnitudeScale = 1.5 - prob; // Ranges from 1 (at prob = 0.5) to 2 (at prob = 0) to 0.5 (at prob = 1)
-                    double magnitude = vectors[i, j] * magnitudeScale;
+                    var prob = probabilities[i, j];
+                    var magnitudeScale = 1.5f - prob; // Ranges from 1 (at prob = 0.5) to 2 (at prob = 0) to 0.5 (at prob = 1)
+                    var magnitude = vectors[i, j] * magnitudeScale;
 
                     // Adjust the angle based on the probability
-                    double angle = vectors[i, j + m];
-                    double angleAdjustment = 1.5d * Math.PI * (1 - prob); // Ranges from 0 (at prob = 1) to 2π (at prob = 0)
-                    angle = (angle + angleAdjustment) % (2 * Math.PI);
+                    var angle = vectors[i, j + m];
+                    var angleAdjustment = 1.5f * PradMath.PI * (1f - prob); // Ranges from 0 (at prob = 1) to 2π (at prob = 0)
+                    angle = (angle + angleAdjustment) % (2 * PradMath.PI);
 
                     this.Output[i, j] = magnitude;
                     this.Output[i, j + m] = angle;
@@ -74,14 +74,14 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < m; j++)
                 {
-                    double prob = this.probabilities[i, j];
-                    double dMagnitude_dProb = -dOutput[i, j] * this.vectors[i, j]; // Derivative of magnitude w.r.t probability
-                    double dMagnitude_dProb2 = dOutput[i, j] * this.vectors[i, j]; // Derivative of magnitude w.r.t probability 2
-                    double dAngle_dProb = -1.5d * Math.PI * dOutput[i, j + m]; // Derivative of angle w.r.t probability
-                    double dAngle_dProb2 = 1.5d * Math.PI * dOutput[i, j + m]; // Derivative of angle w.r.t probability 2
+                    var prob = this.probabilities[i, j];
+                    var dMagnitude_dProb = -dOutput[i, j] * this.vectors[i, j]; // Derivative of magnitude w.r.t probability
+                    var dMagnitude_dProb2 = dOutput[i, j] * this.vectors[i, j]; // Derivative of magnitude w.r.t probability 2
+                    var dAngle_dProb = -1.5f * PradMath.PI * dOutput[i, j + m]; // Derivative of angle w.r.t probability
+                    var dAngle_dProb2 = 1.5f * PradMath.PI * dOutput[i, j + m]; // Derivative of angle w.r.t probability 2
 
                     // Update gradients for vectors
-                    dVectors[i, j] = dOutput[i, j] * (1.5 - prob); // Corrected gradient flow for magnitude
+                    dVectors[i, j] = dOutput[i, j] * (1.5f - prob); // Corrected gradient flow for magnitude
                     dVectors[i, j + m] = dOutput[i, j + m]; // Direct gradient flow for angle is correct
 
                     // Aggregate gradients for probabilities

@@ -59,7 +59,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 Matrix slice = b[q];
                 Matrix matrixMultiplied = a * slice;
-                double sum = matrixMultiplied.Sum();
+                var sum = matrixMultiplied.Sum();
                 this.Output[0][q] = sum;
             }
 

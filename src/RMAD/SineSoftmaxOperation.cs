@@ -59,15 +59,15 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix dLdInput = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                double mM = 0.0;
+                var mM = PradTools.Zero;
                 for (int k = 0; k < numCols; k++)
                 {
-                    mM += Math.Exp(Math.Sin(this.input[i, k]));
+                    mM += PradMath.Exp(PradMath.Sin(this.input[i, k]));
                 }
 
                 for (int j = 0; j < numCols; j++)
                 {
-                    double dSinSoftmaxj = (mM * Math.Exp(Math.Sin(this.input[i, j])) * Math.Cos(this.input[i, j])) / Math.Pow(mM + Math.Exp(Math.Sin(this.input[i, j])), 2);
+                    var dSinSoftmaxj = (mM * PradMath.Exp(PradMath.Sin(this.input[i, j])) * PradMath.Cos(this.input[i, j])) / PradMath.Pow(mM + PradMath.Exp(PradMath.Sin(this.input[i, j])), 2);
                     dLdInput[i][j] = dLdOutput[i][j] * dSinSoftmaxj;
                 }
             }
@@ -86,16 +86,16 @@ namespace ParallelReverseAutoDiff.RMAD
 
             for (int i = 0; i < numRows; i++)
             {
-                double mM = 0.0;
+                var mM = PradTools.Zero;
 
                 for (int j = 0; j < numCols; j++)
                 {
-                    mM += Math.Exp(Math.Sin(input[i, j]));
+                    mM += PradMath.Exp(PradMath.Sin(input[i, j]));
                 }
 
                 for (int j = 0; j < numCols; j++)
                 {
-                    double numerator = Math.Exp(Math.Sin(input[i, j]));
+                    var numerator = PradMath.Exp(PradMath.Sin(input[i, j]));
                     output[i, j] = numerator / (mM + numerator);
                 }
             }

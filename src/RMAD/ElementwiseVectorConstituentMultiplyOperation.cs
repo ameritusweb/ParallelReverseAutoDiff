@@ -97,10 +97,10 @@ namespace ParallelReverseAutoDiff.RMAD
                         double wAngle = input2[k, j + (input2.Cols / 2)];
 
                         // Compute vector components
-                        double x1 = magnitude * Math.Cos(angle);
-                        double y1 = magnitude * Math.Sin(angle);
-                        double x2 = wMagnitude * Math.Cos(wAngle);
-                        double y2 = wMagnitude * Math.Sin(wAngle);
+                        double x1 = magnitude * PradMath.Cos(angle);
+                        double y1 = magnitude * PradMath.Sin(angle);
+                        double x2 = wMagnitude * PradMath.Cos(wAngle);
+                        double y2 = wMagnitude * PradMath.Sin(wAngle);
 
                         // Select vector direction based on weight
                         double deltax = weights[k, j] > 0 ? x2 - x1 : x1 - x2;
@@ -109,22 +109,22 @@ namespace ParallelReverseAutoDiff.RMAD
                         double deltaXYSquared = (deltax * deltax) + (deltay * deltay);
 
                         // Compute resultant vector magnitude and angle
-                        double resultMagnitude = Math.Sqrt(deltaXYSquared) * weights[k, j];
-                        double resultAngle = Math.Atan2(deltay, deltax);
+                        double resultMagnitude = PradMath.Sqrt(deltaXYSquared) * weights[k, j];
+                        double resultAngle = PradMath.Atan2(deltay, deltax);
 
-                        double dResultMagnitude_dDeltaX = (deltax * weights[k, j]) / Math.Sqrt(deltaXYSquared);
-                        double dResultMagnitude_dDeltaY = (deltay * weights[k, j]) / Math.Sqrt(deltaXYSquared);
+                        double dResultMagnitude_dDeltaX = (deltax * weights[k, j]) / PradMath.Sqrt(deltaXYSquared);
+                        double dResultMagnitude_dDeltaY = (deltay * weights[k, j]) / PradMath.Sqrt(deltaXYSquared);
                         double dResultAngle_dDeltaX = -deltay / deltaXYSquared;
                         double dResultAngle_dDeltaY = deltax / deltaXYSquared;
 
-                        double localSumX = resultMagnitude * Math.Cos(resultAngle);
-                        double localSumY = resultMagnitude * Math.Sin(resultAngle);
+                        double localSumX = resultMagnitude * PradMath.Cos(resultAngle);
+                        double localSumY = resultMagnitude * PradMath.Sin(resultAngle);
 
-                        double dLocalSumX_dResultMagnitude = Math.Cos(resultAngle);
-                        double dLocalSumY_dResultMagnitude = Math.Sin(resultAngle);
+                        double dLocalSumX_dResultMagnitude = PradMath.Cos(resultAngle);
+                        double dLocalSumY_dResultMagnitude = PradMath.Sin(resultAngle);
 
-                        double dLocalSumX_dResultAngle = -resultMagnitude * Math.Sin(resultAngle);
-                        double dLocalSumY_dResultAngle = resultMagnitude * Math.Cos(resultAngle);
+                        double dLocalSumX_dResultAngle = -resultMagnitude * PradMath.Sin(resultAngle);
+                        double dLocalSumY_dResultAngle = resultMagnitude * PradMath.Cos(resultAngle);
 
                         double dLocalSumX_dDeltaX = (dLocalSumX_dResultMagnitude * dResultMagnitude_dDeltaX)
                             + (dLocalSumX_dResultAngle * dResultAngle_dDeltaX);
@@ -149,25 +149,25 @@ namespace ParallelReverseAutoDiff.RMAD
                         dDeltaX_dX2[k] = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
                         dDeltaY_dY2[k] = this.weights[k, j] > 0 ? 1 : -1; // Depending on weight sign
 
-                        dX1_dMagnitude[k] = Math.Cos(angle);
-                        dY1_dMagnitude[k] = Math.Sin(angle);
+                        dX1_dMagnitude[k] = PradMath.Cos(angle);
+                        dY1_dMagnitude[k] = PradMath.Sin(angle);
 
-                        dX1_dAngle[k] = -magnitude * Math.Sin(angle);
-                        dY1_dAngle[k] = magnitude * Math.Cos(angle);
+                        dX1_dAngle[k] = -magnitude * PradMath.Sin(angle);
+                        dY1_dAngle[k] = magnitude * PradMath.Cos(angle);
 
-                        dX2_dWMagnitude[k] = Math.Cos(wAngle);
-                        dY2_dWMagnitude[k] = Math.Sin(wAngle);
+                        dX2_dWMagnitude[k] = PradMath.Cos(wAngle);
+                        dY2_dWMagnitude[k] = PradMath.Sin(wAngle);
 
-                        dX2_dWAngle[k] = -wMagnitude * Math.Sin(wAngle);
-                        dY2_dWAngle[k] = wMagnitude * Math.Cos(wAngle);
+                        dX2_dWAngle[k] = -wMagnitude * PradMath.Sin(wAngle);
+                        dY2_dWAngle[k] = wMagnitude * PradMath.Cos(wAngle);
 
                         // Derivatives of delta components with respect to weight
                         dDeltaX_dWeight[k] = (weights[k, j] > 0) ? (x2 - x1) : (x1 - x2);
                         dDeltaY_dWeight[k] = (weights[k, j] > 0) ? (y2 - y1) : (y1 - y2);
 
-                        dResultMagnitude_dWeight[k] = Math.Sqrt(deltaXYSquared);
-                        dSumX_dResultMagnitude[k] = Math.Cos(resultAngle);
-                        dSumY_dResultMagnitude[k] = Math.Sin(resultAngle);
+                        dResultMagnitude_dWeight[k] = PradMath.Sqrt(deltaXYSquared);
+                        dSumX_dResultMagnitude[k] = PradMath.Cos(resultAngle);
+                        dSumY_dResultMagnitude[k] = PradMath.Sin(resultAngle);
                     }
 
                     this.sumX[i, j] = sumX;
@@ -175,8 +175,8 @@ namespace ParallelReverseAutoDiff.RMAD
 
                     // Analytically determined gradients for combined magnitude
                     double magSumXY = (this.sumX[i, j] * this.sumX[i, j]) + (this.sumY[i, j] * this.sumY[i, j]);
-                    double dCombinedMagnitude_dSumX = this.sumX[i, j] / Math.Sqrt(magSumXY);
-                    double dCombinedMagnitude_dSumY = this.sumY[i, j] / Math.Sqrt(magSumXY);
+                    double dCombinedMagnitude_dSumX = this.sumX[i, j] / PradMath.Sqrt(magSumXY);
+                    double dCombinedMagnitude_dSumY = this.sumY[i, j] / PradMath.Sqrt(magSumXY);
 
                     double dCombinedAngle_dSumX = -this.sumY[i, j] / magSumXY;
                     double dCombinedAngle_dSumY = this.sumX[i, j] / magSumXY;
@@ -248,8 +248,8 @@ namespace ParallelReverseAutoDiff.RMAD
                             (dCombinedAngle_dSumY * dSumY_dResultMagnitude[k] * dResultMagnitude_dWeight[k]);
                     }
 
-                    this.Output[i, j] = Math.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
-                    this.Output[i, j + (input2.Cols / 2)] = Math.Atan2(sumY, sumX); // Angle in radians
+                    this.Output[i, j] = PradMath.Sqrt((sumX * sumX) + (sumY * sumY)); // Magnitude
+                    this.Output[i, j + (input2.Cols / 2)] = PradMath.Atan2(sumY, sumX); // Angle in radians
                 }
             });
 

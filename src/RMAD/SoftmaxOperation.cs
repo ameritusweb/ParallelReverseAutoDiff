@@ -60,7 +60,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    double sum = 0.0;
+                    var sum = PradTools.Zero;
                     for (int k = 0; k < numCols; k++)
                     {
                         if (j == k)
@@ -90,11 +90,11 @@ namespace ParallelReverseAutoDiff.RMAD
             Matrix output = new Matrix(numRows, numCols);
             for (int i = 0; i < numRows; i++)
             {
-                double max = input[i].Max();
-                double sum = 0;
+                var max = input[i].Max();
+                var sum = PradTools.Zero;
                 for (int j = 0; j < numCols; j++)
                 {
-                    double exp = Math.Exp(input[i][j] - max);
+                    var exp = PradMath.Exp(input[i][j] - max);
                     sum += exp;
                     output[i][j] = exp;
                 }

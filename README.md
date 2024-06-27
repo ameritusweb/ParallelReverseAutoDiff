@@ -790,7 +790,7 @@ this.computationGraph
     .AddIntermediate("output", x => this.output[x.TimeStep])
     .AddIntermediate("c", x => this.c[x.TimeStep][x.Layer])
     .AddIntermediate("h", x => this.h[x.TimeStep][x.Layer])
-    .AddScalar("scaledDotProductScalar", x => 1.0d / Math.Sqrt(this.hiddenSize))
+    .AddScalar("scaledDotProductScalar", x => 1.0d / PradMath.Sqrt(this.hiddenSize))
     .AddWeight("Wf", x => wf[x.Layer]).AddGradient("dWf", x => dwf[x.Layer])
     .AddWeight("Wi", x => wi[x.Layer]).AddGradient("dWi", x => dwi[x.Layer])
     .AddWeight("Wc", x => wc[x.Layer]).AddGradient("dWc", x => dwc[x.Layer])
@@ -1090,7 +1090,7 @@ public PradResult CustomSigmoid()
             var result = new Tensor(input.Shape); 
             for (int i = 0; i < input.Data.Length; i++) 
             { 
-                result.Data[i] = 1 / (1 + Math.Exp(-input.Data[i])); 
+                result.Data[i] = 1 / (1 + PradMath.Exp(-input.Data[i])); 
             } 
             return result; 
         }, 

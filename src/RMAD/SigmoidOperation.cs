@@ -54,7 +54,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    this.Output[i][j] = 1.0 / (1.0 + Math.Exp(-input[i][j]));
+                    this.Output[i][j] = 1.0f / (1.0f + PradMath.Exp(-input[i][j]));
                 }
             }
 
@@ -72,7 +72,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    double sigmoidDerivative = this.Output[i][j] * (1 - this.Output[i][j]);
+                    var sigmoidDerivative = this.Output[i][j] * (1 - this.Output[i][j]);
                     dInput[i][j] = dOutput[i][j] * sigmoidDerivative;
                 }
             }

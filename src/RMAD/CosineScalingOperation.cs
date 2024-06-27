@@ -55,8 +55,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 Matrix slice = inputMatrix.ColumnSlice(i);
                 Matrix learnedSlice = learnedVectors.ColumnSlice(i);
-                double cosineSim = slice.CosineSimilarity(learnedSlice);
-                double scale = 1.0 - cosineSim;
+                var cosineSim = slice.CosineSimilarity(learnedSlice);
+                var scale = 1.0f - cosineSim;
 
                 Matrix scaledSlice = slice * scale;
                 this.Output.SetColumnSlice(i, scaledSlice);
@@ -75,8 +75,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 Matrix slice = this.inputMatrix.ColumnSlice(i);
                 Matrix learnedSlice = this.learnedVectors.ColumnSlice(i);
-                double cosineSim = slice.CosineSimilarity(learnedSlice);
-                double scale = 1.0 - cosineSim;
+                var cosineSim = slice.CosineSimilarity(learnedSlice);
+                var scale = 1.0f - cosineSim;
 
                 Matrix dSlice = dOutput.ColumnSlice(i) * scale;
                 Matrix gradCosineInput = slice.GradientWRTCosineSimilarity(learnedSlice, -dSlice.Sum());

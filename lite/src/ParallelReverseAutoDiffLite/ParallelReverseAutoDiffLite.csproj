@@ -1,0 +1,183 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <DocumentationFile></DocumentationFile>
+	  <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <None Include="..\..\..\.gitignore" Link=".gitignore" />
+	  <None Include="..\..\..\README.md" Link="README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="CuBlasNetStandard21.CUDA12" Version="1.0.0" />
+	  <PackageReference Include="HDF.PInvoke.NETStandard" Version="1.10.502" />
+	  <PackageReference Include="ILGPU" Version="1.5.0" />
+	  <PackageReference Include="ILGPU.Algorithms" Version="1.5.0" />
+	  <PackageReference Include="MKL.NET" Version="1.5.0" />
+	  <PackageReference Include="MKL.NET.linux-x64" Version="2022.0.1.117" />
+	  <PackageReference Include="MKL.NET.osx-x64" Version="2022.0.0.105" />
+	  <PackageReference Include="MKL.NET.win-x64" Version="2022.0.0.115" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\src\Exceptions\CudaNotInitializedException.cs" Link="Exceptions\CudaNotInitializedException.cs" />
+    <Compile Include="..\..\..\src\Interprocess\CircularBuffer.cs" Link="Interprocess\CircularBuffer.cs" />
+    <Compile Include="..\..\..\src\Interprocess\ConcurrentHashSet.cs" Link="Interprocess\ConcurrentHashSet.cs" />
+    <Compile Include="..\..\..\src\Interprocess\DataSet.cs" Link="Interprocess\DataSet.cs" />
+    <Compile Include="..\..\..\src\Interprocess\DataSetItem.cs" Link="Interprocess\DataSetItem.cs" />
+    <Compile Include="..\..\..\src\Interprocess\PseudoUniqueIDGenerator.cs" Link="Interprocess\PseudoUniqueIDGenerator.cs" />
+    <Compile Include="..\..\..\src\PRAD\ConditionallyInternalUseOnlyAttribute.cs" Link="PRAD\ConditionallyInternalUseOnlyAttribute.cs" />
+    <Compile Include="..\..\..\src\PRAD\IListExtensions.cs" Link="PRAD\IListExtensions.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradMath.cs" Link="PRAD\PradMath.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradOp.cs" Link="PRAD\PradOp.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradOperationAttribute.cs" Link="PRAD\PradOperationAttribute.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradResult.cs" Link="PRAD\PradResult.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradResultBase.cs" Link="PRAD\PradResultBase.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradSplitResult.cs" Link="PRAD\PradSplitResult.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradTensor.cs" Link="PRAD\PradTensor.cs" />
+    <Compile Include="..\..\..\src\RMAD\AmplifiedSigmoidOperation.cs" Link="RMAD\AmplifiedSigmoidOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BackwardResult.cs" Link="RMAD\BackwardResult.cs" />
+    <Compile Include="..\..\..\src\RMAD\BackwardResultBuilder.cs" Link="RMAD\BackwardResultBuilder.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchAmplifiedSigmoidOperation.cs" Link="RMAD\BatchAmplifiedSigmoidOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchCudaMatrixMultiplyOperation.cs" Link="RMAD\BatchCudaMatrixMultiplyOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchDeepMatrixElementwiseAddOperation.cs" Link="RMAD\BatchDeepMatrixElementwiseAddOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchElementwiseMultiplyAndSumOperation.cs" Link="RMAD\BatchElementwiseMultiplyAndSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchEmbeddingOperation.cs" Link="RMAD\BatchEmbeddingOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchFeatureAggregationOperation.cs" Link="RMAD\BatchFeatureAggregationOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchGpuMatrixMultiplyAndSumOperation.cs" Link="RMAD\BatchGpuMatrixMultiplyAndSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchGpuMatrixMultiplyOperation.cs" Link="RMAD\BatchGpuMatrixMultiplyOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchHadamardProductOperation.cs" Link="RMAD\BatchHadamardProductOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchLayerNormalizationOperation.cs" Link="RMAD\BatchLayerNormalizationOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixAddBroadcastingOperation.cs" Link="RMAD\BatchMatrixAddBroadcastingOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixAddOperation.cs" Link="RMAD\BatchMatrixAddOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixAddThreeOperation.cs" Link="RMAD\BatchMatrixAddThreeOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixAverageOperation.cs" Link="RMAD\BatchMatrixAverageOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixBroadcastOperation.cs" Link="RMAD\BatchMatrixBroadcastOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixConcatenateOperation.cs" Link="RMAD\BatchMatrixConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixMultiplyAndSumOperation.cs" Link="RMAD\BatchMatrixMultiplyAndSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixMultiplyOperation.cs" Link="RMAD\BatchMatrixMultiplyOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixRowConcatenateOperation.cs" Link="RMAD\BatchMatrixRowConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixSumOperation.cs" Link="RMAD\BatchMatrixSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixTransposeOperation.cs" Link="RMAD\BatchMatrixTransposeOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixVectorConcatenateOperation.cs" Link="RMAD\BatchMatrixVectorConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchMatrixVerticalConcatenateOperation.cs" Link="RMAD\BatchMatrixVerticalConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchOperation.cs" Link="RMAD\BatchOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchPaddingMaskOperation.cs" Link="RMAD\BatchPaddingMaskOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchScaleAndShiftOperation.cs" Link="RMAD\BatchScaleAndShiftOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchSineSoftmaxOperation.cs" Link="RMAD\BatchSineSoftmaxOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchSoftmaxOperation.cs" Link="RMAD\BatchSoftmaxOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchSwishOperation.cs" Link="RMAD\BatchSwishOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\BatchTanhOperation.cs" Link="RMAD\BatchTanhOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\Constants.cs" Link="RMAD\Constants.cs" />
+    <Compile Include="..\..\..\src\RMAD\CosineScalingOperation.cs" Link="RMAD\CosineScalingOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\CudaMatrixMultiplyOperation.cs" Link="RMAD\CudaMatrixMultiplyOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepConcatenateOperation.cs" Link="RMAD\DeepConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepConvolutionOperation.cs" Link="RMAD\DeepConvolutionOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepMatrixElementwiseAddOperation.cs" Link="RMAD\DeepMatrixElementwiseAddOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepMatrixElementwiseMultiplySumOperation.cs" Link="RMAD\DeepMatrixElementwiseMultiplySumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepMatrixJsonConverter.cs" Link="RMAD\DeepMatrixJsonConverter.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepOperation.cs" Link="RMAD\DeepOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepPairwiseAttentionOperation.cs" Link="RMAD\DeepPairwiseAttentionOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepReLUOperation.cs" Link="RMAD\DeepReLUOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DeepScaleAndShiftOperation.cs" Link="RMAD\DeepScaleAndShiftOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\Dimension.cs" Link="RMAD\Dimension.cs" />
+    <Compile Include="..\..\..\src\RMAD\DualLayersJsonArchitecture.cs" Link="RMAD\DualLayersJsonArchitecture.cs" />
+    <Compile Include="..\..\..\src\RMAD\DualLayersTimeStep.cs" Link="RMAD\DualLayersTimeStep.cs" />
+    <Compile Include="..\..\..\src\RMAD\DualWeightedOperation.cs" Link="RMAD\DualWeightedOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\DynamicParameter.cs" Link="RMAD\DynamicParameter.cs" />
+    <Compile Include="..\..\..\src\RMAD\ElementwiseMultiplyAndSumOperation.cs" Link="RMAD\ElementwiseMultiplyAndSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\ElementwiseSquareOperation.cs" Link="RMAD\ElementwiseSquareOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\ElementwiseVectorAddOperation.cs" Link="RMAD\ElementwiseVectorAddOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\EmbeddingOperation.cs" Link="RMAD\EmbeddingOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\FeatureAggregationOperation.cs" Link="RMAD\FeatureAggregationOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\FlattenOperation.cs" Link="RMAD\FlattenOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\FourDimensionalMatrixJsonConverter.cs" Link="RMAD\FourDimensionalMatrixJsonConverter.cs" />
+    <Compile Include="..\..\..\src\RMAD\GradientStore.cs" Link="RMAD\GradientStore.cs" />
+    <Compile Include="..\..\..\src\RMAD\GradientUtils.cs" Link="RMAD\GradientUtils.cs" />
+    <Compile Include="..\..\..\src\RMAD\IAverageableModelLayer.cs" Link="RMAD\IAverageableModelLayer.cs" />
+    <Compile Include="..\..\..\src\RMAD\IBatchOperation.cs" Link="RMAD\IBatchOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\IDeepOperation.cs" Link="RMAD\IDeepOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\IMatrix.cs" Link="RMAD\IMatrix.cs" />
+    <Compile Include="..\..\..\src\RMAD\IModelLayer.cs" Link="RMAD\IModelLayer.cs" />
+    <Compile Include="..\..\..\src\RMAD\InitializationType.cs" Link="RMAD\InitializationType.cs" />
+    <Compile Include="..\..\..\src\RMAD\IOperation.cs" Link="RMAD\IOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\IOperationBase.cs" Link="RMAD\IOperationBase.cs" />
+    <Compile Include="..\..\..\src\RMAD\JsonArchitecture.cs" Link="RMAD\JsonArchitecture.cs" />
+    <Compile Include="..\..\..\src\RMAD\Layer.cs" Link="RMAD\Layer.cs" />
+    <Compile Include="..\..\..\src\RMAD\LayerInfo.cs" Link="RMAD\LayerInfo.cs" />
+    <Compile Include="..\..\..\src\RMAD\LayerInfoType.cs" Link="RMAD\LayerInfoType.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixAddBroadcastingOperation.cs" Link="RMAD\MatrixAddBroadcastingOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixAddOperation.cs" Link="RMAD\MatrixAddOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixAddThreeOperation.cs" Link="RMAD\MatrixAddThreeOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixAverageOperation.cs" Link="RMAD\MatrixAverageOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixBroadcastOperation.cs" Link="RMAD\MatrixBroadcastOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixConcatenateOperation.cs" Link="RMAD\MatrixConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixDiagonalFilterOperation.cs" Link="RMAD\MatrixDiagonalFilterOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixHorizontalConcatenateOperation.cs" Link="RMAD\MatrixHorizontalConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixMultiplyAndSumOperation.cs" Link="RMAD\MatrixMultiplyAndSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixMultiplyAndSumRowsOperation.cs" Link="RMAD\MatrixMultiplyAndSumRowsOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixMultiplyOperation.cs" Link="RMAD\MatrixMultiplyOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixRowConcatenateOperation.cs" Link="RMAD\MatrixRowConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixSumOperation.cs" Link="RMAD\MatrixSumOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixTransposeOperation.cs" Link="RMAD\MatrixTransposeOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixType.cs" Link="RMAD\MatrixType.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixVectorConcatenateOperation.cs" Link="RMAD\MatrixVectorConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\MatrixVerticalConcatenateOperation.cs" Link="RMAD\MatrixVerticalConcatenateOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\ModelElementType.cs" Link="RMAD\ModelElementType.cs" />
+    <Compile Include="..\..\..\src\RMAD\ModelLayer.cs" Link="RMAD\ModelLayer.cs" />
+    <Compile Include="..\..\..\src\RMAD\MultiQuerySelfAttentionOperation.cs" Link="RMAD\MultiQuerySelfAttentionOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\NestedLayersJsonArchitecture.cs" Link="RMAD\NestedLayersJsonArchitecture.cs" />
+    <Compile Include="..\..\..\src\RMAD\NestedLayersTimeStep.cs" Link="RMAD\NestedLayersTimeStep.cs" />
+    <Compile Include="..\..\..\src\RMAD\NeuralNetwork.cs" Link="RMAD\NeuralNetwork.cs" />
+    <Compile Include="..\..\..\src\RMAD\NeuralNetworkUtilities.cs" Link="RMAD\NeuralNetworkUtilities.cs" />
+    <Compile Include="..\..\..\src\RMAD\Operation.cs" Link="RMAD\Operation.cs" />
+    <Compile Include="..\..\..\src\RMAD\OperationBase.cs" Link="RMAD\OperationBase.cs" />
+    <Compile Include="..\..\..\src\RMAD\OperationGraphVisitor.cs" Link="RMAD\OperationGraphVisitor.cs" />
+    <Compile Include="..\..\..\src\RMAD\OperationInfo.cs" Link="RMAD\OperationInfo.cs" />
+    <Compile Include="..\..\..\src\RMAD\PairwiseSineSoftmaxOperation.cs" Link="RMAD\PairwiseSineSoftmaxOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\ReLUOperation.cs" Link="RMAD\ReLUOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\RMSNormOperation.cs" Link="RMAD\RMSNormOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\ScaleAndShiftOperation.cs" Link="RMAD\ScaleAndShiftOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\SigmoidOperation.cs" Link="RMAD\SigmoidOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\SineSoftmaxOperation.cs" Link="RMAD\SineSoftmaxOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\SoftmaxOperation.cs" Link="RMAD\SoftmaxOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\StoreBase.cs" Link="RMAD\StoreBase.cs" />
+    <Compile Include="..\..\..\src\RMAD\StretchedSigmoidOperation.cs" Link="RMAD\StretchedSigmoidOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\TakeLeftOperation.cs" Link="RMAD\TakeLeftOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\TakeRightOperation.cs" Link="RMAD\TakeRightOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\TanhOperation.cs" Link="RMAD\TanhOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\TimeStep.cs" Link="RMAD\TimeStep.cs" />
+    <Compile Include="..\..\..\src\RMAD\TripleLayersJsonArchitecture.cs" Link="RMAD\TripleLayersJsonArchitecture.cs" />
+    <Compile Include="..\..\..\src\RMAD\TripleLayersTimeStep.cs" Link="RMAD\TripleLayersTimeStep.cs" />
+    <Compile Include="..\..\..\src\RMAD\VectorAttentionBinaryOperation.cs" Link="RMAD\VectorAttentionBinaryOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\VectorAttentionOperation.cs" Link="RMAD\VectorAttentionOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\WeightStore.cs" Link="RMAD\WeightStore.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="docs\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Interprocess\" />
+    <Folder Include="RMAD\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\src\docs\README.md" Link="docs\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\parallel\ParallelReverseAutoDiff\ParallelReverseAutoDiff\lite\src\ParallelReverseAutoDiffLite\.editorconfig" />
+  </ItemGroup>
+
+</Project>

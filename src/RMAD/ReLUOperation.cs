@@ -52,7 +52,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    double x = input[i][j];
+                    var x = input[i][j];
                     this.Output[i][j] = x > 0 ? x : 0;
                 }
             }
@@ -71,8 +71,8 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    double x = this.input[i][j];
-                    double gradient = x > 0 ? 1.0 : 0.0;
+                    var x = this.input[i][j];
+                    var gradient = x > 0 ? 1.0f : 0.0f;
                     dLdInput[i][j] = dLdOutput[i][j] * gradient;
                 }
             }

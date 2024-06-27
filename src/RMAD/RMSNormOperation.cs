@@ -56,13 +56,13 @@ namespace ParallelReverseAutoDiff.RMAD
 
             for (int i = 0; i < rows; i++)
             {
-                double sumSq = 0;
+                var sumSq = PradTools.Zero;
                 for (int j = 0; j < cols; j++)
                 {
-                    sumSq += Math.Pow(input[i, j], 2);
+                    sumSq += PradMath.Pow(input[i, j], 2f);
                 }
 
-                double rms = Math.Sqrt(sumSq / cols);
+                var rms = PradMath.Sqrt(sumSq / cols);
 
                 for (int j = 0; j < cols; j++)
                 {
@@ -84,20 +84,20 @@ namespace ParallelReverseAutoDiff.RMAD
 
             for (int i = 0; i < rows; i++)
             {
-                double sumSq = 0;
+                var sumSq = PradTools.Zero;
                 for (int j = 0; j < cols; j++)
                 {
-                    sumSq += Math.Pow(this.input[i, j], 2);
+                    sumSq += PradMath.Pow(this.input[i, j], 2f);
                 }
 
-                double rms = Math.Sqrt(sumSq / cols);
+                var rms = PradMath.Sqrt(sumSq / cols);
 
                 for (int j = 0; j < cols; j++)
                 {
-                    double x = this.input[i, j];
-                    double g = this.g[i, j];
+                    var x = this.input[i, j];
+                    var g = this.g[i, j];
 
-                    dx[i, j] = (g / rms) - ((x * g * x) / (cols * Math.Pow(rms, 3)));
+                    dx[i, j] = (g / rms) - ((x * g * x) / (cols * PradMath.Pow(rms, 3f)));
                     dg[i, j] = x / rms;
 
                     dx[i, j] *= gradOutput[i, j]; // Chain rule

@@ -65,7 +65,7 @@ namespace ParallelReverseAutoDiff.RMAD
             {
                 for (int j = 0; j < n; j++)
                 {
-                    double coefficient = coefficients[i, j];
+                    var coefficient = coefficients[i, j];
                     for (int k = 0; k < p; k++)
                     {
                         // Aggregate features based on the coefficients
