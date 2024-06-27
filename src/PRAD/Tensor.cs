@@ -47,6 +47,27 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Tensor"/> class from a 2D array.
+        /// </summary>
+        /// <param name="array">The 2D array to initialize the tensor with.</param>
+        public Tensor(double[,] array)
+        {
+            int rows = array.GetLength(0);
+            int cols = array.GetLength(1);
+
+            this.Shape = new int[] { rows, cols };
+            this.Data = new double[rows * cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    this.Data[(i * cols) + j] = array[i, j];
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the data for the tensor.
         /// </summary>
         public double[] Data { get; private set; }
