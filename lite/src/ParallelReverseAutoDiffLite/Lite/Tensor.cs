@@ -68,6 +68,19 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Tensor"/> class with a single value repeated for all elements.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <param name="value">The value to fill the tensor with.</param>
+        public Tensor(int[] shape, float value)
+        {
+            this.Shape = shape;
+            int totalSize = shape.Aggregate(1, (a, b) => a * b);
+            this.Data = new float[totalSize];
+            Array.Fill(this.Data, value);
+        }
+
+        /// <summary>
         /// Gets the data for the tensor.
         /// </summary>
         public float[] Data { get; private set; }
@@ -91,6 +104,51 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             get => this.Data[this.GetIndex(indices)];
             set => this.Data[this.GetIndex(indices)] = value;
+        }
+
+        /// <summary>
+        /// Returns 1 if a tensor value is greater than a scalar, 0 otherwise.
+        /// </summary>
+        /// <param name="a">The tensor to compare.</param>
+        /// <param name="scalar">The scalar to compare.</param>
+        /// <returns>The resultant tensor.</returns>
+        public static Tensor operator >(Tensor a, float scalar)
+        {
+            var result = new Tensor(a.Shape);
+            Parallel.For(0, a.Data.Length, i =>
+            {
+                result.Data[i] = a.Data[i] > scalar ? 1 : 0;
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns 1 if a tensor value is less than a scalar, 0 otherwise.
+        /// </summary>
+        /// <param name="a">The tensor to compare.</param>
+        /// <param name="scalar">The scalar to compare.</param>
+        /// <returns>The resultant tensor.</returns>
+        public static Tensor operator <(Tensor a, float scalar)
+        {
+            var result = new Tensor(a.Shape);
+            Parallel.For(0, a.Data.Length, i =>
+            {
+                result.Data[i] = a.Data[i] < scalar ? 1 : 0;
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Element-wise multiply two tensors together.
+        /// </summary>
+        /// <param name="a">The first tensor.</param>
+        /// <param name="b">The second tensor.</param>
+        /// <returns>The resultant tensor.</returns>
+        public static Tensor operator *(Tensor a, Tensor b)
+        {
+            return a.ElementwiseMultiply(b);
         }
 
         /// <summary>
@@ -284,6 +342,100 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return new Tensor(new int[] { 1, flatArray.Length }, flatArray);
+        }
+
+        /// <summary>
+        /// Create a tensor mask.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <param name="conditionFunc">The condition.</param>
+        /// <returns>The tensor mask.</returns>
+        public static Tensor CreateMask(Tensor tensor, Func<float, bool> conditionFunc)
+        {
+            var maskData = new float[tensor.Data.Length];
+            Parallel.For(0, tensor.Data.Length, i =>
+            {
+                maskData[i] = conditionFunc(tensor.Data[i]) ? 1.0f : 0.0f;
+            });
+
+            return new Tensor(tensor.Shape, maskData);
+        }
+
+        /// <summary>
+        /// Computes the element-wise reciprocal of the tensor.
+        /// </summary>
+        /// <returns>The resultant tensor.</returns>
+        public Tensor Reciprocal()
+        {
+            Tensor result = new Tensor(this.Shape);
+
+            MKLNET.Vml.Inv(this.Data.Length, this.Data, result.Data);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Expands the dimensions.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
+        /// <returns>The resultant tensor.</returns>
+        public Tensor ExpandDims(int axis = -1)
+        {
+            // Handle negative axis
+            if (axis < 0)
+            {
+                axis = this.Shape.Length + 1 + axis;
+            }
+
+            // Validate axis
+            if (axis < 0 || axis > this.Shape.Length)
+            {
+                throw new ArgumentException($"Invalid axis {axis} for tensor with {this.Shape.Length} dimensions.");
+            }
+
+            // Create new shape
+            int[] newShape = new int[this.Shape.Length + 1];
+            for (int i = 0; i < axis; i++)
+            {
+                newShape[i] = this.Shape[i];
+            }
+
+            newShape[axis] = 1;
+            for (int i = axis; i < this.Shape.Length; i++)
+            {
+                newShape[i + 1] = this.Shape[i];
+            }
+
+            // Create new tensor with expanded dimensions
+            Tensor result = new Tensor(newShape, this.Data);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the elementwise absolute value of the tensor.
+        /// </summary>
+        /// <returns>The resultant tensor.</returns>
+        public Tensor Abs()
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Abs(this.Data.Length, this.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the elementwise sign of the tensor.
+        /// </summary>
+        /// <returns>The resultant tensor.</returns>
+        public Tensor Sign()
+        {
+            var result = new Tensor(this.Shape);
+            Parallel.For(0, this.Data.Length, i =>
+            {
+                result.Data[i] = Math.Sign(this.Data[i]);
+            });
+
+            return result;
         }
 
         /// <summary>

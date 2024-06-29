@@ -363,6 +363,29 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the gradient for the reciprocal operation using MKL.NET.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing back from the subsequent operation.</param>
+        /// <param name="reciprocalResult">The result of the forward reciprocal operation.</param>
+        /// <returns>The computed gradient.</returns>
+        public Tensor ReciprocalReverse(Tensor upstreamGradient, Tensor reciprocalResult)
+        {
+            Tensor gradient = new Tensor(upstreamGradient.Shape);
+
+            // Compute -upstreamGradient * reciprocalResult^2
+            Tensor squaredReciprocal = new Tensor(reciprocalResult.Shape);
+            Vml.Sqr(reciprocalResult.Data.Length, reciprocalResult.Data, squaredReciprocal.Data);
+
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, squaredReciprocal.Data, gradient.Data);
+
+            Tensor negativeOnes = new Tensor(gradient.Shape, -1d);
+
+            Vml.Mul(gradient.Data.Length, gradient.Data, negativeOnes.Data, gradient.Data);
+
+            return gradient;
+        }
+
+        /// <summary>
         /// The reverse unstack operation.
         /// </summary>
         /// <param name="upstreamGradients">The upstream gradients from the unstacked tensors.</param>
@@ -595,6 +618,30 @@ namespace ParallelReverseAutoDiff.PRAD
             Blas.scal(-1.0, gradB.Data);
 
             return new Tensor[] { gradA, gradB };
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the ExpandDims operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="axis">The axis.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor ExpandDimsReverse(Tensor upstreamGradient, int axis = -1)
+        {
+            // Remove the expanded dimension
+            int[] newShape = new int[upstreamGradient.Shape.Length - 1];
+            for (int i = 0; i < axis; i++)
+            {
+                newShape[i] = upstreamGradient.Shape[i];
+            }
+
+            for (int i = axis + 1; i < upstreamGradient.Shape.Length; i++)
+            {
+                newShape[i - 1] = upstreamGradient.Shape[i];
+            }
+
+            // Sum along the expanded dimension
+            return upstreamGradient.Reshape(newShape);
         }
 
         /// <summary>
