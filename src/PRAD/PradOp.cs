@@ -76,6 +76,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> DivOp => FuncOp.Div;
 
         /// <summary>
+        /// Gets the expand dims op.
+        /// </summary>
+        public static Func<int, PradResult> ExpandDimsOp => FuncOp.ExpandDims;
+
+        /// <summary>
         /// Gets the sin op.
         /// </summary>
         public static Func<PradResult> SinOp => FuncOp.Sin;
@@ -116,6 +121,26 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor[], int, PradResult> ConcatOp => FuncOp.Concat;
 
         /// <summary>
+        /// Gets the indexer op.
+        /// </summary>
+        public static Func<string[], PradResult> IndexerOp => FuncOp.Indexer;
+
+        /// <summary>
+        /// Gets the reshape op.
+        /// </summary>
+        public static Func<int[], PradResult> ReshapeOp => FuncOp.Reshape;
+
+        /// <summary>
+        /// Gets the transpose op.
+        /// </summary>
+        public static Func<int[], PradResult> TransposeOp => FuncOp.Transpose;
+
+        /// <summary>
+        /// Gets the tile op.
+        /// </summary>
+        public static Func<int[], PradResult> TileOp => FuncOp.Tile;
+
+        /// <summary>
         /// Gets the upstream gradient.
         /// </summary>
         public Tensor UpstreamGradient { get; private set; }
@@ -129,6 +154,27 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
         /// </summary>
         public bool IsDependentBranch => this.parentResult != null;
+
+        /// <summary>
+        /// Gets the shape of the current tensor.
+        /// </summary>
+        public int[] CurrentShape => this.currentTensor.Shape;
+
+        /// <summary>
+        /// Gets the result of the computation.
+        /// </summary>
+        public Tensor? Result
+        {
+            get
+            {
+                if (!this.backpropagationSteps.Any())
+                {
+                    return default;
+                }
+
+                return new PradTensor(this, this.currentTensor);
+            }
+        }
 
         /// <summary>
         /// Gets an operation to get a func.
@@ -427,6 +473,31 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Expands the dimensions of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="axis">The axis along which to expand the dimensions.</param>
+        /// <returns>The result of the expand dims operation.</returns>
+        [PradOperation(nameof(ExpandDimsOp))]
+        public PradResult ExpandDims(int axis = -1)
+        {
+            var result = this.currentTensor.ExpandDims(axis);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ExpandDimsReverse(upstreamGrad, axis);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Computes the sine of each element of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the sine operation along with the gradient placeholders.</returns>
@@ -479,6 +550,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="indices">The indices of the elements to slice.</param>
         /// <returns>The result of the slice operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(IndexerOp))]
         public PradResult Indexer(params string[] indices)
         {
             var result = this.currentTensor.Indexer(indices);
@@ -503,7 +575,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="newShape">The new shape of the tensor.</param>
         /// <returns>The reshaped tensor along with the gradient placeholders.</returns>
-        public PradResult Reshape(int[] newShape)
+        [PradOperation(nameof(ReshapeOp))]
+        public PradResult Reshape(params int[] newShape)
         {
             var oldShape = this.currentTensor.Shape;
             var result = this.currentTensor.Reshape(newShape);
@@ -528,6 +601,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="permutations">The permutations.</param>
         /// <returns>The transposed tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(TransposeOp))]
         public PradResult Transpose(params int[] permutations)
         {
             var result = this.currentTensor.Transpose(permutations);
@@ -584,7 +658,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="multiples">The array of multiples for each dimension.</param>
         /// <returns>The tiled tensor along with the gradient placeholders.</returns>
-        public PradResult Tile(int[] multiples)
+        [PradOperation(nameof(TileOp))]
+        public PradResult Tile(params int[] multiples)
         {
             var result = this.currentTensor.Tile(multiples);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
