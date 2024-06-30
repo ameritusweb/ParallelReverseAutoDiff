@@ -27,6 +27,7 @@ namespace ParallelReverseAutoDiff.PRAD
         private PradResultBase initialResult;
         private Tensor seedGradient;
         private PradOp[] splitOps;
+        private Guid id;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -34,6 +35,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="seed">The seed tensor.</param>
         public PradOp(Tensor seed)
         {
+            this.id = Guid.NewGuid();
             this.seed = seed;
             this.currentTensor = seed;
             this.seedGradient = new Tensor(seed.Shape);
@@ -161,13 +163,18 @@ namespace ParallelReverseAutoDiff.PRAD
         public int[] CurrentShape => this.currentTensor.Shape;
 
         /// <summary>
+        /// Gets the ID.
+        /// </summary>
+        public Guid Id => this.id;
+
+        /// <summary>
         /// Gets the result of the computation.
         /// </summary>
         public Tensor? Result
         {
             get
             {
-                if (!this.backpropagationSteps.Any())
+                if (!this.backpropagationSteps.Any() && !this.IsDependentBranch)
                 {
                     return default;
                 }
@@ -1035,7 +1042,7 @@ namespace ParallelReverseAutoDiff.PRAD
             foreach (var (step, result) in this.backpropagationSteps.AsEnumerable().Reverse())
             {
                 // First, backpropagate through all branches
-                foreach (var branch in result.Branches)
+                foreach (var branch in result.Branches.Where(x => x.UpstreamGradient != null))
                 {
                     var branchGradient = branch.Back();
                     currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);

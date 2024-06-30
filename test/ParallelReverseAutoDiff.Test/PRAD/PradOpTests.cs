@@ -849,13 +849,99 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void MultiPradOpBranchConcatTest()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => i / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i * 2) / 100d).ToArray());
+            var weights = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            PradOp input1Op = new PradOp(input1);
+            PradOp input2Op = new PradOp(input2);
+            PradOp weightsOp = new PradOp(weights);
+
+            var sres1 = input1Op.Square();
+            var sres2 = input2Op.Square();
+            var sres3 = weightsOp.Square();
+
+            var sres1Branch = sres1.Branch();
+            var sres2Branch = sres2.Branch();
+            var sres3Branch = sres3.Branch();
+
+            var sres2Sq = sres2.Then(PradOp.SquareOp);
+            var sres3Sq = sres3.Then(PradOp.SquareOp);
+
+            var concat = sres1.Then(PradOp.ConcatOp, new Tensor[] { sres2Sq.Result, sres3Sq.Result }, axis: 1);
+
+            var upstreamGradient = new Tensor(new int[] { 3, 60 }, Enumerable.Repeat(1.0, 180).ToArray());
+
+            var backResult = input1Op.Back(upstreamGradient);
+
+            Assert.NotNull(backResult);
+            Assert.NotNull(input1Op.SeedGradient);
+            Assert.Equal(input1Op.SeedGradient.Shape, input1.Shape);
+            Assert.NotNull(input2Op.SeedGradient);
+            Assert.Equal(input2Op.SeedGradient.Shape, input2.Shape);
+            Assert.NotNull(weightsOp.SeedGradient);
+            Assert.Equal(weightsOp.SeedGradient.Shape, weights.Shape);
+        }
+
+        [Fact]
+        public void MultiPradOpBranchTest()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => i / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i * 2) / 100d).ToArray());
+            var weights = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            PradOp input1Op = new PradOp(input1);
+            PradOp input2Op = new PradOp(input2);
+            PradOp weightsOp = new PradOp(weights);
+
+            var sres1 = input1Op.Square();
+            var sres2 = input2Op.Square();
+            var sres3 = weightsOp.Square();
+
+            var sres1Branch = sres1.Branch();
+            var sres2Branch = sres2.Branch();
+            var sres3Branch = sres3.Branch();
+
+            var sres2Sq = sres2.Then(PradOp.SquareOp);
+            var sres3Sq = sres3.Then(PradOp.SquareOp);
+
+            var concat = sres1.Then(PradOp.ConcatOp, new Tensor[] { sres2Sq.Result, sres3Sq.Result }, axis: 1);
+
+            var addition = sres1Branch.Add(sres2Branch.Result!)
+                                .Then(PradOp.AddOp, sres3Branch.Result!);
+
+            var tiledHorizontally = addition.Then(PradOp.TileOp, new int[] { 1, 3 });
+
+            var sum = concat.Then(PradOp.AddOp, tiledHorizontally.Result);
+
+            var upstreamGradient = new Tensor(new int[] { 3, 60 }, Enumerable.Repeat(1.0, 180).ToArray());
+
+            var backResult = input1Op.Back(upstreamGradient);
+
+            Assert.NotNull(backResult);
+            Assert.NotNull(input1Op.SeedGradient);
+            Assert.Equal(input1Op.SeedGradient.Shape, input1.Shape);
+            Assert.NotNull(input2Op.SeedGradient);
+            Assert.Equal(input2Op.SeedGradient.Shape, input2.Shape);
+            Assert.NotNull(weightsOp.SeedGradient);
+            Assert.Equal(weightsOp.SeedGradient.Shape, weights.Shape);
+
+        }
+
+        [Fact]
         public void TestVNNDecompositionOperationUsingIndexer()
         {
             Random rand = new Random(3);
 
             var input1 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => i / 100d).ToArray());
             var input2 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i * 2) / 100d).ToArray());
-            var weights = new Tensor(new int[] { 3, 2 }, Enumerable.Range(0, 6).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+            var weights = new Tensor(new int[] { 3, 2 }, Enumerable.Range(0, 6).Select(i => PradMath.Pow(rand.NextDouble(), 2d)).ToArray());
 
             ElementwiseVectorDecompositionOperation op = new ElementwiseVectorDecompositionOperation();
             var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
@@ -865,9 +951,11 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var opWeights = new PradOp(weights);
 
             //            num_rows, num_cols = tf.shape(input1)[1], tf.shape(input1)[2] // 2
+            //            size = num_rows * num_cols
 
             var num_rows = input1.Shape[0];
             var num_cols = input1.Shape[1] / 2;
+            var size = num_rows * num_cols;
 
             //        # Split input1 into magnitude and angle
             //        magnitude = input1[:, :, :num_cols]
@@ -915,6 +1003,9 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var w_magnitudesBranch = w_magnitudes.Branch();
             var w_anglesBranch = w_angles.Branch();
 
+            var w_magnitudesTrans = w_magnitudesBranch.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+            var w_anglesTrans = w_anglesBranch.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+
             //        # Correctly extract w_magnitude_pivot and w_angle_pivot
             //        w_magnitude_pivot = input2[:, :, :half_cols][:, :, ::5]
             //        w_angle_pivot = input2[:, :, half_cols:][:, :, ::5]
@@ -939,6 +1030,9 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 x => x.Mul(cosAngles.Result), 
                 x => x.Mul(sinAngles.Result));
 
+            var xResult = x.Result;
+            var yResult = y.Result;
+
             //        x_pivot = w_magnitude_pivot * tf.math.cos(w_angle_pivot)
             //        y_pivot = w_magnitude_pivot * tf.math.sin(w_angle_pivot)
 
@@ -949,6 +1043,9 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var (xPivot, yPivot) = w_magnitude_pivot.PradOp.DoParallel(
                 x => x.Mul(cosPivot.Result),
                 x => x.Mul(sinPivot.Result));
+
+            var xPivotResult = xPivot.Result;
+            var yPivotResult = yPivot.Result;
 
             //        x_w = w_magnitudes * tf.math.cos(w_angles)
             //        y_w = w_magnitudes * tf.math.sin(w_angles)
@@ -992,33 +1089,39 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var sumYBranch = sumY.Branch();
             var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, -1d));
 
-            //        diff_x = tf.concat([
-            //            sum_x_expanded - x_w[:, :, :, 0:1],
-            //            -sum_x_expanded - x_w[:, :, :, 1:2],
-            //            sum_x_expanded - x_w[:, :, :, 2:3],
-            //            -sum_x_expanded - x_w[:, :, :, 3:4]
-            //        ], axis = -1)
 
-            var diffX1 = sumXExpanded.Then(PradOp.SubOp, x_w.Then(PradOp.IndexerOp, ":", ":", "0:1").Result);
-            var diffX2 = negativeSumXExpanded.Then(PradOp.SubOp, x_w.Then(PradOp.IndexerOp, ":", ":", "1:2").Result);
-            var diffX3 = sumXExpanded.Then(PradOp.SubOp, x_w.Then(PradOp.IndexerOp, ":", ":", "2:3").Result);
-            var diffX4 = negativeSumXExpanded.Then(PradOp.SubOp, x_w.Then(PradOp.IndexerOp, ":", ":", "3:4").Result);
+            // Reshape sumXExpanded and negativeSumXExpanded
+            var sumXReshaped = sumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+            var negativeSumXReshaped = negativeSumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
 
-            var diffX = diffX1.Then(PradOp.ConcatOp, new[] { diffX2.Result, diffX3.Result, diffX4.Result }, axis: -1);
+            // Reshape x_w
+            var x_wReshaped = x_w.Then(PradOp.ReshapeOp, new int[] { 4, size });
 
-            //        diff_y = tf.concat([
-            //            sum_y_expanded - y_w[:, :, :, 0:1],
-            //            -sum_y_expanded - y_w[:, :, :, 1:2],
-            //            sum_y_expanded - y_w[:, :, :, 2:3],
-            //            -sum_y_expanded - y_w[:, :, :, 3:4]
-            //        ], axis = -1)
+            // Concatenate sumX and negativeSumX horizontally
+            var sumXConcatenated = sumXReshaped.Then(PradOp.ConcatOp,
+                new[] { negativeSumXReshaped.Result, sumXReshaped.Result, negativeSumXReshaped.Result },
+                axis: 0);
 
-            var diffY1 = sumYExpanded.Then(PradOp.SubOp, y_w.Then(PradOp.IndexerOp, ":", ":", "0:1").Result);
-            var diffY2 = negativeSumYExpanded.Then(PradOp.SubOp, y_w.Then(PradOp.IndexerOp, ":", ":", "1:2").Result);
-            var diffY3 = sumYExpanded.Then(PradOp.SubOp, y_w.Then(PradOp.IndexerOp, ":", ":", "2:3").Result);
-            var diffY4 = negativeSumYExpanded.Then(PradOp.SubOp, y_w.Then(PradOp.IndexerOp, ":", ":", "3:4").Result);
+            // Perform the subtraction
+            var diffX = sumXConcatenated.Then(PradOp.SubOp, x_wReshaped.Result);
 
-            var diffY = diffY1.Then(PradOp.ConcatOp, new[] { diffY2.Result, diffY3.Result, diffY4.Result }, axis: -1);
+            // Repeat the process for Y
+            var sumYReshaped = sumYExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+            var negativeSumYReshaped = negativeSumYExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+
+            var y_wReshaped = y_w.Then(PradOp.ReshapeOp, new int[] { 4, size });
+
+            var sumYConcatenated = sumYReshaped.Then(PradOp.ConcatOp,
+                new[] { negativeSumYReshaped.Result, sumYReshaped.Result, negativeSumYReshaped.Result },
+                axis: 0);
+
+            var diffY = sumYConcatenated.Then(PradOp.SubOp, y_wReshaped.Result);
+
+            Debug.WriteLine($"PRAD diffX: {diffX.Result.PrintCode(8)}");
+            Debug.WriteLine($"PRAD diffY: {diffY.Result.PrintCode(8)}");
+
+            var diffXBranch = diffX.Branch();
+            var diffYBranch = diffY.Branch();
 
             //        # Compute result magnitudes and angles
             //        result_magnitudes = tf.math.sqrt(diff_x * *2 + diff_y * *2)
@@ -1030,46 +1133,55 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var resultMagnitudes = diffXSquared.Then(PradOp.AddOp, diffYSquared.Result)
                                                 .Then(PradOp.SquareRootOp);
 
-            var resultAngles = diffY.Then(PradOp.Atan2Op, diffX.Result);
+            var resultAngles = diffYBranch.Atan2(diffXBranch.Result!);
 
-            var reshapedResultMagnitudes = resultMagnitudes.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
+            // Result debugging
+            Debug.WriteLine($"PRAD resultMagnitudes: {resultMagnitudes.Result.PrintCode(8)}");
+            Debug.WriteLine($"PRAD resultAngles: {resultAngles.Result.PrintCode(8)}");
 
-            var reshapedResultAngles = resultAngles.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
+            var resultMagnitudesTrans = resultMagnitudes.PradOp.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+            var resultAnglesTrans = resultAngles.PradOp.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
 
-            var reshapedWMagnitudes = w_magnitudesBranch.Reshape(new int[] { num_rows, -1 });
+            var reshapedResultMagnitudes = resultMagnitudesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
 
-            var reshapedWAngles = w_anglesBranch.Reshape(new int[] { num_rows, -1 });
+            var reshapedResultAngles = resultAnglesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
 
-            //        # Combine all results
-            //        output = tf.concat([
-            //            magnitude, w_magnitude_pivot,
-            //            tf.reshape(w_magnitudes, [batch_size, num_rows, -1]),
-            //            tf.reshape(result_magnitudes, [batch_size, num_rows, -1]),
-            //            angle, w_angle_pivot,
-            //            tf.reshape(w_angles, [batch_size, num_rows, -1]),
-            //            tf.reshape(result_angles, [batch_size, num_rows, -1])
-            //        ], axis = -1)
+            // First, let's reshape our tensors to make them easier to work with
+            var magnitudeReshaped = magnitudeBranch.Reshape(new int[] { 3, 2, 1 });
+            var angleReshaped = angleBranch.Reshape(new int[] { 3, 2, 1 });
+            var w_magnitude_pivotReshaped = w_magnitude_pivotBranch.Reshape(new int[] { 3, 2, 1 });
+            var w_angle_pivotReshaped = w_angle_pivotBranch.Reshape(new int[] { 3, 2, 1 });
+            var w_magnitudesReshaped = w_magnitudesTrans.Then(PradOp.ReshapeOp, new int[] { 3, 2, 4 });
+            var w_anglesReshaped = w_anglesTrans.Then(PradOp.ReshapeOp, new int[] { 3, 2, 4 });
+            var resultMagnitudesReshaped = reshapedResultMagnitudes.Then(PradOp.ReshapeOp, new int[] { 3, 2, 4 });
+            var resultAnglesReshaped = reshapedResultAngles.Then(PradOp.ReshapeOp, new int[] { 3, 2, 4 });
 
-            var output = magnitudeBranch.Concat(
-                new[] { 
-                    w_magnitude_pivotBranch.Result!, 
-                    reshapedWMagnitudes.Result, 
-                    reshapedResultMagnitudes.Result, 
-                    angle.Result, 
-                    w_angle_pivotBranch.Result!, 
-                    reshapedWAngles.Result, 
-                    reshapedResultAngles.Result 
-                }, axis: 1);
+            // Now, let's create the interleaved structure for magnitudes and angles separately
+            var magnitudesPart = magnitudeReshaped.Then(PradOp.ConcatOp, new[] {
+                w_magnitude_pivotReshaped.Result,
+                w_magnitudesReshaped.Result,
+                resultMagnitudesReshaped.Result
+            }, axis: 2);
 
-            /*
-            var pradOpOutputCode = output.PrintCode();
-            var naiveOutputCode = naiveOutput.PrintCode();
+            var anglesPart = angleReshaped.Then(PradOp.ConcatOp, new[] {
+                w_angle_pivotReshaped.Result,
+                w_anglesReshaped.Result,
+                resultAnglesReshaped.Result
+            }, axis: 2);
+
+            // Combine magnitudes and angles
+            var output = magnitudesPart.Then(PradOp.ConcatOp, new[] { anglesPart.Result }, axis: 1);
+
+            // Reshape to final output shape
+            var finalOutput = output.Then(PradOp.ReshapeOp, new int[] { 3, 40 });
+
+            var pradOpOutputCode = finalOutput.Result.PrintCode();
+            var naiveOutputCode = resultTensor.PrintCode();
 
             Debug.WriteLine("pradOpOutput: " + pradOpOutputCode);
             Debug.WriteLine("naiveOutput: " + naiveOutputCode);
 
             Assert.Equal(naiveOutputCode, pradOpOutputCode);
-            */
         }
 
         [Fact]
