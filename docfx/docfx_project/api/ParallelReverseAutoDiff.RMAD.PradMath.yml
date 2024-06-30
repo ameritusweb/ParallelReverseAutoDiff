@@ -1,0 +1,1146 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.RMAD.PradMath
+  commentId: T:ParallelReverseAutoDiff.RMAD.PradMath
+  id: PradMath
+  parent: ParallelReverseAutoDiff.RMAD
+  children:
+  - ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Double,System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Single,System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Double,System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Single,System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Single)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Double)
+  - ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Single)
+  langs:
+  - csharp
+  - vb
+  name: PradMath
+  nameWithType: PradMath
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath
+  type: Class
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: PradMath
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 14
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Provides common mathematical functions for PradOp operations.
+  example: []
+  syntax:
+    content: public static class PradMath
+    content.vb: Public Module PradMath
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  id: Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Atan2(PradResult, PradResult)
+  nameWithType: PradMath.Atan2(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Atan2
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 27
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the atan2 of two results.
+  example: []
+  syntax:
+    content: public static PradResult Atan2(PradResult y, PradResult x)
+    parameters:
+    - id: y
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The y input.
+    - id: x
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The x input.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output.
+    content.vb: Public Shared Function Atan2(y As PradResult, x As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Atan2*
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  id: Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Cos(PradResult)
+  nameWithType: PradMath.Cos(PradResult)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Cos
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 45
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the cosine of the result.
+  example: []
+  syntax:
+    content: public static PradResult Cos(PradResult x)
+    parameters:
+    - id: x
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The x input.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output.
+    content.vb: Public Shared Function Cos(x As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Cos*
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  id: Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Sin(PradResult)
+  nameWithType: PradMath.Sin(PradResult)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Sin
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 63
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the sine of the result.
+  example: []
+  syntax:
+    content: public static PradResult Sin(PradResult x)
+    parameters:
+    - id: x
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The x input.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output.
+    content.vb: Public Shared Function Sin(x As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Sin*
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Double)
+  id: Cos(System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Cos(double)
+  nameWithType: PradMath.Cos(double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos(double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Cos
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 81
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the cosine of a double-precision floating-point number.
+  example: []
+  syntax:
+    content: public static double Cos(double x)
+    parameters:
+    - id: x
+      type: System.Double
+      description: The angle, measured in radians.
+    return:
+      type: System.Double
+      description: The cosine of x.
+    content.vb: Public Shared Function Cos(x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Cos*
+  nameWithType.vb: PradMath.Cos(Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Cos(Double)
+  name.vb: Cos(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Single)
+  id: Cos(System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Cos(float)
+  nameWithType: PradMath.Cos(float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos(float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Cos
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 91
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the cosine of a single-precision floating-point number.
+  example: []
+  syntax:
+    content: public static float Cos(float x)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The angle, measured in radians.
+    return:
+      type: System.Single
+      description: The cosine of x.
+    content.vb: Public Shared Function Cos(x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Cos*
+  nameWithType.vb: PradMath.Cos(Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Cos(Single)
+  name.vb: Cos(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Double)
+  id: Sin(System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Sin(double)
+  nameWithType: PradMath.Sin(double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin(double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Sin
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 101
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the sine of a double-precision floating-point number.
+  example: []
+  syntax:
+    content: public static double Sin(double x)
+    parameters:
+    - id: x
+      type: System.Double
+      description: The angle, measured in radians.
+    return:
+      type: System.Double
+      description: The sine of x.
+    content.vb: Public Shared Function Sin(x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Sin*
+  nameWithType.vb: PradMath.Sin(Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sin(Double)
+  name.vb: Sin(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Single)
+  id: Sin(System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Sin(float)
+  nameWithType: PradMath.Sin(float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin(float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Sin
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 111
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the sine of a single-precision floating-point number.
+  example: []
+  syntax:
+    content: public static float Sin(float x)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The angle, measured in radians.
+    return:
+      type: System.Single
+      description: The sine of x.
+    content.vb: Public Shared Function Sin(x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Sin*
+  nameWithType.vb: PradMath.Sin(Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sin(Single)
+  name.vb: Sin(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Double)
+  id: Exp(System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Exp(double)
+  nameWithType: PradMath.Exp(double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Exp(double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Exp
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 121
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the exponential of a double-precision floating-point number.
+  example: []
+  syntax:
+    content: public static double Exp(double x)
+    parameters:
+    - id: x
+      type: System.Double
+      description: The value.
+    return:
+      type: System.Double
+      description: The exponential of x.
+    content.vb: Public Shared Function Exp(x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Exp*
+  nameWithType.vb: PradMath.Exp(Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Exp(Double)
+  name.vb: Exp(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Single)
+  id: Exp(System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Exp(float)
+  nameWithType: PradMath.Exp(float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Exp(float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Exp
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 131
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the exponential of a single-precision floating-point number.
+  example: []
+  syntax:
+    content: public static float Exp(float x)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The value.
+    return:
+      type: System.Single
+      description: The exponential of x.
+    content.vb: Public Shared Function Exp(x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Exp*
+  nameWithType.vb: PradMath.Exp(Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Exp(Single)
+  name.vb: Exp(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Double)
+  id: Sqrt(System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Sqrt(double)
+  nameWithType: PradMath.Sqrt(double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Sqrt
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 141
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the square root of a double-precision floating-point number.
+  example: []
+  syntax:
+    content: public static double Sqrt(double x)
+    parameters:
+    - id: x
+      type: System.Double
+      description: The number whose square root is to be found.
+    return:
+      type: System.Double
+      description: The square root of x.
+    content.vb: Public Shared Function Sqrt(x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt*
+  nameWithType.vb: PradMath.Sqrt(Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(Double)
+  name.vb: Sqrt(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Single)
+  id: Sqrt(System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Sqrt(float)
+  nameWithType: PradMath.Sqrt(float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Sqrt
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 151
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the square root of a single-precision floating-point number.
+  example: []
+  syntax:
+    content: public static float Sqrt(float x)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The number whose square root is to be found.
+    return:
+      type: System.Single
+      description: The square root of x.
+    content.vb: Public Shared Function Sqrt(x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt*
+  nameWithType.vb: PradMath.Sqrt(Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(Single)
+  name.vb: Sqrt(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Double,System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Double,System.Double)
+  id: Atan2(System.Double,System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Atan2(double, double)
+  nameWithType: PradMath.Atan2(double, double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(double, double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Atan2
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 162
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the arctangent of the quotient of two double-precision floating-point numbers.
+  example: []
+  syntax:
+    content: public static double Atan2(double y, double x)
+    parameters:
+    - id: y
+      type: System.Double
+      description: The y coordinate of the point (x, y).
+    - id: x
+      type: System.Double
+      description: The x coordinate of the point (x, y).
+    return:
+      type: System.Double
+      description: The arctangent of y/x, in radians.
+    content.vb: Public Shared Function Atan2(y As Double, x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Atan2*
+  nameWithType.vb: PradMath.Atan2(Double, Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(Double, Double)
+  name.vb: Atan2(Double, Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Single,System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Single,System.Single)
+  id: Atan2(System.Single,System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Atan2(float, float)
+  nameWithType: PradMath.Atan2(float, float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(float, float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Atan2
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 173
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Computes the arctangent of the quotient of two single-precision floating-point numbers.
+  example: []
+  syntax:
+    content: public static float Atan2(float y, float x)
+    parameters:
+    - id: y
+      type: System.Single
+      description: The y coordinate of the point (x, y).
+    - id: x
+      type: System.Single
+      description: The x coordinate of the point (x, y).
+    return:
+      type: System.Single
+      description: The arctangent of y/x, in radians.
+    content.vb: Public Shared Function Atan2(y As Single, x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Atan2*
+  nameWithType.vb: PradMath.Atan2(Single, Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(Single, Single)
+  name.vb: Atan2(Single, Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Double,System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Double,System.Double)
+  id: Pow(System.Double,System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Pow(double, double)
+  nameWithType: PradMath.Pow(double, double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Pow(double, double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Pow
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 184
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Returns a specified number raised to the specified power.
+  example: []
+  syntax:
+    content: public static double Pow(double x, double y)
+    parameters:
+    - id: x
+      type: System.Double
+      description: The number to be raised to a power.
+    - id: y
+      type: System.Double
+      description: The power to which x is to be raised.
+    return:
+      type: System.Double
+      description: The number x raised to the power y.
+    content.vb: Public Shared Function Pow(x As Double, y As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Pow*
+  nameWithType.vb: PradMath.Pow(Double, Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Pow(Double, Double)
+  name.vb: Pow(Double, Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Single,System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Single,System.Single)
+  id: Pow(System.Single,System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Pow(float, float)
+  nameWithType: PradMath.Pow(float, float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Pow(float, float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Pow
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 195
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Returns a specified number raised to the specified power.
+  example: []
+  syntax:
+    content: public static float Pow(float x, float y)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The number to be raised to a power.
+    - id: y
+      type: System.Single
+      description: The power to which x is to be raised.
+    return:
+      type: System.Single
+      description: The number x raised to the power y.
+    content.vb: Public Shared Function Pow(x As Single, y As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Pow*
+  nameWithType.vb: PradMath.Pow(Single, Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Pow(Single, Single)
+  name.vb: Pow(Single, Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Double)
+  id: Tanh(System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Tanh(double)
+  nameWithType: PradMath.Tanh(double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Tanh
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 205
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Returns the hyperbolic tangent of the specified angle.
+  example: []
+  syntax:
+    content: public static double Tanh(double x)
+    parameters:
+    - id: x
+      type: System.Double
+      description: An angle, measured in radians.
+    return:
+      type: System.Double
+      description: The hyperbolic tangent of x.
+    content.vb: Public Shared Function Tanh(x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Tanh*
+  nameWithType.vb: PradMath.Tanh(Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(Double)
+  name.vb: Tanh(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Single)
+  id: Tanh(System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Tanh(float)
+  nameWithType: PradMath.Tanh(float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Tanh
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 215
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Returns the hyperbolic tangent of the specified angle.
+  example: []
+  syntax:
+    content: public static float Tanh(float x)
+    parameters:
+    - id: x
+      type: System.Single
+      description: An angle, measured in radians.
+    return:
+      type: System.Single
+      description: The hyperbolic tangent of x.
+    content.vb: Public Shared Function Tanh(x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Tanh*
+  nameWithType.vb: PradMath.Tanh(Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(Single)
+  name.vb: Tanh(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Double)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Double)
+  id: Log(System.Double)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Log(double)
+  nameWithType: PradMath.Log(double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Log(double)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Log
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 225
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Returns the natural (base *e*) logarithm of a specified number.
+  example: []
+  syntax:
+    content: public static double Log(double x)
+    parameters:
+    - id: x
+      type: System.Double
+      description: A number whose logarithm is to be found.
+    return:
+      type: System.Double
+      description: The natural logarithm of x.
+    content.vb: Public Shared Function Log(x As Double) As Double
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Log*
+  nameWithType.vb: PradMath.Log(Double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Log(Double)
+  name.vb: Log(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Single)
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Single)
+  id: Log(System.Single)
+  parent: ParallelReverseAutoDiff.RMAD.PradMath
+  langs:
+  - csharp
+  - vb
+  name: Log(float)
+  nameWithType: PradMath.Log(float)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Log(float)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradMath.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Log
+    path: ../../src/PRAD/PradMath.cs
+    startLine: 235
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Returns the natural (base *e*) logarithm of a specified number.
+  example: []
+  syntax:
+    content: public static float Log(float x)
+    parameters:
+    - id: x
+      type: System.Single
+      description: A number whose logarithm is to be found.
+    return:
+      type: System.Single
+      description: The natural logarithm of x.
+    content.vb: Public Shared Function Log(x As Single) As Single
+  overload: ParallelReverseAutoDiff.RMAD.PradMath.Log*
+  nameWithType.vb: PradMath.Log(Single)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Log(Single)
+  name.vb: Log(Single)
+references:
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Atan2
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: Atan2
+  nameWithType: PradMath.Atan2
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2
+- uid: ParallelReverseAutoDiff.PRAD.PradResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResult
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  name: PradResult
+  nameWithType: PradResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Cos
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  name: Cos
+  nameWithType: PradMath.Cos
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Sin
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  name: Sin
+  nameWithType: PradMath.Sin
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Exp*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Exp
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Double)
+  name: Exp
+  nameWithType: PradMath.Exp
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Exp
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Sqrt
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Double)
+  name: Sqrt
+  nameWithType: PradMath.Sqrt
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Pow*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Pow
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Double,System.Double)
+  name: Pow
+  nameWithType: PradMath.Pow
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Pow
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Tanh*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Tanh
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Double)
+  name: Tanh
+  nameWithType: PradMath.Tanh
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Tanh
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Log*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Log
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Double)
+  name: Log
+  nameWithType: PradMath.Log
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Log

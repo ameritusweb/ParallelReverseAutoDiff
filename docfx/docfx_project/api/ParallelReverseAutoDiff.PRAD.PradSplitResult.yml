@@ -1,41 +1,43 @@
 ### YamlMime:ManagedReference
 items:
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult
-  commentId: T:ParallelReverseAutoDiff.RMAD.BackwardResult
-  id: BackwardResult
-  parent: ParallelReverseAutoDiff.RMAD
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradSplitResult
+  id: PradSplitResult
+  parent: ParallelReverseAutoDiff.PRAD
   children:
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Results
+  - ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])
+  - ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
   langs:
   - csharp
   - vb
-  name: BackwardResult
-  nameWithType: BackwardResult
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult
+  name: PradSplitResult
+  nameWithType: PradSplitResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult
   type: Class
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradSplitResult.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: BackwardResult
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 10
+    id: PradSplitResult
+    path: ../../src/PRAD/PradSplitResult.cs
+    startLine: 11
   assemblies:
   - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: The result of one step through a backward pass.
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: The result of the computation.
   example: []
   syntax:
-    content: public class BackwardResult
-    content.vb: Public Class BackwardResult
+    content: 'public class PradSplitResult : PradResultBase'
+    content.vb: Public Class PradSplitResult Inherits PradResultBase
   inheritance:
   - System.Object
+  - ParallelReverseAutoDiff.PRAD.PradResultBase
   inheritedMembers:
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
   - System.Object.Equals(System.Object)
   - System.Object.Equals(System.Object,System.Object)
   - System.Object.GetHashCode
@@ -43,184 +45,98 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Results
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])
+  id: '#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])'
+  parent: ParallelReverseAutoDiff.PRAD.PradSplitResult
+  langs:
+  - csharp
+  - vb
+  name: PradSplitResult(Tensor[], Tensor[])
+  nameWithType: PradSplitResult.PradSplitResult(Tensor[], Tensor[])
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.PradSplitResult(ParallelReverseAutoDiff.PRAD.Tensor[], ParallelReverseAutoDiff.PRAD.Tensor[])
+  type: Constructor
+  source:
+    remote:
+      path: src/PRAD/PradSplitResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/PRAD/PradSplitResult.cs
+    startLine: 18
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.PRAD.PradSplitResult" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public PradSplitResult(Tensor[] results, Tensor[] gradients)
+    parameters:
+    - id: results
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The tensor results.
+    - id: gradients
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The gradient tensors.
+    content.vb: Public Sub New(results As Tensor(), gradients As Tensor())
+  overload: ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor*
+  nameWithType.vb: PradSplitResult.New(Tensor(), Tensor())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradSplitResult.New(ParallelReverseAutoDiff.PRAD.Tensor(), ParallelReverseAutoDiff.PRAD.Tensor())
+  name.vb: New(Tensor(), Tensor())
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
   id: Results
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
+  parent: ParallelReverseAutoDiff.PRAD.PradSplitResult
   langs:
   - csharp
   - vb
   name: Results
-  nameWithType: BackwardResult.Results
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
+  nameWithType: PradSplitResult.Results
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
   type: Property
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradSplitResult.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Results
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 15
+    path: ../../src/PRAD/PradSplitResult.cs
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets the backward pass gradients.
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets the result of the computation.
   example: []
   syntax:
-    content: public object?[] Results { get; set; }
+    content: public Tensor[] Results { get; }
     parameters: []
     return:
-      type: System.Object[]
-    content.vb: Public Property Results As Object()
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Results*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  id: HasMultipleInputs
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: HasMultipleInputs
-  nameWithType: BackwardResult.HasMultipleInputs
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: HasMultipleInputs
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 20
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets a value indicating whether the result originated from an operation that has multiple inputs.
-  example: []
-  syntax:
-    content: public bool HasMultipleInputs { get; set; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Property HasMultipleInputs As Boolean
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  id: Item1
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item1
-  nameWithType: BackwardResult.Item1
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item1
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 25
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the first item.
-  example: []
-  syntax:
-    content: public object? Item1 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item1 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  id: Item2
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item2
-  nameWithType: BackwardResult.Item2
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item2
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 36
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the second item.
-  example: []
-  syntax:
-    content: public object? Item2 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item2 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  id: Item3
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item3
-  nameWithType: BackwardResult.Item3
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item3
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 47
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the third item.
-  example: []
-  syntax:
-    content: public object? Item3 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item3 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+    content.vb: Public ReadOnly Property Results As Tensor()
+  overload: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results*
 references:
-- uid: ParallelReverseAutoDiff.RMAD
-  commentId: N:ParallelReverseAutoDiff.RMAD
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
   href: ParallelReverseAutoDiff.html
-  name: ParallelReverseAutoDiff.RMAD
-  nameWithType: ParallelReverseAutoDiff.RMAD
-  fullName: ParallelReverseAutoDiff.RMAD
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
   spec.csharp:
   - uid: ParallelReverseAutoDiff
     name: ParallelReverseAutoDiff
     href: ParallelReverseAutoDiff.html
   - name: .
-  - uid: ParallelReverseAutoDiff.RMAD
-    name: RMAD
-    href: ParallelReverseAutoDiff.RMAD.html
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
   spec.vb:
   - uid: ParallelReverseAutoDiff
     name: ParallelReverseAutoDiff
     href: ParallelReverseAutoDiff.html
   - name: .
-  - uid: ParallelReverseAutoDiff.RMAD
-    name: RMAD
-    href: ParallelReverseAutoDiff.RMAD.html
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
@@ -232,6 +148,41 @@ references:
   nameWithType.vb: Object
   fullName.vb: Object
   name.vb: Object
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResultBase
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html
+  name: PradResultBase
+  nameWithType: PradResultBase
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  name: Gradients
+  nameWithType: PradResultBase.Gradients
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  name: PradOp
+  nameWithType: PradResultBase.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  name: Branches
+  nameWithType: PradResultBase.Branches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  name: SplitBranches
+  nameWithType: PradResultBase.SplitBranches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
 - uid: System.Object.Equals(System.Object)
   commentId: M:System.Object.Equals(System.Object)
   parent: System.Object
@@ -458,67 +409,45 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  name: Results
-  nameWithType: BackwardResult.Results
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-- uid: System.Object[]
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradSplitResult
+  href: ParallelReverseAutoDiff.PRAD.PradSplitResult.html
+  name: PradSplitResult
+  nameWithType: PradSplitResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor
+  href: ParallelReverseAutoDiff.PRAD.PradSplitResult.html#ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])
+  name: PradSplitResult
+  nameWithType: PradSplitResult.PradSplitResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.PradSplitResult
+  nameWithType.vb: PradSplitResult.New
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradSplitResult.New
+  name.vb: New
+- uid: ParallelReverseAutoDiff.PRAD.Tensor[]
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
-  name: object[]
-  nameWithType: object[]
-  fullName: object[]
-  nameWithType.vb: Object()
-  fullName.vb: Object()
-  name.vb: Object()
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor[]
+  nameWithType: Tensor[]
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor[]
+  nameWithType.vb: Tensor()
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor()
+  name.vb: Tensor()
   spec.csharp:
-  - uid: System.Object
-    name: object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
   - name: '['
   - name: ']'
   spec.vb:
-  - uid: System.Object
-    name: Object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
   - name: (
   - name: )
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  name: HasMultipleInputs
-  nameWithType: BackwardResult.HasMultipleInputs
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  name: Item1
-  nameWithType: BackwardResult.Item1
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  name: Item2
-  nameWithType: BackwardResult.Item2
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  name: Item3
-  nameWithType: BackwardResult.Item3
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  href: ParallelReverseAutoDiff.PRAD.PradSplitResult.html#ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  name: Results
+  nameWithType: PradSplitResult.Results
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results

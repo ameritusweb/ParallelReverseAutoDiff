@@ -22,7 +22,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: MatrixJsonConverter
     path: ../../src/RMAD/MatrixJsonConverter.cs
-    startLine: 15
+    startLine: 14
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -62,7 +62,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CanConvert
     path: ../../src/RMAD/MatrixJsonConverter.cs
-    startLine: 22
+    startLine: 21
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -98,7 +98,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: WriteJson
     path: ../../src/RMAD/MatrixJsonConverter.cs
-    startLine: 33
+    startLine: 32
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -140,7 +140,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ReadJson
     path: ../../src/RMAD/MatrixJsonConverter.cs
-    startLine: 52
+    startLine: 55
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD

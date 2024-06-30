@@ -1,0 +1,1434 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TensorReverse
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TensorReverse
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_PRAD_TensorReverse.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.PRAD.TensorReverse%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse">
+
+
+
+  <h1 id="ParallelReverseAutoDiff_PRAD_TensorReverse" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse" class="text-break">
+    Class TensorReverse
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="ParallelReverseAutoDiff.html">ParallelReverseAutoDiff</a>.<a class="xref" href="ParallelReverseAutoDiff.PRAD.html">PRAD</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Backward functions for tensors.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class TensorReverse</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">TensorReverse</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse__ctor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.#ctor*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse__ctor_ParallelReverseAutoDiff_PRAD_Tensor___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[])">
+  TensorReverse(Tensor[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.PRAD.TensorReverse.html">TensorReverse</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TensorReverse(Tensor[] tensors)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tensors</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The initial tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_InitialTensors_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_InitialTensors" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors">
+  InitialTensors
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the initial tensors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] InitialTensors { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ConcatReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ConcatReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)">
+  ConcatReverse(Tensor, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L296"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for concatenation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] ConcatReverse(Tensor upstreamGradient, int axis)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which the concatenation was performed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>An array of tensors representing the gradients for each input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_CreateFlatArrayReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_CreateFlatArrayReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])">
+  CreateFlatArrayReverse(Tensor, int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L340"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for CreateFlatArray.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] CreateFlatArrayReverse(Tensor upstreamGradient, int[] indices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>indices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The indices used in CreateFlatArray.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradient with respect to the input tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAddReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAddReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseAddReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for element-wise addition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] ElementwiseAddReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradient with respect to the input tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAtan2Reverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAtan2Reverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseAtan2Reverse(Tensor, Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the element-wise atan2 operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] ElementwiseAtan2Reverse(Tensor upstreamGradient, Tensor x)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>x</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor used in the atan2 operation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradients with respect to the input tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If the shapes of the tensors are not compatible.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseCosReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseCosReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseCosReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for element-wise cosine.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseCosReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseDivideReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseDivideReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseDivideReverse(Tensor, Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L707"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the element-wise division operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] ElementwiseDivideReverse(Tensor upstreamGradient, Tensor other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>other</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor used in the division operation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradients with respect to the input tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If the shapes of the tensors are not compatible.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseMultiplyReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseMultiplyReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseMultiplyReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for element-wise multiplication.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] ElementwiseMultiplyReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradient with respect to the input tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSinReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSinReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseSinReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for element-wise sine.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSinReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseSquareReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L150"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for element-wise square.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSquareReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareRootReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareRootReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseSquareRootReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the element-wise square root operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSquareRootReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSubReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSubReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseSubReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L676"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for element-wise subtraction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] ElementwiseSubReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradient with respect to the input tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ExpReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ExpReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ExpReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the element-wise exponential function (exp).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ExpReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ExpandDimsReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ExpandDimsReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)">
+  ExpandDimsReverse(Tensor, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L743"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the ExpandDims operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ExpandDimsReverse(Tensor upstreamGradient, int axis = -1)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_GatherNdReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_GatherNdReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)">
+  GatherNdReverse(Tensor, Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L819"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for GatherNd.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor GatherNdReverse(Tensor upstreamGradient, Tensor indices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>indices</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor containing the indices.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_GatherReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_GatherReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)">
+  GatherReverse(Tensor, Tensor, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L601"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the Gather operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor GatherReverse(Tensor upstreamGradient, Tensor indices, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>indices</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The indices of elements that were gathered.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which slices were gathered.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_IndexerReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_IndexerReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_String___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.String[])">
+  IndexerReverse(Tensor, params string[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L1087"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the Indexer operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor IndexerReverse(Tensor upstreamGradient, params string[] indices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>indices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
+    <dd><p>The indices used to slice.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_LnReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_LnReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  LnReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the element-wise natural logarithm (ln).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor LnReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_LogReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_LogReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  LogReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the element-wise logarithm (base 10).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor LogReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_MeanReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_MeanReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)">
+  MeanReverse(Tensor, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L431"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the mean operation along the specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor MeanReverse(Tensor upstreamGradient, int axis)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which the mean was computed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ReciprocalReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ReciprocalReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)">
+  ReciprocalReverse(Tensor, Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L485"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the gradient for the reciprocal operation using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ReciprocalReverse(Tensor upstreamGradient, Tensor reciprocalResult)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing back from the subsequent operation.</p>
+</dd>
+    <dt><code>reciprocalResult</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The result of the forward reciprocal operation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The computed gradient.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_ReshapeReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_ReshapeReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])">
+  ReshapeReverse(Tensor, int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L862"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the reshape operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ReshapeReverse(Tensor upstreamGradient, int[] originalShape)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>originalShape</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The original shape of the tensor before reshape.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor in its original shape.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_SliceReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_SliceReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___System_Int32___System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[],System.Int32[],System.Int32[])">
+  SliceReverse(Tensor, int[], int[], int[]?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L884"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the slice operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor SliceReverse(Tensor upstreamGradient, int[] begin, int[] size, int[]? strides = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>begin</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The starting indices for each axis.</p>
+</dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The lengths of the slice along each axis.</p>
+</dd>
+    <dt><code>strides</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The step size for each axis (default is 1).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_SplitReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_SplitReverse_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)">
+  SplitReverse(Tensor[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L928"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reverses the split operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor SplitReverse(Tensor[] upstreamGradients, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradients</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradients from the split tensors.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which the tensor was split.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor before splitting.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If the shapes of the upstream gradients are not compatible.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_StackReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_StackReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)">
+  StackReverse(Tensor, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L378"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The reverse stack operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] StackReverse(Tensor upstreamGradient, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The upstream gradient.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The gradients.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Empty input list.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Out of bounds axis.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_SumRowsReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_SumRowsReverse_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse(ParallelReverseAutoDiff.PRAD.Tensor)">
+  SumRowsReverse(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L1004"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The reverse of the sum rows operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor SumRowsReverse(Tensor upstreamGradient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The upstream gradient.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Shape does not match.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_TileReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_TileReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])">
+  TileReverse(Tensor, int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L767"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the Tile operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor TileReverse(Tensor upstreamGradient, int[] multiples)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>multiples</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The array of multiples for each dimension.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_TransposeReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_TransposeReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])">
+  TransposeReverse(Tensor, int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L1035"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the reverse gradient for the transpose operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor TransposeReverse(Tensor upstreamGradient, int[] permutation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradient</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient flowing from the upstream layer.</p>
+</dd>
+    <dt><code>permutation</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The permutation of the axes used in the forward transpose operation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor before transposition.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_TensorReverse_UnstackReverse_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_TensorReverse_UnstackReverse_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)">
+  UnstackReverse(Tensor[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L509"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The reverse unstack operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor UnstackReverse(Tensor[] upstreamGradients, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>upstreamGradients</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The upstream gradients from the unstacked tensors.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which the tensor was unstacked.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The gradient with respect to the input tensor before unstacking.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If the axis is out of bounds or upstream gradients are empty.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/TensorReverse.cs/#L17" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

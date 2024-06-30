@@ -18,6 +18,37 @@ items:
     name: HDF5Helper
   - uid: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator
     name: PseudoUniqueIDGenerator
+- uid: ParallelReverseAutoDiff.PRAD
+  name: ParallelReverseAutoDiff.PRAD
+  items:
+  - uid: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+    name: ConditionallyInternalUseOnlyAttribute
+  - uid: ParallelReverseAutoDiff.PRAD.IListExtensions
+    name: IListExtensions
+  - uid: ParallelReverseAutoDiff.PRAD.PradConfig
+    name: PradConfig
+  - uid: ParallelReverseAutoDiff.PRAD.PradDiagram
+    name: PradDiagram
+  - uid: ParallelReverseAutoDiff.PRAD.PradEdge
+    name: PradEdge
+  - uid: ParallelReverseAutoDiff.PRAD.PradGraph
+    name: PradGraph
+  - uid: ParallelReverseAutoDiff.PRAD.PradNode
+    name: PradNode
+  - uid: ParallelReverseAutoDiff.PRAD.PradOp
+    name: PradOp
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+  - uid: ParallelReverseAutoDiff.PRAD.PradResultBase
+    name: PradResultBase
+  - uid: ParallelReverseAutoDiff.PRAD.PradSplitResult
+    name: PradSplitResult
+  - uid: ParallelReverseAutoDiff.PRAD.PradTensor
+    name: PradTensor
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+  - uid: ParallelReverseAutoDiff.PRAD.TensorReverse
+    name: TensorReverse
 - uid: ParallelReverseAutoDiff.RMAD
   name: ParallelReverseAutoDiff.RMAD
   items:
@@ -305,6 +336,10 @@ items:
     name: PairwiseSineSoftmaxOperation
   - uid: ParallelReverseAutoDiff.RMAD.PiecewiseActivationOperation
     name: PiecewiseActivationOperation
+  - uid: ParallelReverseAutoDiff.RMAD.PradMath
+    name: PradMath
+  - uid: ParallelReverseAutoDiff.RMAD.PradTools
+    name: PradTools
   - uid: ParallelReverseAutoDiff.RMAD.ReLUOperation
     name: ReLUOperation
   - uid: ParallelReverseAutoDiff.RMAD.RMSNormOperation

@@ -1,0 +1,581 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResultBase
+  id: PradResultBase
+  parent: ParallelReverseAutoDiff.PRAD
+  children:
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  langs:
+  - csharp
+  - vb
+  name: PradResultBase
+  nameWithType: PradResultBase
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase
+  type: Class
+  source:
+    remote:
+      path: src/PRAD/PradResultBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: PradResultBase
+    path: ../../src/PRAD/PradResultBase.cs
+    startLine: 13
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: The base class for the result of the computation.
+  example: []
+  syntax:
+    content: public abstract class PradResultBase
+    content.vb: Public MustInherit Class PradResultBase
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - ParallelReverseAutoDiff.PRAD.PradResult
+  - ParallelReverseAutoDiff.PRAD.PradSplitResult
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  id: Gradients
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  langs:
+  - csharp
+  - vb
+  name: Gradients
+  nameWithType: PradResultBase.Gradients
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/PradResultBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Gradients
+    path: ../../src/PRAD/PradResultBase.cs
+    startLine: 18
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets or sets the gradient of the input.
+  example: []
+  syntax:
+    content: public Tensor[] Gradients { get; protected set; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+    content.vb: Public Property Gradients As Tensor()
+  overload: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients*
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  id: PradOp
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  langs:
+  - csharp
+  - vb
+  name: PradOp
+  nameWithType: PradResultBase.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/PradResultBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: PradOp
+    path: ../../src/PRAD/PradResultBase.cs
+    startLine: 23
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets the operation.
+  example: []
+  syntax:
+    content: public PradOp PradOp { get; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradOp
+    content.vb: Public Property PradOp As PradOp
+  overload: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp*
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  id: Branches
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  langs:
+  - csharp
+  - vb
+  name: Branches
+  nameWithType: PradResultBase.Branches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/PradResultBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Branches
+    path: ../../src/PRAD/PradResultBase.cs
+    startLine: 28
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets or sets the branches.
+  example: []
+  syntax:
+    content: public List<PradOp> Branches { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.PRAD.PradOp}
+    content.vb: Public Property Branches As List(Of PradOp)
+  overload: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches*
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  id: SplitBranches
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  langs:
+  - csharp
+  - vb
+  name: SplitBranches
+  nameWithType: PradResultBase.SplitBranches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/PradResultBase.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SplitBranches
+    path: ../../src/PRAD/PradResultBase.cs
+    startLine: 33
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets or sets the split branches.
+  example: []
+  syntax:
+    content: public List<PradOp> SplitBranches { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{ParallelReverseAutoDiff.PRAD.PradOp}
+    content.vb: Public Property SplitBranches As List(Of PradOp)
+  overload: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches*
+references:
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  name: Gradients
+  nameWithType: PradResultBase.Gradients
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+- uid: ParallelReverseAutoDiff.PRAD.Tensor[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor[]
+  nameWithType: Tensor[]
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor[]
+  nameWithType.vb: Tensor()
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor()
+  name.vb: Tensor()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  name: PradOp
+  nameWithType: PradResultBase.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradOp
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradOp.html
+  name: PradOp
+  nameWithType: PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  name: Branches
+  nameWithType: PradResultBase.Branches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+- uid: System.Collections.Generic.List{ParallelReverseAutoDiff.PRAD.PradOp}
+  commentId: T:System.Collections.Generic.List{ParallelReverseAutoDiff.PRAD.PradOp}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PradOp>
+  nameWithType: List<PradOp>
+  fullName: System.Collections.Generic.List<ParallelReverseAutoDiff.PRAD.PradOp>
+  nameWithType.vb: List(Of PradOp)
+  fullName.vb: System.Collections.Generic.List(Of ParallelReverseAutoDiff.PRAD.PradOp)
+  name.vb: List(Of PradOp)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: ParallelReverseAutoDiff.PRAD.PradOp
+    name: PradOp
+    href: ParallelReverseAutoDiff.PRAD.PradOp.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradOp
+    name: PradOp
+    href: ParallelReverseAutoDiff.PRAD.PradOp.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  name: SplitBranches
+  nameWithType: PradResultBase.SplitBranches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches

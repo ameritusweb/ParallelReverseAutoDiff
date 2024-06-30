@@ -1,0 +1,141 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  id: ParallelReverseAutoDiff.PRAD
+  children:
+  - ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+  - ParallelReverseAutoDiff.PRAD.IListExtensions
+  - ParallelReverseAutoDiff.PRAD.PradConfig
+  - ParallelReverseAutoDiff.PRAD.PradDiagram
+  - ParallelReverseAutoDiff.PRAD.PradEdge
+  - ParallelReverseAutoDiff.PRAD.PradGraph
+  - ParallelReverseAutoDiff.PRAD.PradNode
+  - ParallelReverseAutoDiff.PRAD.PradOp
+  - ParallelReverseAutoDiff.PRAD.PradResult
+  - ParallelReverseAutoDiff.PRAD.PradResultBase
+  - ParallelReverseAutoDiff.PRAD.PradSplitResult
+  - ParallelReverseAutoDiff.PRAD.PradTensor
+  - ParallelReverseAutoDiff.PRAD.Tensor
+  - ParallelReverseAutoDiff.PRAD.TensorReverse
+  langs:
+  - csharp
+  - vb
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  type: Namespace
+  assemblies:
+  - ParallelReverseAutoDiff
+references:
+- uid: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+  commentId: T:ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+  href: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.html
+  name: ConditionallyInternalUseOnlyAttribute
+  nameWithType: ConditionallyInternalUseOnlyAttribute
+  fullName: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+- uid: ParallelReverseAutoDiff.PRAD.IListExtensions
+  commentId: T:ParallelReverseAutoDiff.PRAD.IListExtensions
+  href: ParallelReverseAutoDiff.PRAD.IListExtensions.html
+  name: IListExtensions
+  nameWithType: IListExtensions
+  fullName: ParallelReverseAutoDiff.PRAD.IListExtensions
+- uid: ParallelReverseAutoDiff.PRAD.PradConfig
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradConfig
+  href: ParallelReverseAutoDiff.PRAD.PradConfig.html
+  name: PradConfig
+  nameWithType: PradConfig
+  fullName: ParallelReverseAutoDiff.PRAD.PradConfig
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradDiagram
+  href: ParallelReverseAutoDiff.PRAD.PradDiagram.html
+  name: PradDiagram
+  nameWithType: PradDiagram
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram
+- uid: ParallelReverseAutoDiff.PRAD.PradEdge
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradEdge
+  href: ParallelReverseAutoDiff.PRAD.PradEdge.html
+  name: PradEdge
+  nameWithType: PradEdge
+  fullName: ParallelReverseAutoDiff.PRAD.PradEdge
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradGraph
+  href: ParallelReverseAutoDiff.PRAD.PradGraph.html
+  name: PradGraph
+  nameWithType: PradGraph
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph
+- uid: ParallelReverseAutoDiff.PRAD.PradNode
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradNode
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradNode.html
+  name: PradNode
+  nameWithType: PradNode
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode
+- uid: ParallelReverseAutoDiff.PRAD.PradOp
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradOp
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradOp.html
+  name: PradOp
+  nameWithType: PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResult
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  name: PradResult
+  nameWithType: PradResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResultBase
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html
+  name: PradResultBase
+  nameWithType: PradResultBase
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradSplitResult
+  href: ParallelReverseAutoDiff.PRAD.PradSplitResult.html
+  name: PradSplitResult
+  nameWithType: PradSplitResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult
+- uid: ParallelReverseAutoDiff.PRAD.PradTensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradTensor
+  href: ParallelReverseAutoDiff.PRAD.PradTensor.html
+  name: PradTensor
+  nameWithType: PradTensor
+  fullName: ParallelReverseAutoDiff.PRAD.PradTensor
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor
+  nameWithType: Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse
+  commentId: T:ParallelReverseAutoDiff.PRAD.TensorReverse
+  href: ParallelReverseAutoDiff.PRAD.TensorReverse.html
+  name: TensorReverse
+  nameWithType: TensorReverse
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html

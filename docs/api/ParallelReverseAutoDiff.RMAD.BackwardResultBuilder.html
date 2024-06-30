@@ -79,7 +79,7 @@
 
   <h1 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder" class="text-break">
     Class BackwardResultBuilder
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -147,7 +147,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddBetaGradient_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
   AddBetaGradient(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L150"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add beta gradient to the backward result.</p>
@@ -186,7 +186,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddBiasGradient_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBiasGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
   AddBiasGradient(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L174"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add bias gradient to the backward result.</p>
@@ -223,9 +223,48 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddDeepInputGradient_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient*"></a>
 
+  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddDeepInputGradient_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)">
+  AddDeepInputGradient(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Add deep input gradient to the backward result.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BackwardResultBuilder AddDeepInputGradient(Tensor matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The 3-D tensor to add.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html">BackwardResultBuilder</a></dt>
+    <dd><p>The backward result builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddDeepInputGradient_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient*"></a>
+
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddDeepInputGradient_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
   AddDeepInputGradient(DeepMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add deep input gradient to the backward result.</p>
@@ -264,7 +303,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddFiltersGradient_ParallelReverseAutoDiff_RMAD_DeepMatrix___" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix[])">
   AddFiltersGradient(DeepMatrix[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add filters gradient to the backward result.</p>
@@ -303,7 +342,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddGammaGradient_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddGammaGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
   AddGammaGradient(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L162"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add gamma gradient to the backward result.</p>
@@ -340,9 +379,48 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradient_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient*"></a>
 
+  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradient_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)">
+  AddInputGradient(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Add input gradient to the backward result.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BackwardResultBuilder AddInputGradient(Tensor tensor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tensor</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor to add.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html">BackwardResultBuilder</a></dt>
+    <dd><p>The backward result builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradient_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient*"></a>
+
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradient_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
   AddInputGradient(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add input gradient to the backward result.</p>
@@ -379,9 +457,48 @@
 
   <a id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradientArray_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*"></a>
 
+  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradientArray_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)">
+  AddInputGradientArray(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Add input gradient array to the backward result.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BackwardResultBuilder AddInputGradientArray(Tensor matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The 3-D tensor to add.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html">BackwardResultBuilder</a></dt>
+    <dd><p>The backward result builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradientArray_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*"></a>
+
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradientArray_ParallelReverseAutoDiff_RMAD_DeepMatrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)">
   AddInputGradientArray(DeepMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add input gradient array to the backward result.</p>
@@ -420,7 +537,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddScalingGradient_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
   AddScalingGradient(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L138"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add scaling gradient to the backward result.</p>
@@ -459,7 +576,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddWeightGradient_ParallelReverseAutoDiff_RMAD_Matrix_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddWeightGradient(ParallelReverseAutoDiff.RMAD.Matrix)">
   AddWeightGradient(Matrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Add weight gradient to the backward result.</p>
@@ -498,7 +615,7 @@
 
   <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_Build" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.Build">
   Build()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L185"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the backward result.</p>
@@ -531,7 +648,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L14" class="edit-link">Edit this page</a>
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResultBuilder.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
         

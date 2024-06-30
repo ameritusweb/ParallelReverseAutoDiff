@@ -2,10 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class BackwardResult
+      <title>Class PradResultBase
  </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class BackwardResult
+      <meta name="title" content="Class PradResultBase
  ">
       
       <link rel="icon" href="../favicon.ico">
@@ -17,7 +17,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_RMAD_BackwardResult.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.RMAD.BackwardResult%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_PRAD_PradResultBase.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.PRAD.PradResultBase%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
   </head>
 
   <script type="module">
@@ -73,26 +73,26 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult">
+        <article data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase">
 
 
 
-  <h1 id="ParallelReverseAutoDiff_RMAD_BackwardResult" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult" class="text-break">
-    Class BackwardResult
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <h1 id="ParallelReverseAutoDiff_PRAD_PradResultBase" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase" class="text-break">
+    Class PradResultBase
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/PradResultBase.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="ParallelReverseAutoDiff.html">ParallelReverseAutoDiff</a>.<a class="xref" href="ParallelReverseAutoDiff.RMAD.html">RMAD</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="ParallelReverseAutoDiff.html">ParallelReverseAutoDiff</a>.<a class="xref" href="ParallelReverseAutoDiff.PRAD.html">PRAD</a></dd></dl>
   <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>The result of one step through a backward pass.</p>
+  <div class="markdown summary"><p>The base class for the result of the computation.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class BackwardResult</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class PradResultBase</code></pre>
   </div>
 
 
@@ -102,11 +102,18 @@
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">BackwardResult</span></div>
+      <div><span class="xref">PradResultBase</span></div>
     </dd>
   </dl>
 
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="ParallelReverseAutoDiff.PRAD.PradResult.html">PradResult</a></div>
+      <div><a class="xref" href="ParallelReverseAutoDiff.PRAD.PradSplitResult.html">PradSplitResult</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist derived">
     <dt>Inherited Members</dt>
@@ -143,19 +150,19 @@
 </h2>
 
 
-  <a id="ParallelReverseAutoDiff_RMAD_BackwardResult_HasMultipleInputs_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*"></a>
+  <a id="ParallelReverseAutoDiff_PRAD_PradResultBase_Branches_" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.Branches*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResult_HasMultipleInputs" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs">
-  HasMultipleInputs
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_PRAD_PradResultBase_Branches" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.Branches">
+  Branches
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/PradResultBase.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the result originated from an operation that has multiple inputs.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the branches.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool HasMultipleInputs { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;PradOp&gt; Branches { get; set; }</code></pre>
   </div>
 
 
@@ -164,7 +171,7 @@
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.PRAD.PradOp.html">PradOp</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -175,19 +182,19 @@
 
 
 
-  <a id="ParallelReverseAutoDiff_RMAD_BackwardResult_Item1_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*"></a>
+  <a id="ParallelReverseAutoDiff_PRAD_PradResultBase_Gradients_" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResult_Item1" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Item1">
-  Item1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_PRAD_PradResultBase_Gradients" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients">
+  Gradients
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/PradResultBase.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the first item.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the gradient of the input.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object? Item1 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Tensor[] Gradients { get; protected set; }</code></pre>
   </div>
 
 
@@ -196,7 +203,7 @@
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
     <dd></dd>
   </dl>
 
@@ -207,19 +214,19 @@
 
 
 
-  <a id="ParallelReverseAutoDiff_RMAD_BackwardResult_Item2_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*"></a>
+  <a id="ParallelReverseAutoDiff_PRAD_PradResultBase_PradOp_" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResult_Item2" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Item2">
-  Item2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_PRAD_PradResultBase_PradOp" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp">
+  PradOp
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/PradResultBase.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the second item.</p>
+  <div class="markdown level1 summary"><p>Gets the operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object? Item2 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public PradOp PradOp { get; }</code></pre>
   </div>
 
 
@@ -228,7 +235,7 @@
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.PradOp.html">PradOp</a></dt>
     <dd></dd>
   </dl>
 
@@ -239,19 +246,19 @@
 
 
 
-  <a id="ParallelReverseAutoDiff_RMAD_BackwardResult_Item3_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*"></a>
+  <a id="ParallelReverseAutoDiff_PRAD_PradResultBase_SplitBranches_" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches*"></a>
 
-  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResult_Item3" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Item3">
-  Item3
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <h3 id="ParallelReverseAutoDiff_PRAD_PradResultBase_SplitBranches" data-uid="ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches">
+  SplitBranches
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/PradResultBase.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the third item.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the split branches.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object? Item3 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;PradOp&gt; SplitBranches { get; set; }</code></pre>
   </div>
 
 
@@ -260,39 +267,7 @@
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="ParallelReverseAutoDiff_RMAD_BackwardResult_Results_" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Results*"></a>
-
-  <h3 id="ParallelReverseAutoDiff_RMAD_BackwardResult_Results" data-uid="ParallelReverseAutoDiff.RMAD.BackwardResult.Results">
-  Results
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L16"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets or sets the backward pass gradients.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public object?[] Results { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>[]</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="ParallelReverseAutoDiff.PRAD.PradOp.html">PradOp</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -307,7 +282,7 @@
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/RMAD/BackwardResult.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/PradResultBase.cs/#L14" class="edit-link">Edit this page</a>
         </div>
 
         

@@ -1,0 +1,2720 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  id: Tensor
+  parent: ParallelReverseAutoDiff.PRAD
+  children:
+  - ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Double[0:,0:])
+  - ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double)
+  - ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  - ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  - ParallelReverseAutoDiff.PRAD.Tensor.Data
+  - ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  - ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  - ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  - ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  - ParallelReverseAutoDiff.PRAD.Tensor.Log
+  - ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.Print
+  - ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  - ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  - ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  - ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  - ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  - ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  - ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)
+  - ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  - ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  - ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  langs:
+  - csharp
+  - vb
+  name: Tensor
+  nameWithType: Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+  type: Class
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Tensor
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 19
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: A flat tensor.
+  example: []
+  syntax:
+    content: public class Tensor
+    content.vb: Public Class Tensor
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - ParallelReverseAutoDiff.PRAD.PradTensor
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])
+  id: '#ctor(System.Int32[])'
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Tensor(int[])
+  nameWithType: Tensor.Tensor(int[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(int[])
+  type: Constructor
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 25
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.PRAD.Tensor" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public Tensor(int[] shape)
+    parameters:
+    - id: shape
+      type: System.Int32[]
+      description: The dimensions of the tensor.
+    content.vb: Public Sub New(shape As Integer())
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.#ctor*
+  nameWithType.vb: Tensor.New(Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Integer())
+  name.vb: New(Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double[])
+  id: '#ctor(System.Int32[],System.Double[])'
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Tensor(int[], double[])
+  nameWithType: Tensor.Tensor(int[], double[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(int[], double[])
+  type: Constructor
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 37
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.PRAD.Tensor" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public Tensor(int[] shape, double[] data)
+    parameters:
+    - id: shape
+      type: System.Int32[]
+      description: The shape.
+    - id: data
+      type: System.Double[]
+      description: The data.
+    content.vb: Public Sub New(shape As Integer(), data As Double())
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.#ctor*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: The data length does not match.
+  nameWithType.vb: Tensor.New(Integer(), Double())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Integer(), Double())
+  name.vb: New(Integer(), Double())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Double[0:,0:])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Double[0:,0:])
+  id: '#ctor(System.Double[0:,0:])'
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Tensor(double[,])
+  nameWithType: Tensor.Tensor(double[,])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(double[,])
+  type: Constructor
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 52
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.PRAD.Tensor" data-throw-if-not-resolved="false"></xref> class from a 2D array.
+  example: []
+  syntax:
+    content: public Tensor(double[,] array)
+    parameters:
+    - id: array
+      type: System.Double[,]
+      description: The 2D array to initialize the tensor with.
+    content.vb: Public Sub New(array As Double(,))
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.#ctor*
+  nameWithType.vb: Tensor.New(Double(,))
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Double(,))
+  name.vb: New(Double(,))
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double)
+  id: '#ctor(System.Int32[],System.Double)'
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Tensor(int[], double)
+  nameWithType: Tensor.Tensor(int[], double)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(int[], double)
+  type: Constructor
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 74
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.PRAD.Tensor" data-throw-if-not-resolved="false"></xref> class with a single value repeated for all elements.
+  example: []
+  syntax:
+    content: public Tensor(int[] shape, double value)
+    parameters:
+    - id: shape
+      type: System.Int32[]
+      description: The shape of the tensor.
+    - id: value
+      type: System.Double
+      description: The value to fill the tensor with.
+    content.vb: Public Sub New(shape As Integer(), value As Double)
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.#ctor*
+  nameWithType.vb: Tensor.New(Integer(), Double)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Integer(), Double)
+  name.vb: New(Integer(), Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Data
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.Data
+  id: Data
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Data
+  nameWithType: Tensor.Data
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Data
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Data
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 85
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets the data for the tensor.
+  example: []
+  syntax:
+    content: public double[] Data { get; }
+    parameters: []
+    return:
+      type: System.Double[]
+    content.vb: Public Property Data As Double()
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Data*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  id: Shape
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Shape
+  nameWithType: Tensor.Shape
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Shape
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 90
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets the shape of the tensor.
+  example: []
+  syntax:
+    content: public int[] Shape { get; }
+    parameters: []
+    return:
+      type: System.Int32[]
+    content.vb: Public Property Shape As Integer()
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Shape*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  id: DebugInfo
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: DebugInfo
+  nameWithType: Tensor.DebugInfo
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DebugInfo
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 95
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets the debug info.
+  example: []
+  syntax:
+    content: public string DebugInfo { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property DebugInfo As String
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])
+  id: Item(System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: this[int[]]
+  nameWithType: Tensor.this[int[]]
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.this[int[]]
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: this[]
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 102
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: An indexer.
+  example: []
+  syntax:
+    content: public double this[params int[] indices] { get; set; }
+    parameters:
+    - id: indices
+      type: System.Int32[]
+      description: The indices.
+    return:
+      type: System.Double
+      description: The data value.
+    content.vb: Public Default Property this[](ParamArray indices As Integer()) As Double
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Item*
+  nameWithType.vb: Tensor.this[](Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.this[](Integer())
+  name.vb: this[](Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  id: op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: operator >(Tensor, double)
+  nameWithType: Tensor.operator >(Tensor, double)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator >(ParallelReverseAutoDiff.PRAD.Tensor, double)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_GreaterThan
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 114
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Returns 1 if a tensor value is greater than a scalar, 0 otherwise.
+  example: []
+  syntax:
+    content: public static Tensor operator >(Tensor a, double scalar)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor to compare.
+    - id: scalar
+      type: System.Double
+      description: The scalar to compare.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Shared Operator >(a As Tensor, scalar As Double) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan*
+  nameWithType.vb: Tensor.>(Tensor, Double)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.>(ParallelReverseAutoDiff.PRAD.Tensor, Double)
+  name.vb: '>(Tensor, Double)'
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  id: op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: operator <(Tensor, double)
+  nameWithType: Tensor.operator <(Tensor, double)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator <(ParallelReverseAutoDiff.PRAD.Tensor, double)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_LessThan
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 131
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Returns 1 if a tensor value is less than a scalar, 0 otherwise.
+  example: []
+  syntax:
+    content: public static Tensor operator <(Tensor a, double scalar)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor to compare.
+    - id: scalar
+      type: System.Double
+      description: The scalar to compare.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Shared Operator <(a As Tensor, scalar As Double) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan*
+  nameWithType.vb: Tensor.<(Tensor, Double)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.<(ParallelReverseAutoDiff.PRAD.Tensor, Double)
+  name.vb: <(Tensor, Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  id: op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: operator *(Tensor, Tensor)
+  nameWithType: Tensor.operator *(Tensor, Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator *(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Multiply
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 148
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Element-wise multiply two tensors together.
+  example: []
+  syntax:
+    content: public static Tensor operator *(Tensor a, Tensor b)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The first tensor.
+    - id: b
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The second tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Shared Operator *(a As Tensor, b As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply*
+  nameWithType.vb: Tensor.*(Tensor, Tensor)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.*(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  name.vb: '*(Tensor, Tensor)'
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  id: Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Stack(Tensor[], int)
+  nameWithType: Tensor.Stack(Tensor[], int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Stack
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 160
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Creates a stack of tensors along a specified axis.
+  example: []
+  syntax:
+    content: public static Tensor Stack(Tensor[] tensors, int axis = 0)
+    parameters:
+    - id: tensors
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: Tensors.
+    - id: axis
+      type: System.Int32
+      description: The axis to stack on.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The new tensor.
+    content.vb: Public Shared Function Stack(tensors As Tensor(), axis As Integer = 0) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Stack*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Cannot be empty.
+  nameWithType.vb: Tensor.Stack(Tensor(), Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  name.vb: Stack(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])
+  id: ToTensorArray(System.Int32,System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ToTensorArray(int, int[])
+  nameWithType: Tensor.ToTensorArray(int, int[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(int, int[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToTensorArray
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 222
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Create a tensor array.
+  example: []
+  syntax:
+    content: public static Tensor[] ToTensorArray(int count, int[] shape)
+    parameters:
+    - id: count
+      type: System.Int32
+      description: The number of tensors.
+    - id: shape
+      type: System.Int32[]
+      description: The shape of each tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The resultant tensor array.
+    content.vb: Public Shared Function ToTensorArray(count As Integer, shape As Integer()) As Tensor()
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray*
+  nameWithType.vb: Tensor.ToTensorArray(Integer, Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(Integer, Integer())
+  name.vb: ToTensorArray(Integer, Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  id: Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Concat(Tensor[], int)
+  nameWithType: Tensor.Concat(Tensor[], int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Concat
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 240
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Concatenates a list of tensors along a specified axis.
+  example: []
+  syntax:
+    content: public static Tensor Concat(Tensor[] tensors, int axis = 0)
+    parameters:
+    - id: tensors
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The tensors.
+    - id: axis
+      type: System.Int32
+      description: The axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A tensor.
+    content.vb: Public Shared Function Concat(tensors As Tensor(), axis As Integer = 0) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Concat*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Must contain at least two tensors.
+  nameWithType.vb: Tensor.Concat(Tensor(), Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  name.vb: Concat(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  id: CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: CreateFlatArray(Tensor[], int[])
+  nameWithType: Tensor.CreateFlatArray(Tensor[], int[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[], int[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: CreateFlatArray
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 326
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Creates a flat array from the tensors along the specified indices.
+  example: []
+  syntax:
+    content: public static Tensor CreateFlatArray(Tensor[] tensors, int[] indices)
+    parameters:
+    - id: tensors
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The tensors.
+    - id: indices
+      type: System.Int32[]
+      description: The indices.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The flat array.
+    content.vb: Public Shared Function CreateFlatArray(tensors As Tensor(), indices As Integer()) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray*
+  nameWithType.vb: Tensor.CreateFlatArray(Tensor(), Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor(), Integer())
+  name.vb: CreateFlatArray(Tensor(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  id: CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: CreateMask(Tensor, Func<double, bool>)
+  nameWithType: Tensor.CreateMask(Tensor, Func<double, bool>)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor, System.Func<double, bool>)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: CreateMask
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 352
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Create a tensor mask.
+  example: []
+  syntax:
+    content: public static Tensor CreateMask(Tensor tensor, Func<double, bool> conditionFunc)
+    parameters:
+    - id: tensor
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor.
+    - id: conditionFunc
+      type: System.Func{System.Double,System.Boolean}
+      description: The condition.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor mask.
+    content.vb: Public Shared Function CreateMask(tensor As Tensor, conditionFunc As Func(Of Double, Boolean)) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask*
+  nameWithType.vb: Tensor.CreateMask(Tensor, Func(Of Double, Boolean))
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor, System.Func(Of Double, Boolean))
+  name.vb: CreateMask(Tensor, Func(Of Double, Boolean))
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  id: Reciprocal
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Reciprocal()
+  nameWithType: Tensor.Reciprocal()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Reciprocal
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 367
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise reciprocal of the tensor.
+  example: []
+  syntax:
+    content: public Tensor Reciprocal()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Function Reciprocal() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)
+  id: ExpandDims(System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ExpandDims(int)
+  nameWithType: Tensor.ExpandDims(int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ExpandDims
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 381
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Expands the dimensions.
+  example: []
+  syntax:
+    content: public Tensor ExpandDims(int axis = -1)
+    parameters:
+    - id: axis
+      type: System.Int32
+      description: The axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Function ExpandDims(axis As Integer = -1) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims*
+  nameWithType.vb: Tensor.ExpandDims(Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(Integer)
+  name.vb: ExpandDims(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  id: Abs
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Abs()
+  nameWithType: Tensor.Abs()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Abs()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Abs
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 418
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the elementwise absolute value of the tensor.
+  example: []
+  syntax:
+    content: public Tensor Abs()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Function Abs() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Abs*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  id: Sign
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Sign()
+  nameWithType: Tensor.Sign()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Sign()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Sign
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 429
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the elementwise sign of the tensor.
+  example: []
+  syntax:
+    content: public Tensor Sign()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The resultant tensor.
+    content.vb: Public Function Sign() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Sign*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  id: DeepClone
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: DeepClone()
+  nameWithType: Tensor.DeepClone()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: DeepClone
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 444
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Deep clone the tensor.
+  example: []
+  syntax:
+    content: public Tensor DeepClone()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor.
+    content.vb: Public Function DeepClone() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])
+  id: ReplaceData(System.Double[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ReplaceData(double[])
+  nameWithType: Tensor.ReplaceData(double[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(double[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ReplaceData
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 457
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Replace the data with new data.
+  example: []
+  syntax:
+    content: public void ReplaceData(double[] newData)
+    parameters:
+    - id: newData
+      type: System.Double[]
+      description: New data.
+    content.vb: Public Sub ReplaceData(newData As Double())
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Size doesn't match.
+  nameWithType.vb: Tensor.ReplaceData(Double())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(Double())
+  name.vb: ReplaceData(Double())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  id: ToMatrix
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ToMatrix()
+  nameWithType: Tensor.ToMatrix()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToMatrix
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 471
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Converts to a Matrix.
+  example: []
+  syntax:
+    content: public Matrix ToMatrix()
+    return:
+      type: ParallelReverseAutoDiff.RMAD.Matrix
+      description: A matrix.
+    content.vb: Public Function ToMatrix() As Matrix
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  id: ToDeepMatrix
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ToDeepMatrix()
+  nameWithType: Tensor.ToDeepMatrix()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToDeepMatrix
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 510
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: >-
+    Converts the Tensor to a DeepMatrix.
+
+    Assumes the first dimension of the Tensor represents the depth of the DeepMatrix.
+  example: []
+  syntax:
+    content: public DeepMatrix ToDeepMatrix()
+    return:
+      type: ParallelReverseAutoDiff.RMAD.DeepMatrix
+      description: The DeepMatrix.
+    content.vb: Public Function ToDeepMatrix() As DeepMatrix
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  id: Exp
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Exp()
+  nameWithType: Tensor.Exp()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Exp()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Exp
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 544
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise exponential of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor Exp()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function Exp() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Exp*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  id: Ln
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Ln()
+  nameWithType: Tensor.Ln()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Ln()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Ln
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 555
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise natural logarithm of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor Ln()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function Ln() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Ln*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Log
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Log
+  id: Log
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Log()
+  nameWithType: Tensor.Log()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Log()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Log
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 566
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise logarithm base 10 of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor Log()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function Log() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Log*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)
+  id: Mean(System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Mean(int)
+  nameWithType: Tensor.Mean(int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Mean(int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Mean
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 579
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the mean of the tensor along the specified axis.
+  example: []
+  syntax:
+    content: public Tensor Mean(int axis)
+    parameters:
+    - id: axis
+      type: System.Int32
+      description: The specified axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function Mean(axis As Integer) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Mean*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Axis is out of bounds.
+  nameWithType.vb: Tensor.Mean(Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Mean(Integer)
+  name.vb: Mean(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  id: Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Gather(Tensor, int)
+  nameWithType: Tensor.Gather(Tensor, int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Gather
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 630
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gathers slices from the tensor along the specified axis.
+  example: []
+  syntax:
+    content: public Tensor Gather(Tensor indices, int axis = 0)
+    parameters:
+    - id: indices
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The indices of elements to gather.
+    - id: axis
+      type: System.Int32
+      description: The axis along which to gather slices.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the gathered slices.
+    content.vb: Public Function Gather(indices As Tensor, axis As Integer = 0) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Gather*
+  nameWithType.vb: Tensor.Gather(Tensor, Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  name.vb: Gather(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])
+  id: Tile(System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Tile(int[])
+  nameWithType: Tensor.Tile(int[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tile(int[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Tile
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 767
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Tiles the tensor along each dimension as specified by multiples.
+  example: []
+  syntax:
+    content: public Tensor Tile(int[] multiples)
+    parameters:
+    - id: multiples
+      type: System.Int32[]
+      description: The array of multiples for each dimension.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor that is tiled according to multiples.
+    content.vb: Public Function Tile(multiples As Integer()) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Tile*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Invalid multiples or shape mismatch.
+  nameWithType.vb: Tensor.Tile(Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Tile(Integer())
+  name.vb: Tile(Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseAdd(Tensor)
+  nameWithType: Tensor.ElementwiseAdd(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseAdd
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 822
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise addition of two tensors using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseAdd(Tensor other)
+    parameters:
+    - id: other
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The other tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseAdd(other As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseSub(Tensor)
+  nameWithType: Tensor.ElementwiseSub(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseSub
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 835
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise subtraction of two tensors using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseSub(Tensor other)
+    parameters:
+    - id: other
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The other tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseSub(other As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseMultiply(Tensor)
+  nameWithType: Tensor.ElementwiseMultiply(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseMultiply
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 848
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise multiplication of two tensors using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseMultiply(Tensor other)
+    parameters:
+    - id: other
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The other tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseMultiply(other As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseDivide(Tensor)
+  nameWithType: Tensor.ElementwiseDivide(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseDivide
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 861
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise division of two tensors using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseDivide(Tensor other)
+    parameters:
+    - id: other
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The other tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseDivide(other As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  id: ElementwiseSquare
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseSquare()
+  nameWithType: Tensor.ElementwiseSquare()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseSquare
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 873
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise square of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseSquare()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseSquare() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  id: ElementwiseSquareRoot
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseSquareRoot()
+  nameWithType: Tensor.ElementwiseSquareRoot()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseSquareRoot
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 884
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise square root of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseSquareRoot()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseSquareRoot() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  id: ElementwiseSin
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseSin()
+  nameWithType: Tensor.ElementwiseSin()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseSin
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 895
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise sin of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseSin()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseSin() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  id: ElementwiseCos
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseCos()
+  nameWithType: Tensor.ElementwiseCos()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseCos
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 906
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise cos of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseCos()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseCos() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: ElementwiseAtan2(Tensor)
+  nameWithType: Tensor.ElementwiseAtan2(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ElementwiseAtan2
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 918
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Computes the element-wise atan2 of the tensor using MKL.NET.
+  example: []
+  syntax:
+    content: public Tensor ElementwiseAtan2(Tensor x)
+    parameters:
+    - id: x
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The other tensor.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the result.
+    content.vb: Public Function ElementwiseAtan2(x As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)
+  id: PrintCode(System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: PrintCode(int)
+  nameWithType: Tensor.PrintCode(int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: PrintCode
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 930
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Prints the tensor as C# code.
+  example: []
+  syntax:
+    content: public string PrintCode(int decimals = 4)
+    parameters:
+    - id: decimals
+      type: System.Int32
+      description: The number of decimal places to round to.
+    return:
+      type: System.String
+      description: The code.
+    content.vb: Public Function PrintCode(decimals As Integer = 4) As String
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode*
+  nameWithType.vb: Tensor.PrintCode(Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(Integer)
+  name.vb: PrintCode(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Print
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Print
+  id: Print
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Print()
+  nameWithType: Tensor.Print()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Print()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Print
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 941
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Prints the tensor to the console.
+  example: []
+  syntax:
+    content: public void Print()
+    content.vb: Public Sub Print()
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Print*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: GatherNd(Tensor)
+  nameWithType: Tensor.GatherNd(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: GatherNd
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 962
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gathers slices from the tensor along the specified indices.
+  example: []
+  syntax:
+    content: public Tensor GatherNd(Tensor indices)
+    parameters:
+    - id: indices
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor containing the indices.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the gathered slices.
+    content.vb: Public Function GatherNd(indices As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])
+  id: Reshape(System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Reshape(int[])
+  nameWithType: Tensor.Reshape(int[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reshape(int[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Reshape
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 994
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Reshapes the tensor to the new shape.
+  example: []
+  syntax:
+    content: public Tensor Reshape(int[] newShape)
+    parameters:
+    - id: newShape
+      type: System.Int32[]
+      description: The new shape.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor with the reshaped data.
+    content.vb: Public Function Reshape(newShape As Integer()) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Reshape*
+  nameWithType.vb: Tensor.Reshape(Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Reshape(Integer())
+  name.vb: Reshape(Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])
+  id: Slice(System.Int32[],System.Int32[],System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Slice(int[], int[], int[]?)
+  nameWithType: Tensor.Slice(int[], int[], int[]?)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Slice(int[], int[], int[]?)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Slice
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 1027
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Extracts a slice from the tensor based on begin, size, and optional strides.
+  example: []
+  syntax:
+    content: public Tensor Slice(int[] begin, int[] size, int[]? strides = null)
+    parameters:
+    - id: begin
+      type: System.Int32[]
+      description: The starting indices for each axis.
+    - id: size
+      type: System.Int32[]
+      description: The lengths of the slice along each axis.
+    - id: strides
+      type: System.Int32[]
+      description: The step size for each axis (default is 1).
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor that is a slice of the original tensor.
+    content.vb: Public Function Slice(begin As Integer(), size As Integer(), strides As Integer() = Nothing) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Slice*
+  nameWithType.vb: Tensor.Slice(Integer(), Integer(), Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Slice(Integer(), Integer(), Integer())
+  name.vb: Slice(Integer(), Integer(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)
+  id: Split(System.Int32,System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Split(int, int)
+  nameWithType: Tensor.Split(int, int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Split(int, int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Split
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 1086
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Splits the tensor into multiple tensors along the specified axis.
+  example: []
+  syntax:
+    content: public Tensor[] Split(int groupSize, int axis = 0)
+    parameters:
+    - id: groupSize
+      type: System.Int32
+      description: The group size.
+    - id: axis
+      type: System.Int32
+      description: The axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The tensors.
+    content.vb: Public Function Split(groupSize As Integer, axis As Integer = 0) As Tensor()
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Split*
+  nameWithType.vb: Tensor.Split(Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Split(Integer, Integer)
+  name.vb: Split(Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  id: SumRows
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: SumRows()
+  nameWithType: Tensor.SumRows()
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.SumRows()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: SumRows
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 1118
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Sum the rows of the tensor.
+  example: []
+  syntax:
+    content: public Tensor SumRows()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor.
+    content.vb: Public Function SumRows() As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.SumRows*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])
+  id: Transpose(System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Transpose(params int[])
+  nameWithType: Tensor.Transpose(params int[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Transpose(params int[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Transpose
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 1143
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Transposes the tensor according to the specified permutation of axes.
+  example: []
+  syntax:
+    content: public Tensor Transpose(params int[] permutation)
+    parameters:
+    - id: permutation
+      type: System.Int32[]
+      description: The permutation of the axes.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: A new tensor that is the transposed version of the original tensor.
+    content.vb: Public Function Transpose(ParamArray permutation As Integer()) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Transpose*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: If the permutation is invalid.
+  nameWithType.vb: Tensor.Transpose(ParamArray Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Transpose(ParamArray Integer())
+  name.vb: Transpose(ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)
+  id: Unstack(System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Unstack(int)
+  nameWithType: Tensor.Unstack(int)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Unstack(int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Unstack
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 1186
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Unstacks the tensor along a specified axis.
+  example: []
+  syntax:
+    content: public Tensor[] Unstack(int axis = 0)
+    parameters:
+    - id: axis
+      type: System.Int32
+      description: The axis along which to unstack.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: An array of tensors resulting from the unstack operation.
+    content.vb: Public Function Unstack(axis As Integer = 0) As Tensor()
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Unstack*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: If the axis is out of bounds.
+  nameWithType.vb: Tensor.Unstack(Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Unstack(Integer)
+  name.vb: Unstack(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])
+  id: Indexer(System.String[])
+  parent: ParallelReverseAutoDiff.PRAD.Tensor
+  langs:
+  - csharp
+  - vb
+  name: Indexer(params string[])
+  nameWithType: Tensor.Indexer(params string[])
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Indexer(params string[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/Tensor.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Indexer
+    path: ../../src/PRAD/Tensor.cs
+    startLine: 1270
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: An indexer for the tensor.
+  example: []
+  syntax:
+    content: public Tensor Indexer(params string[] indices)
+    parameters:
+    - id: indices
+      type: System.String[]
+      description: The indices used to slice.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The sliced tensor.
+    content.vb: Public Function Indexer(ParamArray indices As String()) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.Tensor.Indexer*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Number of indices does not match rank.
+  nameWithType.vb: Tensor.Indexer(ParamArray String())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Indexer(ParamArray String())
+  name.vb: Indexer(ParamArray String())
+references:
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor
+  nameWithType: Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.#ctor
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])
+  name: Tensor
+  nameWithType: Tensor.Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor
+  nameWithType.vb: Tensor.New
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New
+  name.vb: New
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: System.Double[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double[]
+  nameWithType: double[]
+  fullName: double[]
+  nameWithType.vb: Double()
+  fullName.vb: Double()
+  name.vb: Double()
+  spec.csharp:
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: (
+  - name: )
+- uid: System.Double[,]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double[,]
+  nameWithType: double[,]
+  fullName: double[,]
+  nameWithType.vb: Double(,)
+  fullName.vb: Double(,)
+  name.vb: Double(,)
+  spec.csharp:
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: '['
+  - name: ','
+  - name: ']'
+  spec.vb:
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: (
+  - name: ','
+  - name: )
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Data*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Data
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Data
+  name: Data
+  nameWithType: Tensor.Data
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Data
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Shape*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  name: Shape
+  nameWithType: Tensor.Shape
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Shape
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  name: DebugInfo
+  nameWithType: Tensor.DebugInfo
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Item*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Item
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])
+  name: this
+  nameWithType: Tensor.this
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.this
+  nameWithType.vb: Tensor.this[]
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.this[]
+  name.vb: this[]
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  name: operator >
+  nameWithType: Tensor.operator >
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator >
+  nameWithType.vb: Tensor.>
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.>
+  name.vb: '>'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan*
+    name: '>'
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  name: operator <
+  nameWithType: Tensor.operator <
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator <
+  nameWithType.vb: Tensor.<
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.<
+  name.vb: <
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan*
+    name: <
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: operator *
+  nameWithType: Tensor.operator *
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator *
+  nameWithType.vb: Tensor.*
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.*
+  name.vb: '*'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply*
+    name: '*'
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Stack*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Stack
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Stack
+  nameWithType: Tensor.Stack
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Stack
+- uid: ParallelReverseAutoDiff.PRAD.Tensor[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor[]
+  nameWithType: Tensor[]
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor[]
+  nameWithType.vb: Tensor()
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor()
+  name.vb: Tensor()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: (
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])
+  name: ToTensorArray
+  nameWithType: Tensor.ToTensorArray
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Concat*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Concat
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Concat
+  nameWithType: Tensor.Concat
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Concat
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  name: CreateFlatArray
+  nameWithType: Tensor.CreateFlatArray
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.CreateMask
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  name: CreateMask
+  nameWithType: Tensor.CreateMask
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask
+- uid: System.Func{System.Double,System.Boolean}
+  commentId: T:System.Func{System.Double,System.Boolean}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<double, bool>
+  nameWithType: Func<double, bool>
+  fullName: System.Func<double, bool>
+  nameWithType.vb: Func(Of Double, Boolean)
+  fullName.vb: System.Func(Of Double, Boolean)
+  name.vb: Func(Of Double, Boolean)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Double
+    name: double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Double
+    name: Double
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.double
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  name: Reciprocal
+  nameWithType: Tensor.Reciprocal
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)
+  name: ExpandDims
+  nameWithType: Tensor.ExpandDims
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Abs*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  name: Abs
+  nameWithType: Tensor.Abs
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Abs
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Sign*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  name: Sign
+  nameWithType: Tensor.Sign
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Sign
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  name: DeepClone
+  nameWithType: Tensor.DeepClone
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])
+  name: ReplaceData
+  nameWithType: Tensor.ReplaceData
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  name: ToMatrix
+  nameWithType: Tensor.ToMatrix
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+- uid: ParallelReverseAutoDiff.RMAD.Matrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.Matrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html
+  name: Matrix
+  nameWithType: Matrix
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix
+- uid: ParallelReverseAutoDiff.RMAD
+  commentId: N:ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.RMAD
+  nameWithType: ParallelReverseAutoDiff.RMAD
+  fullName: ParallelReverseAutoDiff.RMAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.RMAD
+    name: RMAD
+    href: ParallelReverseAutoDiff.RMAD.html
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  name: ToDeepMatrix
+  nameWithType: Tensor.ToDeepMatrix
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix
+  commentId: T:ParallelReverseAutoDiff.RMAD.DeepMatrix
+  parent: ParallelReverseAutoDiff.RMAD
+  href: ParallelReverseAutoDiff.RMAD.DeepMatrix.html
+  name: DeepMatrix
+  nameWithType: DeepMatrix
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Exp*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  name: Exp
+  nameWithType: Tensor.Exp
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Exp
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Ln*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  name: Ln
+  nameWithType: Tensor.Ln
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Ln
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Log*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Log
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Log
+  name: Log
+  nameWithType: Tensor.Log
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Log
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Mean*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Mean
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)
+  name: Mean
+  nameWithType: Tensor.Mean
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Mean
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Gather*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Gather
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: Gather
+  nameWithType: Tensor.Gather
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Gather
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Tile*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Tile
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])
+  name: Tile
+  nameWithType: Tensor.Tile
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tile
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseAdd
+  nameWithType: Tensor.ElementwiseAdd
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseSub
+  nameWithType: Tensor.ElementwiseSub
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseMultiply
+  nameWithType: Tensor.ElementwiseMultiply
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseDivide
+  nameWithType: Tensor.ElementwiseDivide
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  name: ElementwiseSquare
+  nameWithType: Tensor.ElementwiseSquare
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  name: ElementwiseSquareRoot
+  nameWithType: Tensor.ElementwiseSquareRoot
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  name: ElementwiseSin
+  nameWithType: Tensor.ElementwiseSin
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  name: ElementwiseCos
+  nameWithType: Tensor.ElementwiseCos
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseAtan2
+  nameWithType: Tensor.ElementwiseAtan2
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.PrintCode
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)
+  name: PrintCode
+  nameWithType: Tensor.PrintCode
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Print*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Print
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Print
+  name: Print
+  nameWithType: Tensor.Print
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Print
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.GatherNd
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: GatherNd
+  nameWithType: Tensor.GatherNd
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reshape*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Reshape
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])
+  name: Reshape
+  nameWithType: Tensor.Reshape
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reshape
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Slice*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Slice
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])
+  name: Slice
+  nameWithType: Tensor.Slice
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Slice
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Split*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Split
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)
+  name: Split
+  nameWithType: Tensor.Split
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Split
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.SumRows*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  name: SumRows
+  nameWithType: Tensor.SumRows
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Transpose*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Transpose
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])
+  name: Transpose
+  nameWithType: Tensor.Transpose
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Transpose
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Unstack*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Unstack
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)
+  name: Unstack
+  nameWithType: Tensor.Unstack
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Unstack
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Indexer*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Indexer
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])
+  name: Indexer
+  nameWithType: Tensor.Indexer
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Indexer
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )

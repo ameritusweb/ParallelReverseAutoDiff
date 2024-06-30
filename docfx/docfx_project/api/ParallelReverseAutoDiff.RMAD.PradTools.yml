@@ -1,38 +1,33 @@
 ### YamlMime:ManagedReference
 items:
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult
-  commentId: T:ParallelReverseAutoDiff.RMAD.BackwardResult
-  id: BackwardResult
+- uid: ParallelReverseAutoDiff.RMAD.PradTools
+  commentId: T:ParallelReverseAutoDiff.RMAD.PradTools
+  id: PradTools
   parent: ParallelReverseAutoDiff.RMAD
-  children:
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Results
+  children: []
   langs:
   - csharp
   - vb
-  name: BackwardResult
-  nameWithType: BackwardResult
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult
+  name: PradTools
+  nameWithType: PradTools
+  fullName: ParallelReverseAutoDiff.RMAD.PradTools
   type: Class
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradTools.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: BackwardResult
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 10
+    id: PradTools
+    path: ../../src/PRAD/PradTools.cs
+    startLine: 11
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
-  summary: The result of one step through a backward pass.
+  summary: PRAD tools.
   example: []
   syntax:
-    content: public class BackwardResult
-    content.vb: Public Class BackwardResult
+    content: public static class PradTools
+    content.vb: Public Module PradTools
   inheritance:
   - System.Object
   inheritedMembers:
@@ -43,161 +38,6 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  id: Results
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Results
-  nameWithType: BackwardResult.Results
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Results
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 15
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets the backward pass gradients.
-  example: []
-  syntax:
-    content: public object?[] Results { get; set; }
-    parameters: []
-    return:
-      type: System.Object[]
-    content.vb: Public Property Results As Object()
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Results*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  id: HasMultipleInputs
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: HasMultipleInputs
-  nameWithType: BackwardResult.HasMultipleInputs
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: HasMultipleInputs
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 20
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets a value indicating whether the result originated from an operation that has multiple inputs.
-  example: []
-  syntax:
-    content: public bool HasMultipleInputs { get; set; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Property HasMultipleInputs As Boolean
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  id: Item1
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item1
-  nameWithType: BackwardResult.Item1
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item1
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 25
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the first item.
-  example: []
-  syntax:
-    content: public object? Item1 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item1 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  id: Item2
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item2
-  nameWithType: BackwardResult.Item2
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item2
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 36
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the second item.
-  example: []
-  syntax:
-    content: public object? Item2 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item2 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  id: Item3
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item3
-  nameWithType: BackwardResult.Item3
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item3
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 47
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the third item.
-  example: []
-  syntax:
-    content: public object? Item3 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item3 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
 references:
 - uid: ParallelReverseAutoDiff.RMAD
   commentId: N:ParallelReverseAutoDiff.RMAD
@@ -458,67 +298,3 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  name: Results
-  nameWithType: BackwardResult.Results
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-- uid: System.Object[]
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
-  name: object[]
-  nameWithType: object[]
-  fullName: object[]
-  nameWithType.vb: Object()
-  fullName.vb: Object()
-  name.vb: Object()
-  spec.csharp:
-  - uid: System.Object
-    name: object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: '['
-  - name: ']'
-  spec.vb:
-  - uid: System.Object
-    name: Object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: (
-  - name: )
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  name: HasMultipleInputs
-  nameWithType: BackwardResult.HasMultipleInputs
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-- uid: System.Boolean
-  commentId: T:System.Boolean
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  name: Item1
-  nameWithType: BackwardResult.Item1
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  name: Item2
-  nameWithType: BackwardResult.Item2
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  name: Item3
-  nameWithType: BackwardResult.Item3
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3

@@ -146,6 +146,8 @@ items:
   - ParallelReverseAutoDiff.RMAD.PaddingMaskOperation
   - ParallelReverseAutoDiff.RMAD.PairwiseSineSoftmaxOperation
   - ParallelReverseAutoDiff.RMAD.PiecewiseActivationOperation
+  - ParallelReverseAutoDiff.RMAD.PradMath
+  - ParallelReverseAutoDiff.RMAD.PradTools
   - ParallelReverseAutoDiff.RMAD.RMSNormOperation
   - ParallelReverseAutoDiff.RMAD.ReLUOperation
   - ParallelReverseAutoDiff.RMAD.ScaleAndShiftOperation
@@ -180,6 +182,18 @@ items:
   assemblies:
   - ParallelReverseAutoDiff
 references:
+- uid: ParallelReverseAutoDiff.RMAD.PradMath
+  commentId: T:ParallelReverseAutoDiff.RMAD.PradMath
+  href: ParallelReverseAutoDiff.RMAD.PradMath.html
+  name: PradMath
+  nameWithType: PradMath
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath
+- uid: ParallelReverseAutoDiff.RMAD.PradTools
+  commentId: T:ParallelReverseAutoDiff.RMAD.PradTools
+  href: ParallelReverseAutoDiff.RMAD.PradTools.html
+  name: PradTools
+  nameWithType: PradTools
+  fullName: ParallelReverseAutoDiff.RMAD.PradTools
 - uid: ParallelReverseAutoDiff.RMAD.AdamOptimizer
   commentId: T:ParallelReverseAutoDiff.RMAD.AdamOptimizer
   parent: ParallelReverseAutoDiff.RMAD

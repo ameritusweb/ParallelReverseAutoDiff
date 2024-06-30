@@ -1,0 +1,2049 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Tensor
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Tensor
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ameritusweb/ParallelReverseAutoDiff/new/main/apiSpec/new?filename=ParallelReverseAutoDiff_PRAD_Tensor.md&amp;value=---%0Auid%3A%20ParallelReverseAutoDiff.PRAD.Tensor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="ParallelReverseAutoDiff.PRAD.Tensor">
+
+
+
+  <h1 id="ParallelReverseAutoDiff_PRAD_Tensor" data-uid="ParallelReverseAutoDiff.PRAD.Tensor" class="text-break">
+    Class Tensor
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="ParallelReverseAutoDiff.html">ParallelReverseAutoDiff</a>.<a class="xref" href="ParallelReverseAutoDiff.PRAD.html">PRAD</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>ParallelReverseAutoDiff.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A flat tensor.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Tensor</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Tensor</span></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="ParallelReverseAutoDiff.PRAD.PradTensor.html">PradTensor</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Double_0__0___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Double[0:,0:])">
+  Tensor(double[,])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a> class from a 2D array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor(double[,] array)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>array</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>[,]</dt>
+    <dd><p>The 2D array to initialize the tensor with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])">
+  Tensor(int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor(int[] shape)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shape</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The dimensions of the tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Int32___System_Double_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double)">
+  Tensor(int[], double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a> class with a single value repeated for all elements.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor(int[] shape, double value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shape</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The shape of the tensor.</p>
+</dd>
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd><p>The value to fill the tensor with.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Int32___System_Double___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double[])">
+  Tensor(int[], double[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor(int[] shape, double[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shape</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The shape.</p>
+</dd>
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>[]</dt>
+    <dd><p>The data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>The data length does not match.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Data_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Data*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Data" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Data">
+  Data
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the data for the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double[] Data { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_DebugInfo_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_DebugInfo" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo">
+  DebugInfo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the debug info.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DebugInfo { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Item_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Item*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Item_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])">
+  this[int[]]
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An indexer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double this[params int[] indices] { get; set; }</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>indices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The indices.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd><p>The data value.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Shape_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Shape*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Shape" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Shape">
+  Shape
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the shape of the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int[] Shape { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Abs_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Abs*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Abs" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Abs">
+  Abs()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L419"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the elementwise absolute value of the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Abs()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Concat_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Concat*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Concat_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)">
+  Concat(Tensor[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L241"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Concatenates a list of tensors along a specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor Concat(Tensor[] tensors, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tensors</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The tensors.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Must contain at least two tensors.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_CreateFlatArray_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_CreateFlatArray_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])">
+  CreateFlatArray(Tensor[], int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a flat array from the tensors along the specified indices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor CreateFlatArray(Tensor[] tensors, int[] indices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tensors</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The tensors.</p>
+</dd>
+    <dt><code>indices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The indices.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The flat array.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_CreateMask_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.CreateMask*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_CreateMask_ParallelReverseAutoDiff_PRAD_Tensor_System_Func_System_Double_System_Boolean__" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})">
+  CreateMask(Tensor, Func&lt;double, bool&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L353"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Create a tensor mask.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor CreateMask(Tensor tensor, Func&lt;double, bool&gt; conditionFunc)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tensor</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor.</p>
+</dd>
+    <dt><code>conditionFunc</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>The condition.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor mask.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_DeepClone_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.DeepClone*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_DeepClone" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.DeepClone">
+  DeepClone()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L445"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Deep clone the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor DeepClone()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAdd_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAdd_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseAdd(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L823"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise addition of two tensors using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseAdd(Tensor other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAtan2_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAtan2_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseAtan2(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L919"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise atan2 of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseAtan2(Tensor x)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseCos_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseCos" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos">
+  ElementwiseCos()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L907"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise cos of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseCos()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseDivide_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseDivide_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseDivide(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L862"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise division of two tensors using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseDivide(Tensor other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseMultiply_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseMultiply_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseMultiply(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L849"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise multiplication of two tensors using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseMultiply(Tensor other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSin_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSin" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin">
+  ElementwiseSin()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L896"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise sin of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSin()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquare_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquare" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare">
+  ElementwiseSquare()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L874"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise square of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSquare()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquareRoot_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquareRoot" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot">
+  ElementwiseSquareRoot()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L885"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise square root of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSquareRoot()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSub_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSub_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)">
+  ElementwiseSub(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L836"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise subtraction of two tensors using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ElementwiseSub(Tensor other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The other tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Exp_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Exp*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Exp" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Exp">
+  Exp()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L545"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise exponential of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Exp()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ExpandDims_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ExpandDims_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)">
+  ExpandDims(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L382"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Expands the dimensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor ExpandDims(int axis = -1)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Gather_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Gather*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Gather_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)">
+  Gather(Tensor, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L631"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gathers slices from the tensor along the specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Gather(Tensor indices, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>indices</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The indices of elements to gather.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which to gather slices.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the gathered slices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_GatherNd_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.GatherNd*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_GatherNd_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)">
+  GatherNd(Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L963"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gathers slices from the tensor along the specified indices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor GatherNd(Tensor indices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>indices</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor containing the indices.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the gathered slices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Indexer_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Indexer*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Indexer_System_String___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])">
+  Indexer(params string[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L1271"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An indexer for the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Indexer(params string[] indices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>indices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
+    <dd><p>The indices used to slice.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The sliced tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Number of indices does not match rank.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Ln_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Ln*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Ln" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Ln">
+  Ln()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L556"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise natural logarithm of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Ln()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Log_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Log*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Log" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Log">
+  Log()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L567"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise logarithm base 10 of the tensor using MKL.NET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Log()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Mean_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Mean*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Mean_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)">
+  Mean(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L580"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the mean of the tensor along the specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Mean(int axis)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The specified axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Axis is out of bounds.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Print_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Print*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Print" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Print">
+  Print()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L942"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Prints the tensor to the console.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Print()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_PrintCode_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.PrintCode*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_PrintCode_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)">
+  PrintCode(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L931"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Prints the tensor as C# code.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string PrintCode(int decimals = 4)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>decimals</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of decimal places to round to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The code.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Reciprocal_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Reciprocal" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal">
+  Reciprocal()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L368"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the element-wise reciprocal of the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Reciprocal()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ReplaceData_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ReplaceData_System_Double___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])">
+  ReplaceData(double[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L458"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Replace the data with new data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ReplaceData(double[] newData)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>newData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>[]</dt>
+    <dd><p>New data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Size doesn't match.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Reshape_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Reshape*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Reshape_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])">
+  Reshape(int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L995"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reshapes the tensor to the new shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Reshape(int[] newShape)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>newShape</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The new shape.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor with the reshaped data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Sign_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Sign*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Sign" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Sign">
+  Sign()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L430"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the elementwise sign of the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Sign()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Slice_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Slice*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Slice_System_Int32___System_Int32___System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])">
+  Slice(int[], int[], int[]?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L1028"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Extracts a slice from the tensor based on begin, size, and optional strides.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Slice(int[] begin, int[] size, int[]? strides = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>begin</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The starting indices for each axis.</p>
+</dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The lengths of the slice along each axis.</p>
+</dd>
+    <dt><code>strides</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The step size for each axis (default is 1).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor that is a slice of the original tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Split_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Split*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Split_System_Int32_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)">
+  Split(int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L1087"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Splits the tensor into multiple tensors along the specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] Split(int groupSize, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>groupSize</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The group size.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The tensors.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Stack_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Stack*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Stack_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)">
+  Stack(Tensor[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L161"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a stack of tensors along a specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor Stack(Tensor[] tensors, int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tensors</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>Tensors.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis to stack on.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The new tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Cannot be empty.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_SumRows_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.SumRows*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_SumRows" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.SumRows">
+  SumRows()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L1119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sum the rows of the tensor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor SumRows()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Tile_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Tile*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Tile_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])">
+  Tile(int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L768"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Tiles the tensor along each dimension as specified by multiples.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Tile(int[] multiples)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>multiples</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The array of multiples for each dimension.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor that is tiled according to multiples.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Invalid multiples or shape mismatch.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ToDeepMatrix_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ToDeepMatrix" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix">
+  ToDeepMatrix()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L511"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts the Tensor to a DeepMatrix.
+Assumes the first dimension of the Tensor represents the depth of the DeepMatrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DeepMatrix ToDeepMatrix()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.DeepMatrix.html">DeepMatrix</a></dt>
+    <dd><p>The DeepMatrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ToMatrix_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ToMatrix" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix">
+  ToMatrix()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L472"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts to a Matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Matrix ToMatrix()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.RMAD.Matrix.html">Matrix</a></dt>
+    <dd><p>A matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_ToTensorArray_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_ToTensorArray_System_Int32_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])">
+  ToTensorArray(int, int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L223"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Create a tensor array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor[] ToTensorArray(int count, int[] shape)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>count</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of tensors.</p>
+</dd>
+    <dt><code>shape</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The shape of each tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>The resultant tensor array.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Transpose_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Transpose*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Transpose_System_Int32___" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])">
+  Transpose(params int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L1144"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transposes the tensor according to the specified permutation of axes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor Transpose(params int[] permutation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>permutation</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>The permutation of the axes.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>A new tensor that is the transposed version of the original tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If the permutation is invalid.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_Unstack_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Unstack*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_Unstack_System_Int32_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)">
+  Unstack(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L1187"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Unstacks the tensor along a specified axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tensor[] Unstack(int axis = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axis</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The axis along which to unstack.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a>[]</dt>
+    <dd><p>An array of tensors resulting from the unstack operation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>If the axis is out of bounds.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_op_GreaterThan_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_op_GreaterThan_ParallelReverseAutoDiff_PRAD_Tensor_System_Double_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)">
+  operator &gt;(Tensor, double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns 1 if a tensor value is greater than a scalar, 0 otherwise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor operator &gt;(Tensor a, double scalar)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>a</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor to compare.</p>
+</dd>
+    <dt><code>scalar</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd><p>The scalar to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_op_LessThan_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_op_LessThan_ParallelReverseAutoDiff_PRAD_Tensor_System_Double_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)">
+  operator &lt;(Tensor, double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns 1 if a tensor value is less than a scalar, 0 otherwise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor operator &lt;(Tensor a, double scalar)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>a</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The tensor to compare.</p>
+</dd>
+    <dt><code>scalar</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd><p>The scalar to compare.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="ParallelReverseAutoDiff_PRAD_Tensor_op_Multiply_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply*"></a>
+
+  <h3 id="ParallelReverseAutoDiff_PRAD_Tensor_op_Multiply_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_" data-uid="ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)">
+  operator *(Tensor, Tensor)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Element-wise multiply two tensors together.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Tensor operator *(Tensor a, Tensor b)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>a</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The first tensor.</p>
+</dd>
+    <dt><code>b</code> <a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The second tensor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="ParallelReverseAutoDiff.PRAD.Tensor.html">Tensor</a></dt>
+    <dd><p>The resultant tensor.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/ameritusweb/ParallelReverseAutoDiff/blob/main/src/PRAD/Tensor.cs/#L20" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

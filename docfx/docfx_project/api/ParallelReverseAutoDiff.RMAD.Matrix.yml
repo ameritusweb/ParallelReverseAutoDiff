@@ -8,7 +8,9 @@ items:
   - ParallelReverseAutoDiff.RMAD.Matrix.#ctor
   - ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[])
   - ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][])
+  - ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][],System.Int32[],System.Int32)
   - ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][])
+  - ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][],System.Int32[],System.Int32)
   - ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Int32)
   - ParallelReverseAutoDiff.RMAD.Matrix.Accumulate(System.Double[][])
   - ParallelReverseAutoDiff.RMAD.Matrix.Average(ParallelReverseAutoDiff.RMAD.Matrix)
@@ -34,16 +36,20 @@ items:
   - ParallelReverseAutoDiff.RMAD.Matrix.Initialize(ParallelReverseAutoDiff.RMAD.InitializationType,System.Double)
   - ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32)
   - ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32[])
   - ParallelReverseAutoDiff.RMAD.Matrix.Length
   - ParallelReverseAutoDiff.RMAD.Matrix.Mean
+  - ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
   - ParallelReverseAutoDiff.RMAD.Matrix.Replace(System.Double[][])
   - ParallelReverseAutoDiff.RMAD.Matrix.ReplaceVertically(System.Double[])
   - ParallelReverseAutoDiff.RMAD.Matrix.Rows
   - ParallelReverseAutoDiff.RMAD.Matrix.Serialize(System.Span{System.Byte},System.Boolean)
   - ParallelReverseAutoDiff.RMAD.Matrix.SetColumn(System.Int32,System.Double)
   - ParallelReverseAutoDiff.RMAD.Matrix.SetColumnSlice(System.Int32,ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.Matrix.Shape
   - ParallelReverseAutoDiff.RMAD.Matrix.Sum
   - ParallelReverseAutoDiff.RMAD.Matrix.ToArray
+  - ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
   - ParallelReverseAutoDiff.RMAD.Matrix.Transpose
   - ParallelReverseAutoDiff.RMAD.Matrix.UniqueId
   - ParallelReverseAutoDiff.RMAD.Matrix.op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
@@ -64,7 +70,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Matrix
     path: ../../src/RMAD/Matrix.cs
-    startLine: 18
+    startLine: 19
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -123,7 +129,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 28
+    startLine: 32
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -164,7 +170,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 38
+    startLine: 42
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -202,7 +208,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 53
+    startLine: 60
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -219,6 +225,47 @@ items:
   nameWithType.vb: Matrix.New(Double()())
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Double()())
   name.vb: New(Double()())
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][],System.Int32[],System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][],System.Int32[],System.Int32)
+  id: '#ctor(System.Double[][],System.Int32[],System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Matrix(double[][], int[], int)
+  nameWithType: Matrix.Matrix(double[][], int[], int)
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Matrix(double[][], int[], int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 75
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.Matrix" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public Matrix(double[][] matrix, int[] shape, int numDimensions)
+    parameters:
+    - id: matrix
+      type: System.Double[][]
+      description: The matrix to initialize with.
+    - id: shape
+      type: System.Int32[]
+      description: The shape of the matrix.
+    - id: numDimensions
+      type: System.Int32
+      description: The number of dimensions.
+    content.vb: Public Sub New(matrix As Double()(), shape As Integer(), numDimensions As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.#ctor*
+  nameWithType.vb: Matrix.New(Double()(), Integer(), Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Double()(), Integer(), Integer)
+  name.vb: New(Double()(), Integer(), Integer)
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[])
   commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[])
   id: '#ctor(System.Double[])'
@@ -237,7 +284,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 63
+    startLine: 88
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -272,7 +319,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: .ctor
     path: ../../src/RMAD/Matrix.cs
-    startLine: 76
+    startLine: 104
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -292,6 +339,53 @@ items:
   nameWithType.vb: Matrix.New(Integer, Double()())
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Integer, Double()())
   name.vb: New(Integer, Double()())
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][],System.Int32[],System.Int32)
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][],System.Int32[],System.Int32)
+  id: '#ctor(System.Int32,System.Double[][],System.Int32[],System.Int32)'
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Matrix(int, double[][], int[], int)
+  nameWithType: Matrix.Matrix(int, double[][], int[], int)
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Matrix(int, double[][], int[], int)
+  type: Constructor
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 121
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: >-
+    Initializes a new instance of the <xref href="ParallelReverseAutoDiff.RMAD.Matrix" data-throw-if-not-resolved="false"></xref> class.
+
+    If the number of dimensions is greater than 2, the rows are stacked in the first dimension.
+  example: []
+  syntax:
+    content: public Matrix(int uniqueId, double[][] matrixValues, int[] shape, int numDimensions)
+    parameters:
+    - id: uniqueId
+      type: System.Int32
+      description: The unique ID.
+    - id: matrixValues
+      type: System.Double[][]
+      description: The matrix values.
+    - id: shape
+      type: System.Int32[]
+      description: The shape of the matrix.
+    - id: numDimensions
+      type: System.Int32
+      description: The number of dimensions.
+    content.vb: Public Sub New(uniqueId As Integer, matrixValues As Double()(), shape As Integer(), numDimensions As Integer)
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.#ctor*
+  nameWithType.vb: Matrix.New(Integer, Double()(), Integer(), Integer)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Integer, Double()(), Integer(), Integer)
+  name.vb: New(Integer, Double()(), Integer(), Integer)
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.UniqueId
   commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.UniqueId
   id: UniqueId
@@ -310,7 +404,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: UniqueId
     path: ../../src/RMAD/Matrix.cs
-    startLine: 85
+    startLine: 133
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -351,7 +445,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Rows
     path: ../../src/RMAD/Matrix.cs
-    startLine: 91
+    startLine: 139
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -382,7 +476,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Cols
     path: ../../src/RMAD/Matrix.cs
-    startLine: 96
+    startLine: 144
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -413,7 +507,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Length
     path: ../../src/RMAD/Matrix.cs
-    startLine: 101
+    startLine: 149
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -444,7 +538,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Count
     path: ../../src/RMAD/Matrix.cs
-    startLine: 106
+    startLine: 154
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -459,6 +553,88 @@ items:
   overload: ParallelReverseAutoDiff.RMAD.Matrix.Count*
   implements:
   - ParallelReverseAutoDiff.RMAD.IMatrix.Count
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  id: Shape
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Shape
+  nameWithType: Matrix.Shape
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Shape
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 159
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the shape of the matrix.
+  example: []
+  syntax:
+    content: >-
+      [JsonProperty]
+
+      public int[] Shape { get; }
+    parameters: []
+    return:
+      type: System.Int32[]
+    content.vb: >-
+      <JsonProperty>
+
+      Public ReadOnly Property Shape As Integer()
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.Shape*
+  attributes:
+  - type: Newtonsoft.Json.JsonPropertyAttribute
+    ctor: Newtonsoft.Json.JsonPropertyAttribute.#ctor
+    arguments: []
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  id: NumDimensions
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: NumDimensions
+  nameWithType: Matrix.NumDimensions
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: NumDimensions
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 165
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets the number of dimensions of the matrix.
+  example: []
+  syntax:
+    content: >-
+      [JsonProperty]
+
+      public int NumDimensions { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <JsonProperty>
+
+      Public ReadOnly Property NumDimensions As Integer
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions*
+  attributes:
+  - type: Newtonsoft.Json.JsonPropertyAttribute
+    ctor: Newtonsoft.Json.JsonPropertyAttribute.#ctor
+    arguments: []
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)
   commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)
   id: Item(System.Int32,System.Int32)
@@ -477,7 +653,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/Matrix.cs
-    startLine: 120
+    startLine: 180
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -518,7 +694,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: this[]
     path: ../../src/RMAD/Matrix.cs
-    startLine: 131
+    startLine: 191
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -538,6 +714,44 @@ items:
   nameWithType.vb: Matrix.this[](Integer)
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.this[](Integer)
   name.vb: this[](Integer)
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32[])
+  commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32[])
+  id: Item(System.Int32[])
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: this[int[]]
+  nameWithType: Matrix.this[int[]]
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.this[int[]]
+  type: Property
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: this[]
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 202
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Gets or sets the value at the specified indices.
+  example: []
+  syntax:
+    content: public double this[int[] indices] { get; set; }
+    parameters:
+    - id: indices
+      type: System.Int32[]
+      description: The indices.
+    return:
+      type: System.Double
+      description: The value at the specified indices.
+    content.vb: Public Default Property this[](indices As Integer()) As Double
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.Item*
+  nameWithType.vb: Matrix.this[](Integer())
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.this[](Integer())
+  name.vb: this[](Integer())
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   id: op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
@@ -556,7 +770,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Addition
     path: ../../src/RMAD/Matrix.cs
-    startLine: 143
+    startLine: 231
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -597,7 +811,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Subtraction
     path: ../../src/RMAD/Matrix.cs
-    startLine: 165
+    startLine: 253
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -638,7 +852,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Multiply
     path: ../../src/RMAD/Matrix.cs
-    startLine: 187
+    startLine: 275
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -679,7 +893,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: op_Multiply
     path: ../../src/RMAD/Matrix.cs
-    startLine: 224
+    startLine: 312
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -720,7 +934,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: DeserializeToFlatArray
     path: ../../src/RMAD/Matrix.cs
-    startLine: 247
+    startLine: 335
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -740,6 +954,37 @@ items:
   nameWithType.vb: Matrix.DeserializeToFlatArray(ReadOnlySpan(Of Byte))
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.DeserializeToFlatArray(System.ReadOnlySpan(Of Byte))
   name.vb: DeserializeToFlatArray(ReadOnlySpan(Of Byte))
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  id: ToTensor
+  parent: ParallelReverseAutoDiff.RMAD.Matrix
+  langs:
+  - csharp
+  - vb
+  name: ToTensor()
+  nameWithType: Matrix.ToTensor()
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor()
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/Matrix.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: ToTensor
+    path: ../../src/RMAD/Matrix.cs
+    startLine: 358
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Converts a matrix to a tensor.
+  example: []
+  syntax:
+    content: public Tensor ToTensor()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor.
+    content.vb: Public Function ToTensor() As Tensor
+  overload: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor*
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.HasNaNOrInfinity
   commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.HasNaNOrInfinity
   id: HasNaNOrInfinity
@@ -758,7 +1003,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: HasNaNOrInfinity
     path: ../../src/RMAD/Matrix.cs
-    startLine: 270
+    startLine: 374
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -789,7 +1034,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ElementwiseSumRows
     path: ../../src/RMAD/Matrix.cs
-    startLine: 291
+    startLine: 395
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -820,7 +1065,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ConcatenateColumns
     path: ../../src/RMAD/Matrix.cs
-    startLine: 315
+    startLine: 419
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -855,7 +1100,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ColumnSlice
     path: ../../src/RMAD/Matrix.cs
-    startLine: 343
+    startLine: 447
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -893,7 +1138,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SetColumnSlice
     path: ../../src/RMAD/Matrix.cs
-    startLine: 364
+    startLine: 468
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -931,7 +1176,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ElementwisePower
     path: ../../src/RMAD/Matrix.cs
-    startLine: 387
+    startLine: 491
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -969,7 +1214,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Mean
     path: ../../src/RMAD/Matrix.cs
-    startLine: 408
+    startLine: 512
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1000,7 +1245,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Transpose
     path: ../../src/RMAD/Matrix.cs
-    startLine: 425
+    startLine: 529
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1031,7 +1276,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Accumulate
     path: ../../src/RMAD/Matrix.cs
-    startLine: 446
+    startLine: 550
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1066,7 +1311,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Sum
     path: ../../src/RMAD/Matrix.cs
-    startLine: 462
+    startLine: 566
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1097,7 +1342,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: FrobeniusNorm
     path: ../../src/RMAD/Matrix.cs
-    startLine: 486
+    startLine: 590
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1128,7 +1373,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ElementwiseMultiply
     path: ../../src/RMAD/Matrix.cs
-    startLine: 512
+    startLine: 616
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1163,7 +1408,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ExponentialElementwise
     path: ../../src/RMAD/Matrix.cs
-    startLine: 532
+    startLine: 636
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1194,7 +1439,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Average
     path: ../../src/RMAD/Matrix.cs
-    startLine: 561
+    startLine: 665
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1229,7 +1474,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: CosineSimilarity
     path: ../../src/RMAD/Matrix.cs
-    startLine: 586
+    startLine: 690
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1264,7 +1509,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GradientWRTCosineSimilarity
     path: ../../src/RMAD/Matrix.cs
-    startLine: 621
+    startLine: 725
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1305,7 +1550,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Column
     path: ../../src/RMAD/Matrix.cs
-    startLine: 659
+    startLine: 763
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1343,7 +1588,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/Matrix.cs
-    startLine: 674
+    startLine: 778
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1375,7 +1620,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Initialize
     path: ../../src/RMAD/Matrix.cs
-    startLine: 699
+    startLine: 803
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1413,7 +1658,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Serialize
     path: ../../src/RMAD/Matrix.cs
-    startLine: 721
+    startLine: 825
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1451,7 +1696,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: SetColumn
     path: ../../src/RMAD/Matrix.cs
-    startLine: 749
+    startLine: 853
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1489,7 +1734,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetEnumerator
     path: ../../src/RMAD/Matrix.cs
-    startLine: 761
+    startLine: 865
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1522,7 +1767,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Replace
     path: ../../src/RMAD/Matrix.cs
-    startLine: 782
+    startLine: 886
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1557,7 +1802,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ReplaceVertically
     path: ../../src/RMAD/Matrix.cs
-    startLine: 792
+    startLine: 896
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1595,7 +1840,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: ToArray
     path: ../../src/RMAD/Matrix.cs
-    startLine: 808
+    startLine: 912
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1626,7 +1871,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Clone
     path: ../../src/RMAD/Matrix.cs
-    startLine: 817
+    startLine: 921
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1659,7 +1904,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Equals
     path: ../../src/RMAD/Matrix.cs
-    startLine: 839
+    startLine: 943
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -1698,7 +1943,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: GetHashCode
     path: ../../src/RMAD/Matrix.cs
-    startLine: 874
+    startLine: 978
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -2123,6 +2368,29 @@ references:
   - name: )
   - name: (
   - name: )
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
 - uid: System.Double[]
   isExternal: true
   href: https://learn.microsoft.com/dotnet/api/system.double
@@ -2183,6 +2451,18 @@ references:
   name: Count
   nameWithType: IMatrix.Count
   fullName: ParallelReverseAutoDiff.RMAD.IMatrix.Count
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.Shape*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  name: Shape
+  nameWithType: Matrix.Shape
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Shape
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  name: NumDimensions
+  nameWithType: Matrix.NumDimensions
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.Item*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.Item
   href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32,System.Int32)
@@ -2317,6 +2597,41 @@ references:
   - name: " "
   - name: T
   - name: )
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor*
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  name: ToTensor
+  nameWithType: Matrix.ToTensor
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor
+  nameWithType: Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.HasNaNOrInfinity*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.HasNaNOrInfinity
   href: ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff.RMAD.Matrix.HasNaNOrInfinity

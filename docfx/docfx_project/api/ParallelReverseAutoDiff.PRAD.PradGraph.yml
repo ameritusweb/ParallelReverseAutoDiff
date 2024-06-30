@@ -1,38 +1,36 @@
 ### YamlMime:ManagedReference
 items:
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult
-  commentId: T:ParallelReverseAutoDiff.RMAD.BackwardResult
-  id: BackwardResult
-  parent: ParallelReverseAutoDiff.RMAD
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradGraph
+  id: PradGraph
+  parent: ParallelReverseAutoDiff.PRAD
   children:
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  - ParallelReverseAutoDiff.RMAD.BackwardResult.Results
+  - ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(System.String,System.String)
+  - ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  - ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
   langs:
   - csharp
   - vb
-  name: BackwardResult
-  nameWithType: BackwardResult
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult
+  name: PradGraph
+  nameWithType: PradGraph
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph
   type: Class
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradGraph.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: BackwardResult
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 10
+    id: PradGraph
+    path: ../../src/PRAD/PradGraph.cs
+    startLine: 14
   assemblies:
   - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: The result of one step through a backward pass.
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: A diagram of a PRAD graph.
   example: []
   syntax:
-    content: public class BackwardResult
-    content.vb: Public Class BackwardResult
+    content: public class PradGraph
+    content.vb: Public Class PradGraph
   inheritance:
   - System.Object
   inheritedMembers:
@@ -43,184 +41,145 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  id: Results
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  id: AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.PradGraph
   langs:
   - csharp
   - vb
-  name: Results
-  nameWithType: BackwardResult.Results
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  type: Property
+  name: AddNode(string, int, int, int, int)
+  nameWithType: PradGraph.AddNode(string, int, int, int, int)
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(string, int, int, int, int)
+  type: Method
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradGraph.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Results
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 15
+    id: AddNode
+    path: ../../src/PRAD/PradGraph.cs
+    startLine: 27
   assemblies:
   - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets the backward pass gradients.
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Adds a node to the diagram.
   example: []
   syntax:
-    content: public object?[] Results { get; set; }
-    parameters: []
-    return:
-      type: System.Object[]
-    content.vb: Public Property Results As Object()
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Results*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  id: HasMultipleInputs
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
+    content: public void AddNode(string label, int x, int y, int width, int height)
+    parameters:
+    - id: label
+      type: System.String
+      description: The label.
+    - id: x
+      type: System.Int32
+      description: The X coordinate.
+    - id: y
+      type: System.Int32
+      description: The Y coordinate.
+    - id: width
+      type: System.Int32
+      description: The width.
+    - id: height
+      type: System.Int32
+      description: The height.
+    content.vb: Public Sub AddNode(label As String, x As Integer, y As Integer, width As Integer, height As Integer)
+  overload: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode*
+  nameWithType.vb: PradGraph.AddNode(String, Integer, Integer, Integer, Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(String, Integer, Integer, Integer, Integer)
+  name.vb: AddNode(String, Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(System.String,System.String)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(System.String,System.String)
+  id: AddEdge(System.String,System.String)
+  parent: ParallelReverseAutoDiff.PRAD.PradGraph
   langs:
   - csharp
   - vb
-  name: HasMultipleInputs
-  nameWithType: BackwardResult.HasMultipleInputs
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  type: Property
+  name: AddEdge(string, string)
+  nameWithType: PradGraph.AddEdge(string, string)
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(string, string)
+  type: Method
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradGraph.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: HasMultipleInputs
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 20
+    id: AddEdge
+    path: ../../src/PRAD/PradGraph.cs
+    startLine: 37
   assemblies:
   - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets or sets a value indicating whether the result originated from an operation that has multiple inputs.
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Adds an edge to the diagram.
   example: []
   syntax:
-    content: public bool HasMultipleInputs { get; set; }
-    parameters: []
-    return:
-      type: System.Boolean
-    content.vb: Public Property HasMultipleInputs As Boolean
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  id: Item1
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
+    content: public void AddEdge(string fromNode, string toNode)
+    parameters:
+    - id: fromNode
+      type: System.String
+      description: The from node.
+    - id: toNode
+      type: System.String
+      description: The to node.
+    content.vb: Public Sub AddEdge(fromNode As String, toNode As String)
+  overload: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge*
+  nameWithType.vb: PradGraph.AddEdge(String, String)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(String, String)
+  name.vb: AddEdge(String, String)
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  id: GenerateDiagram
+  parent: ParallelReverseAutoDiff.PRAD.PradGraph
   langs:
   - csharp
   - vb
-  name: Item1
-  nameWithType: BackwardResult.Item1
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  type: Property
+  name: GenerateDiagram()
+  nameWithType: PradGraph.GenerateDiagram()
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram()
+  type: Method
   source:
     remote:
-      path: src/RMAD/BackwardResult.cs
+      path: src/PRAD/PradGraph.cs
       branch: main
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item1
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 25
+    id: GenerateDiagram
+    path: ../../src/PRAD/PradGraph.cs
+    startLine: 51
   assemblies:
   - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the first item.
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Generate diagram.
   example: []
   syntax:
-    content: public object? Item1 { get; }
-    parameters: []
+    content: public string GenerateDiagram()
     return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item1 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  id: Item2
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item2
-  nameWithType: BackwardResult.Item2
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item2
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 36
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the second item.
-  example: []
-  syntax:
-    content: public object? Item2 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item2 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  id: Item3
-  parent: ParallelReverseAutoDiff.RMAD.BackwardResult
-  langs:
-  - csharp
-  - vb
-  name: Item3
-  nameWithType: BackwardResult.Item3
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  type: Property
-  source:
-    remote:
-      path: src/RMAD/BackwardResult.cs
-      branch: main
-      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
-    id: Item3
-    path: ../../src/RMAD/BackwardResult.cs
-    startLine: 47
-  assemblies:
-  - ParallelReverseAutoDiff
-  namespace: ParallelReverseAutoDiff.RMAD
-  summary: Gets the third item.
-  example: []
-  syntax:
-    content: public object? Item3 { get; }
-    parameters: []
-    return:
-      type: System.Object
-    content.vb: Public ReadOnly Property Item3 As Object
-  overload: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
+      type: System.String
+      description: The ASCII diagram.
+    content.vb: Public Function GenerateDiagram() As String
+  overload: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram*
 references:
-- uid: ParallelReverseAutoDiff.RMAD
-  commentId: N:ParallelReverseAutoDiff.RMAD
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
   href: ParallelReverseAutoDiff.html
-  name: ParallelReverseAutoDiff.RMAD
-  nameWithType: ParallelReverseAutoDiff.RMAD
-  fullName: ParallelReverseAutoDiff.RMAD
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
   spec.csharp:
   - uid: ParallelReverseAutoDiff
     name: ParallelReverseAutoDiff
     href: ParallelReverseAutoDiff.html
   - name: .
-  - uid: ParallelReverseAutoDiff.RMAD
-    name: RMAD
-    href: ParallelReverseAutoDiff.RMAD.html
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
   spec.vb:
   - uid: ParallelReverseAutoDiff
     name: ParallelReverseAutoDiff
     href: ParallelReverseAutoDiff.html
   - name: .
-  - uid: ParallelReverseAutoDiff.RMAD
-    name: RMAD
-    href: ParallelReverseAutoDiff.RMAD.html
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
@@ -458,67 +417,43 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-  name: Results
-  nameWithType: BackwardResult.Results
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
-- uid: System.Object[]
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.object
-  name: object[]
-  nameWithType: object[]
-  fullName: object[]
-  nameWithType.vb: Object()
-  fullName.vb: Object()
-  name.vb: Object()
-  spec.csharp:
-  - uid: System.Object
-    name: object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: '['
-  - name: ']'
-  spec.vb:
-  - uid: System.Object
-    name: Object
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.object
-  - name: (
-  - name: )
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-  name: HasMultipleInputs
-  nameWithType: BackwardResult.HasMultipleInputs
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.HasMultipleInputs
-- uid: System.Boolean
-  commentId: T:System.Boolean
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradGraph.AddNode
+  href: ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  name: AddNode
+  nameWithType: PradGraph.AddNode
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode
+- uid: System.String
+  commentId: T:System.String
   parent: System
   isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.boolean
-  name: bool
-  nameWithType: bool
-  fullName: bool
-  nameWithType.vb: Boolean
-  fullName.vb: Boolean
-  name.vb: Boolean
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-  name: Item1
-  nameWithType: BackwardResult.Item1
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item1
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-  name: Item2
-  nameWithType: BackwardResult.Item2
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
-- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
-  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  href: ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
-  name: Item3
-  nameWithType: BackwardResult.Item3
-  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge
+  href: ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(System.String,System.String)
+  name: AddEdge
+  nameWithType: PradGraph.AddEdge
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  href: ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  name: GenerateDiagram
+  nameWithType: PradGraph.GenerateDiagram
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram

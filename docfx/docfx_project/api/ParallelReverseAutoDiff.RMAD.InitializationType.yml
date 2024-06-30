@@ -8,6 +8,7 @@ items:
   - ParallelReverseAutoDiff.RMAD.InitializationType.He
   - ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
   - ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
+  - ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
   - ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
   langs:
   - csharp
@@ -116,6 +117,34 @@ items:
     content: Zeroes = 2
     return:
       type: ParallelReverseAutoDiff.RMAD.InitializationType
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
+  commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
+  id: XavierUniform
+  parent: ParallelReverseAutoDiff.RMAD.InitializationType
+  langs:
+  - csharp
+  - vb
+  name: XavierUniform
+  nameWithType: InitializationType.XavierUniform
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
+  type: Field
+  source:
+    remote:
+      path: src/RMAD/InitializationType.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: XavierUniform
+    path: ../../src/RMAD/InitializationType.cs
+    startLine: 30
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Xavier/Glorot initialization uniform across each layer.
+  example: []
+  syntax:
+    content: XavierUniform = 3
+    return:
+      type: ParallelReverseAutoDiff.RMAD.InitializationType
 - uid: ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
   commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.HeAdjacency
   id: HeAdjacency
@@ -134,14 +163,14 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: HeAdjacency
     path: ../../src/RMAD/InitializationType.cs
-    startLine: 30
+    startLine: 35
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
   summary: He initialization for adjacency matrices.
   example: []
   syntax:
-    content: HeAdjacency = 3
+    content: HeAdjacency = 4
     return:
       type: ParallelReverseAutoDiff.RMAD.InitializationType
 references:

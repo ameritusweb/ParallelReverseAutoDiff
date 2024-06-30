@@ -7,10 +7,13 @@ items:
   children:
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBetaGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBiasGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddGammaGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.RMAD.Matrix)
+  - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddScalingGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   - ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddWeightGradient(ParallelReverseAutoDiff.RMAD.Matrix)
@@ -29,7 +32,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: BackwardResultBuilder
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 13
+    startLine: 14
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -66,7 +69,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddInputGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 25
+    startLine: 26
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -82,6 +85,41 @@ items:
       type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
       description: The backward result builder.
     content.vb: Public Function AddInputGradient(matrix As Matrix) As BackwardResultBuilder
+  overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient*
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+  langs:
+  - csharp
+  - vb
+  name: AddInputGradient(Tensor)
+  nameWithType: BackwardResultBuilder.AddInputGradient(Tensor)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BackwardResultBuilder.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddInputGradient
+    path: ../../src/RMAD/BackwardResultBuilder.cs
+    startLine: 39
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add input gradient to the backward result.
+  example: []
+  syntax:
+    content: public BackwardResultBuilder AddInputGradient(Tensor tensor)
+    parameters:
+    - id: tensor
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor to add.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+      description: The backward result builder.
+    content.vb: Public Function AddInputGradient(tensor As Tensor) As BackwardResultBuilder
   overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient*
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -101,7 +139,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddInputGradientArray
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 38
+    startLine: 52
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -117,6 +155,41 @@ items:
       type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
       description: The backward result builder.
     content.vb: Public Function AddInputGradientArray(matrix As DeepMatrix) As BackwardResultBuilder
+  overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+  langs:
+  - csharp
+  - vb
+  name: AddInputGradientArray(Tensor)
+  nameWithType: BackwardResultBuilder.AddInputGradientArray(Tensor)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BackwardResultBuilder.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddInputGradientArray
+    path: ../../src/RMAD/BackwardResultBuilder.cs
+    startLine: 69
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add input gradient array to the backward result.
+  example: []
+  syntax:
+    content: public BackwardResultBuilder AddInputGradientArray(Tensor matrix)
+    parameters:
+    - id: matrix
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The 3-D tensor to add.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+      description: The backward result builder.
+    content.vb: Public Function AddInputGradientArray(matrix As Tensor) As BackwardResultBuilder
   overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
@@ -136,7 +209,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddDeepInputGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 55
+    startLine: 87
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -152,6 +225,41 @@ items:
       type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
       description: The backward result builder.
     content.vb: Public Function AddDeepInputGradient(matrix As DeepMatrix) As BackwardResultBuilder
+  overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient*
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+  langs:
+  - csharp
+  - vb
+  name: AddDeepInputGradient(Tensor)
+  nameWithType: BackwardResultBuilder.AddDeepInputGradient(Tensor)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/RMAD/BackwardResultBuilder.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: AddDeepInputGradient
+    path: ../../src/RMAD/BackwardResultBuilder.cs
+    startLine: 100
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.RMAD
+  summary: Add deep input gradient to the backward result.
+  example: []
+  syntax:
+    content: public BackwardResultBuilder AddDeepInputGradient(Tensor matrix)
+    parameters:
+    - id: matrix
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The 3-D tensor to add.
+    return:
+      type: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+      description: The backward result builder.
+    content.vb: Public Function AddDeepInputGradient(matrix As Tensor) As BackwardResultBuilder
   overload: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient*
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
   commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddFiltersGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix[])
@@ -171,7 +279,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddFiltersGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 68
+    startLine: 113
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -209,7 +317,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddWeightGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 80
+    startLine: 125
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -244,7 +352,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddScalingGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 92
+    startLine: 137
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -279,7 +387,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBetaGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 104
+    startLine: 149
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -314,7 +422,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddGammaGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 116
+    startLine: 161
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -349,7 +457,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: AddBiasGradient
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 128
+    startLine: 173
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -384,7 +492,7 @@ items:
       repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
     id: Build
     path: ../../src/RMAD/BackwardResultBuilder.cs
-    startLine: 139
+    startLine: 184
   assemblies:
   - ParallelReverseAutoDiff
   namespace: ParallelReverseAutoDiff.RMAD
@@ -677,6 +785,35 @@ references:
   name: BackwardResultBuilder
   nameWithType: BackwardResultBuilder
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor
+  nameWithType: Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray*
   commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray
   href: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)

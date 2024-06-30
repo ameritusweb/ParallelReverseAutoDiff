@@ -383,6 +383,2679 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.Interprocess.PseudoUniqueIDGenerator.Instance
   nameWithType: PseudoUniqueIDGenerator.Instance
+- uid: ParallelReverseAutoDiff.PRAD
+  name: ParallelReverseAutoDiff.PRAD
+  href: api/ParallelReverseAutoDiff.PRAD.html
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+- uid: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+  name: ConditionallyInternalUseOnlyAttribute
+  href: api/ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+  fullName: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute
+  nameWithType: ConditionallyInternalUseOnlyAttribute
+- uid: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate(System.Boolean,System.String)
+  name: Validate(bool, string)
+  href: api/ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.html#ParallelReverseAutoDiff_PRAD_ConditionallyInternalUseOnlyAttribute_Validate_System_Boolean_System_String_
+  commentId: M:ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate(System.Boolean,System.String)
+  name.vb: Validate(Boolean, String)
+  fullName: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate(bool, string)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate(Boolean, String)
+  nameWithType: ConditionallyInternalUseOnlyAttribute.Validate(bool, string)
+  nameWithType.vb: ConditionallyInternalUseOnlyAttribute.Validate(Boolean, String)
+- uid: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate*
+  name: Validate
+  href: api/ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.html#ParallelReverseAutoDiff_PRAD_ConditionallyInternalUseOnlyAttribute_Validate_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.ConditionallyInternalUseOnlyAttribute.Validate
+  nameWithType: ConditionallyInternalUseOnlyAttribute.Validate
+- uid: ParallelReverseAutoDiff.PRAD.IListExtensions
+  name: IListExtensions
+  href: api/ParallelReverseAutoDiff.PRAD.IListExtensions.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.IListExtensions
+  fullName: ParallelReverseAutoDiff.PRAD.IListExtensions
+  nameWithType: IListExtensions
+- uid: ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct*
+  name: Deconstruct
+  href: api/ParallelReverseAutoDiff.PRAD.IListExtensions.html#ParallelReverseAutoDiff_PRAD_IListExtensions_Deconstruct_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct
+  nameWithType: IListExtensions.Deconstruct
+- uid: ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct``1(System.Collections.Generic.IList{``0},``0@,``0@)
+  name: Deconstruct<T>(IList<T>, out T, out T)
+  href: api/ParallelReverseAutoDiff.PRAD.IListExtensions.html#ParallelReverseAutoDiff_PRAD_IListExtensions_Deconstruct__1_System_Collections_Generic_IList___0____0____0__
+  commentId: M:ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct``1(System.Collections.Generic.IList{``0},``0@,``0@)
+  name.vb: Deconstruct(Of T)(IList(Of T), T, T)
+  fullName: ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct<T>(System.Collections.Generic.IList<T>, out T, out T)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.IListExtensions.Deconstruct(Of T)(System.Collections.Generic.IList(Of T), T, T)
+  nameWithType: IListExtensions.Deconstruct<T>(IList<T>, out T, out T)
+  nameWithType.vb: IListExtensions.Deconstruct(Of T)(IList(Of T), T, T)
+- uid: ParallelReverseAutoDiff.PRAD.PradConfig
+  name: PradConfig
+  href: api/ParallelReverseAutoDiff.PRAD.PradConfig.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradConfig
+  fullName: ParallelReverseAutoDiff.PRAD.PradConfig
+  nameWithType: PradConfig
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram
+  name: PradDiagram
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradDiagram
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram
+  nameWithType: PradDiagram
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.#ctor(System.Int32,System.Int32)
+  name: PradDiagram(int, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram__ctor_System_Int32_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradDiagram.#ctor(System.Int32,System.Int32)
+  name.vb: New(Integer, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.PradDiagram(int, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradDiagram.New(Integer, Integer)
+  nameWithType: PradDiagram.PradDiagram(int, int)
+  nameWithType.vb: PradDiagram.New(Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.#ctor*
+  name: PradDiagram
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradDiagram.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.PradDiagram
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradDiagram.New
+  nameWithType: PradDiagram.PradDiagram
+  nameWithType.vb: PradDiagram.New
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox(System.Int32,System.Int32,System.Int32,System.Int32,System.String)
+  name: AddBox(int, int, int, int, string)
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram_AddBox_System_Int32_System_Int32_System_Int32_System_Int32_System_String_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox(System.Int32,System.Int32,System.Int32,System.Int32,System.String)
+  name.vb: AddBox(Integer, Integer, Integer, Integer, String)
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox(int, int, int, int, string)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox(Integer, Integer, Integer, Integer, String)
+  nameWithType: PradDiagram.AddBox(int, int, int, int, string)
+  nameWithType.vb: PradDiagram.AddBox(Integer, Integer, Integer, Integer, String)
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox*
+  name: AddBox
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram_AddBox_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.AddBox
+  nameWithType: PradDiagram.AddBox
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine(System.Int32,System.Int32,System.Int32,System.Int32)
+  name: AddLine(int, int, int, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram_AddLine_System_Int32_System_Int32_System_Int32_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine(System.Int32,System.Int32,System.Int32,System.Int32)
+  name.vb: AddLine(Integer, Integer, Integer, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine(int, int, int, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine(Integer, Integer, Integer, Integer)
+  nameWithType: PradDiagram.AddLine(int, int, int, int)
+  nameWithType.vb: PradDiagram.AddLine(Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine*
+  name: AddLine
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram_AddLine_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.AddLine
+  nameWithType: PradDiagram.AddLine
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.ToString
+  name: ToString()
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram_ToString
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradDiagram.ToString
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.ToString()
+  nameWithType: PradDiagram.ToString()
+- uid: ParallelReverseAutoDiff.PRAD.PradDiagram.ToString*
+  name: ToString
+  href: api/ParallelReverseAutoDiff.PRAD.PradDiagram.html#ParallelReverseAutoDiff_PRAD_PradDiagram_ToString_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradDiagram.ToString
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradDiagram.ToString
+  nameWithType: PradDiagram.ToString
+- uid: ParallelReverseAutoDiff.PRAD.PradEdge
+  name: PradEdge
+  href: api/ParallelReverseAutoDiff.PRAD.PradEdge.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradEdge
+  fullName: ParallelReverseAutoDiff.PRAD.PradEdge
+  nameWithType: PradEdge
+- uid: ParallelReverseAutoDiff.PRAD.PradEdge.From
+  name: From
+  href: api/ParallelReverseAutoDiff.PRAD.PradEdge.html#ParallelReverseAutoDiff_PRAD_PradEdge_From
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradEdge.From
+  fullName: ParallelReverseAutoDiff.PRAD.PradEdge.From
+  nameWithType: PradEdge.From
+- uid: ParallelReverseAutoDiff.PRAD.PradEdge.From*
+  name: From
+  href: api/ParallelReverseAutoDiff.PRAD.PradEdge.html#ParallelReverseAutoDiff_PRAD_PradEdge_From_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradEdge.From
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradEdge.From
+  nameWithType: PradEdge.From
+- uid: ParallelReverseAutoDiff.PRAD.PradEdge.To
+  name: To
+  href: api/ParallelReverseAutoDiff.PRAD.PradEdge.html#ParallelReverseAutoDiff_PRAD_PradEdge_To
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradEdge.To
+  fullName: ParallelReverseAutoDiff.PRAD.PradEdge.To
+  nameWithType: PradEdge.To
+- uid: ParallelReverseAutoDiff.PRAD.PradEdge.To*
+  name: To
+  href: api/ParallelReverseAutoDiff.PRAD.PradEdge.html#ParallelReverseAutoDiff_PRAD_PradEdge_To_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradEdge.To
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradEdge.To
+  nameWithType: PradEdge.To
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph
+  name: PradGraph
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradGraph
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph
+  nameWithType: PradGraph
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(System.String,System.String)
+  name: AddEdge(string, string)
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff_PRAD_PradGraph_AddEdge_System_String_System_String_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(System.String,System.String)
+  name.vb: AddEdge(String, String)
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(string, string)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge(String, String)
+  nameWithType: PradGraph.AddEdge(string, string)
+  nameWithType.vb: PradGraph.AddEdge(String, String)
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge*
+  name: AddEdge
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff_PRAD_PradGraph_AddEdge_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddEdge
+  nameWithType: PradGraph.AddEdge
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  name: AddNode(string, int, int, int, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff_PRAD_PradGraph_AddNode_System_String_System_Int32_System_Int32_System_Int32_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(System.String,System.Int32,System.Int32,System.Int32,System.Int32)
+  name.vb: AddNode(String, Integer, Integer, Integer, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(string, int, int, int, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode(String, Integer, Integer, Integer, Integer)
+  nameWithType: PradGraph.AddNode(string, int, int, int, int)
+  nameWithType.vb: PradGraph.AddNode(String, Integer, Integer, Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode*
+  name: AddNode
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff_PRAD_PradGraph_AddNode_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradGraph.AddNode
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.AddNode
+  nameWithType: PradGraph.AddNode
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  name: GenerateDiagram()
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff_PRAD_PradGraph_GenerateDiagram
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram()
+  nameWithType: PradGraph.GenerateDiagram()
+- uid: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram*
+  name: GenerateDiagram
+  href: api/ParallelReverseAutoDiff.PRAD.PradGraph.html#ParallelReverseAutoDiff_PRAD_PradGraph_GenerateDiagram_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradGraph.GenerateDiagram
+  nameWithType: PradGraph.GenerateDiagram
+- uid: ParallelReverseAutoDiff.PRAD.PradNode
+  name: PradNode
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradNode
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode
+  nameWithType: PradNode
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Height
+  name: Height
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Height
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradNode.Height
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Height
+  nameWithType: PradNode.Height
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Height*
+  name: Height
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Height_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradNode.Height
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Height
+  nameWithType: PradNode.Height
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Label
+  name: Label
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Label
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradNode.Label
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Label
+  nameWithType: PradNode.Label
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Label*
+  name: Label
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Label_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradNode.Label
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Label
+  nameWithType: PradNode.Label
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Width
+  name: Width
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Width
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradNode.Width
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Width
+  nameWithType: PradNode.Width
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Width*
+  name: Width
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Width_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradNode.Width
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Width
+  nameWithType: PradNode.Width
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.X
+  name: X
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_X
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradNode.X
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.X
+  nameWithType: PradNode.X
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.X*
+  name: X
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_X_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradNode.X
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.X
+  nameWithType: PradNode.X
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Y
+  name: Y
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Y
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradNode.Y
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Y
+  nameWithType: PradNode.Y
+- uid: ParallelReverseAutoDiff.PRAD.PradNode.Y*
+  name: Y
+  href: api/ParallelReverseAutoDiff.PRAD.PradNode.html#ParallelReverseAutoDiff_PRAD_PradNode_Y_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradNode.Y
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradNode.Y
+  nameWithType: PradNode.Y
+- uid: ParallelReverseAutoDiff.PRAD.PradOp
+  name: PradOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp
+  nameWithType: PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.#ctor(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: PradOp(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp__ctor_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.#ctor(ParallelReverseAutoDiff.PRAD.Tensor)
+  name.vb: New(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.PradOp(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.New(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.PradOp(Tensor)
+  nameWithType.vb: PradOp.New(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.#ctor*
+  name: PradOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.PradOp
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.New
+  nameWithType: PradOp.PradOp
+  nameWithType.vb: PradOp.New
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Add(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Add(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Add_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Add(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Add(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.Add(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Add*
+  name: Add
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Add_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Add
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Add
+  nameWithType: PradOp.Add
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.AddOp
+  name: AddOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_AddOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.AddOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.AddOp
+  nameWithType: PradOp.AddOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.AddOp*
+  name: AddOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_AddOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.AddOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.AddOp
+  nameWithType: PradOp.AddOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Atan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Atan2(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Atan2_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Atan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Atan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.Atan2(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Atan2*
+  name: Atan2
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Atan2_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Atan2
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Atan2
+  nameWithType: PradOp.Atan2
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Atan2Op
+  name: Atan2Op
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Atan2Op
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.Atan2Op
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Atan2Op
+  nameWithType: PradOp.Atan2Op
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Atan2Op*
+  name: Atan2Op
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Atan2Op_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Atan2Op
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Atan2Op
+  nameWithType: PradOp.Atan2Op
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Back
+  name: Back()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Back
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Back
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Back()
+  nameWithType: PradOp.Back()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Back(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Back_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.Back(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Back*
+  name: Back
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Back_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Back
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Back
+  nameWithType: PradOp.Back
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Branch
+  name: Branch()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Branch
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Branch
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Branch()
+  nameWithType: PradOp.Branch()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Branch*
+  name: Branch
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Branch_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Branch
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Branch
+  nameWithType: PradOp.Branch
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Concat(Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Concat_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: Concat(Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Concat(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Concat(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: PradOp.Concat(Tensor[], int)
+  nameWithType.vb: PradOp.Concat(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Concat*
+  name: Concat
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Concat_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Concat
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Concat
+  nameWithType: PradOp.Concat
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ConcatOp
+  name: ConcatOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ConcatOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.ConcatOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ConcatOp
+  nameWithType: PradOp.ConcatOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ConcatOp*
+  name: ConcatOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ConcatOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.ConcatOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ConcatOp
+  nameWithType: PradOp.ConcatOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Cos
+  name: Cos()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Cos
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Cos
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Cos()
+  nameWithType: PradOp.Cos()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Cos*
+  name: Cos
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Cos_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Cos
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Cos
+  nameWithType: PradOp.Cos
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CosOp
+  name: CosOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CosOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.CosOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CosOp
+  nameWithType: PradOp.CosOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CosOp*
+  name: CosOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CosOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.CosOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CosOp
+  nameWithType: PradOp.CosOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  name: CreateFlatArray(Tensor[], int[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CreateFlatArray_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  name.vb: CreateFlatArray(Tensor(), Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[], int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor(), Integer())
+  nameWithType: PradOp.CreateFlatArray(Tensor[], int[])
+  nameWithType.vb: PradOp.CreateFlatArray(Tensor(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray*
+  name: CreateFlatArray
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CreateFlatArray_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CreateFlatArray
+  nameWithType: PradOp.CreateFlatArray
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CurrentShape
+  name: CurrentShape
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CurrentShape
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.CurrentShape
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CurrentShape
+  nameWithType: PradOp.CurrentShape
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CurrentShape*
+  name: CurrentShape
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CurrentShape_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.CurrentShape
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CurrentShape
+  nameWithType: PradOp.CurrentShape
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor},System.Func{ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[]},System.Int32[])
+  name: CustomOperation(Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CustomOperation_System_Func_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor__System_Func_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor____System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor},System.Func{ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[]},System.Int32[])
+  name.vb: CustomOperation(Func(Of Tensor, Tensor), Func(Of Tensor, Tensor, Tensor, Tensor()), Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation(System.Func<ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor>, System.Func<ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor[]>, int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation(System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor), System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor()), Integer())
+  nameWithType: PradOp.CustomOperation(Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[])
+  nameWithType.vb: PradOp.CustomOperation(Func(Of Tensor, Tensor), Func(Of Tensor, Tensor, Tensor, Tensor()), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation*
+  name: CustomOperation
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_CustomOperation_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.CustomOperation
+  nameWithType: PradOp.CustomOperation
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.DeepClone
+  name: DeepClone()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_DeepClone
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.DeepClone
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.DeepClone()
+  nameWithType: PradOp.DeepClone()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.DeepClone*
+  name: DeepClone
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_DeepClone_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.DeepClone
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.DeepClone
+  nameWithType: PradOp.DeepClone
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Div(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Div(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Div_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Div(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Div(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.Div(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Div*
+  name: Div
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Div_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Div
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Div
+  nameWithType: PradOp.Div
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.DivOp
+  name: DivOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_DivOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.DivOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.DivOp
+  nameWithType: PradOp.DivOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.DivOp*
+  name: DivOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_DivOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.DivOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.DivOp
+  nameWithType: PradOp.DivOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.DoParallel(System.Func{ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.PradResult}[])
+  name: DoParallel(params Func<PradOp, PradResult>[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_DoParallel_System_Func_ParallelReverseAutoDiff_PRAD_PradOp_ParallelReverseAutoDiff_PRAD_PradResult____
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.DoParallel(System.Func{ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.PradResult}[])
+  name.vb: DoParallel(ParamArray Func(Of PradOp, PradResult)())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.DoParallel(params System.Func<ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.PradResult>[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.DoParallel(ParamArray System.Func(Of ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.PradResult)())
+  nameWithType: PradOp.DoParallel(params Func<PradOp, PradResult>[])
+  nameWithType.vb: PradOp.DoParallel(ParamArray Func(Of PradOp, PradResult)())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.DoParallel*
+  name: DoParallel
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_DoParallel_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.DoParallel
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.DoParallel
+  nameWithType: PradOp.DoParallel
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Exp
+  name: Exp()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Exp
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Exp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Exp()
+  nameWithType: PradOp.Exp()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Exp*
+  name: Exp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Exp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Exp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Exp
+  nameWithType: PradOp.Exp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims(System.Int32)
+  name: ExpandDims(int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ExpandDims_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims(System.Int32)
+  name.vb: ExpandDims(Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims(int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims(Integer)
+  nameWithType: PradOp.ExpandDims(int)
+  nameWithType.vb: PradOp.ExpandDims(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims*
+  name: ExpandDims
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ExpandDims_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDims
+  nameWithType: PradOp.ExpandDims
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDimsOp
+  name: ExpandDimsOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ExpandDimsOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.ExpandDimsOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDimsOp
+  nameWithType: PradOp.ExpandDimsOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDimsOp*
+  name: ExpandDimsOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ExpandDimsOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.ExpandDimsOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ExpandDimsOp
+  nameWithType: PradOp.ExpandDimsOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ExpOp
+  name: ExpOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ExpOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.ExpOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ExpOp
+  nameWithType: PradOp.ExpOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ExpOp*
+  name: ExpOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ExpOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.ExpOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ExpOp
+  nameWithType: PradOp.ExpOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: Gather(Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Gather_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: Gather(Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Gather(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Gather(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: PradOp.Gather(Tensor, int)
+  nameWithType.vb: PradOp.Gather(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Gather*
+  name: Gather
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Gather_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Gather
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Gather
+  nameWithType: PradOp.Gather
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: GatherNd(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_GatherNd_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.GatherNd(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.GatherNd*
+  name: GatherNd
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_GatherNd_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.GatherNd
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.GatherNd
+  nameWithType: PradOp.GatherNd
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.GatherNdOp
+  name: GatherNdOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_GatherNdOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.GatherNdOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.GatherNdOp
+  nameWithType: PradOp.GatherNdOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.GatherNdOp*
+  name: GatherNdOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_GatherNdOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.GatherNdOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.GatherNdOp
+  nameWithType: PradOp.GatherNdOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.GatherOp
+  name: GatherOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_GatherOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.GatherOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.GatherOp
+  nameWithType: PradOp.GatherOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.GatherOp*
+  name: GatherOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_GatherOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.GatherOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.GatherOp
+  nameWithType: PradOp.GatherOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Id
+  name: Id
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Id
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.Id
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Id
+  nameWithType: PradOp.Id
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Id*
+  name: Id
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Id_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Id
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Id
+  nameWithType: PradOp.Id
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Indexer(System.String[])
+  name: Indexer(params string[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Indexer_System_String___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Indexer(System.String[])
+  name.vb: Indexer(ParamArray String())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Indexer(params string[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Indexer(ParamArray String())
+  nameWithType: PradOp.Indexer(params string[])
+  nameWithType.vb: PradOp.Indexer(ParamArray String())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Indexer*
+  name: Indexer
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Indexer_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Indexer
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Indexer
+  nameWithType: PradOp.Indexer
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.IndexerOp
+  name: IndexerOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_IndexerOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.IndexerOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.IndexerOp
+  nameWithType: PradOp.IndexerOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.IndexerOp*
+  name: IndexerOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_IndexerOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.IndexerOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.IndexerOp
+  nameWithType: PradOp.IndexerOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.IsDependentBranch
+  name: IsDependentBranch
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_IsDependentBranch
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.IsDependentBranch
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.IsDependentBranch
+  nameWithType: PradOp.IsDependentBranch
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.IsDependentBranch*
+  name: IsDependentBranch
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_IsDependentBranch_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.IsDependentBranch
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.IsDependentBranch
+  nameWithType: PradOp.IsDependentBranch
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Ln
+  name: Ln()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Ln
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Ln
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Ln()
+  nameWithType: PradOp.Ln()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Ln*
+  name: Ln
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Ln_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Ln
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Ln
+  nameWithType: PradOp.Ln
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.LnOp
+  name: LnOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_LnOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.LnOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.LnOp
+  nameWithType: PradOp.LnOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.LnOp*
+  name: LnOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_LnOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.LnOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.LnOp
+  nameWithType: PradOp.LnOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Log
+  name: Log()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Log
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Log
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Log()
+  nameWithType: PradOp.Log()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Log*
+  name: Log
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Log_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Log
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Log
+  nameWithType: PradOp.Log
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.LogOp
+  name: LogOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_LogOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.LogOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.LogOp
+  nameWithType: PradOp.LogOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.LogOp*
+  name: LogOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_LogOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.LogOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.LogOp
+  nameWithType: PradOp.LogOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Mean(System.Int32)
+  name: Mean(int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Mean_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Mean(System.Int32)
+  name.vb: Mean(Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Mean(int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Mean(Integer)
+  nameWithType: PradOp.Mean(int)
+  nameWithType.vb: PradOp.Mean(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Mean*
+  name: Mean
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Mean_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Mean
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Mean
+  nameWithType: PradOp.Mean
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.MeanOp
+  name: MeanOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_MeanOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.MeanOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.MeanOp
+  nameWithType: PradOp.MeanOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.MeanOp*
+  name: MeanOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_MeanOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.MeanOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.MeanOp
+  nameWithType: PradOp.MeanOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Mul(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Mul(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Mul_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Mul(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Mul(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.Mul(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Mul*
+  name: Mul
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Mul_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Mul
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Mul
+  nameWithType: PradOp.Mul
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.MulOp
+  name: MulOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_MulOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.MulOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.MulOp
+  nameWithType: PradOp.MulOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.MulOp*
+  name: MulOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_MulOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.MulOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.MulOp
+  nameWithType: PradOp.MulOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.PrintCodeForCurrentTensor
+  name: PrintCodeForCurrentTensor()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_PrintCodeForCurrentTensor
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.PrintCodeForCurrentTensor
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.PrintCodeForCurrentTensor()
+  nameWithType: PradOp.PrintCodeForCurrentTensor()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.PrintCodeForCurrentTensor*
+  name: PrintCodeForCurrentTensor
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_PrintCodeForCurrentTensor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.PrintCodeForCurrentTensor
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.PrintCodeForCurrentTensor
+  nameWithType: PradOp.PrintCodeForCurrentTensor
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Reciprocal
+  name: Reciprocal()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Reciprocal
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Reciprocal
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Reciprocal()
+  nameWithType: PradOp.Reciprocal()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Reciprocal*
+  name: Reciprocal
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Reciprocal_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Reciprocal
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Reciprocal
+  nameWithType: PradOp.Reciprocal
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ReciprocalOp
+  name: ReciprocalOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ReciprocalOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.ReciprocalOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ReciprocalOp
+  nameWithType: PradOp.ReciprocalOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ReciprocalOp*
+  name: ReciprocalOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ReciprocalOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.ReciprocalOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ReciprocalOp
+  nameWithType: PradOp.ReciprocalOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Reshape(System.Int32[])
+  name: Reshape(params int[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Reshape_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Reshape(System.Int32[])
+  name.vb: Reshape(ParamArray Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Reshape(params int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Reshape(ParamArray Integer())
+  nameWithType: PradOp.Reshape(params int[])
+  nameWithType.vb: PradOp.Reshape(ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Reshape*
+  name: Reshape
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Reshape_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Reshape
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Reshape
+  nameWithType: PradOp.Reshape
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ReshapeOp
+  name: ReshapeOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ReshapeOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.ReshapeOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ReshapeOp
+  nameWithType: PradOp.ReshapeOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.ReshapeOp*
+  name: ReshapeOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_ReshapeOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.ReshapeOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.ReshapeOp
+  nameWithType: PradOp.ReshapeOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Result
+  name: Result
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Result
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.Result
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Result
+  nameWithType: PradOp.Result
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Result*
+  name: Result
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Result_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Result
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Result
+  nameWithType: PradOp.Result
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SeedGradient
+  name: SeedGradient
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SeedGradient
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.SeedGradient
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SeedGradient
+  nameWithType: PradOp.SeedGradient
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SeedGradient*
+  name: SeedGradient
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SeedGradient_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SeedGradient
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SeedGradient
+  nameWithType: PradOp.SeedGradient
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SetUpstreamGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: SetUpstreamGradient(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SetUpstreamGradient_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.SetUpstreamGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SetUpstreamGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.SetUpstreamGradient(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SetUpstreamGradient*
+  name: SetUpstreamGradient
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SetUpstreamGradient_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SetUpstreamGradient
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SetUpstreamGradient
+  nameWithType: PradOp.SetUpstreamGradient
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Sin
+  name: Sin()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Sin
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Sin
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Sin()
+  nameWithType: PradOp.Sin()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Sin*
+  name: Sin
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Sin_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Sin
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Sin
+  nameWithType: PradOp.Sin
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SinOp
+  name: SinOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SinOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.SinOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SinOp
+  nameWithType: PradOp.SinOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SinOp*
+  name: SinOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SinOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SinOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SinOp
+  nameWithType: PradOp.SinOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Slice(System.Int32[],System.Int32[],System.Int32[])
+  name: Slice(int[], int[], int[]?)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Slice_System_Int32___System_Int32___System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Slice(System.Int32[],System.Int32[],System.Int32[])
+  name.vb: Slice(Integer(), Integer(), Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Slice(int[], int[], int[]?)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Slice(Integer(), Integer(), Integer())
+  nameWithType: PradOp.Slice(int[], int[], int[]?)
+  nameWithType.vb: PradOp.Slice(Integer(), Integer(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Slice*
+  name: Slice
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Slice_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Slice
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Slice
+  nameWithType: PradOp.Slice
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Split(System.Int32,System.Int32)
+  name: Split(int, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Split_System_Int32_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Split(System.Int32,System.Int32)
+  name.vb: Split(Integer, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Split(int, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Split(Integer, Integer)
+  nameWithType: PradOp.Split(int, int)
+  nameWithType.vb: PradOp.Split(Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Split*
+  name: Split
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Split_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Split
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Split
+  nameWithType: PradOp.Split
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Square
+  name: Square()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Square
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Square
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Square()
+  nameWithType: PradOp.Square()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Square*
+  name: Square
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Square_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Square
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Square
+  nameWithType: PradOp.Square
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SquareOp
+  name: SquareOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SquareOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.SquareOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SquareOp
+  nameWithType: PradOp.SquareOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SquareOp*
+  name: SquareOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SquareOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SquareOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SquareOp
+  nameWithType: PradOp.SquareOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SquareRoot
+  name: SquareRoot()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SquareRoot
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.SquareRoot
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SquareRoot()
+  nameWithType: PradOp.SquareRoot()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SquareRoot*
+  name: SquareRoot
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SquareRoot_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SquareRoot
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SquareRoot
+  nameWithType: PradOp.SquareRoot
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SquareRootOp
+  name: SquareRootOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SquareRootOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.SquareRootOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SquareRootOp
+  nameWithType: PradOp.SquareRootOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SquareRootOp*
+  name: SquareRootOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SquareRootOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SquareRootOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SquareRootOp
+  nameWithType: PradOp.SquareRootOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Stack(Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Stack_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: Stack(Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Stack(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Stack(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: PradOp.Stack(Tensor[], int)
+  nameWithType.vb: PradOp.Stack(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Stack*
+  name: Stack
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Stack_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Stack
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Stack
+  nameWithType: PradOp.Stack
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.StackOp
+  name: StackOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_StackOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.StackOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.StackOp
+  nameWithType: PradOp.StackOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.StackOp*
+  name: StackOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_StackOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.StackOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.StackOp
+  nameWithType: PradOp.StackOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Sub(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Sub(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Sub_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Sub(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Sub(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradOp.Sub(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Sub*
+  name: Sub
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Sub_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Sub
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Sub
+  nameWithType: PradOp.Sub
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SubOp
+  name: SubOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SubOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.SubOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SubOp
+  nameWithType: PradOp.SubOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SubOp*
+  name: SubOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SubOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SubOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SubOp
+  nameWithType: PradOp.SubOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SumRows
+  name: SumRows()
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SumRows
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.SumRows
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SumRows()
+  nameWithType: PradOp.SumRows()
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SumRows*
+  name: SumRows
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SumRows_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SumRows
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SumRows
+  nameWithType: PradOp.SumRows
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SumRowsOp
+  name: SumRowsOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SumRowsOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.SumRowsOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SumRowsOp
+  nameWithType: PradOp.SumRowsOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.SumRowsOp*
+  name: SumRowsOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_SumRowsOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.SumRowsOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.SumRowsOp
+  nameWithType: PradOp.SumRowsOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Tile(System.Int32[])
+  name: Tile(params int[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Tile_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Tile(System.Int32[])
+  name.vb: Tile(ParamArray Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Tile(params int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Tile(ParamArray Integer())
+  nameWithType: PradOp.Tile(params int[])
+  nameWithType.vb: PradOp.Tile(ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Tile*
+  name: Tile
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Tile_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Tile
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Tile
+  nameWithType: PradOp.Tile
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.TileOp
+  name: TileOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_TileOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.TileOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.TileOp
+  nameWithType: PradOp.TileOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.TileOp*
+  name: TileOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_TileOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.TileOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.TileOp
+  nameWithType: PradOp.TileOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Transpose(System.Int32[])
+  name: Transpose(params int[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Transpose_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradOp.Transpose(System.Int32[])
+  name.vb: Transpose(ParamArray Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Transpose(params int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradOp.Transpose(ParamArray Integer())
+  nameWithType: PradOp.Transpose(params int[])
+  nameWithType.vb: PradOp.Transpose(ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.Transpose*
+  name: Transpose
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_Transpose_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.Transpose
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.Transpose
+  nameWithType: PradOp.Transpose
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.TransposeOp
+  name: TransposeOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_TransposeOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.TransposeOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.TransposeOp
+  nameWithType: PradOp.TransposeOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.TransposeOp*
+  name: TransposeOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_TransposeOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.TransposeOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.TransposeOp
+  nameWithType: PradOp.TransposeOp
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.UpstreamGradient
+  name: UpstreamGradient
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_UpstreamGradient
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradOp.UpstreamGradient
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.UpstreamGradient
+  nameWithType: PradOp.UpstreamGradient
+- uid: ParallelReverseAutoDiff.PRAD.PradOp.UpstreamGradient*
+  name: UpstreamGradient
+  href: api/ParallelReverseAutoDiff.PRAD.PradOp.html#ParallelReverseAutoDiff_PRAD_PradOp_UpstreamGradient_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradOp.UpstreamGradient
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp.UpstreamGradient
+  nameWithType: PradOp.UpstreamGradient
+- uid: ParallelReverseAutoDiff.PRAD.PradResult
+  name: PradResult
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult
+  nameWithType: PradResult
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])
+  name: PradResult(PradOp, Tensor, Tensor[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult__ctor_ParallelReverseAutoDiff_PRAD_PradOp_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])
+  name.vb: New(PradOp, Tensor, Tensor())
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.PradResult(ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.New(ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor())
+  nameWithType: PradResult.PradResult(PradOp, Tensor, Tensor[])
+  nameWithType.vb: PradResult.New(PradOp, Tensor, Tensor())
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.#ctor*
+  name: PradResult
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.PradResult
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.New
+  nameWithType: PradResult.PradResult
+  nameWithType.vb: PradResult.New
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Back(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Back_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradResult.Back(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Back*
+  name: Back
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Back_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Back
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Back
+  nameWithType: PradResult.Back
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  name: Branch()
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Branch
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Branch()
+  nameWithType: PradResult.Branch()
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Branch*
+  name: Branch
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Branch_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  nameWithType: PradResult.Branch
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator +(PradResult, PradResult)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Addition_ParallelReverseAutoDiff_PRAD_PradResult_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: +(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator +(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.+(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradResult.operator +(PradResult, PradResult)
+  nameWithType.vb: PradResult.+(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Addition*
+  name: operator +
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Addition_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Addition
+  isSpec: "True"
+  name.vb: +
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator +
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.+
+  nameWithType: PradResult.operator +
+  nameWithType.vb: PradResult.+
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator /(PradResult, PradResult)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Division_ParallelReverseAutoDiff_PRAD_PradResult_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: /(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator /(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult./(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradResult.operator /(PradResult, PradResult)
+  nameWithType.vb: PradResult./(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Division*
+  name: operator /
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Division_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Division
+  isSpec: "True"
+  name.vb: /
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator /
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult./
+  nameWithType: PradResult.operator /
+  nameWithType.vb: PradResult./
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator *(PradResult, PradResult)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Multiply_ParallelReverseAutoDiff_PRAD_PradResult_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: '*(PradResult, PradResult)'
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator *(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.*(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradResult.operator *(PradResult, PradResult)
+  nameWithType.vb: PradResult.*(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply*
+  name: operator *
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Multiply_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply
+  isSpec: "True"
+  name.vb: '*'
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator *
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.*
+  nameWithType: PradResult.operator *
+  nameWithType.vb: PradResult.*
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator -(PradResult, PradResult)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Subtraction_ParallelReverseAutoDiff_PRAD_PradResult_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: -(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator -(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.-(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradResult.operator -(PradResult, PradResult)
+  nameWithType.vb: PradResult.-(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction*
+  name: operator -
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_op_Subtraction_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction
+  isSpec: "True"
+  name.vb: '-'
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator -
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.-
+  nameWithType: PradResult.operator -
+  nameWithType.vb: PradResult.-
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Result
+  name: Result
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Result
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResult.Result
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Result
+  nameWithType: PradResult.Result
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Result*
+  name: Result
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Result_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Result
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Result
+  nameWithType: PradResult.Result
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Then(Delegate, Tensor?)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_System_Delegate_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  name.vb: Then(Delegate, Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate, ParallelReverseAutoDiff.PRAD.Tensor?)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradResult.Then(Delegate, Tensor?)
+  nameWithType.vb: PradResult.Then(Delegate, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: Then(Func<Tensor, int, PradResult>, Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_System_Func_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_ParallelReverseAutoDiff_PRAD_PradResult__ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: Then(Func(Of Tensor, Integer, PradResult), Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<ParallelReverseAutoDiff.PRAD.Tensor, int, ParallelReverseAutoDiff.PRAD.PradResult>, ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor, Integer, ParallelReverseAutoDiff.PRAD.PradResult), ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: PradResult.Then(Func<Tensor, int, PradResult>, Tensor, int)
+  nameWithType.vb: PradResult.Then(Func(Of Tensor, Integer, PradResult), Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Then(Func<Tensor[], int, PradResult>, Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_System_Func_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_ParallelReverseAutoDiff_PRAD_PradResult__ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: Then(Func(Of Tensor(), Integer, PradResult), Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<ParallelReverseAutoDiff.PRAD.Tensor[], int, ParallelReverseAutoDiff.PRAD.PradResult>, ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor(), Integer, ParallelReverseAutoDiff.PRAD.PradResult), ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: PradResult.Then(Func<Tensor[], int, PradResult>, Tensor[], int)
+  nameWithType.vb: PradResult.Then(Func(Of Tensor(), Integer, PradResult), Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},System.Int32)
+  name: Then(Func<int, PradResult>, int)
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_System_Func_System_Int32_ParallelReverseAutoDiff_PRAD_PradResult__System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},System.Int32)
+  name.vb: Then(Func(Of Integer, PradResult), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<int, ParallelReverseAutoDiff.PRAD.PradResult>, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of Integer, ParallelReverseAutoDiff.PRAD.PradResult), Integer)
+  nameWithType: PradResult.Then(Func<int, PradResult>, int)
+  nameWithType.vb: PradResult.Then(Func(Of Integer, PradResult), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult},System.Int32[])
+  name: Then(Func<int[], PradResult>, params int[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_System_Func_System_Int32___ParallelReverseAutoDiff_PRAD_PradResult__System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult},System.Int32[])
+  name.vb: Then(Func(Of Integer(), PradResult), ParamArray Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<int[], ParallelReverseAutoDiff.PRAD.PradResult>, params int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of Integer(), ParallelReverseAutoDiff.PRAD.PradResult), ParamArray Integer())
+  nameWithType: PradResult.Then(Func<int[], PradResult>, params int[])
+  nameWithType.vb: PradResult.Then(Func(Of Integer(), PradResult), ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult},System.String[])
+  name: Then(Func<string[], PradResult>, params string[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_System_Func_System_String___ParallelReverseAutoDiff_PRAD_PradResult__System_String___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult},System.String[])
+  name.vb: Then(Func(Of String(), PradResult), ParamArray String())
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<string[], ParallelReverseAutoDiff.PRAD.PradResult>, params string[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of String(), ParallelReverseAutoDiff.PRAD.PradResult), ParamArray String())
+  nameWithType: PradResult.Then(Func<string[], PradResult>, params string[])
+  nameWithType.vb: PradResult.Then(Func(Of String(), PradResult), ParamArray String())
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  name: Then
+  href: api/ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff_PRAD_PradResult_Then_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Then
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then
+  nameWithType: PradResult.Then
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase
+  name: PradResultBase
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResultBase
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase
+  nameWithType: PradResultBase
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  name: Branches
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_Branches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  nameWithType: PradResultBase.Branches
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches*
+  name: Branches
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_Branches_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  nameWithType: PradResultBase.Branches
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  name: Gradients
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_Gradients
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  nameWithType: PradResultBase.Gradients
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients*
+  name: Gradients
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_Gradients_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  nameWithType: PradResultBase.Gradients
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  name: PradOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_PradOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  nameWithType: PradResultBase.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp*
+  name: PradOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_PradOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  nameWithType: PradResultBase.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  name: SplitBranches
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_SplitBranches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  nameWithType: PradResultBase.SplitBranches
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches*
+  name: SplitBranches
+  href: api/ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff_PRAD_PradResultBase_SplitBranches_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  nameWithType: PradResultBase.SplitBranches
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult
+  name: PradSplitResult
+  href: api/ParallelReverseAutoDiff.PRAD.PradSplitResult.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradSplitResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult
+  nameWithType: PradSplitResult
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])
+  name: PradSplitResult(Tensor[], Tensor[])
+  href: api/ParallelReverseAutoDiff.PRAD.PradSplitResult.html#ParallelReverseAutoDiff_PRAD_PradSplitResult__ctor_ParallelReverseAutoDiff_PRAD_Tensor___ParallelReverseAutoDiff_PRAD_Tensor___
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[],ParallelReverseAutoDiff.PRAD.Tensor[])
+  name.vb: New(Tensor(), Tensor())
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.PradSplitResult(ParallelReverseAutoDiff.PRAD.Tensor[], ParallelReverseAutoDiff.PRAD.Tensor[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradSplitResult.New(ParallelReverseAutoDiff.PRAD.Tensor(), ParallelReverseAutoDiff.PRAD.Tensor())
+  nameWithType: PradSplitResult.PradSplitResult(Tensor[], Tensor[])
+  nameWithType.vb: PradSplitResult.New(Tensor(), Tensor())
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor*
+  name: PradSplitResult
+  href: api/ParallelReverseAutoDiff.PRAD.PradSplitResult.html#ParallelReverseAutoDiff_PRAD_PradSplitResult__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradSplitResult.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.PradSplitResult
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradSplitResult.New
+  nameWithType: PradSplitResult.PradSplitResult
+  nameWithType.vb: PradSplitResult.New
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  name: Results
+  href: api/ParallelReverseAutoDiff.PRAD.PradSplitResult.html#ParallelReverseAutoDiff_PRAD_PradSplitResult_Results
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  nameWithType: PradSplitResult.Results
+- uid: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results*
+  name: Results
+  href: api/ParallelReverseAutoDiff.PRAD.PradSplitResult.html#ParallelReverseAutoDiff_PRAD_PradSplitResult_Results_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradSplitResult.Results
+  nameWithType: PradSplitResult.Results
+- uid: ParallelReverseAutoDiff.PRAD.PradTensor
+  name: PradTensor
+  href: api/ParallelReverseAutoDiff.PRAD.PradTensor.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradTensor
+  fullName: ParallelReverseAutoDiff.PRAD.PradTensor
+  nameWithType: PradTensor
+- uid: ParallelReverseAutoDiff.PRAD.PradTensor.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: PradTensor(PradOp, Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.PradTensor.html#ParallelReverseAutoDiff_PRAD_PradTensor__ctor_ParallelReverseAutoDiff_PRAD_PradOp_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradTensor.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor)
+  name.vb: New(PradOp, Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradTensor.PradTensor(ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradTensor.New(ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: PradTensor.PradTensor(PradOp, Tensor)
+  nameWithType.vb: PradTensor.New(PradOp, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradTensor.#ctor*
+  name: PradTensor
+  href: api/ParallelReverseAutoDiff.PRAD.PradTensor.html#ParallelReverseAutoDiff_PRAD_PradTensor__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradTensor.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.PradTensor.PradTensor
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradTensor.New
+  nameWithType: PradTensor.PradTensor
+  nameWithType.vb: PradTensor.New
+- uid: ParallelReverseAutoDiff.PRAD.PradTensor.PradOp
+  name: PradOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradTensor.html#ParallelReverseAutoDiff_PRAD_PradTensor_PradOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradTensor.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradTensor.PradOp
+  nameWithType: PradTensor.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradTensor.PradOp*
+  name: PradOp
+  href: api/ParallelReverseAutoDiff.PRAD.PradTensor.html#ParallelReverseAutoDiff_PRAD_PradTensor_PradOp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradTensor.PradOp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.PradTensor.PradOp
+  nameWithType: PradTensor.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  name: Tensor
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+  nameWithType: Tensor
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Double[0:,0:])
+  name: Tensor(double[,])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Double_0__0___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Double[0:,0:])
+  name.vb: New(Double(,))
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(double[,])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Double(,))
+  nameWithType: Tensor.Tensor(double[,])
+  nameWithType.vb: Tensor.New(Double(,))
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double)
+  name: Tensor(int[], double)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Int32___System_Double_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double)
+  name.vb: New(Integer(), Double)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(int[], double)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Integer(), Double)
+  nameWithType: Tensor.Tensor(int[], double)
+  nameWithType.vb: Tensor.New(Integer(), Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double[])
+  name: Tensor(int[], double[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Int32___System_Double___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[],System.Double[])
+  name.vb: New(Integer(), Double())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(int[], double[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Integer(), Double())
+  nameWithType: Tensor.Tensor(int[], double[])
+  nameWithType.vb: Tensor.New(Integer(), Double())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])
+  name: Tensor(int[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor__ctor_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.#ctor(System.Int32[])
+  name.vb: New(Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor(int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New(Integer())
+  nameWithType: Tensor.Tensor(int[])
+  nameWithType.vb: Tensor.New(Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.#ctor*
+  name: Tensor
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tensor
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.New
+  nameWithType: Tensor.Tensor
+  nameWithType.vb: Tensor.New
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  name: Abs()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Abs
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Abs()
+  nameWithType: Tensor.Abs()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Abs*
+  name: Abs
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Abs_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Abs
+  nameWithType: Tensor.Abs
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Concat(Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Concat_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: Concat(Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Concat(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: Tensor.Concat(Tensor[], int)
+  nameWithType.vb: Tensor.Concat(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Concat*
+  name: Concat
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Concat_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Concat
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Concat
+  nameWithType: Tensor.Concat
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  name: CreateFlatArray(Tensor[], int[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_CreateFlatArray_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32[])
+  name.vb: CreateFlatArray(Tensor(), Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor[], int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray(ParallelReverseAutoDiff.PRAD.Tensor(), Integer())
+  nameWithType: Tensor.CreateFlatArray(Tensor[], int[])
+  nameWithType.vb: Tensor.CreateFlatArray(Tensor(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray*
+  name: CreateFlatArray
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_CreateFlatArray_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateFlatArray
+  nameWithType: Tensor.CreateFlatArray
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  name: CreateMask(Tensor, Func<double, bool>)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_CreateMask_ParallelReverseAutoDiff_PRAD_Tensor_System_Func_System_Double_System_Boolean__
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor,System.Func{System.Double,System.Boolean})
+  name.vb: CreateMask(Tensor, Func(Of Double, Boolean))
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor, System.Func<double, bool>)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask(ParallelReverseAutoDiff.PRAD.Tensor, System.Func(Of Double, Boolean))
+  nameWithType: Tensor.CreateMask(Tensor, Func<double, bool>)
+  nameWithType.vb: Tensor.CreateMask(Tensor, Func(Of Double, Boolean))
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask*
+  name: CreateMask
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_CreateMask_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.CreateMask
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.CreateMask
+  nameWithType: Tensor.CreateMask
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Data
+  name: Data
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Data
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.Data
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Data
+  nameWithType: Tensor.Data
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Data*
+  name: Data
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Data_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Data
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Data
+  nameWithType: Tensor.Data
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  name: DebugInfo
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_DebugInfo
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  nameWithType: Tensor.DebugInfo
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo*
+  name: DebugInfo
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_DebugInfo_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DebugInfo
+  nameWithType: Tensor.DebugInfo
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  name: DeepClone()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_DeepClone
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone()
+  nameWithType: Tensor.DeepClone()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone*
+  name: DeepClone
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_DeepClone_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.DeepClone
+  nameWithType: Tensor.DeepClone
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseAdd(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAdd_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.ElementwiseAdd(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd*
+  name: ElementwiseAdd
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAdd_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAdd
+  nameWithType: Tensor.ElementwiseAdd
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseAtan2(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAtan2_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.ElementwiseAtan2(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2*
+  name: ElementwiseAtan2
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseAtan2_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseAtan2
+  nameWithType: Tensor.ElementwiseAtan2
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  name: ElementwiseCos()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseCos
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos()
+  nameWithType: Tensor.ElementwiseCos()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos*
+  name: ElementwiseCos
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseCos_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseCos
+  nameWithType: Tensor.ElementwiseCos
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseDivide(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseDivide_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.ElementwiseDivide(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide*
+  name: ElementwiseDivide
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseDivide_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseDivide
+  nameWithType: Tensor.ElementwiseDivide
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseMultiply(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseMultiply_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.ElementwiseMultiply(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply*
+  name: ElementwiseMultiply
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseMultiply_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseMultiply
+  nameWithType: Tensor.ElementwiseMultiply
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  name: ElementwiseSin()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSin
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin()
+  nameWithType: Tensor.ElementwiseSin()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin*
+  name: ElementwiseSin
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSin_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSin
+  nameWithType: Tensor.ElementwiseSin
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  name: ElementwiseSquare()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquare
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare()
+  nameWithType: Tensor.ElementwiseSquare()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare*
+  name: ElementwiseSquare
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquare_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquare
+  nameWithType: Tensor.ElementwiseSquare
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  name: ElementwiseSquareRoot()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquareRoot
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot()
+  nameWithType: Tensor.ElementwiseSquareRoot()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot*
+  name: ElementwiseSquareRoot
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSquareRoot_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSquareRoot
+  nameWithType: Tensor.ElementwiseSquareRoot
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseSub(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSub_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.ElementwiseSub(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub*
+  name: ElementwiseSub
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ElementwiseSub_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ElementwiseSub
+  nameWithType: Tensor.ElementwiseSub
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  name: Exp()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Exp
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Exp()
+  nameWithType: Tensor.Exp()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Exp*
+  name: Exp
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Exp_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Exp
+  nameWithType: Tensor.Exp
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)
+  name: ExpandDims(int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ExpandDims_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(System.Int32)
+  name.vb: ExpandDims(Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims(Integer)
+  nameWithType: Tensor.ExpandDims(int)
+  nameWithType.vb: Tensor.ExpandDims(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims*
+  name: ExpandDims
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ExpandDims_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ExpandDims
+  nameWithType: Tensor.ExpandDims
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: Gather(Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Gather_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: Gather(Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Gather(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: Tensor.Gather(Tensor, int)
+  nameWithType.vb: Tensor.Gather(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Gather*
+  name: Gather
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Gather_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Gather
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Gather
+  nameWithType: Tensor.Gather
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: GatherNd(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_GatherNd_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.GatherNd(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd*
+  name: GatherNd
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_GatherNd_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.GatherNd
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.GatherNd
+  nameWithType: Tensor.GatherNd
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])
+  name: Indexer(params string[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Indexer_System_String___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Indexer(System.String[])
+  name.vb: Indexer(ParamArray String())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Indexer(params string[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Indexer(ParamArray String())
+  nameWithType: Tensor.Indexer(params string[])
+  nameWithType.vb: Tensor.Indexer(ParamArray String())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Indexer*
+  name: Indexer
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Indexer_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Indexer
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Indexer
+  nameWithType: Tensor.Indexer
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])
+  name: this[int[]]
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Item_System_Int32___
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.Item(System.Int32[])
+  name.vb: this[](Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.this[int[]]
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.this[](Integer())
+  nameWithType: Tensor.this[int[]]
+  nameWithType.vb: Tensor.this[](Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Item*
+  name: this
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Item_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Item
+  isSpec: "True"
+  name.vb: this[]
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.this
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.this[]
+  nameWithType: Tensor.this
+  nameWithType.vb: Tensor.this[]
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  name: Ln()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Ln
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Ln()
+  nameWithType: Tensor.Ln()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Ln*
+  name: Ln
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Ln_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Ln
+  nameWithType: Tensor.Ln
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Log
+  name: Log()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Log
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Log
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Log()
+  nameWithType: Tensor.Log()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Log*
+  name: Log
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Log_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Log
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Log
+  nameWithType: Tensor.Log
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)
+  name: Mean(int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Mean_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Mean(System.Int32)
+  name.vb: Mean(Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Mean(int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Mean(Integer)
+  nameWithType: Tensor.Mean(int)
+  nameWithType.vb: Tensor.Mean(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Mean*
+  name: Mean
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Mean_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Mean
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Mean
+  nameWithType: Tensor.Mean
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  name: operator >(Tensor, double)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_op_GreaterThan_ParallelReverseAutoDiff_PRAD_Tensor_System_Double_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  name.vb: '>(Tensor, Double)'
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator >(ParallelReverseAutoDiff.PRAD.Tensor, double)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.>(ParallelReverseAutoDiff.PRAD.Tensor, Double)
+  nameWithType: Tensor.operator >(Tensor, double)
+  nameWithType.vb: Tensor.>(Tensor, Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan*
+  name: operator >
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_op_GreaterThan_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.op_GreaterThan
+  isSpec: "True"
+  name.vb: '>'
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator >
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.>
+  nameWithType: Tensor.operator >
+  nameWithType.vb: Tensor.>
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  name: operator <(Tensor, double)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_op_LessThan_ParallelReverseAutoDiff_PRAD_Tensor_System_Double_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan(ParallelReverseAutoDiff.PRAD.Tensor,System.Double)
+  name.vb: <(Tensor, Double)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator <(ParallelReverseAutoDiff.PRAD.Tensor, double)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.<(ParallelReverseAutoDiff.PRAD.Tensor, Double)
+  nameWithType: Tensor.operator <(Tensor, double)
+  nameWithType.vb: Tensor.<(Tensor, Double)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan*
+  name: operator <
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_op_LessThan_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.op_LessThan
+  isSpec: "True"
+  name.vb: <
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator <
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.<
+  nameWithType: Tensor.operator <
+  nameWithType.vb: Tensor.<
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: operator *(Tensor, Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_op_Multiply_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name.vb: '*(Tensor, Tensor)'
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator *(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.*(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: Tensor.operator *(Tensor, Tensor)
+  nameWithType.vb: Tensor.*(Tensor, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply*
+  name: operator *
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_op_Multiply_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.op_Multiply
+  isSpec: "True"
+  name.vb: '*'
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.operator *
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.*
+  nameWithType: Tensor.operator *
+  nameWithType.vb: Tensor.*
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Print
+  name: Print()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Print
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Print
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Print()
+  nameWithType: Tensor.Print()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Print*
+  name: Print
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Print_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Print
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Print
+  nameWithType: Tensor.Print
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)
+  name: PrintCode(int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_PrintCode_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(System.Int32)
+  name.vb: PrintCode(Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode(Integer)
+  nameWithType: Tensor.PrintCode(int)
+  nameWithType.vb: Tensor.PrintCode(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode*
+  name: PrintCode
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_PrintCode_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.PrintCode
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.PrintCode
+  nameWithType: Tensor.PrintCode
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  name: Reciprocal()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Reciprocal
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal()
+  nameWithType: Tensor.Reciprocal()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal*
+  name: Reciprocal
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Reciprocal_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reciprocal
+  nameWithType: Tensor.Reciprocal
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])
+  name: ReplaceData(double[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ReplaceData_System_Double___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(System.Double[])
+  name.vb: ReplaceData(Double())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(double[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData(Double())
+  nameWithType: Tensor.ReplaceData(double[])
+  nameWithType.vb: Tensor.ReplaceData(Double())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData*
+  name: ReplaceData
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ReplaceData_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ReplaceData
+  nameWithType: Tensor.ReplaceData
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])
+  name: Reshape(int[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Reshape_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Reshape(System.Int32[])
+  name.vb: Reshape(Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reshape(int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Reshape(Integer())
+  nameWithType: Tensor.Reshape(int[])
+  nameWithType.vb: Tensor.Reshape(Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Reshape*
+  name: Reshape
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Reshape_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Reshape
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Reshape
+  nameWithType: Tensor.Reshape
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  name: Shape
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Shape
+  commentId: P:ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  nameWithType: Tensor.Shape
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Shape*
+  name: Shape
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Shape_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Shape
+  nameWithType: Tensor.Shape
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  name: Sign()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Sign
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Sign()
+  nameWithType: Tensor.Sign()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Sign*
+  name: Sign
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Sign_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Sign
+  nameWithType: Tensor.Sign
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])
+  name: Slice(int[], int[], int[]?)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Slice_System_Int32___System_Int32___System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Slice(System.Int32[],System.Int32[],System.Int32[])
+  name.vb: Slice(Integer(), Integer(), Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Slice(int[], int[], int[]?)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Slice(Integer(), Integer(), Integer())
+  nameWithType: Tensor.Slice(int[], int[], int[]?)
+  nameWithType.vb: Tensor.Slice(Integer(), Integer(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Slice*
+  name: Slice
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Slice_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Slice
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Slice
+  nameWithType: Tensor.Slice
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)
+  name: Split(int, int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Split_System_Int32_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Split(System.Int32,System.Int32)
+  name.vb: Split(Integer, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Split(int, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Split(Integer, Integer)
+  nameWithType: Tensor.Split(int, int)
+  nameWithType.vb: Tensor.Split(Integer, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Split*
+  name: Split
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Split_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Split
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Split
+  nameWithType: Tensor.Split
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: Stack(Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Stack_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: Stack(Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Stack(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: Tensor.Stack(Tensor[], int)
+  nameWithType.vb: Tensor.Stack(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Stack*
+  name: Stack
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Stack_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Stack
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Stack
+  nameWithType: Tensor.Stack
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  name: SumRows()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_SumRows
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.SumRows()
+  nameWithType: Tensor.SumRows()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.SumRows*
+  name: SumRows
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_SumRows_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.SumRows
+  nameWithType: Tensor.SumRows
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])
+  name: Tile(int[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Tile_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Tile(System.Int32[])
+  name.vb: Tile(Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tile(int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Tile(Integer())
+  nameWithType: Tensor.Tile(int[])
+  nameWithType.vb: Tensor.Tile(Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Tile*
+  name: Tile
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Tile_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Tile
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Tile
+  nameWithType: Tensor.Tile
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  name: ToDeepMatrix()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ToDeepMatrix
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix()
+  nameWithType: Tensor.ToDeepMatrix()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix*
+  name: ToDeepMatrix
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ToDeepMatrix_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToDeepMatrix
+  nameWithType: Tensor.ToDeepMatrix
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  name: ToMatrix()
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ToMatrix
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix()
+  nameWithType: Tensor.ToMatrix()
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix*
+  name: ToMatrix
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ToMatrix_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToMatrix
+  nameWithType: Tensor.ToMatrix
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])
+  name: ToTensorArray(int, int[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ToTensorArray_System_Int32_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(System.Int32,System.Int32[])
+  name.vb: ToTensorArray(Integer, Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(int, int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray(Integer, Integer())
+  nameWithType: Tensor.ToTensorArray(int, int[])
+  nameWithType.vb: Tensor.ToTensorArray(Integer, Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray*
+  name: ToTensorArray
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_ToTensorArray_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.ToTensorArray
+  nameWithType: Tensor.ToTensorArray
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])
+  name: Transpose(params int[])
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Transpose_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Transpose(System.Int32[])
+  name.vb: Transpose(ParamArray Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Transpose(params int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Transpose(ParamArray Integer())
+  nameWithType: Tensor.Transpose(params int[])
+  nameWithType.vb: Tensor.Transpose(ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Transpose*
+  name: Transpose
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Transpose_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Transpose
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Transpose
+  nameWithType: Tensor.Transpose
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)
+  name: Unstack(int)
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Unstack_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.Tensor.Unstack(System.Int32)
+  name.vb: Unstack(Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Unstack(int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor.Unstack(Integer)
+  nameWithType: Tensor.Unstack(int)
+  nameWithType.vb: Tensor.Unstack(Integer)
+- uid: ParallelReverseAutoDiff.PRAD.Tensor.Unstack*
+  name: Unstack
+  href: api/ParallelReverseAutoDiff.PRAD.Tensor.html#ParallelReverseAutoDiff_PRAD_Tensor_Unstack_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.Tensor.Unstack
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor.Unstack
+  nameWithType: Tensor.Unstack
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse
+  name: TensorReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html
+  commentId: T:ParallelReverseAutoDiff.PRAD.TensorReverse
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse
+  nameWithType: TensorReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[])
+  name: TensorReverse(Tensor[])
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse__ctor_ParallelReverseAutoDiff_PRAD_Tensor___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.#ctor(ParallelReverseAutoDiff.PRAD.Tensor[])
+  name.vb: New(Tensor())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.TensorReverse(ParallelReverseAutoDiff.PRAD.Tensor[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.New(ParallelReverseAutoDiff.PRAD.Tensor())
+  nameWithType: TensorReverse.TensorReverse(Tensor[])
+  nameWithType.vb: TensorReverse.New(Tensor())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.#ctor*
+  name: TensorReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse__ctor_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.TensorReverse
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.New
+  nameWithType: TensorReverse.TensorReverse
+  nameWithType.vb: TensorReverse.New
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: ConcatReverse(Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ConcatReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: ConcatReverse(Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: TensorReverse.ConcatReverse(Tensor, int)
+  nameWithType.vb: TensorReverse.ConcatReverse(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse*
+  name: ConcatReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ConcatReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ConcatReverse
+  nameWithType: TensorReverse.ConcatReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name: CreateFlatArrayReverse(Tensor, int[])
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_CreateFlatArrayReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name.vb: CreateFlatArrayReverse(Tensor, Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse(ParallelReverseAutoDiff.PRAD.Tensor, int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer())
+  nameWithType: TensorReverse.CreateFlatArrayReverse(Tensor, int[])
+  nameWithType.vb: TensorReverse.CreateFlatArrayReverse(Tensor, Integer())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse*
+  name: CreateFlatArrayReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_CreateFlatArrayReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.CreateFlatArrayReverse
+  nameWithType: TensorReverse.CreateFlatArrayReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseAddReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAddReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseAddReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse*
+  name: ElementwiseAddReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAddReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAddReverse
+  nameWithType: TensorReverse.ElementwiseAddReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseAtan2Reverse(Tensor, Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAtan2Reverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseAtan2Reverse(Tensor, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse*
+  name: ElementwiseAtan2Reverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseAtan2Reverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseAtan2Reverse
+  nameWithType: TensorReverse.ElementwiseAtan2Reverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseCosReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseCosReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseCosReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse*
+  name: ElementwiseCosReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseCosReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseCosReverse
+  nameWithType: TensorReverse.ElementwiseCosReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseDivideReverse(Tensor, Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseDivideReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseDivideReverse(Tensor, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse*
+  name: ElementwiseDivideReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseDivideReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseDivideReverse
+  nameWithType: TensorReverse.ElementwiseDivideReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseMultiplyReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseMultiplyReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseMultiplyReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse*
+  name: ElementwiseMultiplyReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseMultiplyReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseMultiplyReverse
+  nameWithType: TensorReverse.ElementwiseMultiplyReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseSinReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSinReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseSinReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse*
+  name: ElementwiseSinReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSinReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSinReverse
+  nameWithType: TensorReverse.ElementwiseSinReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseSquareReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseSquareReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse*
+  name: ElementwiseSquareReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareReverse
+  nameWithType: TensorReverse.ElementwiseSquareReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseSquareRootReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareRootReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseSquareRootReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse*
+  name: ElementwiseSquareRootReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSquareRootReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSquareRootReverse
+  nameWithType: TensorReverse.ElementwiseSquareRootReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ElementwiseSubReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSubReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ElementwiseSubReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse*
+  name: ElementwiseSubReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ElementwiseSubReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ElementwiseSubReverse
+  nameWithType: TensorReverse.ElementwiseSubReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: ExpandDimsReverse(Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ExpandDimsReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: ExpandDimsReverse(Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: TensorReverse.ExpandDimsReverse(Tensor, int)
+  nameWithType.vb: TensorReverse.ExpandDimsReverse(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse*
+  name: ExpandDimsReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ExpandDimsReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpandDimsReverse
+  nameWithType: TensorReverse.ExpandDimsReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ExpReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ExpReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ExpReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse*
+  name: ExpReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ExpReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ExpReverse
+  nameWithType: TensorReverse.ExpReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: GatherNdReverse(Tensor, Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_GatherNdReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.GatherNdReverse(Tensor, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse*
+  name: GatherNdReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_GatherNdReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherNdReverse
+  nameWithType: TensorReverse.GatherNdReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: GatherReverse(Tensor, Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_GatherReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: GatherReverse(Tensor, Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: TensorReverse.GatherReverse(Tensor, Tensor, int)
+  nameWithType.vb: TensorReverse.GatherReverse(Tensor, Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse*
+  name: GatherReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_GatherReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.GatherReverse
+  nameWithType: TensorReverse.GatherReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.String[])
+  name: IndexerReverse(Tensor, params string[])
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_IndexerReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_String___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.String[])
+  name.vb: IndexerReverse(Tensor, ParamArray String())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse(ParallelReverseAutoDiff.PRAD.Tensor, params string[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse(ParallelReverseAutoDiff.PRAD.Tensor, ParamArray String())
+  nameWithType: TensorReverse.IndexerReverse(Tensor, params string[])
+  nameWithType.vb: TensorReverse.IndexerReverse(Tensor, ParamArray String())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse*
+  name: IndexerReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_IndexerReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.IndexerReverse
+  nameWithType: TensorReverse.IndexerReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors
+  name: InitialTensors
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_InitialTensors
+  commentId: P:ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors
+  nameWithType: TensorReverse.InitialTensors
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors*
+  name: InitialTensors
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_InitialTensors_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.InitialTensors
+  nameWithType: TensorReverse.InitialTensors
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: LnReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_LnReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.LnReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse*
+  name: LnReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_LnReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.LnReverse
+  nameWithType: TensorReverse.LnReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: LogReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_LogReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.LogReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse*
+  name: LogReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_LogReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.LogReverse
+  nameWithType: TensorReverse.LogReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: MeanReverse(Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_MeanReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: MeanReverse(Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: TensorReverse.MeanReverse(Tensor, int)
+  nameWithType.vb: TensorReverse.MeanReverse(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse*
+  name: MeanReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_MeanReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.MeanReverse
+  nameWithType: TensorReverse.MeanReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: ReciprocalReverse(Tensor, Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ReciprocalReverse_ParallelReverseAutoDiff_PRAD_Tensor_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse(ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse(ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.ReciprocalReverse(Tensor, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse*
+  name: ReciprocalReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ReciprocalReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ReciprocalReverse
+  nameWithType: TensorReverse.ReciprocalReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name: ReshapeReverse(Tensor, int[])
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ReshapeReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name.vb: ReshapeReverse(Tensor, Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse(ParallelReverseAutoDiff.PRAD.Tensor, int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer())
+  nameWithType: TensorReverse.ReshapeReverse(Tensor, int[])
+  nameWithType.vb: TensorReverse.ReshapeReverse(Tensor, Integer())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse*
+  name: ReshapeReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_ReshapeReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.ReshapeReverse
+  nameWithType: TensorReverse.ReshapeReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[],System.Int32[],System.Int32[])
+  name: SliceReverse(Tensor, int[], int[], int[]?)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_SliceReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___System_Int32___System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[],System.Int32[],System.Int32[])
+  name.vb: SliceReverse(Tensor, Integer(), Integer(), Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse(ParallelReverseAutoDiff.PRAD.Tensor, int[], int[], int[]?)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer(), Integer(), Integer())
+  nameWithType: TensorReverse.SliceReverse(Tensor, int[], int[], int[]?)
+  nameWithType.vb: TensorReverse.SliceReverse(Tensor, Integer(), Integer(), Integer())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse*
+  name: SliceReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_SliceReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.SliceReverse
+  nameWithType: TensorReverse.SliceReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: SplitReverse(Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_SplitReverse_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: SplitReverse(Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: TensorReverse.SplitReverse(Tensor[], int)
+  nameWithType.vb: TensorReverse.SplitReverse(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse*
+  name: SplitReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_SplitReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.SplitReverse
+  nameWithType: TensorReverse.SplitReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name: StackReverse(Tensor, int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_StackReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  name.vb: StackReverse(Tensor, Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse(ParallelReverseAutoDiff.PRAD.Tensor, int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  nameWithType: TensorReverse.StackReverse(Tensor, int)
+  nameWithType.vb: TensorReverse.StackReverse(Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse*
+  name: StackReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_StackReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.StackReverse
+  nameWithType: TensorReverse.StackReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: SumRowsReverse(Tensor)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_SumRowsReverse_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: TensorReverse.SumRowsReverse(Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse*
+  name: SumRowsReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_SumRowsReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.SumRowsReverse
+  nameWithType: TensorReverse.SumRowsReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name: TileReverse(Tensor, int[])
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_TileReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name.vb: TileReverse(Tensor, Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse(ParallelReverseAutoDiff.PRAD.Tensor, int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer())
+  nameWithType: TensorReverse.TileReverse(Tensor, int[])
+  nameWithType.vb: TensorReverse.TileReverse(Tensor, Integer())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse*
+  name: TileReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_TileReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.TileReverse
+  nameWithType: TensorReverse.TileReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name: TransposeReverse(Tensor, int[])
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_TransposeReverse_ParallelReverseAutoDiff_PRAD_Tensor_System_Int32___
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse(ParallelReverseAutoDiff.PRAD.Tensor,System.Int32[])
+  name.vb: TransposeReverse(Tensor, Integer())
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse(ParallelReverseAutoDiff.PRAD.Tensor, int[])
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse(ParallelReverseAutoDiff.PRAD.Tensor, Integer())
+  nameWithType: TensorReverse.TransposeReverse(Tensor, int[])
+  nameWithType.vb: TensorReverse.TransposeReverse(Tensor, Integer())
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse*
+  name: TransposeReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_TransposeReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.TransposeReverse
+  nameWithType: TensorReverse.TransposeReverse
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name: UnstackReverse(Tensor[], int)
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_UnstackReverse_ParallelReverseAutoDiff_PRAD_Tensor___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse(ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  name.vb: UnstackReverse(Tensor(), Integer)
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse(ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse(ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  nameWithType: TensorReverse.UnstackReverse(Tensor[], int)
+  nameWithType.vb: TensorReverse.UnstackReverse(Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse*
+  name: UnstackReverse
+  href: api/ParallelReverseAutoDiff.PRAD.TensorReverse.html#ParallelReverseAutoDiff_PRAD_TensorReverse_UnstackReverse_
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.PRAD.TensorReverse.UnstackReverse
+  nameWithType: TensorReverse.UnstackReverse
 - uid: ParallelReverseAutoDiff.RMAD
   name: ParallelReverseAutoDiff.RMAD
   href: api/ParallelReverseAutoDiff.RMAD.html
@@ -716,6 +3389,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item2
   nameWithType: BackwardResult.Item2
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+  name: Item3
+  href: api/ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff_RMAD_BackwardResult_Item3
+  commentId: P:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+  nameWithType: BackwardResult.Item3
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3*
+  name: Item3
+  href: api/ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff_RMAD_BackwardResult_Item3_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResult.Item3
+  nameWithType: BackwardResult.Item3
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResult.Results
   name: Results
   href: api/ParallelReverseAutoDiff.RMAD.BackwardResult.html#ParallelReverseAutoDiff_RMAD_BackwardResult_Results
@@ -761,6 +3447,12 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddBiasGradient
   nameWithType: BackwardResultBuilder.AddBiasGradient
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: AddDeepInputGradient(Tensor)
+  href: api/ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddDeepInputGradient_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: BackwardResultBuilder.AddDeepInputGradient(Tensor)
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddDeepInputGradient(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   name: AddDeepInputGradient(DeepMatrix)
   href: api/ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddDeepInputGradient_ParallelReverseAutoDiff_RMAD_DeepMatrix_
@@ -803,6 +3495,12 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddGammaGradient
   nameWithType: BackwardResultBuilder.AddGammaGradient
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: AddInputGradient(Tensor)
+  href: api/ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradient_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: BackwardResultBuilder.AddInputGradient(Tensor)
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient(ParallelReverseAutoDiff.RMAD.Matrix)
   name: AddInputGradient(Matrix)
   href: api/ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradient_ParallelReverseAutoDiff_RMAD_Matrix_
@@ -816,6 +3514,12 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradient
   nameWithType: BackwardResultBuilder.AddInputGradient
+- uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: AddInputGradientArray(Tensor)
+  href: api/ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradientArray_ParallelReverseAutoDiff_PRAD_Tensor_
+  commentId: M:ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  fullName: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.PRAD.Tensor)
+  nameWithType: BackwardResultBuilder.AddInputGradientArray(Tensor)
 - uid: ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.AddInputGradientArray(ParallelReverseAutoDiff.RMAD.DeepMatrix)
   name: AddInputGradientArray(DeepMatrix)
   href: api/ParallelReverseAutoDiff.RMAD.BackwardResultBuilder.html#ParallelReverseAutoDiff_RMAD_BackwardResultBuilder_AddInputGradientArray_ParallelReverseAutoDiff_RMAD_DeepMatrix_
@@ -4994,6 +7698,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.TotalRows
   nameWithType: DeepMatrix.TotalRows
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToTensor
+  name: ToTensor()
+  href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_ToTensor
+  commentId: M:ParallelReverseAutoDiff.RMAD.DeepMatrix.ToTensor
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToTensor()
+  nameWithType: DeepMatrix.ToTensor()
+- uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToTensor*
+  name: ToTensor
+  href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_ToTensor_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.DeepMatrix.ToTensor
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.DeepMatrix.ToTensor
+  nameWithType: DeepMatrix.ToTensor
 - uid: ParallelReverseAutoDiff.RMAD.DeepMatrix.UniqueId
   name: UniqueId
   href: api/ParallelReverseAutoDiff.RMAD.DeepMatrix.html#ParallelReverseAutoDiff_RMAD_DeepMatrix_UniqueId
@@ -7976,6 +10693,12 @@ references:
   commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
   fullName: ParallelReverseAutoDiff.RMAD.InitializationType.Xavier
   nameWithType: InitializationType.Xavier
+- uid: ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
+  name: XavierUniform
+  href: api/ParallelReverseAutoDiff.RMAD.InitializationType.html#ParallelReverseAutoDiff_RMAD_InitializationType_XavierUniform
+  commentId: F:ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
+  fullName: ParallelReverseAutoDiff.RMAD.InitializationType.XavierUniform
+  nameWithType: InitializationType.XavierUniform
 - uid: ParallelReverseAutoDiff.RMAD.InitializationType.Zeroes
   name: Zeroes
   href: api/ParallelReverseAutoDiff.RMAD.InitializationType.html#ParallelReverseAutoDiff_RMAD_InitializationType_Zeroes
@@ -8945,6 +11668,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Double())
   nameWithType: Matrix.Matrix(double[])
   nameWithType.vb: Matrix.New(Double())
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][],System.Int32[],System.Int32)
+  name: Matrix(double[][], int[], int)
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix__ctor_System_Double_____System_Int32___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][],System.Int32[],System.Int32)
+  name.vb: New(Double()(), Integer(), Integer)
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Matrix(double[][], int[], int)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Double()(), Integer(), Integer)
+  nameWithType: Matrix.Matrix(double[][], int[], int)
+  nameWithType.vb: Matrix.New(Double()(), Integer(), Integer)
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Double[][])
   name: Matrix(double[][])
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix__ctor_System_Double_____
@@ -8954,6 +11686,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Double()())
   nameWithType: Matrix.Matrix(double[][])
   nameWithType.vb: Matrix.New(Double()())
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][],System.Int32[],System.Int32)
+  name: Matrix(int, double[][], int[], int)
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix__ctor_System_Int32_System_Double_____System_Int32___System_Int32_
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][],System.Int32[],System.Int32)
+  name.vb: New(Integer, Double()(), Integer(), Integer)
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Matrix(int, double[][], int[], int)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.New(Integer, Double()(), Integer(), Integer)
+  nameWithType: Matrix.Matrix(int, double[][], int[], int)
+  nameWithType.vb: Matrix.New(Integer, Double()(), Integer(), Integer)
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.#ctor(System.Int32,System.Double[][])
   name: Matrix(int, double[][])
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix__ctor_System_Int32_System_Double_____
@@ -9303,6 +12044,15 @@ references:
   fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.this[](Integer)
   nameWithType: Matrix.this[int]
   nameWithType.vb: Matrix.this[](Integer)
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32[])
+  name: this[int[]]
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Item_System_Int32___
+  commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.Item(System.Int32[])
+  name.vb: this[](Integer())
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.this[int[]]
+  fullName.vb: ParallelReverseAutoDiff.RMAD.Matrix.this[](Integer())
+  nameWithType: Matrix.this[int[]]
+  nameWithType.vb: Matrix.this[](Integer())
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.Item*
   name: this
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Item_
@@ -9339,6 +12089,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.Matrix.Mean
   nameWithType: Matrix.Mean
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  name: NumDimensions
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_NumDimensions
+  commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  nameWithType: Matrix.NumDimensions
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions*
+  name: NumDimensions
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_NumDimensions_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.NumDimensions
+  nameWithType: Matrix.NumDimensions
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.op_Addition(ParallelReverseAutoDiff.RMAD.Matrix,ParallelReverseAutoDiff.RMAD.Matrix)
   name: operator +(Matrix, Matrix)
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_op_Addition_ParallelReverseAutoDiff_RMAD_Matrix_ParallelReverseAutoDiff_RMAD_Matrix_
@@ -9498,6 +12261,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.Matrix.SetColumnSlice
   nameWithType: Matrix.SetColumnSlice
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  name: Shape
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Shape
+  commentId: P:ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  nameWithType: Matrix.Shape
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.Shape*
+  name: Shape
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Shape_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.Shape
+  nameWithType: Matrix.Shape
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.Sum
   name: Sum()
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Sum
@@ -9524,6 +12300,19 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.Matrix.ToArray
   nameWithType: Matrix.ToArray
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  name: ToTensor()
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_ToTensor
+  commentId: M:ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor()
+  nameWithType: Matrix.ToTensor()
+- uid: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor*
+  name: ToTensor
+  href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_ToTensor_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.Matrix.ToTensor
+  nameWithType: Matrix.ToTensor
 - uid: ParallelReverseAutoDiff.RMAD.Matrix.Transpose
   name: Transpose()
   href: api/ParallelReverseAutoDiff.RMAD.Matrix.html#ParallelReverseAutoDiff_RMAD_Matrix_Transpose
@@ -12767,6 +15556,236 @@ references:
   isSpec: "True"
   fullName: ParallelReverseAutoDiff.RMAD.PiecewiseActivationOperation.Instantiate
   nameWithType: PiecewiseActivationOperation.Instantiate
+- uid: ParallelReverseAutoDiff.RMAD.PradMath
+  name: PradMath
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.PradMath
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath
+  nameWithType: PradMath
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: Atan2(PradResult, PradResult)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Atan2_ParallelReverseAutoDiff_PRAD_PradResult_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradMath.Atan2(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Double,System.Double)
+  name: Atan2(double, double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Atan2_System_Double_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Double,System.Double)
+  name.vb: Atan2(Double, Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(double, double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(Double, Double)
+  nameWithType: PradMath.Atan2(double, double)
+  nameWithType.vb: PradMath.Atan2(Double, Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Single,System.Single)
+  name: Atan2(float, float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Atan2_System_Single_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Atan2(System.Single,System.Single)
+  name.vb: Atan2(Single, Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(float, float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Atan2(Single, Single)
+  nameWithType: PradMath.Atan2(float, float)
+  nameWithType.vb: PradMath.Atan2(Single, Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Atan2*
+  name: Atan2
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Atan2_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Atan2
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Atan2
+  nameWithType: PradMath.Atan2
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  name: Cos(PradResult)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Cos_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos(ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradMath.Cos(PradResult)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Double)
+  name: Cos(double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Cos_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Double)
+  name.vb: Cos(Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos(double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Cos(Double)
+  nameWithType: PradMath.Cos(double)
+  nameWithType.vb: PradMath.Cos(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Single)
+  name: Cos(float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Cos_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Cos(System.Single)
+  name.vb: Cos(Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos(float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Cos(Single)
+  nameWithType: PradMath.Cos(float)
+  nameWithType.vb: PradMath.Cos(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Cos*
+  name: Cos
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Cos_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Cos
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Cos
+  nameWithType: PradMath.Cos
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Double)
+  name: Exp(double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Exp_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Double)
+  name.vb: Exp(Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Exp(double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Exp(Double)
+  nameWithType: PradMath.Exp(double)
+  nameWithType.vb: PradMath.Exp(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Single)
+  name: Exp(float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Exp_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Exp(System.Single)
+  name.vb: Exp(Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Exp(float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Exp(Single)
+  nameWithType: PradMath.Exp(float)
+  nameWithType.vb: PradMath.Exp(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Exp*
+  name: Exp
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Exp_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Exp
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Exp
+  nameWithType: PradMath.Exp
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Double)
+  name: Log(double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Log_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Double)
+  name.vb: Log(Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Log(double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Log(Double)
+  nameWithType: PradMath.Log(double)
+  nameWithType.vb: PradMath.Log(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Single)
+  name: Log(float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Log_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Log(System.Single)
+  name.vb: Log(Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Log(float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Log(Single)
+  nameWithType: PradMath.Log(float)
+  nameWithType.vb: PradMath.Log(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Log*
+  name: Log
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Log_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Log
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Log
+  nameWithType: PradMath.Log
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Double,System.Double)
+  name: Pow(double, double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Pow_System_Double_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Double,System.Double)
+  name.vb: Pow(Double, Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Pow(double, double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Pow(Double, Double)
+  nameWithType: PradMath.Pow(double, double)
+  nameWithType.vb: PradMath.Pow(Double, Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Single,System.Single)
+  name: Pow(float, float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Pow_System_Single_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Pow(System.Single,System.Single)
+  name.vb: Pow(Single, Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Pow(float, float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Pow(Single, Single)
+  nameWithType: PradMath.Pow(float, float)
+  nameWithType.vb: PradMath.Pow(Single, Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Pow*
+  name: Pow
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Pow_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Pow
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Pow
+  nameWithType: PradMath.Pow
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  name: Sin(PradResult)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sin_ParallelReverseAutoDiff_PRAD_PradResult_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin(ParallelReverseAutoDiff.PRAD.PradResult)
+  nameWithType: PradMath.Sin(PradResult)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Double)
+  name: Sin(double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sin_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Double)
+  name.vb: Sin(Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin(double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sin(Double)
+  nameWithType: PradMath.Sin(double)
+  nameWithType.vb: PradMath.Sin(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Single)
+  name: Sin(float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sin_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sin(System.Single)
+  name.vb: Sin(Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin(float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sin(Single)
+  nameWithType: PradMath.Sin(float)
+  nameWithType.vb: PradMath.Sin(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sin*
+  name: Sin
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sin_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Sin
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sin
+  nameWithType: PradMath.Sin
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Double)
+  name: Sqrt(double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sqrt_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Double)
+  name.vb: Sqrt(Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(Double)
+  nameWithType: PradMath.Sqrt(double)
+  nameWithType.vb: PradMath.Sqrt(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Single)
+  name: Sqrt(float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sqrt_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(System.Single)
+  name.vb: Sqrt(Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt(Single)
+  nameWithType: PradMath.Sqrt(float)
+  nameWithType.vb: PradMath.Sqrt(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt*
+  name: Sqrt
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Sqrt_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Sqrt
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Sqrt
+  nameWithType: PradMath.Sqrt
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Double)
+  name: Tanh(double)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Tanh_System_Double_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Double)
+  name.vb: Tanh(Double)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(double)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(Double)
+  nameWithType: PradMath.Tanh(double)
+  nameWithType.vb: PradMath.Tanh(Double)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Single)
+  name: Tanh(float)
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Tanh_System_Single_
+  commentId: M:ParallelReverseAutoDiff.RMAD.PradMath.Tanh(System.Single)
+  name.vb: Tanh(Single)
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(float)
+  fullName.vb: ParallelReverseAutoDiff.RMAD.PradMath.Tanh(Single)
+  nameWithType: PradMath.Tanh(float)
+  nameWithType.vb: PradMath.Tanh(Single)
+- uid: ParallelReverseAutoDiff.RMAD.PradMath.Tanh*
+  name: Tanh
+  href: api/ParallelReverseAutoDiff.RMAD.PradMath.html#ParallelReverseAutoDiff_RMAD_PradMath_Tanh_
+  commentId: Overload:ParallelReverseAutoDiff.RMAD.PradMath.Tanh
+  isSpec: "True"
+  fullName: ParallelReverseAutoDiff.RMAD.PradMath.Tanh
+  nameWithType: PradMath.Tanh
+- uid: ParallelReverseAutoDiff.RMAD.PradTools
+  name: PradTools
+  href: api/ParallelReverseAutoDiff.RMAD.PradTools.html
+  commentId: T:ParallelReverseAutoDiff.RMAD.PradTools
+  fullName: ParallelReverseAutoDiff.RMAD.PradTools
+  nameWithType: PradTools
 - uid: ParallelReverseAutoDiff.RMAD.ReLUOperation
   name: ReLUOperation
   href: api/ParallelReverseAutoDiff.RMAD.ReLUOperation.html

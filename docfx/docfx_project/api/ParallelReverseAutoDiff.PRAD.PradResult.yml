@@ -1,0 +1,1442 @@
+### YamlMime:ManagedReference
+items:
+- uid: ParallelReverseAutoDiff.PRAD.PradResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResult
+  id: PradResult
+  parent: ParallelReverseAutoDiff.PRAD
+  children:
+  - ParallelReverseAutoDiff.PRAD.PradResult.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])
+  - ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  - ParallelReverseAutoDiff.PRAD.PradResult.Result
+  - ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  - ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  - ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  - ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},System.Int32)
+  - ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult},System.Int32[])
+  - ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult},System.String[])
+  - ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  - ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  - ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  - ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  langs:
+  - csharp
+  - vb
+  name: PradResult
+  nameWithType: PradResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult
+  type: Class
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: PradResult
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 13
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: The result of the computation.
+  example: []
+  syntax:
+    content: 'public class PradResult : PradResultBase'
+    content.vb: Public Class PradResult Inherits PradResultBase
+  inheritance:
+  - System.Object
+  - ParallelReverseAutoDiff.PRAD.PradResultBase
+  inheritedMembers:
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  - ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])
+  id: '#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])'
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: PradResult(PradOp, Tensor, Tensor[])
+  nameWithType: PradResult.PradResult(PradOp, Tensor, Tensor[])
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.PradResult(ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor[])
+  type: Constructor
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: .ctor
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 21
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Initializes a new instance of the <xref href="ParallelReverseAutoDiff.PRAD.PradResult" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public PradResult(PradOp operation, Tensor result, Tensor[] gradients)
+    parameters:
+    - id: operation
+      type: ParallelReverseAutoDiff.PRAD.PradOp
+      description: The operation.
+    - id: result
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The tensor result.
+    - id: gradients
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The gradient tensors.
+    content.vb: Public Sub New(operation As PradOp, result As Tensor, gradients As Tensor())
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.#ctor*
+  nameWithType.vb: PradResult.New(PradOp, Tensor, Tensor())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.New(ParallelReverseAutoDiff.PRAD.PradOp, ParallelReverseAutoDiff.PRAD.Tensor, ParallelReverseAutoDiff.PRAD.Tensor())
+  name.vb: New(PradOp, Tensor, Tensor())
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Result
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResult.Result
+  id: Result
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Result
+  nameWithType: PradResult.Result
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Result
+  type: Property
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Result
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 31
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Gets the result of the computation.
+  example: []
+  syntax:
+    content: public Tensor Result { get; }
+    parameters: []
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+    content.vb: Public ReadOnly Property Result As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Result*
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  id: op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: operator *(PradResult, PradResult)
+  nameWithType: PradResult.operator *(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator *(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Multiply
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 50
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Multiples two results together.
+  example: []
+  syntax:
+    content: public static PradResult operator *(PradResult a, PradResult b)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The first result.
+    - id: b
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The second result.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output result.
+    content.vb: Public Shared Operator *(a As PradResult, b As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply*
+  nameWithType.vb: PradResult.*(PradResult, PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.*(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: '*(PradResult, PradResult)'
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  id: op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: operator +(PradResult, PradResult)
+  nameWithType: PradResult.operator +(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator +(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Addition
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 69
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Adds two results together.
+  example: []
+  syntax:
+    content: public static PradResult operator +(PradResult a, PradResult b)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The first result.
+    - id: b
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The second result.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output result.
+    content.vb: Public Shared Operator +(a As PradResult, b As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.op_Addition*
+  nameWithType.vb: PradResult.+(PradResult, PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.+(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: +(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  id: op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: operator /(PradResult, PradResult)
+  nameWithType: PradResult.operator /(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator /(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Division
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 88
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Divides two results by one another.
+  example: []
+  syntax:
+    content: public static PradResult operator /(PradResult a, PradResult b)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The first result.
+    - id: b
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The second result.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output result.
+    content.vb: Public Shared Operator /(a As PradResult, b As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.op_Division*
+  nameWithType.vb: PradResult./(PradResult, PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult./(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: /(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  id: op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: operator -(PradResult, PradResult)
+  nameWithType: PradResult.operator -(PradResult, PradResult)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator -(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  type: Operator
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: op_Subtraction
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 107
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Subtracts two results from one another.
+  example: []
+  syntax:
+    content: public static PradResult operator -(PradResult a, PradResult b)
+    parameters:
+    - id: a
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The first result.
+    - id: b
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The second result.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: The output result.
+    content.vb: Public Shared Operator -(a As PradResult, b As PradResult) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction*
+  nameWithType.vb: PradResult.-(PradResult, PradResult)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.-(ParallelReverseAutoDiff.PRAD.PradResult, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: -(PradResult, PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  id: Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Back(Tensor)
+  nameWithType: PradResult.Back(Tensor)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Back
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 125
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Backpropagates the gradient.
+  example: []
+  syntax:
+    content: public Tensor Back(Tensor upstreamGradient)
+    parameters:
+    - id: upstreamGradient
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The upstream gradient.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The gradient.
+    content.vb: Public Function Back(upstreamGradient As Tensor) As Tensor
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Back*
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  id: Branch
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Branch()
+  nameWithType: PradResult.Branch()
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Branch()
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Branch
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 134
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Create a branch in the computation graph.
+  example: []
+  syntax:
+    content: public PradOp Branch()
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradOp
+      description: A PradOp.
+    content.vb: Public Function Branch() As PradOp
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Branch*
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  id: Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Then(Delegate, Tensor?)
+  nameWithType: PradResult.Then(Delegate, Tensor?)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate, ParallelReverseAutoDiff.PRAD.Tensor?)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Then
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 146
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: >-
+    Applies the following operation.
+
+    Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
+  example: []
+  syntax:
+    content: public PradResult Then(Delegate operation, Tensor? other = null)
+    parameters:
+    - id: operation
+      type: System.Delegate
+      description: The operation to apply.
+    - id: other
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The other tensor, if needed.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: A PradResult.
+    content.vb: Public Function [Then](operation As [Delegate], other As Tensor = Nothing) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  nameWithType.vb: PradResult.Then(Delegate, Tensor)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate, ParallelReverseAutoDiff.PRAD.Tensor)
+  name.vb: Then(Delegate, Tensor)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  id: Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Then(Func<Tensor[], int, PradResult>, Tensor[], int)
+  nameWithType: PradResult.Then(Func<Tensor[], int, PradResult>, Tensor[], int)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<ParallelReverseAutoDiff.PRAD.Tensor[], int, ParallelReverseAutoDiff.PRAD.PradResult>, ParallelReverseAutoDiff.PRAD.Tensor[], int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Then
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 167
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Applies the following operation.
+  example: []
+  syntax:
+    content: public PradResult Then(Func<Tensor[], int, PradResult> operation, Tensor[] others, int axis = 0)
+    parameters:
+    - id: operation
+      type: System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+      description: The operation to apply.
+    - id: others
+      type: ParallelReverseAutoDiff.PRAD.Tensor[]
+      description: The other tensors.
+    - id: axis
+      type: System.Int32
+      description: The axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: A PradResult.
+    content.vb: Public Function [Then](operation As Func(Of Tensor(), Integer, PradResult), others As Tensor(), axis As Integer = 0) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  nameWithType.vb: PradResult.Then(Func(Of Tensor(), Integer, PradResult), Tensor(), Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor(), Integer, ParallelReverseAutoDiff.PRAD.PradResult), ParallelReverseAutoDiff.PRAD.Tensor(), Integer)
+  name.vb: Then(Func(Of Tensor(), Integer, PradResult), Tensor(), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  id: Then(System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},ParallelReverseAutoDiff.PRAD.Tensor,System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Then(Func<Tensor, int, PradResult>, Tensor, int)
+  nameWithType: PradResult.Then(Func<Tensor, int, PradResult>, Tensor, int)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<ParallelReverseAutoDiff.PRAD.Tensor, int, ParallelReverseAutoDiff.PRAD.PradResult>, ParallelReverseAutoDiff.PRAD.Tensor, int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Then
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 180
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Applies the following operation.
+  example: []
+  syntax:
+    content: public PradResult Then(Func<Tensor, int, PradResult> operation, Tensor indices, int axis = 0)
+    parameters:
+    - id: operation
+      type: System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+      description: The operation to apply.
+    - id: indices
+      type: ParallelReverseAutoDiff.PRAD.Tensor
+      description: The indices.
+    - id: axis
+      type: System.Int32
+      description: The axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: A PradResult.
+    content.vb: Public Function [Then](operation As Func(Of Tensor, Integer, PradResult), indices As Tensor, axis As Integer = 0) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  nameWithType.vb: PradResult.Then(Func(Of Tensor, Integer, PradResult), Tensor, Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor, Integer, ParallelReverseAutoDiff.PRAD.PradResult), ParallelReverseAutoDiff.PRAD.Tensor, Integer)
+  name.vb: Then(Func(Of Tensor, Integer, PradResult), Tensor, Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},System.Int32)
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},System.Int32)
+  id: Then(System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult},System.Int32)
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Then(Func<int, PradResult>, int)
+  nameWithType: PradResult.Then(Func<int, PradResult>, int)
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<int, ParallelReverseAutoDiff.PRAD.PradResult>, int)
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Then
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 192
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Applies the following operation.
+  example: []
+  syntax:
+    content: public PradResult Then(Func<int, PradResult> operation, int axis = -1)
+    parameters:
+    - id: operation
+      type: System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+      description: The operation to apply.
+    - id: axis
+      type: System.Int32
+      description: The axis.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: A PradResult.
+    content.vb: Public Function [Then](operation As Func(Of Integer, PradResult), axis As Integer = -1) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  nameWithType.vb: PradResult.Then(Func(Of Integer, PradResult), Integer)
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of Integer, ParallelReverseAutoDiff.PRAD.PradResult), Integer)
+  name.vb: Then(Func(Of Integer, PradResult), Integer)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult},System.Int32[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult},System.Int32[])
+  id: Then(System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult},System.Int32[])
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Then(Func<int[], PradResult>, params int[])
+  nameWithType: PradResult.Then(Func<int[], PradResult>, params int[])
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<int[], ParallelReverseAutoDiff.PRAD.PradResult>, params int[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Then
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 204
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Applies the following operation.
+  example: []
+  syntax:
+    content: public PradResult Then(Func<int[], PradResult> operation, params int[] array)
+    parameters:
+    - id: operation
+      type: System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult}
+      description: The operation to apply.
+    - id: array
+      type: System.Int32[]
+      description: The array.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: A PradResult.
+    content.vb: Public Function [Then](operation As Func(Of Integer(), PradResult), ParamArray array As Integer()) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  nameWithType.vb: PradResult.Then(Func(Of Integer(), PradResult), ParamArray Integer())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of Integer(), ParallelReverseAutoDiff.PRAD.PradResult), ParamArray Integer())
+  name.vb: Then(Func(Of Integer(), PradResult), ParamArray Integer())
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult},System.String[])
+  commentId: M:ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult},System.String[])
+  id: Then(System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult},System.String[])
+  parent: ParallelReverseAutoDiff.PRAD.PradResult
+  langs:
+  - csharp
+  - vb
+  name: Then(Func<string[], PradResult>, params string[])
+  nameWithType: PradResult.Then(Func<string[], PradResult>, params string[])
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func<string[], ParallelReverseAutoDiff.PRAD.PradResult>, params string[])
+  type: Method
+  source:
+    remote:
+      path: src/PRAD/PradResult.cs
+      branch: main
+      repo: https://github.com/ameritusweb/ParallelReverseAutoDiff.git
+    id: Then
+    path: ../../src/PRAD/PradResult.cs
+    startLine: 216
+  assemblies:
+  - ParallelReverseAutoDiff
+  namespace: ParallelReverseAutoDiff.PRAD
+  summary: Applies the following operation.
+  example: []
+  syntax:
+    content: public PradResult Then(Func<string[], PradResult> operation, params string[] array)
+    parameters:
+    - id: operation
+      type: System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult}
+      description: The operation to apply.
+    - id: array
+      type: System.String[]
+      description: The array.
+    return:
+      type: ParallelReverseAutoDiff.PRAD.PradResult
+      description: A PradResult.
+    content.vb: Public Function [Then](operation As Func(Of String(), PradResult), ParamArray array As String()) As PradResult
+  overload: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  nameWithType.vb: PradResult.Then(Func(Of String(), PradResult), ParamArray String())
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Func(Of String(), ParallelReverseAutoDiff.PRAD.PradResult), ParamArray String())
+  name.vb: Then(Func(Of String(), PradResult), ParamArray String())
+references:
+- uid: ParallelReverseAutoDiff.PRAD
+  commentId: N:ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.html
+  name: ParallelReverseAutoDiff.PRAD
+  nameWithType: ParallelReverseAutoDiff.PRAD
+  fullName: ParallelReverseAutoDiff.PRAD
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+  spec.vb:
+  - uid: ParallelReverseAutoDiff
+    name: ParallelReverseAutoDiff
+    href: ParallelReverseAutoDiff.html
+  - name: .
+  - uid: ParallelReverseAutoDiff.PRAD
+    name: PRAD
+    href: ParallelReverseAutoDiff.PRAD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResultBase
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html
+  name: PradResultBase
+  nameWithType: PradResultBase
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+  name: Gradients
+  nameWithType: PradResultBase.Gradients
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Gradients
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+  name: PradOp
+  nameWithType: PradResultBase.PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+  name: Branches
+  nameWithType: PradResultBase.Branches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.Branches
+- uid: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  commentId: P:ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  parent: ParallelReverseAutoDiff.PRAD.PradResultBase
+  href: ParallelReverseAutoDiff.PRAD.PradResultBase.html#ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+  name: SplitBranches
+  nameWithType: PradResultBase.SplitBranches
+  fullName: ParallelReverseAutoDiff.PRAD.PradResultBase.SplitBranches
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ParallelReverseAutoDiff.PRAD.PradResult
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradResult
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  name: PradResult
+  nameWithType: PradResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.#ctor*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.#ctor
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.#ctor(ParallelReverseAutoDiff.PRAD.PradOp,ParallelReverseAutoDiff.PRAD.Tensor,ParallelReverseAutoDiff.PRAD.Tensor[])
+  name: PradResult
+  nameWithType: PradResult.PradResult
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.PradResult
+  nameWithType.vb: PradResult.New
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.New
+  name.vb: New
+- uid: ParallelReverseAutoDiff.PRAD.PradOp
+  commentId: T:ParallelReverseAutoDiff.PRAD.PradOp
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.PradOp.html
+  name: PradOp
+  nameWithType: PradOp
+  fullName: ParallelReverseAutoDiff.PRAD.PradOp
+- uid: ParallelReverseAutoDiff.PRAD.Tensor
+  commentId: T:ParallelReverseAutoDiff.PRAD.Tensor
+  parent: ParallelReverseAutoDiff.PRAD
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor
+  nameWithType: Tensor
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor
+- uid: ParallelReverseAutoDiff.PRAD.Tensor[]
+  isExternal: true
+  href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  name: Tensor[]
+  nameWithType: Tensor[]
+  fullName: ParallelReverseAutoDiff.PRAD.Tensor[]
+  nameWithType.vb: Tensor()
+  fullName.vb: ParallelReverseAutoDiff.PRAD.Tensor()
+  name.vb: Tensor()
+  spec.csharp:
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: (
+  - name: )
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Result*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Result
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.Result
+  name: Result
+  nameWithType: PradResult.Result
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Result
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator *
+  nameWithType: PradResult.operator *
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator *
+  nameWithType.vb: PradResult.*
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.*
+  name.vb: '*'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply*
+    name: '*'
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Multiply(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Addition*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Addition
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator +
+  nameWithType: PradResult.operator +
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator +
+  nameWithType.vb: PradResult.+
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.+
+  name.vb: +
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Addition*
+    name: +
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Addition(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Division*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Division
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator /
+  nameWithType: PradResult.operator /
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator /
+  nameWithType.vb: PradResult./
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult./
+  name.vb: /
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Division*
+    name: /
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Division(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+  name: operator -
+  nameWithType: PradResult.operator -
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.operator -
+  nameWithType.vb: PradResult.-
+  fullName.vb: ParallelReverseAutoDiff.PRAD.PradResult.-
+  name.vb: '-'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction*
+    name: '-'
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.op_Subtraction(ParallelReverseAutoDiff.PRAD.PradResult,ParallelReverseAutoDiff.PRAD.PradResult)
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Back*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Back
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.Back(ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Back
+  nameWithType: PradResult.Back
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Back
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Branch*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.Branch
+  name: Branch
+  nameWithType: PradResult.Branch
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Branch
+- uid: ParallelReverseAutoDiff.PRAD.PradResult.Then*
+  commentId: Overload:ParallelReverseAutoDiff.PRAD.PradResult.Then
+  href: ParallelReverseAutoDiff.PRAD.PradResult.html#ParallelReverseAutoDiff.PRAD.PradResult.Then(System.Delegate,ParallelReverseAutoDiff.PRAD.Tensor)
+  name: Then
+  nameWithType: PradResult.Then
+  fullName: ParallelReverseAutoDiff.PRAD.PradResult.Then
+- uid: System.Delegate
+  commentId: T:System.Delegate
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.delegate
+  name: Delegate
+  nameWithType: Delegate
+  fullName: System.Delegate
+- uid: System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+  commentId: T:System.Func{ParallelReverseAutoDiff.PRAD.Tensor[],System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+  parent: System
+  definition: System.Func`3
+  href: https://learn.microsoft.com/dotnet/api/system.func-3
+  name: Func<Tensor[], int, PradResult>
+  nameWithType: Func<Tensor[], int, PradResult>
+  fullName: System.Func<ParallelReverseAutoDiff.PRAD.Tensor[], int, ParallelReverseAutoDiff.PRAD.PradResult>
+  nameWithType.vb: Func(Of Tensor(), Integer, PradResult)
+  fullName.vb: System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor(), Integer, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: Func(Of Tensor(), Integer, PradResult)
+  spec.csharp:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Func`3
+  commentId: T:System.Func`3
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-3
+  name: Func<T1, T2, TResult>
+  nameWithType: Func<T1, T2, TResult>
+  fullName: System.Func<T1, T2, TResult>
+  nameWithType.vb: Func(Of T1, T2, TResult)
+  fullName.vb: System.Func(Of T1, T2, TResult)
+  name.vb: Func(Of T1, T2, TResult)
+  spec.csharp:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+  commentId: T:System.Func{ParallelReverseAutoDiff.PRAD.Tensor,System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+  parent: System
+  definition: System.Func`3
+  href: https://learn.microsoft.com/dotnet/api/system.func-3
+  name: Func<Tensor, int, PradResult>
+  nameWithType: Func<Tensor, int, PradResult>
+  fullName: System.Func<ParallelReverseAutoDiff.PRAD.Tensor, int, ParallelReverseAutoDiff.PRAD.PradResult>
+  nameWithType.vb: Func(Of Tensor, Integer, PradResult)
+  fullName.vb: System.Func(Of ParallelReverseAutoDiff.PRAD.Tensor, Integer, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: Func(Of Tensor, Integer, PradResult)
+  spec.csharp:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.Tensor
+    name: Tensor
+    href: ParallelReverseAutoDiff.PRAD.Tensor.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: )
+- uid: System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+  commentId: T:System.Func{System.Int32,ParallelReverseAutoDiff.PRAD.PradResult}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<int, PradResult>
+  nameWithType: Func<int, PradResult>
+  fullName: System.Func<int, ParallelReverseAutoDiff.PRAD.PradResult>
+  nameWithType.vb: Func(Of Integer, PradResult)
+  fullName.vb: System.Func(Of Integer, ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: Func(Of Integer, PradResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult}
+  commentId: T:System.Func{System.Int32[],ParallelReverseAutoDiff.PRAD.PradResult}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<int[], PradResult>
+  nameWithType: Func<int[], PradResult>
+  fullName: System.Func<int[], ParallelReverseAutoDiff.PRAD.PradResult>
+  nameWithType.vb: Func(Of Integer(), PradResult)
+  fullName.vb: System.Func(Of Integer(), ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: Func(Of Integer(), PradResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: )
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult}
+  commentId: T:System.Func{System.String[],ParallelReverseAutoDiff.PRAD.PradResult}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<string[], PradResult>
+  nameWithType: Func<string[], PradResult>
+  fullName: System.Func<string[], ParallelReverseAutoDiff.PRAD.PradResult>
+  nameWithType.vb: Func(Of String(), PradResult)
+  fullName.vb: System.Func(Of String(), ParallelReverseAutoDiff.PRAD.PradResult)
+  name.vb: Func(Of String(), PradResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: ParallelReverseAutoDiff.PRAD.PradResult
+    name: PradResult
+    href: ParallelReverseAutoDiff.PRAD.PradResult.html
+  - name: )
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
