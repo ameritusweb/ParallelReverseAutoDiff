@@ -935,6 +935,30 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestOperatorsOnPradResults()
+        {
+            var input1 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => i / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => i / 100d).ToArray());
+            var upstream = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => i / 100d).ToArray());
+
+            var pradOp1 = new PradOp(input1);
+            var pradOp2 = new PradOp(input2);
+
+            var sinOp = pradOp1.Sin();
+            var cosOp = pradOp2.Cos();
+
+            var multiplied = sinOp * cosOp;
+
+            var addition = sinOp + cosOp;
+
+            var division = sinOp / (PradMath.Atan2(multiplied, addition));
+
+            var subtraction = division - PradMath.Cos(addition);
+
+            var gradient = pradOp1.Back(upstream);
+        }
+
+        [Fact]
         public void TestVNNDecompositionOperationUsingIndexer()
         {
             Random rand = new Random(3);
@@ -1002,6 +1026,10 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var w_angles = w_angles_stacked;
             var w_magnitudesBranch = w_magnitudes.Branch();
             var w_anglesBranch = w_angles.Branch();
+
+            // # Reshape and transpose operations
+            // w_magnitudes_trans = tf.transpose(tf.reshape(w_magnitudes, [1, 4, -1]), [0, 2, 1])
+            // w_angles_trans = tf.transpose(tf.reshape(w_angles, [1, 4, -1]), [0, 2, 1])
 
             var w_magnitudesTrans = w_magnitudesBranch.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
             var w_anglesTrans = w_anglesBranch.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
@@ -1089,6 +1117,13 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var sumYBranch = sumY.Branch();
             var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, -1d));
 
+            // # Vectorized difference calculation
+            // sum_x_reshaped = tf.reshape(sum_x_expanded, [1, -1])
+            // negative_sum_x_reshaped = tf.reshape(-sum_x_expanded, [1, -1])
+            // x_w_reshaped = tf.reshape(x_w, [4, -1])
+            // sum_x_concatenated = tf.concat([sum_x_reshaped, -sum_x_reshaped, sum_x_reshaped, -sum_x_reshaped], axis=0)
+            // diff_x = sum_x_concatenated - x_w_reshaped
+
 
             // Reshape sumXExpanded and negativeSumXExpanded
             var sumXReshaped = sumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
@@ -1104,6 +1139,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             // Perform the subtraction
             var diffX = sumXConcatenated.Then(PradOp.SubOp, x_wReshaped.Result);
+
+
+            // # Vectorized difference calculation
+            // sum_y_reshaped = tf.reshape(sum_y_expanded, [1, -1])
+            // negative_sum_y_reshaped = tf.reshape(-sum_y_expanded, [1, -1])
+            // y_w_reshaped = tf.reshape(y_w, [4, -1])
+            // sum_y_concatenated = tf.concat([sum_y_reshaped, -sum_y_reshaped, sum_y_reshaped, -sum_y_reshaped], axis=0)
+            // diff_y = sum_y_concatenated - y_w_reshaped
 
             // Repeat the process for Y
             var sumYReshaped = sumYExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
@@ -1139,12 +1182,29 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Debug.WriteLine($"PRAD resultMagnitudes: {resultMagnitudes.Result.PrintCode(8)}");
             Debug.WriteLine($"PRAD resultAngles: {resultAngles.Result.PrintCode(8)}");
 
+            // # Reshape and transpose results
+            // result_magnitudes_trans = tf.transpose(tf.reshape(result_magnitudes, [1, 4, -1]), [0, 2, 1])
+            // result_angles_trans = tf.transpose(tf.reshape(result_angles, [1, 4, -1]), [0, 2, 1])
+
+            // reshaped_result_magnitudes = tf.reshape(result_magnitudes_trans, [num_rows, -1])
+            // reshaped_result_angles = tf.reshape(result_angles_trans, [num_rows, -1])
+
             var resultMagnitudesTrans = resultMagnitudes.PradOp.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
             var resultAnglesTrans = resultAngles.PradOp.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
 
             var reshapedResultMagnitudes = resultMagnitudesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
 
             var reshapedResultAngles = resultAnglesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
+
+            // # Final output construction
+            // magnitude_reshaped = tf.reshape(magnitude, [3, 2, 1])
+            // angle_reshaped = tf.reshape(angle, [3, 2, 1])
+            // w_magnitude_pivot_reshaped = tf.reshape(w_magnitude_pivot, [3, 2, 1])
+            // w_angle_pivot_reshaped = tf.reshape(w_angle_pivot, [3, 2, 1])
+            // w_magnitudes_reshaped = tf.reshape(w_magnitudes_trans, [3, 2, 4])
+            // w_angles_reshaped = tf.reshape(w_angles_trans, [3, 2, 4])
+            // result_magnitudes_reshaped = tf.reshape(reshaped_result_magnitudes, [3, 2, 4])
+            // result_angles_reshaped = tf.reshape(reshaped_result_angles, [3, 2, 4])
 
             // First, let's reshape our tensors to make them easier to work with
             var magnitudeReshaped = magnitudeBranch.Reshape(new int[] { 3, 2, 1 });
@@ -1163,11 +1223,19 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 resultMagnitudesReshaped.Result
             }, axis: 2);
 
+            // # Concatenate all parts
+            // magnitudes_part = tf.concat([magnitude_reshaped, w_magnitude_pivot_reshaped, w_magnitudes_reshaped, result_magnitudes_reshaped], axis=2)
+            // angles_part = tf.concat([angle_reshaped, w_angle_pivot_reshaped, w_angles_reshaped, result_angles_reshaped], axis=2)
+
             var anglesPart = angleReshaped.Then(PradOp.ConcatOp, new[] {
                 w_angle_pivotReshaped.Result,
                 w_anglesReshaped.Result,
                 resultAnglesReshaped.Result
             }, axis: 2);
+
+            // # Combine magnitudes and angles
+            // output = tf.concat([magnitudes_part, angles_part], axis=1)
+            // final_output = tf.reshape(output, [3, 40])
 
             // Combine magnitudes and angles
             var output = magnitudesPart.Then(PradOp.ConcatOp, new[] { anglesPart.Result }, axis: 1);

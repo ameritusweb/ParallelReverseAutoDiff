@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// Provides common mathematical functions for PradOp operations.
@@ -16,7 +17,62 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// PI constant.
         /// </summary>
-        public static readonly float PI = (float)Math.PI;
+        internal static readonly float PI = (float)Math.PI;
+
+        /// <summary>
+        /// Computes the atan2 of two results.
+        /// </summary>
+        /// <param name="y">The y input.</param>
+        /// <param name="x">The x input.</param>
+        /// <returns>The output.</returns>
+        public static PradResult Atan2(PradResult y, PradResult x)
+        {
+            if (y.PradOp.IsCurrentlyAssociated(y))
+            {
+                return y.PradOp.Atan2(x.Result);
+            }
+            else
+            {
+                var branch = y.PradOp.BranchAfterTheFact(y);
+                return branch.Atan2(x.Result);
+            }
+        }
+
+        /// <summary>
+        /// Computes the cosine of the result.
+        /// </summary>
+        /// <param name="x">The x input.</param>
+        /// <returns>The output.</returns>
+        public static PradResult Cos(PradResult x)
+        {
+            if (x.PradOp.IsCurrentlyAssociated(x))
+            {
+                return x.PradOp.Cos();
+            }
+            else
+            {
+                var branch = x.PradOp.BranchAfterTheFact(x);
+                return branch.Cos();
+            }
+        }
+
+        /// <summary>
+        /// Computes the sine of the result.
+        /// </summary>
+        /// <param name="x">The x input.</param>
+        /// <returns>The output.</returns>
+        public static PradResult Sin(PradResult x)
+        {
+            if (x.PradOp.IsCurrentlyAssociated(x))
+            {
+                return x.PradOp.Sin();
+            }
+            else
+            {
+                var branch = x.PradOp.BranchAfterTheFact(x);
+                return branch.Sin();
+            }
+        }
 
         /// <summary>
         /// Computes the cosine of a double-precision floating-point number.

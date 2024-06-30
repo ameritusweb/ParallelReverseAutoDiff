@@ -43,6 +43,82 @@ namespace ParallelReverseAutoDiff.PRAD
         internal Tensor ResultTensor { get; set; }
 
         /// <summary>
+        /// Multiples two results together.
+        /// </summary>
+        /// <param name="a">The first result.</param>
+        /// <param name="b">The second result.</param>
+        /// <returns>The output result.</returns>
+        public static PradResult operator *(PradResult a, PradResult b)
+        {
+            if (a.PradOp.IsCurrentlyAssociated(a))
+            {
+                return a.PradOp.Mul(b.Result);
+            }
+            else
+            {
+                var branch = a.PradOp.BranchAfterTheFact(a);
+                return branch.Mul(b.Result);
+            }
+        }
+
+        /// <summary>
+        /// Adds two results together.
+        /// </summary>
+        /// <param name="a">The first result.</param>
+        /// <param name="b">The second result.</param>
+        /// <returns>The output result.</returns>
+        public static PradResult operator +(PradResult a, PradResult b)
+        {
+            if (a.PradOp.IsCurrentlyAssociated(a))
+            {
+                return a.PradOp.Add(b.Result);
+            }
+            else
+            {
+                var branch = a.PradOp.BranchAfterTheFact(a);
+                return branch.Add(b.Result);
+            }
+        }
+
+        /// <summary>
+        /// Divides two results by one another.
+        /// </summary>
+        /// <param name="a">The first result.</param>
+        /// <param name="b">The second result.</param>
+        /// <returns>The output result.</returns>
+        public static PradResult operator /(PradResult a, PradResult b)
+        {
+            if (a.PradOp.IsCurrentlyAssociated(a))
+            {
+                return a.PradOp.Div(b.Result);
+            }
+            else
+            {
+                var branch = a.PradOp.BranchAfterTheFact(a);
+                return branch.Div(b.Result);
+            }
+        }
+
+        /// <summary>
+        /// Subtracts two results from one another.
+        /// </summary>
+        /// <param name="a">The first result.</param>
+        /// <param name="b">The second result.</param>
+        /// <returns>The output result.</returns>
+        public static PradResult operator -(PradResult a, PradResult b)
+        {
+            if (a.PradOp.IsCurrentlyAssociated(a))
+            {
+                return a.PradOp.Sub(b.Result);
+            }
+            else
+            {
+                var branch = a.PradOp.BranchAfterTheFact(a);
+                return branch.Sub(b.Result);
+            }
+        }
+
+        /// <summary>
         /// Backpropagates the gradient.
         /// </summary>
         /// <param name="upstreamGradient">The upstream gradient.</param>

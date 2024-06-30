@@ -770,7 +770,7 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradResult Atan2(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseAtan2(tensor);
-            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
 
             var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
@@ -1087,6 +1087,33 @@ namespace ParallelReverseAutoDiff.PRAD
 
             this.SeedGradient = currentUpstream;
             return currentUpstream;
+        }
+
+        /// <summary>
+        /// Is the result currently associated with the PradOp instance.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>A value indicating whether the PradOp instance for the result has not been modified.</returns>
+        internal bool IsCurrentlyAssociated(PradResult result)
+        {
+            return this.backpropagationSteps.Any() && this.backpropagationSteps.Last().result == result;
+        }
+
+        /// <summary>
+        /// Branch to another prad op after the fact.
+        /// </summary>
+        /// <param name="parentResult">The parent result.</param>
+        /// <returns>The other prad op.</returns>
+        internal PradOp BranchAfterTheFact(PradResult parentResult)
+        {
+            var branchedOp = new PradOp(parentResult.ResultTensor);
+            if (this.backpropagationSteps.Any())
+            {
+                branchedOp.parentResult = parentResult;
+                branchedOp.parentResult.Branches.Add(branchedOp);
+            }
+
+            return branchedOp;
         }
 
         /// <summary>
