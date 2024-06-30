@@ -1,7 +1,4 @@
-﻿using ILGPU.Runtime.Cuda;
-using ManagedCuda.VectorTypes;
-using MKLNET;
-using ParallelReverseAutoDiff.PRAD;
+﻿using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
 using System.Diagnostics;
