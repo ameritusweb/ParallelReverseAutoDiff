@@ -93,6 +93,31 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> CosOp => FuncOp.Cos;
 
         /// <summary>
+        /// Gets the reciprocal op.
+        /// </summary>
+        public static Func<PradResult> ReciprocalOp => FuncOp.Reciprocal;
+
+        /// <summary>
+        /// Gets the exp op.
+        /// </summary>
+        public static Func<PradResult> ExpOp => FuncOp.Exp;
+
+        /// <summary>
+        /// Gets the ln op.
+        /// </summary>
+        public static Func<PradResult> LnOp => FuncOp.Ln;
+
+        /// <summary>
+        /// Gets the log base 10 op.
+        /// </summary>
+        public static Func<PradResult> LogOp => FuncOp.Log;
+
+        /// <summary>
+        /// Gets the Gather op.
+        /// </summary>
+        public static Func<Tensor, int, PradResult> GatherOp => FuncOp.Gather;
+
+        /// <summary>
         /// Gets the GatherNd op.
         /// </summary>
         public static Func<Tensor, PradResult> GatherNdOp => FuncOp.GatherNd;
@@ -141,6 +166,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the tile op.
         /// </summary>
         public static Func<int[], PradResult> TileOp => FuncOp.Tile;
+
+        /// <summary>
+        /// Gets the mean op.
+        /// </summary>
+        public static Func<int, PradResult> MeanOp => FuncOp.Mean;
 
         /// <summary>
         /// Gets the upstream gradient.
@@ -505,6 +535,102 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reciprocal of each element of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The result of the reciprocal operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(ReciprocalOp))]
+        public PradResult Reciprocal()
+        {
+            var result = this.currentTensor.Reciprocal();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ReciprocalReverse(upstreamGrad, result);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the exp of each element of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The result of the exp operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(ExpOp))]
+        public PradResult Exp()
+        {
+            var result = this.currentTensor.Exp();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ExpReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the ln of each element of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The result of the exp operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(LnOp))]
+        public PradResult Ln()
+        {
+            var result = this.currentTensor.Exp();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.LnReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the log base 10 of each element of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The result of the log base 10 operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(LogOp))]
+        public PradResult Log()
+        {
+            var result = this.currentTensor.Log();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.LogReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Computes the sine of each element of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the sine operation along with the gradient placeholders.</returns>
@@ -691,6 +817,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="indices">The indices of elements to gather.</param>
         /// <param name="axis">The axis along which to gather slices.</param>
         /// <returns>The gathered tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(GatherOp))]
         public PradResult Gather(Tensor indices, int axis = 0)
         {
             var result = this.currentTensor.Gather(indices, axis);
@@ -810,6 +937,31 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ElementwiseSquareReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the mean of the tensor along the specified axis and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="axis">The axis along which to compute the mean.</param>
+        /// <returns>The result of the mean operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(MeanOp))]
+        public PradResult Mean(int axis)
+        {
+            var result = this.currentTensor.Mean(axis);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.MeanReverse(upstreamGrad, axis);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };

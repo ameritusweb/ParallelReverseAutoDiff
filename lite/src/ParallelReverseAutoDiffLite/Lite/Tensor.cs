@@ -539,6 +539,90 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise exponential of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor Exp()
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Exp(this.Data.Length, this.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the element-wise natural logarithm of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor Ln()
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Ln(this.Data.Length, this.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the element-wise logarithm base 10 of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the result.</returns>
+        public Tensor Log()
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Log10(this.Data.Length, this.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the mean of the tensor along the specified axis.
+        /// </summary>
+        /// <param name="axis">The specified axis.</param>
+        /// <returns>A new tensor with the result.</returns>
+        /// <exception cref="ArgumentException">Axis is out of bounds.</exception>
+        public Tensor Mean(int axis)
+        {
+            if (axis < 0)
+            {
+                axis += this.Shape.Length;
+            }
+
+            if (axis < 0 || axis >= this.Shape.Length)
+            {
+                throw new ArgumentException("Axis is out of bounds for the tensor.");
+            }
+
+            int[] newShape = this.Shape.Where((_, idx) => idx != axis).ToArray();
+            if (newShape.Length == 0)
+            {
+                newShape = new int[] { 1 };
+            }
+
+            int outerSize = this.Shape.Take(axis).Aggregate(1, (a, b) => a * b);
+            int axisSize = this.Shape[axis];
+            int innerSize = this.Shape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
+
+            float[] resultData = new float[outerSize * innerSize];
+
+            float[] axisData = new float[innerSize];
+            Array.Fill<float>(axisData, axis);
+
+            Parallel.For(0, outerSize, outerIdx =>
+            {
+                float[] sum = new float[innerSize];
+                int srcOffset = outerIdx * axisSize * innerSize;
+
+                for (int axisIdx = 0; axisIdx < axisSize; axisIdx++)
+                {
+                    int offset = srcOffset + (axisIdx * innerSize);
+                    Vml.Add(innerSize, sum, this.Data.AsSpan(offset, innerSize), sum);
+                }
+
+                int destOffset = outerIdx * innerSize;
+                Vml.Div(innerSize, sum, axisData, resultData.AsSpan(destOffset, innerSize));
+            });
+
+            return new Tensor(newShape, resultData);
+        }
+
+        /// <summary>
         /// Gathers slices from the tensor along the specified axis.
         /// </summary>
         /// <param name="indices">The indices of elements to gather.</param>

@@ -56,6 +56,66 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise logarithm (base 10).
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor LogReverse(Tensor upstreamGradient)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            this.CheckShapeCompatibility(inputTensor, upstreamGradient);
+
+            // Gradient of log(x) is 1/x
+            Tensor gradInput = new Tensor(inputTensor.Shape);
+            Vml.Inv(inputTensor.Data.Length, inputTensor.Data, gradInput.Data);
+
+            // Multiply by upstream gradient
+            Vml.Mul(gradInput.Data.Length, gradInput.Data, upstreamGradient.Data, gradInput.Data);
+
+            return gradInput;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the element-wise natural logarithm (ln).
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor LnReverse(Tensor upstreamGradient)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            this.CheckShapeCompatibility(inputTensor, upstreamGradient);
+
+            // Gradient of ln(x) is 1/x
+            Tensor gradInput = new Tensor(inputTensor.Shape);
+            Vml.Inv(inputTensor.Data.Length, inputTensor.Data, gradInput.Data);
+
+            // Multiply by upstream gradient
+            Vml.Mul(gradInput.Data.Length, gradInput.Data, upstreamGradient.Data, gradInput.Data);
+
+            return gradInput;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the element-wise exponential function (exp).
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor ExpReverse(Tensor upstreamGradient)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            this.CheckShapeCompatibility(inputTensor, upstreamGradient);
+
+            // Gradient of exp(x) is exp(x)
+            Tensor gradInput = new Tensor(inputTensor.Shape);
+            Vml.Exp(inputTensor.Data.Length, inputTensor.Data, gradInput.Data);
+
+            // Multiply by upstream gradient
+            Vml.Mul(gradInput.Data.Length, gradInput.Data, upstreamGradient.Data, gradInput.Data);
+
+            return gradInput;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise multiplication.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -360,6 +420,60 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return gradients;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the mean operation along the specified axis.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="axis">The axis along which the mean was computed.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor MeanReverse(Tensor upstreamGradient, int axis)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            if (axis < 0)
+            {
+                axis += inputTensor.Shape.Length;
+            }
+
+            if (axis < 0 || axis >= inputTensor.Shape.Length)
+            {
+                throw new ArgumentException("Axis is out of bounds for the tensor.");
+            }
+
+            int[] outputShape = inputTensor.Shape.Where((_, idx) => idx != axis).ToArray();
+            if (outputShape.Length == 0)
+            {
+                outputShape = new int[] { 1 };
+            }
+
+            int axisSize = inputTensor.Shape[axis];
+            float scale = 1.0f / axisSize;
+            int outerSize = inputTensor.Shape.Take(axis).Aggregate(1, (a, b) => a * b);
+            int innerSize = inputTensor.Shape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
+
+            float[] gradData = new float[inputTensor.Data.Length];
+
+            float[] scaleData = new float[innerSize];
+            Array.Fill(scaleData, scale);
+
+            Parallel.For(0, outerSize, outerIdx =>
+            {
+                int gradOffset = outerIdx * axisSize * innerSize;
+                int upstreamOffset = outerIdx * innerSize;
+
+                // Scale the upstream gradient
+                float[] scaledUpstream = new float[innerSize];
+                Vml.Mul(innerSize, upstreamGradient.Data.AsSpan(upstreamOffset, innerSize), scaleData, scaledUpstream);
+
+                // Repeat the scaled gradient for each element along the axis
+                for (int axisIdx = 0; axisIdx < axisSize; axisIdx++)
+                {
+                    Blas.copy(innerSize, scaledUpstream, 1, gradData.AsSpan(gradOffset + (axisIdx * innerSize)), 1);
+                }
+            });
+
+            return new Tensor(inputTensor.Shape, gradData);
         }
 
         /// <summary>

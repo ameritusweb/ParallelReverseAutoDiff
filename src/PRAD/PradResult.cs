@@ -164,13 +164,24 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="operation">The operation to apply.</param>
         /// <param name="others">The other tensors.</param>
         /// <param name="axis">The axis.</param>
-        /// <typeparam name="T1">The type of the first tensor.</typeparam>
-        /// <typeparam name="T2">The type of the second tensor.</typeparam>
         /// <returns>A PradResult.</returns>
-        public PradResult Then<T1, T2>(Func<T1, T2, PradResult> operation, Tensor[] others, int axis = 0)
+        public PradResult Then(Func<Tensor[], int, PradResult> operation, Tensor[] others, int axis = 0)
         {
             var instanceOperation = this.PradOp.GetOperation<Func<Tensor[], int, PradResult>>(operation);
             return instanceOperation(others, axis);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="indices">The indices.</param>
+        /// <param name="axis">The axis.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<Tensor, int, PradResult> operation, Tensor indices, int axis = 0)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<Tensor, int, PradResult>>(operation);
+            return instanceOperation(indices, axis);
         }
 
         /// <summary>
