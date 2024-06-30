@@ -41,13 +41,19 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="label">The label.</param>
         public void AddBox(int x, int y, int width, int height, string label)
         {
-            // Draw the box
+            // Draw the top of the box (roof)
+            for (int i = x + 1; i < x + width - 1; i++)
+            {
+                this.grid[y - 1, i] = '_';
+            }
+
+            // Draw the bottom of the box
             for (int i = x; i < x + width; i++)
             {
-                this.grid[y, i] = '_';
                 this.grid[y + height - 1, i] = '_';
             }
 
+            // Draw the vertical sides of the box
             for (int i = y; i < y + height; i++)
             {
                 this.grid[i, x] = '|';
@@ -136,7 +142,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
                 else if (this.grid[y, x] != c)
                 {
-                    this.grid[y, x] = '+';
+                    this.grid[y, x] = '|';
                 }
             }
         }
