@@ -987,6 +987,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Exp()` | Computes the exponential of each element in the current tensor. | 
 | `Ln()` | Computes the natural logarithm of each element in the current tensor. | 
 | `Log()` | Computes the base-10 logarithm of each element in the current tensor. | 
+| `Mean(int axis)` | Computes the mean along the specified axis in the current tensor. | 
 | `Reciprocal()` | Computes the reciprocal of each element in the current tensor. | 
 
 #### Tensor Manipulation 
@@ -1030,6 +1031,8 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `ExpOp`
 - `LnOp`
 - `LogOp`
+- `MeanOp`
+- `GatherOp`
 - `GatherNdOp` 
 - `SumRowsOp` 
 - `SquareOp` 
