@@ -9,6 +9,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 
 ## Table of Contents
 - [Overview](#overview)
+- [ParallelReverseAutoDiffLite](#parallelreverseautodifflite)
 - [Building your Neural Network Model](#building-your-neural-network-model)
 - [Understanding the JSON Architecture](#understanding-the-json-architecture)
 - [Instantiating the Architecture](#instantiating-the-architecture)
@@ -23,6 +24,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 - [PradOp](#pradop)
 - [Customization](#customization)
   - [Custom Neural Network Operations](#custom-neural-network-operations)
+- [Examples](#examples)
 - [Support Developer](#support-developer)
 - [Star the Project](#star-the-project)
 - [Reporting Bugs](#reporting-bugs)
@@ -74,6 +76,17 @@ PRAD's dynamic computational graph, constructed from JSON architecture, allows f
 
 ### Prerequisites
 Download and install the [Cuda Toolkit 12.0](https://developer.nvidia.com/cuda-12-0-0-download-archive) if you want to use the CudaMatrixMultiplyOperation.
+
+### ParallelReverseAutoDiffLite
+ParallelReverseAutoDiffLite (PRADLite) is a lightweight version of PRAD that uses single-precision floating point numbers (float) instead of double-precision floating point numbers (double). This can lead to significant improvements in performance and memory efficiency, especially beneficial for large-scale models and datasets.
+
+#### Key Differences
+
+- **Precision**: PRADLite uses float for all computations, reducing memory footprint and potentially increasing computational speed at the cost of precision.
+- **Performance**: Due to the reduced memory requirements and computational overhead, PRADLite can perform faster on both CPUs and GPUs.
+- **Compatibility**: PRADLite retains the same API as PRAD, making it easy to switch between the two versions based on your performance needs.
+
+To use PRADLite, simply reference the `ParallelReverseAutoDiffLite` NuGet package in your project instead of `ParallelReverseAutoDiff`.
 
 ### Regular Operations
 AddGaussianNoiseOperation
@@ -971,6 +984,11 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Square()` | Computes the square of each element in the current tensor. | 
 | `SquareRoot()` | Computes the square root of each element in the current tensor. | 
 | `SumRows()` | Sums the rows of the current tensor. | 
+| `Exp()` | Computes the exponential of each element in the current tensor. | 
+| `Ln()` | Computes the natural logarithm of each element in the current tensor. | 
+| `Log()` | Computes the base-10 logarithm of each element in the current tensor. | 
+| `Mean(int axis)` | Computes the mean along the specified axis in the current tensor. | 
+| `Reciprocal()` | Computes the reciprocal of each element in the current tensor. | 
 
 #### Tensor Manipulation 
 
@@ -986,6 +1004,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Slice(int[] begin, int[] size, int[]? strides = null)` | Extracts a slice from the tensor. | 
 | `Stack(Tensor[] tensors, int axis = 0)` | Stacks the current tensor with other tensors along a new axis. | 
 | `Concat(Tensor[] tensors, int axis = 0)` | Concatenates the current tensor with other tensors along a specified axis. | 
+| `ExpandDims(int axis = -1)` | Expands the dimensions of the tensor along the specified axis. | 
 
 #### Computation Graph Management 
 
@@ -1004,15 +1023,26 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `AddOp` 
 - `MulOp` 
 - `SubOp` 
-- `DivOp` 
+- `DivOp`
+- `ExpandDimsOp`
 - `SinOp` 
-- `CosOp` 
+- `CosOp`
+- `ReciprocalOp`
+- `ExpOp`
+- `LnOp`
+- `LogOp`
+- `MeanOp`
+- `GatherOp`
 - `GatherNdOp` 
 - `SumRowsOp` 
 - `SquareOp` 
 - `Atan2Op` 
 - `StackOp` 
-- `ConcatOp` 
+- `ConcatOp`
+- `IndexerOp`
+- `ReshapeOp`
+- `TransposeOp`
+- `TileOp`
 
 ### PradResult.Then Method
 
@@ -1216,6 +1246,29 @@ public class MatrixAverageOperation : Operation
 In this example, the Forward method calculates the average of the features for each path, while the Backward method spreads the gradient evenly across the features.
 
 This level of customization allows PRAD to be a versatile tool in the field of machine learning, capable of being tailored to a wide range of tasks, datasets, and innovative architectures.
+
+To register your custom operation with the computation graph, add this to your computation graph class:
+
+```c#
+protected override Type TypeRetrieved(string type)
+{
+    var retrievedType = base.TypeRetrieved(type);
+    var customType = Type.GetType("ParallelReverseAutoDiff.RMAD." + type); // replace with your own namespace
+    if (customType == null)
+    {
+        return retrievedType;
+    } else
+    {
+        return customType;
+    }
+}
+```
+
+## Examples
+
+To help you get started with ParallelReverseAutoDiff, we've provided a set of examples in the repository. These examples demonstrate various use cases and features of the library.
+
+You can find these examples in the [examples folder](https://github.com/ameritusweb/ParallelReverseAutoDiff/tree/main/examples) of the repository.
 
 ## Support Developer
 [!["Buy Me A Coffee"](https://raw.githubusercontent.com/ameritusweb/ParallelReverseAutoDiff/main/docs/orange_img.png)](https://www.buymeacoffee.com/ameritusweb)
