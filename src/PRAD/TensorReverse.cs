@@ -56,6 +56,78 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for matrix multiplication.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradients with respect to the input tensors.</returns>
+        public Tensor[] MatrixMultiplyReverse(Tensor upstreamGradient)
+        {
+            if (this.InitialTensors.Length != 2)
+            {
+                throw new InvalidOperationException("MatrixMultiplyReverse expects exactly two initial tensors.");
+            }
+
+            Tensor tensorA = this.InitialTensors[0];
+            Tensor tensorB = this.InitialTensors[1];
+
+            if (tensorA.Shape.Length != 2 || tensorB.Shape.Length != 2)
+            {
+                throw new ArgumentException("Matrix multiplication gradients are only supported for 2D tensors.");
+            }
+
+            int m = tensorA.Shape[0]; // Rows of A
+            int k = tensorA.Shape[1]; // Columns of A and rows of B
+            int n = tensorB.Shape[1]; // Columns of B
+
+            if (k != tensorB.Shape[0])
+            {
+                throw new ArgumentException("Incompatible shapes for matrix multiplication.");
+            }
+
+            // Gradient w.r.t tensorA: dL/dA = dL/dC * B^T
+            var gradAData = new double[m * k];
+            var gradA = new Tensor(new int[] { m, k }, gradAData);
+
+            MKLNET.Blas.gemm(
+                Layout.RowMajor,
+                Trans.No,
+                Trans.Yes,
+                m,
+                k,
+                n,
+                1.0,
+                upstreamGradient.Data.AsSpan(),
+                n,
+                tensorB.Data.AsSpan(),
+                n,
+                0.0,
+                gradAData.AsSpan(),
+                k);
+
+            // Gradient w.r.t tensorB: dL/dB = A^T * dL/dC
+            var gradBData = new double[k * n];
+            var gradB = new Tensor(new int[] { k, n }, gradBData);
+
+            MKLNET.Blas.gemm(
+                Layout.RowMajor,
+                Trans.Yes,
+                Trans.No,
+                k,
+                n,
+                m,
+                1.0,
+                tensorA.Data.AsSpan(),
+                k,
+                upstreamGradient.Data.AsSpan(),
+                n,
+                0.0,
+                gradBData.AsSpan(),
+                n);
+
+            return new Tensor[] { gradA, gradB };
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise logarithm (base 10).
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

@@ -63,6 +63,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> AddOp => FuncOp.Add;
 
         /// <summary>
+        /// Gets the mat mul op.
+        /// </summary>
+        public static Func<Tensor, PradResult> MatMulOp => FuncOp.MatMul;
+
+        /// <summary>
         /// Gets the mul op.
         /// </summary>
         public static Func<Tensor, PradResult> MulOp => FuncOp.Mul;
@@ -419,6 +424,41 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradients = tensorReverse.ElementwiseSubReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Performs matrix multiplication and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="tensor">The tensor to multiply with.</param>
+        /// <returns>The result of the multiplication along with the gradient placeholders.</returns>
+        [PradOperation(nameof(MatMulOp))]
+        public PradResult MatMul(Tensor tensor)
+        {
+            var result = this.currentTensor.MatrixMultiply(tensor);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
+
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.MatrixMultiplyReverse(upstreamGrad);
                 PradOp?[] ops = new PradOp?[2];
                 var tensors = new Tensor[] { this.currentTensor, tensor };
                 for (int i = 0; i < grad.Length; i++)

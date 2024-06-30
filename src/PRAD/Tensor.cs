@@ -362,6 +362,53 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Performs matrix multiplication using MKL dgemm.
+        /// </summary>
+        /// <param name="other">The other tensor to multiply with.</param>
+        /// <param name="alpha">The scalar multiplier for the product of A and B.</param>
+        /// <param name="beta">The scalar multiplier for the existing values in the result tensor.</param>
+        /// <returns>A new tensor resulting from the matrix multiplication.</returns>
+        /// <exception cref="ArgumentException">If the tensors have incompatible shapes for multiplication.</exception>
+        public Tensor MatrixMultiply(Tensor other, double alpha = 1.0, double beta = 0.0)
+        {
+            if (this.Shape.Length != 2 || other.Shape.Length != 2)
+            {
+                throw new ArgumentException("Matrix multiplication is only supported for 2D tensors.");
+            }
+
+            int m = this.Shape[0]; // Rows of A and C
+            int k = this.Shape[1]; // Columns of A and rows of B
+            int n = other.Shape[1]; // Columns of B and C
+
+            if (k != other.Shape[0])
+            {
+                throw new ArgumentException("Incompatible shapes for matrix multiplication.");
+            }
+
+            var resultShape = new int[] { m, n };
+            var resultData = new double[m * n];
+            var result = new Tensor(resultShape, resultData);
+
+            Blas.gemm(
+                Layout.RowMajor,
+                Trans.No,
+                Trans.No,
+                m,
+                n,
+                k,
+                alpha,
+                A: this.Data.AsSpan(),
+                lda: k,
+                B: other.Data.AsSpan(),
+                ldb: n,
+                beta,
+                C: resultData.AsSpan(),
+                ldc: n);
+
+            return result;
+        }
+
+        /// <summary>
         /// Computes the element-wise reciprocal of the tensor.
         /// </summary>
         /// <returns>The resultant tensor.</returns>
