@@ -24,6 +24,7 @@ Parallel Reverse Mode Automatic Differentiation in C#
 - [PradOp](#pradop)
 - [Customization](#customization)
   - [Custom Neural Network Operations](#custom-neural-network-operations)
+- [Examples](#examples)
 - [Support Developer](#support-developer)
 - [Star the Project](#star-the-project)
 - [Reporting Bugs](#reporting-bugs)
@@ -1242,6 +1243,29 @@ public class MatrixAverageOperation : Operation
 In this example, the Forward method calculates the average of the features for each path, while the Backward method spreads the gradient evenly across the features.
 
 This level of customization allows PRAD to be a versatile tool in the field of machine learning, capable of being tailored to a wide range of tasks, datasets, and innovative architectures.
+
+To register your custom operation with the computation graph, add this to your computation graph class:
+
+```c#
+protected override Type TypeRetrieved(string type)
+{
+    var retrievedType = base.TypeRetrieved(type);
+    var customType = Type.GetType("ParallelReverseAutoDiff.RMAD." + type); // replace with your own namespace
+    if (customType == null)
+    {
+        return retrievedType;
+    } else
+    {
+        return customType;
+    }
+}
+```
+
+## Examples
+
+To help you get started with ParallelReverseAutoDiff, we've provided a set of examples in the repository. These examples demonstrate various use cases and features of the library.
+
+You can find these examples in the [examples folder](https://github.com/ameritusweb/ParallelReverseAutoDiff/tree/main/examples) of the repository.
 
 ## Support Developer
 [!["Buy Me A Coffee"](https://raw.githubusercontent.com/ameritusweb/ParallelReverseAutoDiff/main/docs/orange_img.png)](https://www.buymeacoffee.com/ameritusweb)
