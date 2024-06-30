@@ -983,6 +983,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Square()` | Computes the square of each element in the current tensor. | 
 | `SquareRoot()` | Computes the square root of each element in the current tensor. | 
 | `SumRows()` | Sums the rows of the current tensor. | 
+| `Exp()` | Computes the exponential of each element in the current tensor. | 
+| `Ln()` | Computes the natural logarithm of each element in the current tensor. | 
+| `Log()` | Computes the base-10 logarithm of each element in the current tensor. | 
+| `Reciprocal()` | Computes the reciprocal of each element in the current tensor. | 
 
 #### Tensor Manipulation 
 
@@ -998,6 +1002,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Slice(int[] begin, int[] size, int[]? strides = null)` | Extracts a slice from the tensor. | 
 | `Stack(Tensor[] tensors, int axis = 0)` | Stacks the current tensor with other tensors along a new axis. | 
 | `Concat(Tensor[] tensors, int axis = 0)` | Concatenates the current tensor with other tensors along a specified axis. | 
+| `ExpandDims(int axis = -1)` | Expands the dimensions of the tensor along the specified axis. | 
 
 #### Computation Graph Management 
 
@@ -1016,15 +1021,24 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `AddOp` 
 - `MulOp` 
 - `SubOp` 
-- `DivOp` 
+- `DivOp`
+- `ExpandDimsOp`
 - `SinOp` 
-- `CosOp` 
+- `CosOp`
+- `ReciprocalOp`
+- `ExpOp`
+- `LnOp`
+- `LogOp`
 - `GatherNdOp` 
 - `SumRowsOp` 
 - `SquareOp` 
 - `Atan2Op` 
 - `StackOp` 
-- `ConcatOp` 
+- `ConcatOp`
+- `IndexerOp`
+- `ReshapeOp`
+- `TransposeOp`
+- `TileOp`
 
 ### PradResult.Then Method
 
