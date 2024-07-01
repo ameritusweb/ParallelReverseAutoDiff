@@ -31,6 +31,58 @@ namespace ParallelReverseAutoDiff.PRAD
         public Tensor[] InitialTensors { get; private set; }
 
         /// <summary>
+        /// Computes the reverse gradient for the concat slices operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient.</param>
+        /// <param name="axisRange">The axis range.</param>
+        /// <param name="concatAxis">The concatenation axis.</param>
+        /// <returns>The gradients of the input.</returns>
+        /// <exception cref="ArgumentException">No tensors provided.</exception>
+        public Tensor[] ConcatSlicesReverse(Tensor upstreamGradient, string axisRange, int concatAxis)
+        {
+            Tensor[] tensors = this.InitialTensors;
+
+            if (tensors == null || tensors.Length == 0)
+            {
+                throw new ArgumentException("At least one tensor must be provided.");
+            }
+
+            // Parse the axis range
+            (int start, int end) = Tensor.ParseAxisRange(axisRange);
+
+            // Find the maximum rank among all tensors
+            int maxRank = tensors.Max(t => t.Shape.Length);
+
+            // Adjust start and end if negative
+            start = Tensor.AdjustNegativeIndex(start, maxRank);
+            end = Tensor.AdjustNegativeIndex(end, maxRank);
+
+            // Validate range and concatAxis
+            Tensor.ValidateInputs(start, end, concatAxis, maxRank);
+
+            Tensor[] gradients = new Tensor[tensors.Length];
+            int concatOffset = 0;
+
+            for (int i = 0; i < tensors.Length; i++)
+            {
+                var tensor = tensors[i];
+                int[] sliceShape = Tensor.CalculateSliceShape(tensor, start, end, concatAxis, maxRank);
+                int[] sliceIndices = new int[maxRank];
+                sliceIndices[concatAxis] = concatOffset;
+
+                // Initialize the gradient tensor for the current input tensor
+                gradients[i] = new Tensor(tensor.Shape);
+
+                // Extract the corresponding slice from the upstream gradient tensor
+                ChooseAndExtractGradientSlice(upstreamGradient, gradients[i], sliceShape, sliceIndices, start, end);
+
+                concatOffset += sliceShape[concatAxis];
+            }
+
+            return gradients;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise addition.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -655,6 +707,39 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return gradients;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the Squeeze operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="originalShape">The original shape of the tensor before squeeze.</param>
+        /// <param name="axes">The axes that were squeezed. If null, all axes of size 1 were removed.</param>
+        /// <returns>The gradient with respect to the input tensor in its original shape.</returns>
+        public Tensor SqueezeReverse(Tensor upstreamGradient, int[] originalShape, int[]? axes = null)
+        {
+            if (axes == null)
+            {
+                axes = Enumerable.Range(0, originalShape.Length).Where(i => originalShape[i] == 1).ToArray();
+            }
+
+            int[] newShape = upstreamGradient.Shape;
+            int[] expandedShape = new int[originalShape.Length];
+
+            int j = 0;
+            for (int i = 0; i < originalShape.Length; i++)
+            {
+                if (axes.Contains(i))
+                {
+                    expandedShape[i] = 1;
+                }
+                else
+                {
+                    expandedShape[i] = newShape[j++];
+                }
+            }
+
+            return upstreamGradient.Reshape(expandedShape);
         }
 
         /// <summary>
@@ -1344,6 +1429,107 @@ namespace ParallelReverseAutoDiff.PRAD
             this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, new int[inputTensor.Shape.Length], new int[newShape.Length], 0);
 
             return result;
+        }
+
+        private static void ChooseAndExtractGradientSlice(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            long elementsCount = (long)source.Data.Length * destination.Data.Length;
+            if (elementsCount > 1000000)
+            {
+                ParallelExtractGradientSlice(source, destination, sliceShape, startIndices, start, end);
+            }
+            else if (elementsCount > 10000)
+            {
+                PrecomputeAndExtract(source, destination, sliceShape, startIndices, start, end);
+            }
+            else
+            {
+                ExtractGradientSliceIterative(source, destination, sliceShape, startIndices, start, end);
+            }
+        }
+
+        private static void ExtractGradientSliceIterative(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            int[] sourceIndices = new int[source.Shape.Length];
+            int[] destIndices = new int[destination.Shape.Length];
+            int[] currentIndices = new int[sliceShape.Length];
+
+            while (true)
+            {
+                double value = Tensor.GetValueFromSource(source, sourceIndices, start, end);
+                for (int i = 0; i < destIndices.Length; i++)
+                {
+                    destIndices[i] = startIndices[i] + currentIndices[i];
+                }
+
+                destination[destIndices] = value;
+
+                int dim = sliceShape.Length - 1;
+                while (dim >= 0 && ++currentIndices[dim] == sliceShape[dim])
+                {
+                    currentIndices[dim] = 0;
+                    dim--;
+                }
+
+                if (dim < 0)
+                {
+                    break;
+                }
+
+                for (int i = 0; i < sourceIndices.Length; i++)
+                {
+                    sourceIndices[i] = currentIndices[i] % source.Shape[i];
+                }
+            }
+        }
+
+        private static void ParallelExtractGradientSlice(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            int totalElements = sliceShape.Aggregate(1, (a, b) => a * b);
+            int batchSize = 1000; // Adjust based on performance testing
+
+            Parallel.For(0, (totalElements + batchSize - 1) / batchSize, batchIndex =>
+            {
+                int startElement = batchIndex * batchSize;
+                int endElement = Math.Min(startElement + batchSize, totalElements);
+
+                for (int i = startElement; i < endElement; i++)
+                {
+                    int[] indices = Tensor.ConvertToIndices(i, sliceShape);
+                    ExtractSingleElement(source, destination, indices, startIndices, start, end);
+                }
+            });
+        }
+
+        private static void PrecomputeAndExtract(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            int[] sourceStrides = Tensor.ComputeStrides(source.Shape);
+            int[] destStrides = Tensor.ComputeStrides(destination.Shape);
+            int[] indexMap = Tensor.PrecomputeIndexMap(sliceShape, sourceStrides, destStrides, startIndices, start, end);
+
+            for (int i = 0; i < indexMap.Length; i += 2)
+            {
+                destination.Data[indexMap[i + 1]] = source.Data[indexMap[i]];
+            }
+        }
+
+        private static void ExtractSingleElement(Tensor source, Tensor destination, int[] indices, int[] startIndices, int start, int end)
+        {
+            int[] sourceIndices = new int[source.Shape.Length];
+            int[] destIndices = new int[destination.Shape.Length];
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                if (i < sourceIndices.Length)
+                {
+                    sourceIndices[i] = indices[i] % source.Shape[i];
+                }
+
+                destIndices[i] = startIndices[i] + indices[i];
+            }
+
+            double value = Tensor.GetValueFromSource(source, sourceIndices, start, end);
+            destination[destIndices] = value;
         }
 
         /// <summary>

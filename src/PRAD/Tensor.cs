@@ -319,6 +319,53 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Concatenates slices of the input tensors along the specified axis.
+        /// </summary>
+        /// <param name="tensors">The array of tensors to be concatenated.</param>
+        /// <param name="axisRange">The range of axes to be considered for slicing, formatted as "start:end".</param>
+        /// <param name="concatAxis">The axis along which the concatenation is performed.</param>
+        /// <returns>A new tensor that is the result of concatenating the input tensors along the specified axis.</returns>
+        /// <exception cref="ArgumentException">Thrown when no tensors are provided or when invalid axis range or concat axis are specified.</exception>
+        public static Tensor ConcatSlices(Tensor[] tensors, string axisRange, int concatAxis)
+        {
+            if (tensors == null || tensors.Length == 0)
+            {
+                throw new ArgumentException("At least one tensor must be provided.");
+            }
+
+            if (IsMatrixConcatenation(tensors, axisRange, concatAxis))
+            {
+                return FastMatrixConcatenation(tensors, concatAxis);
+            }
+
+            (int start, int end) = ParseAxisRange(axisRange);
+            int maxRank = tensors.Max(t => t.Shape.Length);
+
+            start = AdjustNegativeIndex(start, maxRank);
+            end = AdjustNegativeIndex(end, maxRank);
+
+            ValidateInputs(start, end, concatAxis, maxRank);
+
+            int[] outputShape = CalculateOutputShape(tensors, start, end, concatAxis, maxRank);
+
+            Tensor result = new Tensor(outputShape);
+            int concatOffset = 0;
+
+            foreach (var tensor in tensors)
+            {
+                int[] sliceShape = CalculateSliceShape(tensor, start, end, concatAxis, maxRank);
+                int[] sliceIndices = new int[maxRank];
+                sliceIndices[concatAxis] = concatOffset;
+
+                ChooseAndCopyTensorSlice(tensor, result, sliceShape, sliceIndices, start, end);
+
+                concatOffset += sliceShape[concatAxis];
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Creates a flat array from the tensors along the specified indices.
         /// </summary>
         /// <param name="tensors">The tensors.</param>
@@ -822,6 +869,22 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Removes dimensions of size 1 from the tensor.
+        /// </summary>
+        /// <param name="axes">The axes to squeeze. If null, all axes of size 1 will be removed.</param>
+        /// <returns>A new tensor with the specified dimensions removed.</returns>
+        public Tensor Squeeze(int[]? axes = null)
+        {
+            if (axes == null)
+            {
+                axes = Enumerable.Range(0, this.Shape.Length).Where(i => this.Shape[i] == 1).ToArray();
+            }
+
+            var newShape = this.Shape.Where((dim, index) => !axes.Contains(index)).ToArray();
+            return this.Reshape(newShape);
+        }
+
+        /// <summary>
         /// Computes the mean of the tensor along the specified axis.
         /// </summary>
         /// <param name="axis">The specified axis.</param>
@@ -852,7 +915,7 @@ namespace ParallelReverseAutoDiff.PRAD
             double[] resultData = new double[outerSize * innerSize];
 
             double[] axisData = new double[innerSize];
-            Array.Fill<double>(axisData, axis);
+            Array.Fill<double>(axisData, axisSize);
 
             Parallel.For(0, outerSize, outerIdx =>
             {
@@ -1544,6 +1607,170 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Parses the axis range string and returns the start and end indices.
+        /// </summary>
+        /// <param name="axisRange">The axis range string in the format "start:end" or a single integer.</param>
+        /// <returns>A tuple containing the start and end indices.</returns>
+        internal static (int start, int end) ParseAxisRange(string axisRange)
+        {
+            if (axisRange.Contains(':'))
+            {
+                var parts = axisRange.Split(':');
+                return (int.Parse(parts[0]), int.Parse(parts[1]));
+            }
+            else
+            {
+                int start = int.Parse(axisRange);
+                return (start, start + 1);
+            }
+        }
+
+        /// <summary>
+        /// Adjusts a negative index to a positive index based on the maximum rank.
+        /// </summary>
+        /// <param name="index">The index to adjust.</param>
+        /// <param name="maxRank">The maximum rank of the tensor.</param>
+        /// <returns>The adjusted index.</returns>
+        internal static int AdjustNegativeIndex(int index, int maxRank)
+        {
+            return index < 0 ? maxRank + index : index;
+        }
+
+        /// <summary>
+        /// Validates the input parameters for concatenation.
+        /// </summary>
+        /// <param name="start">The start index of the axis range.</param>
+        /// <param name="end">The end index of the axis range.</param>
+        /// <param name="concatAxis">The axis along which to concatenate.</param>
+        /// <param name="maxRank">The maximum rank of the tensor.</param>
+        /// <exception cref="ArgumentException">Thrown when the input parameters are invalid.</exception>
+        internal static void ValidateInputs(int start, int end, int concatAxis, int maxRank)
+        {
+            if (start < 0 || end > maxRank || start >= end || concatAxis < 0 || concatAxis >= maxRank)
+            {
+                throw new ArgumentException("Invalid axis range or concat axis.");
+            }
+        }
+
+        /// <summary>
+        /// Computes the strides for each dimension of the tensor shape.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <returns>An array of strides for each dimension.</returns>
+        internal static int[] ComputeStrides(int[] shape)
+        {
+            int[] strides = new int[shape.Length];
+            int stride = 1;
+            for (int i = shape.Length - 1; i >= 0; i--)
+            {
+                strides[i] = stride;
+                stride *= shape[i];
+            }
+
+            return strides;
+        }
+
+        /// <summary>
+        /// Precomputes an index map for efficient gradient extraction.
+        /// </summary>
+        /// <param name="sliceShape">The shape of the slice.</param>
+        /// <param name="sourceStrides">The strides of the source tensor.</param>
+        /// <param name="destStrides">The strides of the destination tensor.</param>
+        /// <param name="startIndices">The starting indices for the slice.</param>
+        /// <param name="start">The start index of the axis range.</param>
+        /// <param name="end">The end index of the axis range.</param>
+        /// <returns>An array containing pairs of source and destination indices.</returns>
+        internal static int[] PrecomputeIndexMap(int[] sliceShape, int[] sourceStrides, int[] destStrides, int[] startIndices, int start, int end)
+        {
+            int totalElements = sliceShape.Aggregate(1, (a, b) => a * b);
+            int[] indexMap = new int[totalElements * 2];
+            int mapIndex = 0;
+
+            for (int i = 0; i < totalElements; i++)
+            {
+                int[] indices = ConvertToIndices(i, sliceShape);
+                int sourceIndex = 0, destIndex = 0;
+
+                for (int j = 0; j < indices.Length; j++)
+                {
+                    if (j >= start && j < end)
+                    {
+                        sourceIndex += indices[j] * sourceStrides[j];
+                        destIndex += (startIndices[j] + indices[j]) * destStrides[j];
+                    }
+                }
+
+                indexMap[mapIndex++] = sourceIndex;
+                indexMap[mapIndex++] = destIndex;
+            }
+
+            return indexMap;
+        }
+
+        /// <summary>
+        /// Retrieves a value from the source tensor based on the specified indices and axis range.
+        /// </summary>
+        /// <param name="source">The source tensor.</param>
+        /// <param name="indices">The indices to retrieve the value from.</param>
+        /// <param name="start">The start index of the axis range.</param>
+        /// <param name="end">The end index of the axis range.</param>
+        /// <returns>The value from the source tensor at the specified indices.</returns>
+        internal static double GetValueFromSource(Tensor source, int[] indices, int start, int end)
+        {
+            int[] adjustedIndices = indices.Skip(start).Take(end - start).ToArray();
+            return source[adjustedIndices];
+        }
+
+        /// <summary>
+        /// Calculates the shape of the slice of the tensor based on the axis range and concatenation axis.
+        /// </summary>
+        /// <param name="tensor">The tensor to slice.</param>
+        /// <param name="start">The start index of the axis range.</param>
+        /// <param name="end">The end index of the axis range.</param>
+        /// <param name="concatAxis">The axis along which to concatenate.</param>
+        /// <param name="maxRank">The maximum rank of the tensor.</param>
+        /// <returns>An array representing the shape of the slice.</returns>
+        internal static int[] CalculateSliceShape(Tensor tensor, int start, int end, int concatAxis, int maxRank)
+        {
+            int[] sliceShape = new int[maxRank];
+            for (int i = 0; i < maxRank; i++)
+            {
+                if (i == concatAxis)
+                {
+                    sliceShape[i] = ProductOfShape(tensor.Shape, start, Math.Min(i + 1, end));
+                }
+                else if (i >= start && i < end)
+                {
+                    sliceShape[i] = i < tensor.Shape.Length ? tensor.Shape[i] : 1;
+                }
+                else
+                {
+                    sliceShape[i] = 1;
+                }
+            }
+
+            return sliceShape;
+        }
+
+        /// <summary>
+        /// Converts a flat index to multidimensional indices based on the tensor shape.
+        /// </summary>
+        /// <param name="flatIndex">The flat index to convert.</param>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <returns>An array of multidimensional indices corresponding to the flat index.</returns>
+        internal static int[] ConvertToIndices(int flatIndex, int[] shape)
+        {
+            int[] indices = new int[shape.Length];
+            for (int i = shape.Length - 1; i >= 0; i--)
+            {
+                indices[i] = flatIndex % shape[i];
+                flatIndex /= shape[i];
+            }
+
+            return indices;
+        }
+
+        /// <summary>
         /// Gets the index based on the indices.
         /// </summary>
         /// <param name="indices">The indices.</param>
@@ -1702,6 +1929,196 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        private static bool IsMatrixConcatenation(Tensor[] tensors, string axisRange, int concatAxis)
+        {
+            if (axisRange != "0:2")
+            {
+                return false;
+            }
+
+            foreach (var tensor in tensors)
+            {
+                if (tensor.Shape.Length != 2)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static Tensor FastMatrixConcatenation(Tensor[] tensors, int concatAxis)
+        {
+            int rows = concatAxis == 0 ? tensors.Sum(t => t.Shape[0]) : tensors[0].Shape[0];
+            int cols = concatAxis == 1 ? tensors.Sum(t => t.Shape[1]) : tensors[0].Shape[1];
+
+            double[] resultData = new double[rows * cols];
+
+            if (concatAxis == 0)
+            {
+                int currentRow = 0;
+                foreach (var tensor in tensors)
+                {
+                    int tensorRows = tensor.Shape[0];
+                    int tensorCols = tensor.Shape[1];
+                    for (int i = 0; i < tensorRows; i++)
+                    {
+                        Array.Copy(tensor.Data, i * tensorCols, resultData, (currentRow + i) * cols, tensorCols);
+                    }
+
+                    currentRow += tensorRows;
+                }
+            }
+            else
+            {
+                int currentCol = 0;
+                foreach (var tensor in tensors)
+                {
+                    int tensorRows = tensor.Shape[0];
+                    int tensorCols = tensor.Shape[1];
+                    for (int i = 0; i < tensorRows; i++)
+                    {
+                        for (int j = 0; j < tensorCols; j++)
+                        {
+                            resultData[(i * cols) + currentCol + j] = tensor.Data[(i * tensorCols) + j];
+                        }
+                    }
+
+                    currentCol += tensorCols;
+                }
+            }
+
+            return new Tensor(new int[] { rows, cols }, resultData);
+        }
+
+        private static int[] CalculateOutputShape(Tensor[] tensors, int start, int end, int concatAxis, int maxRank)
+        {
+            int[] outputShape = new int[maxRank];
+            for (int i = 0; i < maxRank; i++)
+            {
+                if (i == concatAxis)
+                {
+                    outputShape[i] = tensors.Sum(t => ProductOfShape(t.Shape, start, Math.Min(i + 1, end)));
+                }
+                else if (i >= start && i < end)
+                {
+                    outputShape[i] = tensors.Max(t => i < t.Shape.Length ? t.Shape[i] : 1);
+                }
+                else
+                {
+                    outputShape[i] = 1;
+                }
+            }
+
+            return outputShape;
+        }
+
+        private static int ProductOfShape(int[] shape, int start, int end)
+        {
+            return shape.Skip(start).Take(end - start).Aggregate(1, (a, b) => a * b);
+        }
+
+        private static void ChooseAndCopyTensorSlice(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            long elementsCount = (long)source.Data.Length * destination.Data.Length;
+            if (elementsCount > 1000000)
+            {
+                ParallelCopyTensorSlice(source, destination, sliceShape, startIndices, start, end);
+            }
+            else if (elementsCount > 10000)
+            {
+                PrecomputeAndCopy(source, destination, sliceShape, startIndices, start, end);
+            }
+            else
+            {
+                CopyTensorSliceIterative(source, destination, sliceShape, startIndices, start, end);
+            }
+        }
+
+        private static void CopyTensorSliceIterative(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            int[] sourceIndices = new int[source.Shape.Length];
+            int[] destIndices = new int[destination.Shape.Length];
+            int[] currentIndices = new int[sliceShape.Length];
+
+            while (true)
+            {
+                double value = GetValueFromSource(source, sourceIndices, start, end);
+                for (int i = 0; i < destIndices.Length; i++)
+                {
+                    destIndices[i] = startIndices[i] + currentIndices[i];
+                }
+
+                destination[destIndices] = value;
+
+                int dim = sliceShape.Length - 1;
+                while (dim >= 0 && ++currentIndices[dim] == sliceShape[dim])
+                {
+                    currentIndices[dim] = 0;
+                    dim--;
+                }
+
+                if (dim < 0)
+                {
+                    break;
+                }
+
+                for (int i = 0; i < sourceIndices.Length; i++)
+                {
+                    sourceIndices[i] = currentIndices[i] % source.Shape[i];
+                }
+            }
+        }
+
+        private static void ParallelCopyTensorSlice(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            int totalElements = sliceShape.Aggregate(1, (a, b) => a * b);
+            int batchSize = 1000;
+
+            Parallel.For(0, (totalElements + batchSize - 1) / batchSize, batchIndex =>
+            {
+                int startElement = batchIndex * batchSize;
+                int endElement = Math.Min(startElement + batchSize, totalElements);
+
+                for (int i = startElement; i < endElement; i++)
+                {
+                    int[] indices = ConvertToIndices(i, sliceShape);
+                    CopySingleElement(source, destination, indices, startIndices, start, end);
+                }
+            });
+        }
+
+        private static void PrecomputeAndCopy(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        {
+            int[] sourceStrides = ComputeStrides(source.Shape);
+            int[] destStrides = ComputeStrides(destination.Shape);
+            int[] indexMap = PrecomputeIndexMap(sliceShape, sourceStrides, destStrides, startIndices, start, end);
+
+            for (int i = 0; i < indexMap.Length; i += 2)
+            {
+                destination.Data[indexMap[i + 1]] = source.Data[indexMap[i]];
+            }
+        }
+
+        private static void CopySingleElement(Tensor source, Tensor destination, int[] indices, int[] startIndices, int start, int end)
+        {
+            int[] sourceIndices = new int[source.Shape.Length];
+            int[] destIndices = new int[destination.Shape.Length];
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                if (i < sourceIndices.Length)
+                {
+                    sourceIndices[i] = indices[i] % source.Shape[i];
+                }
+
+                destIndices[i] = startIndices[i] + indices[i];
+            }
+
+            double value = GetValueFromSource(source, sourceIndices, start, end);
+            destination[destIndices] = value;
         }
 
         private void CopyData(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices, int currentDim)

@@ -846,6 +846,29 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestExpAndMean()
+        {
+            Tensor tensor = new Tensor(new int[] { 200, 300, 400 }, 5f);
+
+            PradOp op = new PradOp(tensor);
+
+            var results = op.DoParallel(
+                x => x.Exp(),
+                y => y.Mean(0),
+                z => z.Sin()
+                );
+
+            var concatResult = results[0].Then(PradOp.ConcatOp, new Tensor[] { results[1].Result, results[2].Result }, 1)
+                .Then(PradOp.LogOp)
+                .Then(PradOp.SinOp)
+                .Then(PradOp.CosOp);
+
+            Tensor grad = new Tensor(new int[] { 200, 900, 400 }, 0.1f);
+
+            var gradient = op.Back(grad);
+        }
+
+        [Fact]
         public void MultiPradOpBranchConcatTest()
         {
             Random rand = new Random(3);
