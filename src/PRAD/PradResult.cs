@@ -200,6 +200,19 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Applies the following operation.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
+        /// <param name="min">The min value.</param>
+        /// <param name="max">The max value.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<double, double, PradResult> operation, double min, double max)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<double, double, PradResult>>(operation);
+            return instanceOperation(min, max);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
         /// <param name="array">The array.</param>
         /// <returns>A PradResult.</returns>
         public PradResult Then(Func<int[], PradResult> operation, params int[] array)

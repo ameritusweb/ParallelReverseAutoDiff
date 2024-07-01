@@ -56,6 +56,169 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for broadcasting.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="originalShape">The original shape before broadcasting.</param>
+        /// <returns>The gradient with respect to the input tensor before broadcasting.</returns>
+        public Tensor BroadcastToReverse(Tensor upstreamGradient, int[] originalShape)
+        {
+            int[] broadcastShape = upstreamGradient.Shape;
+            int[] newShape = new int[originalShape.Length];
+
+            // Determine the new shape to sum the gradients along the broadcasted dimensions
+            for (int i = 0; i < originalShape.Length; i++)
+            {
+                if (originalShape[i] == broadcastShape[broadcastShape.Length - originalShape.Length + i])
+                {
+                    newShape[i] = originalShape[i];
+                }
+                else
+                {
+                    newShape[i] = 1;
+                }
+            }
+
+            Tensor result = upstreamGradient.Reshape(broadcastShape)
+                .Sum(newShape);
+
+            return result.Reshape(originalShape);
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for summation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="axes">The axes along which the summation was performed.</param>
+        /// <returns>The gradient with respect to the input tensor before summation.</returns>
+        public Tensor SumReverse(Tensor upstreamGradient, int[] axes)
+        {
+            var originalShape = this.InitialTensors[0].Shape;
+
+            // Determine the shape after summation
+            var summedShape = originalShape.ToList();
+            foreach (var axis in axes.OrderByDescending(a => a))
+            {
+                summedShape.RemoveAt(axis);
+            }
+
+            if (summedShape.Count == 0)
+            {
+                summedShape.Add(1);
+            }
+
+            // Create a tensor with the shape after summation
+            Tensor result = new Tensor(originalShape, 0.0f);
+
+            // Calculate strides for the original tensor
+            var strides = new int[originalShape.Length];
+            strides[originalShape.Length - 1] = 1;
+            for (int i = originalShape.Length - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * originalShape[i + 1];
+            }
+
+            // Expand the upstream gradient back to the original shape
+            Parallel.For(0, upstreamGradient.Data.Length, i =>
+            {
+                var upstreamIndex = new int[summedShape.Count];
+                var inputIndex = new int[originalShape.Length];
+                int remainingIndex = i;
+                for (int j = summedShape.Count - 1; j >= 0; j--)
+                {
+                    upstreamIndex[j] = remainingIndex % summedShape[j];
+                    remainingIndex /= summedShape[j];
+                }
+
+                for (int j = 0, k = 0; j < originalShape.Length; j++)
+                {
+                    if (axes.Contains(j))
+                    {
+                        inputIndex[j] = 0;
+                    }
+                    else
+                    {
+                        inputIndex[j] = upstreamIndex[k++];
+                    }
+                }
+
+                this.SumReverseRecursive(inputIndex, axes, 0, upstreamGradient.Data[i], strides, result);
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient of excluding.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient.</param>
+        /// <param name="min">The min value.</param>
+        /// <param name="max">The max value.</param>
+        /// <returns>The gradient of the exclusion operation.</returns>
+        public Tensor ExcludeReverse(Tensor upstreamGradient, double min, double max)
+        {
+            Tensor tensor = this.InitialTensors[0];
+
+            var gradData = new float[tensor.Data.Length];
+
+            Parallel.For(0, tensor.Data.Length, i =>
+            {
+                if (tensor.Data[i] < min || tensor.Data[i] > max)
+                {
+                    gradData[i] = upstreamGradient.Data[i];
+                }
+                else
+                {
+                    gradData[i] = 0.0f;
+                }
+            });
+
+            return new Tensor(tensor.Shape, gradData);
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for clipping.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient.</param>
+        /// <param name="min">The minimum value.</param>
+        /// <param name="max">The maximum value.</param>
+        /// <returns>The clipped tensor gradient.</returns>
+        public Tensor ClipReverse(Tensor upstreamGradient, double min, double max)
+        {
+            Tensor tensor = this.InitialTensors[0];
+
+            var gradData = new float[tensor.Data.Length];
+            var minArray = new float[tensor.Data.Length];
+            var maxArray = new float[tensor.Data.Length];
+            var zeroArray = new float[tensor.Data.Length];
+
+            // Fill minArray, maxArray and zeroArray with appropriate values
+            Array.Fill(minArray, (float)min);
+            Array.Fill(maxArray, (float)max);
+            Array.Fill(zeroArray, 0.0f);
+
+            // Create intermediate arrays for comparison
+            var clippedMin = new float[tensor.Data.Length];
+            var clippedMax = new float[tensor.Data.Length];
+            var clippedMask = new float[tensor.Data.Length];
+
+            // Perform element-wise min and max operations
+            Vml.MinMag(tensor.Data.Length, tensor.Data, minArray, clippedMin);
+            Vml.MaxMag(tensor.Data.Length, clippedMin, maxArray, clippedMax);
+
+            // Determine the mask for valid positions (1 if valid, 0 if clipped)
+            Parallel.For(0, tensor.Data.Length, i =>
+            {
+                clippedMask[i] = (clippedMax[i] == tensor.Data[i]) ? 1.0f : 0.0f;
+            });
+
+            // Apply the mask to the upstream gradient
+            Vml.Mul(tensor.Data.Length, upstreamGradient.Data, clippedMask, gradData);
+
+            return new Tensor(tensor.Shape, gradData);
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for matrix multiplication.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -1296,6 +1459,47 @@ namespace ParallelReverseAutoDiff.PRAD
                 if (tensorA.Shape[i] != tensorB.Shape[i])
                 {
                     throw new ArgumentException("Shapes are not compatible for the operation.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recursively expands the upstream gradient back to the original shape.
+        /// </summary>
+        /// <param name="inputIndex">The current indices in the input tensor.</param>
+        /// <param name="axes">The axes along which the summation was performed.</param>
+        /// <param name="currentAxis">The current axis being processed.</param>
+        /// <param name="value">The value of the upstream gradient to be distributed.</param>
+        /// <param name="strides">The strides of the input tensor.</param>
+        /// <param name="result">The tensor to accumulate the gradient in.</param>
+        private void SumReverseRecursive(int[] inputIndex, int[] axes, int currentAxis, float value, int[] strides, Tensor result)
+        {
+            if (currentAxis == inputIndex.Length)
+            {
+                int flatIndex = 0;
+                for (int i = 0; i < inputIndex.Length; i++)
+                {
+                    flatIndex += inputIndex[i] * strides[i];
+                }
+
+                lock (result.Data)
+                {
+                    result.Data[flatIndex] += value;
+                }
+            }
+            else
+            {
+                if (axes.Contains(currentAxis))
+                {
+                    for (int i = 0; i < result.Shape[currentAxis]; i++)
+                    {
+                        inputIndex[currentAxis] = i;
+                        this.SumReverseRecursive(inputIndex, axes, currentAxis + 1, value, strides, result);
+                    }
+                }
+                else
+                {
+                    this.SumReverseRecursive(inputIndex, axes, currentAxis + 1, value, strides, result);
                 }
             }
         }

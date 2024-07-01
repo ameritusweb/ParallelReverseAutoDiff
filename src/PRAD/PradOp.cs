@@ -173,6 +173,26 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<int[], PradResult> TileOp => FuncOp.Tile;
 
         /// <summary>
+        /// Gets the clip op.
+        /// </summary>
+        public static Func<double, double, PradResult> ClipOp => FuncOp.Clip;
+
+        /// <summary>
+        /// Gets the exclude op.
+        /// </summary>
+        public static Func<double, double, PradResult> ExcludeOp => FuncOp.Exclude;
+
+        /// <summary>
+        /// Gets the sum op.
+        /// </summary>
+        public static Func<int[], PradResult> SumOp => FuncOp.Sum;
+
+        /// <summary>
+        /// Gets the broadcast to op.
+        /// </summary>
+        public static Func<int[], PradResult> BroadcastToOp => FuncOp.BroadcastTo;
+
+        /// <summary>
         /// Gets the mean op.
         /// </summary>
         public static Func<int, PradResult> MeanOp => FuncOp.Mean;
@@ -824,6 +844,110 @@ namespace ParallelReverseAutoDiff.PRAD
             var splitOps = new PradOp[] { newOp, branch };
             this.splitOps = splitOps;
             return splitOps;
+        }
+
+        /// <summary>
+        /// Broadcasts the tensor to a specified shape.
+        /// </summary>
+        /// <param name="newShape">The new shape to broadcast to.</param>
+        /// <returns>A new tensor broadcasted to the specified shape.</returns>
+        /// <exception cref="ArgumentException">Thrown when the new shape is not compatible for broadcasting.</exception>
+        [PradOperation(nameof(BroadcastToOp))]
+        public PradResult BroadcastTo(params int[] newShape)
+        {
+            var result = this.currentTensor.BroadcastTo(newShape);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.BroadcastToReverse(upstreamGrad, newShape);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Sums the tensor elements along the specified axes.
+        /// </summary>
+        /// <param name="axes">The axes along which to sum the elements.</param>
+        /// <returns>A new tensor with the summed elements.</returns>
+        [PradOperation(nameof(SumOp))]
+        public PradResult Sum(params int[] axes)
+        {
+            var result = this.currentTensor.Sum(axes);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.SumReverse(upstreamGrad, axes);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Excludes the values of the tensor that are in the specified range.
+        /// If values within the range are closer to max, they become max, otherwise they become min.
+        /// </summary>
+        /// <param name="min">The min value to exclude.</param>
+        /// <param name="max">The max value to exclude.</param>
+        /// <returns>A new tensor with values in the specified range excluded.</returns>
+        [PradOperation(nameof(ExcludeOp))]
+        public PradResult Exclude(double min, double max)
+        {
+            var result = this.currentTensor.Exclude(min, max);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ExcludeReverse(upstreamGrad, min, max);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Clips the values of the tensor to be within the specified range.
+        /// </summary>
+        /// <param name="min">The minimum value to clip to.</param>
+        /// <param name="max">The maximum value to clip to.</param>
+        /// <returns>A new tensor with values clipped to the specified range.</returns>
+        [PradOperation(nameof(ClipOp))]
+        public PradResult Clip(double min, double max)
+        {
+            var result = this.currentTensor.Clip(min, max);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ClipReverse(upstreamGrad, min, max);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
         }
 
         /// <summary>

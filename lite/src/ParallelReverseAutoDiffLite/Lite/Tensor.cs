@@ -362,6 +362,209 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Generates a tensor containing a range of values.
+        /// </summary>
+        /// <param name="start">The starting value of the range.</param>
+        /// <param name="end">The ending value of the range (exclusive).</param>
+        /// <returns>A tensor containing the range of values.</returns>
+        public Tensor Arange(int start, int end)
+        {
+            int length = end - start;
+            float[] data = new float[length];
+
+            Parallel.For(0, length, i =>
+            {
+                data[i] = start + i;
+            });
+
+            return new Tensor(new int[] { length }, data);
+        }
+
+        /// <summary>
+        /// Excludes the values of the tensor that are in the specified range.
+        /// If values within the range are closer to max, they become max, otherwise they become min.
+        /// </summary>
+        /// <param name="min">The min value.</param>
+        /// <param name="max">The max value.</param>
+        /// <returns>The excluded tensor.</returns>
+        public Tensor Exclude(double min, double max)
+        {
+            var excludedData = new float[this.Data.Length];
+
+            var halfDistance = (max - min) / 2.0;
+
+            Parallel.For(0, this.Data.Length, i =>
+            {
+                if (this.Data[i] >= min && this.Data[i] <= max)
+                {
+                    var distance = this.Data[i] - min;
+                    if (distance > halfDistance)
+                    {
+                        excludedData[i] = (float)max;
+                    }
+                    else
+                    {
+                        excludedData[i] = (float)min;
+                    }
+                }
+                else
+                {
+                    excludedData[i] = this.Data[i];
+                }
+            });
+
+            return new Tensor(this.Shape, excludedData);
+        }
+
+        /// <summary>
+        /// Clips the values of the tensor to be within the specified range.
+        /// </summary>
+        /// <param name="min">The minimum value to clip to.</param>
+        /// <param name="max">The maximum value to clip to.</param>
+        /// <returns>A new tensor with values clipped to the specified range.</returns>
+        public Tensor Clip(double min, double max)
+        {
+            var clippedData = new float[this.Data.Length];
+            var minArray = new float[this.Data.Length];
+            var maxArray = new float[this.Data.Length];
+
+            // Fill minArray and maxArray with appropriate values
+            Array.Fill(minArray, (float)min);
+            Array.Fill(maxArray, (float)max);
+
+            // Perform element-wise min and max operations
+            var clippedMin = new float[this.Data.Length];
+            Vml.MinMag(this.Data.Length, this.Data, maxArray, clippedMin);
+            Vml.MaxMag(this.Data.Length, clippedMin, minArray, clippedData);
+
+            return new Tensor(this.Shape, clippedData);
+        }
+
+        /// <summary>
+        /// Broadcasts the tensor to a specified shape.
+        /// </summary>
+        /// <param name="newShape">The new shape to broadcast to.</param>
+        /// <returns>A new tensor broadcasted to the specified shape.</returns>
+        /// <exception cref="ArgumentException">Thrown when the new shape is not compatible for broadcasting.</exception>
+        public Tensor BroadcastTo(int[] newShape)
+        {
+            if (newShape.Length < this.Shape.Length)
+            {
+                throw new ArgumentException("New shape must be of the same rank or higher than the current shape.");
+            }
+
+            // Ensure the shape is compatible for broadcasting
+            for (int i = 0; i < this.Shape.Length; i++)
+            {
+                if (this.Shape[i] != 1 && this.Shape[i] != newShape[newShape.Length - this.Shape.Length + i])
+                {
+                    throw new ArgumentException("Shapes are not compatible for broadcasting.");
+                }
+            }
+
+            // Create the new data array
+            int newTotalSize = newShape.Aggregate(1, (a, b) => a * b);
+            var broadcastedData = new float[newTotalSize];
+
+            // Fill the new data array by repeating the elements
+            int[] indices = new int[newShape.Length];
+            Parallel.For(0, newTotalSize, i =>
+            {
+                int oldIndex = 0;
+                int stride = 1;
+                for (int j = this.Shape.Length - 1; j >= 0; j--)
+                {
+                    int dim = this.Shape.Length - 1 - j;
+                    if (this.Shape[dim] != 1)
+                    {
+                        oldIndex += (indices[newShape.Length - 1 - j] % this.Shape[dim]) * stride;
+                    }
+
+                    stride *= this.Shape[dim];
+                }
+
+                broadcastedData[i] = this.Data[oldIndex];
+
+                // Increment the indices
+                for (int k = newShape.Length - 1; k >= 0; k--)
+                {
+                    indices[k]++;
+                    if (indices[k] < newShape[k])
+                    {
+                        break;
+                    }
+
+                    indices[k] = 0;
+                }
+            });
+
+            return new Tensor(newShape, broadcastedData);
+        }
+
+        /// <summary>
+        /// Sums the tensor elements along the specified axes.
+        /// </summary>
+        /// <param name="axes">The axes along which to sum the elements.</param>
+        /// <returns>A new tensor with the summed elements.</returns>
+        public Tensor Sum(int[] axes)
+        {
+            // Step 1: Determine the shape of the resulting tensor after summing
+            var newShape = this.Shape.ToList();
+            foreach (var axis in axes.OrderByDescending(a => a))
+            {
+                newShape.RemoveAt(axis);
+            }
+
+            if (newShape.Count == 0)
+            {
+                newShape.Add(1);
+            }
+
+            // Step 2: Create the result tensor with the new shape
+            var resultData = new float[newShape.Aggregate(1, (a, b) => a * b)];
+            var resultTensor = new Tensor(newShape.ToArray(), resultData);
+
+            // Step 3: Calculate the strides for original tensor
+            var strides = new int[this.Shape.Length];
+            strides[this.Shape.Length - 1] = 1;
+            for (int i = this.Shape.Length - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * this.Shape[i + 1];
+            }
+
+            // Step 4: Sum the elements along the specified axes
+            Parallel.For(0, resultTensor.Data.Length, i =>
+            {
+                var resultIndex = new int[resultTensor.Shape.Length];
+                var inputIndex = new int[this.Shape.Length];
+                int remainingIndex = i;
+                for (int j = resultTensor.Shape.Length - 1; j >= 0; j--)
+                {
+                    resultIndex[j] = remainingIndex % resultTensor.Shape[j];
+                    remainingIndex /= resultTensor.Shape[j];
+                }
+
+                for (int j = 0, k = 0; j < this.Shape.Length; j++)
+                {
+                    if (axes.Contains(j))
+                    {
+                        inputIndex[j] = 0;
+                    }
+                    else
+                    {
+                        inputIndex[j] = resultIndex[k++];
+                    }
+                }
+
+                var sum = 0.0f;
+                this.SumRecursive(inputIndex, resultIndex, 0, ref sum, strides);
+                resultTensor.Data[i] = sum;
+            });
+
+            return resultTensor;
+        }
+
+        /// <summary>
         /// Performs matrix multiplication using MKL dgemm.
         /// </summary>
         /// <param name="other">The other tensor to multiply with.</param>
@@ -1560,6 +1763,35 @@ namespace ParallelReverseAutoDiff.PRAD
                 if (this.Shape[i] != other.Shape[i])
                 {
                     throw new ArgumentException("Shapes are not compatible for the operation.");
+                }
+            }
+        }
+
+        private void SumRecursive(int[] inputIndex, int[] resultIndex, int currentAxis, ref float sum, int[] strides)
+        {
+            if (currentAxis == this.Shape.Length)
+            {
+                int flatIndex = 0;
+                for (int i = 0; i < this.Shape.Length; i++)
+                {
+                    flatIndex += inputIndex[i] * strides[i];
+                }
+
+                sum += this.Data[flatIndex];
+            }
+            else
+            {
+                if (resultIndex.Contains(currentAxis))
+                {
+                    for (int i = 0; i < this.Shape[currentAxis]; i++)
+                    {
+                        inputIndex[currentAxis] = i;
+                        this.SumRecursive(inputIndex, resultIndex, currentAxis + 1, ref sum, strides);
+                    }
+                }
+                else
+                {
+                    this.SumRecursive(inputIndex, resultIndex, currentAxis + 1, ref sum, strides);
                 }
             }
         }
