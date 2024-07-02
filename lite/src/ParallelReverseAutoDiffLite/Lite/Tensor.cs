@@ -319,6 +319,51 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Concatenates slices of the input tensors along the specified axis.
+        /// </summary>
+        /// <param name="tensors">The array of tensors to be concatenated.</param>
+        /// <param name="axisRange">The range of axes to be considered for slicing, formatted as "start:end".</param>
+        /// <param name="concatAxis">The axis along which the concatenation is performed.</param>
+        /// <returns>A new tensor that is the result of concatenating the input tensors along the specified axis.</returns>
+        /// <exception cref="ArgumentException">Thrown when no tensors are provided or when invalid axis range or concat axis are specified.</exception>
+        public static Tensor ConcatSlices(Tensor[] tensors, string axisRange, int concatAxis)
+        {
+            if (tensors == null || tensors.Length == 0)
+            {
+                throw new ArgumentException("At least one tensor must be provided.");
+            }
+
+            (int start, int end) = ParseAxisRange(axisRange);
+            int maxRank = tensors.Max(t => t.Shape.Length);
+
+            // Adjust negative indices
+            start = start < 0 ? maxRank + start : start;
+            end = end <= 0 ? maxRank + end : end;
+
+            // Ensure end is not less than start
+            end = Math.Max(end, start);
+
+            if (start < 0 || start >= maxRank || end > maxRank || start >= end || concatAxis < 0 || concatAxis >= maxRank)
+            {
+                throw new ArgumentException("Invalid axis range or concat axis.");
+            }
+
+            int scenario = DetermineScenario(start, end, concatAxis, maxRank);
+
+            return scenario switch
+            {
+                1 => StandardConcat(tensors, concatAxis),
+                2 => ConcatByUnstackAndExpand(tensors, 0, 0),
+                3 => ConcatByUnstackAndExpand(tensors, 0, 1),
+                4 => ConcatByUnstackAndExpand(tensors, 0, 1, true),
+                5 => ConcatByExpansion(tensors, 0),
+                6 => ConcatByUnstackAndExpand(tensors, 0, -2, false, true),
+                7 => ConcatByUnstackAndExpand(tensors, 0, -1, true),
+                _ => throw new NotImplementedException($"Scenario {scenario} not implemented."),
+            };
+        }
+
+        /// <summary>
         /// Creates a flat array from the tensors along the specified indices.
         /// </summary>
         /// <param name="tensors">The tensors.</param>
@@ -1386,6 +1431,40 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Splits the tensor into multiple tensors along the specified axis, with specified sizes.
+        /// </summary>
+        /// <param name="sizes">An array specifying the size of each split along the given axis.</param>
+        /// <param name="axis">The axis along which to split the tensor.</param>
+        /// <returns>An array of tensors resulting from the split.</returns>
+        public Tensor[] Split(int[] sizes, int axis = 0)
+        {
+            if (axis < 0 || axis >= this.Shape.Length)
+            {
+                throw new ArgumentException("Axis is out of bounds for the tensor.");
+            }
+
+            if (sizes.Sum() != this.Shape[axis])
+            {
+                throw new ArgumentException("The sum of sizes must equal the dimension of the axis being split.");
+            }
+
+            Tensor[] result = new Tensor[sizes.Length];
+            int[] begin = new int[this.Shape.Length];
+            int[] size = (int[])this.Shape.Clone();
+
+            int startIndex = 0;
+            for (int i = 0; i < sizes.Length; i++)
+            {
+                begin[axis] = startIndex;
+                size[axis] = sizes[i];
+                result[i] = this.Slice(begin, size);
+                startIndex += sizes[i];
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Transposes the tensor according to the specified permutation of axes.
         /// </summary>
         /// <param name="permutation">The permutation of the axes.</param>
@@ -1544,6 +1623,46 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Determines the scenario based on the start, end, and concatAxis.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="concatAxis">The concatenation axis.</param>
+        /// <param name="maxRank">The maximum rank.</param>
+        /// <returns>The scenario.</returns>
+        internal static int DetermineScenario(int start, int end, int concatAxis, int maxRank)
+        {
+            if (start == 0 && end == maxRank && (concatAxis == 0 || concatAxis == 1))
+            {
+                return 1; // Standard concatenation
+            }
+
+            if (start == maxRank - 2 && end == maxRank)
+            {
+                return concatAxis switch
+                {
+                    0 => 5,
+                    1 => 6,
+                    2 => 7,
+                    _ => 0
+                };
+            }
+
+            if (start == 1 && end == 3)
+            {
+                return concatAxis switch
+                {
+                    0 => 2,
+                    1 => 3,
+                    2 => 4,
+                    _ => 0
+                };
+            }
+
+            return 0; // Unknown scenario
+        }
+
+        /// <summary>
         /// Gets the index based on the indices.
         /// </summary>
         /// <param name="indices">The indices.</param>
@@ -1690,6 +1809,82 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return newShape.ToArray();
+        }
+
+        /// <summary>
+        /// Concatenates tensors along a specific axis.
+        /// </summary>
+        private static Tensor StandardConcat(Tensor[] tensors, int concatAxis)
+        {
+            return Tensor.Concat(tensors, concatAxis);
+        }
+
+        /// <summary>
+        /// Concatenates tensors by unstacking along a specified axis, expanding dimensions, and concatenating.
+        /// </summary>
+        private static Tensor ConcatByUnstackAndExpand(Tensor[] tensors, int unstackAxis, int concatAxis, bool expandDim = false, bool expandDimAtEnd = false)
+        {
+            var maxRank = tensors.Max(t => t.Shape.Length);
+            var allSlices = new List<Tensor>();
+            foreach (var tensor in tensors)
+            {
+                if (tensor.Shape.Length == maxRank)
+                {
+                    var unstackedSlices = tensor.Unstack(unstackAxis);
+                    foreach (var slice in unstackedSlices)
+                    {
+                        allSlices.Add(expandDim ? slice.ExpandDims(0) : slice);
+                    }
+                }
+                else
+                {
+                    allSlices.Add(expandDim ? tensor.ExpandDims(0) : tensor);
+                }
+            }
+
+            var result = Tensor.Concat(allSlices.ToArray(), concatAxis);
+
+            if (expandDimAtEnd)
+            {
+                result = result.ExpandDims(0);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Concatenates tensors by expanding them to match the maximum rank.
+        /// </summary>
+        private static Tensor ConcatByExpansion(Tensor[] tensors, int concatAxis)
+        {
+            var allSlices = new List<Tensor>();
+            foreach (var tensor in tensors)
+            {
+                if (tensor.Shape.Length == 2)
+                {
+                    allSlices.Add(tensor.ExpandDims(0));
+                }
+                else
+                {
+                    allSlices.Add(tensor);
+                }
+            }
+
+            return Tensor.Concat(allSlices.ToArray(), concatAxis);
+        }
+
+        /// <summary>
+        /// Parses the axis range string and returns the start and end values.
+        /// </summary>
+        private static (int, int) ParseAxisRange(string axisRange)
+        {
+            var parts = axisRange.Split(':');
+            if (parts.Length != 2 || !int.TryParse(parts[0], out var start) || !int.TryParse(parts[1], out var end))
+            {
+                throw new ArgumentException("Invalid axis range format. Use 'start:end'.");
+            }
+
+            return (start, end);
         }
 
         private static int[] CalculateStrides(int[] shape)
