@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using MKLNET;
@@ -29,58 +30,6 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the initial tensors.
         /// </summary>
         public Tensor[] InitialTensors { get; private set; }
-
-        /// <summary>
-        /// Computes the reverse gradient for the concat slices operation.
-        /// </summary>
-        /// <param name="upstreamGradient">The upstream gradient.</param>
-        /// <param name="axisRange">The axis range.</param>
-        /// <param name="concatAxis">The concatenation axis.</param>
-        /// <returns>The gradients of the input.</returns>
-        /// <exception cref="ArgumentException">No tensors provided.</exception>
-        public Tensor[] ConcatSlicesReverse(Tensor upstreamGradient, string axisRange, int concatAxis)
-        {
-            Tensor[] tensors = this.InitialTensors;
-
-            if (tensors == null || tensors.Length == 0)
-            {
-                throw new ArgumentException("At least one tensor must be provided.");
-            }
-
-            // Parse the axis range
-            (int start, int end) = Tensor.ParseAxisRange(axisRange);
-
-            // Find the maximum rank among all tensors
-            int maxRank = tensors.Max(t => t.Shape.Length);
-
-            // Adjust start and end if negative
-            start = Tensor.AdjustNegativeIndex(start, maxRank);
-            end = Tensor.AdjustNegativeIndex(end, maxRank);
-
-            // Validate range and concatAxis
-            Tensor.ValidateInputs(start, end, concatAxis, maxRank);
-
-            Tensor[] gradients = new Tensor[tensors.Length];
-            int concatOffset = 0;
-
-            for (int i = 0; i < tensors.Length; i++)
-            {
-                var tensor = tensors[i];
-                int[] sliceShape = Tensor.CalculateSliceShape(tensor, start, end, concatAxis, maxRank);
-                int[] sliceIndices = new int[maxRank];
-                sliceIndices[concatAxis] = concatOffset;
-
-                // Initialize the gradient tensor for the current input tensor
-                gradients[i] = new Tensor(tensor.Shape);
-
-                // Extract the corresponding slice from the upstream gradient tensor
-                ChooseAndExtractGradientSlice(upstreamGradient, gradients[i], sliceShape, sliceIndices, start, end);
-
-                concatOffset += sliceShape[concatAxis];
-            }
-
-            return gradients;
-        }
 
         /// <summary>
         /// Computes the reverse gradient for element-wise addition.
@@ -1431,105 +1380,145 @@ namespace ParallelReverseAutoDiff.PRAD
             return result;
         }
 
-        private static void ChooseAndExtractGradientSlice(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        /// <summary>
+        /// Computes the reverse gradient for the concat slices operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient.</param>
+        /// <param name="axisRange">The axis range.</param>
+        /// <param name="concatAxis">The concatenation axis.</param>
+        /// <returns>The gradients of the input.</returns>
+        public Tensor[] ConcatSlicesReverse(Tensor upstreamGradient, string axisRange, int concatAxis)
         {
-            long elementsCount = (long)source.Data.Length * destination.Data.Length;
-            if (elementsCount > 1000000)
+            var tensors = this.InitialTensors;
+            if (upstreamGradient == null || tensors == null || tensors.Length == 0)
             {
-                ParallelExtractGradientSlice(source, destination, sliceShape, startIndices, start, end);
+                throw new ArgumentException("Invalid inputs. Both upstreamGradient and tensors must be provided.");
             }
-            else if (elementsCount > 10000)
+
+            (int start, int end) = this.ParseAxisRange(axisRange);
+            int maxRank = tensors.Max(t => t.Shape.Length);
+
+            // Adjust negative indices
+            start = start < 0 ? maxRank + start : start;
+            end = end <= 0 ? maxRank + end : end;
+
+            // Ensure end is not less than start
+            end = Math.Max(end, start);
+
+            if (start < 0 || start >= maxRank || end > maxRank || start >= end || concatAxis < 0 || concatAxis >= maxRank)
             {
-                PrecomputeAndExtract(source, destination, sliceShape, startIndices, start, end);
+                throw new ArgumentException("Invalid axis range or concat axis.");
             }
-            else
+
+            int scenario = Tensor.DetermineScenario(start, end, concatAxis, maxRank);
+
+            return scenario switch
             {
-                ExtractGradientSliceIterative(source, destination, sliceShape, startIndices, start, end);
-            }
+                1 => this.StandardConcatReverse(upstreamGradient, tensors, concatAxis),
+                2 => this.ConcatByUnstackAndExpandReverse(upstreamGradient, tensors, 0, 0),
+                3 => this.ConcatByUnstackAndExpandReverse(upstreamGradient, tensors, 0, 1),
+                4 => this.ConcatByUnstackAndExpandReverse(upstreamGradient, tensors, 0, 1, true),
+                5 => this.ConcatByExpansionReverse(upstreamGradient, tensors, 0),
+                6 => this.ConcatByUnstackAndExpandReverse(upstreamGradient, tensors, 0, -2, false, true),
+                7 => this.ConcatByUnstackAndExpandReverse(upstreamGradient, tensors, 0, -1, true),
+                _ => throw new NotImplementedException($"Scenario {scenario} not implemented."),
+            };
         }
 
-        private static void ExtractGradientSliceIterative(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        private Tensor[] StandardConcatReverse(Tensor upstreamGradient, Tensor[] tensors, int concatAxis)
         {
-            int[] sourceIndices = new int[source.Shape.Length];
-            int[] destIndices = new int[destination.Shape.Length];
-            int[] currentIndices = new int[sliceShape.Length];
-
-            while (true)
-            {
-                double value = Tensor.GetValueFromSource(source, sourceIndices, start, end);
-                for (int i = 0; i < destIndices.Length; i++)
-                {
-                    destIndices[i] = startIndices[i] + currentIndices[i];
-                }
-
-                destination[destIndices] = value;
-
-                int dim = sliceShape.Length - 1;
-                while (dim >= 0 && ++currentIndices[dim] == sliceShape[dim])
-                {
-                    currentIndices[dim] = 0;
-                    dim--;
-                }
-
-                if (dim < 0)
-                {
-                    break;
-                }
-
-                for (int i = 0; i < sourceIndices.Length; i++)
-                {
-                    sourceIndices[i] = currentIndices[i] % source.Shape[i];
-                }
-            }
+            int[] splitSizes = tensors.Select(t => t.Shape[concatAxis]).ToArray();
+            return upstreamGradient.Split(splitSizes, concatAxis);
         }
 
-        private static void ParallelExtractGradientSlice(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
+        private Tensor[] ConcatByUnstackAndExpandReverse(Tensor upstreamGradient, Tensor[] tensors, int unstackAxis, int concatAxis, bool expandDim = false, bool expandDimAtEnd = false)
         {
-            int totalElements = sliceShape.Aggregate(1, (a, b) => a * b);
-            int batchSize = 1000; // Adjust based on performance testing
-
-            Parallel.For(0, (totalElements + batchSize - 1) / batchSize, batchIndex =>
+            if (expandDimAtEnd)
             {
-                int startElement = batchIndex * batchSize;
-                int endElement = Math.Min(startElement + batchSize, totalElements);
-
-                for (int i = startElement; i < endElement; i++)
-                {
-                    int[] indices = Tensor.ConvertToIndices(i, sliceShape);
-                    ExtractSingleElement(source, destination, indices, startIndices, start, end);
-                }
-            });
-        }
-
-        private static void PrecomputeAndExtract(Tensor source, Tensor destination, int[] sliceShape, int[] startIndices, int start, int end)
-        {
-            int[] sourceStrides = Tensor.ComputeStrides(source.Shape);
-            int[] destStrides = Tensor.ComputeStrides(destination.Shape);
-            int[] indexMap = Tensor.PrecomputeIndexMap(sliceShape, sourceStrides, destStrides, startIndices, start, end);
-
-            for (int i = 0; i < indexMap.Length; i += 2)
-            {
-                destination.Data[indexMap[i + 1]] = source.Data[indexMap[i]];
-            }
-        }
-
-        private static void ExtractSingleElement(Tensor source, Tensor destination, int[] indices, int[] startIndices, int start, int end)
-        {
-            int[] sourceIndices = new int[source.Shape.Length];
-            int[] destIndices = new int[destination.Shape.Length];
-
-            for (int i = 0; i < indices.Length; i++)
-            {
-                if (i < sourceIndices.Length)
-                {
-                    sourceIndices[i] = indices[i] % source.Shape[i];
-                }
-
-                destIndices[i] = startIndices[i] + indices[i];
+                upstreamGradient = upstreamGradient.Squeeze(new int[] { 0 });
             }
 
-            double value = Tensor.GetValueFromSource(source, sourceIndices, start, end);
-            destination[destIndices] = value;
+            var maxRank = tensors.Max(t => t.Shape.Length);
+            var gradients = new Tensor[tensors.Length];
+
+            if (expandDim)
+            {
+                upstreamGradient = upstreamGradient.Squeeze(new int[] { 0 });
+            }
+
+            var unstackedGradients = upstreamGradient.Unstack(concatAxis);
+            int gradientIndex = 0;
+
+            for (int i = 0; i < tensors.Length; i++)
+            {
+                if (tensors[i].Shape.Length == maxRank)
+                {
+                    var slices = new List<Tensor>();
+                    for (int j = 0; j < tensors[i].Shape[unstackAxis]; j++)
+                    {
+                        slices.Add(unstackedGradients[gradientIndex++]);
+                    }
+
+                    gradients[i] = Tensor.Stack(slices.ToArray(), unstackAxis);
+                }
+                else
+                {
+                    gradients[i] = unstackedGradients[gradientIndex++];
+                    if (expandDim)
+                    {
+                        gradients[i] = gradients[i].ExpandDims(0);
+                    }
+                }
+            }
+
+            return gradients;
+        }
+
+        private Tensor[] ConcatByExpansionReverse(Tensor upstreamGradient, Tensor[] tensors, int concatAxis)
+        {
+            var gradients = new Tensor[tensors.Length];
+            int startIndex = 0;
+
+            for (int i = 0; i < tensors.Length; i++)
+            {
+                int[] begin = new int[upstreamGradient.Shape.Length];
+                int[] size = new int[upstreamGradient.Shape.Length];
+
+                for (int j = 0; j < upstreamGradient.Shape.Length; j++)
+                {
+                    if (j == concatAxis)
+                    {
+                        begin[j] = startIndex;
+                        size[j] = tensors[i].Shape[j];
+                        startIndex += size[j];
+                    }
+                    else
+                    {
+                        begin[j] = 0;
+                        size[j] = upstreamGradient.Shape[j];
+                    }
+                }
+
+                gradients[i] = upstreamGradient.Slice(begin, size);
+
+                if (tensors[i].Shape.Length == 2 && upstreamGradient.Shape.Length > 2)
+                {
+                    gradients[i] = gradients[i].Squeeze(new int[] { 0 });
+                }
+            }
+
+            return gradients;
+        }
+
+        private (int, int) ParseAxisRange(string axisRange)
+        {
+            var parts = axisRange.Split(':');
+            if (parts.Length != 2 || !int.TryParse(parts[0], out var start) || !int.TryParse(parts[1], out var end))
+            {
+                throw new ArgumentException("Invalid axis range format. Use 'start:end'.");
+            }
+
+            return (start, end);
         }
 
         /// <summary>
