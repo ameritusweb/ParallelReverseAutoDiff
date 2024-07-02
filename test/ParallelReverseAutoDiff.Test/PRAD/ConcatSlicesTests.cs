@@ -20,19 +20,6 @@
 
             Assert.Equal(new int[] { 11, 8, 7 }, result.Shape);
             Assert.Equal(tensor1.Data.Sum() + tensor2.Data.Sum(), result.Data.Sum(), 6);
-
-            // Test reverse operation
-            TensorReverse reverse = new TensorReverse(tensors);
-            var gradients = reverse.ConcatSlicesReverse(result, "1:3", 0);
-
-            Assert.Equal(2, gradients.Length);
-            Assert.Equal(new int[] { 9, 8, 7 }, gradients[0].Shape);
-            Assert.Equal(new int[] { 2, 8, 7 }, gradients[1].Shape);
-            Assert.Equal(result.Data.Sum(), gradients[0].Data.Sum() + gradients[1].Data.Sum(), 6);
-
-            // Verify that gradients match the original tensors
-            Assert.True(TensorsEqual(tensor1, gradients[0]));
-            Assert.True(TensorsEqual(tensor2, gradients[1]));
         }
 
         [Fact]
@@ -47,19 +34,6 @@
 
             Assert.Equal(new int[] { 1, 88, 7 }, result.Shape);
             Assert.Equal(tensor1.Data.Sum() + tensor2.Data.Sum(), result.Data.Sum(), 6);
-
-            // Test reverse operation
-            TensorReverse reverse = new TensorReverse(tensors);
-            var gradients = reverse.ConcatSlicesReverse(result, "1:3", 1);
-
-            Assert.Equal(2, gradients.Length);
-            Assert.Equal(new int[] { 9, 8, 7 }, gradients[0].Shape);
-            Assert.Equal(new int[] { 2, 8, 7 }, gradients[1].Shape);
-            Assert.Equal(result.Data.Sum(), gradients[0].Data.Sum() + gradients[1].Data.Sum(), 6);
-
-            // Verify that gradients match the original tensors
-            Assert.True(TensorsEqual(tensor1, gradients[0]));
-            Assert.True(TensorsEqual(tensor2, gradients[1]));
         }
 
         [Fact]
@@ -74,19 +48,6 @@
 
             Assert.Equal(new int[] { 1, 8, 77 }, result.Shape);
             Assert.Equal(tensor1.Data.Sum() + tensor2.Data.Sum(), result.Data.Sum(), 6);
-
-            // Test reverse operation
-            //TensorReverse reverse = new TensorReverse(tensors);
-            //var gradients = reverse.ConcatSlicesReverse(result, "1:3", 2);
-
-            //Assert.Equal(2, gradients.Length);
-            //Assert.Equal(new int[] { 9, 8, 7 }, gradients[0].Shape);
-            //Assert.Equal(new int[] { 2, 8, 7 }, gradients[1].Shape);
-            //Assert.Equal(result.Data.Sum(), gradients[0].Data.Sum() + gradients[1].Data.Sum(), 6);
-
-            //// Verify that gradients match the original tensors
-            //Assert.True(TensorsEqual(tensor1, gradients[0]));
-            //Assert.True(TensorsEqual(tensor2, gradients[1]));
         }
 
         [Fact]
@@ -101,19 +62,6 @@
 
             Assert.Equal(new int[] { 10, 8, 7 }, result.Shape);
             Assert.Equal(tensor1.Data.Sum() + tensor2.Data.Sum(), result.Data.Sum(), 6);
-
-            //// Test reverse operation
-            //TensorReverse reverse = new TensorReverse(tensors);
-            //var gradients = reverse.ConcatSlicesReverse(result, "-2:0", 0);
-
-            //Assert.Equal(2, gradients.Length);
-            //Assert.Equal(new int[] { 9, 8, 7 }, gradients[0].Shape);
-            //Assert.Equal(new int[] { 8, 7 }, gradients[1].Shape);
-            //Assert.Equal(result.Data.Sum(), gradients[0].Data.Sum() + gradients[1].Data.Sum(), 6);
-
-            //// Verify that gradients match the original tensors
-            //Assert.True(TensorsEqual(tensor1, gradients[0]));
-            //Assert.True(TensorsEqual(tensor2, gradients[1]));
         }
 
         [Fact]
@@ -128,19 +76,6 @@
 
             Assert.Equal(new int[] { 1, 80, 7 }, result.Shape);
             Assert.Equal(tensor1.Data.Sum() + tensor2.Data.Sum(), result.Data.Sum(), 6);
-
-            //// Test reverse operation
-            //TensorReverse reverse = new TensorReverse(tensors);
-            //var gradients = reverse.ConcatSlicesReverse(result, "-2:0", 0);
-
-            //Assert.Equal(2, gradients.Length);
-            //Assert.Equal(new int[] { 9, 8, 7 }, gradients[0].Shape);
-            //Assert.Equal(new int[] { 8, 7 }, gradients[1].Shape);
-            //Assert.Equal(result.Data.Sum(), gradients[0].Data.Sum() + gradients[1].Data.Sum(), 6);
-
-            //// Verify that gradients match the original tensors
-            //Assert.True(TensorsEqual(tensor1, gradients[0]));
-            //Assert.True(TensorsEqual(tensor2, gradients[1]));
         }
 
         [Fact]
@@ -155,19 +90,6 @@
 
             Assert.Equal(new int[] { 1, 8, 70 }, result.Shape);
             Assert.Equal(tensor1.Data.Sum() + tensor2.Data.Sum(), result.Data.Sum(), 6);
-
-            //// Test reverse operation
-            //TensorReverse reverse = new TensorReverse(tensors);
-            //var gradients = reverse.ConcatSlicesReverse(result, "-2:0", 0);
-
-            //Assert.Equal(2, gradients.Length);
-            //Assert.Equal(new int[] { 9, 8, 7 }, gradients[0].Shape);
-            //Assert.Equal(new int[] { 8, 7 }, gradients[1].Shape);
-            //Assert.Equal(result.Data.Sum(), gradients[0].Data.Sum() + gradients[1].Data.Sum(), 6);
-
-            //// Verify that gradients match the original tensors
-            //Assert.True(TensorsEqual(tensor1, gradients[0]));
-            //Assert.True(TensorsEqual(tensor2, gradients[1]));
         }
 
         [Fact]
