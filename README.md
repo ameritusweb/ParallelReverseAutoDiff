@@ -967,6 +967,9 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `UpstreamGradient` | `Tensor` | Gets or sets the upstream gradient for backpropagation. | 
 | `SeedGradient` | `Tensor` | Gets or sets the gradient of the seed tensor. | 
 | `IsDependentBranch` | `bool` | Indicates whether this is a dependent branch in the computation graph. | 
+| `CurrentShape` | `int[]` | Gets the shape of the current tensor. | 
+| `Id` | `Guid` | Gets the unique identifier of the PradOp instance. |  
+| `Result` | `Tensor?` | Gets the result of the computation. | 
 
 ### Methods 
 
@@ -989,6 +992,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Log()` | Computes the base-10 logarithm of each element in the current tensor. | 
 | `Mean(int axis)` | Computes the mean along the specified axis in the current tensor. | 
 | `Reciprocal()` | Computes the reciprocal of each element in the current tensor. | 
+| `Clip(double min, double max)` | Clips values to the specified range. | 
+| `Exclude(double min, double max)` | Excludes values within the specified range. | 
+| `Sum(int[] axes)` | Sums the tensor along specified axes. | 
+| `BroadcastTo(int[] newShape)` | Broadcasts the tensor to a new shape. |
 
 #### Tensor Manipulation 
 
@@ -1043,6 +1050,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `ReshapeOp`
 - `TransposeOp`
 - `TileOp`
+- `ClipOp`
+- `ExcludeOp`
+- `SumOp`
+- `BroadcastToOp`
 
 ### PradResult.Then Method
 
