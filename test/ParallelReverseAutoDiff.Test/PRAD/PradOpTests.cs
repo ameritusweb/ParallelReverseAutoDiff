@@ -1,6 +1,7 @@
 ﻿using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Xunit;
 
@@ -627,6 +628,34 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Assert.Equal(new int[] { 1, 8000000 }, flatMagnitudes.Shape);
             Assert.Equal(new int[] { 1, 8000000 }, Ys.Shape);
             Assert.Equal(new int[] { 1, 8000000 }, Xs.Shape);
+        }
+
+        [Fact]
+        public void TestConcatSlices1()
+        {
+            Matrix input1 = new Matrix(2, 3, 4 );
+            input1.Initialize(InitializationType.Xavier);
+
+            Matrix input2 = new Matrix(5, 3, 4);
+            input2.Initialize(InitializationType.Xavier);
+
+            Matrix input3 = new Matrix(3, 3, 4);
+            input3.Initialize(InitializationType.Xavier);
+
+            var tensor1 = input1.ToTensor();
+            var tensor2 = input2.ToTensor();
+            var tensor3 = input3.ToTensor();
+
+            Tensor upstream = new Tensor(new int[] { 10, 3, 4 }, 1d);
+
+            var pradOp3 = new PradOp(tensor3);
+            var sq = pradOp3.Square();
+
+            var pradOp1 = new PradOp(tensor1);
+
+            var concatenatedSlices = pradOp1.ConcatSlices(new Tensor[] { tensor2, sq.Result }, "1:3", 0);
+
+            pradOp1.Back(upstream);
         }
 
         [Fact]

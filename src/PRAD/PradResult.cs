@@ -175,6 +175,20 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Applies the following operation.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
+        /// <param name="others">The other tensors.</param>
+        /// <param name="axisRange">The axis range.</param>
+        /// <param name="concatAxis">The concat axis.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<Tensor[], string, int, PradResult> operation, Tensor[] others, string axisRange, int concatAxis = 0)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<Tensor[], string, int, PradResult>>(operation);
+            return instanceOperation(others, axisRange, concatAxis);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
         /// <param name="indices">The indices.</param>
         /// <param name="axis">The axis.</param>
         /// <returns>A PradResult.</returns>

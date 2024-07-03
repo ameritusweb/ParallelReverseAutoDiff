@@ -57,6 +57,27 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
+        /// <param name="batches">The number of batches.</param>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="cols">The number of cols.</param>
+        public Matrix(int batches, int rows, int cols)
+        {
+            var rowSize = batches * rows;
+            this.matrix = new double[rowSize][];
+            for (int i = 0; i < rowSize; ++i)
+            {
+                this.matrix[i] = new double[cols];
+            }
+
+            this.UniqueId = PseudoUniqueIDGenerator.Instance.GetNextID();
+            this.shape = new[] { batches, rows, cols };
+            this.numDimensions = 3;
+            this.totalSize = batches * rows * cols;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
+        /// </summary>
         /// <param name="matrix">The matrix to initialize with.</param>
         public Matrix(double[][] matrix)
         {

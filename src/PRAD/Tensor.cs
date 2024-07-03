@@ -1668,6 +1668,23 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Parses the axis range string and returns the start and end values.
+        /// </summary>
+        /// <param name="axisRange">The axis range.</param>
+        /// <returns>The start and end values.</returns>
+        /// <exception cref="ArgumentException">Invalid axis range format.</exception>
+        internal static (int Start, int End) ParseAxisRange(string axisRange)
+        {
+            var parts = axisRange.Split(':');
+            if (parts.Length != 2 || !int.TryParse(parts[0], out var start) || !int.TryParse(parts[1], out var end))
+            {
+                throw new ArgumentException("Invalid axis range format. Use 'start:end'.");
+            }
+
+            return (start, end);
+        }
+
+        /// <summary>
         /// Determines the scenario based on the start, end, and concatAxis.
         /// </summary>
         /// <param name="start">The start.</param>
@@ -1916,20 +1933,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return Tensor.Concat(allSlices.ToArray(), concatAxis);
-        }
-
-        /// <summary>
-        /// Parses the axis range string and returns the start and end values.
-        /// </summary>
-        private static (int, int) ParseAxisRange(string axisRange)
-        {
-            var parts = axisRange.Split(':');
-            if (parts.Length != 2 || !int.TryParse(parts[0], out var start) || !int.TryParse(parts[1], out var end))
-            {
-                throw new ArgumentException("Invalid axis range format. Use 'start:end'.");
-            }
-
-            return (start, end);
         }
 
         private static int[] CalculateStrides(int[] shape)
