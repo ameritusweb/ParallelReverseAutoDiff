@@ -1159,12 +1159,34 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("The lengths of begin, size, and strides must match the number of dimensions of the tensor.");
             }
 
-            strides = strides ?? new int[inputTensor.Shape.Length];
+            strides = strides ?? Enumerable.Repeat(1, inputTensor.Shape.Length).ToArray();
             for (int i = 0; i < inputTensor.Shape.Length; i++)
             {
                 if (strides[i] == 0)
                 {
-                    strides[i] = 1;
+                    throw new ArgumentException("Stride cannot be zero.");
+                }
+            }
+
+            // Adjust begin indices for negative values and calculate the effective size if size is negative
+            int[] adjustedBegin = (int[])begin.Clone();
+            int[] effectiveSize = (int[])size.Clone();
+            for (int i = 0; i < inputTensor.Shape.Length; i++)
+            {
+                if (adjustedBegin[i] < 0)
+                {
+                    adjustedBegin[i] += inputTensor.Shape[i];
+                }
+
+                if (effectiveSize[i] < 0)
+                {
+                    effectiveSize[i] = (inputTensor.Shape[i] - adjustedBegin[i]) / Math.Abs(strides[i]);
+                }
+
+                if (adjustedBegin[i] < 0 || adjustedBegin[i] >= inputTensor.Shape[i] ||
+                    (adjustedBegin[i] + ((effectiveSize[i] - 1) * strides[i]) < 0 || adjustedBegin[i] + ((effectiveSize[i] - 1) * strides[i]) >= inputTensor.Shape[i]))
+                {
+                    throw new ArgumentException("The slice extends beyond the boundaries of the tensor.");
                 }
             }
 
@@ -1178,10 +1200,24 @@ namespace ParallelReverseAutoDiff.PRAD
                 int[] sourceIndices = new int[resultIndices.Length];
                 for (int i = 0; i < resultIndices.Length; i++)
                 {
-                    sourceIndices[i] = begin[i] + (resultIndices[i] * strides[i]);
+                    sourceIndices[i] = adjustedBegin[i] + (resultIndices[i] * strides[i]);
                 }
 
-                inputGradient[sourceIndices] += upstreamGradient[resultIndices];
+                // Ensure the source indices are within the bounds of the input tensor
+                bool withinBounds = true;
+                for (int i = 0; i < sourceIndices.Length; i++)
+                {
+                    if (sourceIndices[i] < 0 || sourceIndices[i] >= inputTensor.Shape[i])
+                    {
+                        withinBounds = false;
+                        break;
+                    }
+                }
+
+                if (withinBounds)
+                {
+                    inputGradient[sourceIndices] += upstreamGradient[resultIndices];
+                }
             });
 
             return inputGradient;

@@ -152,6 +152,51 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Slice 3-D tensors to form tensors of the specified slice sizes.
+        /// </summary>
+        /// <param name="tensors">The tensors.</param>
+        /// <param name="sliceSizes">The slice sizes.</param>
+        /// <returns>The tensor list.</returns>
+        /// <exception cref="ArgumentException">Slice sizes must be a 3-tuple.</exception>
+        public static List<Tensor> Slice3DTensors(Tensor[] tensors, int[] sliceSizes)
+        {
+            if (sliceSizes.Length != 3)
+            {
+                throw new ArgumentException("Slice sizes must be a 3-tuple.");
+            }
+
+            var slices = new List<Tensor>();
+
+            foreach (var tensor in tensors)
+            {
+                if (tensor.Shape.Length != 3)
+                {
+                    throw new ArgumentException("All input tensors must be 3-dimensional.");
+                }
+
+                // Calculate the number of slices for each dimension
+                int[] numSlices = tensor.CalculateNumberOfSlices(sliceSizes);
+
+                // Generate all possible slice start indices
+                List<int[]> indicesList = tensor.GenerateSliceStartIndices(numSlices);
+
+                // Extract slices
+                foreach (var start in indicesList)
+                {
+                    for (int i = 0; i < start.Length; i++)
+                    {
+                        start[i] *= sliceSizes[i];
+                    }
+
+                    var sliceTensor = tensor.Slice(start, sliceSizes);
+                    slices.Add(sliceTensor);
+                }
+            }
+
+            return slices;
+        }
+
+        /// <summary>
         /// Creates a stack of tensors along a specified axis.
         /// </summary>
         /// <param name="tensors">Tensors.</param>
@@ -1330,7 +1375,7 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Extracts a slice from the tensor based on begin, size, and optional strides.
+        /// Extracts a slice from the tensor based on start indices, slice sizes, and optional strides.
         /// </summary>
         /// <param name="begin">The starting indices for each axis.</param>
         /// <param name="size">The lengths of the slice along each axis.</param>
@@ -1343,12 +1388,12 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("The lengths of begin, size, and strides must match the number of dimensions of the tensor.");
             }
 
-            strides = strides ?? new int[this.Shape.Length];
+            strides = strides ?? Enumerable.Repeat(1, this.Shape.Length).ToArray();
             for (int i = 0; i < this.Shape.Length; i++)
             {
                 if (strides[i] == 0)
                 {
-                    strides[i] = 1;
+                    throw new ArgumentException("Stride cannot be zero.");
                 }
             }
 
@@ -1362,10 +1407,11 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 if (size[i] < 0)
                 {
-                    size[i] = this.Shape[i] - begin[i];
+                    size[i] = (this.Shape[i] - begin[i]) / Math.Abs(strides[i]);
                 }
 
-                if (begin[i] + (size[i] * strides[i]) > this.Shape[i])
+                if (begin[i] < 0 || begin[i] >= this.Shape[i] ||
+                    (begin[i] + ((size[i] - 1) * strides[i]) < 0 || begin[i] + ((size[i] - 1) * strides[i]) >= this.Shape[i]))
                 {
                     throw new ArgumentException("The slice extends beyond the boundaries of the tensor.");
                 }
@@ -1374,6 +1420,7 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             var result = new Tensor(resultShape);
+
             Parallel.For(0, this.GetTotalSize(resultShape), resultIndex =>
             {
                 int[] resultIndices = this.GetMultiDimensionalIndices(resultIndex, resultShape);
@@ -1636,6 +1683,39 @@ namespace ParallelReverseAutoDiff.PRAD
             this.CopyData(this, result, start, end, step, isSlice, new int[this.Shape.Length], new int[newShape.Length], 0);
 
             return result;
+        }
+
+        /// <summary>
+        /// Calculates the number of slices for each dimension based on the specified slice sizes.
+        /// </summary>
+        /// <param name="sliceSizes">The sizes of each slice for each dimension.</param>
+        /// <returns>The number of slices for each dimension.</returns>
+        public int[] CalculateNumberOfSlices(int[] sliceSizes)
+        {
+            if (sliceSizes.Length != this.Shape.Length)
+            {
+                throw new ArgumentException("Slice sizes length must match the tensor shape length.");
+            }
+
+            var numSlices = new int[this.Shape.Length];
+            for (int i = 0; i < this.Shape.Length; i++)
+            {
+                numSlices[i] = (int)Math.Ceiling((double)this.Shape[i] / sliceSizes[i]);
+            }
+
+            return numSlices;
+        }
+
+        /// <summary>
+        /// Generates all possible slice start indices based on the number of slices for each dimension.
+        /// </summary>
+        /// <param name="numSlices">The number of slices for each dimension.</param>
+        /// <returns>A list of slice start indices for each dimension.</returns>
+        public List<int[]> GenerateSliceStartIndices(int[] numSlices)
+        {
+            var indicesList = new List<int[]>();
+            this.GenerateIndicesRecursively(new int[numSlices.Length], 0, numSlices, indicesList);
+            return indicesList;
         }
 
         /// <summary>
@@ -1945,6 +2025,21 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        private void GenerateIndicesRecursively(int[] currentIndex, int dim, int[] numSlices, List<int[]> indicesList)
+        {
+            if (dim == numSlices.Length)
+            {
+                indicesList.Add((int[])currentIndex.Clone());
+                return;
+            }
+
+            for (int i = 0; i < numSlices[dim]; i++)
+            {
+                currentIndex[dim] = i;
+                this.GenerateIndicesRecursively(currentIndex, dim + 1, numSlices, indicesList);
+            }
         }
 
         private void CopyData(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices, int currentDim)
