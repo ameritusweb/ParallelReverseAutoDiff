@@ -263,6 +263,26 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <returns>A new PradResult after applying the operation.</returns>
+        public PradResult Then(Func<PradResult, PradResult> operation)
+        {
+            return operation(this);
+        }
+
+        /// <summary>
+        /// Applies the specified operations to this PradResult.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <returns>New PradResult instances after applying the operation.</returns>
+        public PradResult[] Then(Func<PradResult, PradResult[]> operation)
+        {
+            return operation(this);
+        }
+
+        /// <summary>
         /// Executes multiple operations in parallel on the current PradResult.
         /// </summary>
         /// <param name="operations">An array of functions, each taking a PradResult and returning a PradResult.</param>

@@ -527,7 +527,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var result = this.currentTensor.MatrixMultiply(tensor);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
 
-            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            var grad = new Tensor[] { new Tensor(this.currentTensor.Shape), new Tensor(tensor.Shape) };
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradients = tensorReverse.MatrixMultiplyReverse(upstreamGrad);

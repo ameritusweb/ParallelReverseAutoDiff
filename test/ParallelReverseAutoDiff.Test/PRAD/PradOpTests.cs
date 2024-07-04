@@ -1838,5 +1838,54 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             var gradient = pradOp.Back(upstreamGradient);
         }
+
+        [Fact]
+        public void TestThenParallel2()
+        {
+            // Define input and weights
+            var input = new Tensor(new int[] { 1, 4 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
+            var weights = new Tensor(new int[] { 4, 3 }, new double[] {
+                0.1, 0.2, 0.3,
+                0.4, 0.5, 0.6,
+                0.7, 0.8, 0.9,
+                1.0, 1.1, 1.2
+            });
+            var bias = new Tensor(new int[] { 1, 3 }, new double[] { 0.1, 0.2, 0.3 });
+
+            // Create PradOp instance
+            var pradOp = new PradOp(input);
+
+            PradResult? weightsResult = null;
+            PradResult? biasResult = null;
+
+            // Compute layer output with multiple activations
+            var result = pradOp.MatMul(weights)
+                .Then(result => {
+                    weightsResult = result;
+                    return result.Then(PradOp.AddOp, bias);
+                })
+                .Then(result => {
+                    biasResult = result;
+                    return result.ThenParallel(
+                        result => result.Then(PradOp.SinOp),       // Sine activation
+                        result => result.Then(PradOp.ReciprocalOp).Then(PradOp.AddOp, new Tensor(new int[] { 1, 3 }, 1)),
+                        result => result.Then(PradOp.ExpOp));        // Exponential activation
+                })
+                .Then(activations => {
+                    // Compute weighted sum of activations
+                    var weights = new Tensor(new int[] { 3 }, new double[] { 0.3, 0.3, 0.4 });
+                    return activations
+                        .Select((act, i) => act.PradOp.Mul(weights.Indexer($"{i}").BroadcastTo(new int[] { 1, 3 })))
+                        .Aggregate((a, b) => a.PradOp.Add(b.Result));
+                });
+
+            // Compute gradient
+            var upstreamGradient = new Tensor(new int[] { 1, 3 }, new double[] { 1, 1, 1 });
+            var gradient = pradOp.Back(upstreamGradient);
+
+            // Access results and gradients
+            Console.WriteLine("Layer output: " + result.Result);
+            Console.WriteLine("Input gradient: " + gradient);
+        }
     }
 }
