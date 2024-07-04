@@ -967,6 +967,9 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `UpstreamGradient` | `Tensor` | Gets or sets the upstream gradient for backpropagation. | 
 | `SeedGradient` | `Tensor` | Gets or sets the gradient of the seed tensor. | 
 | `IsDependentBranch` | `bool` | Indicates whether this is a dependent branch in the computation graph. | 
+| `CurrentShape` | `int[]` | Gets the shape of the current tensor. | 
+| `Id` | `Guid` | Gets the unique identifier of the PradOp instance. |  
+| `Result` | `Tensor?` | Gets the result of the computation. | 
 
 ### Methods 
 
@@ -976,8 +979,11 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 |--------|-------------| 
 | `Add(Tensor tensor)` | Adds the given tensor to the current tensor element-wise. | 
 | `Sub(Tensor tensor)` | Subtracts the given tensor from the current tensor element-wise. | 
+| `SubFrom(Tensor tensor)` | Subtracts the current tensor from the given tensor element-wise. | 
 | `Mul(Tensor tensor)` | Multiplies the current tensor by the given tensor element-wise. | 
 | `Div(Tensor tensor)` | Divides the current tensor by the given tensor element-wise. | 
+| `DivInto(Tensor tensor)` | Divides the given tensor by the current tensor element-wise. | 
+| `MatMul(Tensor tensor)` | Performs matrix multiplication of the current tensor with the given tensor. | 
 | `Sin()` | Computes the sine of each element in the current tensor. | 
 | `Cos()` | Computes the cosine of each element in the current tensor. | 
 | `Atan2(Tensor tensor)` | Computes the arctangent of the quotient of the current tensor and the given tensor. | 
@@ -989,6 +995,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Log()` | Computes the base-10 logarithm of each element in the current tensor. | 
 | `Mean(int axis)` | Computes the mean along the specified axis in the current tensor. | 
 | `Reciprocal()` | Computes the reciprocal of each element in the current tensor. | 
+| `Clip(double min, double max)` | Clips values to the specified range. | 
+| `Exclude(double min, double max)` | Excludes values within the specified range. | 
+| `Sum(int[] axes)` | Sums the tensor along specified axes. | 
+| `BroadcastTo(int[] newShape)` | Broadcasts the tensor to a new shape. |
 
 #### Tensor Manipulation 
 
@@ -1022,8 +1032,11 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `SquareRootOp` 
 - `AddOp` 
 - `MulOp` 
-- `SubOp` 
+- `SubOp`
+- `SubFromOp`
 - `DivOp`
+- `DivIntoOp`
+- `MatMulOp`
 - `ExpandDimsOp`
 - `SinOp` 
 - `CosOp`
@@ -1043,6 +1056,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `ReshapeOp`
 - `TransposeOp`
 - `TileOp`
+- `ClipOp`
+- `ExcludeOp`
+- `SumOp`
+- `BroadcastToOp`
 
 ### PradResult.Then Method
 
@@ -1053,6 +1070,8 @@ The `Then` method in `PradResult` is a powerful feature that allows for elegant 
 ```csharp
 public PradResult Then(Delegate operation, Tensor? other = null)
 public PradResult Then(Delegate operation, Tensor[] others, int axis = 0)
+public PradResult Then(Func<PradResult[], PradResult> operation)
+public PradResult[] Then(Func<PradResult[], PradResult[]> operation)
 ```
 
 #### Functionality
@@ -1064,6 +1083,22 @@ public PradResult Then(Delegate operation, Tensor[] others, int axis = 0)
 3. **Flexible Input**: The method can handle operations that require no additional input, a single additional tensor, or multiple additional tensors and an axis.
 
 4. **Dynamic Dispatch**: The method uses the `GetOperation<T>` method of `PradOp` to dynamically retrieve the correct instance method based on the static delegate provided.
+
+ ### PradResult.ThenParallel Method
+
+ The `ThenParallel` method allows for parallel execution of multiple operations on the same PradResult. This is useful for creating branching computational graphs where multiple operations are performed on the same input.
+
+ #### Method Signature
+
+ ```csharp
+ public PradResult[] ThenParallel(params Func<PradResult, PradResult>[] operations)
+ ```
+
+ #### Functionality
+
+ 1. **Parallel Execution**: The method executes multiple operations in parallel, each operating on a copy of the current PradResult.
+ 2. **Branching**: It creates multiple branches in the computation graph, allowing for different operations to be applied to the same input.
+ 3. **Result Aggregation**: Returns an array of PradResult instances, one for each parallel operation.
 
 ### Usage Examples 
 
@@ -1106,6 +1141,66 @@ var (result1, result2) = pradOp.DoParallel(
     x => x.Cos()
 );
 ```
+
+Here is a neural network layer with multiple activations:
+
+This example demonstrates how to use ThenParallel and the Then overloads to compute a neural network layer with multiple activation functions in parallel.
+
+```csharp
+// Define input and weights
+var input = new Tensor(new int[] { 1, 4 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
+var weights = new Tensor(new int[] { 4, 3 }, new double[] { 
+    0.1, 0.2, 0.3,
+    0.4, 0.5, 0.6,
+    0.7, 0.8, 0.9,
+    1.0, 1.1, 1.2
+});
+var bias = new Tensor(new int[] { 1, 3 }, new double[] { 0.1, 0.2, 0.3 });
+
+// Create PradOp instance
+var pradOp = new PradOp(input);
+
+PradResult? weightsResult = null;
+PradResult? biasResult = null;
+
+// Compute layer output with multiple activations
+var result = pradOp.MatMul(weights)
+    .Then(result => {
+        weightsResult = result;
+        return result.Then(PradOp.AddOp, bias);
+    })
+    .Then(result => {
+        biasResult = result;
+        return result.ThenParallel(
+            result => result.Then(PradOp.SinOp),       // Sine activation
+            result => result.Then(PradOp.ReciprocalOp).Then(PradOp.AddOp, new Tensor(new int[] { 1, 3 }, 1)),
+            result => result.Then(PradOp.ExpOp));        // Exponential activation
+    })
+    .Then(activations => {
+        // Compute weighted sum of activations
+        var weights = new Tensor(new int[] { 3 }, new double[] { 0.3, 0.3, 0.4 });
+        return activations
+            .Select((act, i) => act.PradOp.Mul(weights.Indexer($"{i}").BroadcastTo(new int[] { 1, 3 })))
+            .Aggregate((a, b) => a.PradOp.Add(b.Result));
+    });
+
+// Compute gradient
+var upstreamGradient = new Tensor(new int[] { 1, 3 }, new double[] { 1, 1, 1 });
+var gradient = pradOp.Back(upstreamGradient);
+
+// Access results and gradients
+Console.WriteLine("Layer output: " + result.Result);
+Console.WriteLine("Input gradient: " + gradient);
+```
+
+This example showcases:
+
+1. **Matrix Multiplication and Bias Addition**: Simulating a basic neural network layer computation.
+2. **Parallel Activation Functions**: Using ThenParallel to apply multiple activation functions to the layer output simultaneously.
+3. **Result Aggregation**: Using the Then method to combine the results of multiple activations with a weighted sum.
+4. **Gradient Computation**: Demonstrating how gradients can be computed through this complex computation graph.
+
+This example illustrates how ThenParallel and the Then overloads can be used to create more complex and flexible computational graphs, such as those found in advanced neural network architectures with multiple parallel pathways.
 
 #### Custom Operations 
 
