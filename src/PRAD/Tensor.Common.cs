@@ -85,51 +85,6 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Concatenates slices of the input tensors along the specified axis.
-        /// </summary>
-        /// <param name="tensors">The array of tensors to be concatenated.</param>
-        /// <param name="axisRange">The range of axes to be considered for slicing, formatted as "start:end".</param>
-        /// <param name="concatAxis">The axis along which the concatenation is performed.</param>
-        /// <returns>A new tensor that is the result of concatenating the input tensors along the specified axis.</returns>
-        /// <exception cref="ArgumentException">Thrown when no tensors are provided or when invalid axis range or concat axis are specified.</exception>
-        public static Tensor ConcatSlices(Tensor[] tensors, string axisRange, int concatAxis)
-        {
-            if (tensors == null || tensors.Length == 0)
-            {
-                throw new ArgumentException("At least one tensor must be provided.");
-            }
-
-            (int start, int end) = ParseAxisRange(axisRange);
-            int maxRank = tensors.Max(t => t.Shape.Length);
-
-            // Adjust negative indices
-            start = start < 0 ? maxRank + start : start;
-            end = end <= 0 ? maxRank + end : end;
-
-            // Ensure end is not less than start
-            end = Math.Max(end, start);
-
-            if (start < 0 || start >= maxRank || end > maxRank || start >= end || concatAxis < 0 || concatAxis >= maxRank)
-            {
-                throw new ArgumentException("Invalid axis range or concat axis.");
-            }
-
-            int scenario = DetermineScenario(start, end, concatAxis, maxRank);
-
-            return scenario switch
-            {
-                1 => StandardConcat(tensors, concatAxis),
-                2 => ConcatByUnstackAndExpand(tensors, 0, 0),
-                3 => ConcatByUnstackAndExpand(tensors, 0, 1),
-                4 => ConcatByUnstackAndExpand(tensors, 0, 1, true),
-                5 => ConcatByExpansion(tensors, 0),
-                6 => ConcatByUnstackAndExpand(tensors, 0, -2, false, true),
-                7 => ConcatByUnstackAndExpand(tensors, 0, -1, true),
-                _ => throw new NotImplementedException($"Scenario {scenario} not implemented."),
-            };
-        }
-
-        /// <summary>
         /// Computes the element-wise reciprocal of the tensor.
         /// </summary>
         /// <returns>The resultant tensor.</returns>
@@ -1121,68 +1076,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return newShape.ToArray();
-        }
-
-        /// <summary>
-        /// Concatenates tensors along a specific axis.
-        /// </summary>
-        private static Tensor StandardConcat(Tensor[] tensors, int concatAxis)
-        {
-            return Tensor.Concat(tensors, concatAxis);
-        }
-
-        /// <summary>
-        /// Concatenates tensors by unstacking along a specified axis, expanding dimensions, and concatenating.
-        /// </summary>
-        private static Tensor ConcatByUnstackAndExpand(Tensor[] tensors, int unstackAxis, int concatAxis, bool expandDim = false, bool expandDimAtEnd = false)
-        {
-            var maxRank = tensors.Max(t => t.Shape.Length);
-            var allSlices = new List<Tensor>();
-            foreach (var tensor in tensors)
-            {
-                if (tensor.Shape.Length == maxRank)
-                {
-                    var unstackedSlices = tensor.Unstack(unstackAxis);
-                    foreach (var slice in unstackedSlices)
-                    {
-                        allSlices.Add(expandDim ? slice.ExpandDims(0) : slice);
-                    }
-                }
-                else
-                {
-                    allSlices.Add(expandDim ? tensor.ExpandDims(0) : tensor);
-                }
-            }
-
-            var result = Tensor.Concat(allSlices.ToArray(), concatAxis);
-
-            if (expandDimAtEnd)
-            {
-                result = result.ExpandDims(0);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Concatenates tensors by expanding them to match the maximum rank.
-        /// </summary>
-        private static Tensor ConcatByExpansion(Tensor[] tensors, int concatAxis)
-        {
-            var allSlices = new List<Tensor>();
-            foreach (var tensor in tensors)
-            {
-                if (tensor.Shape.Length == 2)
-                {
-                    allSlices.Add(tensor.ExpandDims(0));
-                }
-                else
-                {
-                    allSlices.Add(tensor);
-                }
-            }
-
-            return Tensor.Concat(allSlices.ToArray(), concatAxis);
         }
 
         private static int[] CalculateStrides(int[] shape)

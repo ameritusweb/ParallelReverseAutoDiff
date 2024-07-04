@@ -30,6 +30,18 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Initializes a new instance of the <see cref="Tensor"/> class.
         /// </summary>
+        /// <param name="original">The original tensor.</param>
+        public Tensor(Tensor original)
+        {
+            this.Shape = new int[original.Shape.Length];
+            Array.Copy(original.Shape, this.Shape, original.Shape.Length);
+            this.Data = new float[original.Data.Length];
+            Buffer.BlockCopy(original.Data, 0, this.Data, 0, original.Data.Length * sizeof(float));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tensor"/> class.
+        /// </summary>
         /// <param name="shape">The shape.</param>
         /// <param name="data">The data.</param>
         /// <exception cref="ArgumentException">The data length does not match.</exception>

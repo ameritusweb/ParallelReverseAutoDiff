@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>ParallelReverseAutoDiffLite</id>
-    <version>1.2.4.1</version>
+    <version>1.2.5.1</version>
     <authors>ameritusweb</authors>
     <owners>ameritusweb</owners>
     <license type="expression">LGPL-2.1-only</license>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight library for parallelized reverse mode automatic differentiation in C# for custom neural network development using single-precision.</description>
 	<repository type="git" url="https://github.com/ameritusweb/ParallelReverseAutoDiff.git" commit="0a9bbd18f45c4f4434160a7c064539f29f3a3c67" />
-    <releaseNotes>Add Clip.</releaseNotes>
+    <releaseNotes>Add SubFrom and DivInto.</releaseNotes>
     <copyright>ameritusweb, 2024</copyright>
     <tags>autodiff automatic-differentiation parallel reverse-mode differentiation C# neural network</tags>
     <dependencies>

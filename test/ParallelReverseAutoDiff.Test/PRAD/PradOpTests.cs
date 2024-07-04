@@ -1,7 +1,6 @@
 ﻿using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Xunit;
 
@@ -628,34 +627,6 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Assert.Equal(new int[] { 1, 8000000 }, flatMagnitudes.Shape);
             Assert.Equal(new int[] { 1, 8000000 }, Ys.Shape);
             Assert.Equal(new int[] { 1, 8000000 }, Xs.Shape);
-        }
-
-        [Fact]
-        public void TestConcatSlices1()
-        {
-            Matrix input1 = new Matrix(2, 3, 4 );
-            input1.Initialize(InitializationType.Xavier);
-
-            Matrix input2 = new Matrix(5, 3, 4);
-            input2.Initialize(InitializationType.Xavier);
-
-            Matrix input3 = new Matrix(3, 3, 4);
-            input3.Initialize(InitializationType.Xavier);
-
-            var tensor1 = input1.ToTensor();
-            var tensor2 = input2.ToTensor();
-            var tensor3 = input3.ToTensor();
-
-            Tensor upstream = new Tensor(new int[] { 10, 3, 4 }, 1d);
-
-            var pradOp3 = new PradOp(tensor3);
-            var sq = pradOp3.Square();
-
-            var pradOp1 = new PradOp(tensor1);
-
-            var concatenatedSlices = pradOp1.ConcatSlices(new Tensor[] { tensor2, sq.Result }, "1:3", 0);
-
-            pradOp1.Back(upstream);
         }
 
         [Fact]
@@ -1759,6 +1730,47 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             pradOp.Back(upstreamGradient);
 
             Assert.Equal(new double[] { 2, 4, 6, 8 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestElementwiseSubFrom()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 5, 6, 7, 8 });
+            var tensorToSubFrom = new Tensor(new int[] { 2, 2 }, new double[] { 10, 11, 12, 13 });
+            var pradOp = new PradOp(seed);
+
+            var result = pradOp.SubFrom(tensorToSubFrom);
+
+            Assert.Equal(new double[] { 5, 5, 5, 5 }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            pradOp.Back(upstreamGradient);
+
+            Assert.Equal(new double[] { -1, -1, -1, -1 }, result.Gradients[0].Data);
+            Assert.Equal(new double[] { 1, 1, 1, 1 }, result.Gradients[1].Data);
+        }
+
+        [Fact]
+        public void TestElementwiseDivInto()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 2, 4, 8, 16 });
+            var tensorToDivInto = new Tensor(new int[] { 2, 2 }, new double[] { 10, 20, 40, 80 });
+            var pradOp = new PradOp(seed);
+
+            var result = pradOp.DivInto(tensorToDivInto);
+
+            Assert.Equal(new double[] { 5, 5, 5, 5 }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            pradOp.Back(upstreamGradient);
+
+            // The gradient for the denominator (seed) should be -numerator / denominator^2
+            Assert.Equal(new double[] { -2.5, -1.25, -0.625, -0.3125 }, result.Gradients[0].Data);
+
+            // The gradient for the numerator (tensorToDivInto) should be 1 / denominator
+            Assert.Equal(new double[] { 0.5, 0.25, 0.125, 0.0625 }, result.Gradients[1].Data);
         }
     }
 }

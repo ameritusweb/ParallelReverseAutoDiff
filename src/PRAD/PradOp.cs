@@ -154,11 +154,6 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> Atan2Op => FuncOp.Atan2;
 
         /// <summary>
-        /// Gets the concat slices op.
-        /// </summary>
-        public static Func<Tensor[], string, int, PradResult> ConcatSlicesOp => FuncOp.ConcatSlices;
-
-        /// <summary>
         /// Gets the stack op.
         /// </summary>
         public static Func<Tensor[], int, PradResult> StackOp => FuncOp.Stack;
@@ -489,7 +484,7 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradResult SubFrom(Tensor tensor)
         {
             var result = tensor.ElementwiseSub(this.currentTensor);
-            var tensorReverse = new TensorReverse(new Tensor[] { tensor, this.currentTensor });
+            var tensorReverse = new TensorReverse(new Tensor[] { tensor, new Tensor(this.currentTensor) });
 
             var grad = Tensor.ToTensorArray(2, tensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
@@ -594,7 +589,7 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradResult Div(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseDivide(tensor);
-            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+            var tensorReverse = new TensorReverse(new Tensor[] { new Tensor(this.currentTensor) });
 
             var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
@@ -628,15 +623,16 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(DivIntoOp))]
         public PradResult DivInto(Tensor tensor)
         {
+            var denominator = new Tensor(this.currentTensor);
             var result = tensor.ElementwiseDivide(this.currentTensor);
             var tensorReverse = new TensorReverse(new Tensor[] { tensor });
 
             var grad = Tensor.ToTensorArray(2, tensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradients = tensorReverse.ElementwiseDivideReverse(upstreamGrad, this.currentTensor);
+                var gradients = tensorReverse.ElementwiseDivideReverse(upstreamGrad, denominator);
                 PradOp?[] ops = new PradOp?[2];
-                var tensors = new Tensor[] { this.currentTensor, tensor };
+                var tensors = new Tensor[] { denominator, tensor };
                 for (int i = 0; i < grad.Length; i++)
                 {
                     var tensor = tensors[i];
@@ -1336,48 +1332,6 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Concatenates slices of the input tensors along the specified axis.
-        /// </summary>
-        /// <param name="tensors">The array of tensors to be concatenated.</param>
-        /// <param name="axisRange">The range of axes to be considered for slicing, formatted as "start:end".</param>
-        /// <param name="concatAxis">The axis along which the concatenation is performed.</param>
-        /// <returns>A new tensor that is the result of concatenating the input tensors along the specified axis.</returns>
-        [PradOperation(nameof(ConcatSlicesOp))]
-        public PradResult ConcatSlices(Tensor[] tensors, string axisRange, int concatAxis)
-        {
-            var combinedTensors = new Tensor[tensors.Length + 1];
-            combinedTensors[0] = this.currentTensor;
-            Array.Copy(tensors, 0, combinedTensors, 1, tensors.Length);
-
-            var pradOps = combinedTensors.Select(x => new PradOp(x));
-
-            var result = PradOp.ConcatSlicesPradOp(pradOps.ToArray(), axisRange, concatAxis);
-
-            var grads = combinedTensors.Select(t => new Tensor(t.Shape)).ToArray();
-            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
-            {
-                result.Back(upstreamGrad);
-                var gradients = pradOps.Select(x => x.SeedGradient).ToArray();
-                PradOp?[] ops = new PradOp?[combinedTensors.Length];
-                for (int i = 0; i < grads.Length; i++)
-                {
-                    var tensor = combinedTensors[i];
-                    if (tensor is PradTensor pradTensor)
-                    {
-                        ops[i] = pradTensor.PradOp;
-                    }
-                }
-
-                return (gradients, ops);
-            };
-
-            var pradResult = new PradResult(this, result.Result, grads);
-            this.backpropagationSteps.Add((backpropStep, pradResult));
-            this.currentTensor = result.Result;
-            return pradResult;
-        }
-
-        /// <summary>
         /// Concatenates the current tensor with other tensors along a specified axis and records the operation for backpropagation.
         /// </summary>
         /// <param name="tensors">The tensors to concatenate.</param>
@@ -1560,51 +1514,6 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Concatenates slices of the input tensors along the specified axis.
-        /// </summary>
-        /// <param name="tensors">The array of tensors to be concatenated.</param>
-        /// <param name="axisRange">The range of axes to be considered for slicing, formatted as "start:end".</param>
-        /// <param name="concatAxis">The axis along which the concatenation is performed.</param>
-        /// <returns>A new tensor that is the result of concatenating the input tensors along the specified axis.</returns>
-        /// <exception cref="ArgumentException">Thrown when no tensors are provided or when invalid axis range or concat axis are specified.</exception>
-        internal static PradResult ConcatSlicesPradOp(PradOp[] tensors, string axisRange, int concatAxis)
-        {
-            if (tensors == null || tensors.Length == 0)
-            {
-                throw new ArgumentException("At least one tensor must be provided.");
-            }
-
-            (int start, int end) = Tensor.ParseAxisRange(axisRange);
-            int maxRank = tensors.Max(t => t.CurrentShape.Length);
-
-            // Adjust negative indices
-            start = start < 0 ? maxRank + start : start;
-            end = end <= 0 ? maxRank + end : end;
-
-            // Ensure end is not less than start
-            end = Math.Max(end, start);
-
-            if (start < 0 || start >= maxRank || end > maxRank || start >= end || concatAxis < 0 || concatAxis >= maxRank)
-            {
-                throw new ArgumentException("Invalid axis range or concat axis.");
-            }
-
-            int scenario = Tensor.DetermineScenario(start, end, concatAxis, maxRank);
-
-            return scenario switch
-            {
-                1 => StandardConcatPradOp(tensors, concatAxis),
-                2 => ConcatByUnstackAndExpandPradOp(tensors, 0, 0),
-                3 => ConcatByUnstackAndExpandPradOp(tensors, 0, 1),
-                4 => ConcatByUnstackAndExpandPradOp(tensors, 0, 1, true),
-                5 => ConcatByExpansionPradOp(tensors, 0),
-                6 => ConcatByUnstackAndExpandPradOp(tensors, 0, -2, false, true),
-                7 => ConcatByUnstackAndExpandPradOp(tensors, 0, -1, true),
-                _ => throw new NotImplementedException($"Scenario {scenario} not implemented."),
-            };
-        }
-
-        /// <summary>
         /// Is the result currently associated with the PradOp instance.
         /// </summary>
         /// <param name="result">The result.</param>
@@ -1692,59 +1601,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             throw new KeyNotFoundException("Operation not found.");
-        }
-
-        private static PradResult StandardConcatPradOp(PradOp[] tensors, int concatAxis)
-        {
-            return tensors[0].Concat(tensors.Skip(1).Select(t => t.GetCurrentTensor()).ToArray(), concatAxis);
-        }
-
-        private static PradResult ConcatByUnstackAndExpandPradOp(PradOp[] tensors, int unstackAxis, int concatAxis, bool expandDim = false, bool expandDimAtEnd = false)
-        {
-            var maxRank = tensors.Max(t => t.CurrentShape.Length);
-            var allSlices = new List<PradResult>();
-            foreach (var tensor in tensors)
-            {
-                if (tensor.CurrentShape.Length == maxRank)
-                {
-                    var unstackedSlices = tensor.Split(tensor.CurrentShape[unstackAxis], unstackAxis);
-                    foreach (var slice in unstackedSlices)
-                    {
-                        allSlices.Add(expandDim ? slice.ExpandDims(0) : slice.NoOp());
-                    }
-                }
-                else
-                {
-                    allSlices.Add(expandDim ? tensor.ExpandDims(0) : tensor.NoOp());
-                }
-            }
-
-            var result = allSlices[0].Then(PradOp.ConcatOp, allSlices.Skip(1).Select(s => s.Result).ToArray(), concatAxis);
-
-            if (expandDimAtEnd)
-            {
-                result = result.Then(PradOp.ExpandDimsOp, 0);
-            }
-
-            return result;
-        }
-
-        private static PradResult ConcatByExpansionPradOp(PradOp[] tensors, int concatAxis)
-        {
-            var allSlices = new List<PradResult>();
-            foreach (var tensor in tensors)
-            {
-                if (tensor.CurrentShape.Length == 2)
-                {
-                    allSlices.Add(tensor.ExpandDims(0));
-                }
-                else
-                {
-                    allSlices.Add(tensor.NoOp());
-                }
-            }
-
-            return allSlices[0].Then(PradOp.ConcatOp, allSlices.Skip(1).Select(s => s.Result).ToArray(), concatAxis);
         }
 
         /// <summary>
