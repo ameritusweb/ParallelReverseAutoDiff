@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The result of the computation.
@@ -245,6 +246,60 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             var instanceOperation = this.PradOp.GetOperation<Func<string[], PradResult>>(operation);
             return instanceOperation(array);
+        }
+
+        /// <summary>
+        /// Applies a custom operation.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="forward">The forward function.</param>
+        /// <param name="backward">The backward function.</param>
+        /// <param name="outputShape">The output shape.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[], PradResult> operation, Func<Tensor, Tensor> forward, Func<Tensor, Tensor, Tensor, Tensor[]> backward, params int[] outputShape)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[], PradResult>>(operation);
+            return instanceOperation(forward, backward, outputShape);
+        }
+
+        /// <summary>
+        /// Executes multiple operations in parallel on the current PradResult.
+        /// </summary>
+        /// <param name="operations">An array of functions, each taking a PradResult and returning a PradResult.</param>
+        /// <returns>An array of PradResults, one for each parallel operation.</returns>
+        /// <exception cref="ArgumentException">Thrown when no operations are provided.</exception>
+        public PradResult[] ThenParallel(params Func<PradResult, PradResult>[] operations)
+        {
+            if (operations == null || operations.Length == 0)
+            {
+                throw new ArgumentException("At least one operation must be provided.", nameof(operations));
+            }
+
+            var pradOps = new PradOp[operations.Length];
+            pradOps[0] = this.PradOp; // Use the current PradOp for the first operation
+
+            // Create branched PradOps for subsequent operations
+            for (int i = 1; i < operations.Length; i++)
+            {
+                pradOps[i] = new PradOp(this.PradOp.GetCurrentTensor());
+            }
+
+            var results = new PradResult[operations.Length];
+
+            // Use Parallel.For to execute operations in parallel
+            Parallel.For(0, operations.Length, i =>
+            {
+                var branchedResult = new PradResult(pradOps[i], this.ResultTensor, this.Gradients);
+                results[i] = operations[i](branchedResult);
+            });
+
+            // Record split branches
+            for (int i = 1; i < operations.Length; i++)
+            {
+                pradOps[i].RecordSplitBranch(pradOps[0]);
+            }
+
+            return results;
         }
     }
 }

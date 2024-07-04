@@ -99,6 +99,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<int, PradResult> ExpandDimsOp => FuncOp.ExpandDims;
 
         /// <summary>
+        /// Gets the custom op.
+        /// </summary>
+        public static Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[], PradResult> CustomOp => FuncOp.CustomOperation;
+
+        /// <summary>
         /// Gets the sin op.
         /// </summary>
         public static Func<PradResult> SinOp => FuncOp.Sin;
@@ -372,6 +377,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="reverseOperation">The function that computes the gradient of the operation.</param>
         /// <param name="outputShape">The shape of the output tensor.</param>
         /// <returns>The result of the custom operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(CustomOp))]
         public PradResult CustomOperation(
             Func<Tensor, Tensor> operation,
             Func<Tensor, Tensor, Tensor, Tensor[]> reverseOperation,

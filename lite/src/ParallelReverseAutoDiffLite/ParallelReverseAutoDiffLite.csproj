@@ -44,6 +44,7 @@
     <Compile Include="..\..\..\src\PRAD\PradOperationAttribute.cs" Link="PRAD\PradOperationAttribute.cs" />
     <Compile Include="..\..\..\src\PRAD\PradResult.cs" Link="PRAD\PradResult.cs" />
     <Compile Include="..\..\..\src\PRAD\PradResultBase.cs" Link="PRAD\PradResultBase.cs" />
+    <Compile Include="..\..\..\src\PRAD\PradResultExtensions.cs" Link="PRAD\PradResultExtensions.cs" />
     <Compile Include="..\..\..\src\PRAD\PradSplitResult.cs" Link="PRAD\PradSplitResult.cs" />
     <Compile Include="..\..\..\src\PRAD\PradTensor.cs" Link="PRAD\PradTensor.cs" />
 	<Compile Include="..\..\..\src\PRAD\TensorReverse.Common.cs" Link="PRAD\TensorReverse.Common.cs" />

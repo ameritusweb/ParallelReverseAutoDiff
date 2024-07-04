@@ -1733,6 +1733,36 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestThenCustomOp()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+            var pradOp = new PradOp(seed);
+
+            // Define a custom operation (e.g., element-wise square)
+            Func<Tensor, Tensor> operation = tensor => tensor.ElementwiseSquare();
+            Func<Tensor, Tensor, Tensor, Tensor[]> reverseOperation = (input, output, upstreamGrad) =>
+            {
+                var grad = new Tensor(input.Shape);
+                for (int i = 0; i < input.Data.Length; i++)
+                {
+                    grad.Data[i] = 2 * input.Data[i] * upstreamGrad.Data[i];
+                }
+                return new Tensor[] { grad };
+            };
+
+            var result = pradOp.Square()
+                        .Then(PradOp.CustomOp, operation, reverseOperation, new int[] { 2, 2 });
+
+            Assert.Equal(new double[] { 1, 16, 81, 256 }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            pradOp.Back(upstreamGradient);
+
+            Assert.Equal(new double[] { 2, 8, 18, 32 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
         public void TestElementwiseSubFrom()
         {
             var seed = new Tensor(new int[] { 2, 2 }, new double[] { 5, 6, 7, 8 });
@@ -1771,6 +1801,42 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             // The gradient for the numerator (tensorToDivInto) should be 1 / denominator
             Assert.Equal(new double[] { 0.5, 0.25, 0.125, 0.0625 }, result.Gradients[1].Data);
+        }
+
+        [Fact]
+        public void TestThenParallel()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 0.2d, 0.4d, 0.8d, 0.16d });
+            var otherTensor = new Tensor(new int[] { 2, 2 }, new double[] { 0.1d, 0.2d, 0.4d, 0.8d });
+            var pradOp = new PradOp(seed);
+
+            var result1 = pradOp.Square()
+                .ThenParallel(result => result.PradOp.Add(otherTensor),
+                    result => result.PradOp.Mul(otherTensor),
+                    result => result.PradOp.SubFrom(otherTensor))
+                .Then(resultArray => resultArray[0].PradOp.Add(resultArray[1].Result).PradOp.SubFrom(resultArray[2].Result));
+
+            var pradOp2 = new PradOp(seed);
+
+            var result2 = pradOp2.Square()
+                .ThenParallel(result => result.PradOp.Add(otherTensor),
+                    result => result.PradOp.Mul(otherTensor),
+                    result => result.PradOp.SubFrom(otherTensor))
+                .Then(resultArray =>
+                {
+                    var result1 = resultArray[0].PradOp.Add(resultArray[1].Result);
+                    var result2 = resultArray[2].PradOp.SubFrom(resultArray[1].Result);
+                    return new[] { result1, result2 };
+                })
+                .Then(resultArray => { 
+                    return resultArray[0].PradOp.Add(resultArray[1].Result);
+                });
+
+            var result3 = result1 * result2;
+
+            var upstreamGradient = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+
+            var gradient = pradOp.Back(upstreamGradient);
         }
     }
 }
