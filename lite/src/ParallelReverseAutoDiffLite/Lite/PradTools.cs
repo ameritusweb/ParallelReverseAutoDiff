@@ -6,6 +6,8 @@
 
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+
     /// <summary>
     /// PRAD tools.
     /// </summary>
@@ -17,6 +19,21 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float Zero { get; } = 0.0f;
 
         /// <summary>
+        /// Gets Two.
+        /// </summary>
+        internal static float Two { get; } = 2.0f;
+
+        /// <summary>
+        /// Gets Half.
+        /// </summary>
+        internal static float Half { get; } = 0.5f;
+
+        /// <summary>
+        /// Gets Negative One.
+        /// </summary>
+        internal static float NegativeOne { get; } = -1.0f;
+
+        /// <summary>
         /// Cast a double to a float.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -24,6 +41,18 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float Cast(double value)
         {
             return (float)value;
+        }
+
+        /// <summary>
+        /// Gets the element size of the array.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="array">The array.</param>
+        /// <returns>The element size.</returns>
+        internal static int GetElementSize<T>(T[] array)
+            where T : unmanaged
+        {
+            return Buffer.ByteLength(array) / array.Length;
         }
     }
 }

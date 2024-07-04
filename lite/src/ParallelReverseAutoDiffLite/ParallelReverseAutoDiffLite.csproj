@@ -46,6 +46,8 @@
     <Compile Include="..\..\..\src\PRAD\PradResultBase.cs" Link="PRAD\PradResultBase.cs" />
     <Compile Include="..\..\..\src\PRAD\PradSplitResult.cs" Link="PRAD\PradSplitResult.cs" />
     <Compile Include="..\..\..\src\PRAD\PradTensor.cs" Link="PRAD\PradTensor.cs" />
+	<Compile Include="..\..\..\src\PRAD\TensorReverse.Common.cs" Link="PRAD\TensorReverse.Common.cs" />
+	<Compile Include="..\..\..\src\PRAD\Tensor.Common.cs" Link="PRAD\Tensor.Common.cs" />
     <Compile Include="..\..\..\src\RMAD\AmplifiedSigmoidOperation.cs" Link="RMAD\AmplifiedSigmoidOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\BackwardResult.cs" Link="RMAD\BackwardResult.cs" />
     <Compile Include="..\..\..\src\RMAD\BackwardResultBuilder.cs" Link="RMAD\BackwardResultBuilder.cs" />

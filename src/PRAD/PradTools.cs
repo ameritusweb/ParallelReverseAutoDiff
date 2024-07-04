@@ -19,6 +19,21 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static double Zero { get; } = 0.0;
 
         /// <summary>
+        /// Gets Two.
+        /// </summary>
+        internal static double Two { get; } = 2.0;
+
+        /// <summary>
+        /// Gets Half.
+        /// </summary>
+        internal static double Half { get; } = 0.5;
+
+        /// <summary>
+        /// Gets Negative One.
+        /// </summary>
+        internal static double NegativeOne { get; } = -1.0;
+
+        /// <summary>
         /// Cast a double to a double.
         /// </summary>
         /// <param name="value">The value.</param>

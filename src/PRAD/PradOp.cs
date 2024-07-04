@@ -84,6 +84,16 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> DivOp => FuncOp.Div;
 
         /// <summary>
+        /// Gets the sub from op.
+        /// </summary>
+        public static Func<Tensor, PradResult> SubFromOp => FuncOp.SubFrom;
+
+        /// <summary>
+        /// Gets the div into op.
+        /// </summary>
+        public static Func<Tensor, PradResult> DivIntoOp => FuncOp.DivInto;
+
+        /// <summary>
         /// Gets the expand dims op.
         /// </summary>
         public static Func<int, PradResult> ExpandDimsOp => FuncOp.ExpandDims;
@@ -471,6 +481,41 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Subtracts the current tensor from another tensor element-wise and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="tensor">The tensor to subtract from.</param>
+        /// <returns>The result of the subtraction along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SubFromOp))]
+        public PradResult SubFrom(Tensor tensor)
+        {
+            var result = tensor.ElementwiseSub(this.currentTensor);
+            var tensorReverse = new TensorReverse(new Tensor[] { tensor, this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(2, tensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.ElementwiseSubReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (new Tensor[] { gradients[1], gradients[0] }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Performs matrix multiplication and records the operation for backpropagation.
         /// </summary>
         /// <param name="tensor">The tensor to multiply with.</param>
@@ -549,7 +594,7 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradResult Div(Tensor tensor)
         {
             var result = this.currentTensor.ElementwiseDivide(tensor);
-            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
 
             var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
@@ -567,6 +612,41 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Divides a tensor by the current tensor element-wise and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="tensor">The tensor to divide into.</param>
+        /// <returns>The result of the division along with the gradient placeholders.</returns>
+        [PradOperation(nameof(DivIntoOp))]
+        public PradResult DivInto(Tensor tensor)
+        {
+            var result = tensor.ElementwiseDivide(this.currentTensor);
+            var tensorReverse = new TensorReverse(new Tensor[] { tensor });
+
+            var grad = Tensor.ToTensorArray(2, tensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.ElementwiseDivideReverse(upstreamGrad, this.currentTensor);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (new Tensor[] { gradients[1], gradients[0] }, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);
