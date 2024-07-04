@@ -979,8 +979,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 |--------|-------------| 
 | `Add(Tensor tensor)` | Adds the given tensor to the current tensor element-wise. | 
 | `Sub(Tensor tensor)` | Subtracts the given tensor from the current tensor element-wise. | 
+| `SubFrom(Tensor tensor)` | Subtracts the current tensor from the given tensor element-wise. | 
 | `Mul(Tensor tensor)` | Multiplies the current tensor by the given tensor element-wise. | 
 | `Div(Tensor tensor)` | Divides the current tensor by the given tensor element-wise. | 
+| `DivInto(Tensor tensor)` | Divides the given tensor by the current tensor element-wise. | 
 | `Sin()` | Computes the sine of each element in the current tensor. | 
 | `Cos()` | Computes the cosine of each element in the current tensor. | 
 | `Atan2(Tensor tensor)` | Computes the arctangent of the quotient of the current tensor and the given tensor. | 
@@ -1029,8 +1031,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `SquareRootOp` 
 - `AddOp` 
 - `MulOp` 
-- `SubOp` 
+- `SubOp`
+- `SubFromOp`
 - `DivOp`
+- `DivIntoOp`
 - `ExpandDimsOp`
 - `SinOp` 
 - `CosOp`
