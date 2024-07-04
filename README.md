@@ -983,6 +983,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Mul(Tensor tensor)` | Multiplies the current tensor by the given tensor element-wise. | 
 | `Div(Tensor tensor)` | Divides the current tensor by the given tensor element-wise. | 
 | `DivInto(Tensor tensor)` | Divides the given tensor by the current tensor element-wise. | 
+| `MatMul(Tensor tensor)` | Performs matrix multiplication of the current tensor with the given tensor. | 
 | `Sin()` | Computes the sine of each element in the current tensor. | 
 | `Cos()` | Computes the cosine of each element in the current tensor. | 
 | `Atan2(Tensor tensor)` | Computes the arctangent of the quotient of the current tensor and the given tensor. | 
@@ -1035,6 +1036,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `SubFromOp`
 - `DivOp`
 - `DivIntoOp`
+- `MatMulOp`
 - `ExpandDimsOp`
 - `SinOp` 
 - `CosOp`
