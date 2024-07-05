@@ -978,9 +978,9 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Computes the reverse gradient for the Indexer operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
-        /// <param name="indices">The indices used to slice.</param>
+        /// <param name="indices">The indices used to slice. Null values select the entire dimension.</param>
         /// <returns>The gradient with respect to the input tensor.</returns>
-        public Tensor IndexerReverse(Tensor upstreamGradient, params string[] indices)
+        public Tensor IndexerReverse(Tensor upstreamGradient, params string?[] indices)
         {
             Tensor inputTensor = this.InitialTensors[0];
 

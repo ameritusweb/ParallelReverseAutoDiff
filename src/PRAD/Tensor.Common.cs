@@ -780,12 +780,12 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// An indexer for the tensor.
+        /// An indexer for the tensor that supports slicing with null values as indices.
         /// </summary>
-        /// <param name="indices">The indices used to slice.</param>
+        /// <param name="indices">The indices used to slice. Null values select the entire dimension.</param>
         /// <returns>The sliced tensor.</returns>
         /// <exception cref="ArgumentException">Number of indices does not match rank.</exception>
-        public Tensor Indexer(params string[] indices)
+        public Tensor Indexer(params string?[] indices)
         {
             if (indices.Length != this.Shape.Length)
             {
@@ -985,17 +985,27 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Parse an index.
+        /// Parse an index, handling null values as selecting the entire dimension.
         /// </summary>
-        /// <param name="index">The index.</param>
+        /// <param name="index">The index, which can be null.</param>
         /// <param name="dimSize">The dimension size.</param>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
+        /// <param name="start">The start index.</param>
+        /// <param name="end">The end index.</param>
         /// <param name="step">The step size.</param>
-        /// <param name="isSlice">Is slice.</param>
+        /// <param name="isSlice">Indicates if the index is a slice.</param>
         /// <exception cref="ArgumentException">Step is zero.</exception>
-        internal void ParseIndex(string index, int dimSize, out int start, out int end, out int step, out bool isSlice)
+        internal void ParseIndex(string? index, int dimSize, out int start, out int end, out int step, out bool isSlice)
         {
+            if (index == null)
+            {
+                // If index is null, select the entire dimension
+                start = 0;
+                end = dimSize;
+                step = 1;
+                isSlice = true;
+                return;
+            }
+
             isSlice = index.Contains(':') || index == "...";
             step = 1;
             start = 0;
