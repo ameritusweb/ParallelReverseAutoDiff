@@ -609,6 +609,9 @@ namespace ParallelReverseAutoDiff.PRAD
             int[] newShape = (int[])this.Shape.Clone();
             double[] newData = (double[])this.Data.Clone();
 
+            Array.Copy(this.Shape, newShape, this.Shape.Length);
+            Buffer.BlockCopy(this.Data, 0, newData, 0, this.Data.Length * sizeof(double));
+
             return new Tensor(newShape, newData);
         }
 

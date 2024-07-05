@@ -3,6 +3,7 @@ using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
 using System.Diagnostics;
 using Xunit;
+using static ParallelReverseAutoDiff.PRAD.PradOp;
 
 namespace ParallelReverseAutoDiff.Test.PRAD
 {
@@ -1721,7 +1722,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 return new Tensor[] { grad };
             };
 
-            var result = pradOp.CustomOperation(operation, reverseOperation, new int[] { 2, 2 });
+            var result = pradOp.CustomOperation(operation, reverseOperation);
 
             Assert.Equal(new double[] { 1, 4, 9, 16 }, result.Result.Data);
 
@@ -1730,6 +1731,31 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             pradOp.Back(upstreamGradient);
 
             Assert.Equal(new double[] { 2, 4, 6, 8 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestCustomOperation2()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+            PradOp pradOp = new PradOp(seed);
+
+            // Define a custom operation (e.g., element-wise square and add)
+            TensorOp customOperation = tensor =>
+            {
+                PradOp pradOp = new PradOp(tensor[0]);
+                pradOp
+                    .Square()
+                    .PradOp.Add(tensor[1]);
+                return pradOp;
+            };
+
+            var result = pradOp.CustomOperation(customOperation, new Tensor[] { new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 }) });
+
+            Assert.Equal(new double[] { 2, 6, 12, 20 }, pradOp.Result!.Data);
+
+            result.Then(PradOp.CustomTensorOp, customOperation, new Tensor[] { new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 }) });
+
+            Assert.Equal(new double[] { 5, 38, 147, 404 }, pradOp.Result!.Data);
         }
 
         [Fact]
@@ -1751,7 +1777,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             };
 
             var result = pradOp.Square()
-                        .Then(PradOp.CustomOp, operation, reverseOperation, new int[] { 2, 2 });
+                        .Then(PradOp.CustomOp, operation, reverseOperation);
 
             Assert.Equal(new double[] { 1, 16, 81, 256 }, result.Result.Data);
 

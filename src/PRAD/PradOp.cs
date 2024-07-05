@@ -54,6 +54,13 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// A custom tensor operation.
+        /// </summary>
+        /// <param name="tensors">The tensors as inputs.</param>
+        /// <returns>The PradOp instance created in the function.</returns>
+        public delegate PradOp TensorOp(params Tensor[] tensors);
+
+        /// <summary>
         /// Gets the square root op.
         /// </summary>
         public static Func<PradResult> SquareRootOp => FuncOp.SquareRoot;
@@ -101,7 +108,12 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Gets the custom op.
         /// </summary>
-        public static Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[], PradResult> CustomOp => FuncOp.CustomOperation;
+        public static Func<TensorOp, Tensor[], PradResult> CustomTensorOp => FuncOp.CustomOperation;
+
+        /// <summary>
+        /// Gets the custom op.
+        /// </summary>
+        public static Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, PradResult> CustomOp => FuncOp.CustomOperation;
 
         /// <summary>
         /// Gets the sin op.
@@ -222,6 +234,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the seed gradient.
         /// </summary>
         public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.initialResult.Gradients[0].ReplaceData(value.Data); }
+
+        /// <summary>
+        /// Gets the seed result.
+        /// </summary>
+        public PradResult SeedResult => this.initialResult as PradResult ?? throw new InvalidCastException("Initial result is not a PradResult");
 
         /// <summary>
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
@@ -375,13 +392,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="operation">The function that performs the operation.</param>
         /// <param name="reverseOperation">The function that computes the gradient of the operation.</param>
-        /// <param name="outputShape">The shape of the output tensor.</param>
         /// <returns>The result of the custom operation along with the gradient placeholders.</returns>
         [PradOperation(nameof(CustomOp))]
         public PradResult CustomOperation(
             Func<Tensor, Tensor> operation,
-            Func<Tensor, Tensor, Tensor, Tensor[]> reverseOperation,
-            int[] outputShape)
+            Func<Tensor, Tensor, Tensor, Tensor[]> reverseOperation)
         {
             var input = this.currentTensor.DeepClone();
 
@@ -389,7 +404,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var result = operation(this.currentTensor);
 
             // Initialize gradient tensors
-            var grad = Tensor.ToTensorArray(1, outputShape);
+            var grad = Tensor.ToTensorArray(1, input.Shape);
 
             // Define the backpropagation step function
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
@@ -407,6 +422,67 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Update the current tensor
             this.currentTensor = result;
+
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Applies a custom operation to the current tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="operation">The function that performs the operation.</param>
+        /// <param name="otherTensors">The other tensors to use in the operation.</param>
+        /// <returns>The result of the custom operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(CustomTensorOp))]
+        public PradResult CustomOperation(TensorOp operation, params Tensor[] otherTensors)
+        {
+            var input = this.currentTensor.DeepClone();
+
+            var inputData = this.currentTensor.Data;
+
+            var allTensors = otherTensors.Prepend(this.currentTensor).ToArray();
+
+            // Apply the operation to the current tensor
+            var result = operation(allTensors);
+
+            if (result.Result == null)
+            {
+                throw new InvalidOperationException("Result of custom operation is null.");
+            }
+
+            if (!result.SeedResult.ResultTensor.Data.SequenceEqual(inputData))
+            {
+                throw new InvalidOperationException("Seed tensor data does not match input tensor data.");
+            }
+
+            // Initialize gradient tensors
+            var grad = Tensor.ToTensorArray(1, input.Shape);
+
+            // Define the backpropagation step function
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var backResult = result.Back(upstreamGrad);
+                var gradients = new Tensor[] { backResult };
+                PradOp?[] ops = new PradOp?[allTensors.Length];
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = allTensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            // Create the PradResult object with the result and gradient placeholders
+            var pradResult = new PradResult(this, result.Result, grad);
+
+            // Record the backpropagation step
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+
+            // Update the current tensor
+            this.currentTensor = result.Result;
 
             return pradResult;
         }

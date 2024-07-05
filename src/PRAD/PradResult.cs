@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
     using System.Threading.Tasks;
+    using static ParallelReverseAutoDiff.PRAD.PradOp;
 
     /// <summary>
     /// The result of the computation.
@@ -254,12 +255,24 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="operation">The operation to apply.</param>
         /// <param name="forward">The forward function.</param>
         /// <param name="backward">The backward function.</param>
-        /// <param name="outputShape">The output shape.</param>
         /// <returns>A PradResult.</returns>
-        public PradResult Then(Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[], PradResult> operation, Func<Tensor, Tensor> forward, Func<Tensor, Tensor, Tensor, Tensor[]> backward, params int[] outputShape)
+        public PradResult Then(Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, PradResult> operation, Func<Tensor, Tensor> forward, Func<Tensor, Tensor, Tensor, Tensor[]> backward)
         {
-            var instanceOperation = this.PradOp.GetOperation<Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, int[], PradResult>>(operation);
-            return instanceOperation(forward, backward, outputShape);
+            var instanceOperation = this.PradOp.GetOperation<Func<Func<Tensor, Tensor>, Func<Tensor, Tensor, Tensor, Tensor[]>, PradResult>>(operation);
+            return instanceOperation(forward, backward);
+        }
+
+        /// <summary>
+        /// Applies a custom TensorOp operation.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="op">The custom operation.</param>
+        /// <param name="otherTensors">The other tensors involved.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<TensorOp, Tensor[], PradResult> operation, TensorOp op, params Tensor[] otherTensors)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<TensorOp, Tensor[], PradResult>>(operation);
+            return instanceOperation(op, otherTensors);
         }
 
         /// <summary>
