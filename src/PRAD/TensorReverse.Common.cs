@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using MKLNET;
@@ -30,6 +31,64 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the initial tensors.
         /// </summary>
         public Tensor[] InitialTensors { get; private set; }
+
+        /// <summary>
+        /// Computes the reverse gradient for the slice operation on an array of tensors.
+        /// </summary>
+        /// <param name="upstreamGradients">The gradients flowing from the upstream layers.</param>
+        /// <param name="tensors">The original input tensors.</param>
+        /// <param name="sliceSizes">The slice sizes used in the forward pass.</param>
+        /// <returns>The gradients with respect to the input tensors.</returns>
+        public static Tensor[] Slice3DTensorsReverse(Tensor[] upstreamGradients, Tensor[] tensors, int[] sliceSizes)
+        {
+            if (sliceSizes.Length != 3)
+            {
+                throw new ArgumentException("Slice sizes must be a 3-tuple.");
+            }
+
+            if (upstreamGradients.Length != tensors.Length)
+            {
+                throw new ArgumentException("The number of upstream gradients must match the number of tensors.");
+            }
+
+            var inputGradients = tensors.Select(tensor => new Tensor(tensor.Shape)).ToList();
+
+            for (int t = 0; t < tensors.Length; t++)
+            {
+                var tensor = tensors[t];
+                var upstreamGradient = upstreamGradients[t];
+
+                if (tensor.Shape.Length != 3)
+                {
+                    throw new ArgumentException("All input tensors must be 3-dimensional.");
+                }
+
+                int[] numSlices = tensor.CalculateNumberOfSlices(sliceSizes);
+                List<int[]> indicesList = tensor.GenerateSliceStartIndices(numSlices);
+
+                int index = 0;
+                foreach (var start in indicesList)
+                {
+                    for (int i = 0; i < start.Length; i++)
+                    {
+                        start[i] *= sliceSizes[i];
+                    }
+
+                    var sliceGradient = upstreamGradient.Slice(start, sliceSizes);
+                    var reverseGradient = tensor.SliceReverse(sliceGradient, start, sliceSizes);
+
+                    // Accumulate the gradients
+                    for (int i = 0; i < reverseGradient.Data.Length; i++)
+                    {
+                        inputGradients[t].Data[i] += reverseGradient.Data[i];
+                    }
+
+                    index++;
+                }
+            }
+
+            return inputGradients.ToArray();
+        }
 
         /// <summary>
         /// Computes the reverse gradient for element-wise addition.
@@ -957,19 +1016,44 @@ namespace ParallelReverseAutoDiff.PRAD
             // The shape of the result tensor should be the same as the original tensor
             var result = new Tensor(originalTensor.Shape);
 
-            // Perform the reverse transposition
-            Parallel.For(0, result.Data.Length, i =>
+            if (originalTensor.Shape.Length == 2 && permutation.SequenceEqual(new int[] { 1, 0 }))
             {
-                int[] originalIndices = originalTensor.GetMultiDimensionalIndices(i, originalTensor.Shape);
-                int[] transposedIndices = new int[originalIndices.Length];
-                for (int j = 0; j < originalIndices.Length; j++)
-                {
-                    transposedIndices[inversePermutation[j]] = originalIndices[j];
-                }
+                // 2D case
+                int rows = originalTensor.Shape[1]; // Transposed dimensions
+                int cols = originalTensor.Shape[0];
 
-                int transposedIndex = upstreamGradient.GetIndex(transposedIndices);
-                result.Data[i] = upstreamGradient.Data[transposedIndex];
-            });
+                Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, upstreamGradient.Data, rows, result.Data, cols);
+            }
+            else if (originalTensor.Shape.Length == 3 && permutation.SequenceEqual(new int[] { 0, 2, 1 }))
+            {
+                // 3D batch case
+                int batchSize = originalTensor.Shape[0];
+                int rows = originalTensor.Shape[2]; // Transposed dimensions
+                int cols = originalTensor.Shape[1];
+                int sliceSize = rows * cols;
+
+                Parallel.For(0, batchSize, batchIndex =>
+                {
+                    Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, upstreamGradient.Data, batchIndex * sliceSize, result.Data, batchIndex * sliceSize);
+                });
+            }
+            else
+            {
+                // General case for higher dimensions
+                // Perform the reverse transposition
+                Parallel.For(0, result.Data.Length, i =>
+                {
+                    int[] originalIndices = originalTensor.GetMultiDimensionalIndices(i, originalTensor.Shape);
+                    int[] transposedIndices = new int[originalIndices.Length];
+                    for (int j = 0; j < originalIndices.Length; j++)
+                    {
+                        transposedIndices[inversePermutation[j]] = originalIndices[j];
+                    }
+
+                    int transposedIndex = upstreamGradient.GetIndex(transposedIndices);
+                    result.Data[i] = upstreamGradient.Data[transposedIndex];
+                });
+            }
 
             return result;
         }

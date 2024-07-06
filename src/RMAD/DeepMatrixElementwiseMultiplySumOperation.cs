@@ -8,7 +8,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// A deep matrix element-wise multiply sum operation.
     /// </summary>
-    public class DeepMatrixElementWiseMultiplySumOperation : Operation
+    public class DeepMatrixElementwiseMultiplySumOperation : Operation
     {
         private DeepMatrix inputMatrices; // DeepMatrix of Nx(2M) matrices
         private DeepMatrix multiplierMatrices; // DeepMatrix of 1xN matrices
@@ -20,7 +20,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new DeepMatrixElementWiseMultiplySumOperation();
+            return new DeepMatrixElementwiseMultiplySumOperation();
         }
 
         /// <summary>

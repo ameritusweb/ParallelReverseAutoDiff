@@ -21,6 +21,8 @@ namespace ParallelReverseAutoDiff.PRAD
         private static PradOp funcOp = new PradOp();
         private readonly Tensor seed;
         private readonly Dictionary<Delegate, Delegate> operations;
+        private Lazy<Ops> ops = new Lazy<Ops>(() => new Ops(), true);
+        private Lazy<LossOps> lossOps = new Lazy<LossOps>(() => new LossOps(), true);
         private List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)> backpropagationSteps;
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
@@ -224,6 +226,21 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the mean op.
         /// </summary>
         public static Func<int, PradResult> MeanOp => FuncOp.Mean;
+
+        /// <summary>
+        /// Gets the slice multiple 3D and concat op.
+        /// </summary>
+        public static Func<Tensor[], int, int[], PradResult> SliceMultiple3DAndConcatOp => FuncOp.SliceMultiple3DAndConcat;
+
+        /// <summary>
+        /// Gets operation types.
+        /// </summary>
+        public Ops Ops => this.ops.Value;
+
+        /// <summary>
+        /// Gets loss operation types.
+        /// </summary>
+        public LossOps LossOps => this.lossOps.Value;
 
         /// <summary>
         /// Gets the upstream gradient.
@@ -1449,6 +1466,48 @@ namespace ParallelReverseAutoDiff.PRAD
             var pradResult = new PradResult(this, result, grads);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Slice multiple 3-D tensors and concatenate along the specified axis.
+        /// </summary>
+        /// <param name="tensors">The 3-D tensors to concatenate.</param>
+        /// <param name="axis">The axis to concatenate on.</param>
+        /// <param name="sliceSizes">The slice size to extract.</param>
+        /// <returns>A PradResult.</returns>
+        [PradOperation(nameof(SliceMultiple3DAndConcatOp))]
+        public PradResult SliceMultiple3DAndConcat(Tensor[] tensors, int axis, params int[] sliceSizes)
+        {
+            var combinedTensors = new Tensor[tensors.Length + 1];
+            combinedTensors[0] = this.currentTensor;
+            Array.Copy(tensors, 0, combinedTensors, 1, tensors.Length);
+            var result = Tensor.Slice3DTensors(tensors, sliceSizes);
+            var resultArray = result.ToArray();
+            var concatResult = Tensor.Concat(resultArray, axis);
+            var concatTensorReverse = new TensorReverse(resultArray);
+
+            var grads = combinedTensors.Select(t => new Tensor(t.Shape)).ToArray();
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var concatGradients = concatTensorReverse.ConcatReverse(upstreamGrad, axis);
+                var gradients = TensorReverse.Slice3DTensorsReverse(concatGradients, combinedTensors, sliceSizes);
+                PradOp?[] ops = new PradOp?[combinedTensors.Length];
+                for (int i = 0; i < grads.Length; i++)
+                {
+                    var tensor = combinedTensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, concatResult, grads);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = concatResult;
             return pradResult;
         }
 

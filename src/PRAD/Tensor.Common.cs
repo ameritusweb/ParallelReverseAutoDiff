@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Text;
     using System.Threading.Tasks;
     using MKLNET;
+    using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A flat tensor.
@@ -669,6 +670,52 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the slice operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="begin">The starting indices for each axis.</param>
+        /// <param name="size">The lengths of the slice along each axis.</param>
+        /// <param name="strides">The step size for each axis (default is 1).</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor SliceReverse(Tensor upstreamGradient, int[] begin, int[] size, int[]? strides = null)
+        {
+            Tensor inputTensor = this; // Assuming this tensor is the original input
+
+            if (begin.Length != inputTensor.Shape.Length || size.Length != inputTensor.Shape.Length || (strides != null && strides.Length != inputTensor.Shape.Length))
+            {
+                throw new ArgumentException("The lengths of begin, size, and strides must match the number of dimensions of the tensor.");
+            }
+
+            strides ??= Enumerable.Repeat(1, inputTensor.Shape.Length).ToArray();
+            if (strides.Any(s => s == 0))
+            {
+                throw new ArgumentException("Stride cannot be zero.");
+            }
+
+            int[] adjustedBegin = AdjustIndicesForNegativeValues(begin, inputTensor.Shape);
+            int[] effectiveSize = CalculateEffectiveSize(size, adjustedBegin, strides, inputTensor.Shape);
+
+            var inputGradient = new Tensor(inputTensor.Shape);
+
+            Parallel.For(0, upstreamGradient.Data.Length, upstreamIndex =>
+            {
+                int[] resultIndices = upstreamGradient.GetMultiDimensionalIndices(upstreamIndex, upstreamGradient.Shape);
+                int[] sourceIndices = new int[resultIndices.Length];
+                for (int i = 0; i < resultIndices.Length; i++)
+                {
+                    sourceIndices[i] = adjustedBegin[i] + (resultIndices[i] * strides[i]);
+                }
+
+                if (IsWithinBounds(sourceIndices, inputTensor.Shape))
+                {
+                    inputGradient[sourceIndices] += upstreamGradient[resultIndices];
+                }
+            });
+
+            return inputGradient;
+        }
+
+        /// <summary>
         /// Splits the tensor into multiple tensors along the specified axis.
         /// </summary>
         /// <param name="groupSize">The group size.</param>
@@ -758,23 +805,47 @@ namespace ParallelReverseAutoDiff.PRAD
             var newShape = permutation.Select(p => this.Shape[p]).ToArray();
             var result = new Tensor(newShape);
 
-            // Calculate strides for both the original and transposed tensors
-            var originalStrides = CalculateStrides(this.Shape);
-            var transposedStrides = CalculateStrides(newShape);
-
-            // Perform the transposition
-            Parallel.For(0, result.Data.Length, i =>
+            if (this.Shape.Length == 2 && permutation.SequenceEqual(new int[] { 1, 0 }))
             {
-                int[] newIndices = this.GetMultiDimensionalIndices(i, newShape);
-                int[] oldIndices = new int[newIndices.Length];
-                for (int j = 0; j < newIndices.Length; j++)
-                {
-                    oldIndices[permutation[j]] = newIndices[j];
-                }
+                // 2D case
+                int rows = this.Shape[0];
+                int cols = this.Shape[1];
 
-                int oldIndex = this.GetIndex(oldIndices);
-                result.Data[i] = this.Data[oldIndex];
-            });
+                Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, this.Data, rows, result.Data, cols);
+            }
+            else if (this.Shape.Length == 3 && permutation.SequenceEqual(new int[] { 0, 2, 1 }))
+            {
+                // 3D batch case
+                int batchSize = this.Shape[0];
+                int rows = this.Shape[1];
+                int cols = this.Shape[2];
+                int sliceSize = rows * cols;
+
+                Parallel.For(0, batchSize, batchIndex =>
+                {
+                    Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, this.Data, batchIndex * sliceSize, result.Data, batchIndex * sliceSize);
+                });
+            }
+            else
+            {
+                // Calculate strides for both the original and transposed tensors
+                var originalStrides = CalculateStrides(this.Shape);
+                var transposedStrides = CalculateStrides(newShape);
+
+                // Perform the transposition
+                Parallel.For(0, result.Data.Length, i =>
+                {
+                    int[] newIndices = this.GetMultiDimensionalIndices(i, newShape);
+                    int[] oldIndices = new int[newIndices.Length];
+                    for (int j = 0; j < newIndices.Length; j++)
+                    {
+                        oldIndices[permutation[j]] = newIndices[j];
+                    }
+
+                    int oldIndex = this.GetIndex(oldIndices);
+                    result.Data[i] = this.Data[oldIndex];
+                });
+            }
 
             return result;
         }
@@ -1086,6 +1157,21 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return newShape.ToArray();
+        }
+
+        private static int[] AdjustIndicesForNegativeValues(int[] indices, int[] shape)
+        {
+            return indices.Select((index, i) => index < 0 ? index + shape[i] : index).ToArray();
+        }
+
+        private static int[] CalculateEffectiveSize(int[] size, int[] begin, int[] strides, int[] shape)
+        {
+            return size.Select((s, i) => s < 0 ? (shape[i] - begin[i]) / Math.Abs(strides[i]) : s).ToArray();
+        }
+
+        private static bool IsWithinBounds(int[] indices, int[] shape)
+        {
+            return indices.Zip(shape, (index, dim) => index >= 0 && index < dim).All(isWithin => isWithin);
         }
 
         private static int[] CalculateStrides(int[] shape)

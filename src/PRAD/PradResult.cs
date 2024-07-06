@@ -144,20 +144,24 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
-        /// <param name="other">The other tensor, if needed.</param>
         /// <returns>A PradResult.</returns>
-        public PradResult Then(Delegate operation, Tensor? other = null)
+        public PradResult Then(Func<PradResult> operation)
         {
-            if (other == null)
-            {
-                var instanceOperation = this.PradOp.GetOperation<Func<PradResult>>(operation);
-                return instanceOperation();
-            }
-            else
-            {
-                var instanceOperation = this.PradOp.GetOperation<Func<Tensor, PradResult>>(operation);
-                return instanceOperation(other);
-            }
+            var instanceOperation = this.PradOp.GetOperation<Func<PradResult>>(operation);
+            return instanceOperation();
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="other">The other tensor.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<Tensor, PradResult> operation, Tensor other)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<Tensor, PradResult>>(operation);
+            return instanceOperation(other);
         }
 
         /// <summary>
@@ -178,13 +182,13 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
         /// <param name="others">The other tensors.</param>
-        /// <param name="axisRange">The axis range.</param>
-        /// <param name="concatAxis">The concat axis.</param>
+        /// <param name="axis">The axis to concatenate on.</param>
+        /// <param name="sliceSizes">The slice sizes to extract.</param>
         /// <returns>A PradResult.</returns>
-        public PradResult Then(Func<Tensor[], string, int, PradResult> operation, Tensor[] others, string axisRange, int concatAxis = 0)
+        public PradResult Then(Func<Tensor[], int, int[], PradResult> operation, Tensor[] others, int axis, params int[] sliceSizes)
         {
-            var instanceOperation = this.PradOp.GetOperation<Func<Tensor[], string, int, PradResult>>(operation);
-            return instanceOperation(others, axisRange, concatAxis);
+            var instanceOperation = this.PradOp.GetOperation<Func<Tensor[], int, int[], PradResult>>(operation);
+            return instanceOperation(others, axis, sliceSizes);
         }
 
         /// <summary>

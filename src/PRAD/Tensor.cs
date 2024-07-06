@@ -582,9 +582,9 @@ namespace ParallelReverseAutoDiff.PRAD
             var result = new Tensor(resultShape, resultData);
 
             Blas.gemm(
-                Layout.RowMajor,
-                Trans.No,
-                Trans.No,
+                MKLNET.Layout.RowMajor,
+                MKLNET.Trans.No,
+                MKLNET.Trans.No,
                 m,
                 n,
                 k,

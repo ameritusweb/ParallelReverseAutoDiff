@@ -34,6 +34,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float NegativeOne { get; } = -1.0f;
 
         /// <summary>
+        /// Gets One.
+        /// </summary>
+        internal static float One { get; } = 1.0f;
+
+        /// <summary>
         /// Cast a double to a float.
         /// </summary>
         /// <param name="value">The value.</param>

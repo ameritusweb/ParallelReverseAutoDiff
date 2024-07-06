@@ -39,6 +39,8 @@
     <Compile Include="..\..\..\src\Interprocess\PseudoUniqueIDGenerator.cs" Link="Interprocess\PseudoUniqueIDGenerator.cs" />
     <Compile Include="..\..\..\src\PRAD\ConditionallyInternalUseOnlyAttribute.cs" Link="PRAD\ConditionallyInternalUseOnlyAttribute.cs" />
     <Compile Include="..\..\..\src\PRAD\IListExtensions.cs" Link="PRAD\IListExtensions.cs" />
+	<Compile Include="..\..\..\src\PRAD\Ops.cs" Link="PRAD\Ops.cs" />
+	<Compile Include="..\..\..\src\PRAD\LossOps.cs" Link="PRAD\LossOps.cs" />
     <Compile Include="..\..\..\src\PRAD\PradMath.cs" Link="PRAD\PradMath.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOp.cs" Link="PRAD\PradOp.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOperationAttribute.cs" Link="PRAD\PradOperationAttribute.cs" />
