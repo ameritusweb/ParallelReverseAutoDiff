@@ -88,6 +88,11 @@ namespace ParallelReverseAutoDiff.RMAD
         public float MinimumClipValue { get; set; } = 1E-8F;
 
         /// <summary>
+        /// Gets or sets the Huber loss delta value.
+        /// </summary>
+        public float HuberLossDelta { get; set; } = 1.0f;
+
+        /// <summary>
         /// Gets or sets the number of time steps.
         /// </summary>
         public int NumTimeSteps { get; set; }

@@ -30,6 +30,91 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Type ApplyDropoutOpType => typeof(ApplyDropoutOperation);
 
         /// <summary>
+        /// Gets the Batch amplified sigmoid op type.
+        /// </summary>
+        public static Type BatchAmplifiedSigmoidOpType => typeof(BatchAmplifiedSigmoidOperation);
+
+        /// <summary>
+        /// Gets the Batch cuda matrix multiply op type.
+        /// </summary>
+        public static Type BatchCudaMatrixMultiplyOpType => typeof(BatchCudaMatrixMultiplyOperation);
+
+        /// <summary>
+        /// Gets the Batch deep matrix elementwise add op type.
+        /// </summary>
+        public static Type BatchDeepMatrixElementwiseAddOpType => typeof(BatchDeepMatrixElementwiseAddOperation);
+
+        /// <summary>
+        /// Gets the Batch GPU matrix multiply and sum op type.
+        /// </summary>
+        public static Type BatchGpuMatrixMultiplyAndSumOpType => typeof(BatchGpuMatrixMultiplyAndSumOperation);
+
+        /// <summary>
+        /// Gets the Batch GPU matrix multiply op type.
+        /// </summary>
+        public static Type BatchGpuMatrixMultiplyOpType => typeof(BatchGpuMatrixMultiplyOperation);
+
+        /// <summary>
+        /// Gets the Batcn hadamard product op type.
+        /// </summary>
+        public static Type BatchHadamardProductOpType => typeof(BatchHadamardProductOperation);
+
+        /// <summary>
+        /// Gets the Batch layer normalization op type.
+        /// </summary>
+        public static Type BatchLayerNormalizationOpType => typeof(BatchLayerNormalizationOperation);
+
+        /// <summary>
+        /// Gets the Batch leaky ReLU op type.
+        /// </summary>
+        public static Type BatchLeakyReLUOpType => typeof(BatchLeakyReLUOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix add broadcasting op type.
+        /// </summary>
+        public static Type BatchMatrixAddBroadcastingOpType => typeof(BatchMatrixAddBroadcastingOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix add op type.
+        /// </summary>
+        public static Type BatchMatrixAddOpType => typeof(BatchMatrixAddOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix add three op type.
+        /// </summary>
+        public static Type BatchMatrixAddThreeOpType => typeof(BatchMatrixAddThreeOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix average op type.
+        /// </summary>
+        public static Type BatchMatrixAverageOpType => typeof(BatchMatrixAverageOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix broadcast op type.
+        /// </summary>
+        public static Type BatchMatrixBroadcastOpType => typeof(BatchMatrixBroadcastOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix concatenate op type.
+        /// </summary>
+        public static Type BatchMatrixConcatenateOpType => typeof(BatchMatrixConcatenateOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix multiply and sum op type.
+        /// </summary>
+        public static Type BatchMatrixMultiplyAndSumOpType => typeof(BatchMatrixMultiplyAndSumOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix multiply op type.
+        /// </summary>
+        public static Type BatchMatrixMultiplyOpType => typeof(BatchMatrixMultiplyOperation);
+
+        /// <summary>
+        /// Gets the Batch matrix multiply scalar op type.
+        /// </summary>
+        public static Type BatchMatrixMultiplyScalarOpType => typeof(BatchMatrixMultiplyScalarOperation);
+
+        /// <summary>
         /// Gets the Batch matrix row concatenate op type.
         /// </summary>
         public static Type BatchMatrixRowConcatenateOpType => typeof(BatchMatrixRowConcatenateOperation);

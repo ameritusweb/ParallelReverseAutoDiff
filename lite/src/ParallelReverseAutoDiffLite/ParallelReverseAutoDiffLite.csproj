@@ -122,6 +122,11 @@
     <Compile Include="..\..\..\src\RMAD\Layer.cs" Link="RMAD\Layer.cs" />
     <Compile Include="..\..\..\src\RMAD\LayerInfo.cs" Link="RMAD\LayerInfo.cs" />
     <Compile Include="..\..\..\src\RMAD\LayerInfoType.cs" Link="RMAD\LayerInfoType.cs" />
+    <Compile Include="..\..\..\src\RMAD\Loss\BinaryCrossEntropyLossOperation.cs" Link="RMAD\Loss\BinaryCrossEntropyLossOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\Loss\CategoricalCrossEntropyLossOperation.cs" Link="RMAD\Loss\CategoricalCrossEntropyLossOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\Loss\HuberLossOperation.cs" Link="RMAD\Loss\HuberLossOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\Loss\MeanAbsoluteErrorLossOperation.cs" Link="RMAD\Loss\MeanAbsoluteErrorLossOperation.cs" />
+    <Compile Include="..\..\..\src\RMAD\Loss\MeanSquaredErrorLossOperation.cs" Link="RMAD\Loss\MeanSquaredErrorLossOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\MatrixAddBroadcastingOperation.cs" Link="RMAD\MatrixAddBroadcastingOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\MatrixAddOperation.cs" Link="RMAD\MatrixAddOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\MatrixAddThreeOperation.cs" Link="RMAD\MatrixAddThreeOperation.cs" />
@@ -174,7 +179,7 @@
     <Folder Include="docs\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Interprocess\" />
-    <Folder Include="RMAD\" />
+    <Folder Include="RMAD\Loss\" />
   </ItemGroup>
 
   <ItemGroup>

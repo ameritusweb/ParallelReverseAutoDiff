@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
-using ParallelReverseAutoDiff.Test.FeedForward.RMAD;
 
 namespace ParallelReverseAutoDiff.Test.Convolutional
 {

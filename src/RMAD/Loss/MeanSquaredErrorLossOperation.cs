@@ -1,14 +1,16 @@
-﻿using ParallelReverseAutoDiff.RMAD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//------------------------------------------------------------------------------
+// <copyright file="MeanSquaredErrorLossOperation.cs" author="ameritusweb" date="7/6/2024">
+// Copyright (c) 2024 ameritusweb All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
 
-namespace ParallelReverseAutoDiff.Test.FeedForward.RMAD
+namespace ParallelReverseAutoDiff.RMAD
 {
+    using System;
+    using System.Linq;
+
     /// <summary>
-    /// The mean squared error loss operation.
+    /// The Mean squared error loss operation.
     /// </summary>
     public class MeanSquaredErrorLossOperation : Operation
     {
@@ -33,19 +35,21 @@ namespace ParallelReverseAutoDiff.Test.FeedForward.RMAD
         /// <returns>The loss matrix.</returns>
         public Matrix Forward(Matrix output, Matrix target)
         {
-            this.target = target;
+            this.target = target ?? throw new ArgumentNullException(nameof(target));
+            if (output.Length != target.Length || output[0].Length != target[0].Length)
+            {
+                throw new ArgumentException("Output and target matrices must have the same dimensions.");
+            }
+
             int rowCount = output.Length;
             int colCount = output[0].Length;
-            double mse = 0;
+            var mse = PradTools.Zero;
 
-            for (int row = 0; row < rowCount; row++)
-            {
-                for (int col = 0; col < colCount; col++)
-                {
-                    double diff = output[row][col] - target[row][col];
-                    mse += diff * diff;
-                }
-            }
+            // Using LINQ to calculate the MSE
+            mse = (from row in Enumerable.Range(0, rowCount)
+                   from col in Enumerable.Range(0, colCount)
+                   let diff = output[row][col] - target[row][col]
+                   select diff * diff).Sum();
 
             Matrix loss = new Matrix(1, 1);
             loss[0][0] = mse / (rowCount * colCount);
@@ -63,7 +67,7 @@ namespace ParallelReverseAutoDiff.Test.FeedForward.RMAD
             int colCount = output[0].Length;
             Matrix gradient = new Matrix(rowCount, colCount);
 
-            double scale = 2.0 / (rowCount * colCount);
+            var scale = PradTools.Two / (rowCount * colCount);
             for (int row = 0; row < rowCount; row++)
             {
                 for (int col = 0; col < colCount; col++)

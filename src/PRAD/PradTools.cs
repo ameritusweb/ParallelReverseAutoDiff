@@ -19,6 +19,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static double Zero { get; } = 0.0;
 
         /// <summary>
+        /// Gets Epsilon.
+        /// </summary>
+        internal static double Epsilon { get; } = 1e-15;
+
+        /// <summary>
         /// Gets Two.
         /// </summary>
         internal static double Two { get; } = 2.0;
