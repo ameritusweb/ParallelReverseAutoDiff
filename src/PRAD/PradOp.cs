@@ -133,6 +133,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> ReciprocalOp => FuncOp.Reciprocal;
 
         /// <summary>
+        /// Gets the abs op.
+        /// </summary>
+        public static Func<PradResult> AbsOp => FuncOp.Abs;
+
+        /// <summary>
         /// Gets the exp op.
         /// </summary>
         public static Func<PradResult> ExpOp => FuncOp.Exp;
@@ -815,6 +820,30 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ReciprocalReverse(upstreamGrad, result);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the abs of each element of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The result of the abs operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(AbsOp))]
+        public PradResult Abs()
+        {
+            var result = this.currentTensor.Abs();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.AbsReverse(upstreamGrad);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };

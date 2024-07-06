@@ -116,6 +116,27 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise absolute value function (abs).
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor AbsReverse(Tensor upstreamGradient)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            this.CheckShapeCompatibility(inputTensor, upstreamGradient);
+
+            // Gradient of abs(x) is 1 for x > 0, -1 for x < 0, and undefined for x = 0
+            Tensor gradInput = new Tensor(inputTensor.Shape);
+            Parallel.For(0, inputTensor.Data.Length, i =>
+            {
+                gradInput.Data[i] = inputTensor.Data[i] > 0 ? upstreamGradient.Data[i] :
+                                    (inputTensor.Data[i] < 0 ? -upstreamGradient.Data[i] : 0);
+            });
+
+            return gradInput;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for broadcasting.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
