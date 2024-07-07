@@ -7,7 +7,12 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
+    using ParallelReverseAutoDiff.RMAD;
     using static ParallelReverseAutoDiff.PRAD.PradOp;
 
     /// <summary>
@@ -290,6 +295,57 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation class.</typeparam>
+        /// <param name="args">The args.</param>
+        /// <param name="constructorParams">The constructor parameters.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation>(IPradOperationArgs<TOperation> args, params object[] constructorParams)
+            where TOperation : IOperation, new()
+        {
+            var opType = typeof(TOperation);
+            IOperation op = (IOperation)Activator.CreateInstance(opType, constructorParams);
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(args, forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToMatrix()) });
+        }
+
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation class.</typeparam>
+        /// <param name="args">The args.</param>
+        /// <param name="constructorParams">The constructor parameters.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation>(IPradDeepOperationArgs<TOperation> args, params object[] constructorParams)
+            where TOperation : IDeepOperation, new()
+        {
+            var opType = typeof(TOperation);
+            IDeepOperation op = (IDeepOperation)Activator.CreateInstance(opType, constructorParams);
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(args, forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToDeepMatrix()) });
+        }
+
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation class.</typeparam>
+        /// <param name="args">The args.</param>
+        /// <param name="constructorParams">The constructor parameters.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation>(IPradBatchOperationArgs<TOperation> args, params object[] constructorParams)
+            where TOperation : IBatchOperation, new()
+        {
+            var opType = typeof(TOperation);
+            IBatchOperation op = (IBatchOperation)Activator.CreateInstance(opType, constructorParams);
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(args, forwardMethod, op, (v) => op.Backward(v.ToDeepMatrix()));
+        }
+
+        /// <summary>
         /// Applies the specified operations to this PradResult.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
@@ -337,6 +393,68 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return results;
+        }
+
+        private PradResult InnerThenGeneric(object args, MethodInfo forwardMethod, IOperationBase op, Func<Tensor, BackwardResult[]> backwardFunc)
+        {
+            List<object> forwardParams = new List<object>();
+
+            var interfaces = args.GetType().GetInterfaces();
+            Type interfaceType = interfaces
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPradOperationTupleArgs<,>));
+
+            if (interfaceType != null)
+            {
+                var getArgMethod = interfaceType.GetRuntimeProperty("Args");
+                ITuple? tuple = getArgMethod.GetValue(args) as ITuple;
+                if (tuple != null)
+                {
+                    for (int i = 0; i < tuple.Length; i++)
+                    {
+                        forwardParams.Add(tuple[i]);
+                    }
+                }
+            }
+            else
+            {
+                interfaceType = interfaces
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPradOperationArg<,>));
+                var getArgMethod = interfaceType.GetRuntimeProperty("Arg");
+                forwardParams.Add(getArgMethod.GetValue(args));
+            }
+
+            Func<Tensor, Tensor> forward = (t) =>
+            {
+                var data = forwardMethod.Invoke(op, forwardParams.ToArray());
+                if (data is Tensor tensor)
+                {
+                    return tensor;
+                }
+                else if (data is Matrix matrix)
+                {
+                    return matrix.ToTensor();
+                }
+
+                throw new InvalidOperationException("Forward method must return a Matrix or a Tensor.");
+            };
+
+            Func<Tensor, Tensor, Tensor, Tensor[]> backward = (t, u, v) =>
+            {
+                var backwardResults = backwardFunc.Invoke(v);
+                if (backwardResults[0].Item1 is Tensor tensor)
+                {
+                    return new Tensor[] { tensor };
+                }
+
+                if (backwardResults[0].Item1 is Matrix matrix)
+                {
+                    return new Tensor[] { matrix.ToTensor() };
+                }
+
+                throw new InvalidOperationException("Backward method must return a Matrix or a Tensor.");
+            };
+
+            return this.PradOp.CustomOperation(forward, backward);
         }
     }
 }

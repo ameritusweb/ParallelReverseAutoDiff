@@ -870,6 +870,20 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestThenGeneric()
+        {
+            Tensor tensor = new Tensor(new int[] { 200, 300, 400 }, 5f);
+
+            PradOp op = new PradOp(tensor);
+
+            Matrix m1 = new Matrix(1, 4);
+
+            Matrix m2 = new Matrix(2, 3);
+
+            op.SeedResult.Then<AmplifiedSigmoidOperation>(new AmplifiedSigmoidArgs(m1));
+        }
+
+        [Fact]
         public void MultiPradOpBranchConcatTest()
         {
             Random rand = new Random(3);
