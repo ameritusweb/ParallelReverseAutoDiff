@@ -16,13 +16,11 @@ namespace ParallelReverseAutoDiff.PRAD
     /// <summary>
     /// A lightweight reverse-mode automatic differentiation library.
     /// </summary>
-    public class PradOp
+    public partial class PradOp
     {
         private static PradOp funcOp = new PradOp();
         private readonly Tensor seed;
         private readonly Dictionary<Delegate, Delegate> operations;
-        private Lazy<Ops> ops = new Lazy<Ops>(() => new Ops(), true);
-        private Lazy<LossOps> lossOps = new Lazy<LossOps>(() => new LossOps(), true);
         private List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)> backpropagationSteps;
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
@@ -236,16 +234,6 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the slice multiple 3D and concat op.
         /// </summary>
         public static Func<Tensor[], int, int[], PradResult> SliceMultiple3DAndConcatOp => FuncOp.SliceMultiple3DAndConcat;
-
-        /// <summary>
-        /// Gets operation types.
-        /// </summary>
-        public Ops Ops => this.ops.Value;
-
-        /// <summary>
-        /// Gets loss operation types.
-        /// </summary>
-        public LossOps LossOps => this.lossOps.Value;
 
         /// <summary>
         /// Gets the upstream gradient.

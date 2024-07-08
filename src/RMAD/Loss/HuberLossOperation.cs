@@ -4,15 +4,16 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace ParallelReverseAutoDiff.RMAD
+namespace ParallelReverseAutoDiff.RMAD.LossOps
 {
     using System;
     using System.Linq;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// The Huber loss operation.
     /// </summary>
-    public class HuberLossOperation : Operation
+    public class HuberLossOperation : PradOperationBase<BinaryCrossEntropyLossOperation, Matrix, Matrix, Matrix>
     {
         // Store the target matrix for use in the backward pass
         private Matrix target;
@@ -45,7 +46,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="output">The output matrix.</param>
         /// <param name="target">The target matrix.</param>
         /// <returns>The loss matrix.</returns>
-        public Matrix Forward(Matrix output, Matrix target)
+        public override Matrix Forward(Matrix output, Matrix target)
         {
             this.target = target ?? throw new ArgumentNullException(nameof(target));
             if (output.Length != target.Length || output[0].Length != target[0].Length)

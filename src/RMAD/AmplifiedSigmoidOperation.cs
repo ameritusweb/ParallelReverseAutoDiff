@@ -6,11 +6,12 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// The sigmoid operation utilizing gradient amplification.
     /// </summary>
-    public class AmplifiedSigmoidOperation : Operation
+    public class AmplifiedSigmoidOperation : PradOperationBase<AmplifiedSigmoidOperation, Matrix, Matrix>
     {
         private Matrix input;
 
@@ -41,7 +42,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="input">The input for the operation.</param>
         /// <returns>The output for the operation.</returns>
-        public Matrix Forward(Matrix input)
+        public override Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;

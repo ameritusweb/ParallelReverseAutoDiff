@@ -6,11 +6,12 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// Applies dropout to a small portion of the input.
     /// </summary>
-    public class ApplyDropoutOperation : Operation
+    public class ApplyDropoutOperation : PradOperationBase<ApplyDropoutOperation, Matrix, Matrix>
     {
         private readonly double dropoutRate;
         private readonly Random random;
@@ -54,7 +55,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="input">The input for the apply dropout operation.</param>
         /// <returns>The output for the apply dropout operation.</returns>
-        public Matrix Forward(Matrix input)
+        public override Matrix Forward(Matrix input)
         {
             this.input = input;
             int numRows = input.Length;

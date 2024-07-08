@@ -7,11 +7,12 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Threading.Tasks;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// Matrix multiplication operation.
     /// </summary>
-    public class MatrixMultiplyOperation : Operation
+    public class MatrixMultiplyOperation : PradOperationBase<MatrixMultiplyOperation, Matrix, Matrix, Matrix>
     {
         private Matrix input1;
         private Matrix input2;
@@ -46,7 +47,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <param name="input1">The first input to the matrix multiply operation.</param>
         /// <param name="input2">The second input to the matrix multiply operation.</param>
         /// <returns>The output of the matrix multiply operation.</returns>
-        public Matrix Forward(Matrix input1, Matrix input2)
+        public override Matrix Forward(Matrix input1, Matrix input2)
         {
             this.input1 = input1;
             this.input2 = input2;

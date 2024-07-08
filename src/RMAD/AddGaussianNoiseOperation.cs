@@ -7,11 +7,12 @@ namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
     using System.Linq;
+    using ParallelReverseAutoDiff.PRAD;
 
     /// <summary>
     /// Add Gaussian noise operation.
     /// </summary>
-    public class AddGaussianNoiseOperation : Operation
+    public class AddGaussianNoiseOperation : PradOperationBase<AddGaussianNoiseOperation, Matrix, Matrix>
     {
         private static Random rand = new Random(Guid.NewGuid().GetHashCode());
         private readonly double noiseRatio;
@@ -41,7 +42,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="input">The matrix to add Gaussian noise to.</param>
         /// <returns>The output of the add Gaussian noise operation.</returns>
-        public Matrix Forward(Matrix input)
+        public override Matrix Forward(Matrix input)
         {
             this.input = input;
             double mean = input.SelectMany(x => x).Average();

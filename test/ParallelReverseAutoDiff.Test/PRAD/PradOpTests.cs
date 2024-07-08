@@ -880,7 +880,10 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             Matrix m2 = new Matrix(2, 3);
 
-            op.SeedResult.Then<AmplifiedSigmoidOperation>(new AmplifiedSigmoidArgs(m1));
+            op.SeedResult
+               .Then(new AmplifiedSigmoidOperation())
+               .Then(new MatrixMultiplyOperation(), m1)
+               .Then(new RMAD.LossOps.MeanSquaredErrorLossOperation(), m2);
         }
 
         [Fact]

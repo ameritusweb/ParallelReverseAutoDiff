@@ -295,57 +295,6 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Applies the specified operation to this PradResult.
-        /// </summary>
-        /// <typeparam name="TOperation">The operation class.</typeparam>
-        /// <param name="args">The args.</param>
-        /// <param name="constructorParams">The constructor parameters.</param>
-        /// <returns>A PradResult.</returns>
-        public PradResult Then<TOperation>(IPradOperationArgs<TOperation> args, params object[] constructorParams)
-            where TOperation : IOperation, new()
-        {
-            var opType = typeof(TOperation);
-            IOperation op = (IOperation)Activator.CreateInstance(opType, constructorParams);
-            var forwardMethod = opType.GetMethod("Forward");
-
-            return this.InnerThenGeneric(args, forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToMatrix()) });
-        }
-
-        /// <summary>
-        /// Applies the specified operation to this PradResult.
-        /// </summary>
-        /// <typeparam name="TOperation">The operation class.</typeparam>
-        /// <param name="args">The args.</param>
-        /// <param name="constructorParams">The constructor parameters.</param>
-        /// <returns>A PradResult.</returns>
-        public PradResult Then<TOperation>(IPradDeepOperationArgs<TOperation> args, params object[] constructorParams)
-            where TOperation : IDeepOperation, new()
-        {
-            var opType = typeof(TOperation);
-            IDeepOperation op = (IDeepOperation)Activator.CreateInstance(opType, constructorParams);
-            var forwardMethod = opType.GetMethod("Forward");
-
-            return this.InnerThenGeneric(args, forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToDeepMatrix()) });
-        }
-
-        /// <summary>
-        /// Applies the specified operation to this PradResult.
-        /// </summary>
-        /// <typeparam name="TOperation">The operation class.</typeparam>
-        /// <param name="args">The args.</param>
-        /// <param name="constructorParams">The constructor parameters.</param>
-        /// <returns>A PradResult.</returns>
-        public PradResult Then<TOperation>(IPradBatchOperationArgs<TOperation> args, params object[] constructorParams)
-            where TOperation : IBatchOperation, new()
-        {
-            var opType = typeof(TOperation);
-            IBatchOperation op = (IBatchOperation)Activator.CreateInstance(opType, constructorParams);
-            var forwardMethod = opType.GetMethod("Forward");
-
-            return this.InnerThenGeneric(args, forwardMethod, op, (v) => op.Backward(v.ToDeepMatrix()));
-        }
-
-        /// <summary>
         /// Applies the specified operations to this PradResult.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
@@ -395,37 +344,127 @@ namespace ParallelReverseAutoDiff.PRAD
             return results;
         }
 
-        private PradResult InnerThenGeneric(object args, MethodInfo forwardMethod, IOperationBase op, Func<Tensor, BackwardResult[]> backwardFunc)
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation to apply.</typeparam>
+        /// <typeparam name="TParamType">The type of the first parameter to the forward function.</typeparam>
+        /// <typeparam name="TReturnType">The return type of the forward function.</typeparam>
+        /// <param name="opFunc">The op.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation, TParamType, TReturnType>(Func<PradOperationBase<TOperation, TParamType, TReturnType>> opFunc)
+            where TOperation : PradOperationBase<TOperation, TParamType, TReturnType>
         {
-            List<object> forwardParams = new List<object>();
+            var operation = opFunc.Invoke();
+            var opType = operation.GetType();
+            IOperation op = operation;
+            var forwardMethod = opType.GetMethod("Forward");
 
-            var interfaces = args.GetType().GetInterfaces();
-            Type interfaceType = interfaces
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPradOperationTupleArgs<,>));
+            return this.InnerThenGeneric(new object?[] { this.PradOp.GetCurrentTensor() }, typeof(TReturnType), forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToMatrix()) });
+        }
 
-            if (interfaceType != null)
-            {
-                var getArgMethod = interfaceType.GetRuntimeProperty("Args");
-                ITuple? tuple = getArgMethod.GetValue(args) as ITuple;
-                if (tuple != null)
-                {
-                    for (int i = 0; i < tuple.Length; i++)
-                    {
-                        forwardParams.Add(tuple[i]);
-                    }
-                }
-            }
-            else
-            {
-                interfaceType = interfaces
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPradOperationArg<,>));
-                var getArgMethod = interfaceType.GetRuntimeProperty("Arg");
-                forwardParams.Add(getArgMethod.GetValue(args));
-            }
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation to apply.</typeparam>
+        /// <typeparam name="TParam1Type">The type of the first parameter to the Forward function.</typeparam>
+        /// <typeparam name="TParam2Type">The type of the second parameter to the Forward function.</typeparam>
+        /// <typeparam name="TReturnType">The return type of the Forward function.</typeparam>
+        /// <param name="opFunc">The operation.</param>
+        /// <param name="param2">The second param.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation, TParam1Type, TParam2Type, TReturnType>(Func<PradOperationBase<TOperation, TParam1Type, TParam2Type, TReturnType>> opFunc, TParam2Type param2)
+            where TOperation : PradOperationBase<TOperation, TParam1Type, TParam2Type, TReturnType>
+        {
+            var operation = opFunc.Invoke();
+            var opType = operation.GetType();
+            IOperation op = operation;
+            var forwardMethod = opType.GetMethod("Forward");
 
+            return this.InnerThenGeneric(new object?[] { this.PradOp.GetCurrentTensor(), param2 }, typeof(TReturnType), forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToMatrix()) });
+        }
+
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation to apply.</typeparam>
+        /// <typeparam name="TParamType">The type of the first parameter to the Forward function.</typeparam>
+        /// <typeparam name="TReturnType">The return type of the Forward function.</typeparam>
+        /// <param name="operation">The operation.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation, TParamType, TReturnType>(PradOperationBase<TOperation, TParamType, TReturnType> operation)
+            where TOperation : PradOperationBase<TOperation, TParamType, TReturnType>
+        {
+            var opType = operation.GetType();
+            IOperation op = operation;
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(new object?[] { this.PradOp.GetCurrentTensor() }, typeof(TReturnType), forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToMatrix()) });
+        }
+
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation to apply.</typeparam>
+        /// <typeparam name="TParam1Type">The type of the first parameter to the Forward function.</typeparam>
+        /// <typeparam name="TParam2Type">The type of the second parameter to the Forward function.</typeparam>
+        /// <typeparam name="TReturnType">The return type of the Forward function.</typeparam>
+        /// <param name="operation">The operation.</param>
+        /// <param name="param2">The second param.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then<TOperation, TParam1Type, TParam2Type, TReturnType>(PradOperationBase<TOperation, TParam1Type, TParam2Type, TReturnType> operation, TParam2Type param2)
+            where TOperation : PradOperationBase<TOperation, TParam1Type, TParam2Type, TReturnType>
+        {
+            var opType = operation.GetType();
+            IOperation op = operation;
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(new object?[] { this.PradOp.GetCurrentTensor(), param2 }, typeof(TReturnType), forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToMatrix()) });
+        }
+
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation to apply.</typeparam>
+        /// <typeparam name="TParamType">The type of the first parameter to the Forward function.</typeparam>
+        /// <typeparam name="TReturnType">The return type of the Forward function.</typeparam>
+        /// <param name="operation">The operation.</param>
+        /// <param name="param">The param type.</param>
+        /// <returns>A PradResult.</returns>
+        internal PradResult Then<TOperation, TParamType, TReturnType>(PradDeepOperationBase<TOperation, TParamType, TReturnType> operation, TParamType param)
+            where TOperation : PradDeepOperationBase<TOperation, TParamType, TReturnType>
+        {
+            var opType = operation.GetType();
+            IDeepOperation op = operation;
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(new object?[] { param }, typeof(TReturnType), forwardMethod, op, (v) => new BackwardResult[] { op.Backward(v.ToDeepMatrix()) });
+        }
+
+        /// <summary>
+        /// Applies the specified operation to this PradResult.
+        /// </summary>
+        /// <typeparam name="TOperation">The operation to apply.</typeparam>
+        /// <typeparam name="TParamType">The type of the first parameter to the Forward function.</typeparam>
+        /// <typeparam name="TReturnType">The return type of the Forward function.</typeparam>
+        /// <param name="operation">The operation.</param>
+        /// <param name="param">The param type.</param>
+        /// <returns>A PradResult.</returns>
+        internal PradResult Then<TOperation, TParamType, TReturnType>(PradBatchOperationBase<TOperation, TParamType, TReturnType> operation, TParamType param)
+            where TOperation : PradBatchOperationBase<TOperation, TParamType, TReturnType>
+        {
+            var opType = operation.GetType();
+            IBatchOperation op = operation;
+            var forwardMethod = opType.GetMethod("Forward");
+
+            return this.InnerThenGeneric(new object?[] { param }, typeof(TReturnType), forwardMethod, op, (v) => op.Backward(v.ToDeepMatrix()));
+        }
+
+        private PradResult InnerThenGeneric(object?[] parameters, Type returnType, MethodInfo forwardMethod, IOperationBase op, Func<Tensor, BackwardResult[]> backwardFunc)
+        {
             Func<Tensor, Tensor> forward = (t) =>
             {
-                var data = forwardMethod.Invoke(op, forwardParams.ToArray());
+                var data = forwardMethod.Invoke(op, parameters);
                 if (data is Tensor tensor)
                 {
                     return tensor;
