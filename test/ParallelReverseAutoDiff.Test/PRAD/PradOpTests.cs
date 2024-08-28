@@ -1220,6 +1220,9 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Debug.WriteLine($"PRAD resultMagnitudes: {resultMagnitudes.Result.PrintCode(8)}");
             Debug.WriteLine($"PRAD resultAngles: {resultAngles.Result.PrintCode(8)}");
 
+
+            var naiveOutputCode2 = resultTensor.PrintCode();
+
             // # Reshape and transpose results
             // result_magnitudes_trans = tf.transpose(tf.reshape(result_magnitudes, [1, 4, -1]), [0, 2, 1])
             // result_angles_trans = tf.transpose(tf.reshape(result_angles, [1, 4, -1]), [0, 2, 1])
@@ -1227,7 +1230,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             // reshaped_result_magnitudes = tf.reshape(result_magnitudes_trans, [num_rows, -1])
             // reshaped_result_angles = tf.reshape(result_angles_trans, [num_rows, -1])
 
-            var resultMagnitudesTrans = resultMagnitudes.PradOp.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+            var resultMagnitudesTrans2 = resultMagnitudes.PradOp.Reshape(1, 4, -1);
+            var resultMagnitudesTrans = resultMagnitudesTrans2.PradOp.Transpose(new int[] { 0, 2, 1 });
             var resultAnglesTrans = resultAngles.PradOp.Reshape(1, 4, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
 
             var reshapedResultMagnitudes = resultMagnitudesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });

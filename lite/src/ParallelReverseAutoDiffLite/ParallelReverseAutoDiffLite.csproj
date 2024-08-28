@@ -39,11 +39,13 @@
     <Compile Include="..\..\..\src\Interprocess\PseudoUniqueIDGenerator.cs" Link="Interprocess\PseudoUniqueIDGenerator.cs" />
     <Compile Include="..\..\..\src\PRAD\ConditionallyInternalUseOnlyAttribute.cs" Link="PRAD\ConditionallyInternalUseOnlyAttribute.cs" />
     <Compile Include="..\..\..\src\PRAD\IListExtensions.cs" Link="PRAD\IListExtensions.cs" />
-	<Compile Include="..\..\..\src\PRAD\Ops.cs" Link="PRAD\Ops.cs" />
-	<Compile Include="..\..\..\src\PRAD\LossOps.cs" Link="PRAD\LossOps.cs" />
+	<Compile Include="..\..\..\src\PRAD\PradOp.LossOps.cs" Link="PRAD\PradOp.LossOps.cs" />
     <Compile Include="..\..\..\src\PRAD\PradMath.cs" Link="PRAD\PradMath.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOp.cs" Link="PRAD\PradOp.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOperationAttribute.cs" Link="PRAD\PradOperationAttribute.cs" />
+	<Compile Include="..\..\..\src\PRAD\PradOperationBase.cs" Link="PRAD\PradOperationBase.cs" />
+	<Compile Include="..\..\..\src\PRAD\PradDeepOperationBase.cs" Link="PRAD\PradDeepOperationBase.cs" />
+	<Compile Include="..\..\..\src\PRAD\PradBatchOperationBase.cs" Link="PRAD\PradBatchOperationBase.cs" />
     <Compile Include="..\..\..\src\PRAD\PradResult.cs" Link="PRAD\PradResult.cs" />
     <Compile Include="..\..\..\src\PRAD\PradResultBase.cs" Link="PRAD\PradResultBase.cs" />
     <Compile Include="..\..\..\src\PRAD\PradResultExtensions.cs" Link="PRAD\PradResultExtensions.cs" />

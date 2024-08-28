@@ -48,5 +48,42 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Assert.Equal(new int[] { 2, 2, 2 }, lastSlice.Shape);
             Assert.Equal(expectedLastSliceData, lastSlice.Data);
         }
+
+        [Fact]
+        public void Transpose_1_2_3_Shape_With_0_2_1_Permutation_ShouldReturnCorrectResult()
+        {
+            // Arrange
+            double[] data = { 1, 2, 3, 4, 5, 6 };
+            int[] shape = { 1, 2, 3 };
+            Tensor tensor = new Tensor(shape, data);
+
+            int[] permutation = { 0, 2, 1 };
+
+            // Act
+            Tensor result = tensor.Transpose(permutation);
+
+            // Assert
+            Assert.Equal(new int[] { 1, 3, 2 }, result.Shape);
+
+            double[,,] expectedData = new double[1, 3, 2]
+            {
+            {
+                { 1, 4 },
+                { 2, 5 },
+                { 3, 6 }
+            }
+            };
+
+            for (int i = 0; i < 1; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        Assert.Equal(expectedData[i, j, k], result.Data[i * 6 + j * 2 + k]);
+                    }
+                }
+            }
+        }
     }
 }

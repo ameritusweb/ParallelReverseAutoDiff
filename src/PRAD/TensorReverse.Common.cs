@@ -1040,23 +1040,37 @@ namespace ParallelReverseAutoDiff.PRAD
             if (originalTensor.Shape.Length == 2 && permutation.SequenceEqual(new int[] { 1, 0 }))
             {
                 // 2D case
-                int rows = originalTensor.Shape[1]; // Transposed dimensions
-                int cols = originalTensor.Shape[0];
+                int rows = originalTensor.Shape[0]; // Original dimensions
+                int cols = originalTensor.Shape[1];
 
-                Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, upstreamGradient.Data, rows, result.Data, cols);
+                Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, cols, rows, PradTools.One, upstreamGradient.Data, rows, result.Data, cols);
             }
             else if (originalTensor.Shape.Length == 3 && permutation.SequenceEqual(new int[] { 0, 2, 1 }))
             {
                 // 3D batch case
                 int batchSize = originalTensor.Shape[0];
-                int rows = originalTensor.Shape[2]; // Transposed dimensions
-                int cols = originalTensor.Shape[1];
+                int rows = originalTensor.Shape[1];  // Original dimensions
+                int cols = originalTensor.Shape[2];
                 int sliceSize = rows * cols;
+                var resultSlice = PradTools.AllocateArray(sliceSize);
 
-                Parallel.For(0, batchSize, batchIndex =>
+                for (int b = 0; b < batchSize; b++)
                 {
-                    Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, upstreamGradient.Data, batchIndex * sliceSize, result.Data, batchIndex * sliceSize);
-                });
+                    var upstreamSlice = upstreamGradient.Data.AsSpan(b * sliceSize, sliceSize);
+
+                    Blas.omatcopy(
+                        LayoutChar.RowMajor,
+                        TransChar.Yes,
+                        cols,                 // Number of rows in upstreamGradient slice
+                        rows,                 // Number of columns in upstreamGradient slice
+                        PradTools.One,                  // Alpha (scale factor)
+                        upstreamSlice.ToArray(),
+                        rows,                 // Leading dimension of upstreamGradient slice
+                        resultSlice,
+                        cols);
+
+                    Buffer.BlockCopy(resultSlice, 0, result.Data, b * sliceSize * PradTools.SizeOf, sliceSize * PradTools.SizeOf);
+                }
             }
             else
             {

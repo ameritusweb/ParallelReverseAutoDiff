@@ -820,11 +820,26 @@ namespace ParallelReverseAutoDiff.PRAD
                 int rows = this.Shape[1];
                 int cols = this.Shape[2];
                 int sliceSize = rows * cols;
+                var resultSlice = PradTools.AllocateArray(sliceSize);
 
-                Parallel.For(0, batchSize, batchIndex =>
+                // We'll treat this as a batch of 2D matrices
+                for (int b = 0; b < batchSize; b++)
                 {
-                    Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, this.Data, batchIndex * sliceSize, result.Data, batchIndex * sliceSize);
-                });
+                    var slice = this.Data.AsSpan(b * sliceSize, sliceSize);
+
+                    Blas.omatcopy(
+                        LayoutChar.RowMajor,
+                        TransChar.Yes,
+                        rows,
+                        cols,
+                        PradTools.One,
+                        slice.ToArray(),
+                        cols,
+                        resultSlice,
+                        rows);
+
+                    Buffer.BlockCopy(resultSlice, 0, result.Data, b * sliceSize * PradTools.SizeOf, sliceSize * PradTools.SizeOf);
+                }
             }
             else
             {

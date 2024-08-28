@@ -44,6 +44,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static double One { get; } = 1.0;
 
         /// <summary>
+        /// Gets the SizeOf.
+        /// </summary>
+        internal static int SizeOf { get; } = sizeof(double);
+
+        /// <summary>
         /// Cast a double to a double.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -51,6 +56,16 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static double Cast(double value)
         {
             return value;
+        }
+
+        /// <summary>
+        /// Gets an array of doubles.
+        /// </summary>
+        /// <param name="length">The length of the array.</param>
+        /// <returns>The allocated array.</returns>
+        internal static double[] AllocateArray(int length)
+        {
+            return new double[length];
         }
 
         /// <summary>

@@ -44,6 +44,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float One { get; } = 1.0f;
 
         /// <summary>
+        /// Gets the SizeOf.
+        /// </summary>
+        internal static int SizeOf { get; } = sizeof(float);
+
+        /// <summary>
         /// Cast a double to a float.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -51,6 +56,16 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float Cast(double value)
         {
             return (float)value;
+        }
+
+        /// <summary>
+        /// Gets an array of floats.
+        /// </summary>
+        /// <param name="length">The length of the array.</param>
+        /// <returns>The allocated array.</returns>
+        internal static float[] AllocateArray(int length)
+        {
+            return new float[length];
         }
 
         /// <summary>

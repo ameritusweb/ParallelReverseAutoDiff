@@ -374,6 +374,41 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TransposeReverse_3D_Test()
+        {
+            // Arrange
+            var tensor = new Tensor(new int[] { 2, 3, 4 }, new double[]
+            {
+        1, 2, 3, 4,   5, 6, 7, 8,   9, 10, 11, 12,
+        13, 14, 15, 16,   17, 18, 19, 20,   21, 22, 23, 24
+            });
+            var upstreamGradient = new Tensor(new int[] { 2, 4, 3 }, new double[]
+            {
+        1, 5, 9,   2, 6, 10,   3, 7, 11,   4, 8, 12,
+        13, 17, 21,   14, 18, 22,   15, 19, 23,   16, 20, 24
+            });
+            var tensorReverse = new TensorReverse(new Tensor[] { tensor });
+
+            // Act
+            var gradient = tensorReverse.TransposeReverse(upstreamGradient, new int[] { 0, 2, 1 });
+
+            // Assert
+            var expectedGradient = new double[]
+            {
+        1, 2, 3, 4,   5, 6, 7, 8,   9, 10, 11, 12,
+        13, 14, 15, 16,   17, 18, 19, 20,   21, 22, 23, 24
+            };
+            Assert.Equal(expectedGradient, gradient.Data);
+            Assert.Equal(new int[] { 2, 3, 4 }, gradient.Shape);
+
+            // Additional assertions for more detailed checking
+            for (int i = 0; i < expectedGradient.Length; i++)
+            {
+                Assert.Equal(expectedGradient[i], gradient.Data[i], 6);  // 6 decimal places precision
+            }
+        }
+
+        [Fact]
         public void ElementwiseSubReverse_Test()
         {
             // Arrange
