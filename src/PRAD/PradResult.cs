@@ -171,6 +171,20 @@ namespace ParallelReverseAutoDiff.PRAD
 
         /// <summary>
         /// Applies the following operation.
+        /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="other">The other tensor.</param>
+        /// <param name="additional">The additional tensor.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<Tensor, Tensor, PradResult> operation, Tensor other, Tensor additional)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<Tensor, Tensor, PradResult>>(operation);
+            return instanceOperation(other, additional);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
         /// <param name="others">The other tensors.</param>

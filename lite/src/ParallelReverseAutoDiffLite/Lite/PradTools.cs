@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Numerics;
 
     /// <summary>
     /// PRAD tools.
@@ -66,6 +67,46 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float[] AllocateArray(int length)
         {
             return new float[length];
+        }
+
+        /// <summary>
+        /// Gets the vector count.
+        /// </summary>
+        /// <returns>The vector count.</returns>
+        internal static int VectorCount()
+        {
+            return Vector<float>.Count;
+        }
+
+        /// <summary>
+        /// Gets a vector of floats.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>The vector of floats.</returns>
+        internal static Vector<float> AllocateVector(float[] data, int length)
+        {
+            return new Vector<float>(data, length);
+        }
+
+        /// <summary>
+        /// Allocates a vector.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The vector.</returns>
+        internal static Vector<float> AllocateVector(float value)
+        {
+            return new Vector<float>(value);
+        }
+
+        /// <summary>
+        /// Converts a vector of longs to a vector of floats.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <returns>The converted vector.</returns>
+        internal static Vector<float> Convert(Vector<int> vector)
+        {
+            return Vector.ConvertToSingle(vector);
         }
 
         /// <summary>

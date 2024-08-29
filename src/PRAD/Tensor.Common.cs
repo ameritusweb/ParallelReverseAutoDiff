@@ -9,6 +9,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Text;
     using System.Threading.Tasks;
     using MKLNET;
@@ -38,6 +39,49 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Tensor operator *(Tensor a, Tensor b)
         {
             return a.ElementwiseMultiply(b);
+        }
+
+        /// <summary>
+        /// Returns a tensor formed by selecting elements from two input tensors, based on a condition tensor.
+        /// </summary>
+        /// <param name="condition">A tensor containing boolean-like values (0 or 1), where 1 indicates that the corresponding element should be taken from tensor <paramref name="x"/> and 0 indicates that the corresponding element should be taken from tensor <paramref name="y"/>.</param>
+        /// <param name="x">The tensor from which to select elements when the condition is true (1).</param>
+        /// <param name="y">The tensor from which to select elements when the condition is false (0).</param>
+        /// <returns>A new tensor with the same shape as the input tensors, containing elements selected from <paramref name="x"/> and <paramref name="y"/> based on the <paramref name="condition"/> tensor.</returns>
+        /// <exception cref="ArgumentException">Thrown if the shapes of the input tensors do not match.</exception>
+        /// <remarks>
+        /// This method uses SIMD (Single Instruction, Multiple Data) vectorization to optimize the element selection process for large tensors.
+        /// The method processes elements in blocks of vector size, then handles any remaining elements that do not fit into a full vector.
+        /// </remarks>
+        public static Tensor Where(Tensor condition, Tensor x, Tensor y)
+        {
+            if (!condition.Shape.SequenceEqual(x.Shape) || !condition.Shape.SequenceEqual(y.Shape))
+            {
+                throw new ArgumentException("All tensors must have the same shape for the Where operation.");
+            }
+
+            var result = new Tensor(x.Shape);
+            int vectorSize = PradTools.VectorCount();
+
+            for (int i = 0; i <= condition.Data.Length - vectorSize; i += vectorSize)
+            {
+                var conditionVector = PradTools.AllocateVector(condition.Data, i);
+                var xVector = PradTools.AllocateVector(x.Data, i);
+                var yVector = PradTools.AllocateVector(y.Data, i);
+                var resultVector = Vector.ConditionalSelect(
+                    Vector.Equals(conditionVector, PradTools.AllocateVector(PradTools.One)),
+                    xVector,
+                    yVector);
+                resultVector.CopyTo(result.Data, i);
+            }
+
+            // Handle remaining elements
+            for (int i = condition.Data.Length - (condition.Data.Length % vectorSize); i < condition.Data.Length; i++)
+            {
+                result.Data[i] = condition.Data[i] != 0 ? x.Data[i] : y.Data[i];
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -83,6 +127,34 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return slices;
+        }
+
+        /// <summary>
+        /// Performs a vectorized bit flip operation on the tensor.
+        /// This effectively converts 1s to 0s and 0s to 1s in one pass.
+        /// </summary>
+        /// <returns>A new tensor with flipped bits.</returns>
+        public Tensor VectorizedBitFlip()
+        {
+            var result = new Tensor(this.Shape);
+            int vectorSize = PradTools.VectorCount();
+
+            int i = 0;
+            for (; i <= this.Data.Length - vectorSize; i += vectorSize)
+            {
+                var vector = PradTools.AllocateVector(this.Data, i);
+                var oneVector = PradTools.AllocateVector(PradTools.One);
+                var resultVector = oneVector - vector;
+                resultVector.CopyTo(result.Data, i);
+            }
+
+            // Handle remaining elements
+            for (; i < this.Data.Length; i++)
+            {
+                result.Data[i] = PradTools.One - this.Data[i];
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -892,6 +964,97 @@ namespace ParallelReverseAutoDiff.PRAD
             Tensor result = new Tensor(newShape);
 
             this.CopyData(this, result, start, end, step, isSlice, new int[this.Shape.Length], new int[newShape.Length], 0);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Performs element-wise less than comparison with another tensor or scalar.
+        /// </summary>
+        /// <param name="other">The tensor or scalar to compare with.</param>
+        /// <returns>A new tensor containing the boolean mask.</returns>
+        public Tensor LessThan(Tensor other)
+        {
+            if (!this.Shape.SequenceEqual(other.Shape))
+            {
+                throw new ArgumentException("Tensors must have the same shape for element-wise comparison.");
+            }
+
+            var result = new Tensor(this.Shape);
+            int vectorSize = PradTools.VectorCount();
+
+            for (int i = 0; i <= this.Data.Length - vectorSize; i += vectorSize)
+            {
+                var thisVector = PradTools.AllocateVector(this.Data, i);
+                var otherVector = PradTools.AllocateVector(other.Data, i);
+                var comparisonVector = Vector.LessThan(thisVector, otherVector);
+                var resultVector = PradTools.Convert(comparisonVector);
+                resultVector.CopyTo(result.Data, i);
+            }
+
+            // Handle remaining elements
+            for (int i = this.Data.Length - (this.Data.Length % vectorSize); i < this.Data.Length; i++)
+            {
+                result.Data[i] = this.Data[i] < other.Data[i] ? PradTools.One : PradTools.Zero;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Performs element-wise modulus operation with another tensor.
+        /// </summary>
+        /// <param name="other">The tensor to perform modulus with.</param>
+        /// <returns>A new tensor containing the element-wise modulus results.</returns>
+        public Tensor Modulus(Tensor other)
+        {
+            if (!this.Shape.SequenceEqual(other.Shape))
+            {
+                throw new ArgumentException("Tensors must have the same shape for element-wise operations.");
+            }
+
+            var result = new Tensor(this.Shape);
+
+            // Compute element-wise division (quotient)
+            Vml.Div(this.Data, other.Data, result.Data);
+
+            // Apply floor to the quotient
+            Vml.Floor(result.Data, result.Data);
+
+            // Compute element-wise modulus using: this.Data - (quotient * other.Data)
+            var temp = PradTools.AllocateArray(this.Data.Length);
+            Vml.Mul(result.Data, other.Data, temp);  // temp = quotient * other.Data
+            Vml.Sub(this.Data, temp, result.Data);   // result.Data = this.Data - temp
+
+            return result;
+        }
+
+        /// <summary>
+        /// Performs an element-wise floor operation on the tensor.
+        /// </summary>
+        /// <returns>A new tensor containing the element-wise floor results.</returns>
+        public Tensor ElementwiseFloor()
+        {
+            var result = new Tensor(this.Shape);
+
+            // Apply floor to each element in the tensor
+            Vml.Floor(this.Data, result.Data);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Performs an element-wise negation of the tensor.
+        /// </summary>
+        /// <returns>A new tensor containing the element-wise negated results.</returns>
+        public Tensor ElementwiseNegate()
+        {
+            var result = new Tensor(this.Shape);
+
+            // Multiply each element by -1 to negate it
+            var temp = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(temp, PradTools.NegativeOne);
+            Vml.Mul(this.Data, temp, result.Data);
 
             return result;
         }

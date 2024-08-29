@@ -1,4 +1,5 @@
-﻿using ParallelReverseAutoDiff.PRAD;
+﻿using ILGPU.Runtime.Cuda;
+using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
 using System.Diagnostics;
@@ -1286,6 +1287,295 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var finalOutput = output.Then(PradOp.ReshapeOp, new int[] { 3, 40 });
 
             var pradOpOutputCode = finalOutput.Result.PrintCode();
+            var naiveOutputCode = resultTensor.PrintCode();
+
+            Debug.WriteLine("pradOpOutput: " + pradOpOutputCode);
+            Debug.WriteLine("naiveOutput: " + naiveOutputCode);
+
+            Assert.Equal(naiveOutputCode, pradOpOutputCode);
+        }
+
+        [Fact]
+        public void TestVNNElementwiseAddBezierOperation()
+        {
+            Random rand = new Random(3);
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            // Create Bezier Waveforms
+            var N_sin = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(2.0, 9).ToArray());
+            var N_cos = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(2.0, 9).ToArray());
+            var p0 = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(0.0, 9).ToArray());
+            var p1 = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+            var p2 = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+            var p3 = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(0.0, 9).ToArray());
+
+            // Parameters for Atan2 approximation
+            var alpha = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+            var beta = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+            var lambda = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+            var gamma = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+
+            // Naive implementation
+            ElementwiseVectorWeightedAddBezierOperation op = new ElementwiseVectorWeightedAddBezierOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix(),
+                                          N_sin.ToMatrix(), N_cos.ToMatrix(),
+                                          p0.ToMatrix(), p1.ToMatrix(), p2.ToMatrix(), p3.ToMatrix(),
+                                          alpha.ToMatrix(), beta.ToMatrix(), lambda.ToMatrix(), gamma.ToMatrix()).ToTensor();
+
+            // PradOp implementation
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var rows = input1.Shape[0];
+            var cols = input1.Shape[1];
+            var halfCols = cols / 2;
+
+            var (magnitude1, angle1) = opInput1.Split(halfCols, axis: 1);
+            var (magnitude2, angle2) = opInput2.Split(halfCols, axis: 1);
+
+            // Create branches for magnitudes and angles
+            var magnitude1Branch = magnitude1.Branch();
+            var magnitude2Branch = magnitude2.Branch();
+            var angle1Branch = angle1.Branch();
+            var angle2Branch = angle2.Branch();
+
+            // Create PradOp instances for Bezier control points
+            var opN_sin = new PradOp(N_sin);
+            var opN_cos = new PradOp(N_cos);
+            var opP0 = new PradOp(p0);
+            var opP1 = new PradOp(p1);
+            var opP2 = new PradOp(p2);
+            var opP3 = new PradOp(p3);
+
+            // Compute vector components using Bezier waveforms
+            var x1 = magnitude1.Mul(BezierWaveform(angle1, opN_cos, opP0, opP1, opP2, opP3).Result);
+            var y1 = magnitude1Branch.Mul(BezierWaveform(angle1Branch, opN_sin, opP0, opP1, opP2, opP3).Result);
+            var x2 = magnitude2.Mul(BezierWaveform(angle2, opN_cos, opP0, opP1, opP2, opP3).Result);
+            var y2 = magnitude2Branch.Mul(BezierWaveform(angle2Branch, opN_sin, opP0, opP1, opP2, opP3).Result);
+
+            // Sum components
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumY = y1.Then(PradOp.AddOp, y2.Result);
+
+            var sumXBranch = sumX.Branch();
+            var sumYBranch = sumY.Branch();
+
+            // Compute resultant vector magnitude and angle
+            var sumXSquared = sumX.PradOp.Square();
+            var sumYSquared = sumY.PradOp.Square();
+            var magnitudeSquared = sumXSquared.Then(PradOp.AddOp, sumYSquared.Result);
+            var resultMagnitude = magnitudeSquared.Then(PradOp.SquareRootOp)
+                                                  .Then(PradOp.MulOp, opWeights.SeedResult.Result);
+
+            // Approximate Atan2 using Bezier waveforms
+            var opAlpha = new PradOp(alpha);
+            var opBeta = new PradOp(beta);
+            var opLambda = new PradOp(lambda);
+            var opGamma = new PradOp(gamma);
+
+            var resultAngle = Atan2Approximation(sumYBranch, sumXBranch,
+                                                 opAlpha, opBeta, opLambda, opGamma,
+                                                 opN_cos, opN_sin,
+                                                 opP0, opP1, opP2, opP3);
+
+            // Concatenate results
+            var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
+
+            var pradOpOutputCode = res.Result.PrintCode();
+            var naiveOutputCode = resultTensor.PrintCode();
+
+            Debug.WriteLine("pradOpOutput: " + pradOpOutputCode);
+            Debug.WriteLine("naiveOutput: " + naiveOutputCode);
+
+            Assert.Equal(naiveOutputCode, pradOpOutputCode);
+        }
+
+        public PradResult BezierWaveform(PradOp x, PradOp N, PradOp p0, PradOp p1, PradOp p2, PradOp p3)
+        {
+            // Calculate interval limits based on N
+            var nSquared = N.Square();
+            var halfNSquared = nSquared.Then(PradOp.MulOp, new Tensor(N.CurrentShape, 0.5));
+
+            // Determine the segment and calculate the relative position
+            var xMod = x.Modulus(nSquared.Result);
+            var segment = xMod.Then(PradOp.LessThanOp, halfNSquared.Result);
+            var t = xMod.Then(PradOp.DivOp, halfNSquared.Result);
+
+            // Compute Bezier curve for the first segment
+            var y1 = CubicBezier(t.PradOp, p0, p1, p2, p3);
+            // Reflect the Bezier curve for the second segment
+            var tReflected = t.Then(PradOp.SubOp, new Tensor(t.PradOp.CurrentShape, 1.0)).Then(PradOp.MulOp, new Tensor(t.PradOp.CurrentShape, -1.0));
+            var y2 = CubicBezier(tReflected.PradOp, p3, p2, p1, p0);
+
+            // Choose between the segments
+            return y1.Then(PradOp.WhereOp, segment.Result, y2.Result);
+        }
+
+        public PradResult CubicBezier(PradOp t, PradOp p0, PradOp p1, PradOp p2, PradOp p3)
+        {
+            var t2 = t.Square();
+            var t3 = t2.Then(PradOp.MulOp, t.Result!);
+            var mt = t.Sub(new Tensor(t.CurrentShape, 1.0));
+            var mt2 = mt.PradOp.Square();
+            var mt3 = mt2.Then(PradOp.MulOp, mt.Result);
+
+            return mt3.Then(PradOp.MulOp, p0.Result!)
+                      .Then(PradOp.AddOp, t.Mul(mt2.Result).Then(PradOp.MulOp, p1.Result!).Then(PradOp.MulOp, new Tensor(t.CurrentShape, 3.0)).Result)
+                      .Then(PradOp.AddOp, t2.Then(PradOp.MulOp, mt.Result).Then(PradOp.MulOp, p2.Result!).Then(PradOp.MulOp, new Tensor(t.CurrentShape, 3.0)).Result)
+                      .Then(PradOp.AddOp, t3.Then(PradOp.MulOp, p3.Result!).Result);
+        }
+
+        public PradResult Atan2Approximation(PradOp y, PradOp x,
+                                     PradOp alpha, PradOp beta, PradOp lambda, PradOp gamma,
+                                     PradOp N_cos, PradOp N_sin,
+                                     PradOp p0, PradOp p1, PradOp p2, PradOp p3)
+        {
+            var BWCosX = BezierWaveform(x, N_cos, p0, p1, p2, p3);
+            var BWCosY = BezierWaveform(y, N_cos, p0, p1, p2, p3);
+            var BWSinX = BezierWaveform(x, N_sin, p0, p1, p2, p3);
+            var BWSinY = BezierWaveform(y, N_sin, p0, p1, p2, p3);
+
+            var term1 = alpha.Mul(BWCosX.Result);
+            var term2 = beta.Mul(BWSinX.Result);
+            var term3 = lambda.Mul(BWCosY.Result);
+            var term4 = gamma.Mul(BWSinY.Result);
+
+            return term1.Then(PradOp.AddOp, term2.Result)
+                        .Then(PradOp.AddOp, term3.Result)
+                        .Then(PradOp.AddOp, term4.Result);
+        }
+
+        [Fact]
+        public void TestVNNElementwiseAddOperation()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            ElementwiseVectorWeightedAddOperation op = new ElementwiseVectorWeightedAddOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var rows = input1.Shape[0];
+            var cols = input1.Shape[1];
+            var halfCols = cols / 2;
+
+            var (magnitude1, angle1) = opInput1.Split(halfCols, axis: 1);
+            var (magnitude2, angle2) = opInput2.Split(halfCols, axis: 1);
+
+            // Create branches for magnitude1 and magnitude2
+            var magnitude1Branch = magnitude1.Branch();
+            var magnitude2Branch = magnitude2.Branch();
+
+            var angle1Branch = angle1.Branch();
+            var angle2Branch = angle2.Branch();
+
+            // Compute vector components
+            var x1 = magnitude1.Mul(angle1.Cos().Result);
+            var y1 = magnitude1Branch.Mul(angle1Branch.Sin().Result);
+            var x2 = magnitude2.Mul(angle2.Cos().Result);
+            var y2 = magnitude2Branch.Mul(angle2Branch.Sin().Result);
+
+            // Sum components
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumY = y1.Then(PradOp.AddOp, y2.Result);
+
+            var sumXBranch = sumX.Branch();
+            var sumYBranch = sumY.Branch();
+
+            // Compute resultant vector magnitude and angle
+            var sumXSquared = sumX.PradOp.Square();
+            var sumYSquared = sumY.PradOp.Square();
+            var magnitudeSquared = sumXSquared.Then(PradOp.AddOp, sumYSquared.Result);
+            var resultMagnitude = magnitudeSquared.Then(PradOp.SquareRootOp)
+                                                  .Then(PradOp.MulOp, opWeights.SeedResult.Result);
+            var resultAngle = sumYBranch.Atan2(sumXBranch.SeedResult.Result);
+
+            // Concatenate results
+            var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
+
+            var pradOpOutputCode = res.Result.PrintCode();
+            var naiveOutputCode = resultTensor.PrintCode();
+
+            Debug.WriteLine("pradOpOutput: " + pradOpOutputCode);
+            Debug.WriteLine("naiveOutput: " + naiveOutputCode);
+
+            Assert.Equal(naiveOutputCode, pradOpOutputCode);
+        }
+
+        [Fact]
+        public void TestVNNCartesianSummationOperation()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            ElementwiseVectorCartesianSummationOperation op = new ElementwiseVectorCartesianSummationOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var rows = input1.Shape[0];
+            var cols = input1.Shape[1];
+            var halfCols = cols / 2;
+
+            var (magnitude1, angle1) = opInput1.Split(halfCols, axis: 1);
+            var (magnitude2, angle2) = opInput2.Split(halfCols, axis: 1);
+
+            // Create branches for magnitude1 and magnitude2
+            var magnitude1Branch = magnitude1.Branch();
+            var magnitude2Branch = magnitude2.Branch();
+
+            var angle1Branch = angle1.Branch();
+            var angle2Branch = angle2.Branch();
+
+            // Compute vector components
+            var x1 = magnitude1.Mul(angle1.Cos().Result);
+            var y1 = magnitude1Branch.Mul(angle1Branch.Sin().Result);
+            var x2 = magnitude2.Mul(angle2.Cos().Result);
+            var y2 = magnitude2Branch.Mul(angle2Branch.Sin().Result);
+
+            // Sum components
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumY = y1.Then(PradOp.AddOp, y2.Result);
+
+            var sumXBranch = sumX.Branch();
+            var sumYBranch = sumY.Branch();
+
+            // Compute resultant vector magnitude and angle
+            var resultMagnitude = sumX.PradOp.Square()
+                .Then(PradOp.AddOp, sumY.PradOp.Square().Result)
+                .Then(PradOp.SquareRootOp)
+                .Then(PradOp.MulOp, opWeights.SeedResult.Result);
+            var resultAngle = sumYBranch.Atan2(sumXBranch.SeedResult.Result);
+
+            // Create branch for resultMagnitude
+            var resultMagnitudeBranch = resultMagnitude.PradOp.Branch();
+            var resultAngleBranch = resultAngle.PradOp.Branch();
+
+            // Compute final x and y components
+            var finalX = resultMagnitude.Then(PradOp.MulOp, resultAngle.PradOp.Cos().Result);
+            var finalY = resultMagnitudeBranch.Mul(resultAngleBranch.Sin().Result);
+
+            // Sum across all vectors
+            var sumXTotal = finalX.PradOp.Sum(new[] { 0, 1 }).PradOp.Reshape(1, 1);
+            var sumYTotal = finalY.PradOp.Sum(new[] { 0, 1 }).PradOp.Reshape(1, 1);
+
+            var res = sumXTotal.PradOp.Concat(new[] { sumYTotal.Result }, axis: 1).Result;
+
+            var pradOpOutputCode = res.PrintCode();
             var naiveOutputCode = resultTensor.PrintCode();
 
             Debug.WriteLine("pradOpOutput: " + pradOpOutputCode);

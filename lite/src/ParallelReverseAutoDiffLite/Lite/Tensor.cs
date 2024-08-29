@@ -497,6 +497,14 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>A new tensor with the summed elements.</returns>
         public Tensor Sum(int[] axes)
         {
+            // Check if all axes are summed
+            if (axes.Length == this.Shape.Length)
+            {
+                // Return the sum of all elements as a scalar (wrapped in a tensor)
+                float totalSum = this.Data.Sum();
+                return new Tensor(new int[] { 1 }, new float[] { totalSum });
+            }
+
             // Step 1: Determine the shape of the resulting tensor after summing
             var newShape = this.Shape.ToList();
             foreach (var axis in axes.OrderByDescending(a => a))

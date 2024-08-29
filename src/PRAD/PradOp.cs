@@ -101,6 +101,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> DivIntoOp => FuncOp.DivInto;
 
         /// <summary>
+        /// Gets the modulus op.
+        /// </summary>
+        public static Func<Tensor, PradResult> ModulusOp => FuncOp.Modulus;
+
+        /// <summary>
         /// Gets the expand dims op.
         /// </summary>
         public static Func<int, PradResult> ExpandDimsOp => FuncOp.ExpandDims;
@@ -174,6 +179,16 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the atan2 op.
         /// </summary>
         public static Func<Tensor, PradResult> Atan2Op => FuncOp.Atan2;
+
+        /// <summary>
+        /// Gets the less than op.
+        /// </summary>
+        public static Func<Tensor, PradResult> LessThanOp => FuncOp.LessThan;
+
+        /// <summary>
+        /// Gets the where op.
+        /// </summary>
+        public static Func<Tensor, Tensor, PradResult> WhereOp => FuncOp.Where;
 
         /// <summary>
         /// Gets the stack op.
@@ -1064,8 +1079,8 @@ namespace ParallelReverseAutoDiff.PRAD
 
             this.splitStep = split;
 
-            var branch = newOp.SplitBranch();
-            var splitOps = new PradOp[] { newOp, branch };
+            var branches = newOp.SplitBranchFromResults(results);
+            var splitOps = new PradOp[] { newOp }.Concat(branches).ToArray();
             this.splitOps = splitOps;
             return splitOps;
         }
@@ -1268,6 +1283,151 @@ namespace ParallelReverseAutoDiff.PRAD
                 var gradient = tensorReverse.SliceReverse(upstreamGrad, begin, size, strides);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the element-wise "less than" comparison between the current tensor and another tensor.
+        /// </summary>
+        /// <param name="tensor">The tensor to compare against the current tensor.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> representing the result of the "less than" operation,
+        /// along with the associated gradient and backpropagation steps.
+        /// </returns>
+        /// <remarks>
+        /// This operation compares the elements of the current tensor with the corresponding elements
+        /// of the provided <paramref name="tensor"/>. The result tensor contains boolean-like values
+        /// indicating where the elements of the current tensor are less than the elements of the
+        /// provided tensor. The gradient for this operation is always zero because the "less than"
+        /// operation is non-differentiable.
+        /// </remarks>
+        [PradOperation(nameof(LessThanOp))]
+        public PradResult LessThan(Tensor tensor)
+        {
+            var result = this.currentTensor.LessThan(tensor);
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                // The gradient for LessThan is always zero, but we need to pass it back
+                var gradients = new Tensor[] { new Tensor(this.currentTensor.Shape), new Tensor(tensor.Shape) };
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    if (tensors[i] is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Selects elements from the current tensor or another tensor based on a condition tensor.
+        /// </summary>
+        /// <param name="condition">A tensor containing boolean-like values (0 or 1), where 1 indicates
+        /// that the corresponding element should be taken from the current tensor, and 0 indicates that
+        /// the corresponding element should be taken from the <paramref name="other"/> tensor.</param>
+        /// <param name="other">The tensor from which to select elements when the condition is false (0).</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> representing the result of the "where" operation, along with the
+        /// associated gradient and backpropagation steps.
+        /// </returns>
+        /// <remarks>
+        /// This operation creates a new tensor by selecting elements from the current tensor and
+        /// the <paramref name="other"/> tensor based on the values in the <paramref name="condition"/> tensor.
+        /// The gradient for the "where" operation is computed based on the condition tensor, with the gradient
+        /// of the condition itself being zero.
+        /// </remarks>
+        [PradOperation(nameof(WhereOp))]
+        public PradResult Where(Tensor condition, Tensor other)
+        {
+            var result = Tensor.Where(condition, this.currentTensor, other);
+            var grad = Tensor.ToTensorArray(3, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradX = Tensor.Where(condition, upstreamGrad, new Tensor(upstreamGrad.Shape));
+                var gradY = Tensor.Where(condition.VectorizedBitFlip(), upstreamGrad, new Tensor(upstreamGrad.Shape));
+                var gradCondition = new Tensor(condition.Shape); // Gradient of condition is always zero
+
+                var gradients = new Tensor[] { gradX, gradCondition, gradY };
+                PradOp?[] ops = new PradOp?[3];
+                var tensors = new Tensor[] { this.currentTensor, condition, other };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    if (tensors[i] is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Performs an element-wise modulus operation between the current tensor and the provided tensor.
+        /// </summary>
+        /// <param name="tensor">The tensor to perform the modulus operation with.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> containing the result of the element-wise modulus operation
+        /// and managing the backpropagation steps for gradient calculation.
+        /// </returns>
+        /// <remarks>
+        /// The modulus operation is defined as the remainder of the division of the current tensor by the provided tensor.
+        /// This method also sets up the backpropagation logic to calculate gradients during the training of a neural network.
+        /// The gradient w.r.t. the first operand (current tensor) is straightforwardly the upstream gradient.
+        /// The gradient w.r.t. the second operand (provided tensor) involves a more complex calculation,
+        /// which includes an element-wise floor operation followed by negation.
+        /// </remarks>
+        /// <example>
+        /// Suppose you have a tensor `A` with values [4, 7, 9] and tensor `B` with values [2, 3, 5].
+        /// The result of `A.Modulus(B)` will be a tensor with values [0, 1, 4], representing the element-wise modulus.
+        /// </example>
+        /// <exception cref="ArgumentException">Thrown if the shapes of the tensors do not match for the operation.</exception>
+        [PradOperation(nameof(ModulusOp))]
+        public PradResult Modulus(Tensor tensor)
+        {
+            var result = this.currentTensor.Modulus(tensor);
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                // Gradient w.r.t. x (first operand)
+                var gradX = upstreamGrad;
+
+                // Gradient w.r.t. y (second operand)
+                var quotient = this.currentTensor.ElementwiseDivide(tensor);
+                var gradY = upstreamGrad * quotient.ElementwiseFloor().ElementwiseNegate();
+
+                var gradients = new Tensor[] { gradX, gradY };
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    if (tensors[i] is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);
@@ -1716,6 +1876,33 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return branchedOp;
+        }
+
+        /// <summary>
+        /// Branch to another prad op.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <returns>The other prad op.</returns>
+        internal PradOp[] SplitBranchFromResults(Tensor[] results)
+        {
+            List<PradOp> splits = new List<PradOp>();
+            for (int i = 1; i < results.Length; ++i)
+            {
+                var branchedOp = new PradOp(results[i]);
+                if (this.backpropagationSteps.Any())
+                {
+                    branchedOp.parentResult = this.backpropagationSteps.Last().result;
+                    branchedOp.parentResult.SplitBranches.Add(branchedOp);
+                }
+                else if (this.splitStep.HasValue)
+                {
+                    branchedOp.parentResult = this.splitStep.Value.result;
+                }
+
+                splits.Add(branchedOp);
+            }
+
+            return splits.ToArray();
         }
 
         /// <summary>
