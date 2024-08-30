@@ -1790,9 +1790,13 @@ namespace ParallelReverseAutoDiff.PRAD
                     currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
                 }
 
+                if (result.SplitBranches.Any())
+                {
+                }
+
                 // Then, backpropagate through all split branches
                 List<Tensor> branchGradients = new List<Tensor>();
-                foreach (var branch in result.SplitBranches)
+                foreach (var branch in result.SplitBranches.Where(x => x.UpstreamGradient != null && !x.IsDependentBranch))
                 {
                     var branchGradient = branch.Back();
                     branchGradients.Add(branchGradient);

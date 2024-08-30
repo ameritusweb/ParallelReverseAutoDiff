@@ -357,11 +357,17 @@ namespace ParallelReverseAutoDiff.PRAD
             var gradX = new Tensor(x.Shape);
             var sqrtX = new Tensor(x.Shape);
 
+            var epsilon = 1e-10;
+            var normalizedSqrtX = new Tensor(x.Shape);
+            var epsilonTensor = new Tensor(x.Shape, epsilon);
+
             // Compute sqrt(x)
             Vml.Sqrt(x.Data.Length, x.Data, sqrtX.Data);
 
+            Vml.MaxMag(sqrtX.Data.Length, sqrtX.Data, epsilonTensor.Data, normalizedSqrtX.Data);
+
             // Compute gradX = upstreamGradient / (2 * sqrt(x))
-            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, sqrtX.Data, gradX.Data);
+            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, normalizedSqrtX.Data, gradX.Data);
             Blas.scal(PradTools.Half, gradX.Data);
 
             return gradX;

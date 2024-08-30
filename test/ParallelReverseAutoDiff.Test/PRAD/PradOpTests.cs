@@ -1510,6 +1510,70 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestVNNElementwiseAddOperationBack()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var rows = input1.Shape[0];
+            var cols = input1.Shape[1];
+            var halfCols = cols / 2;
+
+            var (magnitude1, angle1) = opInput1.Split(halfCols, axis: 1);
+            var (magnitude2, angle2) = opInput2.Split(halfCols, axis: 1);
+
+            // Compute vector components
+
+            var angle1Branch = angle1.Branch();
+
+            var cosResult = angle1.Cos().Result;
+            var sinResult = angle1Branch.Sin().Result;
+
+            var (x1, y1) = magnitude1.DoParallel(
+                mag => mag.Mul(cosResult),
+                mag => mag.Mul(sinResult)
+            );
+
+            var angle2Branch = angle2.Branch();
+
+            var cosResult1 = angle2.Cos().Result;
+            var sinResult1 = angle2Branch.Sin().Result;
+
+            var (x2, y2) = magnitude2.DoParallel(
+                mag => mag.Mul(cosResult1),
+                mag => mag.Mul(sinResult1)
+            );
+
+            // Sum components
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumY = y1.Then(PradOp.AddOp, y2.Result);
+
+            var sumXBranch = sumX.Branch();
+            var sumYBranch = sumY.Branch();
+
+            // Compute resultant vector magnitude and angle
+            var sumXSquared = sumX.PradOp.Square();
+            var sumYSquared = sumY.PradOp.Square();
+            var magnitudeSquared = sumXSquared.Then(PradOp.AddOp, sumYSquared.Result);
+            var resultMagnitude = magnitudeSquared.Then(PradOp.SquareRootOp)
+                                                  .Then(PradOp.MulOp, opWeights.SeedResult.Result);
+            var resultAngle = sumYBranch.Atan2(sumXBranch.SeedResult.Result);
+
+            // Concatenate results
+            var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
+                
+            var gradient = new Tensor(res.Result.Shape, 1.0);
+            res.PradOp.Back(gradient);
+        }
+
+        [Fact]
         public void TestVNNElementwiseAddOperation()
         {
             Random rand = new Random(3);
