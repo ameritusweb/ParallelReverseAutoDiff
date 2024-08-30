@@ -25,6 +25,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float Epsilon { get; } = 1e-15f;
 
         /// <summary>
+        /// Gets Epsilon10.
+        /// </summary>
+        internal static float Epsilon10 { get; } = 1e-10f;
+
+        /// <summary>
         /// Gets Two.
         /// </summary>
         internal static float Two { get; } = 2.0f;

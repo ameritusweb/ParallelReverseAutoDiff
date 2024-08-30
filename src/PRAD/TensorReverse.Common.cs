@@ -357,7 +357,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var gradX = new Tensor(x.Shape);
             var sqrtX = new Tensor(x.Shape);
 
-            var epsilon = 1e-10;
+            var epsilon = PradTools.Epsilon10;
             var normalizedSqrtX = new Tensor(x.Shape);
             var epsilonTensor = new Tensor(x.Shape, epsilon);
 
