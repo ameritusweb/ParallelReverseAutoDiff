@@ -82,11 +82,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets a vector of doubles.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="length">The length.</param>
+        /// <param name="index">The index.</param>
         /// <returns>The vector of doubles.</returns>
-        internal static Vector<double> AllocateVector(double[] data, int length)
+        internal static Vector<double> AllocateVector(double[] data, int index)
         {
-            return new Vector<double>(data, length);
+            return new Vector<double>(data, index);
         }
 
         /// <summary>

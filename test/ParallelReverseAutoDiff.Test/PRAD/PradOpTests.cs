@@ -1350,11 +1350,32 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var opP2 = new PradOp(p2);
             var opP3 = new PradOp(p3);
 
+            var branchedOpNCos = opN_cos.Branch();
+            var branchedOpNSin = opN_sin.Branch();
+            var branchedP0 = opP0.Branch();
+            var branchedP1 = opP1.Branch();
+            var branchedP2 = opP2.Branch();
+            var branchedP3 = opP3.Branch();
+
+            var bP0 = opP0.Branch();
+            var bP1 = opP1.Branch();
+            var bP2 = opP2.Branch();
+            var bP3 = opP3.Branch();
+
+            var b4P0 = opP0.Branch();
+            var b4P1 = opP1.Branch();
+            var b4P2 = opP2.Branch();
+            var b4P3 = opP3.Branch();
+
             // Compute vector components using Bezier waveforms
-            var x1 = magnitude1.Mul(BezierWaveform(angle1, opN_cos, opP0, opP1, opP2, opP3).Result);
-            var y1 = magnitude1Branch.Mul(BezierWaveform(angle1Branch, opN_sin, opP0, opP1, opP2, opP3).Result);
-            var x2 = magnitude2.Mul(BezierWaveform(angle2, opN_cos, opP0, opP1, opP2, opP3).Result);
-            var y2 = magnitude2Branch.Mul(BezierWaveform(angle2Branch, opN_sin, opP0, opP1, opP2, opP3).Result);
+            var wave1 = BezierWaveform(angle1, opN_cos, opP0, opP1, opP2, opP3).Result;
+            var x1 = magnitude1.Mul(wave1);
+            var wave2 = BezierWaveform(angle1Branch, opN_sin, branchedP0, branchedP1, branchedP2, branchedP3).Result;
+            var y1 = magnitude1Branch.Mul(wave2);
+            var wave3 = BezierWaveform(angle2, branchedOpNCos, bP0, bP1, bP2, bP3).Result;
+            var x2 = magnitude2.Mul(wave3);
+            var wave4 = BezierWaveform(angle2Branch, branchedOpNSin, b4P0, b4P1, b4P2, b4P3).Result;
+            var y2 = magnitude2Branch.Mul(wave4);
 
             // Sum components
             var sumX = x1.Then(PradOp.AddOp, x2.Result);
@@ -1401,31 +1422,50 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             // Determine the segment and calculate the relative position
             var xMod = x.Modulus(nSquared.Result);
+            var xModBranch = xMod.Branch();
             var segment = xMod.Then(PradOp.LessThanOp, halfNSquared.Result);
-            var t = xMod.Then(PradOp.DivOp, halfNSquared.Result);
-
+            var t = xModBranch.Div(halfNSquared.Result);
+            var branchedT = t.Branch();
             // Compute Bezier curve for the first segment
-            var y1 = CubicBezier(t.PradOp, p0, p1, p2, p3);
+            var branchedP0 = p0.Branch();
+            var branchedP1 = p1.Branch();
+            var branchedP2 = p2.Branch();
+            var branchedP3 = p3.Branch();
+            var y1 = CubicBezier(t.PradOp, p0.SeedResult, p1.SeedResult, p2.SeedResult, p3.SeedResult);
             // Reflect the Bezier curve for the second segment
-            var tReflected = t.Then(PradOp.SubOp, new Tensor(t.PradOp.CurrentShape, 1.0)).Then(PradOp.MulOp, new Tensor(t.PradOp.CurrentShape, -1.0));
-            var y2 = CubicBezier(tReflected.PradOp, p3, p2, p1, p0);
+            var y2 = CubicBezier(branchedT, branchedP0.Mul(new Tensor(p0.CurrentShape, -1.0)),
+                branchedP1.Mul(new Tensor(p1.CurrentShape, -1.0)),
+                branchedP2.Mul(new Tensor(p2.CurrentShape, -1.0)),
+                branchedP3.Mul(new Tensor(p3.CurrentShape, -1.0)));
 
             // Choose between the segments
-            return y1.Then(PradOp.WhereOp, segment.Result, y2.Result);
+            var waveformResult = y1.Then(PradOp.WhereOp, segment.Result, y2.Result);
+            return waveformResult;
         }
 
-        public PradResult CubicBezier(PradOp t, PradOp p0, PradOp p1, PradOp p2, PradOp p3)
+        public PradResult CubicBezier(PradOp t, PradResult p0, PradResult p1, PradResult p2, PradResult p3)
         {
+            var branchedT = t.Branch();
+            var branchOfBranchedT = branchedT.Branch();
             var t2 = t.Square();
-            var t3 = t2.Then(PradOp.MulOp, t.Result!);
-            var mt = t.Sub(new Tensor(t.CurrentShape, 1.0));
+            var branchedT2 = t2.Branch();
+            var t3 = t2.Then(PradOp.MulOp, branchedT.SeedResult.Result);
+            var mt = branchedT.SubFrom(new Tensor(t.CurrentShape, 1.0));
+            var branchedMt = mt.Branch();
             var mt2 = mt.PradOp.Square();
-            var mt3 = mt2.Then(PradOp.MulOp, mt.Result);
+            var branchedMt2 = mt2.Branch();
+            var mt3 = mt2.Then(PradOp.MulOp, branchedMt.SeedResult.Result);
 
-            return mt3.Then(PradOp.MulOp, p0.Result!)
-                      .Then(PradOp.AddOp, t.Mul(mt2.Result).Then(PradOp.MulOp, p1.Result!).Then(PradOp.MulOp, new Tensor(t.CurrentShape, 3.0)).Result)
-                      .Then(PradOp.AddOp, t2.Then(PradOp.MulOp, mt.Result).Then(PradOp.MulOp, p2.Result!).Then(PradOp.MulOp, new Tensor(t.CurrentShape, 3.0)).Result)
-                      .Then(PradOp.AddOp, t3.Then(PradOp.MulOp, p3.Result!).Result);
+            var r0 = mt3.Then(PradOp.MulOp, p0.Result);
+            var r1 = branchOfBranchedT.Mul(branchedMt2.SeedResult.Result).Then(PradOp.MulOp, p1.Result).Then(PradOp.MulOp, new Tensor(t.CurrentShape, 3.0)).Result;
+            var r2 = branchedT2.Mul(branchedMt.SeedResult.Result).Then(PradOp.MulOp, p2.Result).Then(PradOp.MulOp, new Tensor(t.CurrentShape, 3.0)).Result;
+            var r3 = t3.Then(PradOp.MulOp, p3.Result).Result;
+
+            var cubicBezierResult = r0 
+                      .Then(PradOp.AddOp, r1)
+                      .Then(PradOp.AddOp, r2)
+                      .Then(PradOp.AddOp, r3);
+            return cubicBezierResult;
         }
 
         public PradResult Atan2Approximation(PradOp y, PradOp x,
@@ -1433,10 +1473,31 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                                      PradOp N_cos, PradOp N_sin,
                                      PradOp p0, PradOp p1, PradOp p2, PradOp p3)
         {
+            var b1_p0 = p0.Branch();
+            var b1_p1 = p1.Branch();
+            var b1_p2 = p2.Branch();
+            var b1_p3 = p3.Branch();
+
+            var b2_p0 = p0.Branch();
+            var b2_p1 = p1.Branch();
+            var b2_p2 = p2.Branch();
+            var b2_p3 = p3.Branch();
+
+            var b3_p0 = p0.Branch();
+            var b3_p1 = p1.Branch();
+            var b3_p2 = p2.Branch();
+            var b3_p3 = p3.Branch();
+
+            var branchNcos = N_cos.Branch();
+            var branchNsin = N_sin.Branch();
+
+            var branchX = x.Branch();
+            var branchY = y.Branch();
+
             var BWCosX = BezierWaveform(x, N_cos, p0, p1, p2, p3);
-            var BWCosY = BezierWaveform(y, N_cos, p0, p1, p2, p3);
-            var BWSinX = BezierWaveform(x, N_sin, p0, p1, p2, p3);
-            var BWSinY = BezierWaveform(y, N_sin, p0, p1, p2, p3);
+            var BWCosY = BezierWaveform(y, branchNcos, b1_p0, b1_p1, b1_p2, b1_p3);
+            var BWSinX = BezierWaveform(branchX, N_sin, b2_p0, b2_p1, b2_p2, b2_p3);
+            var BWSinY = BezierWaveform(branchY, branchNsin, b3_p0, b3_p1, b3_p2, b3_p3);
 
             var term1 = alpha.Mul(BWCosX.Result);
             var term2 = beta.Mul(BWSinX.Result);

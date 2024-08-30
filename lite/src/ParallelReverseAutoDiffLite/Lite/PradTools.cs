@@ -82,11 +82,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets a vector of floats.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="length">The length.</param>
+        /// <param name="index">The index.</param>
         /// <returns>The vector of floats.</returns>
-        internal static Vector<float> AllocateVector(float[] data, int length)
+        internal static Vector<float> AllocateVector(float[] data, int index)
         {
-            return new Vector<float>(data, length);
+            return new Vector<float>(data, index);
         }
 
         /// <summary>

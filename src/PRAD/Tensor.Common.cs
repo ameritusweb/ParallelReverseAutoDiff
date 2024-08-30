@@ -988,8 +988,8 @@ namespace ParallelReverseAutoDiff.PRAD
                 var thisVector = PradTools.AllocateVector(this.Data, i);
                 var otherVector = PradTools.AllocateVector(other.Data, i);
                 var comparisonVector = Vector.LessThan(thisVector, otherVector);
-                var resultVector = PradTools.Convert(comparisonVector);
-                resultVector.CopyTo(result.Data, i);
+                var mask = PradTools.Convert(Vector.Abs(comparisonVector));
+                mask.CopyTo(result.Data, i);
             }
 
             // Handle remaining elements

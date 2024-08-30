@@ -32,7 +32,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         {
             var output = new Matrix(input1.Rows, input1.Cols);
 
-            Parallel.For(0, input1.Rows, i =>
+            Parallel.For(0, input1.Rows, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, i =>
             {
                 for (int j = 0; j < input1.Cols / 2; j++)
                 {
@@ -41,13 +41,19 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                     double magnitude2 = input2[i, j];
                     double angle2 = input2[i, j + (input2.Cols / 2)];
 
-                    double x1 = magnitude1 * BezierWaveform(angle1, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
-                    double y1 = magnitude1 * BezierWaveform(angle1, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
-                    double x2 = magnitude2 * BezierWaveform(angle2, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
-                    double y2 = magnitude2 * BezierWaveform(angle2, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+                    var wave1 = BezierWaveform(1, angle1, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+
+                    double x1 = magnitude1 * wave1;
+                    double y1 = magnitude1 * BezierWaveform(2, angle1, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+                    double x2 = magnitude2 * BezierWaveform(3, angle2, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+                    double y2 = magnitude2 * BezierWaveform(4, angle2, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+
+                    Debug.WriteLine($"i: {i}, j: {j}, x1: {x1}, x2: {x2}");
 
                     double sumx = x1 + x2;
                     double sumy = y1 + y2;
+
+                    Debug.WriteLine($"i: {i}, j: {j}, sumx: {sumx}, sumy: {sumy}");
 
                     double resultMagnitude = Math.Sqrt((sumx * sumx) + (sumy * sumy)) * weights[i, j];
                     double resultAngle = Atan2Approximation(sumy, sumx,
@@ -63,7 +69,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             return output;
         }
 
-        private double BezierWaveform(double x, double N, double p0, double p1, double p2, double p3)
+        private double BezierWaveform(int number, double x, double N, double p0, double p1, double p2, double p3)
         {
             double nSquared = N * N;
             double halfNSquared = 0.5 * nSquared;
@@ -71,14 +77,15 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             bool segment = xMod < halfNSquared;
             double t = xMod / halfNSquared;
 
-            double y1 = CubicBezier(t, p0, p1, p2, p3);
-            double tReflected = -(t - 1.0);
-            double y2 = CubicBezier(tReflected, p3, p2, p1, p0);
+            double y1 = CubicBezier(number, t, p0, p1, p2, p3);
+            double y2 = CubicBezier(number, t, p0 * -1d, p2 * -1d, p1 * -1d, p0 * -1d);
+
+            Debug.WriteLine($"number: {number}, xMod: {xMod}, t: {t}, y1: {y1}, y2: {y2}");
 
             return segment ? y1 : y2;
         }
 
-        private double CubicBezier(double t, double p0, double p1, double p2, double p3)
+        private double CubicBezier(int number, double t, double p0, double p1, double p2, double p3)
         {
             double t2 = t * t;
             double t3 = t2 * t;
@@ -86,10 +93,17 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             double mt2 = mt * mt;
             double mt3 = mt2 * mt;
 
-            return mt3 * p0 +
-                   3 * t * mt2 * p1 +
-                   3 * t2 * mt * p2 +
-                   t3 * p3;
+            var r0 = mt3 * p0;
+            var r1 = 3 * t * mt2 * p1;
+            var r2 = 3 * t2 * mt * p2;
+            var r3 = t3 * p3;
+
+            Debug.WriteLine($"number: {number}, t: {t}, r0: {r0}, r1: {r1}, r2: {r2}, r3: {r3}");
+
+            return r0 +
+                   r1 +
+                   r2 +
+                   r3;
         }
 
         private double Atan2Approximation(double y, double x,
@@ -97,12 +111,19 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                                           double N_cos, double N_sin,
                                           double p0, double p1, double p2, double p3)
         {
-            double BWCosX = BezierWaveform(x, N_cos, p0, p1, p2, p3);
-            double BWCosY = BezierWaveform(y, N_cos, p0, p1, p2, p3);
-            double BWSinX = BezierWaveform(x, N_sin, p0, p1, p2, p3);
-            double BWSinY = BezierWaveform(y, N_sin, p0, p1, p2, p3);
+            double BWCosX = BezierWaveform(5, x, N_cos, p0, p1, p2, p3);
+            double BWCosY = BezierWaveform(6, y, N_cos, p0, p1, p2, p3);
+            double BWSinX = BezierWaveform(7, x, N_sin, p0, p1, p2, p3);
+            double BWSinY = BezierWaveform(8, y, N_sin, p0, p1, p2, p3);
 
-            return alpha * BWCosX + beta * BWSinX + lambda * BWCosY + gamma * BWSinY;
+            var term1 = alpha * BWCosX;
+            var term2 = beta * BWSinX;
+            var term3 = lambda * BWCosY;
+            var term4 = gamma * BWSinY;
+
+            Debug.WriteLine($"term1: {term1}, term2: {term2}, term3: {term3}, term4: {term4}");
+
+            return term1 + term2 + term3 + term4;
         }
     }
 }
