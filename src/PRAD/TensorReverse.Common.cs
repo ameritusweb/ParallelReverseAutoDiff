@@ -455,13 +455,19 @@ namespace ParallelReverseAutoDiff.PRAD
             // Compute denominator = y^2 + x^2
             Vml.Add(ySquared.Data.Length, ySquared.Data, xSquared.Data, denominator.Data);
 
+            var epsilon = PradTools.Epsilon10;
+            var normalizedDenominator = new Tensor(x.Shape);
+            var epsilonTensor = new Tensor(x.Shape, epsilon);
+
+            Vml.MaxMag(denominator.Data.Length, denominator.Data, epsilonTensor.Data, normalizedDenominator.Data);
+
             // Compute gradY = upstreamGradient * x / denominator
             Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, x.Data, gradY.Data);
-            Vml.Div(gradY.Data.Length, gradY.Data, denominator.Data, gradY.Data);
+            Vml.Div(gradY.Data.Length, gradY.Data, normalizedDenominator.Data, gradY.Data);
 
             // Compute gradX = -upstreamGradient * y / denominator
             Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, y.Data, gradX.Data);
-            Vml.Div(gradX.Data.Length, gradX.Data, denominator.Data, gradX.Data);
+            Vml.Div(gradX.Data.Length, gradX.Data, normalizedDenominator.Data, gradX.Data);
             Blas.scal(PradTools.NegativeOne, gradX.Data);
 
             return new Tensor[] { gradY, gradX };

@@ -27,8 +27,12 @@ namespace ParallelReverseAutoDiff.PRAD
         private PradResultBase parentResult;
         private PradResultBase initialResult;
         private Tensor seedGradient;
-        private PradOp[] splitOps;
+        private PradOp[]? splitOps;
         private Guid id;
+        private PradOp originalSplitOp; // Link to the original PradOp that did the split
+        private int splitIndex; // Index of this PradOp in the split
+        private int gradientStackCounter; // Counter to track the number of gradients received
+        private Tensor[] splitGradients; // Array to store gradients from each split
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -1077,11 +1081,19 @@ namespace ParallelReverseAutoDiff.PRAD
             var currentTensor = results[0];
             var newOp = new PradOp(currentTensor);
 
+            this.splitGradients = new Tensor[results.Length];
             this.splitStep = split;
 
-            var branches = newOp.SplitBranchFromResults(results);
+            newOp.originalSplitOp = this;
+            newOp.splitIndex = 0;
+            newOp.splitGradients = this.splitGradients;
+            newOp.gradientStackCounter = 0;
+
+            var branches = newOp.SplitBranchFromResults(this, results);
             var splitOps = new PradOp[] { newOp }.Concat(branches).ToArray();
             this.splitOps = splitOps;
+
+            this.gradientStackCounter = 0;
             return splitOps;
         }
 
@@ -1796,13 +1808,14 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 // Then, backpropagate through all split branches
                 List<Tensor> branchGradients = new List<Tensor>();
-                foreach (var branch in result.SplitBranches.Where(x => x.UpstreamGradient != null && !x.IsDependentBranch))
+                foreach (var branch in result.SplitBranches.Where(x => x.UpstreamGradient != null))
                 {
                     var branchGradient = branch.Back();
                     branchGradients.Add(branchGradient);
                 }
 
                 var (gradients, ops) = step(currentUpstream);
+                GradientRecorder.Instance.RecordGradient(step.Method.Name, gradients);
 
                 foreach (var branchGradient in branchGradients)
                 {
@@ -1829,6 +1842,34 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 var branchGradient = branch.Back();
                 currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+            }
+
+            PradOp opWithSplit = this.originalSplitOp ?? this;
+
+            if (opWithSplit.splitOps != null && opWithSplit.splitStep.HasValue)
+            {
+                // Save the gradient at the correct index
+                opWithSplit.splitGradients[this.splitIndex] = currentUpstream;
+
+                // Increment the stack counter on the original PradOp
+                opWithSplit.gradientStackCounter++;
+
+                // Check if all gradients have been collected
+                if (opWithSplit.gradientStackCounter == opWithSplit.splitGradients.Length)
+                {
+                    // Combine gradients using the splitStep function
+                    Tensor combinedGradient = opWithSplit.splitStep.Value.splitStep(opWithSplit.splitGradients);
+
+                    // Reset the stack counter for potential reuse
+                    opWithSplit.gradientStackCounter = 0;
+
+                    // Start backpropagation on the main PradOp instance
+                    opWithSplit.UpstreamGradient = combinedGradient;
+                    var splitOps = opWithSplit.splitOps;
+                    opWithSplit.splitOps = null;
+                    opWithSplit.Back();
+                    opWithSplit.splitOps = splitOps;
+                }
             }
 
             this.SeedGradient = currentUpstream;
@@ -1885,14 +1926,20 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Branch to another prad op.
         /// </summary>
+        /// <param name="originalPradOp">The original prad op.</param>
         /// <param name="results">The results.</param>
         /// <returns>The other prad op.</returns>
-        internal PradOp[] SplitBranchFromResults(Tensor[] results)
+        internal PradOp[] SplitBranchFromResults(PradOp originalPradOp, Tensor[] results)
         {
             List<PradOp> splits = new List<PradOp>();
             for (int i = 1; i < results.Length; ++i)
             {
                 var branchedOp = new PradOp(results[i]);
+                branchedOp.originalSplitOp = originalPradOp;
+                branchedOp.splitIndex = i;
+                branchedOp.splitGradients = originalPradOp.splitGradients;
+                branchedOp.gradientStackCounter = 0;
+
                 if (this.backpropagationSteps.Any())
                 {
                     branchedOp.parentResult = this.backpropagationSteps.Last().result;

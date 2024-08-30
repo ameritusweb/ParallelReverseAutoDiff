@@ -1512,6 +1512,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestVNNElementwiseAddOperationBack()
         {
+            GradientRecorder.Instance.RecordingEnabled = true;
+
             Random rand = new Random(3);
 
             var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
@@ -1571,6 +1573,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 
             var gradient = new Tensor(res.Result.Shape, 1.0);
             res.PradOp.Back(gradient);
+
+            var recorded = GradientRecorder.Instance.GetRecordedGradients();
         }
 
         [Fact]
