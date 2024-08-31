@@ -771,6 +771,29 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestLessThanWhereAndModulus()
+        {
+            // Create input tensors
+            var x = new Tensor(new int[] { 2, 3 }, new double[] { 1, 2, 3, 4, 5, 6 });
+            var y = new Tensor(new int[] { 2, 3 }, new double[] { 3, 3, 3, 3, 3, 3 });
+            var pradOp = new PradOp(x);
+
+            // Perform operations
+            var result = pradOp
+                .LessThan(y)  // Check which elements of x are less than 3
+                .Then(lessThanResult => {
+                    var lessThanResultBranch = lessThanResult.PradOp.Branch();
+                    var modulusResult = lessThanResult.PradOp.Modulus(new Tensor(new int[] { 2, 3 }, new double[] { 2, 2, 2, 2, 2, 2 }));
+                    return modulusResult.PradOp.Where(lessThanResultBranch.BranchInitialTensor, y);
+                });
+
+            // Compute gradients
+            var upstreamGradient = new Tensor(new int[] { 2, 3 }, new double[] { 1, 1, 1, 1, 1, 1 });
+            GradientRecorder.Instance.RecordingEnabled = true;
+            var gradient = pradOp.Back(upstreamGradient);
+        }
+
+        [Fact]
         public void TestElementwiseVectorAddOperation()
         {
             Matrix input1 = new Matrix(100, 200);

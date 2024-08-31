@@ -270,6 +270,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradResult SeedResult => this.initialResult as PradResult ?? throw new InvalidCastException("Initial result is not a PradResult");
 
         /// <summary>
+        /// Gets the branch initial tensor.
+        /// </summary>
+        public Tensor BranchInitialTensor => this.SeedResult.Result;
+
+        /// <summary>
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
         /// </summary>
         public bool IsDependentBranch => this.parentResult != null;
@@ -1779,17 +1784,16 @@ namespace ParallelReverseAutoDiff.PRAD
                 attribute?.Validate(this.IsDependentBranch, "Back should not be called on a dependent branch.");
             }
 
-            if (this.splitOps != null)
-            {
-                var gradientLeft = this.splitOps[0].Back(this.UpstreamGradient);
-                var gradientRight = this.splitOps[1].Back();
+            // if (this.splitOps != null)
+            // {
+            //    var gradientLeft = this.splitOps[0].Back(this.UpstreamGradient);
+            //    var gradientRight = this.splitOps[1].Back();
 
-                if (this.splitStep.HasValue)
-                {
-                    this.UpstreamGradient = this.splitStep.Value.splitStep(new Tensor[] { gradientLeft, gradientRight });
-                }
-            }
-
+            // if (this.splitStep.HasValue)
+            //    {
+            //        this.UpstreamGradient = this.splitStep.Value.splitStep(new Tensor[] { gradientLeft, gradientRight });
+            //    }
+            // }
             Tensor currentUpstream = this.UpstreamGradient;
 
             // Reverse iterate over backpropagation steps to accumulate gradients

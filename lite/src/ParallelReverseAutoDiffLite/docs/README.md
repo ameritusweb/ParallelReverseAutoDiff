@@ -999,6 +999,9 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Exclude(double min, double max)` | Excludes values within the specified range. | 
 | `Sum(int[] axes)` | Sums the tensor along specified axes. | 
 | `BroadcastTo(int[] newShape)` | Broadcasts the tensor to a new shape. |
+| `LessThan(Tensor tensor)` | Performs element-wise "less than" comparison. |
+| `Where(Tensor condition, Tensor other)` | Selects elements based on a condition tensor. |
+| `Modulus(Tensor tensor)` | Performs element-wise modulus operation. |
 
 #### Tensor Manipulation 
 
@@ -1060,6 +1063,9 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `ExcludeOp`
 - `SumOp`
 - `BroadcastToOp`
+- `LessThanOp`
+- `WhereOp`
+- `ModulusOp`
 
 ### PradResult.Then Method
 
@@ -1202,6 +1208,28 @@ This example showcases:
 
 This example illustrates how ThenParallel and the Then overloads can be used to create more complex and flexible computational graphs, such as those found in advanced neural network architectures with multiple parallel pathways.
 
+#### Combining LessThan, Where, and Modulus
+
+```csharp
+// Create input tensors
+var x = new Tensor(new int[] { 2, 3 }, new double[] { 1, 2, 3, 4, 5, 6 });
+var y = new Tensor(new int[] { 2, 3 }, new double[] { 3, 3, 3, 3, 3, 3 });
+var pradOp = new PradOp(x);
+
+// Perform operations
+var result = pradOp
+    .LessThan(y)  // Check which elements of x are less than 3
+    .Then(lessThanResult => {
+        var lessThanResultBranch = lessThanResult.PradOp.Branch();
+        var modulusResult = lessThanResult.PradOp.Modulus(new Tensor(new int[] { 2, 3 }, new double[] { 2, 2, 2, 2, 2, 2 }));
+        return modulusResult.PradOp.Where(lessThanResultBranch.BranchInitialTensor, y);
+    });
+
+// Compute gradients
+var upstreamGradient = new Tensor(new int[] { 2, 3 }, new double[] { 1, 1, 1, 1, 1, 1 });
+var gradient = pradOp.Back(upstreamGradient);
+```
+
 #### Custom Operations 
 
 PradOp allows you to define custom operations with their own forward and backward passes. Here's an example of a custom sigmoid operation: 
@@ -1268,7 +1296,7 @@ var processedLeft = leftHalf.Square();
 var processedRight = rightHalf.SquareRoot(); 
 
 var recombined = leftHalf.Stack(new[] { processedRight.Result }, axis: 1); 
-var gradient = pradOp.Back(upstreamGradient); 
+var gradient = recombined.Back(upstreamGradient); 
 ``` 
 
 These examples demonstrate the flexibility of PradOp in handling complex computational graphs, including custom operations, branching, and splitting/recombining tensors. The automatic differentiation system takes care of computing the correct gradients through these complex structures.
