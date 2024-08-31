@@ -1445,22 +1445,18 @@ namespace ParallelReverseAutoDiff.PRAD
         public PradResult Modulus(Tensor tensor)
         {
             var result = this.currentTensor.Modulus(tensor);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
             var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                // Gradient w.r.t. x (first operand)
-                var gradX = upstreamGrad;
-
-                // Gradient w.r.t. y (second operand)
-                var quotient = this.currentTensor.ElementwiseDivide(tensor);
-                var gradY = upstreamGrad * quotient.ElementwiseFloor().ElementwiseNegate();
-
-                var gradients = new Tensor[] { gradX, gradY };
+                var gradients = tensorReverse.ModulusReverse(upstreamGrad, tensor);
                 PradOp?[] ops = new PradOp?[2];
                 var tensors = new Tensor[] { this.currentTensor, tensor };
                 for (int i = 0; i < grad.Length; i++)
                 {
-                    if (tensors[i] is PradTensor pradTensor)
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
                     {
                         ops[i] = pradTensor.PradOp;
                     }

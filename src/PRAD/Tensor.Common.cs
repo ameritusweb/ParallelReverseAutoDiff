@@ -1015,16 +1015,17 @@ namespace ParallelReverseAutoDiff.PRAD
 
             var result = new Tensor(this.Shape);
 
-            // Compute element-wise division (quotient)
-            Vml.Div(this.Data, other.Data, result.Data);
+            // Allocate temporary arrays for integral and fractional parts
+            var integral = PradTools.AllocateArray(this.Data.Length);
+            var fractional = PradTools.AllocateArray(this.Data.Length);
 
-            // Apply floor to the quotient
-            Vml.Floor(result.Data, result.Data);
+            // Use modf to separate the fractional and integral parts of the division
+            Vml.Div(this.Data, other.Data, result.Data);    // result.Data = this.Data / other.Data
+            Vml.Modf(result.Data, integral, fractional);    // integral = truncated int part, fractional = remaining fraction
 
-            // Compute element-wise modulus using: this.Data - (quotient * other.Data)
-            var temp = PradTools.AllocateArray(this.Data.Length);
-            Vml.Mul(result.Data, other.Data, temp);  // temp = quotient * other.Data
-            Vml.Sub(this.Data, temp, result.Data);   // result.Data = this.Data - temp
+            // Compute element-wise modulus using: this.Data - (integral * other.Data)
+            Vml.Mul(integral, other.Data, integral);        // integral = integral * other.Data
+            Vml.Sub(this.Data, integral, result.Data);      // result.Data = this.Data - integral
 
             return result;
         }

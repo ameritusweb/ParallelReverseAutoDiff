@@ -423,6 +423,42 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse (backward) gradient for the element-wise modulus operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient of the loss with respect to the output of the modulus operation.</param>
+        /// <param name="x">The original tensor `x` in the modulus operation `x % y`.</param>
+        /// <returns>An array containing the gradients with respect to `x` and `y`.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the number of initial tensors is not as expected.</exception>
+        public Tensor[] ModulusReverse(Tensor upstreamGradient, Tensor x)
+        {
+            if (this.InitialTensors.Length != 1)
+            {
+                throw new InvalidOperationException("ModulusReverse expects exactly one initial tensor.");
+            }
+
+            Tensor y = this.InitialTensors[0];
+
+            this.CheckShapeCompatibility(y, upstreamGradient);
+            this.CheckShapeCompatibility(y, x);
+
+            var gradX = upstreamGradient.DeepClone();
+            var gradY = new Tensor(y.Shape);
+
+            // Compute floor(x / y) which is the integral part of the division
+            var quotient = new Tensor(x.Shape);
+            Vml.Div(x.Data, y.Data, quotient.Data);
+            var integralPart = new Tensor(x.Shape);
+            var fractionalPart = new Tensor(x.Shape);
+            Vml.Modf(quotient.Data, integralPart.Data, fractionalPart.Data);  // integralPart = floor(x / y)
+
+            // Compute gradY = -upstreamGradient * integralPart
+            Vml.Mul(integralPart.Data.Length, integralPart.Data, upstreamGradient.Data, gradY.Data);
+            Blas.scal(PradTools.NegativeOne, gradY.Data);
+
+            return new Tensor[] { gradX, gradY };
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise atan2 operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

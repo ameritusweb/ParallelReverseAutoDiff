@@ -61,6 +61,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                                                             N_cos[i, j], N_sin[i, j],
                                                             p0[i, j], p1[i, j], p2[i, j]);
 
+                    Debug.WriteLine($"i: {i}, j: {j}, resultMagnitude: {resultMagnitude}, resultAngle: {resultAngle}");
+
                     output[i, j] = resultMagnitude;
                     output[i, j + (input1.Cols / 2)] = resultAngle;
                 }
@@ -71,14 +73,16 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
         private double BezierWaveform(int number, double x, double N, double p0, double p1, double p2)
         {
-            double nSquared = N * N;
-            double halfNSquared = 0.5 * nSquared;
-            double xMod = x % nSquared;
-            bool segment = xMod < halfNSquared;
-            double t = xMod / halfNSquared;
+            // N = 6, x = 70
+            double nSquared = N * N; // 36
+            double halfNSquared = 0.5 * nSquared; // 18
+            double xMod = x % nSquared; // == 70 % 36 == 34
+            bool segment = xMod < halfNSquared; // 34 < 18 == false
+            double t = xMod / halfNSquared; // 34 / 18 == 1.8888888888888888
+            double tMod = t % 1.0; // 0.8888888888888888
 
-            double y1 = ConstrainedBezier(number, t, p0, p1, p2);
-            double y2 = ConstrainedBezier(number, t, p0 * -1d, p1 * -1d, p2 * -1d);
+            double y1 = ConstrainedBezier(number, tMod, p0, p1, p2);
+            double y2 = ConstrainedBezier(number, tMod, p0 * -1d, p1 * -1d, p2 * -1d);
 
             Debug.WriteLine($"number: {number}, xMod: {xMod}, t: {t}, y1: {y1}, y2: {y2}");
 
@@ -119,16 +123,15 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         {
             double t2 = t * t;
             double t3 = t2 * t;
-            double t4 = t3 * t;
 
             double mt = 1.0 - t;
             double mt2 = mt * mt;
             double mt3 = mt2 * mt;
 
             // Calculate the contribution from each control point
-            var r0 = (4 * mt3 * t - 4 * t4) * p0;
-            var r1 = (6 * mt2 * t2 - 6 * t4) * p1;
-            var r2 = (4 * mt * t3 - 4 * t4) * p2;
+            var r0 = (4 * mt3 * t) * p0;
+            var r1 = (6 * mt2 * t2) * p1;
+            var r2 = (4 * mt * t3) * p2;
 
             Debug.WriteLine($"number: {number}, t: {t}, r0: {r0}, r1: {r1}, r2: {r2}");
 
