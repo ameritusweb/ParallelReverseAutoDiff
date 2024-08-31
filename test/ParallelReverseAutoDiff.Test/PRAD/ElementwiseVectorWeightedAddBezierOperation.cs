@@ -27,7 +27,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         /// <returns>The output of the element-wise vector summation operation.</returns>
         public Matrix Forward(Matrix input1, Matrix input2, Matrix weights,
                       Matrix N_sin, Matrix N_cos,
-                      Matrix p0, Matrix p1, Matrix p2, Matrix p3,
+                      Matrix p0, Matrix p1, Matrix p2,
                       Matrix alpha, Matrix beta, Matrix lambda, Matrix gamma)
         {
             var output = new Matrix(input1.Rows, input1.Cols);
@@ -41,12 +41,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                     double magnitude2 = input2[i, j];
                     double angle2 = input2[i, j + (input2.Cols / 2)];
 
-                    var wave1 = BezierWaveform(1, angle1, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+                    var wave1 = BezierWaveform(1, angle1, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j]);
 
                     double x1 = magnitude1 * wave1;
-                    double y1 = magnitude1 * BezierWaveform(2, angle1, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
-                    double x2 = magnitude2 * BezierWaveform(3, angle2, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
-                    double y2 = magnitude2 * BezierWaveform(4, angle2, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+                    double y1 = magnitude1 * BezierWaveform(2, angle1, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j]);
+                    double x2 = magnitude2 * BezierWaveform(3, angle2, N_cos[i, j], p0[i, j], p1[i, j], p2[i, j]);
+                    double y2 = magnitude2 * BezierWaveform(4, angle2, N_sin[i, j], p0[i, j], p1[i, j], p2[i, j]);
 
                     Debug.WriteLine($"i: {i}, j: {j}, x1: {x1}, x2: {x2}");
 
@@ -59,7 +59,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                     double resultAngle = Atan2Approximation(sumy, sumx,
                                                             alpha[i, j], beta[i, j], lambda[i, j], gamma[i, j],
                                                             N_cos[i, j], N_sin[i, j],
-                                                            p0[i, j], p1[i, j], p2[i, j], p3[i, j]);
+                                                            p0[i, j], p1[i, j], p2[i, j]);
 
                     output[i, j] = resultMagnitude;
                     output[i, j + (input1.Cols / 2)] = resultAngle;
@@ -69,7 +69,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             return output;
         }
 
-        private double BezierWaveform(int number, double x, double N, double p0, double p1, double p2, double p3)
+        private double BezierWaveform(int number, double x, double N, double p0, double p1, double p2)
         {
             double nSquared = N * N;
             double halfNSquared = 0.5 * nSquared;
@@ -77,8 +77,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             bool segment = xMod < halfNSquared;
             double t = xMod / halfNSquared;
 
-            double y1 = CubicBezier(number, t, p0, p1, p2, p3);
-            double y2 = CubicBezier(number, t, p0 * -1d, p2 * -1d, p1 * -1d, p0 * -1d);
+            double y1 = ConstrainedBezier(number, t, p0, p1, p2);
+            double y2 = ConstrainedBezier(number, t, p0 * -1d, p1 * -1d, p2 * -1d);
 
             Debug.WriteLine($"number: {number}, xMod: {xMod}, t: {t}, y1: {y1}, y2: {y2}");
 
@@ -106,15 +106,44 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                    r3;
         }
 
+        /// <summary>
+        /// Evaluates the constrained Bézier curve with three control points.
+        /// </summary>
+        /// <param name="number">The number of the control point.</param>
+        /// <param name="t">The parameter t, where 0 <= t <= 1.</param>
+        /// <param name="p0">The first control point.</param>
+        /// <param name="p1">The second control point.</param>
+        /// <param name="p2">The third control point.</param>
+        /// <returns>The evaluated point on the Bézier curve at parameter t.</returns>
+        private double ConstrainedBezier(int number, double t, double p0, double p1, double p2)
+        {
+            double t2 = t * t;
+            double t3 = t2 * t;
+            double t4 = t3 * t;
+
+            double mt = 1.0 - t;
+            double mt2 = mt * mt;
+            double mt3 = mt2 * mt;
+
+            // Calculate the contribution from each control point
+            var r0 = (4 * mt3 * t - 4 * t4) * p0;
+            var r1 = (6 * mt2 * t2 - 6 * t4) * p1;
+            var r2 = (4 * mt * t3 - 4 * t4) * p2;
+
+            Debug.WriteLine($"number: {number}, t: {t}, r0: {r0}, r1: {r1}, r2: {r2}");
+
+            return r0 + r1 + r2;
+        }
+
         private double Atan2Approximation(double y, double x,
                                           double alpha, double beta, double lambda, double gamma,
                                           double N_cos, double N_sin,
-                                          double p0, double p1, double p2, double p3)
+                                          double p0, double p1, double p2)
         {
-            double BWCosX = BezierWaveform(5, x, N_cos, p0, p1, p2, p3);
-            double BWCosY = BezierWaveform(6, y, N_cos, p0, p1, p2, p3);
-            double BWSinX = BezierWaveform(7, x, N_sin, p0, p1, p2, p3);
-            double BWSinY = BezierWaveform(8, y, N_sin, p0, p1, p2, p3);
+            double BWCosX = BezierWaveform(5, x, N_cos, p0, p1, p2);
+            double BWCosY = BezierWaveform(6, y, N_cos, p0, p1, p2);
+            double BWSinX = BezierWaveform(7, x, N_sin, p0, p1, p2);
+            double BWSinY = BezierWaveform(8, y, N_sin, p0, p1, p2);
 
             var term1 = alpha * BWCosX;
             var term2 = beta * BWSinX;

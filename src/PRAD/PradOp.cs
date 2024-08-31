@@ -351,6 +351,28 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Creates a stack of branches from the current PradOp instance.
+        /// </summary>
+        /// <param name="n">The number of branches to create.</param>
+        /// <returns>A BranchStack containing the branches.</returns>
+        public BranchStack BranchStack(int n)
+        {
+            if (n < 1)
+            {
+                throw new ArgumentException("Number of branches must be at least 1.", nameof(n));
+            }
+
+            var branches = new PradOp[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                branches[i] = this.Branch(); // Create additional branches
+            }
+
+            return new BranchStack(branches);
+        }
+
+        /// <summary>
         /// Creates a deep clone of the current PradOp object.
         /// </summary>
         /// <returns>A new PradOp object that is a deep copy of the current instance.</returns>

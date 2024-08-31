@@ -145,6 +145,16 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Create multiple branches in the computation graph.
+        /// </summary>
+        /// <param name="n">The number of branches.</param>
+        /// <returns>The branch stack.</returns>
+        public BranchStack BranchStack(int n)
+        {
+            return this.PradOp.BranchStack(n);
+        }
+
+        /// <summary>
         /// Applies the following operation.
         /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
         /// </summary>
