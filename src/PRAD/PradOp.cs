@@ -1824,10 +1824,6 @@ namespace ParallelReverseAutoDiff.PRAD
                     currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
                 }
 
-                if (result.SplitBranches.Any())
-                {
-                }
-
                 // Then, backpropagate through all split branches
                 List<Tensor> branchGradients = new List<Tensor>();
                 foreach (var branch in result.SplitBranches.Where(x => x.UpstreamGradient != null))
@@ -1881,6 +1877,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 {
                     // Combine gradients using the splitStep function
                     Tensor combinedGradient = opWithSplit.splitStep.Value.splitStep(opWithSplit.splitGradients);
+                    GradientRecorder.Instance.RecordGradient(opWithSplit.splitStep.Value.splitStep.Method.Name, new Tensor[] { combinedGradient });
 
                     // Reset the stack counter for potential reuse
                     opWithSplit.gradientStackCounter = 0;
