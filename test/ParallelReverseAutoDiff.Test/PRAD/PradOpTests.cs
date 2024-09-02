@@ -1321,7 +1321,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestBezierBack()
         {
-            var size1 = 60000;
+            var size1 = 1200000;
             var size2 = size1 * 3;
             var size3 = size1 / 2;
             var size4 = size3 * 3;
@@ -1351,6 +1351,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var opP2 = new PradOp(p2);
 
             // GradientRecorder.Instance.RecordingEnabled = true;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             // PradOp implementation
             var opInput1 = new PradOp(input1);
@@ -1428,13 +1430,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             // Concatenate results
             var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
 
-            var gradient = new Tensor(new int[] { 3, size1 }, Enumerable.Range(0, size2).Select(i => 1.0).ToArray());
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            res.Back(gradient);
-            var steps = GradientRecorder.Instance.GetRecordedGradients();
             sw.Stop();
             var millis = sw.ElapsedMilliseconds;
+
+            var gradient = new Tensor(new int[] { 3, size1 }, Enumerable.Range(0, size2).Select(i => 1.0).ToArray());
+            
+            // res.Back(gradient);
+            // var steps = GradientRecorder.Instance.GetRecordedGradients();
+            
         }
 
         public PradResult BezierWaveform(PradOp x, PradOp N, PradOp p0, PradOp p1, PradOp p2)

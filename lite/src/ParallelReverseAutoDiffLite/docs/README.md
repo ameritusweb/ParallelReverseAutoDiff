@@ -1027,6 +1027,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `DoParallel(params Func<PradOp, PradResult>[] operations)` | Executes multiple operations in parallel. | 
 | `Back(Tensor tensor)` | Initiates backpropagation with the given upstream gradient. | 
 | `Back()` | Computes backpropagation to accumulate gradients. | 
+| `BranchStack(int n)` | Creates a specified number (n) of branches from the current PradOp instance and returns a BranchStack object for managing these branches. This allows you to easily pop branches as needed. |
 
 ### Static Operations 
 
@@ -1283,6 +1284,22 @@ var result2 = branch.Cos();
 var combinedResult = pradOp.Add(result2.Result); 
 var gradient = pradOp.Back(upstreamGradient); 
 ``` 
+
+#### BranchStack
+
+The `BranchStack(int n)` method is designed to streamline the management of multiple branches within the computation graph. It creates `n` branches from the current `PradOp` instance and encapsulates them in a `BranchStack` object. This object provides a `Pop()` method to retrieve and work with individual branches in a controlled and orderly manner.
+
+```csharp
+var tBranches = t.BranchStack(4);
+
+var t2 = t.Square();
+var t3 = t2.Then(PradOp.MulOp, tBranches.Pop().BranchInitialTensor);
+var t4 = t3.Then(PradOp.MulOp, tBranches.Pop().BranchInitialTensor);
+
+var mt = tBranches.Pop().SubFrom(new Tensor(t.CurrentShape, 1.0));
+var mt2 = mt.Square();
+var mt3 = mt2.Then(PradOp.MulOp, tBranches.Pop().BranchInitialTensor);
+```
 
 #### Splitting 
 
