@@ -639,6 +639,48 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Element-wise maximum between this tensor and a scalar value.
+        /// </summary>
+        /// <param name="scalar">The scalar value to compare.</param>
+        /// <returns>A new tensor containing the element-wise maximum values.</returns>
+        public Tensor Max(float scalar)
+        {
+            // Allocate the result tensor
+            var resultData = PradTools.AllocateArray(this.Data.Length);
+            var resultTensor = new Tensor(this.Shape, resultData);
+
+            // Create a scalar array for broadcasting the scalar value
+            var scalarArray = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(scalarArray, scalar);
+
+            // Perform the element-wise maximum using MKLNET
+            Vml.MaxMag(this.Data.Length, this.Data, scalarArray, resultData);
+
+            return resultTensor;
+        }
+
+        /// <summary>
+        /// Element-wise minimum between this tensor and a scalar value.
+        /// </summary>
+        /// <param name="scalar">The scalar value to compare.</param>
+        /// <returns>A new tensor containing the element-wise minimum values.</returns>
+        public Tensor Min(float scalar)
+        {
+            // Allocate the result tensor
+            var resultData = PradTools.AllocateArray(this.Data.Length);
+            var resultTensor = new Tensor(this.Shape, resultData);
+
+            // Create a scalar array for broadcasting the scalar value
+            var scalarArray = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(scalarArray, scalar);
+
+            // Perform the element-wise minimum using MKLNET
+            Vml.MinMag(this.Data.Length, this.Data, scalarArray, resultData);
+
+            return resultTensor;
+        }
+
+        /// <summary>
         /// Converts to a Matrix.
         /// </summary>
         /// <returns>A matrix.</returns>

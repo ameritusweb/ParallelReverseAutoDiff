@@ -115,6 +115,22 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Gets an array of floats.
+        /// </summary>
+        /// <param name="length">The length.</param>
+        /// <returns>The array.</returns>
+        internal static float[] OneArray(int length)
+        {
+            var array = new float[length];
+            for (int i = 0; i < length; i++)
+            {
+                array[i] = 1.0f;
+            }
+
+            return array;
+        }
+
+        /// <summary>
         /// Gets the element size of the array.
         /// </summary>
         /// <typeparam name="T">The type of the array.</typeparam>

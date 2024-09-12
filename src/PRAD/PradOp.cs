@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Reflection;
     using System.Threading.Tasks;
     using ParallelReverseAutoDiff.RMAD;
+    using static ParallelReverseAutoDiff.PRAD.PradOp;
 
     /// <summary>
     /// A lightweight reverse-mode automatic differentiation library.
@@ -188,6 +189,16 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets the atan2 op.
         /// </summary>
         public static Func<Tensor, PradResult> Atan2Op => FuncOp.Atan2;
+
+        /// <summary>
+        /// Gets the max op.
+        /// </summary>
+        public static Func<Tensor, PradResult> MaxOp => FuncOp.Max;
+
+        /// <summary>
+        /// Gets the min op.
+        /// </summary>
+        public static Func<Tensor, PradResult> MinOp => FuncOp.Min;
 
         /// <summary>
         /// Gets the less than op.
@@ -1032,6 +1043,106 @@ namespace ParallelReverseAutoDiff.PRAD
                 var gradient = tensorReverse.ElementwiseCosReverse(upstreamGrad);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Performs an element-wise maximum operation between this tensor and the provided tensor.
+        /// </summary>
+        /// <param name="other">The tensor to compare with the current tensor.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> containing the result tensor of the element-wise maximum operation
+        /// and the associated gradients for backpropagation.
+        /// </returns>
+        /// <remarks>
+        /// This method computes the element-wise maximum of two tensors, stores the result in the current tensor,
+        /// and registers a backpropagation step to calculate the reverse gradient during the backpropagation phase.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var tensor1 = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+        /// var tensor2 = new Tensor(new int[] { 2, 2 }, new double[] { 2, 1, 4, 3 });
+        /// var result = tensor1.Max(tensor2);
+        /// // Result tensor: { 2, 2, 4, 4 }
+        /// </code>
+        /// </example>
+        [PradOperation(nameof(MaxOp))]
+        public PradResult Max(Tensor other)
+        {
+            var result = this.currentTensor.Max(other);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.MaxReverse(upstreamGrad, other);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, other };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Performs an element-wise minimum operation between this tensor and the provided tensor.
+        /// </summary>
+        /// <param name="other">The tensor to compare with the current tensor.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> containing the result tensor of the element-wise minimum operation
+        /// and the associated gradients for backpropagation.
+        /// </returns>
+        /// <remarks>
+        /// This method computes the element-wise minimum of two tensors, stores the result in the current tensor,
+        /// and registers a backpropagation step to calculate the reverse gradient during the backpropagation phase.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var tensor1 = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+        /// var tensor2 = new Tensor(new int[] { 2, 2 }, new double[] { 2, 1, 4, 3 });
+        /// var result = tensor1.Min(tensor2);
+        /// // Result tensor: { 1, 1, 3, 3 }
+        /// </code>
+        /// </example>
+        [PradOperation(nameof(MinOp))]
+        public PradResult Min(Tensor other)
+        {
+            var result = this.currentTensor.Min(other);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.MinReverse(upstreamGrad, other);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, other };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);

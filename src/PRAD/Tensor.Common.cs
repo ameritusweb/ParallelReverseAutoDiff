@@ -12,6 +12,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Numerics;
     using System.Text;
     using System.Threading.Tasks;
+    using ILGPU.IR.Types;
     using MKLNET;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -281,6 +282,54 @@ namespace ParallelReverseAutoDiff.PRAD
 
             var newShape = this.Shape.Where((dim, index) => !axes.Contains(index)).ToArray();
             return this.Reshape(newShape);
+        }
+
+        /// <summary>
+        /// Element-wise maximum between this tensor and another tensor.
+        /// </summary>
+        /// <param name="other">The other tensor to compare.</param>
+        /// <returns>A new tensor containing the element-wise maximum values.</returns>
+        /// <exception cref="ArgumentException">Thrown if the tensors do not have the same shape.</exception>
+        public Tensor Max(Tensor other)
+        {
+            // Ensure the shapes match
+            if (!this.Shape.SequenceEqual(other.Shape))
+            {
+                throw new ArgumentException("Tensors must have the same shape for element-wise maximum.");
+            }
+
+            // Allocate the result tensor
+            var resultData = PradTools.AllocateArray(this.Data.Length);
+            var resultTensor = new Tensor(this.Shape, resultData);
+
+            // Perform the element-wise maximum using MKLNET
+            Vml.MaxMag(this.Data.Length, this.Data, other.Data, resultData);
+
+            return resultTensor;
+        }
+
+        /// <summary>
+        /// Element-wise minimum between this tensor and another tensor.
+        /// </summary>
+        /// <param name="other">The other tensor to compare.</param>
+        /// <returns>A new tensor containing the element-wise minimum values.</returns>
+        /// <exception cref="ArgumentException">Thrown if the tensors do not have the same shape.</exception>
+        public Tensor Min(Tensor other)
+        {
+            // Ensure the shapes match
+            if (!this.Shape.SequenceEqual(other.Shape))
+            {
+                throw new ArgumentException("Tensors must have the same shape for element-wise minimum.");
+            }
+
+            // Allocate the result tensor
+            var resultData = PradTools.AllocateArray(this.Data.Length);
+            var resultTensor = new Tensor(this.Shape, resultData);
+
+            // Perform the element-wise minimum using MKLNET
+            Vml.MinMag(this.Data.Length, this.Data, other.Data, resultData);
+
+            return resultTensor;
         }
 
         /// <summary>
@@ -1048,7 +1097,8 @@ namespace ParallelReverseAutoDiff.PRAD
             // Initialize the output tensor to hold the patches
             int patchSize = filterHeight * filterWidth * channels;
             var outputShape = new int[] { batchSize, outHeight, outWidth, patchSize };
-            var outputData = new double[batchSize * outHeight * outWidth * patchSize];
+            var size = batchSize * outHeight * outWidth * patchSize;
+            var outputData = PradTools.AllocateArray(size);
 
             // Precompute channel stride for efficiency
             int channelStride = paddedInput.Shape[1] * paddedInput.Shape[2] * channels;
@@ -1130,7 +1180,8 @@ namespace ParallelReverseAutoDiff.PRAD
                 ? new int[] { paddedHeight, paddedWidth }
                 : new int[] { batchSize, paddedHeight, paddedWidth, channels };
 
-            var paddedData = new double[batchSize * paddedHeight * paddedWidth * channels];
+            var size = batchSize * paddedHeight * paddedWidth * channels;
+            var paddedData = PradTools.AllocateArray(size);
 
             int inputStride = width * channels;
             int outputStride = paddedWidth * channels;

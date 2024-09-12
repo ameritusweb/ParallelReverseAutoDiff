@@ -340,6 +340,146 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise max operation between two tensors.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="other">The other tensor used in the forward max operation.</param>
+        /// <returns>The gradient with respect to both input tensors.</returns>
+        public Tensor[] MaxReverse(Tensor upstreamGradient, Tensor other)
+        {
+            if (this.InitialTensors.Length != 1)
+            {
+                throw new InvalidOperationException("MaxReverse expects exactly one initial tensor.");
+            }
+
+            Tensor tensorA = this.InitialTensors[0];
+
+            // Ensure both tensors have the same shape
+            this.CheckShapeCompatibility(tensorA, upstreamGradient);
+            this.CheckShapeCompatibility(tensorA, other);
+
+            // Allocate gradient tensors for both inputs
+            var gradX = new Tensor(tensorA.Shape);
+            var gradOther = new Tensor(tensorA.Shape);
+
+            // Compute element-wise maximum
+            var maxMask = new Tensor(tensorA.Shape);
+
+            // maxMask will be 1 where this > other, 0 otherwise
+            Parallel.For(0, tensorA.Data.Length, i =>
+            {
+                maxMask.Data[i] = tensorA.Data[i] > other.Data[i] ? 1 : 0;
+            });
+
+            // Compute gradients based on maxMask
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, maxMask.Data, gradX.Data);  // gradient for `tensorA`
+
+            // Invert maxMask to get the gradient for `other`
+            Vml.Sub(maxMask.Data.Length, PradTools.OneArray(maxMask.Data.Length), maxMask.Data, gradOther.Data);
+            Vml.Mul(gradOther.Data.Length, upstreamGradient.Data, gradOther.Data, gradOther.Data); // gradient for `other`
+
+            return new[] { gradX, gradOther };
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the element-wise max operation with a scalar.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="scalar">The scalar used in the forward max operation.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor MaxReverse(Tensor upstreamGradient, double scalar)
+        {
+            Tensor tensorA = this.InitialTensors[0];
+
+            this.CheckShapeCompatibility(tensorA, upstreamGradient);
+
+            // Allocate gradient tensor
+            var gradX = new Tensor(tensorA.Shape);
+
+            // Compute max mask where this tensor > scalar
+            var maxMask = new Tensor(tensorA.Shape);
+            Parallel.For(0, tensorA.Data.Length, i =>
+            {
+                maxMask.Data[i] = tensorA.Data[i] > scalar ? 1 : 0;
+            });
+
+            // Compute gradient
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, maxMask.Data, gradX.Data);
+
+            return gradX;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the element-wise min operation between two tensors.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="other">The other tensor used in the forward min operation.</param>
+        /// <returns>The gradient with respect to both input tensors.</returns>
+        public Tensor[] MinReverse(Tensor upstreamGradient, Tensor other)
+        {
+            if (this.InitialTensors.Length != 1)
+            {
+                throw new InvalidOperationException("MinReverse expects exactly one initial tensor.");
+            }
+
+            Tensor tensorA = this.InitialTensors[0];
+
+            // Ensure both tensors have the same shape
+            this.CheckShapeCompatibility(tensorA, upstreamGradient);
+            this.CheckShapeCompatibility(tensorA, other);
+
+            // Allocate gradient tensors for both inputs
+            var gradX = new Tensor(tensorA.Shape);
+            var gradOther = new Tensor(tensorA.Shape);
+
+            // Compute element-wise minimum
+            var minMask = new Tensor(tensorA.Shape);
+
+            // minMask will be 1 where this < other, 0 otherwise
+            Parallel.For(0, tensorA.Data.Length, i =>
+            {
+                minMask.Data[i] = tensorA.Data[i] < other.Data[i] ? 1 : 0;
+            });
+
+            // Compute gradients based on minMask
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, minMask.Data, gradX.Data);  // gradient for `tensorA`
+
+            // Invert minMask to get the gradient for `other`
+            Vml.Sub(minMask.Data.Length, PradTools.OneArray(minMask.Data.Length), minMask.Data, gradOther.Data);
+            Vml.Mul(gradOther.Data.Length, upstreamGradient.Data, gradOther.Data, gradOther.Data); // gradient for `other`
+
+            return new[] { gradX, gradOther };
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the element-wise min operation with a scalar.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="scalar">The scalar used in the forward min operation.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor MinReverse(Tensor upstreamGradient, double scalar)
+        {
+            Tensor tensorA = this.InitialTensors[0];
+
+            this.CheckShapeCompatibility(tensorA, upstreamGradient);
+
+            // Allocate gradient tensor
+            var gradX = new Tensor(tensorA.Shape);
+
+            // Compute min mask where this tensor < scalar
+            var minMask = new Tensor(tensorA.Shape);
+            Parallel.For(0, tensorA.Data.Length, i =>
+            {
+                minMask.Data[i] = tensorA.Data[i] < scalar ? 1 : 0;
+            });
+
+            // Compute gradient
+            Vml.Mul(upstreamGradient.Data.Length, upstreamGradient.Data, minMask.Data, gradX.Data);
+
+            return gradX;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise square root operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
