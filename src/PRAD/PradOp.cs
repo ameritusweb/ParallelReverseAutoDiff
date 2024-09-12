@@ -130,6 +130,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> SinOp => FuncOp.Sin;
 
         /// <summary>
+        /// Gets the extract patches op.
+        /// </summary>
+        public static Func<int[], int[], string, PradResult> ExtractPatchesOp => FuncOp.ExtractPatches;
+
+        /// <summary>
         /// Gets the cos op.
         /// </summary>
         public static Func<PradResult> CosOp => FuncOp.Cos;
@@ -974,6 +979,33 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ElementwiseSinReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Extracts patches from a 2D matrix tensor (using MKLNET for optimization).
+        /// </summary>
+        /// <param name="filterSize">The size of the sliding window [filter_height, filter_width].</param>
+        /// <param name="strides">The strides for the sliding window [stride_height, stride_width].</param>
+        /// <param name="padding">Padding type ('VALID' or 'SAME').</param>
+        /// <returns>A new tensor containing the extracted patches.</returns>
+        [PradOperation(nameof(ExtractPatchesOp))]
+        public PradResult ExtractPatches(int[] filterSize, int[] strides, string padding)
+        {
+            var result = this.currentTensor.ExtractPatches(filterSize, strides, padding);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ExtractPatchesReverse(upstreamGrad, filterSize, strides, padding);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
