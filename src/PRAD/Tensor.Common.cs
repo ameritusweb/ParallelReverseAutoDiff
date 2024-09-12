@@ -1046,9 +1046,9 @@ namespace ParallelReverseAutoDiff.PRAD
             int outWidth = ((paddedInput.Shape[2] - filterWidth) / strideWidth) + 1;
 
             // Initialize the output tensor to hold the patches
-            int patchSize = filterHeight * filterWidth;
-            var outputShape = new int[] { batchSize, outHeight, outWidth, patchSize, channels };  // Added batch and channels dimensions
-            var outputData = new double[batchSize * outHeight * outWidth * patchSize * channels];  // Added batch and channels
+            int patchSize = filterHeight * filterWidth * channels;
+            var outputShape = new int[] { batchSize, outHeight, outWidth, patchSize };
+            var outputData = new double[batchSize * outHeight * outWidth * patchSize];
 
             // Precompute channel stride for efficiency
             int channelStride = paddedInput.Shape[1] * paddedInput.Shape[2] * channels;
@@ -1061,27 +1061,22 @@ namespace ParallelReverseAutoDiff.PRAD
                 {
                     for (int j = 0; j < outWidth; j++)
                     {
-                        int patchIndex = ((b * outHeight * outWidth) + (i * outWidth) + j) * patchSize * channels;  // Account for batch and channels in index
+                        int patchIndex = ((b * outHeight * outWidth) + (i * outWidth) + j) * patchSize;
 
                         for (int h = 0; h < filterHeight; h++)
                         {
                             int srcY = (i * strideHeight) + h;
                             int srcXStart = j * strideWidth;
-                            int dstIndex = patchIndex + (h * filterWidth * channels);  // Adjust for batch and channels
+                            int dstIndex = patchIndex + (h * filterWidth * channels);
 
-                            // Copy the patch for each channel
-                            for (int c = 0; c < channels; c++)
-                            {
-                                int srcChannelOffset = batchOffset + ((((srcY * paddedInput.Shape[2]) + srcXStart) * channels) + c);
-                                int dstChannelOffset = dstIndex + c;
-
-                                Buffer.BlockCopy(
-                                    paddedInput.Data,
-                                    srcChannelOffset * PradTools.SizeOf,
-                                    outputData,
-                                    dstChannelOffset * PradTools.SizeOf,
-                                    filterWidth * PradTools.SizeOf);
-                            }
+                            // Copy the entire row for all channels at once
+                            int srcOffset = batchOffset + (((srcY * paddedInput.Shape[2]) + srcXStart) * channels);
+                            Buffer.BlockCopy(
+                                paddedInput.Data,
+                                srcOffset * PradTools.SizeOf,
+                                outputData,
+                                dstIndex * PradTools.SizeOf,
+                                filterWidth * channels * PradTools.SizeOf);
                         }
                     }
                 }
@@ -1100,14 +1095,10 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>A new padded tensor.</returns>
         public Tensor PadUsingMKL(int padTop, int padBottom, int padLeft, int padRight)
         {
-            int paddedHeight = this.Shape[0] + padTop + padBottom;
-            int paddedWidth = this.Shape[1] + padLeft + padRight;
-
             int batchSize, height, width, channels;
 
             if (this.Shape.Length == 2)
             {
-                // 2D tensor: [height, width], single channel assumed
                 batchSize = 1;
                 height = this.Shape[0];
                 width = this.Shape[1];
@@ -1115,7 +1106,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
             else if (this.Shape.Length == 3)
             {
-                // 3D tensor: [height, width, channels]
                 batchSize = 1;
                 height = this.Shape[0];
                 width = this.Shape[1];
@@ -1123,7 +1113,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
             else if (this.Shape.Length == 4)
             {
-                // 4D tensor: [batch, height, width, channels]
                 batchSize = this.Shape[0];
                 height = this.Shape[1];
                 width = this.Shape[2];
@@ -1134,30 +1123,34 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("Input tensor must be 2D, 3D, or 4D.");
             }
 
-            // Output shape: [batch, paddedHeight, paddedWidth, channels] or [paddedHeight, paddedWidth, channels]
+            int paddedHeight = height + padTop + padBottom;
+            int paddedWidth = width + padLeft + padRight;
+
             var outputShape = this.Shape.Length == 2
                 ? new int[] { paddedHeight, paddedWidth }
                 : new int[] { batchSize, paddedHeight, paddedWidth, channels };
 
             var paddedData = new double[batchSize * paddedHeight * paddedWidth * channels];
 
+            int inputStride = width * channels;
+            int outputStride = paddedWidth * channels;
+
             Parallel.For(0, batchSize, b =>
             {
+                int inputBatchOffset = b * height * inputStride;
+                int outputBatchOffset = b * paddedHeight * outputStride;
+
                 for (int i = 0; i < height; i++)
                 {
-                    for (int c = 0; c < channels; c++)
-                    {
-                        int srcOffset = (b * height * width * channels) + (i * width * channels) + c;
-                        int destOffset = (b * paddedHeight * paddedWidth * channels) + ((((i + padTop) * paddedWidth) + padLeft) * channels) + c;
+                    int inputRowOffset = inputBatchOffset + (i * inputStride);
+                    int outputRowOffset = outputBatchOffset + ((i + padTop) * outputStride) + (padLeft * channels);
 
-                        // Use Buffer.BlockCopy to copy the inner matrix for each channel
-                        Buffer.BlockCopy(
-                            this.Data,
-                            srcOffset * PradTools.SizeOf,
-                            paddedData,
-                            destOffset * PradTools.SizeOf,
-                            width * PradTools.SizeOf);  // Copy the entire width for the current row
-                    }
+                    Buffer.BlockCopy(
+                        this.Data,
+                        inputRowOffset * PradTools.SizeOf,
+                        paddedData,
+                        outputRowOffset * PradTools.SizeOf,
+                        inputStride * PradTools.SizeOf);
                 }
             });
 

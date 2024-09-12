@@ -1,6 +1,7 @@
 ﻿using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.Test.Common;
 using Xunit;
+using Xunit.Sdk;
 
 namespace ParallelReverseAutoDiff.Test.PRAD
 {
@@ -477,6 +478,152 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             // Assert
             var expectedGradient = new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4 };
             Assert.Equal(expectedGradient, gradient.Data);
+        }
+
+        [Fact]
+        public void ExtractPatchesReverse_3DInput_SamePadding_CorrectOutput()
+        {
+            // Arrange
+            var inputTensor = new Tensor(new int[] { 1, 3, 3, 2 }, new double[]
+            {
+            1, 2, 3, 4, 5, 6,
+            7, 8, 9, 10, 11, 12,
+            13, 14, 15, 16, 17, 18
+            });
+
+            var upstreamGradient = new Tensor(new int[] { 1, 3, 3, 4, 2 }, new double[]
+            {
+            1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 0, 0, 1, 1, 0, 0,
+            1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 0, 0, 1, 1, 0, 0,
+            1, 1, 1, 1, 0, 0, 0, 0,
+            1, 1, 1, 1, 0, 0, 0, 0,
+            1, 1, 0, 0, 0, 0, 0, 0
+            });
+
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "SAME";
+
+            var testObject = new TensorReverse(new[] { inputTensor });
+
+            // Act
+            var result = testObject.ExtractPatchesReverse(upstreamGradient, filterSize, strides, padding);
+
+            // Assert
+            Assert.Equal(new int[] { 1, 3, 3, 2 }, result.Shape);
+
+            // The expected values are the sum of gradients for each position
+            var expected = new double[]
+            {
+            4, 4, 3, 3, 2, 2,
+            3, 3, 4, 4, 2, 2,
+            2, 2, 2, 2, 1, 1
+            };
+
+            /* <--------- This is what I'm getting
+            var actual = new double[] { 
+             1, 1,
+             2, 2, 2, 2, 2, 2,
+             4, 4, 4, 4,
+             2, 2, ...
+            };
+            */
+
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.Equal(expected[i], result.Data[i], 3); // Using a precision of 3 decimal places
+            }
+        }
+
+        [Fact]
+        public void ExtractPatchesReverse_3DInput_ValidPadding_CorrectOutput()
+        {
+            // Arrange
+            var inputTensor = new Tensor(new int[] { 1, 4, 4, 1 }, new double[]
+            {
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 14, 15, 16
+            });
+
+            var upstreamGradient = new Tensor(new int[] { 1, 3, 3, 4, 1 }, new double[]
+            {
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 1, 1
+            });
+
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "VALID";
+
+            var testObject = new TensorReverse(new[] { inputTensor });
+
+            // Act
+            var result = testObject.ExtractPatchesReverse(upstreamGradient, filterSize, strides, padding);
+
+            // Assert
+            Assert.Equal(new int[] { 1, 4, 4, 1 }, result.Shape);
+
+            var expected = new double[]
+            {
+            1, 2, 2, 1,
+            2, 4, 4, 2,
+            2, 4, 4, 2,
+            1, 2, 2, 1
+            };
+
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.Equal(expected[i], result.Data[i], 3);
+            }
+        }
+
+        [Fact]
+        public void RemovePadding_CorrectlyRemovesPadding()
+        {
+            // Arrange
+            var paddedTensor = new Tensor(new int[] { 1, 5, 5, 2 }, new double[]
+            {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1, 2, 3, 4, 5, 6, 0, 0,
+            0, 0, 7, 8, 9, 10, 11, 12, 0, 0,
+            0, 0, 13, 14, 15, 16, 17, 18, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            });
+
+            int padTop = 1, padBottom = 1, padLeft = 1, padRight = 1;
+
+            var testObject = new TensorReverse(new[] { paddedTensor });
+
+            // Act
+            var result = testObject.RemovePadding(paddedTensor, padTop, padBottom, padLeft, padRight);
+
+            // Assert
+            Assert.Equal(new int[] { 1, 3, 3, 2 }, result.Shape);
+
+            var expected = new double[]
+            {
+            1, 2, 3, 4, 5, 6,
+            7, 8, 9, 10, 11, 12,
+            13, 14, 15, 16, 17, 18
+            };
+
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.Equal(expected[i], result.Data[i], 3);
+            }
         }
     }
 }

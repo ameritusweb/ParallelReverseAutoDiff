@@ -106,7 +106,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var result = input.ExtractPatches(filterSize, strides, padding);
 
             // Assert
-            Assert.Equal(new int[] { 1, 3, 3, 4, 1 }, result.Shape);
+            Assert.Equal(new int[] { 1, 3, 3, 4 }, result.Shape);
             Assert.Equal(new double[]
             {
             1, 2, 5, 6,
@@ -140,7 +140,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var result = input.ExtractPatches(filterSize, strides, padding);
 
             // Assert
-            Assert.Equal(new int[] { 1, 3, 3, 4, 2 }, result.Shape);
+            Assert.Equal(new int[] { 1, 3, 3, 8 }, result.Shape);
             // Check a few key values
             Assert.Equal(1, result.Data[0]);
             Assert.Equal(2, result.Data[1]);
@@ -148,6 +148,39 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             Assert.Equal(4, result.Data[3]);
             Assert.Equal(7, result.Data[4]);
             Assert.Equal(8, result.Data[5]);
+            Assert.Equal(9, result.Data[6]);
+            Assert.Equal(10, result.Data[7]);
+
+            // Check the second patch (top-middle)
+            Assert.Equal(3, result.Data[8]);
+            Assert.Equal(4, result.Data[9]);
+            Assert.Equal(5, result.Data[10]);
+            Assert.Equal(6, result.Data[11]);
+            Assert.Equal(9, result.Data[12]);
+            Assert.Equal(10, result.Data[13]);
+            Assert.Equal(11, result.Data[14]);
+            Assert.Equal(12, result.Data[15]);
+
+            // Check the third patch (top-right)
+            Assert.Equal(5, result.Data[16]);
+            Assert.Equal(6, result.Data[17]);
+            Assert.Equal(0, result.Data[18]);  // Right padding
+            Assert.Equal(0, result.Data[19]);  // Right padding
+            Assert.Equal(11, result.Data[20]);
+            Assert.Equal(12, result.Data[21]);
+            Assert.Equal(0, result.Data[22]);  // Right padding
+            Assert.Equal(0, result.Data[23]);  // Right padding
+
+            // Check the last patch (bottom-right corner)
+            int lastPatchStart = result.Data.Length - 8;
+            Assert.Equal(17, result.Data[lastPatchStart]);
+            Assert.Equal(18, result.Data[lastPatchStart + 1]);
+            Assert.Equal(0, result.Data[lastPatchStart + 2]);  // Right padding
+            Assert.Equal(0, result.Data[lastPatchStart + 3]);  // Right padding
+            Assert.Equal(0, result.Data[lastPatchStart + 4]);  // Bottom padding
+            Assert.Equal(0, result.Data[lastPatchStart + 5]);  // Bottom padding
+            Assert.Equal(0, result.Data[lastPatchStart + 6]);  // Bottom-right padding
+            Assert.Equal(0, result.Data[lastPatchStart + 7]);  // Bottom-right padding
         }
 
         [Fact]
@@ -173,7 +206,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var result = input.ExtractPatches(filterSize, strides, padding);
 
             // Assert
-            Assert.Equal(new int[] { 2, 2, 2, 4, 1 }, result.Shape);
+            Assert.Equal(new int[] { 2, 2, 2, 4 }, result.Shape);
             Assert.Equal(new double[]
             {
             1, 2, 4, 5,
