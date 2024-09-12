@@ -969,6 +969,202 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Extracts patches from a 2D matrix tensor (using MKLNET for optimization).
+        /// </summary>
+        /// <param name="filterSize">The size of the sliding window [filter_height, filter_width].</param>
+        /// <param name="strides">The strides for the sliding window [stride_height, stride_width].</param>
+        /// <param name="padding">Padding type ('VALID' or 'SAME').</param>
+        /// <returns>A new tensor containing the extracted patches.</returns>
+        public Tensor ExtractPatches(int[] filterSize, int[] strides, string padding)
+        {
+            if (filterSize.Length != 2 || strides.Length != 2)
+            {
+                throw new ArgumentException("Filter size and strides must have 2 dimensions (height, width).");
+            }
+
+            // Determine if the tensor is 2D, 3D, or already has a batch dimension (4D)
+            Tensor input;
+            int batchSize;
+            int channels;
+
+            if (this.Shape.Length == 2)
+            {
+                // 2D tensor: expand to [1, height, width, 1] (add both batch and channel dimensions)
+                input = this.ExpandDims(0).ExpandDims(-1);  // Expand to [1, height, width, 1]
+                batchSize = 1;
+                channels = 1;                               // Single channel
+            }
+            else if (this.Shape.Length == 3)
+            {
+                // 3D tensor: expand to [1, height, width, channels] (add batch dimension only)
+                input = this.ExpandDims(0);                 // Expand to [1, height, width, channels]
+                batchSize = 1;
+                channels = this.Shape[2];                   // Multiple channels
+            }
+            else if (this.Shape.Length == 4)
+            {
+                // 4D tensor: already has batch and channel dimensions [batch, height, width, channels]
+                input = this;                               // No expansion needed
+                batchSize = this.Shape[0];                  // Batch size
+                channels = this.Shape[3];                   // Number of channels
+            }
+            else
+            {
+                throw new ArgumentException("Input tensor must be 2D, 3D, or 4D.");
+            }
+
+            int inputHeight = input.Shape[1];  // [batch, height, width, channels]
+            int inputWidth = input.Shape[2];   // [batch, height, width, channels]
+            int filterHeight = filterSize[0];
+            int filterWidth = filterSize[1];
+            int strideHeight = strides[0];
+            int strideWidth = strides[1];
+
+            int padTop, padBottom, padLeft, padRight;
+
+            if (padding == "SAME")
+            {
+                padTop = (filterHeight - 1) / 2;
+                padBottom = (filterHeight - 1) - padTop;
+                padLeft = (filterWidth - 1) / 2;
+                padRight = (filterWidth - 1) - padLeft;
+            }
+            else if (padding == "VALID")
+            {
+                padTop = padBottom = padLeft = padRight = 0;  // No padding for 'VALID'
+            }
+            else
+            {
+                throw new ArgumentException("Unsupported padding type. Use 'VALID' or 'SAME'.");
+            }
+
+            // Apply padding to the input tensor if required
+            Tensor paddedInput = input.PadUsingMKL(padTop, padBottom, padLeft, padRight);
+
+            // Calculate output dimensions
+            int outHeight = ((paddedInput.Shape[1] - filterHeight) / strideHeight) + 1;
+            int outWidth = ((paddedInput.Shape[2] - filterWidth) / strideWidth) + 1;
+
+            // Initialize the output tensor to hold the patches
+            int patchSize = filterHeight * filterWidth;
+            var outputShape = new int[] { batchSize, outHeight, outWidth, patchSize, channels };  // Added batch and channels dimensions
+            var outputData = new double[batchSize * outHeight * outWidth * patchSize * channels];  // Added batch and channels
+
+            // Precompute channel stride for efficiency
+            int channelStride = paddedInput.Shape[1] * paddedInput.Shape[2] * channels;
+
+            Parallel.For(0, batchSize, b =>
+            {
+                int batchOffset = b * channelStride;
+
+                for (int i = 0; i < outHeight; i++)
+                {
+                    for (int j = 0; j < outWidth; j++)
+                    {
+                        int patchIndex = ((b * outHeight * outWidth) + (i * outWidth) + j) * patchSize * channels;  // Account for batch and channels in index
+
+                        for (int h = 0; h < filterHeight; h++)
+                        {
+                            int srcY = (i * strideHeight) + h;
+                            int srcXStart = j * strideWidth;
+                            int dstIndex = patchIndex + (h * filterWidth * channels);  // Adjust for batch and channels
+
+                            // Copy the patch for each channel
+                            for (int c = 0; c < channels; c++)
+                            {
+                                int srcChannelOffset = batchOffset + ((((srcY * paddedInput.Shape[2]) + srcXStart) * channels) + c);
+                                int dstChannelOffset = dstIndex + c;
+
+                                Buffer.BlockCopy(
+                                    paddedInput.Data,
+                                    srcChannelOffset * PradTools.SizeOf,
+                                    outputData,
+                                    dstChannelOffset * PradTools.SizeOf,
+                                    filterWidth * PradTools.SizeOf);
+                            }
+                        }
+                    }
+                }
+            });
+
+            return new Tensor(outputShape, outputData);
+        }
+
+        /// <summary>
+        /// Pads a tensor using MKLNET operations.
+        /// </summary>
+        /// <param name="padTop">Padding for the top.</param>
+        /// <param name="padBottom">Padding for the bottom.</param>
+        /// <param name="padLeft">Padding for the left.</param>
+        /// <param name="padRight">Padding for the right.</param>
+        /// <returns>A new padded tensor.</returns>
+        public Tensor PadUsingMKL(int padTop, int padBottom, int padLeft, int padRight)
+        {
+            int paddedHeight = this.Shape[0] + padTop + padBottom;
+            int paddedWidth = this.Shape[1] + padLeft + padRight;
+
+            int batchSize, height, width, channels;
+
+            if (this.Shape.Length == 2)
+            {
+                // 2D tensor: [height, width], single channel assumed
+                batchSize = 1;
+                height = this.Shape[0];
+                width = this.Shape[1];
+                channels = 1;
+            }
+            else if (this.Shape.Length == 3)
+            {
+                // 3D tensor: [height, width, channels]
+                batchSize = 1;
+                height = this.Shape[0];
+                width = this.Shape[1];
+                channels = this.Shape[2];
+            }
+            else if (this.Shape.Length == 4)
+            {
+                // 4D tensor: [batch, height, width, channels]
+                batchSize = this.Shape[0];
+                height = this.Shape[1];
+                width = this.Shape[2];
+                channels = this.Shape[3];
+            }
+            else
+            {
+                throw new ArgumentException("Input tensor must be 2D, 3D, or 4D.");
+            }
+
+            // Output shape: [batch, paddedHeight, paddedWidth, channels] or [paddedHeight, paddedWidth, channels]
+            var outputShape = this.Shape.Length == 2
+                ? new int[] { paddedHeight, paddedWidth }
+                : new int[] { batchSize, paddedHeight, paddedWidth, channels };
+
+            var paddedData = new double[batchSize * paddedHeight * paddedWidth * channels];
+
+            Parallel.For(0, batchSize, b =>
+            {
+                for (int i = 0; i < height; i++)
+                {
+                    for (int c = 0; c < channels; c++)
+                    {
+                        int srcOffset = (b * height * width * channels) + (i * width * channels) + c;
+                        int destOffset = (b * paddedHeight * paddedWidth * channels) + ((((i + padTop) * paddedWidth) + padLeft) * channels) + c;
+
+                        // Use Buffer.BlockCopy to copy the inner matrix for each channel
+                        Buffer.BlockCopy(
+                            this.Data,
+                            srcOffset * PradTools.SizeOf,
+                            paddedData,
+                            destOffset * PradTools.SizeOf,
+                            width * PradTools.SizeOf);  // Copy the entire width for the current row
+                    }
+                }
+            });
+
+            return new Tensor(outputShape, paddedData);
+        }
+
+        /// <summary>
         /// Performs element-wise less than comparison with another tensor or scalar.
         /// </summary>
         /// <param name="other">The tensor or scalar to compare with.</param>

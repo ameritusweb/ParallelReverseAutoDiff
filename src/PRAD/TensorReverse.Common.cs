@@ -374,6 +374,150 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for ExtractPatches using the original input tensor.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer (patches).</param>
+        /// <param name="filterSize">The size of the sliding window [filter_height, filter_width].</param>
+        /// <param name="strides">The strides for the sliding window [stride_height, stride_width].</param>
+        /// <param name="padding">Padding type ('VALID' or 'SAME').</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor ExtractPatchesReverse(Tensor upstreamGradient, int[] filterSize, int[] strides, string padding)
+        {
+            // Use the initial input tensor before patches were extracted
+            Tensor inputTensor = this.InitialTensors[0];
+
+            if (filterSize.Length != 2 || strides.Length != 2)
+            {
+                throw new ArgumentException("Filter size and strides must have 2 dimensions (height, width).");
+            }
+
+            int batchSize = inputTensor.Shape[0];
+            int inputHeight = inputTensor.Shape[1];
+            int inputWidth = inputTensor.Shape[2];
+            int channels = inputTensor.Shape.Length == 3 ? 1 : inputTensor.Shape[3];
+
+            int filterHeight = filterSize[0];
+            int filterWidth = filterSize[1];
+            int strideHeight = strides[0];
+            int strideWidth = strides[1];
+
+            // Compute padding for SAME or VALID mode
+            int padTop, padBottom, padLeft, padRight;
+
+            if (padding == "SAME")
+            {
+                padTop = (filterHeight - 1) / 2;
+                padBottom = (filterHeight - 1) - padTop;
+                padLeft = (filterWidth - 1) / 2;
+                padRight = (filterWidth - 1) - padLeft;
+            }
+            else if (padding == "VALID")
+            {
+                padTop = padBottom = padLeft = padRight = 0;
+            }
+            else
+            {
+                throw new ArgumentException("Unsupported padding type. Use 'VALID' or 'SAME'.");
+            }
+
+            // Initialize the gradient for the input (zeroed out)
+            int paddedHeight = inputHeight + padTop + padBottom;
+            int paddedWidth = inputWidth + padLeft + padRight;
+            Tensor inputGradient = new Tensor(new int[] { batchSize, paddedHeight, paddedWidth, channels });
+
+            // Unpack the upstream gradients (patches) and sum into the respective locations
+            int outHeight = upstreamGradient.Shape[1];
+            int outWidth = upstreamGradient.Shape[2];
+            int patchSize = filterHeight * filterWidth;
+
+            Parallel.For(0, batchSize, b =>
+            {
+                for (int i = 0; i < outHeight; i++)
+                {
+                    for (int j = 0; j < outWidth; j++)
+                    {
+                        int patchIndex = ((b * outHeight * outWidth) + (i * outWidth) + j) * patchSize * channels;
+
+                        for (int h = 0; h < filterHeight; h++)
+                        {
+                            int srcY = (i * strideHeight) + h;
+                            int srcXStart = j * strideWidth;
+
+                            for (int w = 0; w < filterWidth; w++)
+                            {
+                                for (int c = 0; c < channels; c++)
+                                {
+                                    // Use the upstream gradient to distribute gradients
+                                    int inputGradientOffset = (((b * paddedHeight * paddedWidth) + ((srcY * paddedWidth) + srcXStart + w)) * channels) + c;
+                                    int upstreamOffset = patchIndex + (((h * filterWidth) + w) * channels) + c;
+
+                                    inputGradient.Data[inputGradientOffset] += upstreamGradient.Data[upstreamOffset];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Remove padding from the inputGradient, not the initial tensor
+            if (padTop != 0 || padBottom != 0 || padLeft != 0 || padRight != 0)
+            {
+                return this.RemovePadding(inputGradient, padTop, padBottom, padLeft, padRight);
+            }
+
+            return inputGradient;
+        }
+
+        /// <summary>
+        /// Removes padding from a padded tensor (used after reverse ExtractPatches).
+        /// </summary>
+        /// <param name="paddedTensor">The tensor with padding.</param>
+        /// <param name="padTop">Padding on the top.</param>
+        /// <param name="padBottom">Padding on the bottom.</param>
+        /// <param name="padLeft">Padding on the left.</param>
+        /// <param name="padRight">Padding on the right.</param>
+        /// <returns>A tensor with padding removed.</returns>
+        public Tensor RemovePadding(Tensor paddedTensor, int padTop, int padBottom, int padLeft, int padRight)
+        {
+            // Calculate the new shape after removing the padding
+            int[] newShape =
+            {
+                paddedTensor.Shape[0],                                 // Batch size remains the same
+                paddedTensor.Shape[1] - padTop - padBottom,            // Adjust the height by removing padding
+                paddedTensor.Shape[2] - padLeft - padRight,            // Adjust the width by removing padding
+                paddedTensor.Shape[3],                                 // Number of channels remains the same
+            };
+
+            // Create the new unpadded tensor
+            Tensor unpadded = new Tensor(newShape);
+
+            // Calculate the size of each row (in terms of number of elements) for both the padded and unpadded tensor
+            int paddedRowSize = paddedTensor.Shape[2] * paddedTensor.Shape[3];     // Width * Channels for the padded tensor
+            int unpaddedRowSize = newShape[2] * newShape[3];                       // Width * Channels for the unpadded tensor
+            int channelSize = paddedTensor.Shape[3];                               // Number of channels is the same
+
+            Parallel.For(0, paddedTensor.Shape[0], b =>
+            {
+                for (int i = padTop; i < paddedTensor.Shape[1] - padBottom; i++)
+                {
+                    // Calculate the source and destination indices for Buffer.BlockCopy
+                    int srcOffset = ((((b * paddedTensor.Shape[1]) + i) * paddedTensor.Shape[2]) + padLeft) * channelSize;   // Skip the left padding in the row
+                    int destOffset = (((b * newShape[1]) + (i - padTop)) * newShape[2]) * channelSize;                     // Place the row in the unpadded tensor
+
+                    // Copy the entire row from padded to unpadded tensor
+                    Buffer.BlockCopy(
+                        paddedTensor.Data,
+                        srcOffset * PradTools.SizeOf,              // Source data pointer
+                        unpadded.Data,
+                        destOffset * PradTools.SizeOf,                 // Destination data pointer
+                        unpaddedRowSize * PradTools.SizeOf);
+                }
+            });
+
+            return unpadded;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise sine.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

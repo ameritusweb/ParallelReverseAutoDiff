@@ -85,5 +85,159 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 }
             }
         }
+
+        [Fact]
+        public void ExtractPatches_2DInput_ValidPadding_CorrectOutput()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 4, 4 }, new double[]
+            {
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 14, 15, 16
+            });
+
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "VALID";
+
+            // Act
+            var result = input.ExtractPatches(filterSize, strides, padding);
+
+            // Assert
+            Assert.Equal(new int[] { 1, 3, 3, 4, 1 }, result.Shape);
+            Assert.Equal(new double[]
+            {
+            1, 2, 5, 6,
+            2, 3, 6, 7,
+            3, 4, 7, 8,
+            5, 6, 9, 10,
+            6, 7, 10, 11,
+            7, 8, 11, 12,
+            9, 10, 13, 14,
+            10, 11, 14, 15,
+            11, 12, 15, 16
+            }, result.Data);
+        }
+
+        [Fact]
+        public void ExtractPatches_3DInput_SamePadding_CorrectOutput()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 3, 3, 2 }, new double[]
+            {
+            1, 2, 3, 4, 5, 6,
+            7, 8, 9, 10, 11, 12,
+            13, 14, 15, 16, 17, 18
+            });
+
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "SAME";
+
+            // Act
+            var result = input.ExtractPatches(filterSize, strides, padding);
+
+            // Assert
+            Assert.Equal(new int[] { 1, 3, 3, 4, 2 }, result.Shape);
+            // Check a few key values
+            Assert.Equal(1, result.Data[0]);
+            Assert.Equal(2, result.Data[1]);
+            Assert.Equal(3, result.Data[2]);
+            Assert.Equal(4, result.Data[3]);
+            Assert.Equal(7, result.Data[4]);
+            Assert.Equal(8, result.Data[5]);
+        }
+
+        [Fact]
+        public void ExtractPatches_4DInput_ValidPadding_CorrectOutput()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 2, 3, 3, 1 }, new double[]
+            {
+            1, 2, 3,
+            4, 5, 6,
+            7, 8, 9,
+
+            10, 11, 12,
+            13, 14, 15,
+            16, 17, 18
+            });
+
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "VALID";
+
+            // Act
+            var result = input.ExtractPatches(filterSize, strides, padding);
+
+            // Assert
+            Assert.Equal(new int[] { 2, 2, 2, 4, 1 }, result.Shape);
+            Assert.Equal(new double[]
+            {
+            1, 2, 4, 5,
+            2, 3, 5, 6,
+            4, 5, 7, 8,
+            5, 6, 8, 9,
+
+            10, 11, 13, 14,
+            11, 12, 14, 15,
+            13, 14, 16, 17,
+            14, 15, 17, 18
+            }, result.Data);
+        }
+
+        [Fact]
+        public void ExtractPatches_InvalidFilterSize_ThrowsArgumentException()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 4, 4 }, new double[16]);
+            int[] filterSize = { 2 };
+            int[] strides = { 1, 1 };
+            string padding = "VALID";
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => input.ExtractPatches(filterSize, strides, padding));
+        }
+
+        [Fact]
+        public void ExtractPatches_InvalidStrides_ThrowsArgumentException()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 4, 4 }, new double[16]);
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1 };
+            string padding = "VALID";
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => input.ExtractPatches(filterSize, strides, padding));
+        }
+
+        [Fact]
+        public void ExtractPatches_InvalidPadding_ThrowsArgumentException()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 4, 4 }, new double[16]);
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "INVALID";
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => input.ExtractPatches(filterSize, strides, padding));
+        }
+
+        [Fact]
+        public void ExtractPatches_1DInput_ThrowsArgumentException()
+        {
+            // Arrange
+            var input = new Tensor(new int[] { 4 }, new double[4]);
+            int[] filterSize = { 2, 2 };
+            int[] strides = { 1, 1 };
+            string padding = "VALID";
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => input.ExtractPatches(filterSize, strides, padding));
+        }
     }
 }
