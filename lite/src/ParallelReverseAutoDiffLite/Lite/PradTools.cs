@@ -131,6 +131,23 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Fills an array.
+        /// </summary>
+        /// <param name="length">The length.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The filled array.</returns>
+        internal static float[] FillArray(int length, double value)
+        {
+            var array = new float[length];
+            for (int i = 0; i < length; i++)
+            {
+                array[i] = (float)value;
+            }
+
+            return array;
+        }
+
+        /// <summary>
         /// Gets the element size of the array.
         /// </summary>
         /// <typeparam name="T">The type of the array.</typeparam>

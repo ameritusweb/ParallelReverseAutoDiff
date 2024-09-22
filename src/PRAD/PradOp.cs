@@ -196,6 +196,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> MaxOp => FuncOp.Max;
 
         /// <summary>
+        /// Gets the pow op.
+        /// </summary>
+        public static Func<object, PradResult> PowOp => FuncOp.Pow;
+
+        /// <summary>
         /// Gets the min op.
         /// </summary>
         public static Func<Tensor, PradResult> MinOp => FuncOp.Min;
@@ -1084,6 +1089,83 @@ namespace ParallelReverseAutoDiff.PRAD
                 PradOp?[] ops = new PradOp?[2];
                 var tensors = new Tensor[] { this.currentTensor, other };
                 for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Performs an element-wise power operation on this tensor with the provided exponent.
+        /// </summary>
+        /// <param name="exponent">The exponent to raise each element to. Can be a scalar double or a Tensor.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> containing the result tensor of the element-wise power operation
+        /// and the associated gradients for backpropagation.
+        /// </returns>
+        /// <remarks>
+        /// This method computes the element-wise power of the current tensor, stores the result,
+        /// and registers a backpropagation step to calculate the reverse gradient during the backpropagation phase.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var tensor = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+        /// var result = tensor.Pow(2.0);
+        /// // Result tensor: { 1, 4, 9, 16 }
+        /// =================================
+        /// var exponentTensor = new Tensor(new int[] { 2, 2 }, new double[] { 2, 3, 2, 3 });
+        /// var result2 = tensor.Pow(exponentTensor);
+        /// // Result tensor: { 1, 8, 9, 64 }
+        /// </code>
+        /// </example>
+        [PradOperation(nameof(PowOp))]
+        public PradResult Pow(object exponent)
+        {
+            Tensor result;
+            Tensor? exponentTensor = null;
+            if (exponent is float scalarExponentF)
+            {
+                result = this.currentTensor.Pow(scalarExponentF);
+            }
+            else if (exponent is double scalarExponent)
+            {
+                result = this.currentTensor.Pow(scalarExponent);
+            }
+            else if (exponent is Tensor tensorExponent)
+            {
+                exponentTensor = tensorExponent;
+                result = this.currentTensor.Pow(tensorExponent);
+            }
+            else
+            {
+                throw new ArgumentException("Exponent must be either a double or a Tensor.");
+            }
+
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+            var grad = Tensor.ToTensorArray(exponentTensor != null ? 2 : 1, this.currentTensor.Shape);
+
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradients = tensorReverse.PowReverse(upstreamGrad, exponent);
+                PradOp?[] ops = new PradOp?[gradients.Length];
+                var tensors = new Tensor[] { this.currentTensor };
+                if (exponentTensor != null)
+                {
+                    tensors = tensors.Append(exponentTensor).ToArray();
+                }
+
+                for (int i = 0; i < gradients.Length; i++)
                 {
                     var tensor = tensors[i];
                     if (tensor is PradTensor pradTensor)

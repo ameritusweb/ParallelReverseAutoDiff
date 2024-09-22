@@ -1334,6 +1334,39 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise power of the tensor to the given exponent using MKL.NET.
+        /// </summary>
+        /// <param name="exponent">The exponent to raise each element to. Can be a scalar double or a Tensor.</param>
+        /// <returns>A new tensor with the result of the power operation.</returns>
+        /// <exception cref="ArgumentException">Thrown when the exponent tensor shape doesn't match or the exponent type is invalid.</exception>
+        public Tensor Pow(object exponent)
+        {
+            if (exponent is float scalarExponentF)
+            {
+                return this.PowHelper(scalarExponentF);
+            }
+            else if (exponent is double scalarExponent)
+            {
+                return this.PowHelper(scalarExponent);
+            }
+            else if (exponent is Tensor exponentTensor)
+            {
+                if (!this.Shape.SequenceEqual(exponentTensor.Shape))
+                {
+                    throw new ArgumentException("The shapes of the tensors must match for element-wise power operation.");
+                }
+
+                var result = new Tensor(this.Shape);
+                Vml.Pow(this.Data.Length, this.Data, exponentTensor.Data, result.Data);
+                return result;
+            }
+            else
+            {
+                throw new ArgumentException("Exponent must be either a float, double, or a Tensor.");
+            }
+        }
+
+        /// <summary>
         /// Adjusts a negative index to a positive index based on the maximum rank.
         /// </summary>
         /// <param name="index">The index to adjust.</param>
@@ -1603,6 +1636,30 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        /// <summary>
+        /// Helper method to compute power with a scalar exponent.
+        /// </summary>
+        /// <param name="exponent">The scalar exponent to raise each element to.</param>
+        /// <returns>A new tensor with the result of the power operation.</returns>
+        private Tensor PowHelper(double exponent)
+        {
+            var result = new Tensor(this.Shape);
+
+            if (exponent == 2.0)
+            {
+                // For squaring, we can use the more efficient Sqr function
+                Vml.Sqr(this.Data.Length, this.Data, result.Data);
+            }
+            else
+            {
+                // For general exponents, use the Pow function
+                var exponentArray = PradTools.FillArray(this.Data.Length, exponent);
+                Vml.Pow(this.Data.Length, this.Data, exponentArray, result.Data);
+            }
+
+            return result;
         }
 
         private void GenerateIndicesRecursively(int[] currentIndex, int dim, int[] numSlices, List<int[]> indicesList)

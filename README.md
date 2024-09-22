@@ -1003,6 +1003,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Where(Tensor condition, Tensor other)` | Selects elements based on a condition tensor. |
 | `Modulus(Tensor tensor)` | Performs element-wise modulus operation. |
 | `ExtractPatches(int[] filterSize, int[] strides, string padding)` | Extracts patches from a tensor for im2col. |
+| `Pow(Tensor tensor)` | Performs an element-wise power operation on the current tensor with the provided exponent. |
 
 #### Tensor Manipulation 
 
@@ -1069,6 +1070,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `WhereOp`
 - `ModulusOp`
 - `ExtractPatchesOp`
+- `PowOp`
 
 ### PradResult.Then Method
 

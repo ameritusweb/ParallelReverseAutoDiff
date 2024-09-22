@@ -2480,6 +2480,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestPow()
+        {
+            var input = new Tensor(new int[] { 1, 4 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
+            var pradOp = new PradOp(input);
+            var result = pradOp.Pow(2f).Then(PradOp.PowOp, new Tensor(input.Shape, 5d));
+        }
+
+        [Fact]
         public void TestThenParallel2()
         {
             // Define input and weights

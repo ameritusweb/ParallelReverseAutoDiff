@@ -91,6 +91,19 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Fills an array.
+        /// </summary>
+        /// <param name="length">The length.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The filled array.</returns>
+        internal static double[] FillArray(int length, double value)
+        {
+            var array = new double[length];
+            Array.Fill(array, value);
+            return array;
+        }
+
+        /// <summary>
         /// Gets the vector count.
         /// </summary>
         /// <returns>The vector count.</returns>

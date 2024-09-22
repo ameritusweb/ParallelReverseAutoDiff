@@ -185,6 +185,45 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="operation">The operation to apply.</param>
         /// <param name="other">The other tensor.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<object, PradResult> operation, float other)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<object, PradResult>>(operation);
+            return instanceOperation(other);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="other">The other tensor.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<object, PradResult> operation, double other)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<object, PradResult>>(operation);
+            return instanceOperation(other);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="other">The other tensor.</param>
+        /// <returns>A PradResult.</returns>
+        public PradResult Then(Func<object, PradResult> operation, Tensor other)
+        {
+            var instanceOperation = this.PradOp.GetOperation<Func<object, PradResult>>(operation);
+            return instanceOperation(other);
+        }
+
+        /// <summary>
+        /// Applies the following operation.
+        /// Allows for this: x.Then(PradOp.SquareRoot).Then(PradOp.Add, y);.
+        /// </summary>
+        /// <param name="operation">The operation to apply.</param>
+        /// <param name="other">The other tensor.</param>
         /// <param name="additional">The additional tensor.</param>
         /// <returns>A PradResult.</returns>
         public PradResult Then(Func<Tensor, Tensor, PradResult> operation, Tensor other, Tensor additional)

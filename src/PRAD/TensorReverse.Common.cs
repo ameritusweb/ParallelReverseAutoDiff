@@ -340,6 +340,80 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise power operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="exponent">The exponent used in the forward power operation. Can be a scalar or a tensor.</param>
+        /// <returns>The gradient with respect to the input tensor and the exponent (if it's a tensor).</returns>
+        public Tensor[] PowReverse(Tensor upstreamGradient, object exponent)
+        {
+            if (this.InitialTensors.Length != 1)
+            {
+                throw new InvalidOperationException("PowReverse expects exactly one initial tensor.");
+            }
+
+            Tensor tensorA = this.InitialTensors[0];
+            this.CheckShapeCompatibility(tensorA, upstreamGradient);
+
+            var gradX = new Tensor(tensorA.Shape);
+            Tensor? gradExponent = null;
+
+            if (exponent is double scalarExponent)
+            {
+                // Case 1: Scalar exponent
+                // d/dx(x^n) = n * x^(n-1)
+                var temp = new Tensor(tensorA.Shape);
+                var exponentArray = PradTools.FillArray(tensorA.Data.Length, scalarExponent);
+                var ones = PradTools.OneArray(tensorA.Data.Length);
+                var resultTemp = PradTools.AllocateArray(tensorA.Data.Length);
+                Vml.Sub(tensorA.Data.Length, exponentArray, ones, resultTemp);
+                Vml.Pow(tensorA.Data.Length, tensorA.Data, resultTemp, temp.Data);
+                Vml.Mul(gradX.Data.Length, exponentArray, temp.Data, gradX.Data);
+                Vml.Mul(gradX.Data.Length, upstreamGradient.Data, gradX.Data, gradX.Data);
+            }
+            else if (exponent is float scalarExponentF)
+            {
+                // Case 1: Scalar exponent
+                // d/dx(x^n) = n * x^(n-1)
+                var temp = new Tensor(tensorA.Shape);
+                var exponentArray = PradTools.AllocateArray(tensorA.Data.Length);
+                Array.Fill(exponentArray, scalarExponentF);
+                var ones = PradTools.OneArray(tensorA.Data.Length);
+                var resultTemp = PradTools.AllocateArray(tensorA.Data.Length);
+                Vml.Sub(tensorA.Data.Length, exponentArray, ones, resultTemp);
+                Vml.Pow(tensorA.Data.Length, tensorA.Data, resultTemp, temp.Data);
+                Vml.Mul(gradX.Data.Length, exponentArray, temp.Data, gradX.Data);
+                Vml.Mul(gradX.Data.Length, upstreamGradient.Data, gradX.Data, gradX.Data);
+            }
+            else if (exponent is Tensor exponentTensor)
+            {
+                // Case 2: Tensor exponent
+                this.CheckShapeCompatibility(tensorA, exponentTensor);
+                gradExponent = new Tensor(tensorA.Shape);
+
+                // d/dx(x^y) = y * x^(y-1)
+                var temp1 = new Tensor(tensorA.Shape);
+                var temp2 = new Tensor(tensorA.Shape);
+                Vml.Sub(exponentTensor.Data.Length, exponentTensor.Data, PradTools.OneArray(exponentTensor.Data.Length), temp1.Data);
+                Vml.Pow(tensorA.Data.Length, tensorA.Data, temp1.Data, temp2.Data);
+                Vml.Mul(gradX.Data.Length, exponentTensor.Data, temp2.Data, gradX.Data);
+                Vml.Mul(gradX.Data.Length, upstreamGradient.Data, gradX.Data, gradX.Data);
+
+                // d/dy(x^y) = x^y * ln(x)
+                Vml.Ln(tensorA.Data.Length, tensorA.Data, temp1.Data);
+                Vml.Pow(tensorA.Data.Length, tensorA.Data, exponentTensor.Data, temp2.Data);
+                Vml.Mul(gradExponent.Data.Length, temp1.Data, temp2.Data, gradExponent.Data);
+                Vml.Mul(gradExponent.Data.Length, upstreamGradient.Data, gradExponent.Data, gradExponent.Data);
+            }
+            else
+            {
+                throw new ArgumentException("Exponent must be either a float, double, or a Tensor.");
+            }
+
+            return gradExponent != null ? new[] { gradX, gradExponent } : new[] { gradX };
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise max operation between two tensors.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
