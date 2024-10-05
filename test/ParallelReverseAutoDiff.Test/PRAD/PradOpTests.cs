@@ -1021,6 +1021,35 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestVectorConvolution()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 1, 3, 6, 6 }, Enumerable.Range(0, 12).Select(i => (i + 1) / 100d).ToArray());
+            var opInput1 = new PradOp(input1);
+            var opInputBranch = opInput1.Branch();
+
+            var magnitudes = opInput1.Indexer("...", ":3");
+            var angles = opInputBranch.Indexer("...", "3:");
+
+            var magPatches = magnitudes.PradOp.ExtractPatches(new int[] { 1, 3, 3, 1 }, new int[] { 1, 1, 1, 1 }, "SAME");
+
+            var anglePatches = angles.PradOp.ExtractPatches(new int[] { 1, 3, 3, 1 }, new int[] { 1, 1, 1, 1 }, "VALID");
+
+            var magPatchesShapeLast = magPatches.PradOp.CurrentShape[^1];
+
+            var anglePatchesShapeLast = anglePatches.PradOp.CurrentShape[^1];
+
+            var magFlattened = magPatches.PradOp.Reshape(new int[] { 1, -1, magPatchesShapeLast });
+
+            var angleFlattened = anglePatches.PradOp.Reshape(new int[] { 1, -1, anglePatchesShapeLast });
+
+            var combinedPatches = magFlattened.PradOp.Concat(new Tensor[] { angleFlattened.Result }, -1);
+
+            // TODO: Perform convolution
+        }
+
+        [Fact]
         public void TestVNNDecompositionOperationUsingIndexer()
         {
             Random rand = new Random(3);

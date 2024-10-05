@@ -121,6 +121,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<int, PradResult> ExpandDimsOp => FuncOp.ExpandDims;
 
         /// <summary>
+        /// Gets the argmax op.
+        /// </summary>
+        public static Func<int, PradResult> ArgMaxOp => FuncOp.ArgMax;
+
+        /// <summary>
         /// Gets the custom op.
         /// </summary>
         public static Func<TensorOp, Tensor[], PradResult> CustomTensorOp => FuncOp.CustomOperation;
@@ -866,6 +871,31 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ExpandDimsReverse(upstreamGrad, axis);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Finds the indices of the maximum values along the specified axis with optimized memory access and vectorized operations using Vector of double.
+        /// </summary>
+        /// <param name="axis">The axis along which to find the maximum indices. If -1, finds the index of the maximum value in the flattened tensor.</param>
+        /// <returns>A new tensor containing the indices of the maximum values.</returns>
+        [PradOperation(nameof(ArgMaxOp))]
+        public PradResult ArgMax(int axis = -1)
+        {
+            var result = this.currentTensor.ArgMax(axis);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = new Tensor(this.currentTensor.Shape);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };

@@ -1374,6 +1374,90 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Finds the indices of the maximum values along the specified axis with optimized memory access and vectorized operations using Vector of double.
+        /// </summary>
+        /// <param name="axis">The axis along which to find the maximum indices. If -1, finds the index of the maximum value in the flattened tensor.</param>
+        /// <returns>A new tensor containing the indices of the maximum values.</returns>
+        public Tensor ArgMax(int axis = -1)
+        {
+            // Handle negative axis
+            if (axis < 0)
+            {
+                axis = this.Shape.Length + axis;
+            }
+
+            // Validate the axis
+            if (axis < 0 || axis >= this.Shape.Length)
+            {
+                throw new ArgumentException($"Axis value {axis} is out of bounds for tensor with {this.Shape.Length} dimensions.");
+            }
+
+            int[] outputShape = this.Shape.Take(axis).Concat(this.Shape.Skip(axis + 1)).ToArray();
+            var result = new Tensor(outputShape); // Create a new tensor to hold the indices of the maximum values
+
+            int axisLength = this.Shape[axis]; // The size of the dimension along which we're finding ArgMax
+            int outerSize = this.Shape.Take(axis).Aggregate(1, (x, y) => x * y); // Total size before the axis
+            int innerSize = this.Shape.Skip(axis + 1).Aggregate(1, (x, y) => x * y); // Total size after the axis
+
+            // Precompute strides to optimize index computation
+            int[] strides = ComputeStrides(this.Shape);
+
+            // Vectorized width (Vector<double> typically operates on 2 doubles at once)
+            int vectorWidth = Vector<double>.Count;
+
+            // Parallel loop to compute ArgMax for each slice along the specified axis
+            Parallel.For(0, outerSize, i =>
+            {
+                for (int j = 0; j < innerSize; j++)
+                {
+                    int startIndex = (i * axisLength * innerSize) + j; // Starting index of the slice
+                    double maxValue = this.Data[startIndex];
+                    int maxIndex = 0;
+
+                    // Vectorized comparison (SIMD)
+                    int k = 1;
+                    for (; k + vectorWidth <= axisLength; k += vectorWidth)
+                    {
+                        int currentIndex = startIndex + (k * innerSize);
+
+                        // Load the current values into vectors
+                        var currentVector = new Vector<double>(this.Data, currentIndex);
+                        var maxVector = new Vector<double>(maxValue);
+
+                        // Perform element-wise max comparison
+                        var comparison = Vector.Max(currentVector, maxVector);
+
+                        // Check which values are greater and update maxValue and maxIndex
+                        for (int v = 0; v < vectorWidth; v++)
+                        {
+                            if (comparison[v] > maxValue)
+                            {
+                                maxValue = comparison[v];
+                                maxIndex = k + v;
+                            }
+                        }
+                    }
+
+                    // Handle remaining elements that don't fit into the vector size
+                    for (; k < axisLength; k++)
+                    {
+                        int currentIndex = startIndex + (k * innerSize);
+                        if (this.Data[currentIndex] > maxValue)
+                        {
+                            maxValue = this.Data[currentIndex];
+                            maxIndex = k;
+                        }
+                    }
+
+                    // Store the index of the maximum value in the result tensor
+                    result.Data[(i * innerSize) + j] = maxIndex;
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs an element-wise floor operation on the tensor.
         /// </summary>
         /// <returns>A new tensor containing the element-wise floor results.</returns>
@@ -1798,6 +1882,23 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Computes the strides for a tensor shape.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <returns>An array representing the strides for each dimension.</returns>
+        private int[] PrecomputeStrides(int[] shape)
+        {
+            int[] strides = new int[shape.Length];
+            strides[shape.Length - 1] = 1;
+            for (int i = shape.Length - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * shape[i + 1];
+            }
+
+            return strides;
         }
 
         private void GenerateIndicesRecursively(int[] currentIndex, int dim, int[] numSlices, List<int[]> indicesList)
