@@ -131,6 +131,106 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise arc cosine (inverse cosine) of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the element-wise arc cosine values.</returns>
+        public Tensor ElementwiseArcCos()
+        {
+            var result = new Tensor(this.Shape); // Create a new tensor with the same shape as the current one.
+
+            // Use MKL.NET VML to compute the arc cosine of each element in the tensor.
+            Vml.Acos(this.Data.Length, this.Data, result.Data);
+
+            return result; // Return the resultant tensor containing the arc cosine values.
+        }
+
+        /// <summary>
+        /// Computes the element-wise arc cosine (inverse cosine) of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the element-wise arc cosine values.</returns>
+        public Tensor ElementwiseArcSin()
+        {
+            var result = new Tensor(this.Shape); // Create a new tensor with the same shape as the current one.
+
+            // Use MKL.NET VML to compute the arc cosine of each element in the tensor.
+            Vml.Asin(this.Data.Length, this.Data, result.Data);
+
+            return result; // Return the resultant tensor containing the arc cosine values.
+        }
+
+        /// <summary>
+        /// Performs an embedding lookup on the current tensor based on provided embeddings.
+        /// Supports 1D, 2D, and 3D tensors with optional batch dimensions for embeddings.
+        /// </summary>
+        /// <param name="embeddings">The 2D or 3D tensor containing embedding vectors.</param>
+        /// <returns>A new tensor with the embedded vectors.</returns>
+        /// <exception cref="ArgumentException">Thrown when the tensor shapes are invalid.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when an index is out of the embedding range.</exception>
+        public Tensor Embedding(Tensor embeddings)
+        {
+            // Validate the index tensor (this)
+            if (this.Shape.Length < 1 || this.Shape.Length > 3)
+            {
+                throw new ArgumentException("The index tensor must be 1D, 2D, or 3D.");
+            }
+
+            // Validate the embeddings tensor
+            if (embeddings.Shape.Length != 2 && embeddings.Shape.Length != 3)
+            {
+                throw new ArgumentException("The embeddings tensor must be 2D or 3D.");
+            }
+
+            // Check if embeddings are batched
+            bool batchedEmbeddings = embeddings.Shape.Length == 3;
+
+            // Determine number of embeddings and embedding dimension
+            int numEmbeddings = batchedEmbeddings ? embeddings.Shape[1] : embeddings.Shape[0];
+            int embeddingDim = batchedEmbeddings ? embeddings.Shape[2] : embeddings.Shape[1];
+
+            // Compute the output shape based on the index tensor's shape
+            int[] outputShape = this.Shape.Length switch
+            {
+                1 => new int[] { this.Shape[0], embeddingDim },
+                2 => new int[] { this.Shape[0] * this.Shape[1], embeddingDim },
+                3 => new int[] { this.Shape[0], this.Shape[1] * this.Shape[2], embeddingDim },
+                _ => throw new ArgumentException("Unexpected tensor shape.") // Safety fallback
+            };
+
+            // Create output tensor
+            var result = new Tensor(outputShape);
+
+            // Check if all indices are in range first to avoid partial failure
+            for (int i = 0; i < this.Data.Length; i++)
+            {
+                int index = (int)this.Data[i];
+                if (index < 0 || index >= numEmbeddings)
+                {
+                    throw new ArgumentOutOfRangeException($"Index {index} is out of range for embeddings with {numEmbeddings} entries.");
+                }
+            }
+
+            // Perform the embedding lookup in parallel
+            Parallel.For(0, this.Data.Length, i =>
+            {
+                int index = (int)this.Data[i];
+
+                // If embeddings are batched, calculate the batch offset
+                int batchIndex = batchedEmbeddings ? i / (this.Shape[^2] * this.Shape[^1]) : 0;
+
+                int srcOffset = batchedEmbeddings
+                    ? ((batchIndex * numEmbeddings) + index) * embeddingDim
+                    : index * embeddingDim;
+
+                int destOffset = i * embeddingDim;
+
+                // Copy the embedding vector to the result tensor
+                Array.Copy(embeddings.Data, srcOffset, result.Data, destOffset, embeddingDim);
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs a vectorized bit flip operation on the tensor.
         /// This effectively converts 1s to 0s and 0s to 1s in one pass.
         /// </summary>
@@ -994,6 +1094,9 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">Number of indices does not match rank.</exception>
         public Tensor Indexer(params string?[] indices)
         {
+            // Handle '...' (ellipsis) by expanding it to select all preceding dimensions
+            indices = this.ExpandEllipsis(indices, this.Shape.Length);
+
             if (indices.Length != this.Shape.Length)
             {
                 throw new ArgumentException($"Number of indices ({indices.Length}) does not match tensor rank ({this.Shape.Length})");
@@ -1636,6 +1739,41 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        /// <summary>
+        /// Expands '...' (ellipsis) into a full set of indices, selecting all preceding dimensions fully.
+        /// </summary>
+        /// <param name="indices">The provided indices, which may contain '...'.</param>
+        /// <param name="rank">The rank of the tensor (number of dimensions).</param>
+        /// <returns>An expanded array of indices where '...' has been replaced by the appropriate number of full-dimension selectors.</returns>
+        private string?[] ExpandEllipsis(string?[] indices, int rank)
+        {
+            // Check if '...' exists in the indices
+            int ellipsisIndex = Array.IndexOf(indices, "...");
+            if (ellipsisIndex == -1)
+            {
+                // No ellipsis found, return the indices as-is
+                return indices;
+            }
+
+            // Replace '...' with null values to select all preceding dimensions fully
+            int numMissing = rank - (indices.Length - 1); // Calculate how many dimensions are implied by '...'
+            string?[] expandedIndices = new string?[rank];
+
+            // Fill in the indices before the ellipsis
+            Array.Copy(indices, 0, expandedIndices, 0, ellipsisIndex);
+
+            // Fill in nulls for the dimensions that '...' represents
+            for (int i = ellipsisIndex; i < ellipsisIndex + numMissing; i++)
+            {
+                expandedIndices[i] = null;  // null means select the entire dimension
+            }
+
+            // Copy the remaining indices after the ellipsis
+            Array.Copy(indices, ellipsisIndex + 1, expandedIndices, ellipsisIndex + numMissing, indices.Length - ellipsisIndex - 1);
+
+            return expandedIndices;
         }
 
         /// <summary>

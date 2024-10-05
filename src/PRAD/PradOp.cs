@@ -96,6 +96,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> DivOp => FuncOp.Div;
 
         /// <summary>
+        /// Gets the embedding op.
+        /// </summary>
+        public static Func<Tensor, PradResult> EmbeddingOp => FuncOp.Embedding;
+
+        /// <summary>
         /// Gets the sub from op.
         /// </summary>
         public static Func<Tensor, PradResult> SubFromOp => FuncOp.SubFrom;
@@ -696,6 +701,42 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Performs an embedding operation.
+        /// </summary>
+        /// <param name="embeddings">The embeddings.</param>
+        /// <returns>The embedded tensor.</returns>
+        [PradOperation(nameof(EmbeddingOp))]
+        public PradResult Embedding(Tensor embeddings)
+        {
+            var originalShape = this.currentTensor.Shape;
+            var result = this.currentTensor.Embedding(embeddings);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, embeddings });
+
+            var grad = new Tensor[] { new Tensor(originalShape), new Tensor(embeddings.Shape) };
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.EmbeddingReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, embeddings };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (new Tensor[] { new Tensor(originalShape), gradient }, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);

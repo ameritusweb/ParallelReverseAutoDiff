@@ -1555,6 +1555,32 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestEmbedding()
+        {
+            Random rand = new Random(3);
+            var input1 = new Tensor(new int[] { 6, 1 }, Enumerable.Range(0, 3).Select(i => (double)i).Concat(Enumerable.Range(0, 3).Select(i => (double)i)).ToArray());
+            var embeddings = new Tensor(new int[] { 6, 6 }, Enumerable.Range(0, 36).Select(i => rand.NextDouble()).ToArray());
+            var gradientLoss = new Tensor(new int[] { 6, 6 }, Enumerable.Range(0, 36).Select(i => rand.NextDouble() * -1d).ToArray());
+
+            PradOp input1Prad = new PradOp(input1);
+            var embeddingRes = input1Prad.Embedding(embeddings);
+            embeddingRes.Back(gradientLoss);
+        }
+
+        [Fact]
+        public void TestEmbedding2()
+        {
+            Random rand = new Random(3);
+            var input1 = new Tensor(new int[] { 2, 6, 1 }, Enumerable.Range(0, 6).Select(i => (double)i).Concat(Enumerable.Range(0, 6).Select(i => (double)i)).ToArray());
+            var embeddings = new Tensor(new int[] { 2, 6, 6 }, Enumerable.Range(0, 72).Select(i => rand.NextDouble()).ToArray());
+            var gradientLoss = new Tensor(new int[] { 2, 6, 1, 6 }, Enumerable.Range(0, 72).Select(i => rand.NextDouble() * -1d).ToArray());
+
+            PradOp input1Prad = new PradOp(input1);
+            var embeddingRes = input1Prad.Embedding(embeddings);
+            embeddingRes.Back(gradientLoss);
+        }
+
+        [Fact]
         public void TestVNNElementwiseAddBezierOperation()
         {
             Random rand = new Random(3);

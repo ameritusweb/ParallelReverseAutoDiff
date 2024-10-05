@@ -9,6 +9,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using MKLNET;
     using ParallelReverseAutoDiff.RMAD;
@@ -1121,6 +1122,85 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the gradient for the embeddings tensor based on the upstream gradient tensor.
+        /// This method implements the reverse mode of the embedding operation.
+        /// </summary>
+        /// <param name="upstream">The upstream gradient tensor with respect to the output of the embedding operation.</param>
+        /// <returns>The gradient for the embeddings tensor.</returns>
+        /// <exception cref="ArgumentException">Thrown when tensor shapes are invalid.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when an index is out of range.</exception>
+        public Tensor EmbeddingReverse(Tensor upstream)
+        {
+            var indices = this.InitialTensors[0];
+            var embeddings = this.InitialTensors[1];
+
+            // Validate the upstream gradient tensor
+            if (upstream.Shape.Length < 2 || upstream.Shape.Length > 4)
+            {
+                throw new ArgumentException("The upstream gradient tensor must be 2D, 3D, or 4D.");
+            }
+
+            // Validate the embeddings tensor
+            if (embeddings.Shape.Length != 2 && embeddings.Shape.Length != 3)
+            {
+                throw new ArgumentException("The embeddings tensor must be 2D or 3D.");
+            }
+
+            // Check if embeddings are batched
+            bool batchedEmbeddings = embeddings.Shape.Length == 3;
+
+            // Determine the number of embeddings and embedding dimension
+            int numEmbeddings = batchedEmbeddings ? embeddings.Shape[1] : embeddings.Shape[0];
+            int embeddingDim = batchedEmbeddings ? embeddings.Shape[2] : embeddings.Shape[1];
+
+            // Initialize the gradient tensor for embeddings (same shape as embeddings tensor)
+            var embeddingGrad = new Tensor(embeddings.Shape);
+
+            // Create a thread-local copy of the gradients
+            var localGradients = new Tensor[Environment.ProcessorCount];
+            for (int t = 0; t < localGradients.Length; t++)
+            {
+                localGradients[t] = new Tensor(embeddings.Shape);
+            }
+
+            // Perform the gradient accumulation
+            Parallel.For(0, indices.Data.Length, i =>
+            {
+                int threadId = Thread.CurrentThread.ManagedThreadId % Environment.ProcessorCount;
+
+                int index = (int)indices.Data[i];
+
+                // Compute the batch index for batched embeddings
+                int batchIndex = batchedEmbeddings ? i / (indices.Shape[^2] * indices.Shape[^1]) : 0;
+
+                // Calculate the source offset in the upstream gradient tensor
+                int srcOffset = i * embeddingDim;
+
+                // Calculate the destination offset in the local embedding gradient tensor
+                int destOffset = batchedEmbeddings
+                    ? ((batchIndex * numEmbeddings) + index) * embeddingDim
+                    : index * embeddingDim;
+
+                // Accumulate the gradients into the thread-local buffer
+                for (int j = 0; j < embeddingDim; j++)
+                {
+                    localGradients[threadId].Data[destOffset + j] += upstream.Data[srcOffset + j];
+                }
+            });
+
+            // Sum up the local gradients into the final gradient tensor
+            for (int t = 0; t < localGradients.Length; t++)
+            {
+                for (int i = 0; i < embeddingGrad.Data.Length; i++)
+                {
+                    embeddingGrad.Data[i] += localGradients[t].Data[i];
+                }
+            }
+
+            return embeddingGrad;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise division operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -1509,6 +1589,9 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             Tensor inputTensor = this.InitialTensors[0];
 
+            // Handle '...' (ellipsis) by expanding it to select all preceding dimensions
+            indices = this.ExpandEllipsis(indices, inputTensor.Shape.Length);
+
             if (indices.Length != inputTensor.Shape.Length)
             {
                 throw new ArgumentException($"Number of indices ({indices.Length}) does not match tensor rank ({inputTensor.Shape.Length})");
@@ -1530,6 +1613,41 @@ namespace ParallelReverseAutoDiff.PRAD
             this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, new int[inputTensor.Shape.Length], new int[newShape.Length], 0);
 
             return result;
+        }
+
+        /// <summary>
+        /// Expands '...' (ellipsis) into a full set of indices, selecting all preceding dimensions fully.
+        /// </summary>
+        /// <param name="indices">The provided indices, which may contain '...'.</param>
+        /// <param name="rank">The rank of the tensor (number of dimensions).</param>
+        /// <returns>An expanded array of indices where '...' has been replaced by the appropriate number of full-dimension selectors.</returns>
+        private string?[] ExpandEllipsis(string?[] indices, int rank)
+        {
+            // Check if '...' exists in the indices
+            int ellipsisIndex = Array.IndexOf(indices, "...");
+            if (ellipsisIndex == -1)
+            {
+                // No ellipsis found, return the indices as-is
+                return indices;
+            }
+
+            // Replace '...' with null values to select all preceding dimensions fully
+            int numMissing = rank - (indices.Length - 1); // Calculate how many dimensions are implied by '...'
+            string?[] expandedIndices = new string?[rank];
+
+            // Fill in the indices before the ellipsis
+            Array.Copy(indices, 0, expandedIndices, 0, ellipsisIndex);
+
+            // Fill in nulls for the dimensions that '...' represents
+            for (int i = ellipsisIndex; i < ellipsisIndex + numMissing; i++)
+            {
+                expandedIndices[i] = null;  // null means select the entire dimension
+            }
+
+            // Copy the remaining indices after the ellipsis
+            Array.Copy(indices, ellipsisIndex + 1, expandedIndices, ellipsisIndex + numMissing, indices.Length - ellipsisIndex - 1);
+
+            return expandedIndices;
         }
 
         /// <summary>
