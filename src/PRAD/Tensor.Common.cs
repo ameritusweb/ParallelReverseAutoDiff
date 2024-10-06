@@ -1032,7 +1032,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 int rows = this.Shape[0];
                 int cols = this.Shape[1];
 
-                Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, this.Data, rows, result.Data, cols);
+                Blas.omatcopy(LayoutChar.RowMajor, TransChar.Yes, rows, cols, PradTools.One, this.Data, cols, result.Data, rows);
             }
             else if (this.Shape.Length == 3 && permutation.SequenceEqual(new int[] { 0, 2, 1 }))
             {
@@ -1551,6 +1551,90 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 throw new ArgumentException("Exponent must be either a float, double, or a Tensor.");
             }
+        }
+
+        /// <summary>
+        /// Performs an interleaved gather operation on the tensor with efficient copying and correct looping logic.
+        /// </summary>
+        /// <param name="skip">The number of row indices to skip during the interleaving process.</param>
+        /// <param name="restart">The number of rows before restarting the pattern.</param>
+        /// <returns>A new tensor with interleaved gathered results.</returns>
+        public Tensor InterleavedGather(int skip, int restart)
+        {
+            // Step 1: Reshape the tensor to [3, 18] (assuming original shape [3, 3, 6])
+            int[] reshapedShape = new int[] { this.Shape[0], this.Shape[1] * this.Shape[2] };
+            Tensor reshapedTensor = this.Reshape(reshapedShape);
+
+            // Step 2: Transpose the reshaped tensor to [18, 3] for interleaving
+            Tensor transposedTensor = reshapedTensor.Transpose(1, 0); // Transpose to [18, 3]
+
+            // Step 3: Prepare result tensor with shape [number of interleaved rows, batch size (3)]
+            int totalRowsToGather = transposedTensor.Shape[0];  // You are gathering all rows from the transposed tensor
+            Tensor resultTensor = new Tensor(new int[] { totalRowsToGather, transposedTensor.Shape[1] }); // Shape [18, 3]
+
+            int resultIndex = 0;  // Index for storing values in the result tensor
+
+            // Single loop for i++
+            for (int i = 0; i < transposedTensor.Shape[0]; i++)
+            {
+                // Copy the row at index i
+                Array.Copy(transposedTensor.Data, i * this.Shape[0], resultTensor.Data, resultIndex * this.Shape[0], this.Shape[0]);
+                resultIndex++;
+
+                Array.Copy(transposedTensor.Data, (i + skip) * this.Shape[0], resultTensor.Data, resultIndex * this.Shape[0], this.Shape[0]);
+                resultIndex++;
+
+                // Only reset i when we have completed the restart block
+                if (resultIndex % restart == 0)
+                {
+                    i += skip;  // Move i to the next block for the next iteration
+                }
+            }
+
+            // Step 4: Reshape the result back to the original shape (e.g., [1, 3, 3, 6])
+            return resultTensor.Reshape(new int[] { 1, this.Shape[1], skip, this.Shape[0] * 2 });
+        }
+
+        /// <summary>
+        /// Performs the inverse of an interleaved gather operation on the tensor, restoring it to its original structure.
+        /// </summary>
+        /// <param name="skip">The number of row indices that were skipped during the interleaving process.</param>
+        /// <param name="restart">The number of rows before the restart pattern occurred during interleaving.</param>
+        /// <returns>A tensor that has been restored to its original structure.</returns>
+        public Tensor InterleavedGatherInverse(int skip, int restart)
+        {
+            // Step 1: Reshape the tensor from [1, 3, 3, 6] to [9, 6] (flatten matrix)
+            int totalRowsToGather = (this.Shape[^1] / 2) * this.Shape[1];
+            int[] reshapedShape = new int[] { this.Shape[1] * this.Shape[2], this.Shape[^1] }; // [9, 6]
+            Tensor reshapedTensor = this.Reshape(reshapedShape);
+
+            // Step 2: Transpose from [9, 6] to [6, 9] to separate components
+            Tensor transposedTensor = reshapedTensor.Transpose(1, 0); // [6, 9]
+
+            // Step 3: Prepare the result tensor, where we will gather the interleaved rows
+            Tensor resultTensor = new Tensor(reshapedShape); // [9, 6]
+
+            int resultIndex = 0;
+
+            // Step 4: Perform 6 array copies per iteration to undo the interleaving
+            for (int iteration = 0; iteration < this.Shape[1]; iteration++)
+            {
+                // Step 4.1: Copy magnitudes for the current channel (e.g., `mr` for red)
+                Array.Copy(transposedTensor.Data, iteration * totalRowsToGather, resultTensor.Data, resultIndex * restart, skip);    // First set of magnitudes
+                Array.Copy(transposedTensor.Data, (iteration * totalRowsToGather) + skip, resultTensor.Data, (resultIndex + 1) * restart, skip); // Second set
+                Array.Copy(transposedTensor.Data, (iteration * totalRowsToGather) + (skip * 2), resultTensor.Data, (resultIndex + 2) * restart, skip); // Third set
+
+                // Step 4.2: Copy angles for the current channel (e.g., `ar` for red)
+                Array.Copy(transposedTensor.Data, (iteration + skip) * totalRowsToGather, resultTensor.Data, (resultIndex * restart) + skip, skip);  // First set of angles
+                Array.Copy(transposedTensor.Data, ((iteration + skip) * totalRowsToGather) + skip, resultTensor.Data, ((resultIndex + 1) * restart) + skip, skip); // Second set
+                Array.Copy(transposedTensor.Data, ((iteration + skip) * totalRowsToGather) + (skip * 2), resultTensor.Data, ((resultIndex + 2) * restart) + skip, skip); // Third set
+
+                // Step 4.3: Move to the next block of rows for the next iteration (g, b channels)
+                resultIndex += 3;
+            }
+
+            // Step 5: Reshape the result back to [3, 3, 6] (original shape)
+            return resultTensor.Reshape(new int[] { (this.Shape[^1] / 2), this.Shape[1], this.Shape[^2] * 2 });
         }
 
         /// <summary>

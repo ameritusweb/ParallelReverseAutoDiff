@@ -1021,20 +1021,34 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestInterleavedGather()
+        {
+            var input1 = new Tensor(new int[] { 3, 6, 12 }, Enumerable.Range(0, 216).Select(i => (i + 1) / 100d).ToArray());
+            var opInput1 = new PradOp(input1);
+            var opInput1Branch = opInput1.Branch();
+
+            var interleavedResult = opInput1.InterleavedGather(6, 12);
+            var tensor = interleavedResult.Result;
+
+            var inverse = interleavedResult.PradOp.InterleavedGatherInverse(6, 12);
+            var inverseTensor = inverse.Result;
+        }
+
+        [Fact]
         public void TestVectorConvolution()
         {
             Random rand = new Random(3);
 
-            var input1 = new Tensor(new int[] { 1, 3, 6, 6 }, Enumerable.Range(0, 12).Select(i => (i + 1) / 100d).ToArray());
+            var input1 = new Tensor(new int[] { 1, 3, 6, 6 }, Enumerable.Range(0, 108).Select(i => (i + 1) / 100d).ToArray());
             var opInput1 = new PradOp(input1);
             var opInputBranch = opInput1.Branch();
 
             var magnitudes = opInput1.Indexer("...", ":3");
             var angles = opInputBranch.Indexer("...", "3:");
 
-            var magPatches = magnitudes.PradOp.ExtractPatches(new int[] { 1, 3, 3, 1 }, new int[] { 1, 1, 1, 1 }, "SAME");
+            var magPatches = magnitudes.PradOp.ExtractPatches(new int[] { 3, 3 }, new int[] { 1, 1 }, "SAME");
 
-            var anglePatches = angles.PradOp.ExtractPatches(new int[] { 1, 3, 3, 1 }, new int[] { 1, 1, 1, 1 }, "VALID");
+            var anglePatches = angles.PradOp.ExtractPatches(new int[] { 3, 3 }, new int[] { 1, 1 }, "SAME");
 
             var magPatchesShapeLast = magPatches.PradOp.CurrentShape[^1];
 

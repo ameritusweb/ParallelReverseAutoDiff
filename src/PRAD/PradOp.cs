@@ -181,6 +181,16 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, int, PradResult> GatherOp => FuncOp.Gather;
 
         /// <summary>
+        /// Gets the Interleaved Gather op.
+        /// </summary>
+        public static Func<int, int, PradResult> InterleavedGatherOp => FuncOp.InterleavedGather;
+
+        /// <summary>
+        /// Gets the Interleaved Gather Inverse op.
+        /// </summary>
+        public static Func<int, int, PradResult> InterleavedGatherInverseOp => FuncOp.InterleavedGatherInverse;
+
+        /// <summary>
         /// Gets the GatherNd op.
         /// </summary>
         public static Func<Tensor, PradResult> GatherNdOp => FuncOp.GatherNd;
@@ -1565,6 +1575,58 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.GatherReverse(upstreamGrad, indices, axis);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Gathers slices from the tensor along the specified axis and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="skip">The indices to skip.</param>
+        /// <param name="restart">The indices where to restart.</param>
+        /// <returns>The gathered tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(InterleavedGatherOp))]
+        public PradResult InterleavedGather(int skip, int restart)
+        {
+            var result = this.currentTensor.InterleavedGather(skip, restart);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = new Tensor(this.currentTensor.Shape, PradTools.One);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Gathers slices from the tensor along the specified axis and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="skip">The indices to skip.</param>
+        /// <param name="restart">The indices where to restart.</param>
+        /// <returns>The gathered tensor along with the gradient placeholders.</returns>
+        [PradOperation(nameof(InterleavedGatherInverseOp))]
+        public PradResult InterleavedGatherInverse(int skip, int restart)
+        {
+            var result = this.currentTensor.InterleavedGatherInverse(skip, restart);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = new Tensor(this.currentTensor.Shape, PradTools.One);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
