@@ -11,6 +11,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Linq;
     using System.Numerics;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using ILGPU.IR.Types;
     using MKLNET;
@@ -21,6 +22,8 @@ namespace ParallelReverseAutoDiff.PRAD
     /// </summary>
     public partial class Tensor
     {
+        private static readonly ThreadLocal<Random> RandomGen = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+
         /// <summary>
         /// Gets the shape of the tensor.
         /// </summary>
@@ -1595,6 +1598,59 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the entropy of the tensor along a specified axis.
+        /// </summary>
+        /// <param name="axis">The axis along which to compute the entropy. If null, compute entropy over the entire tensor.</param>
+        /// <returns>A tensor containing the entropy along the specified axis.</returns>
+        public Tensor Entropy(int? axis = null)
+        {
+            // Validate that the tensor represents a probability distribution (values between 0 and 1).
+            this.ValidateProbabilities();
+
+            // Apply log operation to the tensor (element-wise log)
+            var logTensor = this.Log();
+
+            // Multiply the probabilities by their log values (element-wise multiplication)
+            var entropyTensor = this.ElementwiseMultiply(logTensor);
+
+            // Sum the results along the specified axis and negate to compute entropy
+            var summedEntropy = axis.HasValue ? entropyTensor.Sum(new int[] { axis.Value }) : entropyTensor.Sum(Enumerable.Range(0, entropyTensor.Shape.Length).ToArray());
+
+            return summedEntropy.ElementwiseNegate(); // Return -sum(P(x) * log(P(x)))
+        }
+
+        /// <summary>
+        /// Generates a tensor filled with uniformly distributed random values in the range [minValue, maxValue].
+        /// </summary>
+        /// <param name="minValue">The minimum value of the uniform distribution (inclusive).</param>
+        /// <param name="maxValue">The maximum value of the uniform distribution (exclusive).</param>
+        /// <returns>A tensor filled with uniformly distributed random values.</returns>
+        public Tensor Uniform(double minValue = 0.0, double maxValue = 1.0)
+        {
+            var shape = this.Shape;
+
+            // Validate the input range
+            if (minValue >= maxValue)
+            {
+                throw new ArgumentException("minValue must be less than maxValue.");
+            }
+
+            // Create the result tensor with the specified shape
+            var result = new Tensor(shape);
+            var totalSize = result.Data.Length;
+            double range = maxValue - minValue;
+
+            // Use Parallel.For for thread-safe random number generation using ThreadLocal<Random>
+            Parallel.For(0, totalSize, i =>
+            {
+                // Use ThreadLocal Random to avoid conflicts
+                result.Data[i] = PradTools.Cast((RandomGen.Value.NextDouble() * range) + minValue);
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs an interleaved gather operation on the tensor with efficient copying and correct looping logic.
         /// </summary>
         /// <param name="skip">The number of row indices to skip during the interleaving process.</param>
@@ -2086,6 +2142,17 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return total;
+        }
+
+        /// <summary>
+        /// Validates that the tensor contains valid probability values (all elements should be between 0 and 1).
+        /// </summary>
+        private void ValidateProbabilities()
+        {
+            if (this.Data.Any(p => p < 0 || p > 1))
+            {
+                throw new ArgumentException("Tensor contains values outside the range [0, 1], and is therefore not a valid probability distribution.");
+            }
         }
 
         private void CheckShapeCompatibility(Tensor other)
