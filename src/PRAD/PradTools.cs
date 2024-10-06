@@ -35,6 +35,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static double Two { get; } = 2.0;
 
         /// <summary>
+        /// Gets Negative Two.
+        /// </summary>
+        internal static double NegativeTwo { get; } = -2.0;
+
+        /// <summary>
         /// Gets Half.
         /// </summary>
         internal static double Half { get; } = 0.5;

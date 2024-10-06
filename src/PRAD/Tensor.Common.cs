@@ -108,13 +108,13 @@ namespace ParallelReverseAutoDiff.PRAD
             for (int i = 0; i < totalSize; i += 2)
             {
                 // Generate two uniformly distributed random values u1 and u2
-                double u1 = 1.0 - rand.NextDouble(); // avoid log(0) by subtracting from 1
-                double u2 = 1.0 - rand.NextDouble();
+                var u1 = PradTools.One - PradTools.Cast(rand.NextDouble()); // avoid log(0) by subtracting from 1
+                var u2 = PradTools.One - PradTools.Cast(rand.NextDouble());
 
                 // Apply Box-Muller transform to get two independent normally distributed numbers
-                double r = Math.Sqrt(-2.0 * Math.Log(u1));
-                double z0 = r * Math.Cos(2.0 * Math.PI * u2);
-                double z1 = r * Math.Sin(2.0 * Math.PI * u2);
+                var r = PradMath.Sqrt(PradTools.NegativeTwo * PradMath.Log(u1));
+                var z0 = r * PradMath.Cos(PradTools.Two * PradMath.PI * u2);
+                var z1 = r * PradMath.Sin(PradTools.Two * PradMath.PI * u2);
 
                 // Assign the first random number to the tensor
                 result.Data[i] = z0;
@@ -1455,7 +1455,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 for (int j = 0; j < innerSize; j++)
                 {
                     int startIndex = (i * axisLength * innerSize) + j; // Starting index of the slice
-                    double maxValue = this.Data[startIndex];
+                    var maxValue = this.Data[startIndex];
                     int maxIndex = 0;
 
                     // Vectorized comparison (SIMD)
@@ -1465,8 +1465,8 @@ namespace ParallelReverseAutoDiff.PRAD
                         int currentIndex = startIndex + (k * innerSize);
 
                         // Load the current values into vectors
-                        var currentVector = new Vector<double>(this.Data, currentIndex);
-                        var maxVector = new Vector<double>(maxValue);
+                        var currentVector = PradTools.AllocateVector(this.Data, currentIndex);
+                        var maxVector = PradTools.AllocateVector(maxValue);
 
                         // Perform element-wise max comparison
                         var comparison = Vector.Max(currentVector, maxVector);

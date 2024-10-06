@@ -35,6 +35,11 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float Two { get; } = 2.0f;
 
         /// <summary>
+        /// Gets Negative Two.
+        /// </summary>
+        internal static float NegativeTwo { get; } = -2.0f;
+
+        /// <summary>
         /// Gets Half.
         /// </summary>
         internal static float Half { get; } = 0.5f;

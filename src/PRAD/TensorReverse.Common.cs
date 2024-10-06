@@ -1070,11 +1070,11 @@ namespace ParallelReverseAutoDiff.PRAD
                 {
                     for (int c = 0; c < channels; c++)
                     {
-                        for (int i = 0; i < upstreamGradient.Shape[1]; i++) // Output height
+                        for (int i = 0; i < upstreamGradient.Shape[1]; i++)
                         {
                             int nearestY = i / scaleFactor; // Corresponding input Y
 
-                            for (int j = 0; j < upstreamGradient.Shape[2]; j++) // Output width
+                            for (int j = 0; j < upstreamGradient.Shape[2]; j++)
                             {
                                 int nearestX = j / scaleFactor; // Corresponding input X
 
@@ -1092,14 +1092,14 @@ namespace ParallelReverseAutoDiff.PRAD
                 {
                     for (int c = 0; c < channels; c++)
                     {
-                        for (int i = 0; i < upstreamGradient.Shape[1]; i++) // Output height
+                        for (int i = 0; i < upstreamGradient.Shape[1]; i++)
                         {
                             float srcY = (float)i / scaleFactor;
                             int y0 = (int)Math.Floor(srcY);
                             int y1 = Math.Min(y0 + 1, inputHeight - 1);
                             float dy = srcY - y0;
 
-                            for (int j = 0; j < upstreamGradient.Shape[2]; j++) // Output width
+                            for (int j = 0; j < upstreamGradient.Shape[2]; j++)
                             {
                                 float srcX = (float)j / scaleFactor;
                                 int x0 = (int)Math.Floor(srcX);
@@ -1157,7 +1157,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int resultIndex = 0; // Index for storing values in result tensor
 
             // Step 4: Perform the same interleaving reverse logic using the upstream gradient values
-            for (int iteration = 0; iteration < upstreamGradient.Shape[1]; iteration++) // Loop over channels (e.g., red, green, blue)
+            for (int iteration = 0; iteration < upstreamGradient.Shape[1]; iteration++)
             {
                 // Step 4.1: Copy magnitudes for the current channel from upstream gradient
                 Array.Copy(transposedTensor.Data, iteration * totalRowsToGather, resultTensor.Data, resultIndex * restart, skip);    // First set of magnitudes
