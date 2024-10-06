@@ -1651,6 +1651,124 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Upsamples the tensor using the specified scaling factor and interpolation method.
+        /// Supports 2D and 4D tensors (batch, height, width, channels).
+        /// </summary>
+        /// <param name="scaleFactor">The scaling factor for both height and width.</param>
+        /// <param name="method">The interpolation method: "nearest" (default) or "bilinear".</param>
+        /// <returns>A new tensor that has been upsampled by the given factor.</returns>
+        public Tensor Upsample(int scaleFactor, string method = "nearest")
+        {
+            if (scaleFactor <= 0)
+            {
+                throw new ArgumentException("Scale factor must be greater than 0.");
+            }
+
+            // Determine the dimensionality and shape of the input tensor
+            int[] inputShape = this.Shape;
+            Tensor input = this;
+
+            int batchSize, channels, inputHeight, inputWidth;
+
+            if (inputShape.Length == 2)
+            {
+                // Assume it's a 2D tensor, treat it as a single-channel image
+                batchSize = 1;
+                channels = 1;
+                inputHeight = inputShape[0];
+                inputWidth = inputShape[1];
+            }
+            else if (inputShape.Length == 3)
+            {
+                // Single image with channels [height, width, channels]
+                batchSize = 1;
+                inputHeight = inputShape[0];
+                inputWidth = inputShape[1];
+                channels = inputShape[2];
+            }
+            else if (inputShape.Length == 4)
+            {
+                // Batch of images [batch, height, width, channels]
+                batchSize = inputShape[0];
+                inputHeight = inputShape[1];
+                inputWidth = inputShape[2];
+                channels = inputShape[3];
+            }
+            else
+            {
+                throw new ArgumentException("Upsampling only supports 2D or 4D tensors.");
+            }
+
+            // Calculate the new output dimensions
+            int outputHeight = inputHeight * scaleFactor;
+            int outputWidth = inputWidth * scaleFactor;
+
+            // Create the upsampled tensor
+            var outputShape = new int[] { batchSize, outputHeight, outputWidth, channels };
+            var result = new Tensor(outputShape);
+
+            // Nearest neighbor upsampling
+            if (method == "nearest")
+            {
+                Parallel.For(0, batchSize, b =>
+                {
+                    for (int c = 0; c < channels; c++)
+                    {
+                        for (int i = 0; i < outputHeight; i++)
+                        {
+                            int nearestY = i / scaleFactor;
+                            for (int j = 0; j < outputWidth; j++)
+                            {
+                                int nearestX = j / scaleFactor;
+
+                                // Copy the value from the nearest pixel in the input tensor
+                                result[b, i, j, c] = input[b, nearestY, nearestX, c];
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Bilinear interpolation upsampling
+            else if (method == "bilinear")
+            {
+                Parallel.For(0, batchSize, b =>
+                {
+                    for (int c = 0; c < channels; c++)
+                    {
+                        for (int i = 0; i < outputHeight; i++)
+                        {
+                            float srcY = (float)i / scaleFactor;
+                            int y0 = (int)Math.Floor(srcY);
+                            int y1 = Math.Min(y0 + 1, inputHeight - 1);
+                            float dy = srcY - y0;
+
+                            for (int j = 0; j < outputWidth; j++)
+                            {
+                                var srcX = (float)j / scaleFactor;
+                                int x0 = (int)Math.Floor(srcX);
+                                int x1 = Math.Min(x0 + 1, inputWidth - 1);
+                                var dx = srcX - x0;
+
+                                // Bilinear interpolation: top-left, top-right, bottom-left, bottom-right contributions
+                                var top = ((1 - dx) * input[b, y0, x0, c]) + (dx * input[b, y0, x1, c]);
+                                var bottom = ((1 - dx) * input[b, y1, x0, c]) + (dx * input[b, y1, x1, c]);
+
+                                result[b, i, j, c] = PradTools.Cast(((1 - dy) * top) + (dy * bottom));
+                            }
+                        }
+                    }
+                });
+            }
+            else
+            {
+                throw new ArgumentException($"Unsupported method: {method}. Use 'nearest' or 'bilinear'.");
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs an interleaved gather operation on the tensor with efficient copying and correct looping logic.
         /// </summary>
         /// <param name="skip">The number of row indices to skip during the interleaving process.</param>
