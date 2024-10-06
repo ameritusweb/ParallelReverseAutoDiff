@@ -1016,6 +1016,124 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the gradient of the Upsample operation with respect to the input tensor during the backward pass.
+        /// Accumulates gradients from the output to the corresponding input positions.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layers with the same shape as the upsampled output.</param>
+        /// <param name="scaleFactor">The scaling factor used in the forward pass for upsampling.</param>
+        /// <param name="method">The method used in forward pass ("nearest" or "bilinear").</param>
+        /// <returns>A new tensor representing the gradient with respect to the input tensor.</returns>
+        public Tensor UpsampleReverse(Tensor upstreamGradient, int scaleFactor, string method = "nearest")
+        {
+            if (this.InitialTensors.Length != 1)
+            {
+                throw new InvalidOperationException("ElementwiseAtan2Reverse expects exactly one initial tensor.");
+            }
+
+            Tensor input = this.InitialTensors[0];
+            int[] inputShape = input.Shape;
+            int batchSize, channels, inputHeight, inputWidth;
+
+            if (inputShape.Length == 2)
+            {
+                batchSize = 1;
+                channels = 1;
+                inputHeight = inputShape[0];
+                inputWidth = inputShape[1];
+            }
+            else if (inputShape.Length == 3)
+            {
+                batchSize = 1;
+                inputHeight = inputShape[0];
+                inputWidth = inputShape[1];
+                channels = inputShape[2];
+            }
+            else if (inputShape.Length == 4)
+            {
+                batchSize = inputShape[0];
+                inputHeight = inputShape[1];
+                inputWidth = inputShape[2];
+                channels = inputShape[3];
+            }
+            else
+            {
+                throw new ArgumentException("Upsampling only supports 2D or 4D tensors.");
+            }
+
+            // Create a tensor to accumulate the gradients for the input
+            var inputGradient = new Tensor(input.Shape);
+
+            if (method == "nearest")
+            {
+                // Backward pass for nearest-neighbor upsampling
+                Parallel.For(0, batchSize, b =>
+                {
+                    for (int c = 0; c < channels; c++)
+                    {
+                        for (int i = 0; i < upstreamGradient.Shape[1]; i++) // Output height
+                        {
+                            int nearestY = i / scaleFactor; // Corresponding input Y
+
+                            for (int j = 0; j < upstreamGradient.Shape[2]; j++) // Output width
+                            {
+                                int nearestX = j / scaleFactor; // Corresponding input X
+
+                                // Accumulate the gradients from the output back to the input
+                                inputGradient[b, nearestY, nearestX, c] += upstreamGradient[b, i, j, c];
+                            }
+                        }
+                    }
+                });
+            }
+            else if (method == "bilinear")
+            {
+                // Backward pass for bilinear interpolation
+                Parallel.For(0, batchSize, b =>
+                {
+                    for (int c = 0; c < channels; c++)
+                    {
+                        for (int i = 0; i < upstreamGradient.Shape[1]; i++) // Output height
+                        {
+                            float srcY = (float)i / scaleFactor;
+                            int y0 = (int)Math.Floor(srcY);
+                            int y1 = Math.Min(y0 + 1, inputHeight - 1);
+                            float dy = srcY - y0;
+
+                            for (int j = 0; j < upstreamGradient.Shape[2]; j++) // Output width
+                            {
+                                float srcX = (float)j / scaleFactor;
+                                int x0 = (int)Math.Floor(srcX);
+                                int x1 = Math.Min(x0 + 1, inputWidth - 1);
+                                float dx = srcX - x0;
+
+                                // Bilinear interpolation gradient contribution
+                                var grad = upstreamGradient[b, i, j, c];
+
+                                // Gradient with respect to top-left
+                                inputGradient[b, y0, x0, c] += (1 - dx) * (1 - dy) * grad;
+
+                                // Gradient with respect to top-right
+                                inputGradient[b, y0, x1, c] += dx * (1 - dy) * grad;
+
+                                // Gradient with respect to bottom-left
+                                inputGradient[b, y1, x0, c] += (1 - dx) * dy * grad;
+
+                                // Gradient with respect to bottom-right
+                                inputGradient[b, y1, x1, c] += dx * dy * grad;
+                            }
+                        }
+                    }
+                });
+            }
+            else
+            {
+                throw new ArgumentException($"Unsupported method: {method}. Use 'nearest' or 'bilinear'.");
+            }
+
+            return inputGradient;
+        }
+
+        /// <summary>
         /// Reverses the interleaved gather operation by using the upstream gradient tensor to map back gradients
         /// to their original positions in the original tensor.
         /// </summary>
