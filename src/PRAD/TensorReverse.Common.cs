@@ -1016,6 +1016,94 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Reverses the interleaved gather operation by using the upstream gradient tensor to map back gradients
+        /// to their original positions in the original tensor.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient tensor passed from the previous layer.</param>
+        /// <param name="skip">The number of row indices skipped during interleaving.</param>
+        /// <param name="restart">The number of rows before restarting the pattern.</param>
+        /// <returns>The gradient of the original tensor, reshaped to its original form.</returns>
+        public Tensor InterleavedGatherReverse(Tensor upstreamGradient, int skip, int restart)
+        {
+            // Step 1: Reshape the upstream gradient tensor from [1, 3, 3, 6] to [9, 6] (flatten matrix)
+            int totalRowsToGather = (upstreamGradient.Shape[^1] / 2) * upstreamGradient.Shape[1];
+            int[] reshapedShape = new int[] { upstreamGradient.Shape[1] * upstreamGradient.Shape[2], upstreamGradient.Shape[^1] }; // Flatten to [9, 6]
+            Tensor reshapedTensor = upstreamGradient.Reshape(reshapedShape); // Reshape to [9, 6]
+
+            // Step 2: Transpose from [9, 6] to [6, 9] to separate components
+            Tensor transposedTensor = reshapedTensor.Transpose(1, 0); // Transpose to [6, 9]
+
+            // Step 3: Prepare result tensor where we will gather the interleaved rows back to original positions
+            Tensor resultTensor = new Tensor(reshapedShape); // Prepare result tensor with shape [9, 6]
+
+            int resultIndex = 0; // Index for storing values in result tensor
+
+            // Step 4: Perform the same interleaving reverse logic using the upstream gradient values
+            for (int iteration = 0; iteration < upstreamGradient.Shape[1]; iteration++) // Loop over channels (e.g., red, green, blue)
+            {
+                // Step 4.1: Copy magnitudes for the current channel from upstream gradient
+                Array.Copy(transposedTensor.Data, iteration * totalRowsToGather, resultTensor.Data, resultIndex * restart, skip);    // First set of magnitudes
+                Array.Copy(transposedTensor.Data, (iteration * totalRowsToGather) + skip, resultTensor.Data, (resultIndex + 1) * restart, skip); // Second set
+                Array.Copy(transposedTensor.Data, (iteration * totalRowsToGather) + (skip * 2), resultTensor.Data, (resultIndex + 2) * restart, skip); // Third set
+
+                // Step 4.2: Copy angles for the current channel from upstream gradient
+                Array.Copy(transposedTensor.Data, (iteration + skip) * totalRowsToGather, resultTensor.Data, (resultIndex * restart) + skip, skip);  // First set of angles
+                Array.Copy(transposedTensor.Data, ((iteration + skip) * totalRowsToGather) + skip, resultTensor.Data, ((resultIndex + 1) * restart) + skip, skip); // Second set
+                Array.Copy(transposedTensor.Data, ((iteration + skip) * totalRowsToGather) + (skip * 2), resultTensor.Data, ((resultIndex + 2) * restart) + skip, skip); // Third set
+
+                // Step 4.3: Move to the next block of rows for the next iteration (green, blue channels, etc.)
+                resultIndex += 3;
+            }
+
+            // Step 5: Reshape the result back to the original shape [3, 3, 6]
+            return resultTensor.Reshape(new int[] { (upstreamGradient.Shape[^1] / 2), upstreamGradient.Shape[1], upstreamGradient.Shape[^2] * 2 });
+        }
+
+        /// <summary>
+        /// Performs an interleaved gather operation on the upstream gradient tensor with efficient copying and correct looping logic.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient tensor.</param>
+        /// <param name="skip">The number of row indices to skip during the interleaving process.</param>
+        /// <param name="restart">The number of rows before restarting the pattern.</param>
+        /// <returns>A new tensor with interleaved gathered results.</returns>
+        public Tensor InterleavedGatherInverseReverse(Tensor upstreamGradient, int skip, int restart)
+        {
+            // Step 1: Reshape the upstream gradient tensor to [3, 18] (assuming original shape [3, 3, 6])
+            int[] reshapedShape = new int[] { upstreamGradient.Shape[0], upstreamGradient.Shape[1] * upstreamGradient.Shape[2] };
+            Tensor reshapedTensor = upstreamGradient.Reshape(reshapedShape);
+
+            // Step 2: Transpose the reshaped tensor to [18, 3] for interleaving
+            Tensor transposedTensor = reshapedTensor.Transpose(1, 0); // Transpose to [18, 3]
+
+            // Step 3: Prepare result tensor with shape [number of interleaved rows, batch size (3)]
+            int totalRowsToGather = transposedTensor.Shape[0];  // You are gathering all rows from the transposed tensor
+            Tensor resultTensor = new Tensor(new int[] { totalRowsToGather, transposedTensor.Shape[1] }); // Shape [18, 3]
+
+            int resultIndex = 0;  // Index for storing values in the result tensor
+
+            // Single loop for i++
+            for (int i = 0; i < transposedTensor.Shape[0]; i++)
+            {
+                // Copy the row at index i from the transposed tensor into the result tensor
+                Array.Copy(transposedTensor.Data, i * upstreamGradient.Shape[0], resultTensor.Data, resultIndex * upstreamGradient.Shape[0], upstreamGradient.Shape[0]);
+                resultIndex++;
+
+                // Apply the interleaved skip and copy the next set of data
+                Array.Copy(transposedTensor.Data, (i + skip) * upstreamGradient.Shape[0], resultTensor.Data, resultIndex * upstreamGradient.Shape[0], upstreamGradient.Shape[0]);
+                resultIndex++;
+
+                // Only reset i when we have completed the restart block
+                if (resultIndex % restart == 0)
+                {
+                    i += skip;  // Move i to the next block for the next iteration
+                }
+            }
+
+            // Step 4: Reshape the result back to the original shape (e.g., [1, 3, 3, 6])
+            return resultTensor.Reshape(new int[] { 1, upstreamGradient.Shape[1], skip, upstreamGradient.Shape[0] * 2 });
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the Gather operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

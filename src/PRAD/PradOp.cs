@@ -1600,7 +1600,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradient = new Tensor(this.currentTensor.Shape, PradTools.One);
+                var gradient = tensorReverse.InterleavedGatherReverse(upstreamGrad, skip, restart);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
@@ -1626,7 +1626,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradient = new Tensor(this.currentTensor.Shape, PradTools.One);
+                var gradient = tensorReverse.InterleavedGatherInverseReverse(upstreamGrad, skip, restart);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
