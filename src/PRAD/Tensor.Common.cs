@@ -86,6 +86,47 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Fills a tensor with normally distributed random numbers using the Box-Muller transform.
+        /// </summary>
+        /// <param name="shape">The shape of the resulting tensor.</param>
+        /// <returns>A tensor filled with normally distributed random numbers.</returns>
+        public static Tensor RandomNormal(int[] shape)
+        {
+            // Create the result tensor with the specified shape
+            var result = new Tensor(shape);
+
+            // Total number of elements to fill
+            int totalSize = result.Data.Length;
+
+            // Random number generator
+            Random rand = new Random();
+
+            // Generate normally distributed numbers in pairs (Box-Muller generates two at a time)
+            for (int i = 0; i < totalSize; i += 2)
+            {
+                // Generate two uniformly distributed random values u1 and u2
+                double u1 = 1.0 - rand.NextDouble(); // avoid log(0) by subtracting from 1
+                double u2 = 1.0 - rand.NextDouble();
+
+                // Apply Box-Muller transform to get two independent normally distributed numbers
+                double r = Math.Sqrt(-2.0 * Math.Log(u1));
+                double z0 = r * Math.Cos(2.0 * Math.PI * u2);
+                double z1 = r * Math.Sin(2.0 * Math.PI * u2);
+
+                // Assign the first random number to the tensor
+                result.Data[i] = z0;
+
+                // Assign the second random number if within bounds (since we process two numbers at a time)
+                if (i + 1 < totalSize)
+                {
+                    result.Data[i + 1] = z1;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Slice 3-D tensors to form tensors of the specified slice sizes.
         /// </summary>
         /// <param name="tensors">The tensors.</param>
