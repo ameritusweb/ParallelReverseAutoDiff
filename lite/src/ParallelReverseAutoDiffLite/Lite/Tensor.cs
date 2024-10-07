@@ -442,10 +442,22 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("New shape must be of the same rank or higher than the current shape.");
             }
 
-            // Ensure the shape is compatible for broadcasting
+            // Create a padded version of the original shape
+            int[] paddedShape = new int[newShape.Length];
             for (int i = 0; i < this.Shape.Length; i++)
             {
-                if (this.Shape[i] != 1 && this.Shape[i] != newShape[newShape.Length - this.Shape.Length + i])
+                paddedShape[i] = this.Shape[i];
+            }
+
+            for (int i = this.Shape.Length; i < newShape.Length; i++)
+            {
+                paddedShape[i] = 1; // Pad with 1s at the end (right side)
+            }
+
+            // Ensure the shape is compatible for broadcasting
+            for (int i = 0; i < newShape.Length; i++)
+            {
+                if (paddedShape[i] != 1 && paddedShape[i] != newShape[i])
                 {
                     throw new ArgumentException("Shapes are not compatible for broadcasting.");
                 }
@@ -456,35 +468,27 @@ namespace ParallelReverseAutoDiff.PRAD
             var broadcastedData = new float[newTotalSize];
 
             // Fill the new data array by repeating the elements
-            int[] indices = new int[newShape.Length];
             Parallel.For(0, newTotalSize, i =>
             {
                 int oldIndex = 0;
+                int remainingI = i;
                 int stride = 1;
-                for (int j = this.Shape.Length - 1; j >= 0; j--)
+
+                for (int j = newShape.Length - 1; j >= 0; j--)
                 {
-                    int dim = this.Shape.Length - 1 - j;
-                    if (this.Shape[dim] != 1)
+                    int newDimSize = newShape[j];
+                    int oldDimSize = paddedShape[j];
+
+                    oldIndex += ((remainingI % newDimSize) % oldDimSize) * stride;
+                    if (j < this.Shape.Length)
                     {
-                        oldIndex += (indices[newShape.Length - 1 - j] % this.Shape[dim]) * stride;
+                        stride *= oldDimSize;
                     }
 
-                    stride *= this.Shape[dim];
+                    remainingI /= newDimSize;
                 }
 
                 broadcastedData[i] = this.Data[oldIndex];
-
-                // Increment the indices
-                for (int k = newShape.Length - 1; k >= 0; k--)
-                {
-                    indices[k]++;
-                    if (indices[k] < newShape[k])
-                    {
-                        break;
-                    }
-
-                    indices[k] = 0;
-                }
             });
 
             return new Tensor(newShape, broadcastedData);
@@ -522,41 +526,16 @@ namespace ParallelReverseAutoDiff.PRAD
             var resultTensor = new Tensor(newShape.ToArray(), resultData);
 
             // Step 3: Calculate the strides for original tensor
-            var strides = new int[this.Shape.Length];
-            strides[this.Shape.Length - 1] = 1;
-            for (int i = this.Shape.Length - 2; i >= 0; i--)
+            int[] strides = new int[this.Shape.Length];
+            strides[strides.Length - 1] = 1;
+            for (int i = strides.Length - 2; i >= 0; i--)
             {
                 strides[i] = strides[i + 1] * this.Shape[i + 1];
             }
 
             // Step 4: Sum the elements along the specified axes
-            Parallel.For(0, resultTensor.Data.Length, i =>
-            {
-                var resultIndex = new int[resultTensor.Shape.Length];
-                var inputIndex = new int[this.Shape.Length];
-                int remainingIndex = i;
-                for (int j = resultTensor.Shape.Length - 1; j >= 0; j--)
-                {
-                    resultIndex[j] = remainingIndex % resultTensor.Shape[j];
-                    remainingIndex /= resultTensor.Shape[j];
-                }
-
-                for (int j = 0, k = 0; j < this.Shape.Length; j++)
-                {
-                    if (axes.Contains(j))
-                    {
-                        inputIndex[j] = 0;
-                    }
-                    else
-                    {
-                        inputIndex[j] = resultIndex[k++];
-                    }
-                }
-
-                var sum = 0.0f;
-                this.SumRecursive(inputIndex, resultIndex, 0, ref sum, strides);
-                resultTensor.Data[i] = sum;
-            });
+            int[] currentIndices = new int[this.Shape.Length];
+            this.SumRecursive(axes, 0, currentIndices, strides, resultData, 0);
 
             return resultTensor;
         }
@@ -911,31 +890,40 @@ namespace ParallelReverseAutoDiff.PRAD
             return result;
         }
 
-        private void SumRecursive(int[] inputIndex, int[] resultIndex, int currentAxis, ref float sum, int[] strides)
+        private void SumRecursive(int[] axes, int depth, int[] currentIndices, int[] strides, float[] resultData, int resultIndex)
         {
-            if (currentAxis == this.Shape.Length)
+            if (depth == this.Shape.Length)
             {
-                int flatIndex = 0;
-                for (int i = 0; i < this.Shape.Length; i++)
+                int dataIndex = 0;
+                for (int i = 0; i < currentIndices.Length; i++)
                 {
-                    flatIndex += inputIndex[i] * strides[i];
+                    dataIndex += currentIndices[i] * strides[i];
                 }
 
-                sum += this.Data[flatIndex];
+                resultData[resultIndex] += this.Data[dataIndex];
+                return;
+            }
+
+            if (axes.Contains(depth))
+            {
+                for (int i = 0; i < this.Shape[depth]; i++)
+                {
+                    currentIndices[depth] = i;
+                    this.SumRecursive(axes, depth + 1, currentIndices, strides, resultData, resultIndex);
+                }
             }
             else
             {
-                if (resultIndex.Contains(currentAxis))
+                int stride = (depth == this.Shape.Length - 1) ? 1 :
+                    Enumerable.Range(depth + 1, this.Shape.Length - depth - 1)
+                              .Where(i => !axes.Contains(i))
+                              .Aggregate(1, (acc, i) => acc * this.Shape[i]);
+
+                for (int i = 0; i < this.Shape[depth]; i++)
                 {
-                    for (int i = 0; i < this.Shape[currentAxis]; i++)
-                    {
-                        inputIndex[currentAxis] = i;
-                        this.SumRecursive(inputIndex, resultIndex, currentAxis + 1, ref sum, strides);
-                    }
-                }
-                else
-                {
-                    this.SumRecursive(inputIndex, resultIndex, currentAxis + 1, ref sum, strides);
+                    currentIndices[depth] = i;
+                    this.SumRecursive(axes, depth + 1, currentIndices, strides, resultData, resultIndex);
+                    resultIndex += stride;
                 }
             }
         }
