@@ -1681,18 +1681,18 @@ namespace ParallelReverseAutoDiff.PRAD
                     double t2 = t * t;
 
                     // Horner's method for polynomial evaluation
-                    result.Data[i] = 1 + (t2 * (smallCoeffs[0] + (t2 * (smallCoeffs[1] + (t2 * (smallCoeffs[2] +
-                                   (t2 * (smallCoeffs[3] + (t2 * (smallCoeffs[4] + (t2 * smallCoeffs[5])))))))))));
+                    result.Data[i] = PradTools.Cast(1 + (t2 * (smallCoeffs[0] + (t2 * (smallCoeffs[1] + (t2 * (smallCoeffs[2] +
+                                   (t2 * (smallCoeffs[3] + (t2 * (smallCoeffs[4] + (t2 * smallCoeffs[5]))))))))))));
                 }
 
                 // Apply the large value approximation for abs(x) >= 3.75
                 else
                 {
                     double t = threshold / absX;
-                    result.Data[i] = (Math.Exp(absX) / Math.Sqrt(absX)) *
+                    result.Data[i] = PradTools.Cast((Math.Exp(absX) / Math.Sqrt(absX)) *
                                      (sqrt2pi + (t * (largeCoeffs[0] + (t * (largeCoeffs[1] + (t * (largeCoeffs[2] +
                                      (t * (largeCoeffs[3] + (t * (largeCoeffs[4] + (t * (largeCoeffs[5] +
-                                     (t * (largeCoeffs[6] + (t * largeCoeffs[7]))))))))))))))));
+                                     (t * (largeCoeffs[6] + (t * largeCoeffs[7])))))))))))))))));
                 }
             }
 

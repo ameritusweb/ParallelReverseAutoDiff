@@ -264,7 +264,7 @@ namespace ParallelReverseAutoDiff.PRAD
                                     (t2 * (smallGradCoeffs[3] + (t2 * (smallGradCoeffs[4] + (t2 * smallGradCoeffs[5]))))))))));
 
                     // Multiply by the upstream gradient
-                    inputGradient.Data[i] = dI0_dx * upstreamGradient.Data[i];
+                    inputGradient.Data[i] = PradTools.Cast(dI0_dx * upstreamGradient.Data[i]);
                 }
                 else
                 {
@@ -284,7 +284,7 @@ namespace ParallelReverseAutoDiff.PRAD
                                         (t * (largeGradCoeffs[6] + (t * largeGradCoeffs[7]))))))))))))))));
 
                     // Adjust the sign based on the original x and scale by upstream gradient
-                    inputGradient.Data[i] = gradientTerm * Math.Sign(x) * upstreamGradient.Data[i];
+                    inputGradient.Data[i] = PradTools.Cast(gradientTerm * Math.Sign(x) * upstreamGradient.Data[i]);
                 }
             }
 
