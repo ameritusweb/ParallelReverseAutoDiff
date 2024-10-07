@@ -138,96 +138,179 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Computes the reverse gradient for broadcasting.
+        /// Computes the gradient with respect to the input of a broadcast operation.
         /// </summary>
-        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
-        /// <param name="originalShape">The original shape before broadcasting.</param>
-        /// <returns>The gradient with respect to the input tensor before broadcasting.</returns>
+        /// <param name="upstreamGradient">The gradient from the next layer (after broadcasting).</param>
+        /// <param name="originalShape">The original shape of the tensor before broadcasting.</param>
+        /// <returns>The gradient with respect to the input tensor, matching the original shape.</returns>
+        /// <exception cref="ArgumentException">Thrown when the shapes are incompatible.</exception>
         public Tensor BroadcastToReverse(Tensor upstreamGradient, int[] originalShape)
         {
-            int[] broadcastShape = upstreamGradient.Shape;
-            int[] newShape = new int[originalShape.Length];
-
-            // Determine the new shape to sum the gradients along the broadcasted dimensions
-            for (int i = 0; i < originalShape.Length; i++)
+            // Ensure the upstream gradient shape is compatible with the original shape
+            if (upstreamGradient.Shape.Length < originalShape.Length)
             {
-                if (originalShape[i] == broadcastShape[broadcastShape.Length - originalShape.Length + i])
+                throw new ArgumentException("Upstream gradient shape must have the same rank or higher than the original shape.");
+            }
+
+            // Pad the original shape to match the rank of the upstream gradient
+            int[] paddedOriginalShape = new int[upstreamGradient.Shape.Length];
+            Array.Copy(originalShape, 0, paddedOriginalShape, 0, originalShape.Length);
+            for (int i = originalShape.Length; i < upstreamGradient.Shape.Length; i++)
+            {
+                paddedOriginalShape[i] = 1;
+            }
+
+            // Ensure shapes are compatible
+            for (int i = 0; i < upstreamGradient.Shape.Length; i++)
+            {
+                if (paddedOriginalShape[i] != 1 && paddedOriginalShape[i] != upstreamGradient.Shape[i])
                 {
-                    newShape[i] = originalShape[i];
-                }
-                else
-                {
-                    newShape[i] = 1;
+                    throw new ArgumentException($"Shapes are not compatible for broadcasting at dimension {i}.");
                 }
             }
 
-            Tensor result = upstreamGradient.Reshape(broadcastShape)
-                .Sum(newShape);
+            // Initialize the input gradient with the shape of the original tensor
+            double[] inputGradient = new double[originalShape.Aggregate(1, (a, b) => a * b)];
 
-            return result.Reshape(originalShape);
+            // Reduce the upstream gradient over broadcasted dimensions
+            Parallel.For(0, upstreamGradient.Data.Length, i =>
+            {
+                int oldIndex = this.GetOldIndex(i, upstreamGradient.Shape, paddedOriginalShape);
+                lock (inputGradient) // Avoid race conditions when summing the values in parallel
+                {
+                    inputGradient[oldIndex] += upstreamGradient.Data[i];
+                }
+            });
+
+            return new Tensor(originalShape, inputGradient);
         }
 
         /// <summary>
-        /// Computes the reverse gradient for summation.
+        /// Computes the corresponding index in the original tensor's data for the given broadcasted index.
         /// </summary>
-        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
-        /// <param name="axes">The axes along which the summation was performed.</param>
-        /// <returns>The gradient with respect to the input tensor before summation.</returns>
+        /// <param name="broadcastedIndex">Index in the broadcasted data array.</param>
+        /// <param name="newShape">The shape of the broadcasted tensor (upstream gradient shape).</param>
+        /// <param name="paddedShape">The padded shape of the original tensor.</param>
+        /// <returns>The corresponding index in the original tensor's data array.</returns>
+        public int GetOldIndex(int broadcastedIndex, int[] newShape, int[] paddedShape)
+        {
+            int oldIndex = 0;
+            int remainingI = broadcastedIndex;
+            int stride = 1;
+
+            for (int j = newShape.Length - 1; j >= 0; j--)
+            {
+                int newDimSize = newShape[j];
+                int oldDimSize = paddedShape[j];
+
+                // Compute the index in the original data along this dimension
+                oldIndex += ((remainingI % newDimSize) % oldDimSize) * stride;
+
+                // Only update stride if we are within the original tensor's dimensions
+                if (j < paddedShape.Length && paddedShape[j] != 1)
+                {
+                    stride *= oldDimSize;
+                }
+
+                remainingI /= newDimSize;
+            }
+
+            return oldIndex;
+        }
+
+        /// <summary>
+        /// Computes the gradient with respect to the input of a summation operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient from the next layer (after summation).</param>
+        /// <param name="axes">The axes along which the original sum operation was performed.</param>
+        /// <returns>The gradient with respect to the input tensor, matching the original shape.</returns>
+        /// <exception cref="ArgumentException">Thrown when the shapes are incompatible.</exception>
         public Tensor SumReverse(Tensor upstreamGradient, int[] axes)
         {
-            var originalShape = this.InitialTensors[0].Shape;
+            int[] originalShape = this.InitialTensors[0].Shape;
 
-            // Determine the shape after summation
-            var summedShape = originalShape.ToList();
-            foreach (var axis in axes.OrderByDescending(a => a))
+            // Step 1: Ensure upstream gradient shape is compatible
+            int[] reducedShape = originalShape.ToList()
+                                              .Where((_, i) => !axes.Contains(i))
+                                              .ToArray();
+
+            if (!upstreamGradient.Shape.SequenceEqual(reducedShape))
             {
-                summedShape.RemoveAt(axis);
+                throw new ArgumentException("Upstream gradient shape is incompatible with the original tensor's reduced shape.");
             }
 
-            if (summedShape.Count == 0)
-            {
-                summedShape.Add(1);
-            }
+            // Step 2: Initialize the gradient with the original shape
+            double[] inputGradient = new double[originalShape.Aggregate(1, (a, b) => a * b)];
 
-            // Create a tensor with the shape after summation
-            Tensor result = new Tensor(originalShape, PradTools.Zero);
+            // Step 3: Calculate strides for the original tensor and upstream gradient
+            int[] originalStrides = this.CalculateStrides(originalShape);
+            int[] upstreamStrides = this.CalculateStrides(upstreamGradient.Shape);
 
-            // Calculate strides for the original tensor
-            var strides = new int[originalShape.Length];
-            strides[originalShape.Length - 1] = 1;
-            for (int i = originalShape.Length - 2; i >= 0; i--)
-            {
-                strides[i] = strides[i + 1] * originalShape[i + 1];
-            }
+            // Step 4: Perform the reverse broadcasting of the upstream gradient
+            int[] currentIndices = new int[originalShape.Length];
+            this.BroadcastUpstreamGradient(0, currentIndices, originalStrides, upstreamStrides, upstreamGradient.Data, inputGradient);
 
-            // Expand the upstream gradient back to the original shape
-            Parallel.For(0, upstreamGradient.Data.Length, i =>
+            return new Tensor(originalShape, inputGradient);
+        }
+
+        /// <summary>
+        /// Recursively broadcasts the upstream gradient back to the original shape.
+        /// </summary>
+        /// <param name="depth">Current recursion depth (axis).</param>
+        /// <param name="currentIndices">Current indices into the original tensor.</param>
+        /// <param name="originalStrides">Strides for the original tensor.</param>
+        /// <param name="upstreamStrides">Strides for the upstream gradient.</param>
+        /// <param name="upstreamData">The data array of the upstream gradient.</param>
+        /// <param name="inputGradient">The input gradient being filled.</param>
+        public void BroadcastUpstreamGradient(int depth, int[] currentIndices, int[] originalStrides, int[] upstreamStrides, double[] upstreamData, double[] inputGradient)
+        {
+            if (depth == originalStrides.Length)
             {
-                var upstreamIndex = new int[summedShape.Count];
-                var inputIndex = new int[originalShape.Length];
-                int remainingIndex = i;
-                for (int j = summedShape.Count - 1; j >= 0; j--)
+                // Calculate original tensor index
+                int originalIndex = 0;
+                for (int i = 0; i < currentIndices.Length; i++)
                 {
-                    upstreamIndex[j] = remainingIndex % summedShape[j];
-                    remainingIndex /= summedShape[j];
+                    originalIndex += currentIndices[i] * originalStrides[i];
                 }
 
-                for (int j = 0, k = 0; j < originalShape.Length; j++)
+                // Calculate upstream tensor index
+                int upstreamIndex = 0;
+                for (int i = 0; i < upstreamStrides.Length; i++)
                 {
-                    if (axes.Contains(j))
+                    if (upstreamStrides[i] != 0) // Avoid dimensions reduced to 1 in upstream gradient
                     {
-                        inputIndex[j] = 0;
-                    }
-                    else
-                    {
-                        inputIndex[j] = upstreamIndex[k++];
+                        upstreamIndex += (currentIndices[i] % upstreamStrides[i]) * upstreamStrides[i];
                     }
                 }
 
-                this.SumReverseRecursive(inputIndex, axes, 0, upstreamGradient.Data[i], strides, result);
-            });
+                // Broadcast the upstream gradient value to the input gradient
+                inputGradient[originalIndex] += upstreamData[upstreamIndex];
+                return;
+            }
 
-            return result;
+            // Recur into each element along this dimension
+            for (int i = 0; i < originalStrides[depth]; i++)
+            {
+                currentIndices[depth] = i;
+                this.BroadcastUpstreamGradient(depth + 1, currentIndices, originalStrides, upstreamStrides, upstreamData, inputGradient);
+            }
+        }
+
+        /// <summary>
+        /// Computes strides for a given shape.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <returns>An array of strides.</returns>
+        public int[] CalculateStrides(int[] shape)
+        {
+            int[] strides = new int[shape.Length];
+            strides[strides.Length - 1] = 1;
+            for (int i = strides.Length - 2; i >= 0; i--)
+            {
+                strides[i] = strides[i + 1] * shape[i + 1];
+            }
+
+            return strides;
         }
 
         /// <summary>

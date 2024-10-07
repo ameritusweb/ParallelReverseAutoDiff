@@ -486,14 +486,10 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Create a padded version of the original shape
             int[] paddedShape = new int[newShape.Length];
-            for (int i = 0; i < this.Shape.Length; i++)
-            {
-                paddedShape[i] = this.Shape[i];
-            }
-
+            Array.Copy(this.Shape, 0, paddedShape, 0, this.Shape.Length);
             for (int i = this.Shape.Length; i < newShape.Length; i++)
             {
-                paddedShape[i] = 1; // Pad with 1s at the end (right side)
+                paddedShape[i] = 1; // Pad with 1s to match the new shape length
             }
 
             // Ensure the shape is compatible for broadcasting
@@ -501,39 +497,54 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 if (paddedShape[i] != 1 && paddedShape[i] != newShape[i])
                 {
-                    throw new ArgumentException("Shapes are not compatible for broadcasting.");
+                    throw new ArgumentException($"Shape mismatch at dimension {i}. Original size {paddedShape[i]} cannot be broadcast to {newShape[i]}.");
                 }
             }
 
-            // Create the new data array
+            // Calculate the total size of the new shape
             int newTotalSize = newShape.Aggregate(1, (a, b) => a * b);
             var broadcastedData = new double[newTotalSize];
 
             // Fill the new data array by repeating the elements
             Parallel.For(0, newTotalSize, i =>
             {
-                int oldIndex = 0;
-                int remainingI = i;
-                int stride = 1;
-
-                for (int j = newShape.Length - 1; j >= 0; j--)
-                {
-                    int newDimSize = newShape[j];
-                    int oldDimSize = paddedShape[j];
-
-                    oldIndex += ((remainingI % newDimSize) % oldDimSize) * stride;
-                    if (j < this.Shape.Length)
-                    {
-                        stride *= oldDimSize;
-                    }
-
-                    remainingI /= newDimSize;
-                }
-
-                broadcastedData[i] = this.Data[oldIndex];
+                broadcastedData[i] = this.Data[this.GetOldIndex(i, newShape, paddedShape)];
             });
 
             return new Tensor(newShape, broadcastedData);
+        }
+
+        /// <summary>
+        /// Computes the corresponding index in the original tensor's data for the given broadcasted index.
+        /// </summary>
+        /// <param name="broadcastedIndex">Index in the broadcasted data array.</param>
+        /// <param name="newShape">The shape of the broadcasted tensor.</param>
+        /// <param name="paddedShape">The padded shape of the original tensor.</param>
+        /// <returns>The corresponding index in the original tensor's data array.</returns>
+        public int GetOldIndex(int broadcastedIndex, int[] newShape, int[] paddedShape)
+        {
+            int oldIndex = 0;
+            int remainingI = broadcastedIndex;
+            int stride = 1;
+
+            for (int j = newShape.Length - 1; j >= 0; j--)
+            {
+                int newDimSize = newShape[j];
+                int oldDimSize = paddedShape[j];
+
+                // Compute the index in the original data along this dimension
+                oldIndex += ((remainingI % newDimSize) % oldDimSize) * stride;
+
+                // Only update stride if we are within the original tensor's dimensions
+                if (j < this.Shape.Length)
+                {
+                    stride *= oldDimSize;
+                }
+
+                remainingI /= newDimSize;
+            }
+
+            return oldIndex;
         }
 
         /// <summary>

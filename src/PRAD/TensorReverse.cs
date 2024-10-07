@@ -424,46 +424,5 @@ namespace ParallelReverseAutoDiff.PRAD
 
             return result;
         }
-
-        /// <summary>
-        /// Recursively expands the upstream gradient back to the original shape.
-        /// </summary>
-        /// <param name="inputIndex">The current indices in the input tensor.</param>
-        /// <param name="axes">The axes along which the summation was performed.</param>
-        /// <param name="currentAxis">The current axis being processed.</param>
-        /// <param name="value">The value of the upstream gradient to be distributed.</param>
-        /// <param name="strides">The strides of the input tensor.</param>
-        /// <param name="result">The tensor to accumulate the gradient in.</param>
-        private void SumReverseRecursive(int[] inputIndex, int[] axes, int currentAxis, double value, int[] strides, Tensor result)
-        {
-            if (currentAxis == inputIndex.Length)
-            {
-                int flatIndex = 0;
-                for (int i = 0; i < inputIndex.Length; i++)
-                {
-                    flatIndex += inputIndex[i] * strides[i];
-                }
-
-                lock (result.Data)
-                {
-                    result.Data[flatIndex] += value;
-                }
-            }
-            else
-            {
-                if (axes.Contains(currentAxis))
-                {
-                    for (int i = 0; i < result.Shape[currentAxis]; i++)
-                    {
-                        inputIndex[currentAxis] = i;
-                        this.SumReverseRecursive(inputIndex, axes, currentAxis + 1, value, strides, result);
-                    }
-                }
-                else
-                {
-                    this.SumReverseRecursive(inputIndex, axes, currentAxis + 1, value, strides, result);
-                }
-            }
-        }
     }
 }
