@@ -300,30 +300,57 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">Thrown when the shapes are incompatible.</exception>
         public Tensor SumReverse(Tensor upstreamGradient, int[] axes)
         {
-            int[] originalShape = this.InitialTensors[0].Shape;
+            var initial = this.InitialTensors[0];
 
-            // Step 1: Ensure upstream gradient shape is compatible
-            int[] reducedShape = originalShape.ToList()
-                                              .Where((_, i) => !axes.Contains(i))
-                                              .ToArray();
+            // Step 1: Create a new tensor with the same shape as the original input
+            var gradientTensor = new Tensor(initial.Shape, new double[initial.Data.Length]);
 
-            if (!upstreamGradient.Shape.SequenceEqual(reducedShape))
+            // Step 2: Broadcast the upstream gradient to the shape of the original input
+            int[] broadcastDims = Enumerable.Range(0, initial.Shape.Length)
+                                            .Where(i => !axes.Contains(i))
+                                            .ToArray();
+
+            // Step 3: Populate the gradient tensor
+            int[] currentIndices = new int[initial.Shape.Length];
+            this.PopulateGradientRecursive(upstreamGradient, gradientTensor, axes, broadcastDims, 0, currentIndices);
+
+            return gradientTensor;
+        }
+
+        /// <summary>
+        /// Populate.
+        /// </summary>
+        /// <param name="upstreamGradient">A.</param>
+        /// <param name="gradientTensor">B.</param>
+        /// <param name="sumAxes">C.</param>
+        /// <param name="broadcastDims">D.</param>
+        /// <param name="depth">E.</param>
+        /// <param name="currentIndices">F.</param>
+        public void PopulateGradientRecursive(Tensor upstreamGradient, Tensor gradientTensor, int[] sumAxes, int[] broadcastDims, int depth, int[] currentIndices)
+        {
+            var initial = this.InitialTensors[0];
+            if (depth == initial.Shape.Length)
             {
-                throw new ArgumentException("Upstream gradient shape is incompatible with the original tensor's reduced shape.");
+                int gradientIndex = 0;
+                int upstreamIndex = 0;
+                for (int i = 0; i < initial.Shape.Length; i++)
+                {
+                    gradientIndex += currentIndices[i] * gradientTensor.Strides[i];
+                    if (broadcastDims.Contains(i))
+                    {
+                        upstreamIndex += currentIndices[i] * upstreamGradient.Strides[broadcastDims.ToList().IndexOf(i)];
+                    }
+                }
+
+                gradientTensor.Data[gradientIndex] = upstreamGradient.Data[upstreamIndex];
+                return;
             }
 
-            // Step 2: Initialize the gradient with the original shape
-            var inputGradient = PradTools.AllocateArray(originalShape.Aggregate(1, (a, b) => a * b));
-
-            // Step 3: Calculate strides for the original tensor and upstream gradient
-            int[] originalStrides = this.CalculateStrides(originalShape);
-            int[] upstreamStrides = this.CalculateStrides(upstreamGradient.Shape);
-
-            // Step 4: Perform the reverse broadcasting of the upstream gradient
-            int[] currentIndices = new int[originalShape.Length];
-            this.BroadcastUpstreamGradient(0, currentIndices, originalStrides, upstreamStrides, Array.ConvertAll(upstreamGradient.Data, x => (double)x), Array.ConvertAll(inputGradient, x => (double)x));
-
-            return new Tensor(originalShape, inputGradient);
+            for (int i = 0; i < initial.Shape[depth]; i++)
+            {
+                currentIndices[depth] = i;
+                this.PopulateGradientRecursive(upstreamGradient, gradientTensor, sumAxes, broadcastDims, depth + 1, currentIndices);
+            }
         }
 
         /// <summary>

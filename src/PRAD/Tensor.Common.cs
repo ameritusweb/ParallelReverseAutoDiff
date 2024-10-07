@@ -24,6 +24,29 @@ namespace ParallelReverseAutoDiff.PRAD
     {
         private static readonly ThreadLocal<Random> RandomGen = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
 
+        private int[] strides;
+
+        /// <summary>
+        /// Gets the strides.
+        /// </summary>
+        public int[] Strides
+        {
+            get
+            {
+                if (this.strides == null)
+                {
+                    this.strides = new int[this.Shape.Length];
+                    this.strides[this.strides.Length - 1] = 1;
+                    for (int i = this.strides.Length - 2; i >= 0; i--)
+                    {
+                        this.strides[i] = this.strides[i + 1] * this.Shape[i + 1];
+                    }
+                }
+
+                return this.strides;
+            }
+        }
+
         /// <summary>
         /// Gets the shape of the tensor.
         /// </summary>

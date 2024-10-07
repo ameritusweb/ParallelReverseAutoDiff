@@ -1023,7 +1023,17 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestSineSoftmax()
         {
-            var input1 = new Tensor(new int[] { 3, 6, 120 }, Enumerable.Range(0, 2160).Select(i => (i + 1) / 100d).ToArray());
+            var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+
+            SineSoftmaxOperation op = new SineSoftmaxOperation();
+            op.Forward(input1.ToMatrix());
+
+            var upstream = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 1000d).ToArray());
+
+            var result = op.Backward(upstream.ToMatrix());
+            var resultMatrix = result.Item1 as Matrix;
+            var resultTensor = resultMatrix.ToTensor();
+
             var opInput1 = new PradOp(input1);
             var sinned = opInput1.Sin();
             var exped = sinned.Then(PradOp.ExpOp);
@@ -1031,11 +1041,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             // Determine the axis to sum over based on the input dimensions
             int sumAxis = opInput1.CurrentShape.Length - 1;  // Last dimension
 
-            var expedBranch = exped.BranchStack(3);
-            var sums = expedBranch.Pop().Sum(new[] { sumAxis });
-            var broadcastedSums = sums.Then(PradOp.BroadcastToOp, opInput1.CurrentShape);
-            var denominator = expedBranch.Pop().Add(broadcastedSums.Result);
-            var output = expedBranch.Pop().Div(denominator.Result);
+            var expedBranch = exped.BranchStack(2);
+            var sums = exped.PradOp.Sum(new[] { sumAxis });
+            var broadcastedSums = sums.Then(PradOp.BroadcastToOp, input1.Shape);
+            var denominator = broadcastedSums.PradOp.Add(expedBranch.Pop().BranchInitialTensor);
+            var output = denominator.PradOp.DivInto(expedBranch.Pop().BranchInitialTensor);
+
+            var gradientOutput = output.Back(upstream);
+            var gradientInput = opInput1.SeedGradient;
         }
 
         [Fact]

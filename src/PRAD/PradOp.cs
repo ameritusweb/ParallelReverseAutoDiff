@@ -1468,13 +1468,14 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(BroadcastToOp))]
         public PradResult BroadcastTo(params int[] newShape)
         {
+            var initialShape = (int[])this.currentTensor.Shape.Clone();
             var result = this.currentTensor.BroadcastTo(newShape);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
 
-            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            var grad = Tensor.ToTensorArray(1, initialShape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradient = tensorReverse.BroadcastToReverse(upstreamGrad, newShape);
+                var gradient = tensorReverse.BroadcastToReverse(upstreamGrad, initialShape);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
@@ -2231,6 +2232,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 Parallel.For(0, result.Gradients.Length, i =>
                 {
+                    var s = step;
                     result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
                     if (ops[i] != null)
                     {
