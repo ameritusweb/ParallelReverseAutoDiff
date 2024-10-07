@@ -170,13 +170,13 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             // Initialize the input gradient with the shape of the original tensor
-            double[] inputGradient = new double[originalShape.Aggregate(1, (a, b) => a * b)];
+            var inputGradient = PradTools.AllocateArray(originalShape.Aggregate(1, (a, b) => a * b));
 
             // Reduce the upstream gradient over broadcasted dimensions
             Parallel.For(0, upstreamGradient.Data.Length, i =>
             {
                 int oldIndex = this.GetOldIndex(i, upstreamGradient.Shape, paddedOriginalShape);
-                lock (inputGradient) // Avoid race conditions when summing the values in parallel
+                lock (inputGradient)
                 {
                     inputGradient[oldIndex] += upstreamGradient.Data[i];
                 }
@@ -240,7 +240,7 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             // Step 2: Initialize the gradient with the original shape
-            double[] inputGradient = new double[originalShape.Aggregate(1, (a, b) => a * b)];
+            var inputGradient = PradTools.AllocateArray(originalShape.Aggregate(1, (a, b) => a * b));
 
             // Step 3: Calculate strides for the original tensor and upstream gradient
             int[] originalStrides = this.CalculateStrides(originalShape);
@@ -248,7 +248,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Step 4: Perform the reverse broadcasting of the upstream gradient
             int[] currentIndices = new int[originalShape.Length];
-            this.BroadcastUpstreamGradient(0, currentIndices, originalStrides, upstreamStrides, upstreamGradient.Data, inputGradient);
+            this.BroadcastUpstreamGradient(0, currentIndices, originalStrides, upstreamStrides, Array.ConvertAll(upstreamGradient.Data, x => (double)x), Array.ConvertAll(inputGradient, x => (double)x));
 
             return new Tensor(originalShape, inputGradient);
         }
@@ -277,7 +277,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 int upstreamIndex = 0;
                 for (int i = 0; i < upstreamStrides.Length; i++)
                 {
-                    if (upstreamStrides[i] != 0) // Avoid dimensions reduced to 1 in upstream gradient
+                    if (upstreamStrides[i] != 0)
                     {
                         upstreamIndex += (currentIndices[i] % upstreamStrides[i]) * upstreamStrides[i];
                     }
