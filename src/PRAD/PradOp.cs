@@ -166,6 +166,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> ExpOp => FuncOp.Exp;
 
         /// <summary>
+        /// Gets the BesselI0 op.
+        /// </summary>
+        public static Func<PradResult> BesselI0Op => FuncOp.BesselI0;
+
+        /// <summary>
         /// Gets the ln op.
         /// </summary>
         public static Func<PradResult> LnOp => FuncOp.Ln;
@@ -939,6 +944,30 @@ namespace ParallelReverseAutoDiff.PRAD
             var pradResult = new PradResult(this, resultTensor, grad);
             this.backpropagationSteps.Add((backpropStep, pradResult));
             this.currentTensor = resultTensor;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the reciprocal of each element of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The result of the reciprocal operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(BesselI0Op))]
+        public PradResult BesselI0()
+        {
+            var result = this.currentTensor.BesselI0();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.BesselI0Reverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
             return pradResult;
         }
 

@@ -1651,6 +1651,55 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise modified Bessel function of the first kind, I0(x), of the tensor's elements.
+        /// </summary>
+        /// <returns>A new tensor containing the result of I0(x) for each element.</returns>
+        public Tensor BesselI0()
+        {
+            // Create a result tensor with the same shape as the current tensor
+            var result = new Tensor(this.Shape);
+
+            // Precompute constants for small and large value approximations
+            const double threshold = 3.75;
+            const double invThreshold = 1 / threshold; // Save division later
+            const double sqrt2pi = 0.39894228; // Approximation constant for large values
+
+            // Constants for small value approximation
+            double[] smallCoeffs = { 3.5156229, 3.0899424, 1.2067492, 0.2659732, 0.0360768, 0.0045813 };
+
+            // Constants for large value approximation
+            double[] largeCoeffs = { 0.01328592, 0.00225319, -0.00157565, 0.00916281, -0.02057706, 0.02635537, -0.01647633, 0.00392377 };
+
+            for (int i = 0; i < this.Data.Length; i++)
+            {
+                double absX = Math.Abs(this.Data[i]);
+
+                // Apply the small value approximation for abs(x) < 3.75
+                if (absX < threshold)
+                {
+                    double t = this.Data[i] * invThreshold;
+                    double t2 = t * t;
+
+                    // Horner's method for polynomial evaluation
+                    result.Data[i] = 1 + (t2 * (smallCoeffs[0] + (t2 * (smallCoeffs[1] + (t2 * (smallCoeffs[2] +
+                                   (t2 * (smallCoeffs[3] + (t2 * (smallCoeffs[4] + (t2 * smallCoeffs[5])))))))))));
+                }
+
+                // Apply the large value approximation for abs(x) >= 3.75
+                else
+                {
+                    double t = threshold / absX;
+                    result.Data[i] = (Math.Exp(absX) / Math.Sqrt(absX)) *
+                                     (sqrt2pi + (t * (largeCoeffs[0] + (t * (largeCoeffs[1] + (t * (largeCoeffs[2] +
+                                     (t * (largeCoeffs[3] + (t * (largeCoeffs[4] + (t * (largeCoeffs[5] +
+                                     (t * (largeCoeffs[6] + (t * largeCoeffs[7]))))))))))))))));
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Upsamples the tensor using the specified scaling factor and interpolation method.
         /// Supports 2D and 4D tensors (batch, height, width, channels).
         /// </summary>

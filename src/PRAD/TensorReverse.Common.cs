@@ -219,6 +219,79 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the gradient of the modified Bessel function of the first kind, I0(x), with respect to the input,
+        /// and scales it by the upstream gradient.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the next layer in the backward pass.</param>
+        /// <returns>The gradient of the input tensor with respect to I0(x), scaled by the upstream gradient.</returns>
+        public Tensor BesselI0Reverse(Tensor upstreamGradient)
+        {
+            var initial = this.InitialTensors[0];
+
+            // Ensure the upstream gradient has the same shape as the input tensor
+            if (!initial.Shape.SequenceEqual(upstreamGradient.Shape))
+            {
+                throw new ArgumentException("The shape of the upstream gradient must match the shape of the input tensor.");
+            }
+
+            // Create a tensor to store the gradient of the input with respect to the output
+            var inputGradient = new Tensor(initial.Shape);
+
+            // Precompute constants for the small and large x approximations
+            const double threshold = 3.75;
+            const double invThreshold = 1 / threshold;
+            const double sqrt2pi = 0.39894228;
+
+            // Coefficients for small x approximation
+            double[] smallGradCoeffs = { 7.0312458, 9.2698272, 4.8269968, 1.3298928, 0.2162304, 0.0320391 };
+
+            // Coefficients for large x approximation (precomputed derivatives of the Bessel function)
+            double[] largeGradCoeffs = { 0.01328592, 0.00450638, -0.00472695, 0.03665124, -0.10288530, 0.15813222, -0.11533431, 0.03139016 };
+
+            for (int i = 0; i < initial.Data.Length; i++)
+            {
+                double x = initial.Data[i];
+                double absX = Math.Abs(x);
+
+                // Compute the gradient of I0(x) with respect to x
+                if (absX < threshold)
+                {
+                    // Small x approximation for the gradient
+                    double t = x * invThreshold;
+                    double t2 = t * t;
+                    double dI0_dx = (x * invThreshold) *
+                                    (smallGradCoeffs[0] + (t2 * (smallGradCoeffs[1] + (t2 * (smallGradCoeffs[2] +
+                                    (t2 * (smallGradCoeffs[3] + (t2 * (smallGradCoeffs[4] + (t2 * smallGradCoeffs[5]))))))))));
+
+                    // Multiply by the upstream gradient
+                    inputGradient.Data[i] = dI0_dx * upstreamGradient.Data[i];
+                }
+                else
+                {
+                    // Large x approximation for the gradient
+                    double t = threshold / absX;
+                    double expTerm = Math.Exp(absX) / Math.Sqrt(absX);
+
+                    // Use precomputed coefficients for the large x derivative
+                    double besselTerm = sqrt2pi +
+                                        (t * (largeGradCoeffs[0] + (t * (largeGradCoeffs[1] + (t * (largeGradCoeffs[2] +
+                                        (t * (largeGradCoeffs[3] + (t * (largeGradCoeffs[4] + (t * (largeGradCoeffs[5] +
+                                        (t * (largeGradCoeffs[6] + (t * largeGradCoeffs[7])))))))))))))));
+
+                    double gradientTerm = expTerm * (besselTerm -
+                                        (0.5 * t * (largeGradCoeffs[0] + (t * (largeGradCoeffs[1] + (t * (largeGradCoeffs[2] +
+                                        (t * (largeGradCoeffs[3] + (t * (largeGradCoeffs[4] + (t * (largeGradCoeffs[5] +
+                                        (t * (largeGradCoeffs[6] + (t * largeGradCoeffs[7]))))))))))))))));
+
+                    // Adjust the sign based on the original x and scale by upstream gradient
+                    inputGradient.Data[i] = gradientTerm * Math.Sign(x) * upstreamGradient.Data[i];
+                }
+            }
+
+            return inputGradient;
+        }
+
+        /// <summary>
         /// Computes the gradient with respect to the input of a summation operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient from the next layer (after summation).</param>
