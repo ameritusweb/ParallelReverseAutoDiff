@@ -1021,6 +1021,24 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestSineSoftmax()
+        {
+            var input1 = new Tensor(new int[] { 3, 6, 120 }, Enumerable.Range(0, 2160).Select(i => (i + 1) / 100d).ToArray());
+            var opInput1 = new PradOp(input1);
+            var sinned = opInput1.Sin();
+            var exped = sinned.Then(PradOp.ExpOp);
+
+            // Determine the axis to sum over based on the input dimensions
+            int sumAxis = opInput1.CurrentShape.Length - 1;  // Last dimension
+
+            var expedBranch = exped.BranchStack(3);
+            var sums = expedBranch.Pop().Sum(new[] { sumAxis });
+            var broadcastedSums = sums.Then(PradOp.BroadcastToOp, opInput1.CurrentShape);
+            var denominator = expedBranch.Pop().Add(broadcastedSums.Result);
+            var output = expedBranch.Pop().Div(denominator.Result);
+        }
+
+        [Fact]
         public void TestInterleavedGather()
         {
             var input1 = new Tensor(new int[] { 3, 6, 12 }, Enumerable.Range(0, 216).Select(i => (i + 1) / 100d).ToArray());
