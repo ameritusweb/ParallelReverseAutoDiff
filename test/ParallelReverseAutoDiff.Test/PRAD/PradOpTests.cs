@@ -1021,12 +1021,39 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestQuotientRule()
+        {
+            var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+            var weights = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+
+            var upstream = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 1000d).ToArray());
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+            var branch = opInput1.Branch();
+            var seedGrad = opInput1.SeedGradient;
+            var sinRes = opInput1.Sin();
+            var sinBranch = sinRes.PradOp.Branch();
+            var cosRes = branch.Cos();
+            var cosBranch = cosRes.PradOp.Branch();
+            var res = sinRes.PradOp.Div(cosRes.Result).PradOp.Mul(opWeights.SeedResult.Result);
+            var atanRes = sinBranch.Atan2(cosBranch.BranchInitialTensor);
+            var concat = atanRes.PradOp.Indexer("...", ":60").PradOp.Concat(new Tensor[] { opInput2.Indexer("...", "60:").Result }, 1);
+            var divRes = res.PradOp.Div(concat.Result);
+
+            var gradRes = divRes.Back(upstream);
+        }
+
+        [Fact]
         public void TestSineSoftmax()
         {
             var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
 
             SineSoftmaxOperation op = new SineSoftmaxOperation();
-            op.Forward(input1.ToMatrix());
+            var forwardRes = op.Forward(input1.ToMatrix());
+            var forwardTensor = forwardRes.ToTensor();
 
             var upstream = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 1000d).ToArray());
 
