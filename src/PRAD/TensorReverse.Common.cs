@@ -154,10 +154,18 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Pad the original shape to match the rank of the upstream gradient
             int[] paddedOriginalShape = new int[upstreamGradient.Shape.Length];
-            Array.Copy(originalShape, 0, paddedOriginalShape, 0, originalShape.Length);
-            for (int i = originalShape.Length; i < upstreamGradient.Shape.Length; i++)
+            int padOffset = upstreamGradient.Shape.Length - originalShape.Length;
+
+            for (int i = 0; i < upstreamGradient.Shape.Length; i++)
             {
-                paddedOriginalShape[i] = 1;
+                if (i < padOffset)
+                {
+                    paddedOriginalShape[i] = 1; // Pad with 1s
+                }
+                else
+                {
+                    paddedOriginalShape[i] = originalShape[i - padOffset];
+                }
             }
 
             // Ensure shapes are compatible
@@ -165,57 +173,71 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 if (paddedOriginalShape[i] != 1 && paddedOriginalShape[i] != upstreamGradient.Shape[i])
                 {
-                    throw new ArgumentException($"Shapes are not compatible for broadcasting at dimension {i}.");
+                    // If the dimension of the upstream gradient is not divisible by the original shape (and it's not broadcasting), it's invalid
+                    if (upstreamGradient.Shape[i] % paddedOriginalShape[i] != 0)
+                    {
+                        throw new ArgumentException($"Shapes are not compatible for broadcasting at dimension {i}.");
+                    }
                 }
             }
 
             // Initialize the input gradient with the shape of the original tensor
-            var inputGradient = PradTools.AllocateArray(originalShape.Aggregate(1, (a, b) => a * b));
+            var inputGradient = new double[originalShape.Aggregate(1, (a, b) => a * b)];
 
-            // Reduce the upstream gradient over broadcasted dimensions
-            Parallel.For(0, upstreamGradient.Data.Length, i =>
+            // Rearrange upstream gradient to match the original shape
+            Parallel.For(0, inputGradient.Length, originalFlatIndex =>
             {
-                int oldIndex = this.GetOldIndex(i, upstreamGradient.Shape, paddedOriginalShape);
-                lock (inputGradient)
-                {
-                    inputGradient[oldIndex] += upstreamGradient.Data[i];
-                }
+                int newFlatIndex = this.GetBroadcastIndex(originalFlatIndex, originalShape, paddedOriginalShape, upstreamGradient.Shape);
+                inputGradient[originalFlatIndex] = upstreamGradient.Data[newFlatIndex];
             });
 
             return new Tensor(originalShape, inputGradient);
         }
 
         /// <summary>
-        /// Computes the corresponding index in the original tensor's data for the given broadcasted index.
+        /// Maps the original flattened index to the broadcasted tensor's flattened index.
         /// </summary>
-        /// <param name="broadcastedIndex">Index in the broadcasted data array.</param>
-        /// <param name="newShape">The shape of the broadcasted tensor (upstream gradient shape).</param>
-        /// <param name="paddedShape">The padded shape of the original tensor.</param>
-        /// <returns>The corresponding index in the original tensor's data array.</returns>
-        public int GetOldIndex(int broadcastedIndex, int[] newShape, int[] paddedShape)
+        /// <param name="flatIndex">The original flattened index.</param>
+        /// <param name="originalShape">The original shape of the tensor.</param>
+        /// <param name="paddedOriginalShape">The padded original shape for broadcasting.</param>
+        /// <param name="broadcastShape">The target broadcasted shape.</param>
+        /// <returns>The corresponding index in the broadcasted data array.</returns>
+        public int GetBroadcastIndex(int flatIndex, int[] originalShape, int[] paddedOriginalShape, int[] broadcastShape)
         {
-            int oldIndex = 0;
-            int remainingI = broadcastedIndex;
-            int stride = 1;
-
-            for (int j = newShape.Length - 1; j >= 0; j--)
+            // Convert flatIndex to multi-dimensional coordinates for the original shape
+            int[] originalCoords = new int[originalShape.Length];
+            int remainingIndex = flatIndex;
+            for (int i = originalShape.Length - 1; i >= 0; i--)
             {
-                int newDimSize = newShape[j];
-                int oldDimSize = paddedShape[j];
-
-                // Compute the index in the original data along this dimension
-                oldIndex += ((remainingI % newDimSize) % oldDimSize) * stride;
-
-                // Only update stride if we are within the original tensor's dimensions
-                if (j < paddedShape.Length && paddedShape[j] != 1)
-                {
-                    stride *= oldDimSize;
-                }
-
-                remainingI /= newDimSize;
+                originalCoords[i] = remainingIndex % originalShape[i];
+                remainingIndex /= originalShape[i];
             }
 
-            return oldIndex;
+            // Map originalCoords to newCoords for the broadcasted tensor
+            int[] broadcastCoords = new int[broadcastShape.Length];
+            int padOffset = broadcastShape.Length - originalShape.Length;
+            for (int i = 0; i < broadcastShape.Length; i++)
+            {
+                if (i < padOffset)
+                {
+                    broadcastCoords[i] = 0; // Broadcasting over this dimension
+                }
+                else
+                {
+                    broadcastCoords[i] = paddedOriginalShape[i] == 1 ? 0 : originalCoords[i - padOffset];
+                }
+            }
+
+            // Convert newCoords (broadcasted shape) back to a flat index
+            int broadcastFlatIndex = 0;
+            int stride = 1;
+            for (int i = broadcastShape.Length - 1; i >= 0; i--)
+            {
+                broadcastFlatIndex += broadcastCoords[i] * stride;
+                stride *= broadcastShape[i];
+            }
+
+            return broadcastFlatIndex;
         }
 
         /// <summary>

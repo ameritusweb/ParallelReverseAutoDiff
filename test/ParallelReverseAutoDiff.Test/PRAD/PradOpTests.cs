@@ -1061,6 +1061,9 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var resultMatrix = result.Item1 as Matrix;
             var resultTensor = resultMatrix.ToTensor();
 
+            var result2 = op.SineSoftmaxBackward(input1.ToMatrix(), upstream.ToMatrix());
+            var result2Tensor = result2.ToTensor();
+
             var opInput1 = new PradOp(input1);
             var sinned = opInput1.Sin();
             var exped = sinned.Then(PradOp.ExpOp);

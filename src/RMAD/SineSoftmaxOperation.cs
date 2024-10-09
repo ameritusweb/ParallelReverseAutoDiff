@@ -77,6 +77,76 @@ namespace ParallelReverseAutoDiff.RMAD
                 .Build();
         }
 
+        /// <summary>
+        /// Computes the gradient of the SineSoftmax output with respect to the input using RMAD.
+        /// This is the backward pass only, calculating exp(sin(x)) during the process, and multiplying by the upstream gradient.
+        /// </summary>
+        /// <param name="input">The input matrix for which the gradients are being computed.</param>
+        /// <param name="upstreamGradient">The upstream gradient matrix flowing from the next layer.</param>
+        /// <returns>The gradient of the output w.r.t the input.</returns>
+        public Matrix SineSoftmaxBackward(Matrix input, Matrix upstreamGradient)
+        {
+            int numRows = input.Rows;
+            int numCols = input.Cols;
+
+            Matrix gradient = new Matrix(numRows, numCols); // The final gradient matrix
+
+            for (int i = 0; i < numRows; i++)
+            {
+                double mM = 0.0;
+
+                // First, we need to compute the sum over the entire row (denominator) mM
+                double[] expSineVals = new double[numCols]; // Cache the exp(sin(x)) values
+
+                for (int j = 0; j < numCols; j++)
+                {
+                    double sineValue = PradMath.Sin(input[i, j]);      // Calculate sin(x)
+                    expSineVals[j] = PradMath.Exp(sineValue);          // Calculate and store exp(sin(x))
+                    mM += expSineVals[j];                              // Accumulate mM over the whole row
+                }
+
+                // Reverse pass: Calculate gradients w.r.t each input (numerator and denominator)
+                for (int j = 0; j < numCols; j++)
+                {
+                    double expSineVal = expSineVals[j];                // Reuse the cached exp(sin(x))
+                    double denominator = mM + expSineVal;                           // Denominator is the sum over the whole row
+
+                    // Gradient w.r.t numerator
+                    double gradNumerator = 1.0 / denominator;
+
+                    // Gradient w.r.t denominator
+                    double gradDenominator = -expSineVal / (denominator * denominator);
+
+                    // Gradient of exp(sin(x)) is cos(x) * exp(sin(x))
+                    double gradExpSin = PradMath.Cos(input[i, j]) * expSineVal;
+
+                    // Combine with upstream gradient
+                    double upstreamGrad = upstreamGradient[i, j];      // Upstream gradient for this element
+
+                    double passN = upstreamGrad * gradNumerator;
+
+                    double passD = upstreamGrad * gradDenominator;
+
+                    double accum1 = passN * gradExpSin;
+
+                    double accum2 = passD * gradExpSin;
+
+                    double accum3 = passD * gradExpSin;
+
+                    // 1. Accumulation of gradient w.r.t the numerator
+                    gradient[i, j] = upstreamGrad * gradNumerator * gradExpSin;
+
+                    // 2. Accumulation of gradient w.r.t the summation term of the denominator
+                    gradient[i, j] += upstreamGrad * gradDenominator * gradExpSin;
+
+                    // 3. Accumulation of gradient w.r.t the current element's contribution to the denominator
+                    gradient[i, j] += upstreamGrad * gradDenominator * gradExpSin;
+                }
+            }
+
+            return gradient;
+        }
+
         private Matrix SineSoftmax(Matrix input)
         {
             int numRows = input.Rows;
