@@ -1877,12 +1877,22 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         {
             Random rand = new Random(3);
 
-            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
-            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i + 1)).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)((i + 1) * 2)).ToArray());
             var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            var upstream = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => ((i + 1) % 10) + rand.NextDouble()).ToArray());
 
             ElementwiseVectorWeightedAddOperation op = new ElementwiseVectorWeightedAddOperation();
             var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+
+            var res1 = op.Backward(upstream.ToMatrix());
+            var res21 = res1.Item1 as Matrix;
+            var res22 = res1.Item2 as Matrix;
+            var res23 = res1.Item3 as Matrix;
+            var resTensor1 = res21.ToTensor();
+            var resTensor2 = res22.ToTensor();
+            var resTensor3 = res23.ToTensor();
 
             var opInput1 = new PradOp(input1);
             var opInput2 = new PradOp(input2);
@@ -1934,6 +1944,11 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             // Concatenate results
             var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
+
+            var gradientRes = res.Back(upstream);
+            var opi1 = opInput1.SeedGradient;
+            var opi2 = opInput2.SeedGradient;
+            var w1 = opWeights.SeedGradient;
 
             var pradOpOutputCode = res.Result.PrintCode();
             var naiveOutputCode = resultTensor.PrintCode();

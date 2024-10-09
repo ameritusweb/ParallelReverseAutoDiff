@@ -523,6 +523,236 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for concatenation along any axis.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="axis">The axis along which the concatenation was performed.</param>
+        /// <returns>An array of tensors representing the gradients for each input tensor.</returns>
+        public Tensor[] ConcatReverse(Tensor upstreamGradient, int axis)
+        {
+            int numTensors = this.InitialTensors.Length;
+            Tensor[] gradients = new Tensor[numTensors];
+
+            // Normalize axis and validate
+            axis = this.NormalizeAxis(axis, upstreamGradient.Shape.Length);
+            this.ValidateTensorsForConcatenation(axis);
+
+            int offset = 0;
+
+            // Iterate over the tensors
+            for (int i = 0; i < numTensors; i++)
+            {
+                int[] tensorShape = this.InitialTensors[i].Shape;
+                int sliceSize = tensorShape[axis];  // The size of the slice along the concatenation axis
+                int totalElementsToCopy = tensorShape.Aggregate(1, (a, b) => a * b);  // Total elements for the tensor
+
+                // Create storage for the gradient data for this tensor
+                double[] gradData = new double[totalElementsToCopy];
+
+                // Calculate the number of elements per slice (all dimensions except the concatenation axis)
+                int elementsPerSlice = this.GetElementsPerSlice(upstreamGradient.Shape, axis);
+
+                // Copy the relevant slices for this tensor
+                for (int slice = 0; slice < elementsPerSlice; slice++)
+                {
+                    // Calculate the start and end indices in the upstream gradient
+                    int upstreamStartIndex = (slice * upstreamGradient.Shape[axis]) + offset;
+                    int upstreamEndIndex = upstreamStartIndex + sliceSize;
+
+                    // Copy the slice into the gradient data for this tensor
+                    Array.Copy(upstreamGradient.Data, upstreamStartIndex, gradData, slice * sliceSize, sliceSize);
+                }
+
+                // Create the tensor for the gradient and add it to the array
+                gradients[i] = new Tensor(tensorShape, gradData);
+
+                // Update the offset to move to the next tensor's slice
+                offset += sliceSize;
+            }
+
+            return gradients;
+        }
+
+        /// <summary>
+        /// Calculates the number of elements per slice along all dimensions except the concatenation axis.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <param name="axis">The axis along which the concatenation occurred.</param>
+        /// <returns>The number of elements per slice along the specified axis.</returns>
+        public int GetElementsPerSlice(int[] shape, int axis)
+        {
+            // Multiply the dimensions except for the concatenation axis to get the number of slices
+            return shape.Where((_, idx) => idx != axis).Aggregate(1, (a, b) => a * b);
+        }
+
+        /// <summary>
+        /// Extracts a slice of the gradient from the upstream gradient tensor along a specific axis.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient tensor.</param>
+        /// <param name="offset">The starting offset in the upstream gradient.</param>
+        /// <param name="sliceLength">The length of the slice along the specified axis.</param>
+        /// <param name="gradShape">The shape of the resulting gradient tensor.</param>
+        /// <param name="axis">The axis along which to slice.</param>
+        /// <returns>A new tensor with the sliced gradient data.</returns>
+        public Tensor ExtractGradientSlice(Tensor upstreamGradient, int offset, int sliceLength, int[] gradShape, int axis)
+        {
+            int[] upstreamShape = upstreamGradient.Shape;
+            int rank = upstreamShape.Length;
+
+            // Create the gradient data array to hold the extracted slice
+            double[] gradData = new double[gradShape.Aggregate(1, (a, b) => a * b)];
+            int stride = this.GetStride(upstreamShape, axis); // Calculate stride along the axis
+
+            // Multi-dimensional extraction across the tensor
+            int subTensorSize = gradShape.Skip(axis + 1).Aggregate(1, (a, b) => a * b); // Size of a single row or sub-dimension
+            int gradIndex = 0;
+
+            // Iterate over the specified axis, extracting each slice
+            for (int i = 0; i < sliceLength; i++)
+            {
+                for (int j = 0; j < subTensorSize; j++)
+                {
+                    int upstreamIndex = (offset * stride) + (i * stride) + j;
+                    gradData[gradIndex++] = upstreamGradient.Data[upstreamIndex];
+                }
+            }
+
+            return new Tensor(gradShape, gradData);
+        }
+
+        /// <summary>
+        /// Calculates the stride size for slicing along a specific axis.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <param name="axis">The axis along which the stride is calculated.</param>
+        /// <returns>The stride size for the axis.</returns>
+        public int GetStride(int[] shape, int axis)
+        {
+            // Calculate the stride for the given axis by multiplying the sizes of all subsequent dimensions
+            return shape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
+        }
+
+        /// <summary>
+        /// Slices a tensor along a specific axis.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient tensor.</param>
+        /// <param name="offset">The starting offset in the upstream gradient.</param>
+        /// <param name="sliceLength">The length of the slice along the specified axis.</param>
+        /// <param name="gradShape">The shape of the resulting gradient tensor.</param>
+        /// <param name="axis">The axis along which to slice.</param>
+        /// <returns>A new tensor with the sliced data.</returns>
+        public Tensor SliceAlongAxis(Tensor upstreamGradient, int offset, int sliceLength, int[] gradShape, int axis)
+        {
+            double[] gradData = new double[gradShape.Aggregate(1, (a, b) => a * b)];
+            int stride = this.GetStride(upstreamGradient.Shape, axis);
+            int subTensorSize = gradShape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
+
+            // Slice along the specified axis
+            int dataIndex = 0;
+            for (int i = 0; i < sliceLength; i++)
+            {
+                for (int j = 0; j < subTensorSize; j++)
+                {
+                    int sourceIndex = offset + (i * stride) + j;
+                    gradData[dataIndex++] = upstreamGradient.Data[sourceIndex];
+                }
+            }
+
+            return new Tensor(gradShape, gradData);
+        }
+
+        /// <summary>
+        /// Calculates the size of the data that corresponds to one "slice" along a given axis.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <param name="axis">The axis along which the slicing is performed.</param>
+        /// <returns>The size of one slice of the tensor.</returns>
+        public int GetSliceSize(int[] shape, int axis)
+        {
+            return shape[axis] * shape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
+        }
+
+        /// <summary>
+        /// Normalizes the axis to handle negative values.
+        /// </summary>
+        /// <param name="axis">The axis provided.</param>
+        /// <param name="rank">The rank of the tensors.</param>
+        /// <returns>Normalized axis.</returns>
+        /// <exception cref="ArgumentException">Thrown if the axis is out of bounds.</exception>
+        public int NormalizeAxis(int axis, int rank)
+        {
+            if (axis < 0)
+            {
+                axis += rank;
+            }
+
+            if (axis < 0 || axis >= rank)
+            {
+                throw new ArgumentException($"Axis value {axis} is out of bounds for tensor rank {rank}.");
+            }
+
+            return axis;
+        }
+
+        /// <summary>
+        /// Validates that the tensors are compatible for concatenation along the given axis.
+        /// </summary>
+        /// <param name="axis">The axis along which concatenation was performed.</param>
+        /// <exception cref="ArgumentException">Thrown if the tensors are not compatible for concatenation.</exception>
+        public void ValidateTensorsForConcatenation(int axis)
+        {
+            int[] referenceShape = this.InitialTensors[0].Shape;
+            for (int i = 1; i < this.InitialTensors.Length; i++)
+            {
+                int[] currentShape = this.InitialTensors[i].Shape;
+
+                for (int dim = 0; dim < referenceShape.Length; dim++)
+                {
+                    if (dim != axis && referenceShape[dim] != currentShape[dim])
+                    {
+                        throw new ArgumentException("All tensor shapes must match except for the concatenation axis.");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Slices a tensor along a given axis and returns a new tensor.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient tensor to slice.</param>
+        /// <param name="offset">The starting offset in the upstream gradient data.</param>
+        /// <param name="gradShape">The shape of the sliced gradient tensor.</param>
+        /// <param name="axis">The axis along which to slice.</param>
+        /// <returns>A new tensor representing the sliced gradient.</returns>
+        public Tensor SliceTensor(Tensor upstreamGradient, int offset, int[] gradShape, int axis)
+        {
+            double[] gradData = new double[gradShape.Aggregate(1, (a, b) => a * b)];
+
+            // Calculate the size of a "sub-tensor" (everything except the axis dimension)
+            int subTensorSize = this.GetSubTensorSize(upstreamGradient.Shape, axis);
+            int stepSize = subTensorSize * gradShape[axis];
+
+            // Slice along the given axis, copying rows/chunks of the tensor
+            for (int i = 0; i < gradShape[axis]; i++)
+            {
+                Array.Copy(upstreamGradient.Data, offset + (i * subTensorSize), gradData, i * subTensorSize, subTensorSize);
+            }
+
+            return new Tensor(gradShape, gradData);
+        }
+
+        /// <summary>
+        /// Calculates the size of the "sub-tensor" for slicing, ignoring the given axis.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor.</param>
+        /// <param name="axis">The axis along which the slicing is performed.</param>
+        /// <returns>The size of the sub-tensor (product of dimensions except the axis).</returns>
+        public int GetSubTensorSize(int[] shape, int axis)
+        {
+            return shape.Where((_, idx) => idx != axis).Aggregate(1, (a, b) => a * b);
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise square.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

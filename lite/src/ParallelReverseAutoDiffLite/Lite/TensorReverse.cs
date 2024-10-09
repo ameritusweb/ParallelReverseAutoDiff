@@ -159,50 +159,6 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Computes the reverse gradient for concatenation.
-        /// </summary>
-        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
-        /// <param name="axis">The axis along which the concatenation was performed.</param>
-        /// <returns>An array of tensors representing the gradients for each input tensor.</returns>
-        public Tensor[] ConcatReverse(Tensor upstreamGradient, int axis)
-        {
-            int numTensors = this.InitialTensors.Length;
-            Tensor[] gradients = new Tensor[numTensors];
-
-            int[] shape = this.InitialTensors[0].Shape;
-            int rank = shape.Length;
-
-            // Handle negative axis
-            if (axis < 0)
-            {
-                axis = rank + axis;
-            }
-
-            // Validate axis
-            if (axis < 0 || axis >= rank)
-            {
-                throw new ArgumentException("Axis value is out of bounds.");
-            }
-
-            // Split the upstream gradient along the concatenation axis
-            int offset = 0;
-            for (int i = 0; i < numTensors; i++)
-            {
-                int[] gradShape = (int[])shape.Clone();
-                gradShape[axis] = this.InitialTensors[i].Shape[axis];
-
-                int gradSize = gradShape.Aggregate((a, b) => a * b);
-                float[] gradData = new float[gradSize];
-                Array.Copy(upstreamGradient.Data, offset, gradData, 0, gradSize);
-
-                gradients[i] = new Tensor(gradShape, gradData);
-                offset += gradSize;
-            }
-
-            return gradients;
-        }
-
-        /// <summary>
         /// Computes the reverse gradient for the mean operation along the specified axis.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
