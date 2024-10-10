@@ -2227,6 +2227,11 @@ namespace ParallelReverseAutoDiff.PRAD
                     }
                     else if (branch.UpstreamGradient != null)
                     {
+                        if (this.ImportantBranches.Contains(branch))
+                        {
+                            this.ImportantBranches.Remove(branch);
+                        }
+
                         var branchGradient = branch.Back();
                         branchAdded = branchGradient.DeepClone();
                         currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
@@ -2234,6 +2239,7 @@ namespace ParallelReverseAutoDiff.PRAD
                     else if (this.ImportantBranches.Any())
                     {
                         var importantBranch = this.ImportantBranches.First();
+                        this.ImportantBranches.Remove(importantBranch);
                         var deferredResult = importantBranch.Back();
                         this.DeferredResults.Add(importantBranch, deferredResult);
                         if (branch.UpstreamGradient != null)
