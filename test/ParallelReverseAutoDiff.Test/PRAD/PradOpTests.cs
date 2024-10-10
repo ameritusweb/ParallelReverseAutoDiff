@@ -1873,6 +1873,47 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestAtan2()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i + 1)).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)((i + 1) * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            var upstream = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)1).ToArray());
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var cos = opInput1.Cos();
+            var sin = opInput2.Sin();
+
+            var ss = cos.PradOp.Mul(sin.Result);
+
+            var ssBranch = ss.Branch();
+
+            var sq = ss.PradOp.Exp();
+
+            var sumXBranch = sq.Branch();
+
+            // Compute resultant vector magnitude and angle
+            var sumXSquared = sq.PradOp.Square();
+            var sumYSquared = opInput2.Square();
+            var magnitudeSquared = sumXSquared.Then(PradOp.AddOp, sumYSquared.Result);
+            var resultMagnitude = magnitudeSquared.Then(PradOp.SquareRootOp)
+                                                  .Then(PradOp.MulOp, opWeights.SeedResult.Result);
+            var resultAngle = ssBranch.Atan2(sumXBranch.SeedResult.Result);
+
+            // Concatenate results
+            var res = resultMagnitude.PradOp.Add(resultAngle.Result);
+
+            res.Back(upstream);
+
+        }
+
+        [Fact]
         public void TestVNNElementwiseAddOperation()
         {
             Random rand = new Random(3);
@@ -1912,23 +1953,30 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var cosResult = angle1.Cos().Result;
             var sinResult = angle1Branch.Sin().Result;
 
-            var (x1, y1) = magnitude1.DoParallel(
-                mag => mag.Mul(cosResult),
-                mag => mag.Mul(sinResult)
-            );
+            var x1 = magnitude1.Mul(cosResult);
+            var y1 = magnitude1.Branch().Mul(sinResult);
+
+            //var (x1, y1) = magnitude1.DoParallel(
+            //    mag => mag.Mul(cosResult),
+            //    mag => mag.Mul(sinResult)
+            //);
 
             var angle2Branch = angle2.Branch();
 
             var cosResult1 = angle2.Cos().Result;
             var sinResult1 = angle2Branch.Sin().Result;
 
-            var (x2, y2) = magnitude2.DoParallel(
-                mag => mag.Mul(cosResult1),
-                mag => mag.Mul(sinResult1)
-            );
+            var x2 = magnitude2.Mul(cosResult1);
+            var y2 = magnitude2.Mul(sinResult1);
+
+            //var (x2, y2) = magnitude2.DoParallel(
+            //    mag => mag.Mul(cosResult1),
+            //    mag => mag.Mul(sinResult1)
+            //);
 
             // Sum components
-            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumXsum = x1.Then(PradOp.AddOp, x2.Result);
+            var sumX = sumXsum.PradOp.Exp();
             var sumY = y1.Then(PradOp.AddOp, y2.Result);
 
             var sumXBranch = sumX.Branch();

@@ -73,6 +73,11 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                     var wMagnitude = this.input2[i, j];
                     var wAngle = this.input2[i, j + (this.input2.Cols / 2)];
 
+                    var cAngle = Math.Cos(angle);
+                    var sAngle = Math.Sin(angle);
+                    var cwAngle = Math.Cos(wAngle);
+                    var swAngle = Math.Sin(wAngle);
+
                     var x1 = magnitude * Math.Cos(angle);
                     var y1 = magnitude * Math.Sin(angle);
                     var x2 = wMagnitude * Math.Cos(wAngle);
@@ -98,8 +103,21 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                     var dResultMagnitude_dCombinedX = combinedX / combinedMagnitude * this.weights[i, j];
                     var dResultMagnitude_dCombinedY = combinedY / combinedMagnitude * this.weights[i, j];
 
-                    var dResultAngle_dCombinedX = -combinedY / ((combinedX * combinedX) + (combinedY * combinedY));
-                    var dResultAngle_dCombinedY = combinedX / ((combinedX * combinedX) + (combinedY * combinedY));
+                    var denominator = ((combinedX * combinedX) + (combinedY * combinedY));
+                    var dResultAngle_dCombinedX = -combinedY / denominator;
+                    var dResultAngle_dCombinedY = combinedX / denominator;
+
+                    if (i == 0 && j == 0)
+                    {
+                        var a1 = dOutput[i, j] * dResultMagnitude_dCombinedX;
+                        var a2 = dOutput[i, j] * dResultMagnitude_dCombinedY;
+                        var a3 = dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedX;
+                        var a4 = dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedY;
+                        var upstream = dOutput[i, j + (this.input1.Cols / 2)];
+
+                        var combined1 = a1 + a3;
+                        var combined2 = a2 + a4;
+                    }
 
                     dInput1[i, j] = (dOutput[i, j] * dResultMagnitude_dCombinedX * dCombinedX_dMagnitude) +
                                     (dOutput[i, j] * dResultMagnitude_dCombinedY * dCombinedY_dMagnitude) +
@@ -122,9 +140,6 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                                                             (dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedY * dCombinedY_dWAngle);
 
                     var dResultMagnitude_dWeights = Math.Sqrt((combinedX * combinedX) + (combinedY * combinedY));
-                    if (i == 2 && j == 2)
-                    {
-                    }
 
                     dWeights[i, j] = dOutput[i, j] * dResultMagnitude_dWeights;
                 }

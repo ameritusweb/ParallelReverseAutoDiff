@@ -352,6 +352,16 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Gets or sets important branches.
+        /// </summary>
+        public List<PradOp> ImportantBranches { get; set; } = new List<PradOp>();
+
+        /// <summary>
+        /// Gets or sets deferred results.
+        /// </summary>
+        public Dictionary<PradOp, Tensor> DeferredResults { get; set; } = new Dictionary<PradOp, Tensor>();
+
+        /// <summary>
         /// Gets an operation to get a func.
         /// </summary>
         internal static PradOp FuncOp => funcOp;
@@ -2205,11 +2215,34 @@ namespace ParallelReverseAutoDiff.PRAD
             // Reverse iterate over backpropagation steps to accumulate gradients
             foreach (var (step, result) in this.backpropagationSteps.AsEnumerable().Reverse())
             {
+                Tensor? currentHere = currentUpstream.DeepClone();
+                Tensor? branchAdded = null;
+
                 // First, backpropagate through all branches
-                foreach (var branch in result.Branches.Where(x => x.UpstreamGradient != null))
+                foreach (var branch in result.Branches)
                 {
-                    var branchGradient = branch.Back();
-                    currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                    if (this.DeferredResults.ContainsKey(branch))
+                    {
+                        currentUpstream = currentUpstream.ElementwiseAdd(this.DeferredResults[branch]);
+                    }
+                    else if (branch.UpstreamGradient != null)
+                    {
+                        var branchGradient = branch.Back();
+                        branchAdded = branchGradient.DeepClone();
+                        currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                    }
+                    else if (this.ImportantBranches.Any())
+                    {
+                        var importantBranch = this.ImportantBranches.First();
+                        var deferredResult = importantBranch.Back();
+                        this.DeferredResults.Add(importantBranch, deferredResult);
+                        if (branch.UpstreamGradient != null)
+                        {
+                            var branchGradient = branch.Back();
+                            branchAdded = branchGradient.DeepClone();
+                            currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                        }
+                    }
                 }
 
                 // Then, backpropagate through all split branches
@@ -2240,6 +2273,10 @@ namespace ParallelReverseAutoDiff.PRAD
                         if (!ops[i]!.IsDependentBranch)
                         {
                             ops[i]?.Back();
+                        }
+                        else
+                        {
+                            result.PradOp.ImportantBranches.Add(ops[i]!);
                         }
                     }
                 });
