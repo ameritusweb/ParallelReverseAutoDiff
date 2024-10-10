@@ -1975,8 +1975,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             //);
 
             // Sum components
-            var sumXsum = x1.Then(PradOp.AddOp, x2.Result);
-            var sumX = sumXsum.PradOp.Exp();
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
             var sumY = y1.Then(PradOp.AddOp, y2.Result);
 
             var sumXBranch = sumX.Branch();

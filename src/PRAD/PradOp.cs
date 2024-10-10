@@ -336,6 +336,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public Guid Id => this.id;
 
         /// <summary>
+        /// Gets or sets the linked branches.
+        /// </summary>
+        public List<PradOp> LinkedBranches { get; set; } = new List<PradOp>();
+
+        /// <summary>
         /// Gets the result of the computation.
         /// </summary>
         public Tensor? Result
@@ -1867,6 +1872,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(Atan2Op))]
         public PradResult Atan2(Tensor tensor)
         {
+            if (tensor is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var result = this.currentTensor.ElementwiseAtan2(tensor);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
 
@@ -2206,10 +2216,30 @@ namespace ParallelReverseAutoDiff.PRAD
             foreach (var (step, result) in this.backpropagationSteps.AsEnumerable().Reverse())
             {
                 // First, backpropagate through all branches
-                foreach (var branch in result.Branches.Where(x => x.UpstreamGradient != null))
+                foreach (var branch in result.Branches)
                 {
-                    var branchGradient = branch.Back();
-                    currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                    if (branch.UpstreamGradient == null)
+                    {
+                        var branchResult = branch.LinkedBranches.FirstOrDefault();
+                        if (branchResult != null)
+                        {
+                            branchResult.Back();
+                        }
+                    }
+
+                    if (branch.UpstreamGradient == null)
+                    {
+                    }
+
+                    if (branch.UpstreamGradient == null)
+                    {
+                        var branchGradient = branch.Back();
+                        currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                    }
+                    else
+                    {
+                        currentUpstream = currentUpstream.ElementwiseAdd(branch.UpstreamGradient);
+                    }
                 }
 
                 // Then, backpropagate through all split branches
