@@ -68,6 +68,106 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             {
                 for (int j = 0; j < this.input1.Cols / 2; j++)
                 {
+                    var magnitude = this.input1[i, j];  // magnitude of angle1
+                    var angle = this.input1[i, j + (this.input1.Cols / 2)];
+                    var wMagnitude = this.input2[i, j];  // magnitude of wAngle
+                    var wAngle = this.input2[i, j + (this.input2.Cols / 2)];
+
+                    var cAngle = Math.Cos(angle);
+                    var sAngle = Math.Sin(angle);
+                    var cwAngle = Math.Cos(wAngle);
+                    var swAngle = Math.Sin(wAngle);
+
+                    var x1 = magnitude * Math.Cos(angle);
+                    var y1 = magnitude * Math.Sin(angle);
+                    var x2 = wMagnitude * Math.Cos(wAngle);
+                    var y2 = wMagnitude * Math.Sin(wAngle);
+
+                    var combinedX = x1 + x2;
+                    var combinedY = y1 + y2;
+
+                    // Compute derivatives of combinedX and combinedY w.r.t. magnitudes and angles
+                    var dCombinedX_dMagnitude = Math.Cos(angle);
+                    var dCombinedX_dAngle = -magnitude * Math.Sin(angle);
+                    var dCombinedX_dWMagnitude = Math.Cos(wAngle);
+                    var dCombinedX_dWAngle = -wMagnitude * Math.Sin(wAngle);
+
+                    var dCombinedY_dMagnitude = Math.Sin(angle);
+                    var dCombinedY_dAngle = magnitude * Math.Cos(angle);
+                    var dCombinedY_dWMagnitude = Math.Sin(wAngle);
+                    var dCombinedY_dWAngle = wMagnitude * Math.Cos(wAngle);
+
+                    var combinedMagnitude = Math.Sqrt((combinedX * combinedX) + (combinedY * combinedY));
+                    double resultMagnitude = combinedMagnitude * this.weights[i, j];
+                    double resultAngle = Math.Atan2(combinedY, combinedX);
+
+                    var dResultMagnitude_dCombinedX = combinedX / combinedMagnitude * this.weights[i, j];
+                    var dResultMagnitude_dCombinedY = combinedY / combinedMagnitude * this.weights[i, j];
+
+                    var denominator = ((combinedX * combinedX) + (combinedY * combinedY));
+                    var dResultAngle_dCombinedX = -combinedY / denominator;
+                    var dResultAngle_dCombinedY = combinedX / denominator;
+
+                    // Changes: Handle separate upstream gradients for both sin and cos branches
+                    // This ensures four distinct gradients:
+                    // Two for angle and two for wAngle (one for magnitude, one for angle)
+                    var upstreamGradientMagnitudeX = dOutput[i, j] * dResultMagnitude_dCombinedX;
+                    var upstreamGradientMagnitudeY = dOutput[i, j] * dResultMagnitude_dCombinedY;
+                    var upstreamGradientAngleX = dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedX;
+                    var upstreamGradientAngleY = dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedY;
+
+                    // Compute gradients for input1 (magnitude and angle)
+                    // Instead of combining them into two, we handle four upstream gradients separately.
+                    dInput1[i, j] = (upstreamGradientMagnitudeX * dCombinedX_dMagnitude) +
+                                    (upstreamGradientMagnitudeY * dCombinedY_dMagnitude) +
+                                    (upstreamGradientAngleX * dCombinedX_dMagnitude) +
+                                    (upstreamGradientAngleY * dCombinedY_dMagnitude);
+
+                    if (i == 0 && j == 0)
+                    {
+                        var combined = upstreamGradientMagnitudeX + upstreamGradientAngleX; // -2.652
+                        var combined2 = upstreamGradientMagnitudeY + upstreamGradientAngleY; // -1.538
+                    }
+
+                    dInput1[i, j + (this.input1.Cols / 2)] = (upstreamGradientMagnitudeX * dCombinedX_dAngle) +
+                                                            (upstreamGradientMagnitudeY * dCombinedY_dAngle) +
+                                                            (upstreamGradientAngleX * dCombinedX_dAngle) +
+                                                            (upstreamGradientAngleY * dCombinedY_dAngle);
+
+                    // Compute gradients for input2 (wMagnitude and wAngle)
+                    dInput2[i, j] = (upstreamGradientMagnitudeX * dCombinedX_dWMagnitude) +
+                                    (upstreamGradientMagnitudeY * dCombinedY_dWMagnitude) +
+                                    (upstreamGradientAngleX * dCombinedX_dWMagnitude) +
+                                    (upstreamGradientAngleY * dCombinedY_dWMagnitude);
+
+                    dInput2[i, j + (this.input2.Cols / 2)] = (upstreamGradientMagnitudeX * dCombinedX_dWAngle) +
+                                                            (upstreamGradientMagnitudeY * dCombinedY_dWAngle) +
+                                                            (upstreamGradientAngleX * dCombinedX_dWAngle) +
+                                                            (upstreamGradientAngleY * dCombinedY_dWAngle);
+
+                    // Gradient for the weights
+                    var dResultMagnitude_dWeights = combinedMagnitude;
+                    dWeights[i, j] = dOutput[i, j] * dResultMagnitude_dWeights;
+                }
+            });
+
+            return new BackwardResultBuilder()
+                .AddInputGradient(dInput1)
+                .AddInputGradient(dInput2)
+                .AddInputGradient(dWeights)
+                .Build();
+        }
+
+        public BackwardResult Backward2(Matrix dOutput)
+        {
+            Matrix dInput1 = new Matrix(this.input1.Rows, this.input1.Cols);
+            Matrix dInput2 = new Matrix(this.input2.Rows, this.input2.Cols);
+            Matrix dWeights = new Matrix(this.weights.Rows, this.weights.Cols);
+
+            Parallel.For(0, this.input1.Rows, i =>
+            {
+                for (int j = 0; j < this.input1.Cols / 2; j++)
+                {
                     var magnitude = this.input1[i, j];
                     var angle = this.input1[i, j + (this.input1.Cols / 2)];
                     var wMagnitude = this.input2[i, j];
@@ -106,18 +206,6 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                     var denominator = ((combinedX * combinedX) + (combinedY * combinedY));
                     var dResultAngle_dCombinedX = -combinedY / denominator;
                     var dResultAngle_dCombinedY = combinedX / denominator;
-
-                    if (i == 0 && j == 0)
-                    {
-                        var a1 = dOutput[i, j] * dResultMagnitude_dCombinedX;
-                        var a2 = dOutput[i, j] * dResultMagnitude_dCombinedY;
-                        var a3 = dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedX;
-                        var a4 = dOutput[i, j + (this.input1.Cols / 2)] * dResultAngle_dCombinedY;
-                        var upstream = dOutput[i, j + (this.input1.Cols / 2)];
-
-                        var combined1 = a1 + a3;
-                        var combined2 = a2 + a4;
-                    }
 
                     dInput1[i, j] = (dOutput[i, j] * dResultMagnitude_dCombinedX * dCombinedX_dMagnitude) +
                                     (dOutput[i, j] * dResultMagnitude_dCombinedY * dCombinedY_dMagnitude) +

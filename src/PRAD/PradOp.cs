@@ -396,7 +396,13 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The other prad op.</returns>
         public PradOp Branch()
         {
+            if (!this.backpropagationSteps.Any())
+            {
+                this.NoOp();
+            }
+
             var branchedOp = new PradOp(this.currentTensor);
+
             if (this.backpropagationSteps.Any())
             {
                 branchedOp.parentResult = this.backpropagationSteps.Last().result;
@@ -607,6 +613,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(AddOp))]
         public PradResult Add(Tensor tensor)
         {
+            if (tensor is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var result = this.currentTensor.ElementwiseAdd(tensor);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
 
@@ -783,6 +794,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(MulOp))]
         public PradResult Mul(Tensor tensor)
         {
+            if (tensor is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var result = this.currentTensor.ElementwiseMultiply(tensor);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
 
@@ -1463,6 +1479,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             var branches = newOp.SplitBranchFromResults(this, results);
             var splitOps = new PradOp[] { newOp }.Concat(branches).ToArray();
+
             this.splitOps = splitOps;
 
             this.gradientStackCounter = 0;
@@ -2220,6 +2237,8 @@ namespace ParallelReverseAutoDiff.PRAD
             // Reverse iterate over backpropagation steps to accumulate gradients
             foreach (var (step, result) in this.backpropagationSteps.AsEnumerable().Reverse())
             {
+                var isDependentBranch = result.PradOp.IsDependentBranch;
+
                 // First, backpropagate through all branches
                 foreach (var branch in result.Branches)
                 {
@@ -2228,12 +2247,29 @@ namespace ParallelReverseAutoDiff.PRAD
                         var branchResult = branch.LinkedBranches.FirstOrDefault();
                         if (branchResult != null)
                         {
-                            branchResult.Back();
+                            if (branchResult.UpstreamGradient != null)
+                            {
+                                branchResult.Back();
+                            }
+                            else if (branchResult.LinkedBranches.Any())
+                            {
+                                var linkedBranchResult = branchResult.LinkedBranches.First();
+                                if (linkedBranchResult.UpstreamGradient != null)
+                                {
+                                    linkedBranchResult.Back();
+                                }
+
+                                if (branchResult.UpstreamGradient != null)
+                                {
+                                    branchResult.Back();
+                                }
+                            }
                         }
                     }
 
                     if (branch.UpstreamGradient == null)
                     {
+                        throw new Exception("Computation graph failed to propagate gradient flow.");
                     }
 
                     if (branch.IsFinished)
