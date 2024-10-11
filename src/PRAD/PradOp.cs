@@ -306,6 +306,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public Tensor UpstreamGradient { get; private set; }
 
         /// <summary>
+        /// Gets a value indicating whether or not the branch is finished.
+        /// </summary>
+        public bool IsFinished { get; private set; }
+
+        /// <summary>
         /// Gets the seed gradient.
         /// </summary>
         public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.initialResult.Gradients[0].ReplaceData(value.Data); }
@@ -2231,14 +2236,14 @@ namespace ParallelReverseAutoDiff.PRAD
                     {
                     }
 
-                    if (branch.UpstreamGradient == null)
+                    if (branch.IsFinished)
                     {
-                        var branchGradient = branch.Back();
-                        currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                        currentUpstream = currentUpstream.ElementwiseAdd(branch.SeedGradient);
                     }
                     else
                     {
-                        currentUpstream = currentUpstream.ElementwiseAdd(branch.UpstreamGradient);
+                        var branchGradient = branch.Back();
+                        currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
                     }
                 }
 
@@ -2311,6 +2316,7 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             this.SeedGradient = currentUpstream;
+            this.IsFinished = true;
             return currentUpstream;
         }
 

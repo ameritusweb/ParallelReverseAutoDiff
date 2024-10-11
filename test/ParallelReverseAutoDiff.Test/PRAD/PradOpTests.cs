@@ -1948,26 +1948,28 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             // Compute vector components
 
+            var magnitude1Branch = magnitude1.Branch();
             var angle1Branch = angle1.Branch();
 
             var cosResult = angle1.Cos().Result;
             var sinResult = angle1Branch.Sin().Result;
 
             var x1 = magnitude1.Mul(cosResult);
-            var y1 = magnitude1.Branch().Mul(sinResult);
+            var y1 = magnitude1Branch.Mul(sinResult);
 
             //var (x1, y1) = magnitude1.DoParallel(
             //    mag => mag.Mul(cosResult),
             //    mag => mag.Mul(sinResult)
             //);
 
+            var magnitude2Branch = magnitude2.Branch();
             var angle2Branch = angle2.Branch();
 
             var cosResult1 = angle2.Cos().Result;
             var sinResult1 = angle2Branch.Sin().Result;
 
             var x2 = magnitude2.Mul(cosResult1);
-            var y2 = magnitude2.Mul(sinResult1);
+            var y2 = magnitude2Branch.Mul(sinResult1);
 
             //var (x2, y2) = magnitude2.DoParallel(
             //    mag => mag.Mul(cosResult1),
