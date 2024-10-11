@@ -134,13 +134,13 @@ namespace ParallelReverseAutoDiff.RMAD
                     double accum3 = passD * gradExpSin;
 
                     // 1. Accumulation of gradient w.r.t the numerator
-                    gradient[i, j] = upstreamGrad * gradNumerator * gradExpSin;
+                    gradient[i, j] = PradTools.Cast(upstreamGrad * gradNumerator * gradExpSin);
 
                     // 2. Accumulation of gradient w.r.t the summation term of the denominator
-                    gradient[i, j] += upstreamGrad * gradDenominator * gradExpSin;
+                    gradient[i, j] += PradTools.Cast(upstreamGrad * gradDenominator * gradExpSin);
 
                     // 3. Accumulation of gradient w.r.t the current element's contribution to the denominator
-                    gradient[i, j] += upstreamGrad * gradDenominator * gradExpSin;
+                    gradient[i, j] += PradTools.Cast(upstreamGrad * gradDenominator * gradExpSin);
                 }
             }
 

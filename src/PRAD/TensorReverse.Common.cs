@@ -182,7 +182,7 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             // Initialize the input gradient with the shape of the original tensor
-            var inputGradient = new double[originalShape.Aggregate(1, (a, b) => a * b)];
+            var inputGradient = PradTools.AllocateArray(originalShape.Aggregate(1, (a, b) => a * b));
 
             // Rearrange upstream gradient to match the original shape
             Parallel.For(0, inputGradient.Length, originalFlatIndex =>
@@ -325,7 +325,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var initial = this.InitialTensors[0];
 
             // Step 1: Create a new tensor with the same shape as the original input
-            var gradientTensor = new Tensor(initial.Shape, new double[initial.Data.Length]);
+            var gradientTensor = new Tensor(initial.Shape, PradTools.AllocateArray(initial.Data.Length));
 
             // Step 2: Broadcast the upstream gradient to the shape of the original input
             int[] broadcastDims = Enumerable.Range(0, initial.Shape.Length)
@@ -547,7 +547,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 int totalElementsToCopy = tensorShape.Aggregate(1, (a, b) => a * b);  // Total elements for the tensor
 
                 // Create storage for the gradient data for this tensor
-                double[] gradData = new double[totalElementsToCopy];
+                var gradData = PradTools.AllocateArray(totalElementsToCopy);
 
                 // Calculate the number of elements per slice (all dimensions except the concatenation axis)
                 int elementsPerSlice = this.GetElementsPerSlice(upstreamGradient.Shape, axis);
@@ -600,7 +600,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int rank = upstreamShape.Length;
 
             // Create the gradient data array to hold the extracted slice
-            double[] gradData = new double[gradShape.Aggregate(1, (a, b) => a * b)];
+            var gradData = PradTools.AllocateArray(gradShape.Aggregate(1, (a, b) => a * b));
             int stride = this.GetStride(upstreamShape, axis); // Calculate stride along the axis
 
             // Multi-dimensional extraction across the tensor
@@ -630,46 +630,6 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             // Calculate the stride for the given axis by multiplying the sizes of all subsequent dimensions
             return shape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
-        }
-
-        /// <summary>
-        /// Slices a tensor along a specific axis.
-        /// </summary>
-        /// <param name="upstreamGradient">The upstream gradient tensor.</param>
-        /// <param name="offset">The starting offset in the upstream gradient.</param>
-        /// <param name="sliceLength">The length of the slice along the specified axis.</param>
-        /// <param name="gradShape">The shape of the resulting gradient tensor.</param>
-        /// <param name="axis">The axis along which to slice.</param>
-        /// <returns>A new tensor with the sliced data.</returns>
-        public Tensor SliceAlongAxis(Tensor upstreamGradient, int offset, int sliceLength, int[] gradShape, int axis)
-        {
-            double[] gradData = new double[gradShape.Aggregate(1, (a, b) => a * b)];
-            int stride = this.GetStride(upstreamGradient.Shape, axis);
-            int subTensorSize = gradShape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
-
-            // Slice along the specified axis
-            int dataIndex = 0;
-            for (int i = 0; i < sliceLength; i++)
-            {
-                for (int j = 0; j < subTensorSize; j++)
-                {
-                    int sourceIndex = offset + (i * stride) + j;
-                    gradData[dataIndex++] = upstreamGradient.Data[sourceIndex];
-                }
-            }
-
-            return new Tensor(gradShape, gradData);
-        }
-
-        /// <summary>
-        /// Calculates the size of the data that corresponds to one "slice" along a given axis.
-        /// </summary>
-        /// <param name="shape">The shape of the tensor.</param>
-        /// <param name="axis">The axis along which the slicing is performed.</param>
-        /// <returns>The size of one slice of the tensor.</returns>
-        public int GetSliceSize(int[] shape, int axis)
-        {
-            return shape[axis] * shape.Skip(axis + 1).Aggregate(1, (a, b) => a * b);
         }
 
         /// <summary>
@@ -714,31 +674,6 @@ namespace ParallelReverseAutoDiff.PRAD
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Slices a tensor along a given axis and returns a new tensor.
-        /// </summary>
-        /// <param name="upstreamGradient">The upstream gradient tensor to slice.</param>
-        /// <param name="offset">The starting offset in the upstream gradient data.</param>
-        /// <param name="gradShape">The shape of the sliced gradient tensor.</param>
-        /// <param name="axis">The axis along which to slice.</param>
-        /// <returns>A new tensor representing the sliced gradient.</returns>
-        public Tensor SliceTensor(Tensor upstreamGradient, int offset, int[] gradShape, int axis)
-        {
-            double[] gradData = new double[gradShape.Aggregate(1, (a, b) => a * b)];
-
-            // Calculate the size of a "sub-tensor" (everything except the axis dimension)
-            int subTensorSize = this.GetSubTensorSize(upstreamGradient.Shape, axis);
-            int stepSize = subTensorSize * gradShape[axis];
-
-            // Slice along the given axis, copying rows/chunks of the tensor
-            for (int i = 0; i < gradShape[axis]; i++)
-            {
-                Array.Copy(upstreamGradient.Data, offset + (i * subTensorSize), gradData, i * subTensorSize, subTensorSize);
-            }
-
-            return new Tensor(gradShape, gradData);
         }
 
         /// <summary>
