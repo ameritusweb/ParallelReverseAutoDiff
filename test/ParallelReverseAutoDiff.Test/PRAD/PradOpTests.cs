@@ -2086,8 +2086,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         {
             Random rand = new Random(3);
 
-            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)i).ToArray());
-            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i * 2)).ToArray());
+            var input1 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)(i + 1)).ToArray());
+            var input2 = new Tensor(new int[] { 3, 6 }, Enumerable.Range(0, 18).Select(i => (double)((i + 1) * 2)).ToArray());
             var weights = new Tensor(new int[] { 3, 3 }, Enumerable.Range(0, 9).Select(i => (i % 10) + rand.NextDouble()).ToArray());
 
             ElementwiseVectorConstituentMultiplyOperation op = new ElementwiseVectorConstituentMultiplyOperation();
