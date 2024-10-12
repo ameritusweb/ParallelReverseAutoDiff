@@ -306,6 +306,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public Tensor UpstreamGradient { get; private set; }
 
         /// <summary>
+        /// Gets a value indicating whether or not the branch has started.
+        /// </summary>
+        public bool IsStarted { get; private set; }
+
+        /// <summary>
         /// Gets a value indicating whether or not the branch is finished.
         /// </summary>
         public bool IsFinished { get; private set; }
@@ -346,6 +351,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public List<PradOp> LinkedBranches { get; set; } = new List<PradOp>();
 
         /// <summary>
+        /// Gets or sets the visited branches.
+        /// </summary>
+        public List<PradOp> VisitedBranches { get; set; } = new List<PradOp>();
+
+        /// <summary>
         /// Gets the result of the computation.
         /// </summary>
         public Tensor? Result
@@ -376,6 +386,12 @@ namespace ParallelReverseAutoDiff.PRAD
             if (!gradient.Shape.SequenceEqual(this.currentTensor.Shape))
             {
                 throw new ArgumentException("Upstream gradient shape must match the current tensor shape.");
+            }
+
+            if (this.UpstreamGradient != null)
+            {
+                this.UpstreamGradient = this.UpstreamGradient.ElementwiseAdd(gradient);
+                return;
             }
 
             this.UpstreamGradient = gradient;
@@ -688,6 +704,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(SubFromOp))]
         public PradResult SubFrom(Tensor tensor)
         {
+            if (tensor is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var result = tensor.ElementwiseSub(this.currentTensor);
             var tensorReverse = new TensorReverse(new Tensor[] { tensor, new Tensor(this.currentTensor) });
 
@@ -2071,6 +2092,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(ConcatOp))]
         public PradResult Concat(Tensor[] tensors, int axis = 0)
         {
+            if (tensors[0] is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var combinedTensors = new Tensor[tensors.Length + 1];
             combinedTensors[0] = this.currentTensor;
             Array.Copy(tensors, 0, combinedTensors, 1, tensors.Length);
@@ -2214,6 +2240,12 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new InvalidOperationException("UpstreamGradient must be set before calling Back().");
             }
 
+            if (this.IsStarted)
+            {
+                Console.WriteLine("Backpropagation has already been started for this branch.");
+                return this.UpstreamGradient;
+            }
+
             if (this.IsDependentBranch)
             {
                 var attribute = (ConditionallyInternalUseOnlyAttribute)Attribute.GetCustomAttribute(
@@ -2234,10 +2266,13 @@ namespace ParallelReverseAutoDiff.PRAD
             // }
             Tensor currentUpstream = this.UpstreamGradient;
 
+            this.IsStarted = true;
+
             // Reverse iterate over backpropagation steps to accumulate gradients
             foreach (var (step, result) in this.backpropagationSteps.AsEnumerable().Reverse())
             {
                 var isDependentBranch = result.PradOp.IsDependentBranch;
+                var linkedBranches = result.PradOp.LinkedBranches;
 
                 // First, backpropagate through all branches
                 foreach (var branch in result.Branches)
@@ -2269,7 +2304,25 @@ namespace ParallelReverseAutoDiff.PRAD
 
                     if (branch.UpstreamGradient == null)
                     {
-                        throw new Exception("Computation graph failed to propagate gradient flow.");
+                        var lBranches = linkedBranches.Where(f => !f.IsStarted && !f.IsFinished && f.UpstreamGradient != null);
+                        foreach (var lBranch in lBranches)
+                        {
+                            lBranch.Back();
+                        }
+
+                        foreach (var lBranch in linkedBranches)
+                        {
+                            while (lBranch.VisitedBranches.Any(f => !f.IsStarted && !f.IsFinished))
+                            {
+                                var lB = lBranch.VisitedBranches.FirstOrDefault(f => !f.IsStarted && !f.IsFinished);
+                                lB.Back();
+                            }
+                        }
+
+                        if (branch.UpstreamGradient == null)
+                        {
+                            throw new Exception("Computation graph failed to propagate gradient flow. Press create a GitHub issue.");
+                        }
                     }
 
                     if (branch.IsFinished)
@@ -2311,6 +2364,10 @@ namespace ParallelReverseAutoDiff.PRAD
                         if (!ops[i]!.IsDependentBranch)
                         {
                             ops[i]?.Back();
+                        }
+                        else if (!this.VisitedBranches.Contains(ops[i]!))
+                        {
+                            this.VisitedBranches.Add(ops[i]!);
                         }
                     }
                 });
