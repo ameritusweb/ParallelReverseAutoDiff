@@ -12,6 +12,11 @@ namespace ParallelReverseAutoDiff.PRAD
     public interface IOptimizer
     {
         /// <summary>
+        /// Gets a value indicating whether the optimizer is initialized.
+        /// </summary>
+        bool IsInitialized { get; }
+
+        /// <summary>
         /// Initializes the momentum.
         /// </summary>
         /// <param name="parameter">The parameter.</param>

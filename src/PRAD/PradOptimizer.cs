@@ -24,6 +24,19 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Creates an Adam optimizer with momentum.
+        /// </summary>
+        /// <param name="learningRate">The learning rate.</param>
+        /// <param name="beta1">The first beta.</param>
+        /// <param name="beta2">The second beta.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns>The optimizer.</returns>
+        public static IOptimizer CreateAdamOptimizerWithMomentum(double learningRate = 0.001, double beta1 = 0.9, double beta2 = 0.999, double epsilon = 1e-8)
+        {
+            return new MomentumAdamOptimizer(learningRate, beta1, beta2, epsilon);
+        }
+
+        /// <summary>
         /// Creates an RMSProp Optimizer.
         /// </summary>
         /// <param name="learningRate">The learning rate.</param>

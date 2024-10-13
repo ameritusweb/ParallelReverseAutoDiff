@@ -1049,10 +1049,22 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestMultipleBack()
         {
-            var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
             var weights1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
             var weights2 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
-            var upstream = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+
+            var random = new Random(3);
+
+            for (int i = 0; i < 5; ++i)
+            {
+                var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) * random.NextDouble() / 100d).ToArray());
+                var predicted = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) * random.NextDouble() / 100d).ToArray());
+                this.RunOnce(ref input1, ref weights1, ref weights2, ref predicted);
+            }
+        }
+
+        public void RunOnce(ref Tensor input1, ref Tensor weights1, ref Tensor weights2, ref Tensor predicted)
+        {
+            var defaultLearningRate = 0.001d;
 
             PradOp input1Op = new PradOp(input1);
             PradOp weights1Op = new PradOp(weights1);
@@ -1065,7 +1077,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 .PradOp.Atan2(weights1Op.BranchInitialTensor)
                 .PradOp.Atan2(weights2Op.BranchInitialTensor);
 
+            (var lossTensor, var upstream) = res.Result.MeanSquaredError(predicted);
+
             res.Back(upstream);
+
+            weights1Op.Optimize(PradOptimizer.CreateAdamOptimizer(learningRate: defaultLearningRate));
+            weights2Op.Optimize(PradOptimizer.CreateRMSPropOptimizer(learningRate: 0.0001d));
         }
 
         [Fact]

@@ -13,7 +13,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using ILGPU.IR.Types;
+    using ILGPU.IR.Values;
     using MKLNET;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -2035,6 +2035,84 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Step 5: Reshape the result back to [3, 3, 6] (original shape)
             return resultTensor.Reshape(new int[] { (this.Shape[^1] / 2), this.Shape[1], this.Shape[^2] * 2 });
+        }
+
+        /// <summary>
+        /// Computes the Mean Squared Error (MSE) between two tensors, with an option to treat the first dimension as a batch dimension.
+        /// </summary>
+        /// <param name="yPred">The tensor of predicted values.</param>
+        /// <param name="hasBatchDimension">If true, treats the first dimension as the batch dimension and computes MSE per batch. If false, computes MSE over the entire tensor.</param>
+        /// <returns>A tensor containing the MSE for each batch if hasBatchDimension is true, otherwise a scalar tensor with the overall MSE.</returns>
+        /// <exception cref="ArgumentException">Thrown if the shapes of the input tensors do not match.</exception>
+        public (Tensor, Tensor) MeanSquaredError(Tensor yPred, bool hasBatchDimension = false)
+        {
+            Tensor yTrue = this;
+
+            // Ensure the shapes of the two tensors are the same
+            if (!yTrue.Shape.SequenceEqual(yPred.Shape))
+            {
+                throw new ArgumentException("The tensors must have the same shape for Mean Squared Error calculation.");
+            }
+
+            if (hasBatchDimension && yTrue.Shape.Length > 1)
+            {
+                // Treat the first dimension as the batch dimension
+                int batchSize = yTrue.Shape[0];
+                int[] reducedShape = yTrue.Shape.Skip(1).ToArray(); // Shape for individual batches
+
+                // Preallocate a tensor to store the MSE for each batch
+                var mseBatch = PradTools.AllocateArray(batchSize);
+
+                // Compute MSE for each batch independently
+                for (int batch = 0; batch < batchSize; batch++)
+                {
+                    // Slice out each batch for both yTrue and yPred
+                    Tensor yTrueBatch = yTrue.Slice(new int[] { batch, 0 }, reducedShape);
+                    Tensor yPredBatch = yPred.Slice(new int[] { batch, 0 }, reducedShape);
+
+                    // Step 1: Compute the element-wise difference (yTrue - yPred)
+                    var difference = yTrueBatch.ElementwiseSub(yPredBatch);
+
+                    // Step 2: Square the differences
+                    var squaredDifference = difference.ElementwiseSquare();
+
+                    // Step 3: Sum the squared differences and divide by the number of elements
+                    var totalSquaredSum = squaredDifference.Data.Sum();
+                    int numElements = squaredDifference.Data.Length;
+
+                    // Step 4: Store the MSE for the current batch
+                    mseBatch[batch] = totalSquaredSum / numElements;
+                }
+
+                var tensorReverse = new TensorReverse(new Tensor[] { yTrue, yPred });
+                var upstream = tensorReverse.MeanSquaredErrorReverse(hasBatchDimension);
+
+                // Step 5: Return a tensor containing the MSE for each batch
+                return (new Tensor(new int[] { batchSize }, mseBatch), upstream);
+            }
+            else
+            {
+                // No batch dimension; compute MSE over the entire tensor
+                // Step 1: Compute the element-wise difference (yTrue - yPred)
+                var difference = yTrue.ElementwiseSub(yPred);
+
+                // Step 2: Square the differences
+                var squaredDifference = difference.ElementwiseSquare();
+
+                // Step 3: Sum the squared differences and divide by the number of elements
+                var totalSquaredSum = squaredDifference.Data.Sum();
+                int numElements = squaredDifference.Data.Length;
+
+                // Step 4: Return the MSE as a scalar tensor
+                var mseValue = totalSquaredSum / numElements;
+                var dataArray = PradTools.AllocateArray(1);
+                dataArray[0] = mseValue;
+
+                var tensorReverse = new TensorReverse(new Tensor[] { yTrue, yPred });
+                var upstream = tensorReverse.MeanSquaredErrorReverse(hasBatchDimension);
+
+                return (new Tensor(new int[] { 1 }, dataArray), upstream);
+            }
         }
 
         /// <summary>

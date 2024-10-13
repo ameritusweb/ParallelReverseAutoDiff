@@ -37,13 +37,17 @@
     <Compile Include="..\..\..\src\Interprocess\DataSet.cs" Link="Interprocess\DataSet.cs" />
     <Compile Include="..\..\..\src\Interprocess\DataSetItem.cs" Link="Interprocess\DataSetItem.cs" />
     <Compile Include="..\..\..\src\Interprocess\PseudoUniqueIDGenerator.cs" Link="Interprocess\PseudoUniqueIDGenerator.cs" />
+	<Compile Include="..\..\..\src\PRAD\AdamOptimizer.cs" Link="PRAD\AdamOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\BranchStack.cs" Link="PRAD\BranchStack.cs" />
     <Compile Include="..\..\..\src\PRAD\ConditionallyInternalUseOnlyAttribute.cs" Link="PRAD\ConditionallyInternalUseOnlyAttribute.cs" />
 	<Compile Include="..\..\..\src\PRAD\GradientRecorder.cs" Link="PRAD\GradientRecorder.cs" />
     <Compile Include="..\..\..\src\PRAD\IListExtensions.cs" Link="PRAD\IListExtensions.cs" />
+	<Compile Include="..\..\..\src\PRAD\IOptimizer.cs" Link="PRAD\IOptimizer.cs" />
+	<Compile Include="..\..\..\src\PRAD\MomentumAdamOptimizer.cs" Link="PRAD\MomentumAdamOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\PradOp.LossOps.cs" Link="PRAD\PradOp.LossOps.cs" />
     <Compile Include="..\..\..\src\PRAD\PradMath.cs" Link="PRAD\PradMath.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOp.cs" Link="PRAD\PradOp.cs" />
+	<Compile Include="..\..\..\src\PRAD\PradOptimizer.cs" Link="PRAD\PradOptimizer.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOperationAttribute.cs" Link="PRAD\PradOperationAttribute.cs" />
 	<Compile Include="..\..\..\src\PRAD\PradOperationBase.cs" Link="PRAD\PradOperationBase.cs" />
 	<Compile Include="..\..\..\src\PRAD\PradDeepOperationBase.cs" Link="PRAD\PradDeepOperationBase.cs" />
@@ -54,6 +58,7 @@
     <Compile Include="..\..\..\src\PRAD\PradResultExtensions.cs" Link="PRAD\PradResultExtensions.cs" />
     <Compile Include="..\..\..\src\PRAD\PradSplitResult.cs" Link="PRAD\PradSplitResult.cs" />
     <Compile Include="..\..\..\src\PRAD\PradTensor.cs" Link="PRAD\PradTensor.cs" />
+	<Compile Include="..\..\..\src\PRAD\RMSPropOptimizer.cs" Link="PRAD\RMSPropOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\TensorReverse.Common.cs" Link="PRAD\TensorReverse.Common.cs" />
 	<Compile Include="..\..\..\src\PRAD\Tensor.Common.cs" Link="PRAD\Tensor.Common.cs" />
     <Compile Include="..\..\..\src\RMAD\AmplifiedSigmoidOperation.cs" Link="RMAD\AmplifiedSigmoidOperation.cs" />

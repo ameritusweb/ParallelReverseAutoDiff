@@ -9,6 +9,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
     using MKLNET;
@@ -1192,6 +1193,74 @@ namespace ParallelReverseAutoDiff.PRAD
             Blas.scal(PradTools.NegativeOne, gradA.Data);
 
             return gradA;
+        }
+
+        /// <summary>
+        /// Computes the gradient (reverse mode differentiation) of the Mean Squared Error (MSE) with respect to yTrue.
+        /// </summary>
+        /// <param name="hasBatchDimension">If true, treats the first dimension as the batch dimension and computes gradients per batch.</param>
+        /// <returns>A tensor containing the gradient of the MSE with respect to yTrue.</returns>
+        /// <exception cref="ArgumentException">Thrown if the shapes of the input tensors do not match.</exception>
+        public Tensor MeanSquaredErrorReverse(bool hasBatchDimension = false)
+        {
+            Tensor yTrue = this.InitialTensors[0];
+            Tensor yPred = this.InitialTensors[1];
+
+            // Ensure the shapes of the two tensors are the same
+            if (!yTrue.Shape.SequenceEqual(yPred.Shape))
+            {
+                throw new ArgumentException("The tensors must have the same shape for Mean Squared Error gradient calculation.");
+            }
+
+            if (hasBatchDimension && yTrue.Shape.Length > 1)
+            {
+                // Treat the first dimension as the batch dimension
+                int batchSize = yTrue.Shape[0];
+                int[] reducedShape = yTrue.Shape.Skip(1).ToArray();  // Shape for individual batches
+                int numElementsPerBatch = reducedShape.Aggregate(1, (a, b) => a * b);  // Total elements in each batch
+
+                // Preallocate a tensor to store the gradient for each batch
+                var gradientData = PradTools.AllocateArray(yTrue.Data.Length);
+
+                // Compute gradients for each batch independently
+                for (int batch = 0; batch < batchSize; batch++)
+                {
+                    // Slice out each batch for both yTrue and yPred
+                    Tensor yTrueBatch = yTrue.Slice(new int[] { batch, 0 }, reducedShape);
+                    Tensor yPredBatch = yPred.Slice(new int[] { batch, 0 }, reducedShape);
+
+                    // Step 1: Compute the element-wise difference (yTrue - yPred)
+                    var difference = yTrueBatch.ElementwiseSub(yPredBatch);
+
+                    // Step 2: Compute the gradient for each batch (2/n * (yTrue - yPred))
+                    // The gradient of MSE with respect to yTrue is: 2/n * (yTrue - yPred)
+                    var scaleFactor = PradTools.Two / numElementsPerBatch;
+                    var scaledTensor = new Tensor(difference.Shape, scaleFactor);
+                    var gradientBatch = difference.ElementwiseMultiply(scaledTensor);
+
+                    // Step 3: Store the gradient data for the current batch
+                    Array.Copy(gradientBatch.Data, 0, gradientData, batch * numElementsPerBatch, numElementsPerBatch);
+                }
+
+                // Step 4: Return the gradient as a tensor
+                return new Tensor(yTrue.Shape, gradientData);
+            }
+            else
+            {
+                // No batch dimension; compute gradient over the entire tensor
+                int numElements = yTrue.Data.Length;
+
+                // Step 1: Compute the element-wise difference (yTrue - yPred)
+                var difference = yTrue.ElementwiseSub(yPred);
+
+                // Step 2: Compute the gradient for the entire tensor (2/n * (yTrue - yPred))
+                var scaleFactor = PradTools.Two / numElements;
+                var scaledTensor = new Tensor(difference.Shape, scaleFactor);
+                var gradient = difference.ElementwiseMultiply(scaledTensor);
+
+                // Step 3: Return the gradient as a tensor
+                return gradient;
+            }
         }
 
         /// <summary>

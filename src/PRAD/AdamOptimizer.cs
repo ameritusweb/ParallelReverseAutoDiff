@@ -55,14 +55,20 @@ namespace ParallelReverseAutoDiff.PRAD
         public double Epsilon { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether is initialized.
+        /// </summary>
+        public bool IsInitialized { get; set; }
+
+        /// <summary>
         /// Initialize the optimizer's moment vectors.
         /// </summary>
         /// <param name="parameter">The tensor parameter representing the weights.</param>
         public void Initialize(Tensor parameter)
         {
             // Initialize moment vectors to zeros, matching the shape of the parameter (weights)
-            this.m = new Tensor(parameter.Shape, 0.0);
-            this.v = new Tensor(parameter.Shape, 0.0);
+            this.m = new Tensor(parameter.Shape, PradTools.Zero);
+            this.v = new Tensor(parameter.Shape, PradTools.Zero);
+            this.IsInitialized = true;
         }
 
         /// <summary>
@@ -75,22 +81,22 @@ namespace ParallelReverseAutoDiff.PRAD
             this.t++;  // Increment timestep
 
             // Compute the biased first moment estimate (m = beta1 * m + (1 - beta1) * gradient)
-            this.m = this.m.ElementwiseMultiply(new Tensor(this.m.Shape, this.Beta1))
-                          .ElementwiseAdd(gradient.ElementwiseMultiply(new Tensor(gradient.Shape, PradTools.One - this.Beta1)));
+            this.m = this.m.ElementwiseMultiply(new Tensor(this.m.Shape, PradTools.Cast(this.Beta1)))
+                          .ElementwiseAdd(gradient.ElementwiseMultiply(new Tensor(gradient.Shape, PradTools.One - PradTools.Cast(this.Beta1))));
 
             // Compute the biased second moment estimate (v = beta2 * v + (1 - beta2) * gradient^2)
-            this.v = this.v.ElementwiseMultiply(new Tensor(this.v.Shape, this.Beta2))
-                          .ElementwiseAdd(gradient.ElementwiseSquare().ElementwiseMultiply(new Tensor(gradient.Shape, PradTools.One - this.Beta2)));
+            this.v = this.v.ElementwiseMultiply(new Tensor(this.v.Shape, PradTools.Cast(this.Beta2)))
+                          .ElementwiseAdd(gradient.ElementwiseSquare().ElementwiseMultiply(new Tensor(gradient.Shape, PradTools.One - PradTools.Cast(this.Beta2))));
 
             // Bias correction for the first moment (mHat = m / (1 - beta1^t))
-            var mHat = this.m.ElementwiseDivide(new Tensor(this.m.Shape, PradTools.One - Math.Pow(this.Beta1, this.t)));
+            var mHat = this.m.ElementwiseDivide(new Tensor(this.m.Shape, PradTools.One - PradMath.Pow(PradTools.Cast(this.Beta1), this.t)));
 
             // Bias correction for the second moment (vHat = v / (1 - beta2^t))
-            var vHat = this.v.ElementwiseDivide(new Tensor(this.v.Shape, PradTools.One - Math.Pow(this.Beta2, this.t)));
+            var vHat = this.v.ElementwiseDivide(new Tensor(this.v.Shape, PradTools.One - PradMath.Pow(PradTools.Cast(this.Beta2), this.t)));
 
             // Update the weights (weights -= learningRate * mHat / (sqrt(vHat) + epsilon))
-            var weightUpdate = mHat.ElementwiseMultiply(new Tensor(mHat.Shape, this.LearningRate))
-                                   .ElementwiseDivide(vHat.ElementwiseSquareRoot().ElementwiseAdd(new Tensor(vHat.Shape, this.Epsilon)));
+            var weightUpdate = mHat.ElementwiseMultiply(new Tensor(mHat.Shape, PradTools.Cast(this.LearningRate)))
+                                   .ElementwiseDivide(vHat.ElementwiseSquareRoot().ElementwiseAdd(new Tensor(vHat.Shape, PradTools.Cast(this.Epsilon))));
 
             // Replace the data in the original weights tensor with the updated values
             weights.ReplaceData(weights.ElementwiseSub(weightUpdate).Data);

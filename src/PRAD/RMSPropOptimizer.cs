@@ -6,6 +6,8 @@
 
 namespace ParallelReverseAutoDiff.PRAD
 {
+    using ParallelReverseAutoDiff.RMAD;
+
     /// <summary>
     /// Optimizes weight updates.
     /// </summary>
@@ -42,12 +44,18 @@ namespace ParallelReverseAutoDiff.PRAD
         public double Epsilon { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether is initialized.
+        /// </summary>
+        public bool IsInitialized { get; set; }
+
+        /// <summary>
         /// Initializes the optimizer.
         /// </summary>
         /// <param name="parameter">The tensor parameter.</param>
         public void Initialize(Tensor parameter)
         {
-            this.s = new Tensor(parameter.Shape, 0.0);  // Initialize running average to zeros
+            this.s = new Tensor(parameter.Shape, PradTools.Zero);  // Initialize running average to zeros
+            this.IsInitialized = true;
         }
 
         /// <summary>
@@ -58,11 +66,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public void UpdateWeights(Tensor weights, Tensor gradient)
         {
             // Update running average of squared gradients
-            this.s = this.s.ElementwiseMultiply(new Tensor(this.s.Shape, this.Beta)).ElementwiseAdd(gradient.ElementwiseSquare().ElementwiseMultiply(new Tensor(gradient.Shape, 1 - this.Beta)));
+            this.s = this.s.ElementwiseMultiply(new Tensor(this.s.Shape, PradTools.Cast(this.Beta))).ElementwiseAdd(gradient.ElementwiseSquare().ElementwiseMultiply(new Tensor(gradient.Shape, PradTools.One - PradTools.Cast(this.Beta))));
 
             // Update weights using RMSProp's update rule
-            weights.ReplaceData(weights.ElementwiseSub(gradient.ElementwiseMultiply(new Tensor(gradient.Shape, this.LearningRate))
-                .ElementwiseDivide(this.s.ElementwiseSquareRoot().ElementwiseAdd(new Tensor(this.s.Shape, this.Epsilon)))).Data);
+            weights.ReplaceData(weights.ElementwiseSub(gradient.ElementwiseMultiply(new Tensor(gradient.Shape, PradTools.Cast(this.LearningRate)))
+                .ElementwiseDivide(this.s.ElementwiseSquareRoot().ElementwiseAdd(new Tensor(this.s.Shape, PradTools.Cast(this.Epsilon))))).Data);
         }
     }
 }
