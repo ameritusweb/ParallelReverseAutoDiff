@@ -35,12 +35,14 @@ namespace ParallelReverseAutoDiff.PRAD
         private int gradientStackCounter; // Counter to track the number of gradients received
         private Tensor[] splitGradients; // Array to store gradients from each split
         private PradOpBranchTracker branchTracker;
+        private IOptimizer? optimizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
         /// </summary>
         /// <param name="seed">The seed tensor.</param>
-        public PradOp(Tensor seed)
+        /// <param name="optimizer">The optimizer.</param>
+        public PradOp(Tensor seed, IOptimizer? optimizer = null)
         {
             this.id = Guid.NewGuid();
             this.seed = seed;
@@ -51,6 +53,14 @@ namespace ParallelReverseAutoDiff.PRAD
             this.operations = new Dictionary<Delegate, Delegate>();
             this.branchTracker = new PradOpBranchTracker();
             this.InitializeOperations();
+
+            this.optimizer = optimizer;
+
+            // Initialize the optimizer with the seed tensor (weights) if provided
+            if (this.optimizer != null)
+            {
+                this.optimizer.Initialize(seed);
+            }
         }
 
         /// <summary>
@@ -2448,6 +2458,13 @@ namespace ParallelReverseAutoDiff.PRAD
 
             this.SeedGradient = currentUpstream;
             this.IsFinished = true;
+
+            // If an optimizer exists, use it to update the seed weights
+            if (this.optimizer != null)
+            {
+                this.optimizer.UpdateWeights(this.seed, this.SeedGradient);
+            }
+
             return currentUpstream;
         }
 
