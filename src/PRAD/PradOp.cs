@@ -2266,6 +2266,12 @@ namespace ParallelReverseAutoDiff.PRAD
 
             if (this.IsStarted)
             {
+                if (this.backpropagationSteps.Count == 0)
+                {
+                    this.SeedGradient = this.UpstreamGradient;
+                    return this.UpstreamGradient;
+                }
+
                 Console.WriteLine("Backpropagation has already been started for this branch.");
                 return this.UpstreamGradient;
             }

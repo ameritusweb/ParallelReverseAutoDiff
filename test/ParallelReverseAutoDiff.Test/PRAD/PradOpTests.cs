@@ -1047,6 +1047,28 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestMultipleBack()
+        {
+            var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+            var weights1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+            var weights2 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+            var upstream = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+
+            PradOp input1Op = new PradOp(input1);
+            PradOp weights1Op = new PradOp(weights1);
+            PradOp weights2Op = new PradOp(weights2);
+
+            var res = input1Op.Cos()
+                .PradOp.Sin()
+                .PradOp.Square().PradOp.Mul(weights1Op.BranchInitialTensor)
+                .PradOp.Square().PradOp.Mul(weights2Op.BranchInitialTensor)
+                .PradOp.Atan2(weights1Op.BranchInitialTensor)
+                .PradOp.Atan2(weights2Op.BranchInitialTensor);
+
+            res.Back(upstream);
+        }
+
+        [Fact]
         public void TestSineSoftmax()
         {
             var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
