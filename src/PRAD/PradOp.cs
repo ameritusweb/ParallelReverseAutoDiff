@@ -2371,8 +2371,15 @@ namespace ParallelReverseAutoDiff.PRAD
                 List<Tensor> branchGradients = new List<Tensor>();
                 foreach (var branch in result.SplitBranches.Where(x => x.UpstreamGradient != null))
                 {
-                    var branchGradient = branch.Back();
-                    branchGradients.Add(branchGradient);
+                    if (branch.IsFinished)
+                    {
+                        branchGradients.Add(branch.SeedGradient);
+                    }
+                    else
+                    {
+                        var branchGradient = branch.Back();
+                        branchGradients.Add(branchGradient);
+                    }
                 }
 
                 var (gradients, ops) = step(currentUpstream);

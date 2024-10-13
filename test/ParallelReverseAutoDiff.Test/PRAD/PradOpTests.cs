@@ -1129,8 +1129,8 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         {
             Random rand = new Random(3);
 
-            var input1 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => i / 100d).ToArray());
-            var input2 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => (i * 2) / 100d).ToArray());
+            var input1 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => (i+1) / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 3, 20 }, Enumerable.Range(0, 60).Select(i => ((i+1) * 2) / 100d).ToArray());
             var weights = new Tensor(new int[] { 3, 2 }, Enumerable.Range(0, 6).Select(i => PradMath.Pow(rand.NextDouble(), 2d)).ToArray());
 
             ElementwiseVectorDecompositionOperation op = new ElementwiseVectorDecompositionOperation();
@@ -1211,10 +1211,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             //        w_magnitude_pivot = input2[:, :, :half_cols][:, :, ::5]
             //        w_angle_pivot = input2[:, :, half_cols:][:, :, ::5]
 
-            var (w_magnitude_pivot, w_angle_pivot) = opInput2Branch.DoParallel(
-                x => x.Indexer(":", $":{half_cols}").PradOp.Indexer(":", $"::5"),
-                y => y.Indexer(":", $"{half_cols}:").PradOp.Indexer(":", $"::5")
+            var (w_magnitude_pivot_a, w_angle_pivot_a) = opInput2Branch.DoParallel(
+                x => x.Indexer(":", $":{half_cols}"),
+                y => y.Indexer(":", $"{half_cols}:")
             );
+
+            var w_magnitude_pivot = w_magnitude_pivot_a.PradOp.Indexer(":", $"::5");
+            var w_angle_pivot = w_angle_pivot_a.PradOp.Indexer(":", $"::5");
+
             var w_magnitude_pivotBranch = w_magnitude_pivot.Branch();
             var w_angle_pivotBranch = w_angle_pivot.Branch();
 
@@ -1313,7 +1317,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 axis: 0);
 
             // Perform the subtraction
-            var diffX = sumXConcatenated.Then(PradOp.SubOp, x_wReshaped.Result);
+            var diffX = x_wReshaped.PradOp.SubFrom(sumXConcatenated.Result);
 
 
             // # Vectorized difference calculation
