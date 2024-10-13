@@ -192,7 +192,7 @@ namespace ParallelReverseAutoDiff.PRAD
             Array.Copy(shape, outputShape, rank);
             outputShape[axis] = concatDimSize;
 
-            var outputData = new double[outputShape.Aggregate(1, (a, b) => a * b)];
+            var outputData = PradTools.AllocateArray(outputShape.Aggregate(1, (a, b) => a * b));
             var outputTensor = new Tensor(outputShape, outputData);
 
             // Calculate slice size and number of slices
