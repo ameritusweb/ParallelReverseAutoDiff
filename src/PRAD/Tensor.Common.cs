@@ -112,6 +112,119 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Concatenates a list of tensors along a specified axis, based on a custom ordering of the tensors.
+        /// If the ordering is null, the tensors will be concatenated in their original order.
+        /// </summary>
+        /// <param name="tensors">The list of tensors to concatenate.</param>
+        /// <param name="axis">The axis along which to concatenate the tensors. Defaults to 0.</param>
+        /// <param name="ordering">An optional array representing the ordering of the tensors by index. If null, no reordering is done.</param>
+        /// <returns>A new concatenated tensor.</returns>
+        /// <exception cref="ArgumentException">Thrown if tensors list is null, fewer than two tensors, invalid axis, or incompatible tensor shapes.</exception>
+        public static Tensor Concat(Tensor[] tensors, int axis = 0, int[]? ordering = null)
+        {
+            if (tensors == null || tensors.Length < 2)
+            {
+                throw new ArgumentException("The input list of tensors must contain at least two tensors.");
+            }
+
+            var shape = tensors[0].Shape;
+            int rank = shape.Length;
+
+            // Handle negative axis
+            if (axis < 0)
+            {
+                axis = rank + axis;
+            }
+
+            // Validate axis bounds
+            if (axis < 0 || axis >= rank)
+            {
+                throw new ArgumentException("Axis value is out of bounds.");
+            }
+
+            // Reorder tensors based on the provided ordering, or use the original tensors if ordering is null
+            Tensor[] tensorsToConcat;
+            if (ordering != null)
+            {
+                if (ordering.Length != tensors.Length)
+                {
+                    throw new ArgumentException("The ordering array must be the same length as the tensors array.");
+                }
+
+                tensorsToConcat = new Tensor[tensors.Length];
+                for (int i = 0; i < ordering.Length; i++)
+                {
+                    if (ordering[i] < 0 || ordering[i] >= tensors.Length)
+                    {
+                        throw new ArgumentException("Invalid ordering index.");
+                    }
+
+                    tensorsToConcat[i] = tensors[ordering[i]];
+                }
+            }
+            else
+            {
+                tensorsToConcat = tensors;
+            }
+
+            // Validate tensor ranks and calculate the total size along the concatenation axis
+            int concatDimSize = 0;
+            foreach (var tensor in tensorsToConcat)
+            {
+                if (tensor.Shape.Length != rank)
+                {
+                    throw new ArgumentException("All input tensors must have the same rank.");
+                }
+
+                for (int i = 0; i < rank; i++)
+                {
+                    if (i != axis && tensor.Shape[i] != shape[i])
+                    {
+                        throw new ArgumentException("All input tensors must have the same shape except along the concatenation axis.");
+                    }
+                }
+
+                concatDimSize += tensor.Shape[axis];
+            }
+
+            // Determine the output tensor shape
+            var outputShape = new int[rank];
+            Array.Copy(shape, outputShape, rank);
+            outputShape[axis] = concatDimSize;
+
+            var outputData = new double[outputShape.Aggregate(1, (a, b) => a * b)];
+            var outputTensor = new Tensor(outputShape, outputData);
+
+            // Calculate slice size and number of slices
+            int sliceSize = 1;
+            for (int i = axis + 1; i < rank; i++)
+            {
+                sliceSize *= shape[i];
+            }
+
+            int numSlices = 1;
+            for (int i = 0; i < axis; i++)
+            {
+                numSlices *= shape[i];
+            }
+
+            // Concatenate the tensors (in original order or reordered based on `ordering`)
+            int outputOffset = 0;
+            for (int slice = 0; slice < numSlices; slice++)
+            {
+                foreach (var tensor in tensorsToConcat)
+                {
+                    int tensorSliceSize = sliceSize * tensor.Shape[axis];
+                    int inputOffset = slice * tensorSliceSize;
+                    Buffer.BlockCopy(tensor.Data, inputOffset * PradTools.SizeOf, outputData, outputOffset * PradTools.SizeOf, tensorSliceSize * PradTools.SizeOf);
+                    outputOffset += tensorSliceSize;
+                }
+            }
+
+            return outputTensor;
+        }
+
+        /// <summary>
         /// Fills a tensor with normally distributed random numbers using the Box-Muller transform.
         /// </summary>
         /// <param name="shape">The shape of the resulting tensor.</param>

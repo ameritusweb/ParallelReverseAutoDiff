@@ -34,6 +34,7 @@ namespace ParallelReverseAutoDiff.PRAD
         private int splitIndex; // Index of this PradOp in the split
         private int gradientStackCounter; // Counter to track the number of gradients received
         private Tensor[] splitGradients; // Array to store gradients from each split
+        private PradOpBranchTracker branchTracker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -48,6 +49,7 @@ namespace ParallelReverseAutoDiff.PRAD
             this.initialResult = new PradResult(this, seed, new Tensor[] { this.seedGradient });
             this.backpropagationSteps = new List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)>();
             this.operations = new Dictionary<Delegate, Delegate>();
+            this.branchTracker = new PradOpBranchTracker();
             this.InitializeOperations();
         }
 
@@ -248,7 +250,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Gets the concat op.
         /// </summary>
-        public static Func<Tensor[], int, PradResult> ConcatOp => FuncOp.Concat;
+        public static Func<Tensor[], int, int[], PradResult> ConcatOp => FuncOp.Concat;
 
         /// <summary>
         /// Gets the indexer op.
@@ -351,11 +353,6 @@ namespace ParallelReverseAutoDiff.PRAD
         public List<PradOp> LinkedBranches { get; set; } = new List<PradOp>();
 
         /// <summary>
-        /// Gets or sets the visited branches.
-        /// </summary>
-        public List<PradOp> VisitedBranches { get; set; } = new List<PradOp>();
-
-        /// <summary>
         /// Gets the result of the computation.
         /// </summary>
         public Tensor? Result
@@ -375,6 +372,15 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets an operation to get a func.
         /// </summary>
         internal static PradOp FuncOp => funcOp;
+
+        /// <summary>
+        /// Sets the branch tracker.
+        /// </summary>
+        /// <param name="branchTracker">The branch tracker.</param>
+        public void SetBranchTracker(PradOpBranchTracker branchTracker)
+        {
+            this.branchTracker = branchTracker;
+        }
 
         /// <summary>
         /// Sets the upstream gradient.
@@ -418,6 +424,7 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             var branchedOp = new PradOp(this.currentTensor);
+            branchedOp.SetBranchTracker(this.branchTracker);
 
             if (this.backpropagationSteps.Any())
             {
@@ -2088,26 +2095,32 @@ namespace ParallelReverseAutoDiff.PRAD
         /// </summary>
         /// <param name="tensors">The tensors to concatenate.</param>
         /// <param name="axis">The axis along which to concatenate.</param>
+        /// <param name="reordering">The order of concatenation.</param>
         /// <returns>The concatenated tensor along with the gradient placeholders.</returns>
         [PradOperation(nameof(ConcatOp))]
-        public PradResult Concat(Tensor[] tensors, int axis = 0)
+        public PradResult Concat(Tensor[] tensors, int axis = 0, int[]? reordering = null)
         {
             if (tensors[0] is PradTensor pradTensor)
             {
                 pradTensor.PradOp.LinkedBranches.Add(this);
             }
 
+            if (reordering != null && reordering.Length == 0)
+            {
+                reordering = null;
+            }
+
             var combinedTensors = new Tensor[tensors.Length + 1];
             combinedTensors[0] = this.currentTensor;
             Array.Copy(tensors, 0, combinedTensors, 1, tensors.Length);
 
-            var result = Tensor.Concat(combinedTensors, axis);
+            var result = Tensor.Concat(combinedTensors, axis, reordering);
             var tensorReverse = new TensorReverse(combinedTensors);
 
             var grads = combinedTensors.Select(t => new Tensor(t.Shape)).ToArray();
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradients = tensorReverse.ConcatReverse(upstreamGrad, axis);
+                var gradients = tensorReverse.ConcatReverse(upstreamGrad, axis, reordering);
                 PradOp?[] ops = new PradOp?[combinedTensors.Length];
                 for (int i = 0; i < grads.Length; i++)
                 {
@@ -2189,6 +2202,7 @@ namespace ParallelReverseAutoDiff.PRAD
             for (int i = 1; i < operations.Length; i++)
             {
                 pradOps[i] = new PradOp(this.currentTensor);
+                pradOps[i].SetBranchTracker(this.branchTracker);
             }
 
             var results = new PradResult[operations.Length];
@@ -2310,13 +2324,30 @@ namespace ParallelReverseAutoDiff.PRAD
                             lBranch.Back();
                         }
 
-                        foreach (var lBranch in linkedBranches)
+                        if (branch.UpstreamGradient == null)
                         {
-                            while (lBranch.VisitedBranches.Any(f => !f.IsStarted && !f.IsFinished))
+                            this.branchTracker.RunBranchesFor(branch);
+                        }
+
+                        if (branch.UpstreamGradient == null)
+                        {
+                            foreach (var lBranch in linkedBranches.Concat(branch.LinkedBranches))
                             {
-                                var lB = lBranch.VisitedBranches.FirstOrDefault(f => !f.IsStarted && !f.IsFinished);
-                                lB.Back();
+                                if (!lBranch.IsStarted && !lBranch.IsFinished && lBranch.UpstreamGradient != null)
+                                {
+                                    lBranch.Back();
+                                }
+
+                                if (lBranch.branchTracker != this.branchTracker)
+                                {
+                                    lBranch.branchTracker.RunBranchesFor(branch);
+                                }
                             }
+                        }
+
+                        if (branch.UpstreamGradient == null)
+                        {
+                            this.branchTracker.RunBranchesFor(branch);
                         }
 
                         if (branch.UpstreamGradient == null)
@@ -2365,9 +2396,9 @@ namespace ParallelReverseAutoDiff.PRAD
                         {
                             ops[i]?.Back();
                         }
-                        else if (!this.VisitedBranches.Contains(ops[i]!))
+                        else if (!this.branchTracker.VisitedBranches.Contains(ops[i]!))
                         {
-                            this.VisitedBranches.Add(ops[i]!);
+                            this.branchTracker.VisitedBranches.Add(ops[i]!);
                         }
                     }
                 });

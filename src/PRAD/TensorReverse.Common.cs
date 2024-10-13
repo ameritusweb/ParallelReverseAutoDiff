@@ -523,14 +523,45 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Computes the reverse gradient for concatenation along any axis.
+        /// Computes the reverse gradient for concatenation along any axis, taking into account a custom ordering of tensors.
+        /// If the ordering is null, the tensors will be processed in their original order.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
         /// <param name="axis">The axis along which the concatenation was performed.</param>
+        /// <param name="ordering">An optional array representing the custom ordering of the tensors. If null, no reordering is done.</param>
         /// <returns>An array of tensors representing the gradients for each input tensor.</returns>
-        public Tensor[] ConcatReverse(Tensor upstreamGradient, int axis)
+        /// <exception cref="ArgumentException">Thrown if tensor shapes are incompatible or ordering is invalid.</exception>
+        public Tensor[] ConcatReverse(Tensor upstreamGradient, int axis, int[]? ordering = null)
         {
             int numTensors = this.InitialTensors.Length;
+
+            Tensor[] tensorsToProcess;
+
+            if (ordering != null)
+            {
+                if (ordering.Length != numTensors)
+                {
+                    throw new ArgumentException("The ordering array must be the same length as the number of tensors.");
+                }
+
+                // Reorder tensors based on the provided ordering
+                tensorsToProcess = new Tensor[numTensors];
+                for (int i = 0; i < ordering.Length; i++)
+                {
+                    if (ordering[i] < 0 || ordering[i] >= numTensors)
+                    {
+                        throw new ArgumentException("Invalid ordering index.");
+                    }
+
+                    tensorsToProcess[i] = this.InitialTensors[ordering[i]];
+                }
+            }
+            else
+            {
+                // If no ordering is provided, use the tensors in their original order
+                tensorsToProcess = this.InitialTensors;
+            }
+
             Tensor[] gradients = new Tensor[numTensors];
 
             // Normalize axis and validate
@@ -539,10 +570,10 @@ namespace ParallelReverseAutoDiff.PRAD
 
             int offset = 0;
 
-            // Iterate over the tensors
+            // Iterate over the tensors (in the original or reordered order)
             for (int i = 0; i < numTensors; i++)
             {
-                int[] tensorShape = this.InitialTensors[i].Shape;
+                int[] tensorShape = tensorsToProcess[i].Shape;
                 int sliceSize = tensorShape[axis];  // The size of the slice along the concatenation axis
                 int totalElementsToCopy = tensorShape.Aggregate(1, (a, b) => a * b);  // Total elements for the tensor
 
@@ -568,6 +599,18 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 // Update the offset to move to the next tensor's slice
                 offset += sliceSize;
+            }
+
+            if (ordering != null)
+            {
+                // Second reordering: Map the gradients back to their original order
+                Tensor[] finalGradients = new Tensor[numTensors];
+                for (int i = 0; i < ordering.Length; i++)
+                {
+                    finalGradients[ordering[i]] = gradients[i];
+                }
+
+                return finalGradients;
             }
 
             return gradients;
@@ -1821,6 +1864,18 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor ExpandDimsReverse(Tensor upstreamGradient, int axis = -1)
         {
+            // Normalize the axis in case it's negative
+            if (axis < 0)
+            {
+                axis += upstreamGradient.Shape.Length;
+            }
+
+            // Ensure the axis is valid
+            if (axis < 0 || axis >= upstreamGradient.Shape.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(axis), "Axis is out of range.");
+            }
+
             // Remove the expanded dimension
             int[] newShape = new int[upstreamGradient.Shape.Length - 1];
             for (int i = 0; i < axis; i++)
