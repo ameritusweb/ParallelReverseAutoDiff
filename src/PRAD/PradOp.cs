@@ -2460,6 +2460,15 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Clips the gradients.
+        /// </summary>
+        /// <param name="clipper">The gradient clipper.</param>
+        public void ClipGradients(IClipper clipper)
+        {
+            clipper.ClipGradients(this.SeedGradient);
+        }
+
+        /// <summary>
         /// Optimize the weights with an optimizer.
         /// </summary>
         /// <param name="optimizer">The optimizer to use.</param>

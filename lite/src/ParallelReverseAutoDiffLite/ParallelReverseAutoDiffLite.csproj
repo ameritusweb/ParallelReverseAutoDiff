@@ -40,10 +40,13 @@
 	<Compile Include="..\..\..\src\PRAD\AdamOptimizer.cs" Link="PRAD\AdamOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\BranchStack.cs" Link="PRAD\BranchStack.cs" />
     <Compile Include="..\..\..\src\PRAD\ConditionallyInternalUseOnlyAttribute.cs" Link="PRAD\ConditionallyInternalUseOnlyAttribute.cs" />
+	<Compile Include="..\..\..\src\PRAD\GradientClipper.cs" Link="PRAD\GradientClipper.cs" />
 	<Compile Include="..\..\..\src\PRAD\GradientRecorder.cs" Link="PRAD\GradientRecorder.cs" />
+	<Compile Include="..\..\..\src\PRAD\IClipper.cs" Link="PRAD\IClipper.cs" />
     <Compile Include="..\..\..\src\PRAD\IListExtensions.cs" Link="PRAD\IListExtensions.cs" />
 	<Compile Include="..\..\..\src\PRAD\IOptimizer.cs" Link="PRAD\IOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\MomentumAdamOptimizer.cs" Link="PRAD\MomentumAdamOptimizer.cs" />
+	<Compile Include="..\..\..\src\PRAD\PradClipper.cs" Link="PRAD\PradClipper.cs" />
 	<Compile Include="..\..\..\src\PRAD\PradOp.LossOps.cs" Link="PRAD\PradOp.LossOps.cs" />
     <Compile Include="..\..\..\src\PRAD\PradMath.cs" Link="PRAD\PradMath.cs" />
     <Compile Include="..\..\..\src\PRAD\PradOp.cs" Link="PRAD\PradOp.cs" />

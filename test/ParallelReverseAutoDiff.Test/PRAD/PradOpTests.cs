@@ -1049,8 +1049,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestMultipleBack()
         {
+            var defaultLearningRate = 0.001d;
             var weights1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
             var weights2 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) / 100d).ToArray());
+            var clipper = PradClipper.CreateGradientClipper(clipValue: 4d);
+            var optimizer1 = PradOptimizer.CreateAdamOptimizer(learningRate: defaultLearningRate);
+            var optimizer2 = PradOptimizer.CreateRMSPropOptimizer(learningRate: 0.0001d);
 
             var random = new Random(3);
 
@@ -1058,14 +1062,12 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             {
                 var input1 = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) * random.NextDouble() / 100d).ToArray());
                 var predicted = new Tensor(new int[] { 6, 120 }, Enumerable.Range(0, 720).Select(i => (i + 1) * random.NextDouble() / 100d).ToArray());
-                this.RunOnce(ref input1, ref weights1, ref weights2, ref predicted);
+                this.RunBackAndOptimize(ref input1, ref weights1, ref weights2, ref predicted, ref clipper, ref optimizer1, ref optimizer2);
             }
         }
 
-        public void RunOnce(ref Tensor input1, ref Tensor weights1, ref Tensor weights2, ref Tensor predicted)
+        public void RunBackAndOptimize(ref Tensor input1, ref Tensor weights1, ref Tensor weights2, ref Tensor predicted, ref IClipper clipper, ref IOptimizer optimizer1, ref IOptimizer optimizer2)
         {
-            var defaultLearningRate = 0.001d;
-
             PradOp input1Op = new PradOp(input1);
             PradOp weights1Op = new PradOp(weights1);
             PradOp weights2Op = new PradOp(weights2);
@@ -1081,8 +1083,10 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             res.Back(upstream);
 
-            weights1Op.Optimize(PradOptimizer.CreateAdamOptimizer(learningRate: defaultLearningRate));
-            weights2Op.Optimize(PradOptimizer.CreateRMSPropOptimizer(learningRate: 0.0001d));
+            weights1Op.ClipGradients(clipper);
+            weights2Op.ClipGradients(clipper);
+            weights1Op.Optimize(optimizer1);
+            weights2Op.Optimize(optimizer2);
         }
 
         [Fact]
