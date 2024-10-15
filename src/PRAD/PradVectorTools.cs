@@ -25,7 +25,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="cols">THe cols.</param>
         /// <param name="target">The target.</param>
         /// <returns>The generated matrix.</returns>
-        public Vector2[][] GenerateVectorMatrix(Random rand, int rows, int cols, float target)
+        public Tensor GenerateVectorMatrix(Random rand, int rows, int cols, float target)
         {
             Vector2[][] matrix = new Vector2[rows][];
             for (int i = 0; i < rows; ++i)
@@ -39,7 +39,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
 
-            return matrix;
+            return matrix.ToInterleavedTensor();
         }
 
         /// <summary>

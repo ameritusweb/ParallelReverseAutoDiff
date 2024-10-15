@@ -36,5 +36,31 @@ namespace ParallelReverseAutoDiff.PRAD
             var c2 = v2.ToCartesian();
             return new Vector2(c1.X - c2.X, c1.Y - c2.Y);
         }
+
+        /// <summary>
+        /// Creates an interleaved tensor.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <returns>An interleaved tensor.</returns>
+        public static Tensor ToInterleavedTensor(this Vector2[][] matrix)
+        {
+            int rows = matrix.Length;
+            int cols = matrix[0].Length;
+            var output = new Tensor(new int[] { rows, cols * 2 });
+            double[] data = new double[rows * cols * 2];
+            int index = 0;
+            for (int i = 0; i < rows; ++i)
+            {
+                for (int j = 0; j < cols; ++j)
+                {
+                    data[index++] = matrix[i][j].X;
+                    data[cols + index++] = matrix[i][j].Y;
+                }
+
+                index += cols;
+            }
+
+            return new Tensor(new int[] { rows, cols * 2 }, data);
+        }
     }
 }
