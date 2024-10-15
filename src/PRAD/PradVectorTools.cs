@@ -9,6 +9,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -16,6 +17,46 @@ namespace ParallelReverseAutoDiff.PRAD
     /// </summary>
     public class PradVectorTools
     {
+        /// <summary>
+        /// Generates a vector matrix.
+        /// </summary>
+        /// <param name="rand">The random generator.</param>
+        /// <param name="rows">The rows.</param>
+        /// <param name="cols">THe cols.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>The generated matrix.</returns>
+        public Vector2[][] GenerateVectorMatrix(Random rand, int rows, int cols, float target)
+        {
+            Vector2[][] matrix = new Vector2[rows][];
+            for (int i = 0; i < rows; ++i)
+            {
+                matrix[i] = new Vector2[cols];
+                for (int j = 0; j < cols * 2; j += 2)
+                {
+                    var pair = this.GenerateVectorPair(rand, target);
+                    matrix[i][j] = pair.Item1;
+                    matrix[i][j + 1] = pair.Item2;
+                }
+            }
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// Generate a random vector pair toward target.
+        /// </summary>
+        /// <param name="rand">The random generator.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>The vector pair.</returns>
+        public (Vector2, Vector2) GenerateVectorPair(Random rand, float target)
+        {
+            var magnitude = (float)rand.NextDouble();
+            Vector2 initial = new Vector2(magnitude, (float)rand.NextDouble());
+            Vector2 targetVector = new Vector2(magnitude, target);
+            var other = targetVector.Sub(initial);
+            return (initial, other);
+        }
+
         /// <summary>
         /// Uses element-wise square on inputs or angles.
         /// </summary>
