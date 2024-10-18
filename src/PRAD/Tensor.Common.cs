@@ -13,7 +13,6 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using ILGPU.IR.Values;
     using MKLNET;
     using ParallelReverseAutoDiff.RMAD;
 
@@ -308,6 +307,148 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return slices;
+        }
+
+        /// <summary>
+        /// Initializes a tensor using the Xavier (Glorot) uniform initialization.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor to initialize.</param>
+        /// <returns>A tensor initialized with values drawn from the Xavier uniform distribution.</returns>
+        public static Tensor XavierUniform(int[] shape)
+        {
+            if (shape.Length < 2)
+            {
+                throw new ArgumentException("Xavier initialization requires at least two dimensions (e.g., for weights in a neural network layer).");
+            }
+
+            // Calculate fan_in and fan_out
+            int fanIn = shape[shape.Length - 2];
+            int fanOut = shape[shape.Length - 1];
+
+            // Xavier uniform range
+            var limit = Math.Sqrt(6.0 / (fanIn + fanOut));
+
+            // Create a tensor and fill it with values from a uniform distribution in the range [-limit, limit]
+            var result = new Tensor(shape);
+            int totalSize = result.Data.Length;
+
+            // Thread-safe random number generator
+            Parallel.For(0, totalSize, i =>
+            {
+                // Generate a uniform random value in [-1, 1]
+                var randomValue = (2.0 * RandomGen.Value.NextDouble()) - 1.0;
+
+                // Scale to the range [-limit, limit]
+                result.Data[i] = randomValue * limit;
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Initializes a tensor using the Xavier (Glorot) normal initialization.
+        /// </summary>
+        /// <param name="shape">The shape of the tensor to initialize.</param>
+        /// <returns>A tensor initialized with values drawn from the Xavier normal distribution.</returns>
+        public static Tensor XavierNormal(int[] shape)
+        {
+            if (shape.Length < 2)
+            {
+                throw new ArgumentException("Xavier initialization requires at least two dimensions (e.g., for weights in a neural network layer).");
+            }
+
+            // Calculate fan_in and fan_out
+            int fanIn = shape[shape.Length - 2];
+            int fanOut = shape[shape.Length - 1];
+
+            // Xavier normal standard deviation
+            double stddev = Math.Sqrt(2.0 / (fanIn + fanOut));
+
+            // Create a tensor and fill it with normally distributed values
+            var result = new Tensor(shape);
+
+            // Use Box-Muller transform to generate normally distributed values
+            int totalSize = result.Data.Length;
+            Parallel.For(0, totalSize / 2, i =>
+            {
+                // Generate two uniformly distributed random values u1 and u2
+                double u1 = RandomGen.Value.NextDouble();
+                double u2 = RandomGen.Value.NextDouble();
+
+                // Box-Muller transform to generate two independent standard normal values
+                double r = Math.Sqrt(-2.0 * Math.Log(u1));
+                double theta = 2.0 * Math.PI * u2;
+
+                double z0 = r * Math.Cos(theta);
+                double z1 = r * Math.Sin(theta);
+
+                // Apply Xavier scaling (stddev)
+                result.Data[2 * i] = z0 * stddev;
+                if ((2 * i) + 1 < totalSize)
+                {
+                    result.Data[(2 * i) + 1] = z1 * stddev;
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Adds noise to the tensor, with the noise mean equal to the mean of the tensor's distribution,
+        /// and the standard deviation scaled by the provided scale factor. The dropout parameter controls
+        /// the fraction of elements that will remain unchanged.
+        /// </summary>
+        /// <param name="tensor">The tensor to which noise will be applied.</param>
+        /// <param name="scale">The scale factor for the noise variance. A higher scale increases the variance of the added noise.</param>
+        /// <param name="dropoutProbability">The probability of dropping out noise for each element. 0 means no dropout, 1 means full dropout.</param>
+        /// <returns>A new tensor with added noise and dropout applied.</returns>
+        public static Tensor ApplyNoise(Tensor tensor, double scale, double dropoutProbability)
+        {
+            if (scale <= 0)
+            {
+                throw new ArgumentException("Scale must be a positive value.");
+            }
+
+            if (dropoutProbability < 0 || dropoutProbability > 1)
+            {
+                throw new ArgumentException("Dropout probability must be between 0 and 1.");
+            }
+
+            // Calculate the mean of the input tensor
+            double mean = tensor.Data.Average();
+
+            // Calculate the standard deviation of the input tensor
+            double variance = tensor.Data.Select(x => Math.Pow(x - mean, 2)).Sum() / tensor.Data.Length;
+            double stddev = Math.Sqrt(variance);
+
+            // Adjust the standard deviation by the scale factor
+            double scaledStddev = stddev * scale;
+
+            // Create a new tensor to hold the result
+            var result = new Tensor(tensor.Shape);
+
+            // Apply noise with dropout to each element
+            Parallel.For(0, tensor.Data.Length, i =>
+            {
+                // Generate a dropout decision
+                if (RandomGen.Value.NextDouble() > dropoutProbability)
+                {
+                    // Apply noise (Gaussian noise with mean = 0 and stddev = 1)
+                    var u1 = RandomGen.Value.NextDouble();
+                    var u2 = RandomGen.Value.NextDouble();
+                    var noise = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
+
+                    // Scale the noise and add it to the original tensor value
+                    result.Data[i] = tensor.Data[i] + (mean + (noise * scaledStddev));
+                }
+                else
+                {
+                    // No noise is applied (dropout), keep the original value
+                    result.Data[i] = tensor.Data[i];
+                }
+            });
+
+            return result;
         }
 
         /// <summary>
