@@ -1139,6 +1139,27 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestExtractPatches()
+        {
+            var magnitudes = new Tensor(new int[] { 1, 3, 3, 1 }, Enumerable.Range(0, 9).Select(i => (i + 1) / 100d).ToArray());
+            var opMagnitudes = new PradOp(magnitudes);
+
+            var angles = new Tensor(new int[] { 1, 3, 3, 1 }, Enumerable.Range(0, 9).Select(i => (i + 1) / 100d).ToArray());
+            var opAngles = new PradOp(angles);
+
+            var magnitudeFilter = new Tensor(new int[] { 1, 2, 2, 1 }, Enumerable.Range(0, 4).Select(i => (i + 1) / 100d).ToArray());
+            var opMagnitudeFilter = new PradOp(magnitudeFilter);
+
+            var angleFilter = new Tensor(new int[] { 1, 2, 2, 1 }, Enumerable.Range(0, 4).Select(i => (i + 1) / 100d).ToArray());
+            var opAngleFilter = new PradOp(angleFilter);
+
+            var magnitudePatches = opMagnitudes.ExtractPatches(new int[] { 2, 2 }, new int[] { 1, 1 }, "SAME"); // is now [1, 3, 3, 4]
+            var anglePatches = opAngles.ExtractPatches(new int[] { 2, 2 }, new int[] { 1, 1 }, "SAME"); // is now [1, 3, 3, 4]
+
+            // How do I arrive at a Tensor of [1, 2, 2, 1] where each element is the result of summing the dot product results
+        }
+
+        [Fact]
         public void TestVectorConvolution()
         {
             Random rand = new Random(3);

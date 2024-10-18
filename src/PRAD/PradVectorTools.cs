@@ -68,6 +68,25 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Converts from polar to Cartesian.
+        /// </summary>
+        /// <param name="magnitude">The magnitudes.</param>
+        /// <param name="angle">The angles.</param>
+        /// <returns>The Cartesian results.</returns>
+        public (PradResult, PradResult) PolarToCartesian(PradOp magnitude, PradOp angle)
+        {
+            var (cosAngle, sinAngle) = angle.DoParallel(
+                x => x.Cos(),
+                x => x.Sin());
+
+            var (x, y) = magnitude.DoParallel(
+                x => x.Mul(cosAngle.Result),
+                x => x.Mul(sinAngle.Result));
+
+            return (x, y);
+        }
+
+        /// <summary>
         /// Vectorize the input with the angles.
         /// </summary>
         /// <param name="input">The input prad op.</param>
@@ -744,6 +763,39 @@ namespace ParallelReverseAutoDiff.PRAD
             var cc = sumXTotal.PradOp.Concat(new[] { sumYTotal.Result }, axis: 1);
 
             return cc;
+        }
+
+        /// <summary>
+        /// Perform a custom 2-D vector convolution.
+        /// The magnitude dimensions should be [batch_size, rows, columns, 1]
+        /// The angle dimensions should be [batch_size, rows, columns, 1]
+        /// The filterMagnitude dimensions should be [1, 1, 1, 4]
+        /// The filterAngle dimensions should be [1, 1, 1, 4].
+        /// </summary>
+        /// <param name="magnitude">The magnitudes.</param>
+        /// <param name="angle">The angles.</param>
+        /// <param name="filterMagnitude">The filter magnitudes.</param>
+        /// <param name="filterAngle">The angle magnitudes.</param>
+        /// <returns>The result of the convolution.</returns>
+        public PradResult CustomVectorConvolution(PradOp magnitude, PradOp angle, PradOp filterMagnitude, PradOp filterAngle)
+        {
+            var (x, y) = this.PolarToCartesian(magnitude, angle);
+            var (filterX, filterY) = this.PolarToCartesian(filterMagnitude, filterAngle);
+
+            var xPatches = x.PradOp.ExtractPatches(new int[] { 2, 2 }, new int[] { 1, 1 }, "SAME");
+            var yPatches = y.PradOp.ExtractPatches(new int[] { 2, 2 }, new int[] { 1, 1 }, "SAME");
+
+            var tileMultiples = new int[] { xPatches.PradOp.CurrentShape[0], xPatches.PradOp.CurrentShape[1], xPatches.PradOp.CurrentShape[2], 1 };
+            var tiledFilterX = filterX.PradOp.Tile(tileMultiples);
+            var tiledFilterY = filterY.PradOp.Tile(tileMultiples);
+
+            var dotProductX = xPatches.PradOp.Mul(tiledFilterX.Result);
+            var dotProductY = yPatches.PradOp.Mul(tiledFilterY.Result);
+            var dotProduct = dotProductX.PradOp.Add(dotProductY.Result);
+
+            var summedResult = dotProduct.PradOp.Sum(new int[] { 3 });
+
+            return summedResult;
         }
 
         /// <summary>

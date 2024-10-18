@@ -333,6 +333,17 @@ namespace ParallelReverseAutoDiff.PRAD
         public Tensor BranchInitialTensor => this.SeedResult.Result;
 
         /// <summary>
+        /// Gets the tensor result of the computation if a computation occurred, or the initial seed tensor if a computation has not occurred.
+        /// </summary>
+        public Tensor CurrentTensor
+        {
+            get
+            {
+                return this.Result ?? this.BranchInitialTensor;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether this is a dependent branch. If so, Back should not be called.
         /// </summary>
         public bool IsDependentBranch => this.parentResult != null;
