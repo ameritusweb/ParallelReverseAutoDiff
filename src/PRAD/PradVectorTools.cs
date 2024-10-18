@@ -746,6 +746,89 @@ namespace ParallelReverseAutoDiff.PRAD
             return cc;
         }
 
+        /// <summary>
+        /// Calculate the squared arc length Euclidean loss.
+        /// </summary>
+        /// <param name="predictions">The Cartesian prediction.</param>
+        /// <param name="targetAngle">The target angle.</param>
+        /// <returns>The result of the loss function.</returns>
+        public PradResult SquaredArclengthEuclideanLoss(PradOp predictions, double targetAngle)
+        {
+            return predictions.CustomOperation(
+                operation: (inputTensor) =>
+                {
+                    var output = new Tensor(new[] { 1, 1 });
+                    double xOutput = inputTensor[0, 0];
+                    double yOutput = inputTensor[0, 1];
+
+                    double magnitude = Math.Sqrt((xOutput * xOutput) + (yOutput * yOutput));
+                    double actualAngle = Math.Atan2(yOutput, xOutput);
+
+                    double xTarget = Math.Cos(targetAngle) * magnitude;
+                    double yTarget = Math.Sin(targetAngle) * magnitude;
+
+                    double xTargetUnnormalized = Math.Cos(targetAngle);
+                    double yTargetUnnormalized = Math.Sin(targetAngle);
+
+                    double radius = magnitude;
+                    double dotProduct = (xOutput * xTarget) + (yOutput * yTarget);
+
+                    double normalizedDotProduct = dotProduct / (radius * radius);
+                    normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
+
+                    double theta = Math.Acos(normalizedDotProduct);
+
+                    double distanceXQuad = (0.75d * Math.Pow(xOutput, 2)) - (1.5d * xOutput * xTargetUnnormalized);
+                    double distanceYQuad = (0.75d * Math.Pow(yOutput, 2)) - (1.5d * yOutput * yTargetUnnormalized);
+                    double distanceAccum = distanceXQuad + distanceYQuad;
+
+                    double arcLength = Math.Pow(radius * theta, 2);
+
+                    double lossMagnitude = (arcLength + distanceAccum) / 2d;
+
+                    output[0, 0] = lossMagnitude;
+
+                    return output;
+                },
+                reverseOperation: (inputTensor, outputTensor, upstreamGradient) =>
+                {
+                    var dPredictions = new Tensor(new[] { 1, 2 });
+                    double xOutput = inputTensor[0, 0];
+                    double yOutput = inputTensor[0, 1];
+
+                    double magnitude = Math.Sqrt((xOutput * xOutput) + (yOutput * yOutput));
+                    double actualAngle = Math.Atan2(yOutput, xOutput);
+
+                    double xTarget = Math.Cos(targetAngle) * magnitude;
+                    double yTarget = Math.Sin(targetAngle) * magnitude;
+
+                    double xTargetUnnormalized = Math.Cos(targetAngle);
+                    double yTargetUnnormalized = Math.Sin(targetAngle);
+
+                    double radius = magnitude;
+                    double dotProduct = (xOutput * xTarget) + (yOutput * yTarget);
+
+                    double normalizedDotProduct = dotProduct / (radius * radius);
+                    normalizedDotProduct = Math.Clamp(normalizedDotProduct, -1.0, 1.0);
+
+                    double theta = Math.Acos(normalizedDotProduct);
+                    double denominator = Math.Sqrt(1 - (normalizedDotProduct * normalizedDotProduct));
+
+                    double gradXOutput = xTarget * theta / denominator;
+                    double gradYOutput = yTarget * theta / denominator;
+
+                    double dLoss_dX = (xOutput - xTargetUnnormalized) * (3d / 2d);
+                    double dLoss_dY = (yOutput - yTargetUnnormalized) * (3d / 2d);
+
+                    var anglesTensor = new Tensor(new[] { 1, 2 }, new[] { actualAngle, targetAngle });
+                    (double cX, double cY) = anglesTensor.CalculateCoefficient();
+                    dPredictions[0, 0] = cX * Math.Abs(gradXOutput + dLoss_dX) * upstreamGradient[0, 0];
+                    dPredictions[0, 1] = cY * Math.Abs(gradYOutput + dLoss_dY) * upstreamGradient[0, 0];
+
+                    return new[] { dPredictions };
+                });
+        }
+
         private PradResult ConcatMap(
             PradOp b,
             PradOp a,
