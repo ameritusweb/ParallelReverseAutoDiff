@@ -6,6 +6,17 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class TensorTests
     {
         [Fact]
+        public void TestGather()
+        {
+            Tensor a = Tensor.XavierUniform(new int[] { 1, 10 }).Reshape(new int[] { 10 });
+            Tensor b = new Tensor(new int[] { 2, 5 }, Enumerable.Range(0, 10).Select(x => (double)x).ToArray());
+            PradOp opInput1 = new PradOp(a);
+            var res = opInput1.Gather(b);
+
+            var c = res.Result;
+        }
+
+        [Fact]
         public void TestSlice3DTensors()
         {
             // Arrange

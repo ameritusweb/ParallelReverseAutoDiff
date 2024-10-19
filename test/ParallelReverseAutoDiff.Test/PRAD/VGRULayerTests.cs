@@ -1,0 +1,69 @@
+﻿using Emgu.CV.Shape;
+using ParallelReverseAutoDiff.PRAD;
+using ParallelReverseAutoDiff.PRAD.Layers;
+using Xunit;
+
+namespace ParallelReverseAutoDiff.Test.PRAD
+{
+    public class VGRULayerTests
+    {
+        [Fact]
+        public void TestLayer()
+        {
+            int[] shape = new int[] { 100, 200 };
+            PradOp opInput1 = new PradOp(Tensor.XavierUniform(shape));
+            PradOp opAngles = new PradOp(Tensor.XavierUniform(shape));
+            int[] shapeD1 = new int[] { shape[0], shape[1] * 10 };
+            int[] shapeD2 = new int[] { shape[0], shape[1] };
+            PradOp opD1 = new PradOp(Tensor.XavierUniform(shapeD1));
+            PradOp opD2 = new PradOp(Tensor.XavierUniform(shapeD2));
+            int[] shapeP = new int[] { shape[0], shape[1] * 20 };
+            PradOp previousHiddenState = new PradOp(Tensor.XavierUniform(shapeP));
+            int[] shapeGate = new int[] { shape[1] * 20, shape[1] * 20 };
+            int[] shapeB = new int[] { shape[0], shape[1] * 20 };
+            int[] shapeV = new int[] { shape[0], shape[1] * 20 };
+            int[] shapeW = new int[] { shape[0], shape[1] * 10 };
+            PradOp[][] updateWeights = GateWeights(shapeGate, shapeV, shapeW, shapeB);
+            PradOp[][] resetWeights = GateWeights(shapeGate, shapeV, shapeW, shapeB);
+            PradOp[][] candidateWeights = new PradOp[2][];
+            for (int i = 0; i < 2; ++i)
+            {
+                candidateWeights[i] = new PradOp[4];
+                candidateWeights[i][0] = new PradOp(Tensor.XavierUniform(shapeW));
+                candidateWeights[i][1] = new PradOp(Tensor.XavierUniform(shapeGate));
+                candidateWeights[i][2] = new PradOp(Tensor.XavierUniform(shapeB));
+                candidateWeights[i][3] = new PradOp(Tensor.XavierUniform(shapeW));
+            }
+
+            PradOp[][] hiddenWeights = new PradOp[2][];
+            for (int i = 0; i < 2; ++i)
+            {
+                hiddenWeights[i] = new PradOp[1];
+                hiddenWeights[i][0] = new PradOp(Tensor.XavierUniform(shapeW));
+            }
+            PradOp convolutionFilter = new PradOp(Tensor.XavierUniform(shapeP));
+
+            VGRULayer layer = new VGRULayer(opInput1, opAngles, opD1, opD2, previousHiddenState, updateWeights, resetWeights, candidateWeights, hiddenWeights, convolutionFilter);
+            var computeResult = layer.Compute();
+        
+        }
+
+        private PradOp[][] GateWeights(int[] shapeGate, int[] shapeV, int[] shapeW, int[] shapeB)
+        {
+            PradOp[][] updateWeights = new PradOp[2][];
+            for (int i = 0; i < 2; ++i)
+            {
+                updateWeights[i] = new PradOp[7];
+                updateWeights[i][0] = new PradOp(Tensor.XavierUniform(shapeW));
+                updateWeights[i][1] = new PradOp(Tensor.XavierUniform(shapeW));
+                updateWeights[i][2] = new PradOp(Tensor.XavierUniform(shapeV));
+                updateWeights[i][3] = new PradOp(Tensor.XavierUniform(shapeV));
+                updateWeights[i][4] = new PradOp(Tensor.XavierUniform(shapeW));
+                updateWeights[i][5] = new PradOp(Tensor.XavierUniform(shapeGate));
+                updateWeights[i][6] = new PradOp(Tensor.XavierUniform(shapeB));
+            }
+
+            return updateWeights;
+        }
+    }
+}

@@ -148,8 +148,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The result of the decomposition.</returns>
         public PradResult VectorDecomposition(PradOp opInput1, PradOp opInput2, PradOp opWeights)
         {
-            var num_rows = opInput1.SeedResult.Result.Shape[0];
-            var num_cols = opInput1.SeedResult.Result.Shape[1] / 2;
+            var num_rows = opInput1.CurrentTensor.Shape[0];
+            var num_cols = opInput1.CurrentTensor.Shape[1] / 2;
             var size = num_rows * num_cols;
 
             var (magnitude, angle) = opInput1.DoParallel(
@@ -158,7 +158,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var magnitudeBranch = magnitude.Branch();
             var angleBranch = angle.Branch();
 
-            var input2_cols = opInput2.SeedResult.Result.Shape[1];
+            var input2_cols = opInput2.CurrentTensor.Shape[1];
             var half_cols = input2_cols / 2;
 
             var opInput2Branch = opInput2.Branch();
@@ -341,8 +341,8 @@ namespace ParallelReverseAutoDiff.PRAD
             var clonedOpInput1 = opInput1.Branch();
             var clonedOpInput2 = opInput2.Branch();
 
-            var rows = opInput1.SeedResult.Result.Shape[0];
-            var cols = opInput1.SeedResult.Result.Shape[1];
+            var rows = opInput1.CurrentTensor.Shape[0];
+            var cols = opInput1.CurrentTensor.Shape[1];
             var halfCols = cols / 2;
 
             var anglesSeed = opInput1.Indexer(":", $"{halfCols}:").Result;
@@ -459,8 +459,8 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The weighted addition result.</returns>
         public PradResult VectorWeightedAdd(PradOp opInput1, PradOp opInput2, PradOp opWeights)
         {
-            var rows = opInput1.SeedResult.Result.Shape[0];
-            var cols = opInput2.SeedResult.Result.Shape[1];
+            var rows = opInput1.CurrentTensor.Shape[0];
+            var cols = opInput2.CurrentTensor.Shape[1];
             var halfCols = cols / 2;
 
             var (magnitude1, angle1) = opInput1.Split(halfCols, axis: 1);
@@ -565,21 +565,27 @@ namespace ParallelReverseAutoDiff.PRAD
 
             int m = numCols / 2;
 
+            var opInputBranch = opInput.Branch();
             var firstHalf = opInput.Indexer(":", $":{m}");
-            var secondHalf = opInput.Indexer(":", $"{m}:");
+            var secondHalf = opInputBranch.Indexer(":", $"{m}:");
 
-            var sinned = opInput.Sin();
-            var exped = sinned.PradOp.Exp();
+            var sinFirst = firstHalf.PradOp.Sin();
+            var sinSecond = secondHalf.PradOp.Sin();
 
-            var expFirst = exped.PradOp.Indexer(":", $":{m}");
-            var expSecond = exped.PradOp.Indexer(":", $"{m}:");
+            var sinFirstExp = sinFirst.PradOp.Exp();
+            var sinSecondExp = sinSecond.PradOp.Exp();
 
-            var sumExp = expFirst.PradOp.Add(expSecond.Result);
+            var sinFirstBranchExp = sinFirstExp.Branch();
+            var sinSecondBranchExp = sinSecondExp.Branch();
+
+            var sumExp = sinFirstExp.PradOp.Add(sinSecondExp.Result);
+
             var epsilon = new Tensor(sumExp.PradOp.CurrentShape, 1e-9);
             var denominator = sumExp.PradOp.Add(epsilon);
 
-            var outputFirst = expFirst.PradOp.Div(denominator.Result);
-            var outputSecond = expSecond.PradOp.Div(denominator.Result);
+            var denominatorBranch = denominator.Branch();
+            var outputFirst = denominator.PradOp.DivInto(sinFirstBranchExp.BranchInitialTensor);
+            var outputSecond = denominatorBranch.DivInto(sinSecondBranchExp.BranchInitialTensor);
 
             return outputFirst.PradOp.Concat(new[] { outputSecond.Result }, axis: -1);
         }
@@ -644,10 +650,8 @@ namespace ParallelReverseAutoDiff.PRAD
             int halfCols = cols / 2;
 
             // Use indexers to access magnitude and angle components
-            var magnitude1 = input1.Indexer(":", $":{halfCols}");
-            var angle1 = input1.Indexer(":", $"{halfCols}:");
-            var magnitude2 = input2.Indexer(":", $":{halfCols}");
-            var angle2 = input2.Indexer(":", $"{halfCols}:");
+            var (magnitude1, angle1) = this.SplitInterleavedTensor(input1);
+            var (magnitude2, angle2) = this.SplitInterleavedTensor(input2);
 
             // Average magnitudes
             var avgMagnitude = magnitude1.PradOp.Add(magnitude2.Result).PradOp.Mul(new Tensor(magnitude1.PradOp.CurrentShape, 0.5));
@@ -673,11 +677,15 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Performs a vector attention operation.
         /// </summary>
         /// <param name="vectors">The vectors.</param>
-        /// <param name="probabilities">The probabilities.</param>
+        /// <param name="probabilitiesBoth">The probabilities.</param>
         /// <returns>The attended to result.</returns>
         /// <exception cref="ArgumentException">Must be compatible.</exception>
-        public PradResult VectorAttention(PradOp vectors, PradOp probabilities)
+        public PradResult VectorAttention(PradOp vectors, PradOp probabilitiesBoth)
         {
+            var halfCols = probabilitiesBoth.CurrentShape[^1] / 2;
+            var probabilities = probabilitiesBoth.Indexer("...", $"{halfCols}:").PradOp;
+            var probabilitiesBranch = probabilities.Branch();
+
             // Ensure inputs have compatible shapes
             if (vectors.CurrentShape[0] != probabilities.CurrentShape[0] ||
                 vectors.CurrentShape[1] / 2 != probabilities.CurrentShape[1])
@@ -689,8 +697,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int m = cols / 2;
 
             // Split vectors into magnitude and angle components
-            var magnitudes = vectors.Indexer(":", $":{m}");
-            var angles = vectors.Indexer(":", $"{m}:");
+            var (magnitudes, angles) = this.SplitInterleavedTensor(vectors);
 
             // Create constants
             var onePointFive = new Tensor(probabilities.CurrentShape, 1.5f);
@@ -706,7 +713,7 @@ namespace ParallelReverseAutoDiff.PRAD
             var scaledMagnitudes = magnitudes.PradOp.Mul(magnitudeScale.Result);
 
             // Calculate angle adjustment
-            var angleAdjustment = probabilities.SubFrom(one).PradOp.Mul(halfPi).PradOp.Mul(onePointFive);
+            var angleAdjustment = probabilitiesBranch.SubFrom(one).PradOp.Mul(halfPi).PradOp.Mul(onePointFive);
 
             // Adjust angles
             var adjustedAngles = angles.PradOp.Add(angleAdjustment.Result).PradOp.Modulus(twoPi);
@@ -925,6 +932,7 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<PradOp, PradOp, int, object, int> mapFunc,
             object mappingObj)
         {
+            var aShape = (int[])a.CurrentShape.Clone();
             var flattenedA = a.Reshape(new[] { a.CurrentShape[0] * a.CurrentShape[1] });
 
             var indices = new Tensor(b.CurrentShape);
@@ -937,8 +945,10 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
 
-            var resortedFlatA = flattenedA.PradOp.Gather(indices);
-            var resortedA = resortedFlatA.PradOp.Reshape(a.CurrentShape);
+            var flattenedIndices = indices.Reshape(new int[] { indices.Shape[0] * indices.Shape[1] });
+
+            var resortedFlatA = flattenedA.PradOp.Gather(flattenedIndices);
+            var resortedA = resortedFlatA.PradOp.Reshape(aShape);
 
             return b.Concat(new[] { resortedA.Result }, axis: 1);
         }

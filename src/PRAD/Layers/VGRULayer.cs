@@ -30,8 +30,8 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
         /// </summary>
         /// <param name="opInput">The input tensor for the current time step.</param>
         /// <param name="opAngles">The angle tensor corresponding to the input tensor.</param>
-        /// <param name="decompositionWeights">The weights used in vector decomposition.</param>
         /// <param name="decompositionVectors">The vectors used in vector decomposition.</param>
+        /// <param name="decompositionWeights">The weights used in vector decomposition.</param>
         /// <param name="previousHiddenState">The hidden state tensor from the previous time step.</param>
         /// <param name="updateWeights">Weights for the update gate in each layer.</param>
         /// <param name="resetWeights">Weights for the reset gate in each layer.</param>
@@ -41,8 +41,8 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
         public VGRULayer(
             PradOp opInput,
             PradOp opAngles,
-            PradOp decompositionWeights,
             PradOp decompositionVectors,
+            PradOp decompositionWeights,
             PradOp previousHiddenState,
             PradOp[][] updateWeights,
             PradOp[][] resetWeights,
@@ -52,8 +52,8 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
         {
             this.opInput = opInput;
             this.opAngles = opAngles;
-            this.decompositionWeights = decompositionWeights;
             this.decompositionVectors = decompositionVectors;
+            this.decompositionWeights = decompositionWeights;
             this.previousHiddenState = previousHiddenState;
             this.updateWeights = updateWeights;
             this.resetWeights = resetWeights;
@@ -87,13 +87,15 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             for (int layer = 0; layer < this.updateWeights.Length; layer++)
             {
                 // Update gate (z) computation
-                var z = this.ComputeGate(currentInput.PradOp, hiddenState, this.updateWeights[layer]);
+                var currentInputBranches = currentInput.BranchStack(2);
+                var hiddenStateBranches = hiddenState.BranchStack(3);
+                var z = this.ComputeGate(currentInput.PradOp, hiddenStateBranches.Pop(), this.updateWeights[layer]);
 
                 // Reset gate (r) computation
-                var r = this.ComputeGate(currentInput.PradOp, hiddenState, this.resetWeights[layer]);
+                var r = this.ComputeGate(currentInputBranches.Pop(), hiddenStateBranches.Pop(), this.resetWeights[layer]);
 
                 // Candidate hidden state computation
-                var candidateHidden = this.ComputeCandidateHiddenState(currentInput.PradOp, hiddenState, r.PradOp, this.candidateWeights[layer]);
+                var candidateHidden = this.ComputeCandidateHiddenState(currentInputBranches.Pop(), hiddenStateBranches.Pop(), r.PradOp, this.candidateWeights[layer]);
 
                 // New hidden state computation
                 var newHiddenState = this.UpdateHiddenState(hiddenState, z.PradOp, candidateHidden.PradOp, this.hiddenWeights[layer][0]);
@@ -128,7 +130,8 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var previousGate = this.vectorTools.VectorBasedMatrixMultiplication(previousHiddenState, weights[3], previousWeights.PradOp);
 
             var combinedGate = this.vectorTools.VectorWeightedAdd(currentGate.PradOp, previousGate.PradOp, weights[4]);
-            var gateKeys = this.vectorTools.MatrixMultiplication(combinedGate.PradOp, weights[5]);
+            var combinedGateBranch = combinedGate.Branch();
+            var gateKeys = this.vectorTools.MatrixMultiplication(combinedGateBranch, weights[5]);
             var gateKeysBroadcasted = this.vectorTools.AddBroadcasting(gateKeys.PradOp, weights[6]);
 
             var activatedGate = this.vectorTools.LeakyReLU(gateKeysBroadcasted.PradOp);
@@ -147,8 +150,9 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
         /// <returns>The candidate hidden state result.</returns>
         private PradResult ComputeCandidateHiddenState(PradOp currentInput, PradOp hiddenState, PradOp resetGate, PradOp[] weights)
         {
+            var currentInputBranch = currentInput.Branch();
             var weightedHiddenState = this.vectorTools.VectorWeightedAdd(hiddenState, resetGate, weights[0]);
-            var inputKeys = this.vectorTools.MatrixMultiplication(currentInput, weights[1]);
+            var inputKeys = this.vectorTools.MatrixMultiplication(currentInputBranch, weights[1]);
             var inputKeysBroadcasted = this.vectorTools.AddBroadcasting(inputKeys.PradOp, weights[2]);
 
             var activatedInput = this.vectorTools.LeakyReLU(inputKeysBroadcasted.PradOp);
@@ -168,9 +172,10 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
         /// <returns>The new hidden state result.</returns>
         private PradResult UpdateHiddenState(PradOp hiddenState, PradOp updateGate, PradOp candidateHiddenState, PradOp hiddenWeight)
         {
+            var updateGateBranch = updateGate.Branch();
             var complementUpdateGate = this.vectorTools.ElementwiseInversion(updateGate);
 
-            var weightedPreviousHiddenState = this.vectorTools.VectorAveraging(hiddenState, updateGate);
+            var weightedPreviousHiddenState = this.vectorTools.VectorAveraging(hiddenState, updateGateBranch);
             var weightedCandidateHiddenState = this.vectorTools.VectorAveraging(candidateHiddenState, complementUpdateGate.PradOp);
 
             return this.vectorTools.VectorWeightedAdd(weightedPreviousHiddenState.PradOp, weightedCandidateHiddenState.PradOp, hiddenWeight);

@@ -891,58 +891,95 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
-        /// Tiles the tensor along each dimension as specified by multiples.
+        /// Tiles the tensor by the specified multiples along each dimension.
         /// </summary>
-        /// <param name="multiples">The array of multiples for each dimension.</param>
-        /// <returns>A new tensor that is tiled according to multiples.</returns>
-        /// <exception cref="ArgumentException">Invalid multiples or shape mismatch.</exception>
+        /// <param name="multiples">An array specifying the tiling factor along each dimension.</param>
+        /// <returns>A new tiled Tensor instance.</returns>
+        /// <exception cref="ArgumentException">Thrown when the length of multiples doesn't match the tensor dimensions or when any multiple is non-positive.</exception>
         public Tensor Tile(int[] multiples)
         {
-            if (multiples.Length != this.Shape.Length)
+            // Validation
+            if (multiples.Length != this.Shape.Length || multiples.Any(m => m <= 0))
             {
-                throw new ArgumentException("Length of multiples must match the number of dimensions of the tensor.");
+                throw new ArgumentException("Invalid multiples: Must match tensor dimensions and all values must be positive.");
             }
 
-            foreach (var multiple in multiples)
-            {
-                if (multiple <= 0)
-                {
-                    throw new ArgumentException("All multiples must be positive integers.");
-                }
-            }
-
+            // Compute the new shape and total multiplication factor
             int[] newShape = new int[this.Shape.Length];
-            for (int i = 0; i < this.Shape.Length; i++)
+            int totalMultiple = 1;
+
+            checked
             {
-                newShape[i] = this.Shape[i] * multiples[i];
+                for (int i = 0; i < this.Shape.Length; i++)
+                {
+                    newShape[i] = this.Shape[i] * multiples[i];
+                    totalMultiple *= multiples[i];
+                }
             }
 
             var result = new Tensor(newShape);
-            int[] indices = new int[this.Shape.Length];
-            int[] resultIndices = new int[this.Shape.Length];
 
-            void TileRecursive(int dim)
+            // Fast path for tiling along a single dimension
+            int maxMultiple = multiples.Max();
+            int tilingDimension = Array.IndexOf(multiples, maxMultiple);
+
+            if (multiples.Count(m => m > 1) == 1)
             {
-                if (dim == this.Shape.Length)
+                int copySize = this.Data.Length;
+                Array.Copy(this.Data, 0, result.Data, 0, copySize);
+
+                for (int i = 1; i < multiples[tilingDimension]; i++)
                 {
-                    var value = this[indices];
-                    result[resultIndices] = value;
+                    Array.Copy(result.Data, 0, result.Data, i * copySize, copySize);
                 }
-                else
-                {
-                    for (int i = 0; i < this.Shape[dim]; i++)
-                    {
-                        indices[dim] = i;
-                        for (int j = 0; j < multiples[dim]; j++)
-                        {
-                            resultIndices[dim] = i + (j * this.Shape[dim]);
-                            TileRecursive(dim + 1);
-                        }
-                    }
-                }
+
+                return result;
             }
 
-            TileRecursive(0);
+            // Fast path for equal multiples along all dimensions
+            if (multiples.All(m => m == multiples[0]))
+            {
+                int blockSize = this.Data.Length;
+                for (int i = 1; i < totalMultiple; i++)
+                {
+                    Array.Copy(this.Data, 0, result.Data, i * blockSize, blockSize);
+                }
+
+                return result;
+            }
+
+            // General case: tile each dimension separately
+            int currentRepetitions = 1;
+            int currentBlockSize = this.Data.Length;
+
+            for (int dim = this.Shape.Length - 1; dim >= 0; dim--)
+            {
+                if (multiples[dim] == 1)
+                {
+                    continue;
+                }
+
+                int nextBlockSize = currentBlockSize * multiples[dim];
+
+                for (int rep = 0; rep < currentRepetitions; rep++)
+                {
+                    int destOffset = rep * nextBlockSize;
+                    int srcOffset = rep * currentBlockSize;
+
+                    // Copy the first block
+                    Array.Copy(this.Data, srcOffset, result.Data, destOffset, currentBlockSize);
+
+                    // Tile this block
+                    for (int m = 1; m < multiples[dim]; m++)
+                    {
+                        Array.Copy(result.Data, destOffset, result.Data, destOffset + (m * currentBlockSize), currentBlockSize);
+                    }
+                }
+
+                currentRepetitions *= multiples[dim];
+                currentBlockSize = nextBlockSize;
+            }
+
             return result;
         }
 
