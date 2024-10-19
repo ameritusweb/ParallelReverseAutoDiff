@@ -94,6 +94,14 @@ namespace ParallelReverseAutoDiff.PRAD
         public (PradResult, PradResult) SplitInterleavedTensor(PradOp opInput1)
         {
             var half_cols = opInput1.CurrentShape[^1] / 2;
+            if (opInput1.CurrentShape.Length == 4)
+            {
+                var (magnitudes1, angles1) = opInput1.DoParallel(
+                x => x.Indexer(":", ":", ":", $":{half_cols}"),
+                y => y.Indexer(":", ":", ":", $"{half_cols}:"));
+                return (magnitudes1, angles1);
+            }
+
             var (magnitudes, angles) = opInput1.DoParallel(
                 x => x.Indexer(":", $":{half_cols}"),
                 y => y.Indexer(":", $"{half_cols}:"));
@@ -137,6 +145,192 @@ namespace ParallelReverseAutoDiff.PRAD
                 map);
 
             return result;
+        }
+
+        /// <summary>
+        /// Perform vector decomposition that follows the formula: I + O = (Ai + Bi) * W.
+        /// </summary>
+        /// <param name="opInput1">The first input.</param>
+        /// <param name="opInput2">The second input.</param>
+        /// <param name="opWeights">The weights.</param>
+        /// <returns>The result of the decomposition.</returns>
+        public PradResult VectorMiniDecomposition(PradOp opInput1, PradOp opInput2, PradOp opWeights)
+        {
+            var num_rows = opInput1.CurrentTensor.Shape[0];
+            var num_cols = opInput1.CurrentTensor.Shape[1] / 2;
+            var size = num_rows * num_cols;
+
+            var (magnitude, angle) = opInput1.DoParallel(
+                x => x.Indexer(":", $":{num_cols}"),
+                y => y.Indexer(":", $"{num_cols}:"));
+            var magnitudeBranch = magnitude.Branch();
+            var angleBranch = angle.Branch();
+
+            var input2_cols = opInput2.CurrentTensor.Shape[1];
+            var half_cols = input2_cols / 2;
+
+            var opInput2Branch = opInput2.Branch();
+
+            var opInput2Branches = opInput2.BranchStack(3);
+
+            var w_magnitudes_t = new PradResult[2];
+            var w_angles_t = new PradResult[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var branchM = opInput2;
+
+                if (i > 0)
+                {
+                    branchM = opInput2Branches.Pop();
+                }
+
+                var (w_magnitudes_tt, w_angles_tt) = branchM.DoParallel(
+                    x => x.Indexer(":", $"{1 + i}:{half_cols}:3"),
+                    y => y.Indexer(":", $"{half_cols + 1 + i}::3"));
+
+                w_magnitudes_t[i] = w_magnitudes_tt;
+                w_angles_t[i] = w_angles_tt;
+            }
+
+            var w_magnitudes_stacked = w_magnitudes_t[0].PradOp.Stack(w_magnitudes_t.Select(f => f.Result).Skip(1).ToArray(), axis: -1);
+            var w_angles_stacked = w_angles_t[0].PradOp.Stack(w_angles_t.Select(f => f.Result).Skip(1).ToArray(), axis: -1);
+
+            var w_magnitudes = w_magnitudes_stacked;
+            var w_angles = w_angles_stacked;
+            var w_magnitudesBranch = w_magnitudes.Branch();
+            var w_anglesBranch = w_angles.Branch();
+
+            var w_magnitudesTrans = w_magnitudesBranch.Reshape(1, 2, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+            var w_anglesTrans = w_anglesBranch.Reshape(1, 2, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+
+            var (w_magnitude_pivot_a, w_angle_pivot_a) = opInput2Branch.DoParallel(
+                x => x.Indexer(":", $":{half_cols}"),
+                y => y.Indexer(":", $"{half_cols}:"));
+
+            var w_magnitude_pivot = w_magnitude_pivot_a.PradOp.Indexer(":", $"::3");
+            var w_angle_pivot = w_angle_pivot_a.PradOp.Indexer(":", $"::3");
+
+            var w_magnitude_pivotBranch = w_magnitude_pivot.Branch();
+            var w_angle_pivotBranch = w_angle_pivot.Branch();
+
+            var (cosAngles, sinAngles) = angle.PradOp.DoParallel(
+                x => x.Cos(),
+                y => y.Sin());
+
+            var (x, y) = magnitude.PradOp.DoParallel(
+                x => x.Mul(cosAngles.Result),
+                x => x.Mul(sinAngles.Result));
+
+            var xResult = x.Result;
+            var yResult = y.Result;
+
+            var (cosPivot, sinPivot) = w_angle_pivot.PradOp.DoParallel(
+                x => x.Cos(),
+                x => x.Sin());
+
+            var (xPivot, yPivot) = w_magnitude_pivot.PradOp.DoParallel(
+                x => x.Mul(cosPivot.Result),
+                x => x.Mul(sinPivot.Result));
+
+            var xPivotResult = xPivot.Result;
+            var yPivotResult = yPivot.Result;
+
+            var (cosAngles_w, sinAngles_w) = w_angles.PradOp.DoParallel(
+                x => x.Cos(),
+                x => x.Sin());
+
+            var (x_w, y_w) = w_magnitudes.PradOp.DoParallel(
+                x => x.Mul(cosAngles_w.Result),
+                x => x.Mul(sinAngles_w.Result));
+
+            Tensor addScalar = new Tensor(opWeights.SeedResult.Result.Shape, 0.01d);
+            var adjustedWeights = opWeights.Add(addScalar);
+
+            var xPivotAdd = x.Then(PradOp.AddOp, xPivot.Result);
+            var yPivotAdd = y.Then(PradOp.AddOp, yPivot.Result);
+
+            var weightsEpsilon = adjustedWeights.Then(PradOp.AddOp, new Tensor(opWeights.SeedResult.Result.Shape, 1e-9d));
+
+            var sumX = xPivotAdd.Then(PradOp.DivOp, weightsEpsilon.Result);
+            var sumY = yPivotAdd.Then(PradOp.DivOp, weightsEpsilon.Result);
+
+            var sumXExpanded = sumX.Then(PradOp.ExpandDimsOp, -1);
+            var sumYExpanded = sumY.Then(PradOp.ExpandDimsOp, -1);
+
+            var sumXBranch = sumX.Branch();
+            var negativeSumXExpanded = sumXBranch.Mul(new Tensor(sumXBranch.CurrentShape, -1d));
+
+            var sumYBranch = sumY.Branch();
+            var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, -1d));
+
+            var sumXReshaped = sumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+            var negativeSumXReshaped = negativeSumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+
+            var x_wReshaped = x_w.Then(PradOp.ReshapeOp, new int[] { 2, size });
+
+            var sumXConcatenated = sumXReshaped.Then(
+                PradOp.ConcatOp,
+                new[] { negativeSumXReshaped.Result },
+                axis: 0);
+
+            var diffX = x_wReshaped.PradOp.SubFrom(sumXConcatenated.Result);
+
+            var sumYReshaped = sumYExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+            var negativeSumYReshaped = negativeSumYExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
+
+            var y_wReshaped = y_w.Then(PradOp.ReshapeOp, new int[] { 2, size });
+
+            var sumYConcatenated = sumYReshaped.Then(
+                PradOp.ConcatOp,
+                new[] { negativeSumYReshaped.Result },
+                axis: 0);
+
+            var diffY = sumYConcatenated.Then(PradOp.SubOp, y_wReshaped.Result);
+
+            var diffXBranch = diffX.Branch();
+            var diffYBranch = diffY.Branch();
+
+            var diffXSquared = diffX.Then(PradOp.SquareOp);
+            var diffYSquared = diffY.Then(PradOp.SquareOp);
+
+            var resultMagnitudes = diffXSquared.Then(PradOp.AddOp, diffYSquared.Result)
+                                                .Then(PradOp.SquareRootOp);
+
+            var resultAngles = diffYBranch.Atan2(diffXBranch.BranchInitialTensor);
+
+            var resultMagnitudesTrans2 = resultMagnitudes.PradOp.Reshape(1, 2, -1);
+            var resultMagnitudesTrans = resultMagnitudesTrans2.PradOp.Transpose(new int[] { 0, 2, 1 });
+            var resultAnglesTrans = resultAngles.PradOp.Reshape(1, 2, -1).PradOp.Transpose(new int[] { 0, 2, 1 });
+
+            var reshapedResultMagnitudes = resultMagnitudesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
+
+            var reshapedResultAngles = resultAnglesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, -1 });
+
+            var magnitudeReshaped = magnitudeBranch.Reshape(new int[] { num_rows, num_cols, 1 });
+            var angleReshaped = angleBranch.Reshape(new int[] { num_rows, num_cols, 1 });
+            var w_magnitude_pivotReshaped = w_magnitude_pivotBranch.Reshape(new int[] { num_rows, num_cols, 1 });
+            var w_angle_pivotReshaped = w_angle_pivotBranch.Reshape(new int[] { num_rows, num_cols, 1 });
+            var w_magnitudesReshaped = w_magnitudesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, num_cols, 2 });
+            var w_anglesReshaped = w_anglesTrans.Then(PradOp.ReshapeOp, new int[] { num_rows, num_cols, 2 });
+            var resultMagnitudesReshaped = reshapedResultMagnitudes.Then(PradOp.ReshapeOp, new int[] { num_rows, num_cols, 2 });
+            var resultAnglesReshaped = reshapedResultAngles.Then(PradOp.ReshapeOp, new int[] { num_rows, num_cols, 2 });
+
+            var magnitudesPart = resultMagnitudesReshaped.Then(
+                PradOp.ConcatOp,
+                new[] { magnitudeReshaped.Result, w_magnitude_pivotReshaped.Result, w_magnitudesReshaped.Result },
+                axis: 2,
+                new int[] { 1, 2, 3, 0 });
+
+            var anglesPart = angleReshaped.Then(
+                PradOp.ConcatOp,
+                new[] { w_angle_pivotReshaped.Result, w_anglesReshaped.Result, resultAnglesReshaped.Result },
+                axis: 2);
+
+            var output = magnitudesPart.Then(PradOp.ConcatOp, new[] { anglesPart.Result }, axis: 1);
+
+            var finalOutput = output.Then(PradOp.ReshapeOp, new int[] { num_rows, num_cols * 12 });
+
+            return finalOutput;
         }
 
         /// <summary>
@@ -830,15 +1024,24 @@ namespace ParallelReverseAutoDiff.PRAD
             var xPatches = x.PradOp.ExtractPatches(new int[] { 2, 2 }, new int[] { 1, 1 }, "SAME");
             var yPatches = y.PradOp.ExtractPatches(new int[] { 2, 2 }, new int[] { 1, 1 }, "SAME");
 
-            var tileMultiples = new int[] { xPatches.PradOp.CurrentShape[0], xPatches.PradOp.CurrentShape[1], xPatches.PradOp.CurrentShape[2], 1 };
-            var tiledFilterX = filterX.PradOp.Tile(tileMultiples);
-            var tiledFilterY = filterY.PradOp.Tile(tileMultiples);
+            var filterXR = filterX.PradOp.Reshape(new int[] { 1, 1, 1, 4 });
+            var filterYR = filterY.PradOp.Reshape(new int[] { 1, 1, 1, 4 });
 
-            var dotProductX = xPatches.PradOp.Mul(tiledFilterX.Result);
-            var dotProductY = yPatches.PradOp.Mul(tiledFilterY.Result);
+            var tileMultiples = new int[] { xPatches.PradOp.CurrentShape[0], xPatches.PradOp.CurrentShape[1], 1, 1 };
+            var tiledFilterX = filterXR.PradOp.Tile(tileMultiples);
+            var tiledFilterY = filterYR.PradOp.Tile(tileMultiples);
+
+            var tileMultiples2 = new int[] { 1, 1, xPatches.PradOp.CurrentShape[2], 1 };
+            var tiledFilterX1 = tiledFilterX.PradOp.Tile(tileMultiples2);
+            var tiledFilterY1 = tiledFilterY.PradOp.Tile(tileMultiples2);
+
+            var dotProductX = xPatches.PradOp.Mul(tiledFilterX1.Result);
+            var dotProductY = yPatches.PradOp.Mul(tiledFilterY1.Result);
             var dotProduct = dotProductX.PradOp.Add(dotProductY.Result);
 
-            var summedResult = dotProduct.PradOp.Sum(new int[] { 3 });
+            var dotProductR = dotProduct.PradOp.Reshape(new int[] { dotProduct.PradOp.CurrentShape[1] * dotProduct.PradOp.CurrentShape[2], dotProduct.PradOp.CurrentShape[3] });
+
+            var summedResult = dotProductR.PradOp.Sum(new int[] { 0 });
 
             return summedResult;
         }

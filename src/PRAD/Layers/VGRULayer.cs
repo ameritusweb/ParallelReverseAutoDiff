@@ -78,7 +78,7 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var squaredWeights = this.vectorTools.ElementwiseSquare(this.decompositionWeights);
             var squaredAngles = this.vectorTools.ElementwiseSquare(this.opAngles);
             var vectorizedInput = this.vectorTools.Vectorize(this.opInput, squaredAngles.PradOp);
-            var decomposed = this.vectorTools.VectorDecomposition(vectorizedInput.PradOp, this.decompositionVectors, squaredWeights.PradOp);
+            var decomposed = this.vectorTools.VectorMiniDecomposition(vectorizedInput.PradOp, this.decompositionVectors, squaredWeights.PradOp);
 
             PradOp hiddenState = this.previousHiddenState;
             PradResult currentInput = decomposed;
@@ -106,9 +106,11 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             }
 
             // End Operations: Convolution on the final hidden state
-            var splitHiddenState = this.vectorTools.SplitInterleavedTensor(hiddenState);
+            var (splitHiddenStateMag, splitHiddenStateA) = this.vectorTools.SplitInterleavedTensor(hiddenState);
+            var mag1 = splitHiddenStateMag.PradOp.Reshape(1, splitHiddenStateMag.PradOp.CurrentShape[0], splitHiddenStateMag.PradOp.CurrentShape[1], 1);
+            var angle1 = splitHiddenStateA.PradOp.Reshape(1, splitHiddenStateA.PradOp.CurrentShape[0], splitHiddenStateA.PradOp.CurrentShape[1], 1);
             var splitFilter = this.vectorTools.SplitInterleavedTensor(this.convolutionFilter);
-            var output = this.vectorTools.CustomVectorConvolution(splitHiddenState.Item1.PradOp, splitHiddenState.Item2.PradOp, splitFilter.Item1.PradOp, splitFilter.Item2.PradOp);
+            var output = this.vectorTools.CustomVectorConvolution(mag1.PradOp, angle1.PradOp, splitFilter.Item1.PradOp, splitFilter.Item2.PradOp);
 
             return output;
         }

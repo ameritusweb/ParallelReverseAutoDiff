@@ -13,16 +13,16 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             int[] shape = new int[] { 100, 200 };
             PradOp opInput1 = new PradOp(Tensor.XavierUniform(shape));
             PradOp opAngles = new PradOp(Tensor.XavierUniform(shape));
-            int[] shapeD1 = new int[] { shape[0], shape[1] * 10 };
+            int[] shapeD1 = new int[] { shape[0], shape[1] * 6 };
             int[] shapeD2 = new int[] { shape[0], shape[1] };
             PradOp opD1 = new PradOp(Tensor.XavierUniform(shapeD1));
             PradOp opD2 = new PradOp(Tensor.XavierUniform(shapeD2));
-            int[] shapeP = new int[] { shape[0], shape[1] * 20 };
+            int[] shapeP = new int[] { shape[0], shape[1] * 12 };
             PradOp previousHiddenState = new PradOp(Tensor.XavierUniform(shapeP));
-            int[] shapeGate = new int[] { shape[1] * 20, shape[1] * 20 };
-            int[] shapeB = new int[] { shape[0], shape[1] * 20 };
-            int[] shapeV = new int[] { shape[0], shape[1] * 20 };
-            int[] shapeW = new int[] { shape[0], shape[1] * 10 };
+            int[] shapeGate = new int[] { shape[1] * 12, shape[1] * 12 };
+            int[] shapeB = new int[] { shape[0], shape[1] * 12 };
+            int[] shapeV = new int[] { shape[0], shape[1] * 12 };
+            int[] shapeW = new int[] { shape[0], shape[1] * 6 };
             PradOp[][] updateWeights = GateWeights(shapeGate, shapeV, shapeW, shapeB);
             PradOp[][] resetWeights = GateWeights(shapeGate, shapeV, shapeW, shapeB);
             PradOp[][] candidateWeights = new PradOp[2][];
@@ -41,7 +41,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
                 hiddenWeights[i] = new PradOp[1];
                 hiddenWeights[i][0] = new PradOp(Tensor.XavierUniform(shapeW));
             }
-            PradOp convolutionFilter = new PradOp(Tensor.XavierUniform(shapeP));
+            PradOp convolutionFilter = new PradOp(Tensor.XavierUniform(new int[] { 1, 2, 2, 2 }));
 
             VGRULayer layer = new VGRULayer(opInput1, opAngles, opD1, opD2, previousHiddenState, updateWeights, resetWeights, candidateWeights, hiddenWeights, convolutionFilter);
             var computeResult = layer.Compute();
