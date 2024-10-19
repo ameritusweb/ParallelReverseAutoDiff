@@ -87,6 +87,21 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Splits an interleaved tensor.
+        /// </summary>
+        /// <param name="opInput1">The tensor.</param>
+        /// <returns>The magnitudes and angles.</returns>
+        public (PradResult, PradResult) SplitInterleavedTensor(PradOp opInput1)
+        {
+            var half_cols = opInput1.CurrentShape[^1] / 2;
+            var (magnitudes, angles) = opInput1.DoParallel(
+                x => x.Indexer(":", $":{half_cols}"),
+                y => y.Indexer(":", $"{half_cols}:"));
+
+            return (magnitudes, angles);
+        }
+
+        /// <summary>
         /// Vectorize the input with the angles.
         /// </summary>
         /// <param name="input">The input prad op.</param>
@@ -485,6 +500,29 @@ namespace ParallelReverseAutoDiff.PRAD
             var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
 
             return res;
+        }
+
+        /// <summary>
+        /// Performs a matrix multiplication between two tensors.
+        /// </summary>
+        /// <param name="opInput1">The first input.</param>
+        /// <param name="opInput2">The second input.</param>
+        /// <returns>The result of the matrix multiplication.</returns>
+        public PradResult MatrixMultiplication(PradOp opInput1, PradOp opInput2)
+        {
+            return opInput1.MatMul(opInput2.CurrentTensor);
+        }
+
+        /// <summary>
+        /// Performs a broadcasting add operation.
+        /// </summary>
+        /// <param name="opInput1">The first tensor.</param>
+        /// <param name="toBroadcast">The tensor to broadcast.</param>
+        /// <returns>The result of add broadcasting.</returns>
+        public PradResult AddBroadcasting(PradOp opInput1, PradOp toBroadcast)
+        {
+            var broadcasted = toBroadcast.BroadcastTo(opInput1.CurrentShape);
+            return opInput1.Add(broadcasted.Result);
         }
 
         /// <summary>
