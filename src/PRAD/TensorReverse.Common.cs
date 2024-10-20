@@ -9,6 +9,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
@@ -1980,6 +1981,27 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("Length of multiples must match the number of dimensions of the tensor.");
             }
 
+            if (multiples.Length == 4 && multiples[0] == 1 && multiples[1] == 1 && multiples[3] == 1)
+            {
+                var res = this.TileReverseSpecializedCaseSIMD(upstreamGradient, originalTensor.Shape, multiples[2]);
+                return res;
+            }
+            else if (multiples.Length == 4 && multiples[0] == 1 && multiples[2] == 1 && multiples[3] == 1)
+            {
+                var res = this.TileReverseSpecializedCaseSecondDim(upstreamGradient, originalTensor.Shape, multiples[1]);
+                return res;
+            }
+            else if (multiples.Length == 2 && multiples[1] == 1)
+            {
+                var res = this.TileReverseSpecializedCaseN1SIMD(upstreamGradient, originalTensor.Shape, multiples[0]);
+                return res;
+            }
+            else if (multiples.Length == 2 && multiples[0] == 1)
+            {
+                var res = this.TileReverseSpecializedCase1NSIMD(upstreamGradient, originalTensor.Shape, multiples[1]);
+                return res;
+            }
+
             int[] originalShape = originalTensor.Shape;
             int[] tiledShape = new int[originalShape.Length];
             for (int i = 0; i < originalShape.Length; i++)
@@ -2177,13 +2199,13 @@ namespace ParallelReverseAutoDiff.PRAD
             Tensor grad = new Tensor(originalShape);
 
             // Distribute the upstream gradient across the columns of each row
-            for (int i = 0; i < originalShape[0]; i++)
+            Parallel.For(0, originalShape[0], i =>
             {
                 for (int j = 0; j < originalShape[1]; j++)
                 {
                     grad[i, j] = upstreamGradient[i, 0];
                 }
-            }
+            });
 
             return grad;
         }
@@ -2310,9 +2332,204 @@ namespace ParallelReverseAutoDiff.PRAD
             int[] newShape = inputTensor.CalculateNewShape(start, end, step, isSlice);
             Tensor result = new Tensor(inputTensor.Shape);
 
-            this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, new int[inputTensor.Shape.Length], new int[newShape.Length], 0);
+            Memory<int> sourceIndices = new int[inputTensor.Shape.Length];
+            Memory<int> destIndices = new int[inputTensor.Shape.Length];
+
+            if (step.All(s => s == 1))
+            {
+                this.CopyDataReverseOne(upstreamGradient, result, start, end, step, isSlice, sourceIndices, destIndices, 0);
+            }
+            else
+            {
+                this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, sourceIndices, destIndices, 0);
+            }
 
             return result;
+        }
+
+        private Tensor TileReverseSpecializedCase1NSIMD(Tensor upstreamGradient, int[] originalShape, int multipleSecondDim)
+        {
+            Tensor grad = new Tensor(originalShape);
+            int firstDimSize = originalShape[0];
+            int originalSecondDimSize = originalShape[1];
+            int tiledSecondDimSize = originalSecondDimSize * multipleSecondDim;
+
+            int vectorSize = Vector<double>.Count;
+            int simdIterations = originalSecondDimSize / vectorSize;
+            int remainderStart = simdIterations * vectorSize;
+
+            Parallel.For(0, firstDimSize, i =>
+            {
+                int baseGradIndex = i * originalSecondDimSize;
+                int baseUpstreamIndex = i * tiledSecondDimSize;
+
+                for (int j = 0; j < simdIterations; j++)
+                {
+                    Vector<double> sum = Vector<double>.Zero;
+                    int gradIndex = baseGradIndex + (j * vectorSize);
+
+                    for (int m = 0; m < multipleSecondDim; m++)
+                    {
+                        int upstreamIndex = baseUpstreamIndex + (m * originalSecondDimSize) + (j * vectorSize);
+                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex);
+                        sum += vec;
+                    }
+
+                    sum.CopyTo(grad.Data, gradIndex);
+                }
+
+                // Handle remaining elements
+                for (int j = remainderStart; j < originalSecondDimSize; j++)
+                {
+                    double sum = 0;
+                    for (int m = 0; m < multipleSecondDim; m++)
+                    {
+                        int upstreamIndex = baseUpstreamIndex + (m * originalSecondDimSize) + j;
+                        sum += upstreamGradient.Data[upstreamIndex];
+                    }
+
+                    grad.Data[baseGradIndex + j] = sum;
+                }
+            });
+
+            return grad;
+        }
+
+        private Tensor TileReverseSpecializedCaseN1SIMD(Tensor upstreamGradient, int[] originalShape, int multipleFirstDim)
+        {
+            Tensor grad = new Tensor(originalShape);
+            int originalFirstDimSize = originalShape[0];
+            int secondDimSize = originalShape[1];
+
+            int vectorSize = Vector<double>.Count;
+            int simdIterations = secondDimSize / vectorSize;
+            int remainderStart = simdIterations * vectorSize;
+
+            Parallel.For(0, originalFirstDimSize, i =>
+            {
+                double[] sumArray = new double[vectorSize];
+                int baseUpstreamIndex = i * multipleFirstDim * secondDimSize;
+                int baseGradIndex = i * secondDimSize;
+
+                for (int m = 0; m < multipleFirstDim; m++)
+                {
+                    int upstreamIndex = baseUpstreamIndex + (m * secondDimSize);
+
+                    // SIMD summing
+                    for (int j = 0; j < simdIterations; j++)
+                    {
+                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex + (j * vectorSize));
+                        Vector<double> sumVec = new Vector<double>(sumArray);
+                        sumVec += vec;
+                        sumVec.CopyTo(sumArray);
+                    }
+
+                    // Handle remaining elements
+                    for (int j = remainderStart; j < secondDimSize; j++)
+                    {
+                        sumArray[j - remainderStart] += upstreamGradient.Data[upstreamIndex + j];
+                    }
+                }
+
+                // Store the results
+                new Span<double>(sumArray).CopyTo(new Span<double>(grad.Data, baseGradIndex, secondDimSize));
+
+                // Handle any remaining elements if secondDimSize > vectorSize
+                if (remainderStart < secondDimSize)
+                {
+                    for (int j = vectorSize; j < secondDimSize; j++)
+                    {
+                        grad.Data[baseGradIndex + j] = sumArray[j % vectorSize];
+                    }
+                }
+            });
+
+            return grad;
+        }
+
+        private Tensor TileReverseSpecializedCaseSecondDim(Tensor upstreamGradient, int[] originalShape, int multipleSecondDim)
+        {
+            Tensor grad = new Tensor(originalShape);
+            int originalSecondDimSize = originalShape[1];
+            int totalElementsPerSecondDim = originalShape[0] * originalShape[2] * originalShape[3];
+
+            // Prepare SIMD vectors
+            int vectorSize = Vector<double>.Count;
+            int simdIterations = multipleSecondDim / vectorSize;
+            int remainderElements = multipleSecondDim % vectorSize;
+
+            Parallel.For(0, totalElementsPerSecondDim, i =>
+            {
+                int baseIndexOriginal = i * originalSecondDimSize;
+                int baseIndexUpstream = i * multipleSecondDim;
+
+                for (int j = 0; j < originalSecondDimSize; j++)
+                {
+                    Vector<double> sum = Vector<double>.Zero;
+                    int upstreamIndex = baseIndexUpstream + j;
+
+                    // SIMD summing
+                    for (int k = 0; k < simdIterations; k++)
+                    {
+                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex + (k * vectorSize * originalSecondDimSize));
+                        sum += vec;
+                    }
+
+                    // Sum the elements in the final vector
+                    double result = Vector.Dot(sum, Vector<double>.One);
+
+                    // Handle remaining elements
+                    for (int k = simdIterations * vectorSize; k < multipleSecondDim; k++)
+                    {
+                        result += upstreamGradient.Data[upstreamIndex + (k * originalSecondDimSize)];
+                    }
+
+                    grad.Data[baseIndexOriginal + j] = result / multipleSecondDim;
+                }
+            });
+
+            return grad;
+        }
+
+        private Tensor TileReverseSpecializedCaseSIMD(Tensor upstreamGradient, int[] originalShape, int multipleThirdDim)
+        {
+            Tensor grad = new Tensor(originalShape);
+            int originalThirdDimSize = originalShape[2];
+            int totalElementsPerThirdDim = originalShape[0] * originalShape[1] * originalShape[3];
+
+            int vectorSize = Vector<double>.Count;
+            int simdIterations = multipleThirdDim / vectorSize;
+            int remainderElements = multipleThirdDim % vectorSize;
+
+            Parallel.For(0, totalElementsPerThirdDim, i =>
+            {
+                int baseIndex = i * originalThirdDimSize;
+                for (int j = 0; j < originalThirdDimSize; j++)
+                {
+                    Vector<double> sum = Vector<double>.Zero;
+                    int upstreamIndex = baseIndex + (j * multipleThirdDim);
+
+                    // SIMD summing
+                    for (int k = 0; k < simdIterations; k++)
+                    {
+                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex + (k * vectorSize));
+                        sum += vec;
+                    }
+
+                    // Sum the elements in the final vector
+                    double scalarSum = Vector.Dot(sum, Vector<double>.One);
+
+                    // Handle remaining elements
+                    for (int k = simdIterations * vectorSize; k < multipleThirdDim; k++)
+                    {
+                        scalarSum += upstreamGradient.Data[upstreamIndex + k];
+                    }
+
+                    grad.Data[baseIndex + j] = scalarSum;
+                }
+            });
+
+            return grad;
         }
 
         /// <summary>
@@ -2362,11 +2579,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="sourceIndices">The current indices in the source tensor.</param>
         /// <param name="destIndices">The current indices in the destination tensor.</param>
         /// <param name="currentDim">The current dimension being processed.</param>
-        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices, int currentDim)
+        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
         {
             if (currentDim == dest.Shape.Length)
             {
-                dest[destIndices] += source[sourceIndices];
+                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
                 return;
             }
 
@@ -2379,11 +2596,12 @@ namespace ParallelReverseAutoDiff.PRAD
                 int destIndex = 0;
                 for (int i = sourceStart; i < sourceEnd; i += sourceStep)
                 {
-                    int[] newSourceIndices = (int[])sourceIndices.Clone();
-                    newSourceIndices[currentDim] = destIndex;
-
-                    int[] newDestIndices = (int[])destIndices.Clone();
-                    newDestIndices[currentDim] = i;
+                    Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                    Memory<int> newDestIndices = new int[destIndices.Length];
+                    sourceIndices.CopyTo(newSourceIndices);
+                    destIndices.CopyTo(newDestIndices);
+                    newSourceIndices.Span[currentDim] = destIndex;
+                    newDestIndices.Span[currentDim] = i;
 
                     this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
                     destIndex++;
@@ -2391,11 +2609,88 @@ namespace ParallelReverseAutoDiff.PRAD
             }
             else
             {
-                int[] newSourceIndices = (int[])sourceIndices.Clone();
-                newSourceIndices[currentDim] = sourceStart;
+                Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                sourceIndices.CopyTo(newSourceIndices);
+                newSourceIndices.Span[currentDim] = sourceStart;
 
                 this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
             }
+        }
+
+        private void CopyDataReverseOne(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
+        {
+            if (currentDim == dest.Shape.Length)
+            {
+                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
+                return;
+            }
+
+            int sourceStart = start[currentDim];
+            int sourceEnd = end[currentDim];
+
+            if (isSlice[currentDim])
+            {
+                int sliceSize = sourceEnd - sourceStart;
+
+                if (sliceSize >= 100 && currentDim < 2)
+                {
+                    Parallel.For(
+                        0,
+                        sliceSize,
+                        new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },
+                        index =>
+                        {
+                            Memory<int> localSourceIndices = new int[sourceIndices.Length];
+                            Memory<int> localDestIndices = new int[destIndices.Length];
+                            sourceIndices.CopyTo(localSourceIndices);
+                            destIndices.CopyTo(localDestIndices);
+                            localSourceIndices.Span[currentDim] = index;
+                            localDestIndices.Span[currentDim] = sourceStart + index;
+                            this.CopyDataReverseOne(source, dest, start, end, step, isSlice, localSourceIndices, localDestIndices, currentDim + 1);
+                        });
+                }
+                else
+                {
+                    for (int i = 0; i < sliceSize; i++)
+                    {
+                        Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                        Memory<int> newDestIndices = new int[destIndices.Length];
+                        sourceIndices.CopyTo(newSourceIndices);
+                        destIndices.CopyTo(newDestIndices);
+                        newSourceIndices.Span[currentDim] = i;
+                        newDestIndices.Span[currentDim] = sourceStart + i;
+                        this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
+                    }
+                }
+            }
+            else
+            {
+                Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                sourceIndices.CopyTo(newSourceIndices);
+                newSourceIndices.Span[currentDim] = sourceStart;
+                this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
+            }
+        }
+
+        private int GetFullIndex(Memory<int> indices, int lastDimIndex, Memory<int> shape)
+        {
+            int index = 0;
+            int stride = 1;
+            for (int i = indices.Length - 1; i >= 0; i--)
+            {
+                if (i == indices.Length - 1)
+                {
+                    index += lastDimIndex * stride;
+                }
+                else
+                {
+                    index += indices.Span[i] * stride;
+                }
+
+                stride *= shape.Span[i];
+            }
+
+            return index;
         }
 
         private int GetTotalSize(int[] shape)

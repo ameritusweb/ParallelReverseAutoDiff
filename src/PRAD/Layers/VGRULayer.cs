@@ -84,13 +84,19 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             PradOp currentInput = decomposed.PradOp;
 
             // Layer Operations
-            for (int layer = 0; layer < 1; layer++)
+            for (int layer = 0; layer < this.updateWeights.Length; layer++)
             {
                 // Update gate (z) computation
                 var currentInputBranches = currentInput.BranchStack(2);
                 var hiddenStateBranches = hiddenState.BranchStack(3);
+
+                if (layer > 0)
+                {
+                    hiddenState = hiddenState.Branch();
+                }
+
                 var h1 = hiddenStateBranches.Pop();
-                var z = this.ComputeGate(currentInput, h1, this.updateWeights[layer]);
+                var z = this.ComputeGate(layer > 0 ? hiddenState : currentInput, h1, this.updateWeights[layer]);
 
                 // Reset gate (r) computation
                 var h2 = hiddenStateBranches.Pop();
@@ -103,9 +109,7 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
                 var candidateHidden = this.ComputeCandidateHiddenState(c2, h3, r.PradOp, this.candidateWeights[layer]);
 
                 // New hidden state computation
-                var newHiddenState = this.UpdateHiddenState(hiddenState, z.PradOp, candidateHidden.PradOp, this.hiddenWeights[layer][0]);
-
-                newHiddenState.Back(new Tensor(new int[] { 100, 2400 }, 1d));
+                var newHiddenState = this.UpdateHiddenState(layer > 0 ? currentInput : hiddenState, z.PradOp, candidateHidden.PradOp, this.hiddenWeights[layer][0]);
 
                 hiddenState = newHiddenState.PradOp;
 
@@ -121,8 +125,6 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var convOutput = this.vectorTools.CustomVectorConvolution(mag1.PradOp, angle1.PradOp, splitFilter.Item1.PradOp, splitFilter.Item2.PradOp);
 
             var output = this.vectorTools.SineSoftmax(convOutput.PradOp);
-
-            output.Back(new Tensor(new int[] { 4 }, 1d));
 
             return output;
         }
