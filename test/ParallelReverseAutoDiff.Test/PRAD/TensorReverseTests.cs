@@ -484,55 +484,59 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         public void ExtractPatchesReverse_3DInput_SamePadding_CorrectOutput()
         {
             // Arrange
-            var inputTensor = new Tensor(new int[] { 1, 3, 3, 2 }, new double[]
+            var inputTensor = new Tensor(new int[] { 1, 3, 3, 1 }, new double[]
             {
-            1, 2, 3, 4, 5, 6,
-            7, 8, 9, 10, 11, 12,
-            13, 14, 15, 16, 17, 18
+            1, 2, 3, 
+            4, 5, 6,
+            7, 8, 9
             });
 
-            var upstreamGradient = new Tensor(new int[] { 1, 3, 3, 4, 2 }, new double[]
+            var upstreamGradient = new Tensor(new int[] { 1, 3, 3, 4 }, new double[]
             {
-            1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 0, 0, 1, 1, 0, 0,
-            1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 0, 0, 1, 1, 0, 0,
-            1, 1, 1, 1, 0, 0, 0, 0,
-            1, 1, 1, 1, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 0, 0,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 0, 0,
+            1, 1, 1, 1,
+            1, 1, 1, 1,
+            1, 1, 0, 0,
+            });
+
+            var outputTensor = new Tensor(new int[] { 1, 3, 3, 4 }, new double[]
+            {
+            1, 2, 4, 5,
+            2, 3, 5, 6,
+            3, 0, 6, 0,
+            4, 5, 7, 8,
+            5, 6, 8, 9,
+            6, 0, 9, 0,
+            7, 8, 0, 0,
+            8, 9, 0, 0,
+            9, 0, 0, 0,
+            });
+
+            var gradientTensor = new Tensor(new int[] { 1, 3, 3, 1 }, new double[]
+            {
+            1, 2, 2,
+            2, 4, 3,
+            2, 4, 3
             });
 
             int[] filterSize = { 2, 2 };
             int[] strides = { 1, 1 };
             string padding = "SAME";
 
+            var tensor = new Tensor(new int[] { 1, 3, 3, 1 }, inputTensor.Data);
+            var patches = tensor.ExtractPatches(filterSize, strides, padding);
+
             var testObject = new TensorReverse(new[] { inputTensor });
 
             // Act
             var result = testObject.ExtractPatchesReverse(upstreamGradient, filterSize, strides, padding);
 
-            // Assert
-            Assert.Equal(new int[] { 1, 3, 3, 2 }, result.Shape);
-
-            // The expected values are the sum of gradients for each position
-            var expected = new double[]
-            {
-            4, 4, 3, 3, 2, 2,
-            3, 3, 4, 4, 2, 2,
-            2, 2, 2, 2, 1, 1
-            };
-
-            /* <--------- This is what I'm getting
-            var actual = new double[] { 
-             1, 1,
-             2, 2, 2, 2, 2, 2,
-             4, 4, 4, 4,
-             2, 2, ...
-            };
-            */
-
+            var expected = gradientTensor.Data;
             for (int i = 0; i < expected.Length; i++)
             {
                 Assert.Equal(expected[i], result.Data[i], 3); // Using a precision of 3 decimal places

@@ -1021,6 +1021,11 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new ArgumentException("Filter size and strides must have 2 dimensions (height, width).");
             }
 
+            if (padding == "SAME")
+            {
+                return this.ExtractPatchesSameReverse(upstreamGradient, filterSize, strides);
+            }
+
             int batchSize = inputTensor.Shape[0];
             int inputHeight = inputTensor.Shape[1];
             int inputWidth = inputTensor.Shape[2];
@@ -1034,14 +1039,7 @@ namespace ParallelReverseAutoDiff.PRAD
             // Compute padding for SAME or VALID mode
             int padTop, padBottom, padLeft, padRight;
 
-            if (padding == "SAME")
-            {
-                padTop = (filterHeight - 1) / 2;
-                padBottom = (filterHeight - 1) - padTop;
-                padLeft = (filterWidth - 1) / 2;
-                padRight = (filterWidth - 1) - padLeft;
-            }
-            else if (padding == "VALID")
+            if (padding == "VALID")
             {
                 padTop = padBottom = padLeft = padRight = 0;
             }
@@ -1093,6 +1091,68 @@ namespace ParallelReverseAutoDiff.PRAD
             if (padTop != 0 || padBottom != 0 || padLeft != 0 || padRight != 0)
             {
                 return this.RemovePadding(inputGradient, padTop, padBottom, padLeft, padRight);
+            }
+
+            return inputGradient;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for ExtractPatches using the original input tensor.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer (patches).</param>
+        /// <param name="filterSize">The size of the sliding window [filter_height, filter_width].</param>
+        /// <param name="strides">The strides for the sliding window [stride_height, stride_width].</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor ExtractPatchesSameReverse(Tensor upstreamGradient, int[] filterSize, int[] strides)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            int batchSize = inputTensor.Shape[0];
+            int inputHeight = inputTensor.Shape[1];
+            int inputWidth = inputTensor.Shape[2];
+            int channels = inputTensor.Shape[3];
+
+            int filterHeight = filterSize[0];
+            int filterWidth = filterSize[1];
+            int strideHeight = strides[0];
+            int strideWidth = strides[1];
+
+            int outHeight = upstreamGradient.Shape[1];
+            int outWidth = upstreamGradient.Shape[2];
+
+            Tensor inputGradient = new Tensor(new int[] { batchSize, inputHeight, inputWidth, channels });
+
+            int padTop = (filterHeight - 1) / 2;
+            int padBottom = filterHeight - 1 - padTop;
+            int padLeft = (filterWidth - 1) / 2;
+            int padRight = filterWidth - 1 - padLeft;
+
+            for (int b = 0; b < batchSize; b++)
+            {
+                for (int oh = 0; oh < outHeight; oh++)
+                {
+                    for (int ow = 0; ow < outWidth; ow++)
+                    {
+                        for (int fh = 0; fh < filterHeight; fh++)
+                        {
+                            for (int fw = 0; fw < filterWidth; fw++)
+                            {
+                                int ih = (oh * strideHeight) + fh - padTop;
+                                int iw = (ow * strideWidth) + fw - padLeft;
+
+                                if (ih >= 0 && ih < inputHeight && iw >= 0 && iw < inputWidth)
+                                {
+                                    for (int c = 0; c < channels; c++)
+                                    {
+                                        int upstreamIndex = (((((((((b * outHeight) + oh) * outWidth) + ow) * filterHeight) + fh) * filterWidth) + fw) * channels) + c;
+                                        int inputGradientIndex = (((((b * inputHeight) + ih) * inputWidth) + iw) * channels) + c;
+
+                                        inputGradient.Data[inputGradientIndex] += upstreamGradient.Data[upstreamIndex];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             return inputGradient;
