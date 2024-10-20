@@ -2347,6 +2347,167 @@ namespace ParallelReverseAutoDiff.PRAD
             return result;
         }
 
+        /// <summary>
+        /// Expands '...' (ellipsis) into a full set of indices, selecting all preceding dimensions fully.
+        /// </summary>
+        /// <param name="indices">The provided indices, which may contain '...'.</param>
+        /// <param name="rank">The rank of the tensor (number of dimensions).</param>
+        /// <returns>An expanded array of indices where '...' has been replaced by the appropriate number of full-dimension selectors.</returns>
+        private string?[] ExpandEllipsis(string?[] indices, int rank)
+        {
+            // Check if '...' exists in the indices
+            int ellipsisIndex = Array.IndexOf(indices, "...");
+            if (ellipsisIndex == -1)
+            {
+                // No ellipsis found, return the indices as-is
+                return indices;
+            }
+
+            // Replace '...' with null values to select all preceding dimensions fully
+            int numMissing = rank - (indices.Length - 1); // Calculate how many dimensions are implied by '...'
+            string?[] expandedIndices = new string?[rank];
+
+            // Fill in the indices before the ellipsis
+            Array.Copy(indices, 0, expandedIndices, 0, ellipsisIndex);
+
+            // Fill in nulls for the dimensions that '...' represents
+            for (int i = ellipsisIndex; i < ellipsisIndex + numMissing; i++)
+            {
+                expandedIndices[i] = null;  // null means select the entire dimension
+            }
+
+            // Copy the remaining indices after the ellipsis
+            Array.Copy(indices, ellipsisIndex + 1, expandedIndices, ellipsisIndex + numMissing, indices.Length - ellipsisIndex - 1);
+
+            return expandedIndices;
+        }
+
+        /// <summary>
+        /// Copies data from the upstream gradient to the result tensor in reverse operation.
+        /// </summary>
+        /// <param name="source">The source tensor (upstream gradient).</param>
+        /// <param name="dest">The destination tensor (original gradient).</param>
+        /// <param name="start">The start indices for slicing.</param>
+        /// <param name="end">The end indices for slicing.</param>
+        /// <param name="step">The step sizes for slicing.</param>
+        /// <param name="isSlice">Indicates whether the dimension is sliced.</param>
+        /// <param name="sourceIndices">The current indices in the source tensor.</param>
+        /// <param name="destIndices">The current indices in the destination tensor.</param>
+        /// <param name="currentDim">The current dimension being processed.</param>
+        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
+        {
+            if (currentDim == dest.Shape.Length)
+            {
+                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
+                return;
+            }
+
+            int sourceStart = start[currentDim];
+            int sourceEnd = end[currentDim];
+            int sourceStep = step[currentDim];
+
+            if (isSlice[currentDim])
+            {
+                int destIndex = 0;
+                for (int i = sourceStart; i < sourceEnd; i += sourceStep)
+                {
+                    Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                    Memory<int> newDestIndices = new int[destIndices.Length];
+                    sourceIndices.CopyTo(newSourceIndices);
+                    destIndices.CopyTo(newDestIndices);
+                    newSourceIndices.Span[currentDim] = destIndex;
+                    newDestIndices.Span[currentDim] = i;
+
+                    this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
+                    destIndex++;
+                }
+            }
+            else
+            {
+                Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                sourceIndices.CopyTo(newSourceIndices);
+                newSourceIndices.Span[currentDim] = sourceStart;
+
+                this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
+            }
+        }
+
+        private void CopyDataReverseOne(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
+        {
+            if (currentDim == dest.Shape.Length)
+            {
+                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
+                return;
+            }
+
+            int sourceStart = start[currentDim];
+            int sourceEnd = end[currentDim];
+
+            if (isSlice[currentDim])
+            {
+                int sliceSize = sourceEnd - sourceStart;
+
+                if (sliceSize >= 100 && currentDim < 2)
+                {
+                    Parallel.For(
+                        0,
+                        sliceSize,
+                        new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },
+                        index =>
+                        {
+                            Memory<int> localSourceIndices = new int[sourceIndices.Length];
+                            Memory<int> localDestIndices = new int[destIndices.Length];
+                            sourceIndices.CopyTo(localSourceIndices);
+                            destIndices.CopyTo(localDestIndices);
+                            localSourceIndices.Span[currentDim] = index;
+                            localDestIndices.Span[currentDim] = sourceStart + index;
+                            this.CopyDataReverseOne(source, dest, start, end, step, isSlice, localSourceIndices, localDestIndices, currentDim + 1);
+                        });
+                }
+                else
+                {
+                    for (int i = 0; i < sliceSize; i++)
+                    {
+                        Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                        Memory<int> newDestIndices = new int[destIndices.Length];
+                        sourceIndices.CopyTo(newSourceIndices);
+                        destIndices.CopyTo(newDestIndices);
+                        newSourceIndices.Span[currentDim] = i;
+                        newDestIndices.Span[currentDim] = sourceStart + i;
+                        this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
+                    }
+                }
+            }
+            else
+            {
+                Memory<int> newSourceIndices = new int[sourceIndices.Length];
+                sourceIndices.CopyTo(newSourceIndices);
+                newSourceIndices.Span[currentDim] = sourceStart;
+                this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
+            }
+        }
+
+        private int GetFullIndex(Memory<int> indices, int lastDimIndex, Memory<int> shape)
+        {
+            int index = 0;
+            int stride = 1;
+            for (int i = indices.Length - 1; i >= 0; i--)
+            {
+                if (i == indices.Length - 1)
+                {
+                    index += lastDimIndex * stride;
+                }
+                else
+                {
+                    index += indices.Span[i] * stride;
+                }
+
+                stride *= shape.Span[i];
+            }
+
+            return index;
+        }
+
         private Tensor TileReverseSpecializedCase1NSIMD(Tensor upstreamGradient, int[] originalShape, int multipleSecondDim)
         {
             Tensor grad = new Tensor(originalShape);
@@ -2530,167 +2691,6 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return grad;
-        }
-
-        /// <summary>
-        /// Expands '...' (ellipsis) into a full set of indices, selecting all preceding dimensions fully.
-        /// </summary>
-        /// <param name="indices">The provided indices, which may contain '...'.</param>
-        /// <param name="rank">The rank of the tensor (number of dimensions).</param>
-        /// <returns>An expanded array of indices where '...' has been replaced by the appropriate number of full-dimension selectors.</returns>
-        private string?[] ExpandEllipsis(string?[] indices, int rank)
-        {
-            // Check if '...' exists in the indices
-            int ellipsisIndex = Array.IndexOf(indices, "...");
-            if (ellipsisIndex == -1)
-            {
-                // No ellipsis found, return the indices as-is
-                return indices;
-            }
-
-            // Replace '...' with null values to select all preceding dimensions fully
-            int numMissing = rank - (indices.Length - 1); // Calculate how many dimensions are implied by '...'
-            string?[] expandedIndices = new string?[rank];
-
-            // Fill in the indices before the ellipsis
-            Array.Copy(indices, 0, expandedIndices, 0, ellipsisIndex);
-
-            // Fill in nulls for the dimensions that '...' represents
-            for (int i = ellipsisIndex; i < ellipsisIndex + numMissing; i++)
-            {
-                expandedIndices[i] = null;  // null means select the entire dimension
-            }
-
-            // Copy the remaining indices after the ellipsis
-            Array.Copy(indices, ellipsisIndex + 1, expandedIndices, ellipsisIndex + numMissing, indices.Length - ellipsisIndex - 1);
-
-            return expandedIndices;
-        }
-
-        /// <summary>
-        /// Copies data from the upstream gradient to the result tensor in reverse operation.
-        /// </summary>
-        /// <param name="source">The source tensor (upstream gradient).</param>
-        /// <param name="dest">The destination tensor (original gradient).</param>
-        /// <param name="start">The start indices for slicing.</param>
-        /// <param name="end">The end indices for slicing.</param>
-        /// <param name="step">The step sizes for slicing.</param>
-        /// <param name="isSlice">Indicates whether the dimension is sliced.</param>
-        /// <param name="sourceIndices">The current indices in the source tensor.</param>
-        /// <param name="destIndices">The current indices in the destination tensor.</param>
-        /// <param name="currentDim">The current dimension being processed.</param>
-        private void CopyDataReverse(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
-        {
-            if (currentDim == dest.Shape.Length)
-            {
-                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
-                return;
-            }
-
-            int sourceStart = start[currentDim];
-            int sourceEnd = end[currentDim];
-            int sourceStep = step[currentDim];
-
-            if (isSlice[currentDim])
-            {
-                int destIndex = 0;
-                for (int i = sourceStart; i < sourceEnd; i += sourceStep)
-                {
-                    Memory<int> newSourceIndices = new int[sourceIndices.Length];
-                    Memory<int> newDestIndices = new int[destIndices.Length];
-                    sourceIndices.CopyTo(newSourceIndices);
-                    destIndices.CopyTo(newDestIndices);
-                    newSourceIndices.Span[currentDim] = destIndex;
-                    newDestIndices.Span[currentDim] = i;
-
-                    this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
-                    destIndex++;
-                }
-            }
-            else
-            {
-                Memory<int> newSourceIndices = new int[sourceIndices.Length];
-                sourceIndices.CopyTo(newSourceIndices);
-                newSourceIndices.Span[currentDim] = sourceStart;
-
-                this.CopyDataReverse(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
-            }
-        }
-
-        private void CopyDataReverseOne(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
-        {
-            if (currentDim == dest.Shape.Length)
-            {
-                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
-                return;
-            }
-
-            int sourceStart = start[currentDim];
-            int sourceEnd = end[currentDim];
-
-            if (isSlice[currentDim])
-            {
-                int sliceSize = sourceEnd - sourceStart;
-
-                if (sliceSize >= 100 && currentDim < 2)
-                {
-                    Parallel.For(
-                        0,
-                        sliceSize,
-                        new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },
-                        index =>
-                        {
-                            Memory<int> localSourceIndices = new int[sourceIndices.Length];
-                            Memory<int> localDestIndices = new int[destIndices.Length];
-                            sourceIndices.CopyTo(localSourceIndices);
-                            destIndices.CopyTo(localDestIndices);
-                            localSourceIndices.Span[currentDim] = index;
-                            localDestIndices.Span[currentDim] = sourceStart + index;
-                            this.CopyDataReverseOne(source, dest, start, end, step, isSlice, localSourceIndices, localDestIndices, currentDim + 1);
-                        });
-                }
-                else
-                {
-                    for (int i = 0; i < sliceSize; i++)
-                    {
-                        Memory<int> newSourceIndices = new int[sourceIndices.Length];
-                        Memory<int> newDestIndices = new int[destIndices.Length];
-                        sourceIndices.CopyTo(newSourceIndices);
-                        destIndices.CopyTo(newDestIndices);
-                        newSourceIndices.Span[currentDim] = i;
-                        newDestIndices.Span[currentDim] = sourceStart + i;
-                        this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
-                    }
-                }
-            }
-            else
-            {
-                Memory<int> newSourceIndices = new int[sourceIndices.Length];
-                sourceIndices.CopyTo(newSourceIndices);
-                newSourceIndices.Span[currentDim] = sourceStart;
-                this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
-            }
-        }
-
-        private int GetFullIndex(Memory<int> indices, int lastDimIndex, Memory<int> shape)
-        {
-            int index = 0;
-            int stride = 1;
-            for (int i = indices.Length - 1; i >= 0; i--)
-            {
-                if (i == indices.Length - 1)
-                {
-                    index += lastDimIndex * stride;
-                }
-                else
-                {
-                    index += indices.Span[i] * stride;
-                }
-
-                stride *= shape.Span[i];
-            }
-
-            return index;
         }
 
         private int GetTotalSize(int[] shape)
