@@ -1126,7 +1126,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int padLeft = (filterWidth - 1) / 2;
             int padRight = filterWidth - 1 - padLeft;
 
-            for (int b = 0; b < batchSize; b++)
+            Parallel.For(0, batchSize, b =>
             {
                 for (int oh = 0; oh < outHeight; oh++)
                 {
@@ -1153,7 +1153,7 @@ namespace ParallelReverseAutoDiff.PRAD
                         }
                     }
                 }
-            }
+            });
 
             return inputGradient;
         }
