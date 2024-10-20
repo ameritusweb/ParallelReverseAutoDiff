@@ -2329,20 +2329,13 @@ namespace ParallelReverseAutoDiff.PRAD
                 inputTensor.ParseIndex(indices[i], inputTensor.Shape[i], out start[i], out end[i], out step[i], out isSlice[i]);
             }
 
-            int[] newShape = inputTensor.CalculateNewShape(start, end, step, isSlice);
             Tensor result = new Tensor(inputTensor.Shape);
+            Array.Fill(result.Data, 0.0f);  // Initialize with zeros
 
-            Memory<int> sourceIndices = new int[inputTensor.Shape.Length];
-            Memory<int> destIndices = new int[inputTensor.Shape.Length];
+            int[] sourceIndices = new int[upstreamGradient.Shape.Length];
+            int[] destIndices = new int[inputTensor.Shape.Length];
 
-            if (step.All(s => s == 1))
-            {
-                this.CopyDataReverseOne(upstreamGradient, result, start, end, step, isSlice, sourceIndices, destIndices, 0);
-            }
-            else
-            {
-                this.CopyDataReverse(upstreamGradient, result, start, end, step, isSlice, sourceIndices, destIndices, 0);
-            }
+            this.CopyDataReverseOne(upstreamGradient, result, start, end, step, isSlice, sourceIndices, destIndices, 0);
 
             return result;
         }
@@ -2432,59 +2425,85 @@ namespace ParallelReverseAutoDiff.PRAD
             }
         }
 
-        private void CopyDataReverseOne(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, Memory<int> sourceIndices, Memory<int> destIndices, int currentDim)
+        private void CopyDataReverseOne(Tensor source, Tensor dest, int[] start, int[] end, int[] step, bool[] isSlice, int[] sourceIndices, int[] destIndices, int currentDim)
         {
-            if (currentDim == dest.Shape.Length)
+            int sourceSize = source.Shape[currentDim];
+            int destStart = start[currentDim];
+            int destEnd = end[currentDim];
+            int destStep = step[currentDim];
+
+            for (int i = 0; i < sourceSize; i++)
             {
-                dest.Data[this.GetFullIndex(destIndices, 0, dest.Shape)] += source.Data[this.GetFullIndex(sourceIndices, 0, source.Shape)];
-                return;
-            }
+                sourceIndices[currentDim] = i;
+                destIndices[currentDim] = destStart + (i * destStep);
 
-            int sourceStart = start[currentDim];
-            int sourceEnd = end[currentDim];
-
-            if (isSlice[currentDim])
-            {
-                int sliceSize = sourceEnd - sourceStart;
-
-                if (sliceSize >= 100 && currentDim < 2)
+                if (destIndices[currentDim] < destEnd)
                 {
-                    Parallel.For(
-                        0,
-                        sliceSize,
-                        new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },
-                        index =>
-                        {
-                            Memory<int> localSourceIndices = new int[sourceIndices.Length];
-                            Memory<int> localDestIndices = new int[destIndices.Length];
-                            sourceIndices.CopyTo(localSourceIndices);
-                            destIndices.CopyTo(localDestIndices);
-                            localSourceIndices.Span[currentDim] = index;
-                            localDestIndices.Span[currentDim] = sourceStart + index;
-                            this.CopyDataReverseOne(source, dest, start, end, step, isSlice, localSourceIndices, localDestIndices, currentDim + 1);
-                        });
-                }
-                else
-                {
-                    for (int i = 0; i < sliceSize; i++)
+                    if (currentDim < dest.Shape.Length - 1)
                     {
-                        Memory<int> newSourceIndices = new int[sourceIndices.Length];
-                        Memory<int> newDestIndices = new int[destIndices.Length];
-                        sourceIndices.CopyTo(newSourceIndices);
-                        destIndices.CopyTo(newDestIndices);
-                        newSourceIndices.Span[currentDim] = i;
-                        newDestIndices.Span[currentDim] = sourceStart + i;
-                        this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, newDestIndices, currentDim + 1);
+                        this.CopyDataReverseOne(source, dest, start, end, step, isSlice, sourceIndices, destIndices, currentDim + 1);
+                    }
+                    else if (destStep == 1)
+                    {
+                        // SIMD copy for the innermost dimension when step is 1
+                        int vectorSize = Vector<float>.Count;
+                        int remainingSize = destEnd - destIndices[currentDim];
+                        int vectorizableSize = remainingSize - (remainingSize % vectorSize);
+
+                        int sourceIndex = this.GetFlatIndex(sourceIndices, source.Shape);
+                        int destIndex = this.GetFlatIndex(destIndices, dest.Shape);
+
+                        // Vector copy
+                        for (int j = 0; j < vectorizableSize; j += vectorSize)
+                        {
+                            Vector<double> sourceVector = new Vector<double>(source.Data, sourceIndex + j);
+                            sourceVector.CopyTo(dest.Data, destIndex + j);
+                        }
+
+                        // Copy remaining elements
+                        for (int j = vectorizableSize; j < remainingSize; j++)
+                        {
+                            dest.Data[destIndex + j] = source.Data[sourceIndex + j];
+                        }
+
+                        // Skip the rest of the innermost loop as we've copied everything
+                        return;
+                    }
+                    else
+                    {
+                        // Regular copy for non-contiguous or non-SIMD cases
+                        int sourceIndex = this.GetFlatIndex(sourceIndices, source.Shape);
+                        int destIndex = this.GetFlatIndex(destIndices, dest.Shape);
+                        dest.Data[destIndex] = source.Data[sourceIndex];
                     }
                 }
             }
-            else
+        }
+
+        private int GetFlatIndex(int[] indices, int[] shape)
+        {
+            int index = 0;
+            int stride = 1;
+            for (int i = indices.Length - 1; i >= 0; i--)
             {
-                Memory<int> newSourceIndices = new int[sourceIndices.Length];
-                sourceIndices.CopyTo(newSourceIndices);
-                newSourceIndices.Span[currentDim] = sourceStart;
-                this.CopyDataReverseOne(source, dest, start, end, step, isSlice, newSourceIndices, destIndices, currentDim + 1);
+                index += indices[i] * stride;
+                stride *= shape[i];
             }
+
+            return index;
+        }
+
+        private int GetFullIndex2(int[] indices, int[] start, int[] shape)
+        {
+            int index = 0;
+            int stride = 1;
+            for (int i = indices.Length - 1; i >= 0; i--)
+            {
+                index += (indices[i] - start[i]) * stride;
+                stride *= shape[i];
+            }
+
+            return index;
         }
 
         private int GetFullIndex(Memory<int> indices, int lastDimIndex, Memory<int> shape)
