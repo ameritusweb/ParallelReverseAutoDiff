@@ -2360,6 +2360,14 @@ namespace ParallelReverseAutoDiff.PRAD
                                 {
                                     lBranch.branchTracker.RunBranchesFor(branch);
                                 }
+
+                                if (branch.UpstreamGradient == null && lBranch.splitOps != null)
+                                {
+                                    foreach (var splitOp in lBranch.splitOps)
+                                    {
+                                        splitOp.branchTracker.RunBranchesFor(branch);
+                                    }
+                                }
                             }
                         }
 
@@ -2368,9 +2376,17 @@ namespace ParallelReverseAutoDiff.PRAD
                             this.branchTracker.RunBranchesFor(branch);
                         }
 
+                        if (branch.UpstreamGradient == null && branch.splitOps != null)
+                        {
+                            foreach (var splitOp in branch.splitOps)
+                            {
+                                splitOp.branchTracker.RunBranchesFor(branch);
+                            }
+                        }
+
                         if (branch.UpstreamGradient == null)
                         {
-                            throw new Exception("Computation graph failed to propagate gradient flow. Press create a GitHub issue.");
+                            throw new Exception("Computation graph failed to propagate gradient flow.");
                         }
                     }
 
@@ -2561,6 +2577,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 branchedOp.splitIndex = i;
                 branchedOp.splitGradients = originalPradOp.splitGradients;
                 branchedOp.gradientStackCounter = 0;
+                branchedOp.LinkedBranches.Add(originalPradOp);
 
                 if (this.backpropagationSteps.Any())
                 {

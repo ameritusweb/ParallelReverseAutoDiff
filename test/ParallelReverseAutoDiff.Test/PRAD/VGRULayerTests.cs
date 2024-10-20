@@ -45,6 +45,10 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             VGRULayer layer = new VGRULayer(opInput1, opAngles, opD1, opD2, previousHiddenState, updateWeights, resetWeights, candidateWeights, hiddenWeights, convolutionFilter);
             var computeResult = layer.Compute();
+
+            var upstream = new Tensor(new int[] { 4 }, 1d);
+
+            computeResult.Back(upstream);
         
         }
 

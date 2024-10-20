@@ -171,7 +171,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             var opInput2Branch = opInput2.Branch();
 
-            var opInput2Branches = opInput2.BranchStack(3);
+            var opInput2Branches = opInput2.BranchStack(1);
 
             var w_magnitudes_t = new PradResult[2];
             var w_angles_t = new PradResult[2];
@@ -657,8 +657,13 @@ namespace ParallelReverseAutoDiff.PRAD
             var cols = opInput2.CurrentTensor.Shape[1];
             var halfCols = cols / 2;
 
-            var (magnitude1, angle1) = opInput1.Split(halfCols, axis: 1);
-            var (magnitude2, angle2) = opInput2.Split(halfCols, axis: 1);
+            var (magnitude1R, angle1R) = this.SplitInterleavedTensor(opInput1);
+            var (magnitude2R, angle2R) = this.SplitInterleavedTensor(opInput2);
+
+            var magnitude1 = magnitude1R.PradOp;
+            var angle1 = angle1R.PradOp;
+            var magnitude2 = magnitude2R.PradOp;
+            var angle2 = angle2R.PradOp;
 
             var magnitude1Branch = magnitude1.Branch();
             var angle1Branch = angle1.Branch();
@@ -726,6 +731,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The sine-softmax probability distribution output.</returns>
         public PradResult SineSoftmax(PradOp opInput1)
         {
+            var shape = opInput1.CurrentTensor.Shape;
             var sinned = opInput1.Sin();
             var exped = sinned.Then(PradOp.ExpOp);
 
@@ -734,7 +740,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             var expedBranch = exped.BranchStack(2);
             var sums = exped.PradOp.Sum(new[] { sumAxis });
-            var broadcastedSums = sums.Then(PradOp.BroadcastToOp, opInput1.SeedResult.Result.Shape);
+            var broadcastedSums = sums.Then(PradOp.BroadcastToOp, shape);
             var denominator = broadcastedSums.PradOp.Add(expedBranch.Pop().BranchInitialTensor);
             var output = denominator.PradOp.DivInto(expedBranch.Pop().BranchInitialTensor);
 
@@ -848,10 +854,12 @@ namespace ParallelReverseAutoDiff.PRAD
             var (magnitude2, angle2) = this.SplitInterleavedTensor(input2);
 
             // Average magnitudes
-            var avgMagnitude = magnitude1.PradOp.Add(magnitude2.Result).PradOp.Mul(new Tensor(magnitude1.PradOp.CurrentShape, 0.5));
+            var magnitudeSum = magnitude1.PradOp.Add(magnitude2.Result);
+            var avgMagnitude = magnitudeSum.PradOp.Mul(new Tensor(magnitude1.PradOp.CurrentShape, 0.5));
 
             // Average angles
-            var avgAngle = angle1.PradOp.Add(angle2.Result).PradOp.Mul(new Tensor(angle1.PradOp.CurrentShape, 0.5));
+            var angleSum = angle1.PradOp.Add(angle2.Result);
+            var avgAngle = angleSum.PradOp.Mul(new Tensor(angle1.PradOp.CurrentShape, 0.5));
 
             // Concatenate averaged magnitudes and angles
             return avgMagnitude.PradOp.Concat(new[] { avgAngle.Result }, axis: -1);

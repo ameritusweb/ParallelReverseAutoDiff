@@ -81,28 +81,36 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var decomposed = this.vectorTools.VectorMiniDecomposition(vectorizedInput.PradOp, this.decompositionVectors, squaredWeights.PradOp);
 
             PradOp hiddenState = this.previousHiddenState;
-            PradResult currentInput = decomposed;
+            PradOp currentInput = decomposed.PradOp;
 
             // Layer Operations
-            for (int layer = 0; layer < this.updateWeights.Length; layer++)
+            for (int layer = 0; layer < 1; layer++)
             {
                 // Update gate (z) computation
                 var currentInputBranches = currentInput.BranchStack(2);
                 var hiddenStateBranches = hiddenState.BranchStack(3);
-                var z = this.ComputeGate(currentInput.PradOp, hiddenStateBranches.Pop(), this.updateWeights[layer]);
+                var h1 = hiddenStateBranches.Pop();
+                var z = this.ComputeGate(currentInput, h1, this.updateWeights[layer]);
 
                 // Reset gate (r) computation
-                var r = this.ComputeGate(currentInputBranches.Pop(), hiddenStateBranches.Pop(), this.resetWeights[layer]);
+                var h2 = hiddenStateBranches.Pop();
+                var c1 = currentInputBranches.Pop();
+                var r = this.ComputeGate(c1, h2, this.resetWeights[layer]);
 
                 // Candidate hidden state computation
-                var candidateHidden = this.ComputeCandidateHiddenState(currentInputBranches.Pop(), hiddenStateBranches.Pop(), r.PradOp, this.candidateWeights[layer]);
+                var h3 = hiddenStateBranches.Pop();
+                var c2 = currentInputBranches.Pop();
+                var candidateHidden = this.ComputeCandidateHiddenState(c2, h3, r.PradOp, this.candidateWeights[layer]);
 
                 // New hidden state computation
                 var newHiddenState = this.UpdateHiddenState(hiddenState, z.PradOp, candidateHidden.PradOp, this.hiddenWeights[layer][0]);
+
+                newHiddenState.Back(new Tensor(new int[] { 100, 2400 }, 1d));
+
                 hiddenState = newHiddenState.PradOp;
 
                 // Update currentInput for the next layer
-                currentInput = newHiddenState;
+                currentInput = newHiddenState.PradOp;
             }
 
             // End Operations: Convolution on the final hidden state
@@ -110,7 +118,11 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var mag1 = splitHiddenStateMag.PradOp.Reshape(1, splitHiddenStateMag.PradOp.CurrentShape[0], splitHiddenStateMag.PradOp.CurrentShape[1], 1);
             var angle1 = splitHiddenStateA.PradOp.Reshape(1, splitHiddenStateA.PradOp.CurrentShape[0], splitHiddenStateA.PradOp.CurrentShape[1], 1);
             var splitFilter = this.vectorTools.SplitInterleavedTensor(this.convolutionFilter);
-            var output = this.vectorTools.CustomVectorConvolution(mag1.PradOp, angle1.PradOp, splitFilter.Item1.PradOp, splitFilter.Item2.PradOp);
+            var convOutput = this.vectorTools.CustomVectorConvolution(mag1.PradOp, angle1.PradOp, splitFilter.Item1.PradOp, splitFilter.Item2.PradOp);
+
+            var output = this.vectorTools.SineSoftmax(convOutput.PradOp);
+
+            output.Back(new Tensor(new int[] { 4 }, 1d));
 
             return output;
         }
@@ -131,7 +143,7 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var currentGate = this.vectorTools.VectorBasedMatrixMultiplication(currentInput, weights[2], currentWeights.PradOp);
             var previousGate = this.vectorTools.VectorBasedMatrixMultiplication(previousHiddenState, weights[3], previousWeights.PradOp);
 
-            var combinedGate = this.vectorTools.VectorWeightedAdd(currentGate.PradOp, previousGate.PradOp, weights[4]);
+            var combinedGate = this.vectorTools.VectorWeightedAdd(previousGate.PradOp, currentGate.PradOp, weights[4]);
             var combinedGateBranch = combinedGate.Branch();
             var gateKeys = this.vectorTools.MatrixMultiplication(combinedGateBranch, weights[5]);
             var gateKeysBroadcasted = this.vectorTools.AddBroadcasting(gateKeys.PradOp, weights[6]);
@@ -153,7 +165,7 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
         private PradResult ComputeCandidateHiddenState(PradOp currentInput, PradOp hiddenState, PradOp resetGate, PradOp[] weights)
         {
             var currentInputBranch = currentInput.Branch();
-            var weightedHiddenState = this.vectorTools.VectorWeightedAdd(hiddenState, resetGate, weights[0]);
+            var weightedHiddenState = this.vectorTools.VectorWeightedAdd(resetGate, hiddenState, weights[0]);
             var inputKeys = this.vectorTools.MatrixMultiplication(currentInputBranch, weights[1]);
             var inputKeysBroadcasted = this.vectorTools.AddBroadcasting(inputKeys.PradOp, weights[2]);
 
@@ -161,7 +173,7 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var softmaxInput = this.vectorTools.PairwiseSineSoftmax(activatedInput.PradOp);
 
             var inputAttention = this.vectorTools.VectorAttention(currentInput, softmaxInput.PradOp);
-            return this.vectorTools.VectorWeightedAdd(inputAttention.PradOp, weightedHiddenState.PradOp, weights[3]);
+            return this.vectorTools.VectorWeightedAdd(weightedHiddenState.PradOp, inputAttention.PradOp, weights[3]);
         }
 
         /// <summary>
@@ -178,9 +190,11 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
             var complementUpdateGate = this.vectorTools.ElementwiseInversion(updateGate);
 
             var weightedPreviousHiddenState = this.vectorTools.VectorAveraging(hiddenState, updateGateBranch);
-            var weightedCandidateHiddenState = this.vectorTools.VectorAveraging(candidateHiddenState, complementUpdateGate.PradOp);
+            var weightedCandidateHiddenState = this.vectorTools.VectorAveraging(complementUpdateGate.PradOp, candidateHiddenState);
 
-            return this.vectorTools.VectorWeightedAdd(weightedPreviousHiddenState.PradOp, weightedCandidateHiddenState.PradOp, hiddenWeight);
+            var res = this.vectorTools.VectorWeightedAdd(weightedPreviousHiddenState.PradOp, weightedCandidateHiddenState.PradOp, hiddenWeight);
+
+            return res;
         }
     }
 }
