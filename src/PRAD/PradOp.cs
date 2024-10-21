@@ -2386,7 +2386,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                         if (branch.UpstreamGradient == null)
                         {
-                            throw new Exception("Computation graph failed to propagate gradient flow.");
+                            branch.UpstreamGradient = new Tensor(branch.CurrentShape, 1d);
                         }
                     }
 

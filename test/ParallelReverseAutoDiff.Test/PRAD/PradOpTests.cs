@@ -1139,6 +1139,38 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestIndexer3()
+        {
+            var magnitudes = new Tensor(new int[] { 3, 12 }, Enumerable.Range(0, 36).Select(i => (i + 1) / 100d).ToArray());
+            var magnitudesOp = new PradOp(magnitudes);
+
+            var opInput2Branches = magnitudesOp.BranchStack(1);
+            var half_cols = 6;
+            var w_magnitudes_t = new PradResult[2];
+            var w_angles_t = new PradResult[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var branchM = magnitudesOp;
+
+                if (i > 0)
+                {
+                    branchM = opInput2Branches.Pop();
+                }
+
+                var (w_magnitudes_tt, w_angles_tt) = branchM.DoParallel(
+                    x => x.Indexer(":", $"{1 + i}:{half_cols}:3"),
+                    y => y.Indexer(":", $"{half_cols + 1 + i}::3"));
+
+                w_magnitudes_t[i] = w_magnitudes_tt;
+                w_angles_t[i] = w_angles_tt;
+            }
+
+            var concat = w_magnitudes_t[0].PradOp.Concat(new Tensor[] { w_magnitudes_t[1].Result }).PradOp.Concat(new Tensor[] { w_angles_t[0].Result }).PradOp.Concat(new Tensor[] { w_angles_t[1].Result });
+            
+            concat.Back(new Tensor(concat.PradOp.CurrentShape, 1d));
+        }
+
+        [Fact]
         public void TestExtractPatches()
         {
             var magnitudes = new Tensor(new int[] { 1, 3, 3, 1 }, Enumerable.Range(0, 9).Select(i => (i + 1) / 100d).ToArray());

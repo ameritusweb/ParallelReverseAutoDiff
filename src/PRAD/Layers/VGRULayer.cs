@@ -126,6 +126,8 @@ namespace ParallelReverseAutoDiff.PRAD.Layers
 
             var output = this.vectorTools.SineSoftmax(convOutput.PradOp);
 
+            output.Back(new Tensor(new int[] { 4 }, 1d));
+
             return output;
         }
 

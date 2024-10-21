@@ -2506,7 +2506,7 @@ namespace ParallelReverseAutoDiff.PRAD
                     else if (destStep == 1)
                     {
                         // SIMD copy for the innermost dimension when step is 1
-                        int vectorSize = Vector<float>.Count;
+                        int vectorSize = Vector<double>.Count;
                         int remainingSize = destEnd - destIndices[currentDim];
                         int vectorizableSize = remainingSize - (remainingSize % vectorSize);
 
