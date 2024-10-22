@@ -243,13 +243,13 @@ namespace ParallelReverseAutoDiff.PRAD
                 x => x.Mul(cosAngles_w.Result),
                 x => x.Mul(sinAngles_w.Result));
 
-            Tensor addScalar = new Tensor(opWeights.SeedResult.Result.Shape, 0.01d);
+            Tensor addScalar = new Tensor(opWeights.SeedResult.Result.Shape, PradTools.OneHundredth);
             var adjustedWeights = opWeights.Add(addScalar);
 
             var xPivotAdd = x.Then(PradOp.AddOp, xPivot.Result);
             var yPivotAdd = y.Then(PradOp.AddOp, yPivot.Result);
 
-            var weightsEpsilon = adjustedWeights.Then(PradOp.AddOp, new Tensor(opWeights.SeedResult.Result.Shape, 1e-9d));
+            var weightsEpsilon = adjustedWeights.Then(PradOp.AddOp, new Tensor(opWeights.SeedResult.Result.Shape, PradTools.Epsilon9));
 
             var sumX = xPivotAdd.Then(PradOp.DivOp, weightsEpsilon.Result);
             var sumY = yPivotAdd.Then(PradOp.DivOp, weightsEpsilon.Result);
@@ -258,10 +258,10 @@ namespace ParallelReverseAutoDiff.PRAD
             var sumYExpanded = sumY.Then(PradOp.ExpandDimsOp, -1);
 
             var sumXBranch = sumX.Branch();
-            var negativeSumXExpanded = sumXBranch.Mul(new Tensor(sumXBranch.CurrentShape, -1d));
+            var negativeSumXExpanded = sumXBranch.Mul(new Tensor(sumXBranch.CurrentShape, PradTools.NegativeOne));
 
             var sumYBranch = sumY.Branch();
-            var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, -1d));
+            var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, PradTools.NegativeOne));
 
             var sumXReshaped = sumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
             var negativeSumXReshaped = negativeSumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
@@ -429,13 +429,13 @@ namespace ParallelReverseAutoDiff.PRAD
                 x => x.Mul(cosAngles_w.Result),
                 x => x.Mul(sinAngles_w.Result));
 
-            Tensor addScalar = new Tensor(opWeights.SeedResult.Result.Shape, 0.01d);
+            Tensor addScalar = new Tensor(opWeights.SeedResult.Result.Shape, PradTools.OneHundredth);
             var adjustedWeights = opWeights.Add(addScalar);
 
             var xPivotAdd = x.Then(PradOp.AddOp, xPivot.Result);
             var yPivotAdd = y.Then(PradOp.AddOp, yPivot.Result);
 
-            var weightsEpsilon = adjustedWeights.Then(PradOp.AddOp, new Tensor(opWeights.SeedResult.Result.Shape, 1e-9d));
+            var weightsEpsilon = adjustedWeights.Then(PradOp.AddOp, new Tensor(opWeights.SeedResult.Result.Shape, PradTools.Epsilon9));
 
             var sumX = xPivotAdd.Then(PradOp.DivOp, weightsEpsilon.Result);
             var sumY = yPivotAdd.Then(PradOp.DivOp, weightsEpsilon.Result);
@@ -444,10 +444,10 @@ namespace ParallelReverseAutoDiff.PRAD
             var sumYExpanded = sumY.Then(PradOp.ExpandDimsOp, -1);
 
             var sumXBranch = sumX.Branch();
-            var negativeSumXExpanded = sumXBranch.Mul(new Tensor(sumXBranch.CurrentShape, -1d));
+            var negativeSumXExpanded = sumXBranch.Mul(new Tensor(sumXBranch.CurrentShape, PradTools.NegativeOne));
 
             var sumYBranch = sumY.Branch();
-            var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, -1d));
+            var negativeSumYExpanded = sumYBranch.Mul(new Tensor(sumYBranch.CurrentShape, PradTools.NegativeOne));
 
             var sumXReshaped = sumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
             var negativeSumXReshaped = negativeSumXExpanded.Then(PradOp.ReshapeOp, new int[] { 1, size });
@@ -780,7 +780,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             var sumExp = sinFirstExp.PradOp.Add(sinSecondExp.Result);
 
-            var epsilon = new Tensor(sumExp.PradOp.CurrentShape, 1e-9);
+            var epsilon = new Tensor(sumExp.PradOp.CurrentShape, PradTools.Epsilon9);
             var denominator = sumExp.PradOp.Add(epsilon);
 
             var denominatorBranch = denominator.Branch();
@@ -855,11 +855,11 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Average magnitudes
             var magnitudeSum = magnitude1.PradOp.Add(magnitude2.Result);
-            var avgMagnitude = magnitudeSum.PradOp.Mul(new Tensor(magnitude1.PradOp.CurrentShape, 0.5));
+            var avgMagnitude = magnitudeSum.PradOp.Mul(new Tensor(magnitude1.PradOp.CurrentShape, PradTools.Half));
 
             // Average angles
             var angleSum = angle1.PradOp.Add(angle2.Result);
-            var avgAngle = angleSum.PradOp.Mul(new Tensor(angle1.PradOp.CurrentShape, 0.5));
+            var avgAngle = angleSum.PradOp.Mul(new Tensor(angle1.PradOp.CurrentShape, PradTools.Half));
 
             // Concatenate averaged magnitudes and angles
             return avgMagnitude.PradOp.Concat(new[] { avgAngle.Result }, axis: -1);
@@ -872,7 +872,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The inverted result.</returns>
         public PradResult ElementwiseInversion(PradOp opInput1)
         {
-            return opInput1.SubFrom(new Tensor(opInput1.CurrentShape, 1d));
+            return opInput1.SubFrom(new Tensor(opInput1.CurrentShape, PradTools.One));
         }
 
         /// <summary>
@@ -937,8 +937,8 @@ namespace ParallelReverseAutoDiff.PRAD
                     var result = new Tensor(inputTensor.Shape);
                     for (int i = 0; i < inputTensor.Data.Length; i++)
                     {
-                        double x = inputTensor.Data[i];
-                        result.Data[i] = x > 0 ? x : 0.01d * x;
+                        var x = inputTensor.Data[i];
+                        result.Data[i] = x > 0 ? x : PradTools.OneHundredth * x;
                     }
 
                     return result;
@@ -948,8 +948,8 @@ namespace ParallelReverseAutoDiff.PRAD
                     var gradientTensor = new Tensor(inputTensor.Shape);
                     for (int i = 0; i < inputTensor.Data.Length; i++)
                     {
-                        double x = inputTensor.Data[i];
-                        double gradient = x > 0 ? 1.0 : 0.01d;
+                        var x = inputTensor.Data[i];
+                        var gradient = x > 0 ? PradTools.One : PradTools.OneHundredth;
                         gradientTensor.Data[i] = upstreamGradient.Data[i] * gradient;
                     }
 
@@ -1094,7 +1094,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                     double lossMagnitude = (arcLength + distanceAccum) / 2d;
 
-                    output[0, 0] = lossMagnitude;
+                    output[0, 0] = (float)lossMagnitude;
 
                     return output;
                 },
@@ -1128,10 +1128,10 @@ namespace ParallelReverseAutoDiff.PRAD
                     double dLoss_dX = (xOutput - xTargetUnnormalized) * (3d / 2d);
                     double dLoss_dY = (yOutput - yTargetUnnormalized) * (3d / 2d);
 
-                    var anglesTensor = new Tensor(new[] { 1, 2 }, new[] { actualAngle, targetAngle });
+                    var anglesTensor = new Tensor(new[] { 1, 2 }, new[] { PradTools.Cast(actualAngle), PradTools.Cast(targetAngle) });
                     (double cX, double cY) = anglesTensor.CalculateCoefficient();
-                    dPredictions[0, 0] = cX * Math.Abs(gradXOutput + dLoss_dX) * upstreamGradient[0, 0];
-                    dPredictions[0, 1] = cY * Math.Abs(gradYOutput + dLoss_dY) * upstreamGradient[0, 0];
+                    dPredictions[0, 0] = PradTools.Cast(cX * Math.Abs(gradXOutput + dLoss_dX) * upstreamGradient[0, 0]);
+                    dPredictions[0, 1] = PradTools.Cast(cY * Math.Abs(gradYOutput + dLoss_dY) * upstreamGradient[0, 0]);
 
                     return new[] { dPredictions };
                 });

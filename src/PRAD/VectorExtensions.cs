@@ -8,6 +8,7 @@ namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
     using System.Numerics;
+    using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// Vector Extensions.
@@ -47,7 +48,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int rows = matrix.Length;
             int cols = matrix[0].Length;
             var output = new Tensor(new int[] { rows, cols * 2 });
-            double[] data = new double[rows * cols * 2];
+            var data = PradTools.AllocateArray(rows * cols * 2);
             int index = 0;
             for (int i = 0; i < rows; ++i)
             {

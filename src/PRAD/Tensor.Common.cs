@@ -326,7 +326,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int fanOut = shape[shape.Length - 1];
 
             // Xavier uniform range
-            var limit = Math.Sqrt(6.0 / (fanIn + fanOut));
+            var limit = PradMath.Sqrt(PradTools.Six / (fanIn + fanOut));
 
             // Create a tensor and fill it with values from a uniform distribution in the range [-limit, limit]
             var result = new Tensor(shape);
@@ -336,7 +336,7 @@ namespace ParallelReverseAutoDiff.PRAD
             Parallel.For(0, totalSize, i =>
             {
                 // Generate a uniform random value in [-1, 1]
-                var randomValue = (2.0 * RandomGen.Value.NextDouble()) - 1.0;
+                var randomValue = PradTools.Cast((2.0 * RandomGen.Value.NextDouble()) - 1.0);
 
                 // Scale to the range [-limit, limit]
                 result.Data[i] = randomValue * limit;
@@ -362,7 +362,7 @@ namespace ParallelReverseAutoDiff.PRAD
             int fanOut = shape[shape.Length - 1];
 
             // Xavier normal standard deviation
-            double stddev = Math.Sqrt(2.0 / (fanIn + fanOut));
+            var stddev = PradMath.Sqrt(PradTools.Two / (fanIn + fanOut));
 
             // Create a tensor and fill it with normally distributed values
             var result = new Tensor(shape);
@@ -372,15 +372,15 @@ namespace ParallelReverseAutoDiff.PRAD
             Parallel.For(0, totalSize / 2, i =>
             {
                 // Generate two uniformly distributed random values u1 and u2
-                double u1 = RandomGen.Value.NextDouble();
-                double u2 = RandomGen.Value.NextDouble();
+                var u1 = (float)RandomGen.Value.NextDouble();
+                var u2 = (float)RandomGen.Value.NextDouble();
 
                 // Box-Muller transform to generate two independent standard normal values
-                double r = Math.Sqrt(-2.0 * Math.Log(u1));
-                double theta = 2.0 * Math.PI * u2;
+                var r = PradMath.Sqrt(PradTools.NegativeTwo * PradMath.Log(u1));
+                var theta = PradTools.Two * PradMath.PI * u2;
 
-                double z0 = r * Math.Cos(theta);
-                double z1 = r * Math.Sin(theta);
+                var z0 = r * PradMath.Cos(theta);
+                var z1 = r * PradMath.Sin(theta);
 
                 // Apply Xavier scaling (stddev)
                 result.Data[2 * i] = z0 * stddev;
@@ -415,14 +415,14 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             // Calculate the mean of the input tensor
-            double mean = tensor.Data.Average();
+            var mean = tensor.Data.Average();
 
             // Calculate the standard deviation of the input tensor
-            double variance = tensor.Data.Select(x => Math.Pow(x - mean, 2)).Sum() / tensor.Data.Length;
-            double stddev = Math.Sqrt(variance);
+            var variance = tensor.Data.Select(x => PradMath.Pow(x - mean, 2)).Sum() / tensor.Data.Length;
+            var stddev = PradMath.Sqrt(variance);
 
             // Adjust the standard deviation by the scale factor
-            double scaledStddev = stddev * scale;
+            var scaledStddev = stddev * (float)scale;
 
             // Create a new tensor to hold the result
             var result = new Tensor(tensor.Shape);
@@ -434,9 +434,9 @@ namespace ParallelReverseAutoDiff.PRAD
                 if (RandomGen.Value.NextDouble() > dropoutProbability)
                 {
                     // Apply noise (Gaussian noise with mean = 0 and stddev = 1)
-                    var u1 = RandomGen.Value.NextDouble();
-                    var u2 = RandomGen.Value.NextDouble();
-                    var noise = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
+                    var u1 = (float)RandomGen.Value.NextDouble();
+                    var u2 = (float)RandomGen.Value.NextDouble();
+                    var noise = PradMath.Sqrt(PradTools.NegativeTwo * PradMath.Log(u1)) * PradMath.Cos(PradTools.Two * PradMath.PI * u2);
 
                     // Scale the noise and add it to the original tensor value
                     result.Data[i] = tensor.Data[i] + (mean + (noise * scaledStddev));

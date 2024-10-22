@@ -2506,7 +2506,7 @@ namespace ParallelReverseAutoDiff.PRAD
                     else if (destStep == 1)
                     {
                         // SIMD copy for the innermost dimension when step is 1
-                        int vectorSize = Vector<double>.Count;
+                        int vectorSize = PradTools.VectorCount();
                         int remainingSize = destEnd - destIndices[currentDim];
                         int vectorizableSize = remainingSize - (remainingSize % vectorSize);
 
@@ -2516,7 +2516,7 @@ namespace ParallelReverseAutoDiff.PRAD
                         // Vector copy
                         for (int j = 0; j < vectorizableSize; j += vectorSize)
                         {
-                            Vector<double> sourceVector = new Vector<double>(source.Data, sourceIndex + j);
+                            var sourceVector = PradTools.AllocateVector(source.Data, sourceIndex + j);
                             sourceVector.CopyTo(dest.Data, destIndex + j);
                         }
 
@@ -2605,13 +2605,13 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 for (int j = 0; j < simdIterations; j++)
                 {
-                    Vector<double> sum = Vector<double>.Zero;
+                    var sum = PradTools.VectorZero();
                     int gradIndex = baseGradIndex + (j * vectorSize);
 
                     for (int m = 0; m < multipleSecondDim; m++)
                     {
                         int upstreamIndex = baseUpstreamIndex + (m * originalSecondDimSize) + (j * vectorSize);
-                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex);
+                        var vec = PradTools.AllocateVector(upstreamGradient.Data, upstreamIndex);
                         sum += vec;
                     }
 
@@ -2621,7 +2621,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 // Handle remaining elements
                 for (int j = remainderStart; j < originalSecondDimSize; j++)
                 {
-                    double sum = 0;
+                    var sum = PradTools.Zero;
                     for (int m = 0; m < multipleSecondDim; m++)
                     {
                         int upstreamIndex = baseUpstreamIndex + (m * originalSecondDimSize) + j;
@@ -2647,7 +2647,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             Parallel.For(0, originalFirstDimSize, i =>
             {
-                double[] sumArray = new double[vectorSize];
+                var sumArray = PradTools.AllocateArray(vectorSize);
                 int baseUpstreamIndex = i * multipleFirstDim * secondDimSize;
                 int baseGradIndex = i * secondDimSize;
 
@@ -2658,8 +2658,8 @@ namespace ParallelReverseAutoDiff.PRAD
                     // SIMD summing
                     for (int j = 0; j < simdIterations; j++)
                     {
-                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex + (j * vectorSize));
-                        Vector<double> sumVec = new Vector<double>(sumArray);
+                        var vec = PradTools.AllocateVector(upstreamGradient.Data, upstreamIndex + (j * vectorSize));
+                        var sumVec = PradTools.AllocateVector(sumArray);
                         sumVec += vec;
                         sumVec.CopyTo(sumArray);
                     }
@@ -2672,7 +2672,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 // Store the results
-                new Span<double>(sumArray).CopyTo(new Span<double>(grad.Data, baseGradIndex, secondDimSize));
+                PradTools.AllocateSpan(sumArray).CopyTo(PradTools.AllocateSpan(grad.Data, baseGradIndex, secondDimSize));
 
                 // Handle any remaining elements if secondDimSize > vectorSize
                 if (remainderStart < secondDimSize)
@@ -2705,18 +2705,18 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 for (int j = 0; j < originalSecondDimSize; j++)
                 {
-                    Vector<double> sum = Vector<double>.Zero;
+                    var sum = PradTools.VectorZero();
                     int upstreamIndex = baseIndexUpstream + j;
 
                     // SIMD summing
                     for (int k = 0; k < simdIterations; k++)
                     {
-                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex + (k * vectorSize * originalSecondDimSize));
+                        var vec = PradTools.AllocateVector(upstreamGradient.Data, upstreamIndex + (k * vectorSize * originalSecondDimSize));
                         sum += vec;
                     }
 
                     // Sum the elements in the final vector
-                    double result = Vector.Dot(sum, Vector<double>.One);
+                    var result = Vector.Dot(sum, PradTools.VectorOne());
 
                     // Handle remaining elements
                     for (int k = simdIterations * vectorSize; k < multipleSecondDim; k++)
@@ -2746,18 +2746,18 @@ namespace ParallelReverseAutoDiff.PRAD
                 int baseIndex = i * originalThirdDimSize;
                 for (int j = 0; j < originalThirdDimSize; j++)
                 {
-                    Vector<double> sum = Vector<double>.Zero;
+                    var sum = PradTools.VectorZero();
                     int upstreamIndex = baseIndex + (j * multipleThirdDim);
 
                     // SIMD summing
                     for (int k = 0; k < simdIterations; k++)
                     {
-                        Vector<double> vec = new Vector<double>(upstreamGradient.Data, upstreamIndex + (k * vectorSize));
+                        var vec = PradTools.AllocateVector(upstreamGradient.Data, upstreamIndex + (k * vectorSize));
                         sum += vec;
                     }
 
                     // Sum the elements in the final vector
-                    double scalarSum = Vector.Dot(sum, Vector<double>.One);
+                    var scalarSum = Vector.Dot(sum, PradTools.VectorOne());
 
                     // Handle remaining elements
                     for (int k = simdIterations * vectorSize; k < multipleThirdDim; k++)

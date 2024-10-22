@@ -2386,7 +2386,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                         if (branch.UpstreamGradient == null)
                         {
-                            branch.UpstreamGradient = new Tensor(branch.CurrentShape, 1d);
+                            branch.UpstreamGradient = new Tensor(branch.CurrentShape, PradTools.One);
                         }
                     }
 
