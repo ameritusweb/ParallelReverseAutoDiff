@@ -20,9 +20,19 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static double Zero { get; } = 0.0;
 
         /// <summary>
+        /// Gets One Hundredth.
+        /// </summary>
+        internal static double OneHundredth { get; } = 0.01;
+
+        /// <summary>
         /// Gets Epsilon.
         /// </summary>
         internal static double Epsilon { get; } = 1e-15;
+
+        /// <summary>
+        /// Gets Epsilon9.
+        /// </summary>
+        internal static double Epsilon9 { get; } = 1e-9;
 
         /// <summary>
         /// Gets Epsilon10.
@@ -33,6 +43,11 @@ namespace ParallelReverseAutoDiff.RMAD
         /// Gets Two.
         /// </summary>
         internal static double Two { get; } = 2.0;
+
+        /// <summary>
+        /// Gets Six.
+        /// </summary>
+        internal static double Six { get; } = 6.0;
 
         /// <summary>
         /// Gets Negative Two.
@@ -118,6 +133,24 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Gets the vector zero.
+        /// </summary>
+        /// <returns>The vector zero.</returns>
+        internal static Vector<double> VectorZero()
+        {
+            return Vector<double>.Zero;
+        }
+
+        /// <summary>
+        /// Gets the vector one.
+        /// </summary>
+        /// <returns>The vector one.</returns>
+        internal static Vector<double> VectorOne()
+        {
+            return Vector<double>.One;
+        }
+
+        /// <summary>
         /// Gets a vector of doubles.
         /// </summary>
         /// <param name="data">The data.</param>
@@ -126,6 +159,38 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static Vector<double> AllocateVector(double[] data, int index)
         {
             return new Vector<double>(data, index);
+        }
+
+        /// <summary>
+        /// Gets a vector of doubles.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>The vector of doubles.</returns>
+        internal static Vector<double> AllocateVector(double[] data)
+        {
+            return new Vector<double>(data);
+        }
+
+        /// <summary>
+        /// Gets a span of doubles.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>The span of doubles.</returns>
+        internal static Span<double> AllocateSpan(double[] data)
+        {
+            return new Span<double>(data);
+        }
+
+        /// <summary>
+        /// Gets a span of doubles.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>The span of doubles.</returns>
+        internal static Span<double> AllocateSpan(double[] data, int start, int length)
+        {
+            return new Span<double>(data, start, length);
         }
 
         /// <summary>
