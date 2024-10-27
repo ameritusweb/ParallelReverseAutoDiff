@@ -1018,7 +1018,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Transpose(params int[] permutations)` | Transposes the current tensor according to the given permutations. | 
 | `Split(int groupSize, int axis = 0)` | Splits the tensor into multiple tensors along the specified axis. | 
 | `Tile(int[] multiples)` | Tiles the tensor along each dimension according to the given multiples. | 
-| `PairwiseTile(Tensor other)` | Generates a 2 row tile that represents all possible pairings between two 1D tensors. | 
+| `PairwiseTile(Tensor other)` | Generates a 2 row tensor that represents all possible pairings between two 1D tensors. | 
 | `Gather(Tensor indices, int axis = 0)` | Gathers slices from the tensor along the specified axis. | 
 | `GatherNd(Tensor indices)` | Gathers slices from the tensor using multidimensional indices. | 
 | `Slice(int[] begin, int[] size, int[]? strides = null)` | Extracts a slice from the tensor. | 
