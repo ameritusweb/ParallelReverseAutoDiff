@@ -238,6 +238,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> LessThanOp => FuncOp.LessThan;
 
         /// <summary>
+        /// Gets the pairwise tile op.
+        /// </summary>
+        public static Func<Tensor, PradResult> PairwiseTileOp => FuncOp.PairwiseTile;
+
+        /// <summary>
         /// Gets the where op.
         /// </summary>
         public static Func<Tensor, Tensor, PradResult> WhereOp => FuncOp.Where;
@@ -1410,6 +1415,42 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Generates all possible pairings between two 1D tensors.
+        /// Optimized using Array.Fill, Array.Copy, and Parallel.For for efficient memory operations and parallelism.
+        /// </summary>
+        /// <param name="other">A tensor of shape [1, P].</param>
+        /// <returns>A tensor of shape [2, N * P] where each column represents a pairing between the tensors.</returns>
+        [PradOperation(nameof(PairwiseTileOp))]
+        public PradResult PairwiseTile(Tensor other)
+        {
+            var result = this.currentTensor.PairwiseTile(other);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, other });
+
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var (gradient1, gradient2) = tensorReverse.PairwiseTileReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, other };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (new Tensor[] { gradient1, gradient2 }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Slices the tensor and records the operation for backpropagation.
         /// </summary>
         /// <param name="indices">The indices of the elements to slice.</param>
@@ -2386,7 +2427,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                         if (branch.UpstreamGradient == null)
                         {
-                            branch.UpstreamGradient = new Tensor(branch.CurrentShape, PradTools.One);
+                            throw new InvalidOperationException($"An error occurred during backpropagation. Branch '{branch.Id}' has no upstream gradient.");
                         }
                     }
 

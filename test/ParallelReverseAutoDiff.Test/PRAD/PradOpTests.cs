@@ -1125,6 +1125,21 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestPairwiseTile()
+        {
+            var input1 = new Tensor(new int[] { 1, 4 }, Enumerable.Range(0, 4).Select(i => (i + 1) / 100d).ToArray());
+            var input2 = new Tensor(new int[] { 1, 4 }, Enumerable.Range(0, 4).Select(i => (i + 1) / 100d).ToArray());
+
+            var upstream = new Tensor(new int[] { 2, 16 }, Enumerable.Range(0, 32).Select(i => 1d).ToArray());
+
+            PradOp opInput1 = new PradOp(input1);
+            PradOp opInput2 = new PradOp(input2);
+
+            var pairwiseOperation = opInput1.PairwiseTile(opInput2.CurrentTensor);
+            pairwiseOperation.Back(upstream);
+        }
+
+        [Fact]
         public void TestInterleavedGather()
         {
             var input1 = new Tensor(new int[] { 3, 6, 12 }, Enumerable.Range(0, 216).Select(i => (i + 1) / 100d).ToArray());

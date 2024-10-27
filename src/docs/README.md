@@ -970,6 +970,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `CurrentShape` | `int[]` | Gets the shape of the current tensor. | 
 | `Id` | `Guid` | Gets the unique identifier of the PradOp instance. |  
 | `Result` | `Tensor?` | Gets the result of the computation. | 
+| `CurrentTensor` | `Tensor` | Gets the tensor result of the computation or the seed tensor if no computation has been performed. | 
 
 ### Methods 
 
@@ -1003,6 +1004,9 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Where(Tensor condition, Tensor other)` | Selects elements based on a condition tensor. |
 | `Modulus(Tensor tensor)` | Performs element-wise modulus operation. |
 | `ExtractPatches(int[] filterSize, int[] strides, string padding)` | Extracts patches from a tensor for im2col. |
+| `Max(Tensor other)` | Performs element-wise max operation. |
+| `Min(Tensor other)` | Performs element-wise min operation. |
+| `Abs()` | Performs element-wise absolute value operation. |
 | `Pow(Tensor tensor)` | Performs an element-wise power operation on the current tensor with the provided exponent. |
 
 #### Tensor Manipulation 
@@ -1014,6 +1018,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 | `Transpose(params int[] permutations)` | Transposes the current tensor according to the given permutations. | 
 | `Split(int groupSize, int axis = 0)` | Splits the tensor into multiple tensors along the specified axis. | 
 | `Tile(int[] multiples)` | Tiles the tensor along each dimension according to the given multiples. | 
+| `PairwiseTile(Tensor other)` | Generates a 2 row tile that represents all possible pairings between two 1D tensors. | 
 | `Gather(Tensor indices, int axis = 0)` | Gathers slices from the tensor along the specified axis. | 
 | `GatherNd(Tensor indices)` | Gathers slices from the tensor using multidimensional indices. | 
 | `Slice(int[] begin, int[] size, int[]? strides = null)` | Extracts a slice from the tensor. | 
@@ -1070,6 +1075,8 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `WhereOp`
 - `ModulusOp`
 - `ExtractPatchesOp`
+- `MaxOp`
+- `MinOp`
 - `PowOp`
 
 ### PradResult.Then Method

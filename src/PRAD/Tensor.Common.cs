@@ -730,6 +730,52 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Generates all possible pairings between two 1D tensors.
+        /// Optimized using Array.Fill, Array.Copy, and Parallel.For for efficient memory operations and parallelism.
+        /// </summary>
+        /// <param name="other">A tensor of shape [1, P].</param>
+        /// <returns>A tensor of shape [2, N * P] where each column represents a pairing between the tensors.</returns>
+        public Tensor PairwiseTile(Tensor other)
+        {
+            var tensor1 = this;
+            var tensor2 = other;
+
+            if (tensor1.Shape.Length != 2 || tensor1.Shape[0] != 1)
+            {
+                throw new ArgumentException("First tensor must be of shape [1, N].");
+            }
+
+            if (tensor2.Shape.Length != 2 || tensor2.Shape[0] != 1)
+            {
+                throw new ArgumentException("Second tensor must be of shape [1, P].");
+            }
+
+            int n = tensor1.Shape[1];
+            int p = tensor2.Shape[1];
+
+            // Create the output tensor of shape [2, N * P]
+            var resultShape = new int[] { 2, n * p };
+            var result = new Tensor(resultShape);
+
+            // First row: Use Array.Fill and then Array.Copy to optimize memory operations
+            Parallel.For(0, n, i =>
+            {
+                // Fill the block of P elements with the current value of tensor1[i]
+                int startIndex = i * p;
+                Array.Fill(result.Data, tensor1.Data[i], startIndex, p);
+            });
+
+            // Second row: Repeat tensor2 contents N times using Array.Copy
+            Parallel.For(0, n, i =>
+            {
+                // Copy the entire tensor2 array into the corresponding location in the result
+                Array.Copy(tensor2.Data, 0, result.Data, (n * p) + (i * p), p);
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Element-wise minimum between this tensor and another tensor.
         /// </summary>
         /// <param name="other">The other tensor to compare.</param>

@@ -128,12 +128,11 @@ namespace ParallelReverseAutoDiff.PRAD
             Tensor inputTensor = this.InitialTensors[0];
             this.CheckShapeCompatibility(inputTensor, upstreamGradient);
 
-            // Gradient of abs(x) is 1 for x > 0, -1 for x < 0, and undefined for x = 0
+            // Gradient of abs(x) is 1 for x >= 0, -1 for x < 0
             Tensor gradInput = new Tensor(inputTensor.Shape);
             Parallel.For(0, inputTensor.Data.Length, i =>
             {
-                gradInput.Data[i] = inputTensor.Data[i] > 0 ? upstreamGradient.Data[i] :
-                                    (inputTensor.Data[i] < 0 ? -upstreamGradient.Data[i] : 0);
+                gradInput.Data[i] = inputTensor.Data[i] >= 0 ? upstreamGradient.Data[i] : -upstreamGradient.Data[i];
             });
 
             return gradInput;
@@ -2020,6 +2019,63 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Sum along the expanded dimension
             return upstreamGradient.Reshape(newShape);
+        }
+
+        /// <summary>
+        /// Computes the gradient tensors for the inputs of the PairwiseTile function.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient tensor of shape [2, N * P].</param>
+        /// <returns>A tuple of two gradient tensors corresponding to the inputs of PairwiseTile.</returns>
+        public (Tensor gradTensor1, Tensor gradTensor2) PairwiseTileReverse(Tensor upstreamGradient)
+        {
+            if (this.InitialTensors.Length != 2)
+            {
+                throw new InvalidOperationException("TileReverse expects exactly two initial tensors.");
+            }
+
+            Tensor tensor1 = this.InitialTensors[0];
+            Tensor tensor2 = this.InitialTensors[1];
+
+            int n = tensor1.Shape[1];
+            int p = tensor2.Shape[1];
+
+            // Create gradient tensors for tensor1 and tensor2
+            var gradTensor1 = new Tensor(new int[] { 1, n });
+            var gradTensor2 = new Tensor(new int[] { 1, p });
+
+            // Validate the shape of the upstream gradient
+            if (upstreamGradient.Shape.Length != 2 || upstreamGradient.Shape[0] != 2 || upstreamGradient.Shape[1] != n * p)
+            {
+                throw new ArgumentException("Upstream gradient must be of shape [2, N * P].");
+            }
+
+            // Calculate the gradient for tensor1
+            Parallel.For(0, n, i =>
+            {
+                // Sum the relevant part of the upstream gradient for tensor1
+                var sum = PradTools.Zero;
+                for (int j = 0; j < p; j++)
+                {
+                    sum += upstreamGradient.Data[(i * p) + j];  // Accumulate values for the first row
+                }
+
+                gradTensor1.Data[i] = sum;
+            });
+
+            // Calculate the gradient for tensor2
+            Parallel.For(0, p, j =>
+            {
+                // Sum the relevant part of the upstream gradient for tensor2
+                var sum = PradTools.Zero;
+                for (int i = 0; i < n; i++)
+                {
+                    sum += upstreamGradient.Data[(n * p) + ((i * p) + j)];  // Accumulate values for the second row
+                }
+
+                gradTensor2.Data[j] = sum;
+            });
+
+            return (gradTensor1, gradTensor2);
         }
 
         /// <summary>
