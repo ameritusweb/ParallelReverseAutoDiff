@@ -1067,6 +1067,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `ReshapeOp`
 - `TransposeOp`
 - `TileOp`
+- `PairwiseTileOp`
 - `ClipOp`
 - `ExcludeOp`
 - `SumOp`
@@ -1077,6 +1078,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `ExtractPatchesOp`
 - `MaxOp`
 - `MinOp`
+- `AbsOp`
 - `PowOp`
 
 ### PradResult.Then Method
