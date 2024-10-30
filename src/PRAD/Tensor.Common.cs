@@ -452,6 +452,81 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Generates unique pairs within a single 1D tensor without repetition or self-pairing.
+        /// Optimized with precomputed offsets and parallelism.
+        /// </summary>
+        /// <returns>A tensor of shape [2, M] where each column represents a unique pair.</returns>
+        public Tensor SelfPair()
+        {
+            var tensor = this;
+
+            if (tensor.Shape.Length != 2 || tensor.Shape[0] != 1)
+            {
+                throw new ArgumentException("Input tensor must be of shape [1, N].");
+            }
+
+            int n = tensor.Shape[1];
+            int m = n * (n - 1) / 2; // Number of unique pairs
+
+            // Create the output tensor of shape [2, M]
+            var resultShape = new int[] { 2, m };
+            var result = new Tensor(resultShape);
+
+            // Calculate offset for each row based on cumulative pair count up to i
+            int[] offsets = new int[n];
+            for (int i = 1; i < n; i++)
+            {
+                offsets[i] = offsets[i - 1] + (n - i);
+            }
+
+            // Generate unique pairs using the precomputed offsets
+            Parallel.For(0, n - 1, i =>
+            {
+                int offset = offsets[i];
+                for (int j = i + 1; j < n; j++)
+                {
+                    result.Data[offset] = tensor.Data[i];       // First row value
+                    result.Data[m + offset] = tensor.Data[j];   // Second row value
+                    offset++;
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Multiplies the values together in each column of the tensor.
+        /// </summary>
+        /// <returns>A tensor of shape [1, P] where each element is the product of the corresponding column in the original tensor.</returns>
+        public Tensor MultiplyColumns()
+        {
+            if (this.Shape.Length != 2)
+            {
+                throw new ArgumentException("MultiplyColumns operation is only defined for 2D tensors.");
+            }
+
+            int rows = this.Shape[0];
+            int columns = this.Shape[1];
+
+            // Create the output tensor of shape [1, columns]
+            var result = new Tensor(new int[] { 1, columns });
+
+            // Compute the product of each column in parallel
+            Parallel.For(0, columns, col =>
+            {
+                var product = PradTools.One;
+                for (int row = 0; row < rows; row++)
+                {
+                    product *= this.Data[(row * columns) + col];
+                }
+
+                result.Data[col] = product;
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Computes the element-wise arc cosine (inverse cosine) of the tensor using MKL.NET.
         /// </summary>
         /// <returns>A new tensor with the element-wise arc cosine values.</returns>

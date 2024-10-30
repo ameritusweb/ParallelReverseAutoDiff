@@ -497,6 +497,110 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the SelfPair operation, optimized with precomputed offsets.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient tensor from the output of SelfPair, shape [2, M].</param>
+        /// <returns>The gradient with respect to the original input tensor, shape [1, N].</returns>
+        public Tensor SelfPairReverse(Tensor upstreamGradient)
+        {
+            Tensor originalTensor = this.InitialTensors[0];
+
+            if (upstreamGradient.Shape.Length != 2 || upstreamGradient.Shape[0] != 2)
+            {
+                throw new ArgumentException("Upstream gradient must be of shape [2, M].");
+            }
+
+            if (originalTensor.Shape.Length != 2 || originalTensor.Shape[0] != 1)
+            {
+                throw new ArgumentException("Original tensor must be of shape [1, N].");
+            }
+
+            int n = originalTensor.Shape[1];
+            int m = n * (n - 1) / 2; // Expected number of pairs
+
+            if (upstreamGradient.Shape[1] != m)
+            {
+                throw new ArgumentException("Upstream gradient does not have the correct shape based on input size.");
+            }
+
+            // Create the output gradient tensor of shape [1, N]
+            var resultGradient = new Tensor(new int[] { 1, n });
+            var resultData = resultGradient.Data;
+
+            // Precompute offsets for each index based on cumulative pair count
+            int[] offsets = new int[n];
+            for (int i = 1; i < n; i++)
+            {
+                offsets[i] = offsets[i - 1] + (n - i);
+            }
+
+            // Accumulate gradients in parallel
+            Parallel.For(0, n - 1, i =>
+            {
+                int offset = offsets[i];
+                for (int j = i + 1; j < n; j++)
+                {
+                    // For pair (i, j), add the upstream gradients to resultData[i] and resultData[j]
+                    resultData[i] += upstreamGradient.Data[offset];
+                    resultData[j] += upstreamGradient.Data[m + offset];
+                    offset++;
+                }
+            });
+
+            return resultGradient;
+        }
+
+        /// <summary>
+        /// Computes the reverse gradient for the MultiplyColumns operation.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient tensor from the output of MultiplyColumns, shape [1, P].</param>
+        /// <returns>The gradient with respect to the original input tensor, shape [M, P].</returns>
+        public Tensor MultiplyColumnsReverse(Tensor upstreamGradient)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+
+            if (inputTensor.Shape.Length != 2 || upstreamGradient.Shape.Length != 2)
+            {
+                throw new ArgumentException("MultiplyColumnsReverse requires a 2D input tensor and a 2D upstream gradient tensor.");
+            }
+
+            int rows = inputTensor.Shape[0];
+            int columns = inputTensor.Shape[1];
+
+            if (upstreamGradient.Shape[0] != 1 || upstreamGradient.Shape[1] != columns)
+            {
+                throw new ArgumentException("Upstream gradient must have shape [1, columns] to match the number of columns in the input tensor.");
+            }
+
+            // Create the output gradient tensor of the same shape as the original input tensor
+            var inputGradient = new Tensor(inputTensor.Shape);
+
+            // Compute the column products from the original tensor
+            var columnProducts = PradTools.AllocateArray(columns);
+            for (int col = 0; col < columns; col++)
+            {
+                columnProducts[col] = 1;
+                for (int row = 0; row < rows; row++)
+                {
+                    columnProducts[col] *= inputTensor.Data[(row * columns) + col];
+                }
+            }
+
+            // Calculate the gradient for each element in the original tensor
+            Parallel.For(0, columns, col =>
+            {
+                for (int row = 0; row < rows; row++)
+                {
+                    // Gradient for element (row, col) is upstreamGradient[col] * (column product / element)
+                    var elementValue = inputTensor.Data[(row * columns) + col];
+                    inputGradient.Data[(row * columns) + col] = upstreamGradient.Data[col] * (columnProducts[col] / elementValue);
+                }
+            });
+
+            return inputGradient;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise multiplication.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

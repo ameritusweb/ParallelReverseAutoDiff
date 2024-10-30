@@ -203,9 +203,19 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> GatherNdOp => FuncOp.GatherNd;
 
         /// <summary>
-        /// Gets the add op.
+        /// Gets the sum rows op.
         /// </summary>
         public static Func<PradResult> SumRowsOp => FuncOp.SumRows;
+
+        /// <summary>
+        /// Gets the self pair op.
+        /// </summary>
+        public static Func<PradResult> SelfPairOp => FuncOp.SelfPair;
+
+        /// <summary>
+        /// Gets the multiply columns op.
+        /// </summary>
+        public static Func<PradResult> MultiplyColumnsOp => FuncOp.MultiplyColumns;
 
         /// <summary>
         /// Gets the square op.
@@ -1214,6 +1224,31 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Generates unique pairs within a single 1D tensor without repetition or self-pairing.
+        /// Optimized with precomputed offsets and parallelism.
+        /// </summary>
+        /// <returns>A result of shape [2, M] where each column represents a unique pair.</returns>
+        [PradOperation(nameof(SelfPairOp))]
+        public PradResult SelfPair()
+        {
+            var result = this.currentTensor.SelfPair();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.SelfPairReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Computes the cosine of each element of the tensor and records the operation for backpropagation.
         /// </summary>
         /// <returns>The result of the cosine operation along with the gradient placeholders.</returns>
@@ -2070,6 +2105,30 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ElementwiseSquareRootReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Multiplies the columns of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <returns>The tensor with multiplied columns along with the gradient placeholders.</returns>
+        [PradOperation(nameof(MultiplyColumnsOp))]
+        public PradResult MultiplyColumns()
+        {
+            var result = this.currentTensor.MultiplyColumns();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.MultiplyColumnsReverse(upstreamGrad);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };

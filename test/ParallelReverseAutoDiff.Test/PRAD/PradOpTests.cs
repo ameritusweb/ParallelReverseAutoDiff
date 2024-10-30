@@ -1125,6 +1125,36 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestMultiplyColumns()
+        {
+            var input1 = new Tensor(new int[] { 3, 4 }, Enumerable.Range(0, 12).Select(i => (i + 1) / 100d).ToArray());
+
+            var upstream = new Tensor(new int[] { 1, 4 }, Enumerable.Range(0, 4).Select(i => 1d).ToArray());
+
+            PradOp opInput1 = new PradOp(input1);
+            var res = opInput1.MultiplyColumns();
+
+            res.Back(upstream);
+
+            var ig = opInput1.SeedGradient;
+        }
+
+        [Fact]
+        public void TestSelfPair()
+        {
+            var input1 = new Tensor(new int[] { 1, 4 }, Enumerable.Range(0, 4).Select(i => (i + 1) / 100d).ToArray());
+
+            var upstream = new Tensor(new int[] { 2, 6 }, Enumerable.Range(0, 12).Select(i => 1d).ToArray());
+
+            PradOp opInput1 = new PradOp(input1);
+            var res = opInput1.SelfPair();
+
+            res.Back(upstream);
+
+            var ig = opInput1.SeedGradient;
+        }
+
+        [Fact]
         public void TestPairwiseTile()
         {
             var input1 = new Tensor(new int[] { 1, 4 }, Enumerable.Range(0, 4).Select(i => (i + 1) / 100d).ToArray());
