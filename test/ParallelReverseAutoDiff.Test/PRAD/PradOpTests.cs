@@ -128,6 +128,23 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         [Fact]
         public void TestTile()
         {
+            var seed = new Tensor(new int[] { 4, 1 }, new double[] { 1, 2, 3, 4 });
+            var pradOp = new PradOp(seed);
+
+            var result = pradOp.Tile(new int[] { 1, 2 });
+
+            Assert.Equal(new double[] { 1, 1, 2, 2, 3, 3, 4, 4 }, result.Result.Data);
+
+            // Perform backpropagation
+            var upstreamGradient = new Tensor(new int[] { 4, 2 }, new double[] { 1, 1, 1, 1, 1, 1, 1, 1 });
+            pradOp.Back(upstreamGradient);
+
+            Assert.Equal(new double[] { 4, 4, 4, 4 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestTile2()
+        {
             var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
             var pradOp = new PradOp(seed);
 
