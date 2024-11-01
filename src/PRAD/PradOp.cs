@@ -243,6 +243,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, PradResult> MinOp => FuncOp.Min;
 
         /// <summary>
+        /// Gets the on-off embedding op.
+        /// </summary>
+        public static Func<Tensor, Tensor, Tensor, PradResult> OnOffEmbeddingOp => FuncOp.OnOffEmbedding;
+
+        /// <summary>
         /// Gets the less than op.
         /// </summary>
         public static Func<Tensor, PradResult> LessThanOp => FuncOp.LessThan;
@@ -1441,6 +1446,44 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Creates an "On-Off" embedding using a learned sparsity tensor T.
+        /// </summary>
+        /// <param name="indices">Tensor of indices, representing which rows to select.</param>
+        /// <param name="binaryCondition">Tensor with binary values (0 or 1) indicating the condition for each index.</param>
+        /// <param name="sparsityTensor">A learned tensor of shape [1, N] providing sparsity values for embedding interleaving.</param>
+        /// <returns>A new tensor with doubled column size, applying the alternating pattern based on binaryCondition and sparsityTensor.</returns>
+        /// <exception cref="ArgumentException">Thrown if indices and binaryCondition shapes don't match, or if binaryCondition contains values other than 0 or 1, or if sparsityTensor shape is incompatible.</exception>
+        [PradOperation(nameof(OnOffEmbeddingOp))]
+        public PradResult OnOffEmbedding(Tensor indices, Tensor binaryCondition, Tensor sparsityTensor)
+        {
+            var result = this.currentTensor.OnOffEmbedding(indices, binaryCondition, sparsityTensor);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var (gradient1, gradient2) = tensorReverse.OnOffEmbeddingReverse(upstreamGrad, indices, binaryCondition);
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, sparsityTensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    var tensor = tensors[i];
+                    if (tensor is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (new Tensor[] { gradient1, gradient2 }, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);

@@ -627,6 +627,73 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Creates an "On-Off" embedding using a learned sparsity tensor T.
+        /// </summary>
+        /// <param name="indices">Tensor of indices, representing which rows to select.</param>
+        /// <param name="binaryCondition">Tensor with binary values (0 or 1) indicating the condition for each index.</param>
+        /// <param name="sparsityTensor">A learned tensor of shape [1, N] providing sparsity values for embedding interleaving.</param>
+        /// <returns>A new tensor with doubled column size, applying the alternating pattern based on binaryCondition and sparsityTensor.</returns>
+        /// <exception cref="ArgumentException">Thrown if indices and binaryCondition shapes don't match, or if binaryCondition contains values other than 0 or 1, or if sparsityTensor shape is incompatible.</exception>
+        public Tensor OnOffEmbedding(Tensor indices, Tensor binaryCondition, Tensor sparsityTensor)
+        {
+            // Validate input shapes
+            if (!indices.Shape.SequenceEqual(binaryCondition.Shape))
+            {
+                throw new ArgumentException("Indices and binary condition tensors must have the same shape.");
+            }
+
+            if (sparsityTensor.Shape.Length != 2 || sparsityTensor.Shape[0] != 1 || sparsityTensor.Shape[1] != this.Shape[1])
+            {
+                throw new ArgumentException("Sparsity tensor must be of shape [1, N], where N matches the embedding size.");
+            }
+
+            int embeddingSize = this.Shape[1];  // Original embedding size
+            int newEmbeddingSize = embeddingSize * 2; // Doubled embedding size for on-off pattern
+
+            // Validate binaryCondition values
+            if (binaryCondition.Data.Any(b => b != 0 && b != 1))
+            {
+                throw new ArgumentException("Binary condition tensor must only contain values of 0 or 1.");
+            }
+
+            // Create the output tensor with doubled column size
+            var resultShape = indices.Shape.Concat(new[] { newEmbeddingSize }).ToArray();
+            var result = new Tensor(resultShape);
+
+            Parallel.For(0, indices.Data.Length, i =>
+            {
+                int index = (int)indices.Data[i];
+                int binary = (int)binaryCondition.Data[i];
+
+                // Get the embedding row and the sparsity row (from sparsityTensor)
+                int embeddingRowStart = index * embeddingSize;
+                int sparsityRowStart = 0;  // Single row, so always starts at 0 for sparsityTensor
+
+                // Result row for doubled columns
+                int resultRowStart = i * newEmbeddingSize;
+
+                // Populate the result row based on the binary condition
+                for (int j = 0; j < embeddingSize; j++)
+                {
+                    if (binary == 0)
+                    {
+                        // For binary 0, place embedding value in even indices, sparsity value in odd indices
+                        result.Data[resultRowStart + (2 * j)] = this.Data[embeddingRowStart + j];
+                        result.Data[resultRowStart + (2 * j) + 1] = sparsityTensor.Data[sparsityRowStart + j];
+                    }
+                    else
+                    {
+                        // For binary 1, place sparsity value in even indices, embedding value in odd indices
+                        result.Data[resultRowStart + (2 * j)] = sparsityTensor.Data[sparsityRowStart + j];
+                        result.Data[resultRowStart + (2 * j) + 1] = this.Data[embeddingRowStart + j];
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs a vectorized bit flip operation on the tensor.
         /// This effectively converts 1s to 0s and 0s to 1s in one pass.
         /// </summary>

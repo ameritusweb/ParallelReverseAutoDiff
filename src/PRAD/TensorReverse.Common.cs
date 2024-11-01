@@ -551,6 +551,69 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the gradients for the embedding tensor and the sparsity tensor from the upstream gradient tensor.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient tensor with the same shape as the output of OnOffEmbedding.</param>
+        /// <param name="indices">Tensor of indices, representing which rows were selected in the forward pass.</param>
+        /// <param name="binaryCondition">Tensor with binary values (0 or 1) indicating the condition for each index in the forward pass.</param>
+        /// <returns>A tuple containing the gradients for the embedding tensor and the sparsity tensor.</returns>
+        /// <exception cref="ArgumentException">Thrown if upstreamGradient shape is incompatible or if binaryCondition contains values other than 0 or 1.</exception>
+        public (Tensor embeddingGradient, Tensor sparsityGradient) OnOffEmbeddingReverse(Tensor upstreamGradient, Tensor indices, Tensor binaryCondition)
+        {
+            Tensor original = this.InitialTensors[0];
+
+            // Validate input shapes
+            if (!indices.Shape.SequenceEqual(binaryCondition.Shape) || indices.Shape.Length + 1 != upstreamGradient.Shape.Length)
+            {
+                throw new ArgumentException("Indices and binary condition tensors must match in shape, and upstream gradient shape must align with the output of OnOffEmbedding.");
+            }
+
+            if (upstreamGradient.Shape[^1] != original.Shape[1] * 2)
+            {
+                throw new ArgumentException("Upstream gradient tensor must have twice the embedding size as the last dimension.");
+            }
+
+            int embeddingSize = original.Shape[1];
+            int newEmbeddingSize = embeddingSize * 2;
+
+            // Initialize gradient tensors
+            var embeddingGradient = new Tensor(original.Shape);
+            var sparsityGradient = new Tensor(new int[] { 1, embeddingSize });
+
+            // Accumulate gradients for each index
+            Parallel.For(0, indices.Data.Length, i =>
+            {
+                int index = (int)indices.Data[i];
+                int binary = (int)binaryCondition.Data[i];
+
+                // Locate the corresponding gradient rows
+                int embeddingRowStart = index * embeddingSize;
+                int sparsityRowStart = 0;  // Single row for sparsity, so always start at 0
+
+                // Upstream gradient row for doubled columns
+                int gradientRowStart = i * newEmbeddingSize;
+
+                for (int j = 0; j < embeddingSize; j++)
+                {
+                    if (binary == 0)
+                    {
+                        // For binary 0: upstream gradient for embedding in even indices, sparsity in odd indices
+                        embeddingGradient.Data[embeddingRowStart + j] += upstreamGradient.Data[gradientRowStart + (2 * j)];
+                        sparsityGradient.Data[sparsityRowStart + j] += upstreamGradient.Data[gradientRowStart + (2 * j) + 1];
+                    }
+                    else
+                    {
+                        // For binary 1: upstream gradient for sparsity in even indices, embedding in odd indices
+                        sparsityGradient.Data[sparsityRowStart + j] += upstreamGradient.Data[gradientRowStart + (2 * j)];
+                        embeddingGradient.Data[embeddingRowStart + j] += upstreamGradient.Data[gradientRowStart + (2 * j) + 1];
+                    }
+                }
+            });
+
+            return (embeddingGradient, sparsityGradient);
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the MultiplyColumns operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient tensor from the output of MultiplyColumns, shape [1, P].</param>
