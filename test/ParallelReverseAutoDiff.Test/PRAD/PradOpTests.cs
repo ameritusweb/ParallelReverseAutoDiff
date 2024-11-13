@@ -1,4 +1,5 @@
 ﻿using ILGPU.Runtime.Cuda;
+using ManagedCuda.VectorTypes;
 using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
@@ -1280,6 +1281,473 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var combinedPatches = magFlattened.PradOp.Concat(new Tensor[] { angleFlattened.Result }, -1);
 
             // TODO: Perform convolution
+        }
+
+        [Fact]
+        public void Test3DVNNWeightedElementwiseAdd()
+        {
+            // weighting all three, the magnitude, polar, and azimuth
+            Random rand = new Random(3);
+
+            int r = 3;
+            int c = 4;
+            int rTimesC = r * c;
+
+            var magnitudes1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var polars1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var azimuths1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+
+            var magnitudes2 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var polars2 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var azimuths2 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+
+            var opMagnitudes1 = new PradOp(magnitudes1);
+            var opPolars1 = new PradOp(polars1);
+            var opAzimuths1 = new PradOp(azimuths1);
+
+            var opMagnitudes2 = new PradOp(magnitudes2);
+            var opPolars2 = new PradOp(polars2);
+            var opAzimuths2 = new PradOp(azimuths2);
+
+            // First convert both sets of vectors to Cartesian coordinates
+            var opPolars1Branch = opPolars1.Branch();
+            var opAzimuths1Branch = opAzimuths1.Branch();
+
+            // Convert first set to Cartesian
+            var sinPolar1 = opPolars1.Sin();
+            var cosPolar1 = opPolars1Branch.Cos();
+            var sinAzimuth1 = opAzimuths1.Sin();
+            var cosAzimuth1 = opAzimuths1Branch.Cos();
+
+            var opMagnitudes1Branch = opMagnitudes1.Branch();
+            var intermediate1 = opMagnitudes1.Mul(sinPolar1.Result);
+            var intermediate1Branch = intermediate1.Branch();
+
+            var x1 = intermediate1.PradOp.Mul(cosAzimuth1.Result);
+            var y1 = intermediate1Branch.Mul(sinAzimuth1.Result);
+            var z1 = opMagnitudes1Branch.Mul(cosPolar1.Result);
+
+            // Convert second set to Cartesian
+            var opPolars2Branch = opPolars2.Branch();
+            var opAzimuths2Branch = opAzimuths2.Branch();
+
+            var sinPolar2 = opPolars2.Sin();
+            var cosPolar2 = opPolars2Branch.Cos();
+            var sinAzimuth2 = opAzimuths2.Sin();
+            var cosAzimuth2 = opAzimuths2Branch.Cos();
+
+            var opMagnitudes2Branch = opMagnitudes2.Branch();
+            var intermediate2 = opMagnitudes2.Mul(sinPolar2.Result);
+            var intermediate2Branch = intermediate2.Branch();
+
+            var x2 = intermediate2.PradOp.Mul(cosAzimuth2.Result);
+            var y2 = intermediate2Branch.Mul(sinAzimuth2.Result);
+            var z2 = opMagnitudes2Branch.Mul(cosPolar2.Result);
+
+            // Add the Cartesian coordinates
+            var xSum = x1.PradOp.Add(x2.Result);
+            var ySum = y1.PradOp.Add(y2.Result);
+            var zSum = z1.PradOp.Add(z2.Result);
+
+            // Convert back to spherical coordinates
+            // Calculate magnitude
+            var xSumSquared = xSum.PradOp.Square();
+            var ySumSquared = ySum.PradOp.Square();
+            var zSumSquared = zSum.PradOp.Square();
+
+            var magnitude = xSumSquared.PradOp.Add(ySumSquared.Result)
+                .Then(PradOp.AddOp, zSumSquared.Result)
+                .Then(PradOp.SquareRootOp);
+
+            // Add small epsilon for numerical stability
+            var magEpsilon = new Tensor(magnitude.PradOp.CurrentShape, 1e-7);
+            var safeMagnitude = magnitude.PradOp.Add(magEpsilon);
+
+            // Calculate polar angle (theta)
+            var polarAngle = zSum.PradOp.Div(safeMagnitude.Result)
+                .Then(PradOp.ArcCosOp);
+
+            // Calculate azimuthal angle (phi)
+            var azimuthAngle = ySum.PradOp.Atan2(xSum.Result);
+
+            // Create weight tensors
+            var magnitudeWeights = new Tensor(opMagnitudes1.CurrentShape, Enumerable.Range(0, rTimesC).Select(i => 1.0).ToArray());
+            var polarWeights = new Tensor(opPolars1.CurrentShape, Enumerable.Range(0, rTimesC).Select(i => 1.0).ToArray());
+            var azimuthWeights = new Tensor(opAzimuths1.CurrentShape, Enumerable.Range(0, rTimesC).Select(i => 1.0).ToArray());
+
+            var opMagnitudeWeights = new PradOp(magnitudeWeights);
+            var opPolarWeights = new PradOp(polarWeights);
+            var opAzimuthWeights = new PradOp(azimuthWeights);
+
+            // Apply weights to final spherical coordinates
+            var weightedMagnitude = magnitude.PradOp.Mul(opMagnitudeWeights.CurrentTensor);
+            var weightedPolar = polarAngle.PradOp.Mul(opPolarWeights.CurrentTensor);
+            var weightedAzimuth = azimuthAngle.PradOp.Mul(opAzimuthWeights.CurrentTensor);
+        }
+
+        [Fact]
+        public void Test3DVNNVectorDecomposition()
+        {
+            // I + O = (A + B) * W
+            // B = (I + O) / W - A
+            Random rand = new Random(3);
+
+            int numOfAs = 2;
+
+            int r = 3;
+            int c = 4;
+            int rTimesC = r * c;
+
+            int r2 = 3;
+            int c2 = c * (1 + numOfAs);
+            int r2TimesC2 = r2 * c2;
+
+            var magnitudes1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var polars1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var azimuths1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+
+            var magnitudes2 = new Tensor(new int[] { r2, c2 }, Enumerable.Range(0, r2TimesC2).Select(i => (i + 1) / 100d).ToArray());
+            var polars2 = new Tensor(new int[] { r2, c2 }, Enumerable.Range(0, r2TimesC2).Select(i => (i + 1) / 100d).ToArray());
+            var azimuths2 = new Tensor(new int[] { r2, c2 }, Enumerable.Range(0, r2TimesC2).Select(i => (i + 1) / 100d).ToArray());
+
+            var opMagnitudes1 = new PradOp(magnitudes1);
+            var opPolars1 = new PradOp(polars1);
+            var opAzimuths1 = new PradOp(azimuths1);
+
+            var opMagnitudes1Final = opMagnitudes1.Branch();
+            var opPolars1Final = opPolars1.Branch();
+            var opAzimuths1Final = opAzimuths1.Branch();
+
+            var opMagnitudes2 = new PradOp(magnitudes2);
+            var opPolars2 = new PradOp(polars2);
+            var opAzimuths2 = new PradOp(azimuths2);
+
+            var opMagnitudes2Branch = opMagnitudes2.Branch();
+            var opPolars2Branch = opPolars2.Branch();
+            var opAzimuths2Branch = opAzimuths2.Branch();
+
+            var opOffsetsMag = opMagnitudes2.Indexer(":", $":{c}");
+            var opOffsetsPolar = opPolars2.Indexer(":", $":{c}");
+            var opOffsetsAzimuth = opAzimuths2.Indexer(":", $":{c}");
+
+            var opOffsetsMagFinal = opOffsetsMag.Branch();
+            var opOffsetsPolarFinal = opOffsetsPolar.Branch();
+            var opOffsetsAzimuthFinal = opOffsetsAzimuth.Branch();
+
+            var opAsMag = opMagnitudes2Branch.Indexer(":", $"{c}:");
+            var opAsPolar = opPolars2Branch.Indexer(":", $"{c}:");
+            var opAsAzimuth = opAzimuths2Branch.Indexer(":", $"{c}:");
+
+            var opAsMagFinal = opAsMag.Branch();
+            var opAsPolarFinal = opAsPolar.Branch();
+            var opAsAzimuthFinal = opAsAzimuth.Branch();
+
+            var opOffsetsPolarBranch = opOffsetsPolar.Branch();
+            var opOffsetsAzimuthBranch = opOffsetsAzimuth.Branch();
+
+            // First, let's convert vectors to Cartesian coordinates for easier operations
+            // For offsets: convert O vectors
+            var sinOffsetPolar = opOffsetsPolar.PradOp.Sin();
+            var cosOffsetPolar = opOffsetsPolarBranch.Cos();
+            var sinOffsetAzimuth = opOffsetsAzimuth.PradOp.Sin();
+            var cosOffsetAzimuth = opOffsetsAzimuthBranch.Cos();
+
+            var opOffsetsMagBranch = opOffsetsMag.Branch();
+            var intermediate1 = opOffsetsMag.PradOp.Mul(sinOffsetPolar.Result);
+            var intermediate1Branch = intermediate1.Branch();
+
+            var xOffsets = intermediate1.PradOp.Mul(cosOffsetAzimuth.Result);
+            var yOffsets = intermediate1Branch.Mul(sinOffsetAzimuth.Result);
+            var zOffsets = opOffsetsMagBranch.Mul(cosOffsetPolar.Result);
+
+            var opAsPolarBranch = opAsPolar.Branch();
+            var opAsAzimuthBranch = opAsAzimuth.Branch();
+
+            // For A vectors: convert A vectors
+            var sinAsPolar = opAsPolar.PradOp.Sin();
+            var cosAsPolar = opAsPolarBranch.Cos();
+            var sinAsAzimuth = opAsAzimuth.PradOp.Sin();
+            var cosAsAzimuth = opAsAzimuthBranch.Cos();
+
+            var opAsMagBranch = opAsMag.Branch();
+            var intermediate2 = opAsMag.PradOp.Mul(sinAsPolar.Result);
+            var intermediate2Branch = intermediate2.Branch();
+
+            var xAs = intermediate2.PradOp.Mul(cosAsAzimuth.Result);
+            var yAs = intermediate2Branch.Mul(sinAsAzimuth.Result);
+            var zAs = opAsMagBranch.Mul(cosAsPolar.Result);
+
+            var opPolars1Branch = opPolars1.Branch();
+            var opAzimuths1Branch = opAzimuths1.Branch();
+
+            // For input vectors: convert I vectors
+            var sinInputPolar = opPolars1.Sin();
+            var cosInputPolar = opPolars1Branch.Cos();
+            var sinInputAzimuth = opAzimuths1.Sin();
+            var cosInputAzimuth = opAzimuths1Branch.Cos();
+
+            var opMagnitudes1Branch = opMagnitudes1.Branch();
+            var intermediate3 = opMagnitudes1.Mul(sinInputPolar.Result);
+            var intermediate3Branch = intermediate3.Branch();
+
+            var xInputs = intermediate3.PradOp.Mul(cosInputAzimuth.Result);
+            var yInputs = intermediate3Branch.Mul(sinInputAzimuth.Result);
+            var zInputs = opMagnitudes1Branch.Mul(cosInputPolar.Result);
+
+            // Create weights tensor
+            var weights = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => 1.0).ToArray());
+            var opWeights = new PradOp(weights);
+            var opWeightsBranch = opWeights.Branch();
+
+            // Add I + O for each component
+            var xInputsPlusOffsets = xInputs.PradOp.Add(xOffsets.Result);
+            var yInputsPlusOffsets = yInputs.PradOp.Add(yOffsets.Result);
+            var zInputsPlusOffsets = zInputs.PradOp.Add(zOffsets.Result);
+
+            // Add small epsilon to weights for numerical stability
+            var epsilon = new Tensor(opWeights.CurrentShape, 1e-7);
+            var weightsEpsilon = opWeights.Add(epsilon);
+
+            // Divide (I + O) by W
+            var xDividedByWeights = xInputsPlusOffsets.PradOp.Div(weightsEpsilon.Result);
+            var yDividedByWeights = yInputsPlusOffsets.PradOp.Div(weightsEpsilon.Result);
+            var zDividedByWeights = zInputsPlusOffsets.PradOp.Div(weightsEpsilon.Result);
+
+            // Tile (I + O) / W to match dimensions of A vectors
+            var xDividedTiled = xDividedByWeights.PradOp.Tile(new[] { 1, numOfAs });
+            var yDividedTiled = yDividedByWeights.PradOp.Tile(new[] { 1, numOfAs });
+            var zDividedTiled = zDividedByWeights.PradOp.Tile(new[] { 1, numOfAs });
+
+            // Now subtract A vectors to get B vectors
+            var xB = xDividedTiled.PradOp.Sub(xAs.Result);
+            var yB = yDividedTiled.PradOp.Sub(yAs.Result);
+            var zB = zDividedTiled.PradOp.Sub(zAs.Result);
+
+            // Calculate B magnitudes
+            var xBSquared = xB.PradOp.Square();
+            var yBSquared = yB.PradOp.Square();
+            var zBSquared = zB.PradOp.Square();
+
+            var bMagnitudes = xBSquared.PradOp.Add(yBSquared.Result)
+                .Then(PradOp.AddOp, zBSquared.Result)
+                .Then(PradOp.SquareRootOp);
+
+            // Add small epsilon for numerical stability in angle calculations
+            var magEpsilon = new Tensor(bMagnitudes.PradOp.CurrentShape, 1e-7);
+            var safeMagnitudes = bMagnitudes.PradOp.Add(magEpsilon);
+
+            // Calculate B polar angles (theta)
+            var bPolarAngles = zB.PradOp.Div(safeMagnitudes.Result)
+                .Then(PradOp.ArcCosOp);
+
+            // Calculate B azimuthal angles (phi)
+            var bAzimuthAngles = yB.PradOp.Atan2(xB.Result);
+
+            var opMagnitudesFinalConcat = opMagnitudes1Final.Concat(new[] { opOffsetsMagFinal.CurrentTensor, opAsMagFinal.CurrentTensor, bMagnitudes.Result }, 1);
+            var opPolarsFinalConcat = opPolars1Final.Concat(new[] { opOffsetsPolarFinal.CurrentTensor, opAsPolarFinal.CurrentTensor, bPolarAngles.Result }, 1);
+            var opAzimuthsFinalConcat = opAzimuths1Final.Concat(new[] { opOffsetsAzimuthFinal.CurrentTensor, opAsAzimuthFinal.CurrentTensor, bAzimuthAngles.Result }, 1);
+        }
+
+        [Fact]
+        public void Test3DVNNMatrixMultiply()
+        {
+            Random rand = new Random(3);
+
+            int r = 3;
+            int c = 4;
+            int rTimesC = r * c;
+
+            int r2 = 4;
+            int c2 = 5;
+            int r2TimesC2 = r2 * c2;
+
+            int rTimesC2 = r * c2;
+
+            // valid MM because c is equal to r2
+
+            var magnitudes1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var polars1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+            var azimuths1 = new Tensor(new int[] { r, c }, Enumerable.Range(0, rTimesC).Select(i => (i + 1) / 100d).ToArray());
+
+            var magnitudes2 = new Tensor(new int[] { r2, c2 }, Enumerable.Range(0, r2TimesC2).Select(i => (i + 1) / 100d).ToArray());
+            var polars2 = new Tensor(new int[] { r2, c2 }, Enumerable.Range(0, r2TimesC2).Select(i => (i + 1) / 100d).ToArray());
+            var azimuths2 = new Tensor(new int[] { r2, c2 }, Enumerable.Range(0, r2TimesC2).Select(i => (i + 1) / 100d).ToArray());
+
+            var magnitudesWeights = new Tensor(new int[] { r, c2 }, Enumerable.Range(0, rTimesC2).Select(i => (i + 1) / 100d).ToArray());
+            var polarsWeights = new Tensor(new int[] { r, c2 }, Enumerable.Range(0, rTimesC2).Select(i => (i + 1) / 100d).ToArray());
+            var azimuthsWeights = new Tensor(new int[] { r, c2 }, Enumerable.Range(0, rTimesC2).Select(i => (i + 1) / 100d).ToArray());
+
+            var opMagnitudes1 = new PradOp(magnitudes1);
+            var opPolars1 = new PradOp(polars1);
+            var opAzimuths1 = new PradOp(azimuths1);
+
+            var opMagnitudesWeights = new PradOp(magnitudes1);
+            var opPolarsWeights = new PradOp(polars1);
+            var opAzimuthsWeights = new PradOp(azimuths1);
+
+            opMagnitudes1.Reshape(new[] { 1, rTimesC });
+            opPolars1.Reshape(new[] { 1, rTimesC });
+            opAzimuths1.Reshape(new[] { 1, rTimesC });
+
+            var opMagnitudes2 = new PradOp(magnitudes2);
+            var opPolars2 = new PradOp(polars2);
+            var opAzimuths2 = new PradOp(azimuths2);
+
+            opMagnitudes2.Reshape(new[] { 1, r2TimesC2 });
+            opPolars2.Reshape(new[] { 1, r2TimesC2 });
+            opAzimuths2.Reshape(new[] { 1, r2TimesC2 });
+
+            var opMagnitudesConcat = opMagnitudes1.Concat(new[] { opMagnitudes2.CurrentTensor }, 1);
+            var opPolarsConcat = opPolars1.Concat(new[] { opPolars2.CurrentTensor }, 1);
+            var opAzimuthsConcat = opAzimuths1.Concat(new[] { opAzimuths2.CurrentTensor }, 1);
+
+            // Calculate sin and cos of polar angles
+            var sinPolars = opPolarsConcat.PradOp.Sin();
+            var cosPolars = opPolarsConcat.PradOp.Cos();
+
+            // Calculate sin and cos of azimuthal angles
+            var sinAzimuths = opAzimuthsConcat.PradOp.Sin();
+            var cosAzimuths = opAzimuthsConcat.PradOp.Cos();
+
+            // Convert to Cartesian coordinates:
+            // x = r * sin(θ) * cos(φ)
+            // y = r * sin(θ) * sin(φ)
+            // z = r * cos(θ)
+            var originalMagnitudesConcat = opMagnitudesConcat.Branch();
+            var intermediate = opMagnitudesConcat.PradOp.Mul(sinPolars.Result);
+            var intermediateBranch = intermediate.Branch();
+
+            var x = intermediate.PradOp.Mul(cosAzimuths.Result);
+            var y = intermediateBranch.Mul(sinAzimuths.Result);
+            var z = originalMagnitudesConcat.Mul(cosPolars.Result);
+
+            var xBranch = x.Branch();
+            var yBranch = y.Branch();
+            var zBranch = z.Branch();
+
+            // First split into left and right parts
+            var xLeft = x.PradOp.Indexer(":", $":{rTimesC}");
+            var xRight = xBranch.Indexer(":", $"{rTimesC}:");
+            var yLeft = y.PradOp.Indexer(":", $":{rTimesC}");
+            var yRight = yBranch.Indexer(":", $"{rTimesC}:");
+            var zLeft = z.PradOp.Indexer(":", $":{rTimesC}");
+            var zRight = zBranch.Indexer(":", $"{rTimesC}:");
+
+            // Reshape left parts to original matrix dimensions
+            var xLeftReshaped = xLeft.PradOp.Reshape(new[] { r, c });
+            var yLeftReshaped = yLeft.PradOp.Reshape(new[] { r, c });
+            var zLeftReshaped = zLeft.PradOp.Reshape(new[] { r, c });
+
+            // Reshape right parts to second matrix dimensions
+            var xRightReshaped = xRight.PradOp.Reshape(new[] { r2, c2 });
+            var yRightReshaped = yRight.PradOp.Reshape(new[] { r2, c2 });
+            var zRightReshaped = zRight.PradOp.Reshape(new[] { r2, c2 });
+
+            // Transpose right matrices
+            var xRightTrans = xRightReshaped.PradOp.Transpose(new[] { 1, 0 });  // Now c2 x r2
+            var yRightTrans = yRightReshaped.PradOp.Transpose(new[] { 1, 0 });
+            var zRightTrans = zRightReshaped.PradOp.Transpose(new[] { 1, 0 });
+
+            // Reshape transposed right matrices to 1D
+            var xRightFlat = xRightTrans.PradOp.Reshape(new[] { 1, r2TimesC2 });
+            var yRightFlat = yRightTrans.PradOp.Reshape(new[] { 1, r2TimesC2 });
+            var zRightFlat = zRightTrans.PradOp.Reshape(new[] { 1, r2TimesC2 });
+
+            // Tile left matrix by c2 on axis 1
+            var xLeftTiled = xLeftReshaped.PradOp.Tile(new[] { 1, c2 });
+            var yLeftTiled = yLeftReshaped.PradOp.Tile(new[] { 1, c2 });
+            var zLeftTiled = zLeftReshaped.PradOp.Tile(new[] { 1, c2 });
+
+            // Tile right matrix by r on axis 0
+            var xRightTiled = xRightFlat.PradOp.Tile(new[] { r, 1 });
+            var yRightTiled = yRightFlat.PradOp.Tile(new[] { r, 1 });
+            var zRightTiled = zRightFlat.PradOp.Tile(new[] { r, 1 });
+
+            var yLeftTiledBranch = yLeftTiled.Branch();
+            var zLeftTiledBranch = zLeftTiled.Branch();
+            var xLeftTiledBranch = xLeftTiled.Branch();
+
+            // Calculate cross products
+            var yLeftTimesZRight = yLeftTiled.PradOp.Mul(zRightTiled.Result);
+            var zLeftTimesYRight = zLeftTiled.PradOp.Mul(yRightTiled.Result);
+            var crossX = yLeftTimesZRight.PradOp.Sub(zLeftTimesYRight.Result);
+
+            var zLeftTimesXRight = zLeftTiledBranch.Mul(xRightTiled.Result);
+            var xLeftTimesZRight = xLeftTiled.PradOp.Mul(zRightTiled.Result);
+            var crossY = zLeftTimesXRight.PradOp.Sub(xLeftTimesZRight.Result);
+
+            var xLeftTimesYRight = xLeftTiledBranch.Mul(yRightTiled.Result);
+            var yLeftTimesXRight = yLeftTiledBranch.Mul(xRightTiled.Result);
+            var crossZ = xLeftTimesYRight.PradOp.Sub(yLeftTimesXRight.Result);
+
+            // Calculate cross product magnitudes
+            var crossXSquared = crossX.PradOp.Square();
+            var crossYSquared = crossY.PradOp.Square();
+            var crossZSquared = crossZ.PradOp.Square();
+
+            var crossMagnitudes = crossXSquared.PradOp.Add(crossYSquared.Result)
+                .Then(PradOp.AddOp, crossZSquared.Result)
+                .Then(PradOp.SquareRootOp);
+
+            // Add small epsilon to avoid division by zero
+            var epsilon = new Tensor(crossMagnitudes.PradOp.CurrentShape, 1e-7);
+            var safeMagnitudes = crossMagnitudes.PradOp.Add(epsilon);
+
+            // Calculate polar angles (theta)
+            var crossPolarAngles = crossZ.PradOp.Div(safeMagnitudes.Result)
+                .Then(PradOp.ArcCosOp);
+
+            // Calculate azimuthal angles (phi)
+            var crossAzimuthAngles = crossY.PradOp.Atan2(crossX.Result);
+
+            // Apply weights to each component
+            var weightedMagnitudes = crossMagnitudes.PradOp.Mul(opMagnitudesWeights.CurrentTensor);
+            var weightedPolarAngles = crossPolarAngles.PradOp.Mul(opPolarsWeights.CurrentTensor);
+            var weightedAzimuthAngles = crossAzimuthAngles.PradOp.Mul(opAzimuthsWeights.CurrentTensor);
+
+            // Convert weighted spherical coordinates back to Cartesian
+            var sinWeightedPolar = weightedPolarAngles.PradOp.Sin();
+            var cosWeightedPolar = weightedPolarAngles.PradOp.Cos();
+            var sinWeightedAzimuth = weightedAzimuthAngles.PradOp.Sin();
+            var cosWeightedAzimuth = weightedAzimuthAngles.PradOp.Cos();
+
+            // Calculate final Cartesian coordinates
+            var finalX = weightedMagnitudes.PradOp.Mul(sinWeightedPolar.Result)
+                .Then(PradOp.MulOp, cosWeightedAzimuth.Result);
+            var finalY = weightedMagnitudes.PradOp.Mul(sinWeightedPolar.Result)
+                .Then(PradOp.MulOp, sinWeightedAzimuth.Result);
+            var finalZ = weightedMagnitudes.PradOp.Mul(cosWeightedPolar.Result);
+
+            // Reshape for proper summation
+            // Current shape is [r, r2*c2], need to reshape to [r, r2, c2] to sum over r2
+            var reshapedX = finalX.PradOp.Reshape(new[] { r, r2, c2 });
+            var reshapedY = finalY.PradOp.Reshape(new[] { r, r2, c2 });
+            var reshapedZ = finalZ.PradOp.Reshape(new[] { r, r2, c2 });
+
+            // Sum along r2 dimension (axis 1)
+            var summedX = reshapedX.PradOp.Sum(new[] { 1 });  // Results in [r, c2]
+            var summedY = reshapedY.PradOp.Sum(new[] { 1 });  // Results in [r, c2]
+            var summedZ = reshapedZ.PradOp.Sum(new[] { 1 });  // Results in [r, c2]
+
+            // Calculate final magnitude
+            var finalSummedXSquared = summedX.PradOp.Square();
+            var finalSummedYSquared = summedY.PradOp.Square();
+            var finalSummedZSquared = summedZ.PradOp.Square();
+
+            var finalMagnitudes = finalSummedXSquared.PradOp.Add(finalSummedYSquared.Result)
+                .Then(PradOp.AddOp, finalSummedZSquared.Result)
+                .Then(PradOp.SquareRootOp);
+
+            // Add small epsilon for numerical stability
+            var finalEpsilon = new Tensor(finalMagnitudes.PradOp.CurrentShape, 1e-7);
+            var finalSafeMagnitudes = finalMagnitudes.PradOp.Add(finalEpsilon);
+
+            // Calculate final polar angles (theta)
+            var finalPolarAngles = summedZ.PradOp.Div(finalSafeMagnitudes.Result)
+                .Then(PradOp.ArcCosOp);
+
+            // Calculate final azimuthal angles (phi)
+            var finalAzimuthAngles = summedY.PradOp.Atan2(summedX.Result);
         }
 
         [Fact]

@@ -1136,6 +1136,42 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the element-wise arccosine (acos).
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor ElementwiseArcCosReverse(Tensor upstreamGradient)
+        {
+            if (this.InitialTensors.Length != 1)
+            {
+                throw new InvalidOperationException("ElementwiseArcCosReverse expects exactly one initial tensor.");
+            }
+
+            Tensor tensorA = this.InitialTensors[0];
+            this.CheckShapeCompatibility(tensorA, upstreamGradient);
+
+            Tensor gradA = new Tensor(tensorA.Shape);
+            Tensor denom = new Tensor(tensorA.Shape);
+            Tensor oneTensor = new Tensor(tensorA.Shape, PradTools.One);
+
+            // Compute 1 - x^2 in denom
+            Vml.Pow(tensorA.Data.Length, tensorA.Data, PradTools.FillArray(tensorA.Data.Length, PradTools.Two), denom.Data);
+            Vml.Sub(denom.Data.Length, oneTensor.Data, denom.Data, denom.Data);
+
+            // Ensure numerical stability by adding a small epsilon to avoid division by zero
+            Vml.MaxMag(denom.Data.Length, denom.Data, PradTools.FillArray(denom.Data.Length, PradTools.Epsilon10), denom.Data);
+
+            // Compute sqrt(1 - x^2)
+            Vml.Sqrt(denom.Data.Length, denom.Data, denom.Data);
+
+            // Calculate gradient: gradA = -upstreamGradient / denom
+            Vml.Div(upstreamGradient.Data.Length, upstreamGradient.Data, denom.Data, gradA.Data);
+            Blas.scal(PradTools.NegativeOne, gradA.Data);
+
+            return gradA;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise square root operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

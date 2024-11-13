@@ -223,6 +223,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> SquareOp => FuncOp.Square;
 
         /// <summary>
+        /// Gets the arccos op.
+        /// </summary>
+        public static Func<PradResult> ArcCosOp => FuncOp.ArcCos;
+
+        /// <summary>
         /// Gets the atan2 op.
         /// </summary>
         public static Func<Tensor, PradResult> Atan2Op => FuncOp.Atan2;
@@ -2148,6 +2153,30 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ElementwiseSquareRootReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.backpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the element-wise arc cosine (inverse cosine) of the tensor using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with the element-wise arc cosine values.</returns>
+        [PradOperation(nameof(ArcCosOp))]
+        public PradResult ArcCos()
+        {
+            var result = this.currentTensor.ElementwiseArcCos();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ElementwiseArcCosReverse(upstreamGrad);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
