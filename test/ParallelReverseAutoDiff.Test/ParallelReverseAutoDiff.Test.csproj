@@ -75,4 +75,10 @@
     <ProjectReference Include="..\..\src\ParallelReverseAutoDiff.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Vision\JSON\hsl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
