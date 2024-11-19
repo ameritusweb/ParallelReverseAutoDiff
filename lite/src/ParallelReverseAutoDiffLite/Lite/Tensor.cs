@@ -264,6 +264,67 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Retrieves the specified row from a 2D tensor.
+        /// </summary>
+        /// <param name="rowIndex">The index of the row to retrieve.</param>
+        /// <returns>A new tensor representing the row.</returns>
+        /// <exception cref="InvalidOperationException">If the tensor is not 2D.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the row index is out of bounds.</exception>
+        public Tensor GetRow(int rowIndex)
+        {
+            if (this.Shape.Length != 2)
+            {
+                throw new InvalidOperationException("GetRow can only be used on 2D tensors.");
+            }
+
+            int rows = this.Shape[0];
+            int cols = this.Shape[1];
+
+            if (rowIndex < 0 || rowIndex >= rows)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), "Row index is out of bounds.");
+            }
+
+            // Extract the row as a new 1D tensor
+            float[] rowData = new float[cols];
+            Array.Copy(this.Data, rowIndex * cols, rowData, 0, cols);
+
+            return new Tensor(new int[] { 1, cols }, rowData);
+        }
+
+        /// <summary>
+        /// Sets the specified row in a 2D tensor to the provided data.
+        /// </summary>
+        /// <param name="rowIndex">The index of the row to set.</param>
+        /// <param name="rowData">The data to set for the row.</param>
+        /// <exception cref="InvalidOperationException">If the tensor is not 2D.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the row index is out of bounds.</exception>
+        /// <exception cref="ArgumentException">If the row data length does not match the tensor's column size.</exception>
+        public void SetRow(int rowIndex, float[] rowData)
+        {
+            if (this.Shape.Length != 2)
+            {
+                throw new InvalidOperationException("SetRow can only be used on 2D tensors.");
+            }
+
+            int rows = this.Shape[0];
+            int cols = this.Shape[1];
+
+            if (rowIndex < 0 || rowIndex >= rows)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), "Row index is out of bounds.");
+            }
+
+            if (rowData.Length != cols)
+            {
+                throw new ArgumentException($"Row data length ({rowData.Length}) does not match the number of columns ({cols}).", nameof(rowData));
+            }
+
+            // Set the row data
+            Array.Copy(rowData, 0, this.Data, rowIndex * cols, cols);
+        }
+
+        /// <summary>
         /// Generates a tensor containing a range of values.
         /// </summary>
         /// <param name="start">The starting value of the range.</param>
