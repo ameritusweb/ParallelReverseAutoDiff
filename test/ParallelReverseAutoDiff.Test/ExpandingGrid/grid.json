@@ -1,0 +1,54 @@
+{
+  "type": "ExpandingGrid",
+  "totalGridSize": [ 11, 11 ],
+  "initialization": {
+    "opInput": {
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "opAngles": {
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "decompositionVectors": {
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "decompositionWeights": {
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "previousHiddenState": {
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "updateWeights": {
+      "arrayDimensions": [ 2, 7 ],
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "resetWeights": {
+      "arrayDimensions": [ 2, 7 ],
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "candidateWeights": {
+      "arrayDimensions": [ 2, 7 ],
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    },
+    "hiddenWeights": {
+      "arrayDimensions": [ 2, 7 ],
+      "dimensions": [ 1, 11, 11 ],
+      "initType": "XavierUniform"
+    }
+  },
+  "timeSteps": {
+    "index": "i",
+    "steps": [
+      {
+        "TODO:": "Complete this JSON"
+      }
+    ]
+  }
+}

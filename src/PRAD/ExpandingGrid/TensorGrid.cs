@@ -7,7 +7,6 @@
 namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
 {
     using System;
-    using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
     /// A tensor grid for an expanding grid GRU.
@@ -34,6 +33,11 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
         public int TensorSize => this.tensorSize;
 
         /// <summary>
+        /// Gets the center index position.
+        /// </summary>
+        public int CenterIndex => (GridSize - 1) / 2;
+
+        /// <summary>
         /// Extract the tensor based on the coordinates.
         /// </summary>
         /// <param name="x">The X coordinate.</param>
@@ -49,13 +53,28 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
                     throw new IndexOutOfRangeException("Index out of range for TensorGrid");
                 }
 
-                if (this.grid[x, y] == null)
-                {
-                    this.grid[x, y] = Tensor.XavierUniform(new int[] { this.tensorSize, this.tensorSize });
-                }
-
                 return this.grid[x, y];
             }
+        }
+
+        /// <summary>
+        /// Make this tensor Xavier Uniform.
+        /// </summary>
+        /// <param name="x">The X-coordinate.</param>
+        /// <param name="y">The Y-coordinate.</param>
+        public void MakeXavierUniform(int x, int y)
+        {
+            this.grid[x, y] = Tensor.XavierUniform(new int[] { this.tensorSize, this.tensorSize });
+        }
+
+        /// <summary>
+        /// Make this tensor a placeholder.
+        /// </summary>
+        /// <param name="x">The X-coordinate.</param>
+        /// <param name="y">The Y-coordinate.</param>
+        public void MakePlaceholder(int x, int y)
+        {
+            this.grid[x, y] = new Tensor(new int[] { this.tensorSize, this.tensorSize }, 0d);
         }
     }
 }

@@ -14,10 +14,10 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
     public class TensorView
     {
         private readonly TensorGrid baseGrid;
-        private readonly int minX;
-        private readonly int minY;
-        private readonly int maxX;
-        private readonly int maxY;
+        private int minX;
+        private int minY;
+        private int maxX;
+        private int maxY;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TensorView"/> class.
@@ -27,13 +27,33 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
         /// <param name="minY">The minimum Y coordinate of the view in grid space.</param>
         /// <param name="maxX">The maximum X coordinate of the view in grid space.</param>
         /// <param name="maxY">The maximum Y coordinate of the view in grid space.</param>
-        public TensorView(TensorGrid grid, int minX, int minY, int maxX, int maxY)
+        /// <param name="isPlaceholder">Is this a placeholder?.</param>
+        public TensorView(TensorGrid grid, int minX, int minY, int maxX, int maxY, bool isPlaceholder = false)
         {
             this.baseGrid = grid;
             this.minX = minX;
             this.minY = minY;
             this.maxX = maxX;
             this.maxY = maxY;
+
+            // when you instantiate it, that's when you instantiate the tensors.
+            for (int i = minX; i <= maxX; ++i)
+            {
+                for (int j = minY; j <= maxY; ++j)
+                {
+                    if (this.baseGrid[i, j] == null)
+                    {
+                        if (isPlaceholder)
+                        {
+                            this.baseGrid.MakePlaceholder(grid.CenterIndex + i, grid.CenterIndex + j);
+                        }
+                        else
+                        {
+                            this.baseGrid.MakeXavierUniform(grid.CenterIndex + i, grid.CenterIndex + j);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -47,34 +67,79 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
         public int Height => (this.maxY - this.minY + 1) * this.baseGrid.TensorSize;
 
         /// <summary>
-        /// Gets or sets the value at the specified coordinates within the view.
+        /// Expand in a certain direction and keeps rectangular using placeholders.
         /// </summary>
-        /// <param name="x">The X coordinate within the view.</param>
-        /// <param name="y">The Y coordinate within the view.</param>
-        /// <returns>The value at the specified coordinates.</returns>
-        /// <exception cref="IndexOutOfRangeException">Thrown when the coordinates are outside the view's bounds.</exception>
-        public double this[int x, int y]
+        /// <param name="expandFromX">The index to expand from X.</param>
+        /// <param name="expandFromY">The index to expand from Y.</param>
+        /// <param name="direction">The direction to expand in.</param>
+        public void Expand(int expandFromX, int expandFromY, ExpansionDirection direction)
         {
-            get
+            int destinationX = expandFromX;
+            int destinationY = expandFromY;
+            switch (direction)
             {
-                this.ValidateCoordinates(x, y);
-                int gridX = (x / this.baseGrid.TensorSize) + this.minX;
-                int gridY = (y / this.baseGrid.TensorSize) + this.minY;
-                int localX = x % this.baseGrid.TensorSize;
-                int localY = y % this.baseGrid.TensorSize;
-
-                return this.baseGrid[gridX, gridY][localX, localY];
+                case ExpansionDirection.Up:
+                    destinationY--;
+                    break;
+                case ExpansionDirection.Down:
+                    destinationY++;
+                    break;
+                case ExpansionDirection.Right:
+                    destinationX++;
+                    break;
+                case ExpansionDirection.Left:
+                    destinationX--;
+                    break;
             }
 
-            set
+            if (this.baseGrid[this.baseGrid.CenterIndex + destinationX, this.baseGrid.CenterIndex + destinationY] == null)
             {
-                this.ValidateCoordinates(x, y);
-                int gridX = (x / this.baseGrid.TensorSize) + this.minX;
-                int gridY = (y / this.baseGrid.TensorSize) + this.minY;
-                int localX = x % this.baseGrid.TensorSize;
-                int localY = y % this.baseGrid.TensorSize;
+                this.baseGrid.MakeXavierUniform(this.baseGrid.CenterIndex + destinationX, this.baseGrid.CenterIndex + destinationY);
+            }
 
-                this.baseGrid[gridX, gridY][localX, localY] = value;
+            if (destinationY > this.maxY)
+            {
+                this.maxY = destinationY;
+                for (int i = this.minX; i <= this.maxX; ++i)
+                {
+                    if (this.baseGrid[this.baseGrid.CenterIndex + i, this.baseGrid.CenterIndex + destinationY] == null)
+                    {
+                        this.baseGrid.MakePlaceholder(this.baseGrid.CenterIndex + i, this.baseGrid.CenterIndex + destinationY);
+                    }
+                }
+            }
+            else if (destinationY < this.minY)
+            {
+                this.minY = destinationY;
+                for (int i = this.minX; i <= this.maxX; ++i)
+                {
+                    if (this.baseGrid[this.baseGrid.CenterIndex + i, this.baseGrid.CenterIndex + destinationY] == null)
+                    {
+                        this.baseGrid.MakePlaceholder(this.baseGrid.CenterIndex + i, this.baseGrid.CenterIndex + destinationY);
+                    }
+                }
+            }
+            else if (destinationX > this.maxX)
+            {
+                this.maxX = destinationX;
+                for (int i = this.minY; i <= this.maxY; ++i)
+                {
+                    if (this.baseGrid[this.baseGrid.CenterIndex + destinationX, this.baseGrid.CenterIndex + i] == null)
+                    {
+                        this.baseGrid.MakePlaceholder(this.baseGrid.CenterIndex + destinationX, this.baseGrid.CenterIndex + i);
+                    }
+                }
+            }
+            else if (destinationX < this.minX)
+            {
+                this.minX = destinationX;
+                for (int i = this.minY; i <= this.maxY; ++i)
+                {
+                    if (this.baseGrid[this.baseGrid.CenterIndex + destinationX, this.baseGrid.CenterIndex + i] == null)
+                    {
+                        this.baseGrid.MakePlaceholder(this.baseGrid.CenterIndex + destinationX, this.baseGrid.CenterIndex + i);
+                    }
+                }
             }
         }
 
@@ -94,7 +159,7 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
                 {
                     for (int gridX = this.minX; gridX <= this.maxX; gridX++)
                     {
-                        Tensor currentTensor = this.baseGrid[gridX, gridY];
+                        Tensor currentTensor = this.baseGrid[this.baseGrid.CenterIndex + gridX, this.baseGrid.CenterIndex + gridY];
                         double[] row = currentTensor.GetRow(tensorRow).Data;
                         Array.Copy(row, 0, result, destIndex, row.Length);
                         destIndex += row.Length;
@@ -126,27 +191,13 @@ namespace ParallelReverseAutoDiff.PRAD.ExpandingGrid
                 {
                     for (int gridX = this.minX; gridX <= this.maxX; gridX++)
                     {
-                        Tensor currentTensor = this.baseGrid[gridX, gridY];
+                        Tensor currentTensor = this.baseGrid[this.baseGrid.CenterIndex + gridX, this.baseGrid.CenterIndex + gridY];
                         double[] row = new double[this.baseGrid.TensorSize];
                         Array.Copy(values, sourceIndex, row, 0, row.Length);
                         currentTensor.SetRow(tensorRow, row);
                         sourceIndex += row.Length;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Validates whether the given coordinates are within the view's bounds.
-        /// </summary>
-        /// <param name="x">The X coordinate to validate.</param>
-        /// <param name="y">The Y coordinate to validate.</param>
-        /// <exception cref="IndexOutOfRangeException">Thrown when the coordinates are outside the view's bounds.</exception>
-        private void ValidateCoordinates(int x, int y)
-        {
-            if (x < 0 || x >= this.Width || y < 0 || y >= this.Height)
-            {
-                throw new IndexOutOfRangeException($"Coordinates ({x}, {y}) are outside the view's bounds of {this.Width}x{this.Height}.");
             }
         }
     }

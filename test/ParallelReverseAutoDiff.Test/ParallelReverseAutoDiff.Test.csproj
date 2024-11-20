@@ -76,6 +76,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ExpandingGrid\grid.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Vision\JSON\hsl.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
