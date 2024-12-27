@@ -141,6 +141,39 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Generates a tensor containing values from start to (but not including) limit with a specified step (delta).
+        /// </summary>
+        /// <param name="start">The starting value of the sequence.</param>
+        /// <param name="limit">The exclusive upper bound of the sequence.</param>
+        /// <param name="delta">The step size between elements (default is 1).</param>
+        /// <returns>A 1D tensor with evenly spaced values.</returns>
+        public static Tensor Range(double start, double limit, double delta = 1.0)
+        {
+            if (delta == 0)
+            {
+                throw new ArgumentException("Delta (step size) cannot be zero.");
+            }
+
+            // Calculate number of elements
+            int numElements = (int)Math.Ceiling((limit - start) / delta);
+
+            if (numElements <= 0)
+            {
+                return new Tensor(new int[] { 0 });  // Return empty tensor if the range is invalid
+            }
+
+            // Allocate data for the result tensor
+            var result = new Tensor(new int[] { numElements });
+
+            Parallel.For(0, numElements, i =>
+            {
+                result.Data[i] = start + (i * delta);
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Creates a stack of tensors along a specified axis.
         /// </summary>
         /// <param name="tensors">Tensors.</param>
@@ -261,6 +294,37 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return new Tensor(tensor.Shape, maskData);
+        }
+
+        /// <summary>
+        /// Generates a tensor with random values drawn from a uniform distribution in the range [minValue, maxValue).
+        /// </summary>
+        /// <param name="shape">The shape of the output tensor.</param>
+        /// <param name="minValue">The minimum value of the distribution (inclusive).</param>
+        /// <param name="maxValue">The maximum value of the distribution (exclusive).</param>
+        /// <returns>A tensor filled with random values in the specified range.</returns>
+        /// <exception cref="ArgumentException">Thrown if maxValue is less than or equal to minValue.</exception>
+        public static Tensor RandomUniform(int[] shape, double minValue = 0.0, double maxValue = 1.0)
+        {
+            if (maxValue <= minValue)
+            {
+                throw new ArgumentException("maxValue must be greater than minValue.");
+            }
+
+            // Calculate the number of elements in the tensor
+            int totalSize = shape.Aggregate(1, (x, y) => x * y);
+
+            // Allocate memory for tensor data
+            var result = new Tensor(shape);
+
+            // Generate random values in parallel
+            Parallel.For(0, totalSize, i =>
+            {
+                double randomValue = RandomGen.Value.NextDouble();
+                result.Data[i] = (randomValue * (maxValue - minValue)) + minValue;
+            });
+
+            return result;
         }
 
         /// <summary>
@@ -789,6 +853,76 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return new Tensor(new int[] { shape[0], 1 }, resultData);
+        }
+
+        /// <summary>
+        /// Samples from a multinomial distribution based on class probabilities with temperature scaling.
+        /// </summary>
+        /// <param name="numSamples">Number of samples to draw for each batch.</param>
+        /// <param name="temperature">Temperature to control the sharpness of the distribution. Default is 1.0.</param>
+        /// <returns>A tensor of shape [batch_size, num_samples] with the sampled class indices.</returns>
+        /// <exception cref="ArgumentException">Thrown if the tensor is not 2D.</exception>
+        public Tensor Multinomial(int numSamples, double temperature = 1.0)
+        {
+            if (this.Shape.Length != 2)
+            {
+                throw new ArgumentException("Tensor must be a 2D tensor with shape [batch_size, num_classes].");
+            }
+
+            int batchSize = this.Shape[0];
+            int numClasses = this.Shape[1];
+
+            var result = new Tensor(new int[] { batchSize, numSamples });
+
+            // Scale logits by temperature (softening or sharpening the distribution)
+            Tensor scaledLogits = temperature == 1.0 ? this : this.Divide(temperature);
+
+            // Convert logits to probabilities using softmax
+            var probabilities = scaledLogits.Softmax(axis: 1);
+
+            Parallel.For(0, batchSize, batch =>
+            {
+                var cumulativeProbabilities = new double[numClasses];
+                cumulativeProbabilities[0] = probabilities[batch, 0];
+
+                // Compute cumulative distribution function (CDF)
+                for (int i = 1; i < numClasses; i++)
+                {
+                    cumulativeProbabilities[i] = cumulativeProbabilities[i - 1] + probabilities[batch, i];
+                }
+
+                // Sample from the multinomial distribution
+                for (int sample = 0; sample < numSamples; sample++)
+                {
+                    double u = RandomGen.Value.NextDouble();
+
+                    for (int i = 0; i < numClasses; i++)
+                    {
+                        if (u <= cumulativeProbabilities[i])
+                        {
+                            result[batch, sample] = i;
+                            break;
+                        }
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Element-wise division of the tensor by a scalar (temperature scaling).
+        /// </summary>
+        /// <param name="scalar">The scalar value to divide the tensor by.</param>
+        /// <returns>A new tensor with each element divided by the scalar.</returns>
+        public Tensor Divide(double scalar)
+        {
+            var result = new Tensor(this.Shape);
+            Parallel.For(0, this.Data.Length, i =>
+            {
+                result.Data[i] = this.Data[i] / scalar;
+            });
+            return result;
         }
 
         /// <summary>

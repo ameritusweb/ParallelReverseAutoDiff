@@ -1891,6 +1891,39 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Performs element-wise greater than comparison with another tensor or scalar.
+        /// </summary>
+        /// <param name="other">The tensor or scalar to compare with.</param>
+        /// <returns>A new tensor containing the boolean mask.</returns>
+        public Tensor GreaterThan(Tensor other)
+        {
+            if (!this.Shape.SequenceEqual(other.Shape))
+            {
+                throw new ArgumentException("Tensors must have the same shape for element-wise comparison.");
+            }
+
+            var result = new Tensor(this.Shape);
+            int vectorSize = PradTools.VectorCount();
+
+            for (int i = 0; i <= this.Data.Length - vectorSize; i += vectorSize)
+            {
+                var thisVector = PradTools.AllocateVector(this.Data, i);
+                var otherVector = PradTools.AllocateVector(other.Data, i);
+                var comparisonVector = Vector.GreaterThan(thisVector, otherVector);
+                var mask = PradTools.Convert(Vector.Abs(comparisonVector));
+                mask.CopyTo(result.Data, i);
+            }
+
+            // Handle remaining elements
+            for (int i = this.Data.Length - (this.Data.Length % vectorSize); i < this.Data.Length; i++)
+            {
+                result.Data[i] = this.Data[i] > other.Data[i] ? PradTools.One : PradTools.Zero;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs element-wise modulus operation with another tensor.
         /// </summary>
         /// <param name="other">The tensor to perform modulus with.</param>
@@ -1917,6 +1950,113 @@ namespace ParallelReverseAutoDiff.PRAD
             Vml.Sub(this.Data, integral, result.Data);      // result.Data = this.Data - integral
 
             return result;
+        }
+
+        /// <summary>
+        /// Computes the softmax of the tensor along the specified axis.
+        /// </summary>
+        /// <param name="axis">The axis to apply the softmax on (default is last axis).</param>
+        /// <returns>A tensor with softmax values.</returns>
+        public Tensor Softmax(int axis = -1)
+        {
+            int[] shape = this.Shape;
+            var result = new Tensor(shape);
+
+            if (axis < 0)
+            {
+                axis = shape.Length + axis;
+            }
+
+            int outerSize = shape.Take(axis).Aggregate(1, (x, y) => x * y);
+            int axisSize = shape[axis];
+            int innerSize = shape.Skip(axis + 1).Aggregate(1, (x, y) => x * y);
+
+            Parallel.For(0, outerSize, i =>
+            {
+                for (int k = 0; k < innerSize; k++)
+                {
+                    // Find start index of current row
+                    int startIndex = (i * axisSize * innerSize) + k;
+
+                    // Compute max value for numerical stability
+                    var maxVal = this.Data[startIndex];
+                    for (int j = 1; j < axisSize; j++)
+                    {
+                        maxVal = Math.Max(maxVal, this.Data[startIndex + (j * innerSize)]);
+                    }
+
+                    // Calculate exp(logits - maxVal)
+                    var sum = PradTools.Zero;
+                    for (int j = 0; j < axisSize; j++)
+                    {
+                        result.Data[startIndex + (j * innerSize)] =
+                            PradMath.Exp(this.Data[startIndex + (j * innerSize)] - maxVal);
+                        sum += result.Data[startIndex + (j * innerSize)];
+                    }
+
+                    // Normalize by dividing by the sum
+                    for (int j = 0; j < axisSize; j++)
+                    {
+                        result.Data[startIndex + (j * innerSize)] /= sum;
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the mean and variance of the tensor along the specified axes.
+        /// </summary>
+        /// <param name="axes">The axes along which to compute mean and variance. If null, reduce across all dimensions.</param>
+        /// <param name="keepDims">If true, retains reduced dimensions with size 1.</param>
+        /// <returns>A tuple (mean, variance) of tensors.</returns>
+        public (Tensor mean, Tensor variance) Moments(int[]? axes = null, bool keepDims = false)
+        {
+            int[] shape = this.Shape;
+            int rank = shape.Length;
+
+            if (axes == null)
+            {
+                axes = Enumerable.Range(0, rank).ToArray();  // Reduce across all dimensions if axes are not specified
+            }
+
+            // Ensure axes are positive and sorted
+            axes = axes.Select(axis => axis < 0 ? rank + axis : axis).OrderBy(x => x).ToArray();
+
+            // Calculate the shape of the reduced tensor
+            int[] reducedShape = shape.ToArray();
+            foreach (var axis in axes)
+            {
+                reducedShape[axis] = 1;
+            }
+
+            // Compute mean
+            var mean = this.ReduceSum(axes).Divide(this.Data.Length / reducedShape.Aggregate(1, (a, b) => a * b));
+
+            // Compute variance using Welford's algorithm for numerical stability
+            var variance = new Tensor(mean.Shape);
+
+            Parallel.For(0, this.Data.Length, i =>
+            {
+                int[] indices = this.GetMultiDimensionalIndices(i, shape);
+                int reducedIndex = this.MapToReducedIndex(indices, axes, reducedShape);
+
+                var delta = this.Data[i] - mean.Data[reducedIndex];
+                variance.Data[reducedIndex] += delta * delta;
+            });
+
+            // Normalize variance by N
+            variance = variance.Divide(this.Data.Length / reducedShape.Aggregate(1, (a, b) => a * b));
+
+            // Squeeze reduced dimensions if keepDims is false
+            if (!keepDims)
+            {
+                mean = mean.Squeeze(axes);
+                variance = variance.Squeeze(axes);
+            }
+
+            return (mean, variance);
         }
 
         /// <summary>
@@ -2786,6 +2926,83 @@ namespace ParallelReverseAutoDiff.PRAD
             Array.Copy(indices, ellipsisIndex + 1, expandedIndices, ellipsisIndex + numMissing, indices.Length - ellipsisIndex - 1);
 
             return expandedIndices;
+        }
+
+        /// <summary>
+        /// Reduces the tensor by summing along the specified axes.
+        /// </summary>
+        /// <param name="axes">Axes to reduce.</param>
+        /// <returns>The reduced tensor with summed values.</returns>
+        private Tensor ReduceSum(int[] axes)
+        {
+            int[] shape = this.Shape;
+            int[] reducedShape = shape.ToArray();
+
+            // Set reduction dimensions to 1
+            foreach (var axis in axes)
+            {
+                reducedShape[axis] = 1;
+            }
+
+            var result = new Tensor(reducedShape);
+
+            // Use a lock array to ensure thread safety during accumulation
+            object[] locks = new object[result.Data.Length];
+            for (int i = 0; i < locks.Length; i++)
+            {
+                locks[i] = new object();
+            }
+
+            Parallel.For(0, this.Data.Length, i =>
+            {
+                int[] indices = this.GetMultiDimensionalIndices(i, shape);
+                int reducedIndex = this.MapToReducedIndex(indices, axes, reducedShape);
+
+                // Accumulate in a thread-safe manner
+                lock (locks[reducedIndex])
+                {
+                    result.Data[reducedIndex] += this.Data[i];
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Maps a tensor's multi-dimensional indices to reduced indices for summation.
+        /// </summary>
+        /// <param name="indices">Full indices.</param>
+        /// <param name="axes">Axes to reduce.</param>
+        /// <param name="reducedShape">Shape after reduction.</param>
+        /// <returns>The flattened reduced index.</returns>
+        private int MapToReducedIndex(int[] indices, int[] axes, int[] reducedShape)
+        {
+            int[] reducedIndices = indices.ToArray();
+            foreach (var axis in axes)
+            {
+                reducedIndices[axis] = 0;
+            }
+
+            return this.GetIndex(reducedIndices, reducedShape);
+        }
+
+        /// <summary>
+        /// Computes the flattened index from multi-dimensional indices.
+        /// </summary>
+        /// <param name="indices">The indices to compute from.</param>
+        /// <param name="shape">The tensor's shape.</param>
+        /// <returns>The flattened index.</returns>
+        private int GetIndex(int[] indices, int[] shape)
+        {
+            int index = 0;
+            int stride = 1;
+            for (int i = shape.Length - 1; i >= 0; i--)
+            {
+                index += indices[i] * stride;
+                stride *= shape[i];
+            }
+
+            return index;
         }
 
         /// <summary>
