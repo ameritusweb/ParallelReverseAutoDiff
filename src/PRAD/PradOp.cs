@@ -389,6 +389,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public List<PradOp> LinkedBranches { get; set; } = new List<PradOp>();
 
         /// <summary>
+        /// Gets or sets the tensors waiting for backpropagation to finish.
+        /// </summary>
+        public Queue<Tensor> WaitingToAdd { get; set; } = new Queue<Tensor>();
+
+        /// <summary>
         /// Gets the result of the computation.
         /// </summary>
         public Tensor? Result
@@ -416,6 +421,15 @@ namespace ParallelReverseAutoDiff.PRAD
         public void SetBranchTracker(PradOpBranchTracker branchTracker)
         {
             this.branchTracker = branchTracker;
+        }
+
+        /// <summary>
+        /// Resets the gradient.
+        /// </summary>
+        public void ResetGradient()
+        {
+            this.seedGradient = new Tensor(this.seed.Shape);
+            this.initialResult = new PradResult(this, this.seed, new Tensor[] { this.seedGradient });
         }
 
         /// <summary>
@@ -469,6 +483,17 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return branchedOp;
+        }
+
+        /// <summary>
+        /// Takes back a branch.
+        /// </summary>
+        public void TakeBackBranch()
+        {
+            if (this.parentResult.Branches.Contains(this))
+            {
+                this.parentResult.Branches.Remove(this);
+            }
         }
 
         /// <summary>
@@ -2569,7 +2594,14 @@ namespace ParallelReverseAutoDiff.PRAD
                     else
                     {
                         var branchGradient = branch.Back();
-                        currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                        if (branch.IsFinished)
+                        {
+                            currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
+                        }
+                        else
+                        {
+                            branch.WaitingToAdd.Enqueue(currentUpstream);
+                        }
                     }
                 }
 
@@ -2654,6 +2686,15 @@ namespace ParallelReverseAutoDiff.PRAD
 
             this.SeedGradient = currentUpstream;
             this.IsFinished = true;
+
+            if (this.WaitingToAdd.Count > 0)
+            {
+                for (int w = 0; w < this.WaitingToAdd.Count; ++w)
+                {
+                    var waiting = this.WaitingToAdd.Dequeue();
+                    waiting.ElementwiseAdd(currentUpstream);
+                }
+            }
 
             return currentUpstream;
         }

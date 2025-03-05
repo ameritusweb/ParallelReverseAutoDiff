@@ -43,5 +43,18 @@ namespace ParallelReverseAutoDiff.PRAD
 
             return this.branches.Pop();
         }
+
+        /// <summary>
+        /// Cleanup excess branches.
+        /// </summary>
+        public void Cleanup()
+        {
+            foreach (var branch in this.branches)
+            {
+                branch.TakeBackBranch();
+            }
+
+            this.branches.Clear();
+        }
     }
 }
