@@ -394,6 +394,16 @@ namespace ParallelReverseAutoDiff.PRAD
         public Queue<Tensor> WaitingToAdd { get; set; } = new Queue<Tensor>();
 
         /// <summary>
+        /// Gets or sets a value indicating whether the operation has a low backpropagation priority.
+        /// </summary>
+        public bool IsLowPriorityForBackpropagation { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the operation has a high backpropagation priority.
+        /// </summary>
+        public bool IsHighPriorityForBackpropagation { get; set; } = false;
+
+        /// <summary>
         /// Gets the result of the computation.
         /// </summary>
         public Tensor? Result
@@ -413,6 +423,22 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Gets an operation to get a func.
         /// </summary>
         internal static PradOp FuncOp => funcOp;
+
+        /// <summary>
+        /// Gets the last result.
+        /// </summary>
+        internal PradResult? LastResult
+        {
+            get
+            {
+                if (this.backpropagationSteps.Any())
+                {
+                    return this.backpropagationSteps.Last().result;
+                }
+
+                return default;
+            }
+        }
 
         /// <summary>
         /// Sets the branch tracker.
@@ -738,6 +764,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(SubOp))]
         public PradResult Sub(Tensor tensor)
         {
+            if (tensor is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var result = this.currentTensor.ElementwiseSub(tensor);
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
 
@@ -2539,6 +2570,18 @@ namespace ParallelReverseAutoDiff.PRAD
                             lBranch.Back();
                         }
 
+                        if (branch.UpstreamGradient == null && branch.backpropagationSteps.Any())
+                        {
+                            var bstep = branch.backpropagationSteps.LastOrDefault();
+                            (Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)? linkedStep = null;
+                            if (branch.LinkedBranches.Any())
+                            {
+                                linkedStep = branch.LinkedBranches.First().backpropagationSteps.LastOrDefault();
+                            }
+
+                            this.branchTracker.ProcessBranch(branch, bstep.result.PradOp, linkedStep == null ? default : linkedStep.GetValueOrDefault().result.PradOp);
+                        }
+
                         if (branch.UpstreamGradient == null)
                         {
                             this.branchTracker.RunBranchesFor(branch);
@@ -2583,7 +2626,15 @@ namespace ParallelReverseAutoDiff.PRAD
 
                         if (branch.UpstreamGradient == null)
                         {
-                            throw new InvalidOperationException($"An error occurred during backpropagation. Branch '{branch.Id}' has no upstream gradient.");
+                            if (branch.backpropagationSteps.Any())
+                            {
+                                throw new InvalidOperationException($"An error occurred during backpropagation. Branch '{branch.Id}' has no upstream gradient.");
+                            }
+                            else
+                            {
+                                branch.IsStarted = true;
+                                branch.IsFinished = true;
+                            }
                         }
                     }
 
@@ -2637,7 +2688,7 @@ namespace ParallelReverseAutoDiff.PRAD
                     if (ops[i] != null)
                     {
                         ops[i]?.SetUpstreamGradient(gradients[i]);
-                        if (!ops[i]!.IsDependentBranch)
+                        if (ops[i]!.IsHighPriorityForBackpropagation || (!ops[i]!.IsDependentBranch && !ops[i]!.IsLowPriorityForBackpropagation))
                         {
                             ops[i]?.Back();
                         }

@@ -2335,6 +2335,12 @@ namespace ParallelReverseAutoDiff.PRAD
 
             Tensor grad = new Tensor(originalShape);
 
+            if (multiples.All(m => m == 1))
+            {
+                Array.Copy(upstreamGradient.Data, grad.Data, upstreamGradient.Data.Length);
+                return grad;
+            }
+
             // Iterate over all elements in the upstream gradient
             for (int i = 0; i < upstreamGradient.Data.Length; i++)
             {

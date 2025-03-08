@@ -1,5 +1,6 @@
 ﻿using ILGPU.Runtime.Cuda;
 using ManagedCuda.VectorTypes;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
@@ -3309,6 +3310,117 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 
             Assert.Equal(naiveOutputCode, pradOpOutputCode);
 
+        }
+
+        [Fact]
+        public void TestVNNOperationConstituentMultiply2()
+        {
+            Random rand = new Random(3);
+
+            var input1 = new Tensor(new int[] { 2000, 6 }, Enumerable.Range(0, 12000).Select(i => (double)(i + 1)).ToArray());
+            var input2 = new Tensor(new int[] { 3, 2 }, Enumerable.Range(0, 6).Select(i => (double)((i + 1) * 2)).ToArray());
+            var weights = new Tensor(new int[] { 3, 1 }, Enumerable.Range(0, 3).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            var upstream = new Tensor(new int[] { 2000, 2 }, Enumerable.Range(0, 4000).Select(i => (i % 10) + rand.NextDouble()).ToArray());
+
+            ElementwiseVectorConstituentMultiplyOperation op = new ElementwiseVectorConstituentMultiplyOperation();
+            var resultTensor = op.Forward(input1.ToMatrix(), input2.ToMatrix(), weights.ToMatrix()).ToTensor();
+
+            var opInput1 = new PradOp(input1);
+            var opInput2 = new PradOp(input2);
+            var opWeights = new PradOp(weights);
+
+            var clonedOpInput1 = opInput1.Branch();
+            var clonedOpInput2 = opInput2.Branch();
+
+            var rows1 = input1.Shape[0];
+            var cols1 = input1.Shape[1];
+            var halfCols1 = cols1 / 2;
+
+            var rows2 = input2.Shape[0];
+            var cols2 = input2.Shape[1];
+            var halfCols2 = cols2 / 2;
+
+            var N = rows1;
+            var M = halfCols1;
+            var P = halfCols2;
+
+            var magnitudesSeed = opInput1.Indexer(":", $":{M}");
+            var magnitudesOther = opInput2.Indexer(":", $":{P}");
+
+            var anglesSeed = clonedOpInput1.Indexer(":", $"{M}:");
+            var anglesOther = clonedOpInput2.Indexer(":", $"{P}:");
+
+            var mBranch1 = magnitudesSeed.Branch();
+            var mBranch2 = magnitudesOther.Branch();
+
+            var aBranch1 = anglesSeed.Branch();
+            var aBranch2 = anglesOther.Branch();
+
+            var x1 = magnitudesSeed.PradOp.Mul(anglesSeed.PradOp.Cos().Result)
+                .PradOp.Reshape(new int[] { N, M, 1 }).PradOp.Tile(new int[] { 1, 1, P });
+            var x2 = magnitudesOther.PradOp.Mul(anglesOther.PradOp.Cos().Result)
+                .PradOp.Reshape(new int[] { 1, M, P }).PradOp.Tile(new int[] { N, 1, 1 });
+            var y1 = mBranch1.Mul(aBranch1.Sin().Result)
+                .PradOp.Reshape(new int[] { N, M, 1 }).PradOp.Tile(new int[] { 1, 1, P });
+            var y2 = mBranch2.Mul(aBranch2.Sin().Result)
+                .PradOp.Reshape(new int[] { 1, M, P }).PradOp.Tile(new int[] { N, 1, 1 });
+
+            var weightsTiled = opWeights.Reshape(new[] { 1, M, P })
+                                    .PradOp.Tile(new[] { N, 1, 1 });
+
+            var wtBranch = weightsTiled.Branch();
+
+            var negativeWeights = weightsTiled.PradOp.LessThan(new Tensor(new[] { N, M, P }, 0d));
+
+            var x1Branch = x1.Branch();
+
+            var x2Branch = x2.Branch();
+
+            var subx2x1 = x1Branch.SubFrom(x2.Result);
+
+            var y1Branch = y1.Branch();
+
+            var y2Branch = y2.Branch();
+
+            var suby2y1 = y1Branch.SubFrom(y2.Result);
+
+            var deltaX = x1.PradOp.Sub(x2Branch.CurrentTensor).PradOp.Where(negativeWeights.Result, subx2x1.Result);
+            var deltaY = y1.PradOp.Sub(y2Branch.CurrentTensor).PradOp.Where(negativeWeights.Result, suby2y1.Result);
+
+            var deltaXBranch = deltaX.Branch();
+            var deltaYBranch = deltaY.Branch();
+
+            var diffMagnitudes = deltaX.PradOp.Square()
+                .PradOp.Add(deltaY.PradOp.Square().Result)
+                .PradOp.SquareRoot()
+                .PradOp.Div(new Tensor(new int[] { N, M, P }, M)); // [N, M, P]
+            var diffAngles = deltaYBranch.Atan2(deltaXBranch.CurrentTensor);  // [N, M, P]
+
+            var daBranch = diffAngles.Branch();
+
+            var abs = wtBranch.Abs();
+
+            var weightedMagnitudes = diffMagnitudes.PradOp.Mul(abs.Result);  // [N, M, P]
+            var wmBranch = weightedMagnitudes.Branch();
+
+            var weightedX = weightedMagnitudes.PradOp.Mul(diffAngles.PradOp.Cos().Result);  // [N, M, P]
+            var weightedY = wmBranch.Mul(daBranch.Sin().Result);  // [N, M, P]
+
+            var sumX = weightedX.PradOp.Sum(new int[] { 1 });  // [N, P]
+            var sumY = weightedY.PradOp.Sum(new int[] { 1 });  // [N, P]
+
+            var sumXBranch = sumX.Branch();
+            var sumYBranch = sumY.Branch();
+
+            var finalMagnitudes = sumX.PradOp.Square()
+                .PradOp.Add(sumY.PradOp.Square().Result)
+                .PradOp.SquareRoot();  // [N, P]
+            var finalAngles = sumYBranch.Atan2(sumXBranch.CurrentTensor);  // [N, P]
+
+            var finalResult = finalMagnitudes.PradOp.Concat(new[] { finalAngles.Result }, 1);  // [N, P*2]
+
+            finalResult.PradOp.Back(upstream);
         }
 
         [Fact]

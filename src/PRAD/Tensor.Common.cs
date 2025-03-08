@@ -1127,6 +1127,12 @@ namespace ParallelReverseAutoDiff.PRAD
             // Fast path for equal multiples along all dimensions
             if (multiples.All(m => m == multiples[0]))
             {
+                if (multiples[0] == 1)
+                {
+                    Array.Copy(this.Data, result.Data, this.Data.Length);
+                    return result;
+                }
+
                 int blockSize = this.Data.Length;
                 for (int i = 1; i < totalMultiple; i++)
                 {
