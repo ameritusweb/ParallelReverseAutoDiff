@@ -3424,6 +3424,20 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestVectorBasedTranspose()
+        {
+            Random rand = new Random(3);
+            var seed = new Tensor(new int[] { 200, 400 }, Enumerable.Range(0, 80000).Select(i => (double)i).ToArray());
+
+            var upstream = new Tensor(new int[] { 200, 400 }, Enumerable.Range(0, 80000).Select(i => rand.NextDouble()).ToArray());
+            var opSeed = new PradOp(seed);
+            PradVectorTools tools = new PradVectorTools();
+            var res = tools.VectorBasedTranspose(opSeed);
+
+            res.Back(upstream);
+        }
+
+        [Fact]
         public void TestVNNOperation()
         {
             Random rand = new Random(3);

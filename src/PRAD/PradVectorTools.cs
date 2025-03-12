@@ -629,6 +629,31 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Performs a vector-based transpose operation.
+        /// </summary>
+        /// <param name="input">The tensor to transpose.</param>
+        /// <returns>The result.</returns>
+        public PradResult VectorBasedTranspose(PradOp input)
+        {
+            var rows = input.CurrentTensor.Shape[0];
+            var cols = input.CurrentTensor.Shape[1];
+            var halfCols = cols / 2;
+
+            var branch = input.Branch();
+
+            // Split magnitudes and angles
+            var magnitudes = input.Indexer(":", $":{halfCols}");  // [rows, halfCols]
+            var angles = branch.Indexer(":", $"{halfCols}:");      // [rows, halfCols]
+
+            // Transpose each half separately
+            var transposedMagnitudes = magnitudes.PradOp.Transpose(new[] { 1, 0 });  // [halfCols, rows]
+            var transposedAngles = angles.PradOp.Transpose(new[] { 1, 0 });          // [halfCols, rows]
+
+            // Concatenate along axis 1 to get final result
+            return transposedMagnitudes.PradOp.Concat(new[] { transposedAngles.Result }, axis: 1);
+        }
+
+        /// <summary>
         /// Perform a vector weighted add operation.
         /// </summary>
         /// <param name="opInput1">The first input.</param>
