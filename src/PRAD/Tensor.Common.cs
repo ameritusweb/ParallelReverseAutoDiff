@@ -1205,7 +1205,6 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Create a padded version of the original shape
             int[] paddedShape = new int[newShape.Length];
-
             for (int i = 0; i < paddedShape.Length; i++)
             {
                 paddedShape[i] = 1;
@@ -1220,7 +1219,11 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 if (paddedShape[i] != 1 && paddedShape[i] != newShape[i])
                 {
-                    throw new ArgumentException($"Shape mismatch at dimension {i}. Original size {paddedShape[i]} cannot be broadcast to {newShape[i]}.");
+                    // Check if target dimension is divisible by the original dimension
+                    if (newShape[i] % paddedShape[i] != 0)
+                    {
+                        throw new ArgumentException($"Shape mismatch at dimension {i}. Original size {paddedShape[i]} cannot be broadcast to {newShape[i]}.");
+                    }
                 }
             }
 
@@ -1262,18 +1265,25 @@ namespace ParallelReverseAutoDiff.PRAD
             // Start from the rightmost dimension (which is aligned with the original shape)
             for (int j = newShape.Length - 1; j >= 0; j--)
             {
-                // For dimensions that exist in the original shape
+                // For dimensions in the original tensor
                 if (paddedShape[j] > 1)
                 {
-                    // Use the coordinate directly for non-broadcasted dimensions
-                    oldIndex += (newCoords[j] % paddedShape[j]) * stride;
-                }
+                    // If this dimension is repeated (broadcast from smaller to larger)
+                    if (newShape[j] > paddedShape[j] && newShape[j] % paddedShape[j] == 0)
+                    {
+                        // Use modulo to wrap around for repeated blocks
+                        oldIndex += (newCoords[j] % paddedShape[j]) * stride;
+                    }
+                    else
+                    {
+                        oldIndex += newCoords[j] * stride;
+                    }
 
-                // Only multiply stride by original dimensions (not by the broadcasted ones)
-                if (paddedShape[j] > 1)
-                {
                     stride *= paddedShape[j];
                 }
+
+                // For dimensions added through padding (original dim was 1)
+                // No need to add to oldIndex since these don't contribute to the index
             }
 
             return oldIndex;

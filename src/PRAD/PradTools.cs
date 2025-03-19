@@ -95,6 +95,16 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Gets a double array of doubles.
+        /// </summary>
+        /// <param name="length">The length of the array.</param>
+        /// <returns>The allocated array.</returns>
+        internal static double[][] AllocateDoubleArray(int length)
+        {
+            return new double[length][];
+        }
+
+        /// <summary>
         /// Gets an array of doubles.
         /// </summary>
         /// <param name="length">The length.</param>

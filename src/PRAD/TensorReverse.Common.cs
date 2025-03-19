@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.PRAD
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
@@ -182,17 +183,98 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
 
-            // Initialize the input gradient with the shape of the original tensor
-            var inputGradient = PradTools.AllocateArray(originalShape.Aggregate(1, (a, b) => a * b));
+            // For the reverse operation, we need to sum gradients when a dimension was expanded
+            var resultSize = originalShape.Aggregate(1, (a, b) => a * b);
+            var result = PradTools.AllocateArray(resultSize);
 
-            // Rearrange upstream gradient to match the original shape
-            Parallel.For(0, inputGradient.Length, originalFlatIndex =>
+            // For simple thread safety, use local partitioning instead of thread-local arrays
+            object lockObj = new object();
+            Parallel.ForEach(
+                Partitioner.Create(0, upstreamGradient.Data.Length),
+                range =>
+                {
+                    // Create a local accumulator for this range
+                    var localResult = PradTools.AllocateArray(resultSize);
+
+                    // Process this chunk of indices
+                    for (int gradIndex = range.Item1; gradIndex < range.Item2; gradIndex++)
+                    {
+                        // Find the corresponding index in the original tensor
+                        int originalIndex = this.GetReverseIndex(gradIndex, upstreamGradient.Shape, paddedOriginalShape, originalShape);
+
+                        // Accumulate in local array without synchronization
+                        localResult[originalIndex] += upstreamGradient.Data[gradIndex];
+                    }
+
+                    // Once the local chunk is processed, add results to the main array under a lock
+                    lock (lockObj)
+                    {
+                        for (int i = 0; i < resultSize; i++)
+                        {
+                            result[i] += localResult[i];
+                        }
+                    }
+                });
+
+            return new Tensor(originalShape, result);
+        }
+
+        /// <summary>
+        /// Maps an index from the broadcasted gradient back to the original tensor for gradient accumulation.
+        /// </summary>
+        /// <param name="gradIndex">Index in the gradient tensor.</param>
+        /// <param name="gradShape">Shape of the gradient tensor.</param>
+        /// <param name="paddedOriginalShape">Padded original shape.</param>
+        /// <param name="originalShape">The original tensor shape.</param>
+        /// <returns>The index in the original tensor where this gradient should be accumulated.</returns>
+        public int GetReverseIndex(int gradIndex, int[] gradShape, int[] paddedOriginalShape, int[] originalShape)
+        {
+            // Convert gradient index to multi-dimensional coordinates
+            int[] gradCoords = new int[gradShape.Length];
+            int remainingIndex = gradIndex;
+            for (int i = gradShape.Length - 1; i >= 0; i--)
             {
-                int newFlatIndex = this.GetBroadcastIndex(originalFlatIndex, originalShape, paddedOriginalShape, upstreamGradient.Shape);
-                inputGradient[originalFlatIndex] = upstreamGradient.Data[newFlatIndex];
-            });
+                gradCoords[i] = remainingIndex % gradShape[i];
+                remainingIndex /= gradShape[i];
+            }
 
-            return new Tensor(originalShape, inputGradient);
+            // Map to coordinates in the original tensor, accounting for broadcasting
+            int[] originalCoords = new int[originalShape.Length];
+            int padOffset = gradShape.Length - originalShape.Length;
+
+            for (int i = 0; i < originalShape.Length; i++)
+            {
+                int gradDim = i + padOffset;
+
+                if (paddedOriginalShape[gradDim] == 1)
+                {
+                    // This dimension was broadcast from 1 to n - always use index 0
+                    originalCoords[i] = 0;
+                }
+                else if (gradShape[gradDim] > paddedOriginalShape[gradDim] &&
+                         gradShape[gradDim] % paddedOriginalShape[gradDim] == 0)
+                {
+                    // This dimension was broadcast from n to m where m > n and m % n == 0
+                    // We need to wrap to the correct original index
+                    originalCoords[i] = gradCoords[gradDim] % paddedOriginalShape[gradDim];
+                }
+                else
+                {
+                    // Normal case - dimensions match exactly
+                    originalCoords[i] = gradCoords[gradDim];
+                }
+            }
+
+            // Convert back to flat index
+            int originalIndex = 0;
+            int stride = 1;
+            for (int i = originalShape.Length - 1; i >= 0; i--)
+            {
+                originalIndex += originalCoords[i] * stride;
+                stride *= originalShape[i];
+            }
+
+            return originalIndex;
         }
 
         /// <summary>
@@ -217,6 +299,7 @@ namespace ParallelReverseAutoDiff.PRAD
             // Map originalCoords to newCoords for the broadcasted tensor
             int[] broadcastCoords = new int[broadcastShape.Length];
             int padOffset = broadcastShape.Length - originalShape.Length;
+
             for (int i = 0; i < broadcastShape.Length; i++)
             {
                 if (i < padOffset)
@@ -225,7 +308,23 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
                 else
                 {
-                    broadcastCoords[i] = paddedOriginalShape[i] == 1 ? 0 : originalCoords[i - padOffset];
+                    if (paddedOriginalShape[i] == 1)
+                    {
+                        // Dimension is broadcast from 1 to n
+                        broadcastCoords[i] = 0;
+                    }
+                    else if (broadcastShape[i] > paddedOriginalShape[i] &&
+                             broadcastShape[i] % paddedOriginalShape[i] == 0)
+                    {
+                        // Handle case where broadcasting is by repeating (not just from size 1)
+                        // For this forward mapping, we just map to the first occurrence
+                        broadcastCoords[i] = originalCoords[i - padOffset];
+                    }
+                    else
+                    {
+                        // Normal case - dimensions match
+                        broadcastCoords[i] = originalCoords[i - padOffset];
+                    }
                 }
             }
 
