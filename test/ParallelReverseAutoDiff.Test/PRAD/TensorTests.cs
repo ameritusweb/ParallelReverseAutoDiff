@@ -6,6 +6,205 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class TensorTests
     {
         [Fact]
+        public void BroadcastTo_ScalarToVector_ReturnsCorrectResult()
+        {
+            // Arrange
+            var scalar = new Tensor(new[] { 1 }, new[] { 5.0 });
+            var targetShape = new[] { 3 };
+
+            // Act
+            var result = scalar.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(new[] { 5.0, 5.0, 5.0 }, result.Data);
+        }
+
+        [Fact]
+        public void BroadcastTo_VectorToMatrix_ReturnsCorrectResult()
+        {
+            // Arrange
+            var vector = new Tensor(new[] { 3 }, new[] { 1.0, 2.0, 3.0 });
+            var targetShape = new[] { 2, 3 };
+
+            // Act
+            var result = vector.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(new[] { 1.0, 2.0, 3.0, 1.0, 2.0, 3.0 }, result.Data);
+        }
+
+        [Fact]
+        public void BroadcastTo_MatrixToHigherRank_ReturnsCorrectResult()
+        {
+            // Arrange
+            var matrix = new Tensor(
+                new[] { 2, 3 },
+                new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }
+            );
+            var targetShape = new[] { 4, 2, 3 };
+
+            // Act
+            var result = matrix.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(24, result.Data.Length);
+
+            // Check the first slice
+            Assert.Equal(new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }, result.Data.Take(6).ToArray());
+            // Check the second slice (should be the same)
+            Assert.Equal(new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }, result.Data.Skip(6).Take(6).ToArray());
+            // Check the third slice (should be the same)
+            Assert.Equal(new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }, result.Data.Skip(12).Take(6).ToArray());
+            // Check the fourth slice (should be the same)
+            Assert.Equal(new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }, result.Data.Skip(18).Take(6).ToArray());
+        }
+
+        [Fact]
+        public void BroadcastTo_RightmostDimensionBroadcast_ReturnsCorrectResult()
+        {
+            // Arrange
+            var tensor = new Tensor(
+                new[] { 2, 1 },
+                new[] { 10.0, 20.0 }
+            );
+            var targetShape = new[] { 2, 3 };
+
+            // Act
+            var result = tensor.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(new[] { 10.0, 10.0, 10.0, 20.0, 20.0, 20.0 }, result.Data);
+        }
+
+        [Fact]
+        public void BroadcastTo_MultipleDimensionsBroadcast_ReturnsCorrectResult()
+        {
+            // Arrange
+            var tensor = new Tensor(
+                new[] { 1, 3, 1 },
+                new[] { 1.0, 2.0, 3.0 }
+            );
+            var targetShape = new[] { 2, 3, 4 };
+
+            // Act
+            var result = tensor.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(24, result.Data.Length);
+
+            // Check first row (first element)
+            Assert.Equal(1.0, result.Data[0]);
+            Assert.Equal(1.0, result.Data[1]);
+            Assert.Equal(1.0, result.Data[2]);
+            Assert.Equal(1.0, result.Data[3]);
+
+            // Check second row (second element)
+            Assert.Equal(2.0, result.Data[4]);
+            Assert.Equal(2.0, result.Data[5]);
+            Assert.Equal(2.0, result.Data[6]);
+            Assert.Equal(2.0, result.Data[7]);
+
+            // Check third row (third element)
+            Assert.Equal(3.0, result.Data[8]);
+            Assert.Equal(3.0, result.Data[9]);
+            Assert.Equal(3.0, result.Data[10]);
+            Assert.Equal(3.0, result.Data[11]);
+
+            // The pattern repeats for the second slice
+            Assert.Equal(1.0, result.Data[12]);
+            Assert.Equal(2.0, result.Data[16]);
+            Assert.Equal(3.0, result.Data[20]);
+        }
+
+        [Fact]
+        public void BroadcastTo_IncompatibleShapes_ThrowsArgumentException()
+        {
+            // Arrange
+            var tensor = new Tensor(
+                new[] { 2, 3 },
+                new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }
+            );
+            var targetShape = new[] { 3, 3 }; // Incompatible with first dimension
+
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => tensor.BroadcastTo(targetShape));
+            Assert.Contains("Shape mismatch at dimension 0", exception.Message);
+        }
+
+        [Fact]
+        public void BroadcastTo_LowerRankTarget_ThrowsArgumentException()
+        {
+            // Arrange
+            var tensor = new Tensor(
+                new[] { 2, 3 },
+                new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }
+            );
+            var targetShape = new[] { 3 }; // Lower rank
+
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => tensor.BroadcastTo(targetShape));
+            Assert.Contains("New shape must be of the same rank or higher", exception.Message);
+        }
+
+        [Fact]
+        public void BroadcastTo_ComplexBroadcasting_ReturnsCorrectResult()
+        {
+            // Arrange
+            var tensor = new Tensor(
+                new[] { 2, 1, 3 },
+                new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }
+            );
+            var targetShape = new[] { 4, 2, 5, 3 };
+
+            // Act
+            var result = tensor.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(4 * 2 * 5 * 3, result.Data.Length);
+
+            // Check a few key indices to ensure broadcast works correctly
+            // First slice (i=0, j=0, k=0)
+            Assert.Equal(1.0, result.Data[0]);
+            Assert.Equal(2.0, result.Data[1]);
+            Assert.Equal(3.0, result.Data[2]);
+
+            // First slice (i=0, j=0, k=1) - broadcast along k
+            Assert.Equal(1.0, result.Data[3]);
+            Assert.Equal(2.0, result.Data[4]);
+            Assert.Equal(3.0, result.Data[5]);
+
+            // Second slice (i=0, j=1, k=0) - different j shows second row of original tensor
+            Assert.Equal(4.0, result.Data[15]);
+            Assert.Equal(5.0, result.Data[16]);
+            Assert.Equal(6.0, result.Data[17]);
+        }
+
+        [Fact]
+        public void BroadcastTo_IdenticalShape_ReturnsCopy()
+        {
+            // Arrange
+            var tensor = new Tensor(
+                new[] { 2, 3 },
+                new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 }
+            );
+            var targetShape = new[] { 2, 3 }; // Same shape
+
+            // Act
+            var result = tensor.BroadcastTo(targetShape);
+
+            // Assert
+            Assert.Equal(targetShape, result.Shape);
+            Assert.Equal(tensor.Data, result.Data);
+            Assert.NotSame(tensor, result); // Should be a different instance
+        }
+
+        [Fact]
         public void TestGather()
         {
             Tensor a = Tensor.XavierUniform(new int[] { 1, 10 }).Reshape(new int[] { 10 });

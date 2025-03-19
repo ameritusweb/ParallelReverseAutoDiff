@@ -1191,6 +1191,95 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Broadcasts the tensor to a specified shape.
+        /// </summary>
+        /// <param name="newShape">The new shape to broadcast to.</param>
+        /// <returns>A new tensor broadcasted to the specified shape.</returns>
+        /// <exception cref="ArgumentException">Thrown when the new shape is not compatible for broadcasting.</exception>
+        public Tensor BroadcastTo(int[] newShape)
+        {
+            if (newShape.Length < this.Shape.Length)
+            {
+                throw new ArgumentException("New shape must be of the same rank or higher than the current shape.");
+            }
+
+            // Create a padded version of the original shape
+            int[] paddedShape = new int[newShape.Length];
+
+            for (int i = 0; i < paddedShape.Length; i++)
+            {
+                paddedShape[i] = 1;
+            }
+
+            // Copy the original shape to the rightmost positions
+            int offset = newShape.Length - this.Shape.Length;
+            Array.Copy(this.Shape, 0, paddedShape, offset, this.Shape.Length);
+
+            // Ensure the shape is compatible for broadcasting
+            for (int i = 0; i < newShape.Length; i++)
+            {
+                if (paddedShape[i] != 1 && paddedShape[i] != newShape[i])
+                {
+                    throw new ArgumentException($"Shape mismatch at dimension {i}. Original size {paddedShape[i]} cannot be broadcast to {newShape[i]}.");
+                }
+            }
+
+            // Calculate the total size of the new shape
+            int newTotalSize = newShape.Aggregate(1, (a, b) => a * b);
+            var broadcastedData = PradTools.AllocateArray(newTotalSize);
+
+            // Fill the new data array by repeating the elements
+            Parallel.For(0, newTotalSize, i =>
+            {
+                broadcastedData[i] = this.Data[this.GetOldIndex(i, newShape, paddedShape)];
+            });
+
+            return new Tensor(newShape, broadcastedData);
+        }
+
+        /// <summary>
+        /// Computes the corresponding index in the original tensor's data for the given broadcasted index.
+        /// </summary>
+        /// <param name="broadcastedIndex">Index in the broadcasted data array.</param>
+        /// <param name="newShape">The shape of the broadcasted tensor.</param>
+        /// <param name="paddedShape">The padded shape of the original tensor.</param>
+        /// <returns>The corresponding index in the original tensor's data array.</returns>
+        public int GetOldIndex(int broadcastedIndex, int[] newShape, int[] paddedShape)
+        {
+            // First, convert the flat index to coordinates in the new shape
+            int[] newCoords = new int[newShape.Length];
+            int remainingI = broadcastedIndex;
+            for (int j = newShape.Length - 1; j >= 0; j--)
+            {
+                newCoords[j] = remainingI % newShape[j];
+                remainingI /= newShape[j];
+            }
+
+            // Calculate the corresponding index in the original tensor
+            int oldIndex = 0;
+            int stride = 1;
+
+            // Start from the rightmost dimension (which is aligned with the original shape)
+            for (int j = newShape.Length - 1; j >= 0; j--)
+            {
+                // For dimensions that exist in the original shape
+                if (paddedShape[j] > 1)
+                {
+                    // Use the coordinate directly for non-broadcasted dimensions
+                    oldIndex += (newCoords[j] % paddedShape[j]) * stride;
+                }
+
+                // Only multiply stride by original dimensions (not by the broadcasted ones)
+                if (paddedShape[j] > 1)
+                {
+                    stride *= paddedShape[j];
+                }
+            }
+
+            return oldIndex;
+        }
+
+        /// <summary>
         /// Computes the element-wise subtraction of two tensors using MKL.NET.
         /// </summary>
         /// <param name="other">The other tensor.</param>

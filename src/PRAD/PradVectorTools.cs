@@ -629,6 +629,56 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Calculates contribution probabilities for vectors based on their influence on the decision boundary at π/2.
+        /// </summary>
+        /// <param name="input">Input tensor with magnitudes in left half and angles in right half.</param>
+        /// <param name="temperature">The temperature.</param>
+        /// <returns>Tensor containing probability of contribution for each vector.</returns>
+        public PradResult CalculateVectorContributionProbabilities(PradOp input, double temperature = 1.0d)
+        {
+            var half_cols = input.CurrentShape[^1] / 2;
+
+            // Split into magnitudes and angles
+            var (magnitudes, angles) = input.DoParallel(
+                x => x.Indexer(":", $":{half_cols}"),
+                y => y.Indexer(":", $"{half_cols}:"));
+
+            // Calculate total resultant vector components
+            var (cosAngles, sinAngles) = angles.PradOp.DoParallel(
+                x => x.Cos(),
+                y => y.Sin());
+
+            var (xComponents, yComponents) = magnitudes.PradOp.DoParallel(
+                x => x.Mul(cosAngles.Result),
+                y => y.Mul(sinAngles.Result));
+
+            // Calculate resultant magnitude
+            var xComponentsSquared = xComponents.PradOp.Square();
+            var yComponentsSquared = yComponents.PradOp.Square();
+            var resultantMagnitudeSquared = xComponentsSquared.Then(PradOp.AddOp, yComponentsSquared.Result);
+            var resultantMagnitude = resultantMagnitudeSquared.Then(PradOp.SquareRootOp);
+
+            // Calculate angle deviations from π/2
+            var piOverTwo = new Tensor(angles.PradOp.CurrentShape, (float)(Math.PI / 2));
+            var angleDeviations = angles.PradOp.Sub(piOverTwo);
+            var absoluteDeviations = angleDeviations.Then(PradOp.AbsOp);
+
+            // Normalize deviations to range 0-1
+            var normalizedDeviations = absoluteDeviations.Then(
+                PradOp.DivOp,
+                new Tensor(absoluteDeviations.PradOp.CurrentShape, (float)(Math.PI / 2)));
+
+            // Calculate relative magnitudes
+            var relativeMagnitudes = magnitudes.PradOp.Div(resultantMagnitude.Result);
+
+            // Combine magnitude and angle effects
+            var contributions = relativeMagnitudes.Then(PradOp.MulOp, normalizedDeviations.Result);
+
+            // Apply sine-softmax to get probabilities
+            return this.SineSoftmax(contributions.PradOp, temperature);
+        }
+
+        /// <summary>
         /// Performs a vector-based transpose operation.
         /// </summary>
         /// <param name="input">The tensor to transpose.</param>
@@ -737,11 +787,15 @@ namespace ParallelReverseAutoDiff.PRAD
         /// Perform a sine-softmax operation.
         /// </summary>
         /// <param name="opInput1">The input.</param>
+        /// <param name="temperature">The temperature.</param>
         /// <returns>The sine-softmax probability distribution output.</returns>
-        public PradResult SineSoftmax(PradOp opInput1)
+        public PradResult SineSoftmax(PradOp opInput1, double temperature = 1.0d)
         {
             var shape = opInput1.CurrentTensor.Shape;
-            var sinned = opInput1.Sin();
+
+            var scaled = opInput1.Mul(new Tensor(opInput1.CurrentShape, PradTools.One / PradTools.Cast(temperature)));
+
+            var sinned = scaled.PradOp.Sin();
             var exped = sinned.Then(PradOp.ExpOp);
 
             // Determine the axis to sum over based on the input dimensions
