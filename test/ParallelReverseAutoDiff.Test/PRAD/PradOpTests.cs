@@ -128,6 +128,109 @@ namespace ParallelReverseAutoDiff.Test.PRAD
         }
 
         [Fact]
+        public void TestTile3D()
+        {
+            var seed = new Tensor(new int[] { 2, 2, 1 }, new double[] { 1, 2, 3, 4 });
+            var pradOp = new PradOp(seed);
+            var result = pradOp.Tile(new int[] { 1, 1, 3 });
+
+            // Each value should be repeated 3 times in the last dimension
+            Assert.Equal(new double[] {
+        1, 1, 1,  // [0,0,:]
+        2, 2, 2,  // [0,1,:]
+        3, 3, 3,  // [1,0,:]
+        4, 4, 4   // [1,1,:]
+    }, result.Result.Data);
+
+            // Test backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2, 2, 3 },
+                Enumerable.Repeat(1.0, 12).ToArray());
+            pradOp.Back(upstreamGradient);
+
+            // Each original position should accumulate 3 gradients
+            Assert.Equal(new double[] { 3, 3, 3, 3 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestTileWithUneven3D()
+        {
+            var seed = new Tensor(new int[] { 2, 3, 2 },
+                new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
+            var pradOp = new PradOp(seed);
+            var result = pradOp.Tile(new int[] { 1, 1, 2 });
+
+            // Each value should be repeated twice in the last dimension
+            Assert.Equal(new double[] {
+        1, 2, 1, 2,    // [0,0,:]
+        3, 4, 3, 4,    // [0,1,:]
+        5, 6, 5, 6,    // [0,2,:]
+        7, 8, 7, 8,    // [1,0,:]
+        9, 10, 9, 10,  // [1,1,:]
+        11, 12, 11, 12 // [1,2,:]
+    }, result.Result.Data);
+
+            // Test backpropagation
+            var upstreamGradient = new Tensor(new int[] { 2, 3, 4 },
+                Enumerable.Repeat(1.0, 24).ToArray());
+            pradOp.Back(upstreamGradient);
+
+            // Each original position should accumulate 2 gradients
+            Assert.Equal(new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+                result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestTileFirstDimension()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+            var pradOp = new PradOp(seed);
+            var result = pradOp.Tile(new int[] { 3, 1 });
+
+            // Should repeat the entire rows 3 times
+            Assert.Equal(new double[] {
+        1, 2,  // First copy
+        3, 4,
+        1, 2,  // Second copy
+        3, 4,
+        1, 2,  // Third copy
+        3, 4
+    }, result.Result.Data);
+
+            // Test backpropagation
+            var upstreamGradient = new Tensor(new int[] { 6, 2 },
+                Enumerable.Repeat(1.0, 12).ToArray());
+            pradOp.Back(upstreamGradient);
+
+            // Each original position should accumulate 3 gradients
+            Assert.Equal(new double[] { 3, 3, 3, 3 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
+        public void TestTile4D()
+        {
+            var seed = new Tensor(new int[] { 1, 2, 2, 1 },
+                new double[] { 1, 2, 3, 4 });
+            var pradOp = new PradOp(seed);
+            var result = pradOp.Tile(new int[] { 1, 1, 1, 2 });
+
+            // Should repeat each value twice in the last dimension
+            Assert.Equal(new double[] {
+        1, 1,  // [0,0,0,:]
+        2, 2,  // [0,0,1,:]
+        3, 3,  // [0,1,0,:]
+        4, 4   // [0,1,1,:]
+    }, result.Result.Data);
+
+            // Test backpropagation
+            var upstreamGradient = new Tensor(new int[] { 1, 2, 2, 2 },
+                Enumerable.Repeat(1.0, 8).ToArray());
+            pradOp.Back(upstreamGradient);
+
+            // Each original position should accumulate 2 gradients
+            Assert.Equal(new double[] { 2, 2, 2, 2 }, result.Gradients[0].Data);
+        }
+
+        [Fact]
         public void TestTile()
         {
             var seed = new Tensor(new int[] { 4, 1 }, new double[] { 1, 2, 3, 4 });
@@ -141,7 +244,7 @@ namespace ParallelReverseAutoDiff.Test.PRAD
             var upstreamGradient = new Tensor(new int[] { 4, 2 }, new double[] { 1, 1, 1, 1, 1, 1, 1, 1 });
             pradOp.Back(upstreamGradient);
 
-            Assert.Equal(new double[] { 4, 4, 4, 4 }, result.Gradients[0].Data);
+            Assert.Equal(new double[] { 2, 2, 2, 2 }, result.Gradients[0].Data);
         }
 
         [Fact]

@@ -1119,15 +1119,103 @@ namespace ParallelReverseAutoDiff.PRAD
             // Fast path for tiling along a single dimension
             int maxMultiple = multiples.Max();
             int tilingDimension = Array.IndexOf(multiples, maxMultiple);
-
             if (multiples.Count(m => m > 1) == 1)
             {
-                int copySize = this.Data.Length;
-                Array.Copy(this.Data, 0, result.Data, 0, copySize);
-
-                for (int i = 1; i < multiples[tilingDimension]; i++)
+                // Calculate strides for outer dimensions only
+                int[] outerStrides = new int[tilingDimension];
+                if (tilingDimension > 0)
                 {
-                    Array.Copy(result.Data, 0, result.Data, i * copySize, copySize);
+                    outerStrides[tilingDimension - 1] = 1;
+                    for (int i = tilingDimension - 2; i >= 0; i--)
+                    {
+                        outerStrides[i] = outerStrides[i + 1] * this.Shape[i + 1];
+                    }
+                }
+
+                // Calculate strides for result tensor
+                int[] newStrides = new int[newShape.Length];
+                newStrides[newShape.Length - 1] = 1;
+                for (int i = newShape.Length - 2; i >= 0; i--)
+                {
+                    newStrides[i] = newStrides[i + 1] * newShape[i + 1];
+                }
+
+                // Copy initial data
+                Array.Copy(this.Data, 0, result.Data, 0, this.Data.Length);
+
+                // For each position before the tiling dimension
+                int outerLoopSize = 1;
+                for (int i = 0; i < tilingDimension; i++)
+                {
+                    outerLoopSize *= this.Shape[i];
+                }
+
+                // For each position in the tiling dimension
+                int tilingDimSize = this.Shape[tilingDimension];
+
+                // For each position after the tiling dimension
+                int innerLoopSize = 1;
+                for (int i = tilingDimension + 1; i < this.Shape.Length; i++)
+                {
+                    innerLoopSize *= this.Shape[i];
+                }
+
+                // Iterate through all positions
+                for (int outer = 0; outer < outerLoopSize; outer++)
+                {
+                    // Calculate outer indices using outer strides
+                    int[] outerIndices = new int[tilingDimension];
+                    int remaining = outer;
+                    for (int i = 0; i < tilingDimension; i++)
+                    {
+                        if (i == tilingDimension - 1)
+                        {
+                            outerIndices[i] = remaining;
+                        }
+                        else
+                        {
+                            outerIndices[i] = remaining / outerStrides[i];
+                            remaining %= outerStrides[i];
+                        }
+                    }
+
+                    for (int mid = 0; mid < tilingDimSize; mid++)
+                    {
+                        for (int inner = 0; inner < innerLoopSize; inner++)
+                        {
+                            // Calculate source offset
+                            int sourceOffset = 0;
+                            for (int i = 0; i < tilingDimension; i++)
+                            {
+                                sourceOffset = (sourceOffset * this.Shape[i]) + outerIndices[i];
+                            }
+
+                            sourceOffset = (sourceOffset * this.Shape[tilingDimension]) + mid;
+                            if (inner > 0)
+                            {
+                                sourceOffset = (sourceOffset * this.Shape[tilingDimension + 1]) + inner;
+                            }
+
+                            // Copy to each tile
+                            for (int tile = 0; tile < multiples[tilingDimension]; tile++)
+                            {
+                                // Calculate target offset
+                                int targetOffset = 0;
+                                for (int i = 0; i < tilingDimension; i++)
+                                {
+                                    targetOffset = (targetOffset * newShape[i]) + outerIndices[i];
+                                }
+
+                                targetOffset = (targetOffset * newShape[tilingDimension]) + mid + (tile * tilingDimSize);
+                                if (inner > 0)
+                                {
+                                    targetOffset = (targetOffset * newShape[tilingDimension + 1]) + inner;
+                                }
+
+                                result.Data[targetOffset] = this.Data[sourceOffset];
+                            }
+                        }
+                    }
                 }
 
                 return result;
@@ -1142,10 +1230,56 @@ namespace ParallelReverseAutoDiff.PRAD
                     return result;
                 }
 
-                int blockSize = this.Data.Length;
-                for (int i = 1; i < totalMultiple; i++)
+                // Calculate strides for original tensor
+                int[] originalStrides = new int[this.Shape.Length];
+                originalStrides[this.Shape.Length - 1] = 1;
+                for (int i = this.Shape.Length - 2; i >= 0; i--)
                 {
-                    Array.Copy(this.Data, 0, result.Data, i * blockSize, blockSize);
+                    originalStrides[i] = originalStrides[i + 1] * this.Shape[i + 1];
+                }
+
+                // Calculate strides for result tensor
+                int[] newStrides = new int[newShape.Length];
+                newStrides[newShape.Length - 1] = 1;
+                for (int i = newShape.Length - 2; i >= 0; i--)
+                {
+                    newStrides[i] = newStrides[i + 1] * newShape[i + 1];
+                }
+
+                // For each element in the original tensor
+                for (int flatIndex = 0; flatIndex < this.Data.Length; flatIndex++)
+                {
+                    // Convert flat index to multi-dimensional indices
+                    int[] indices = new int[this.Shape.Length];
+                    int remaining = flatIndex;
+                    for (int dim = 0; dim < this.Shape.Length; dim++)
+                    {
+                        indices[dim] = remaining / originalStrides[dim];
+                        remaining %= originalStrides[dim];
+                    }
+
+                    // For each tile position
+                    for (int tile = 0; tile < totalMultiple; tile++)
+                    {
+                        // Convert tile number to tile indices
+                        int[] tileIndices = new int[this.Shape.Length];
+                        remaining = tile;
+                        for (int dim = 0; dim < this.Shape.Length; dim++)
+                        {
+                            tileIndices[dim] = remaining % multiples[dim];
+                            remaining /= multiples[dim];
+                        }
+
+                        // Calculate target offset
+                        int targetOffset = 0;
+                        for (int dim = 0; dim < this.Shape.Length; dim++)
+                        {
+                            int targetIndex = indices[dim] + (tileIndices[dim] * this.Shape[dim]);
+                            targetOffset += targetIndex * newStrides[dim];
+                        }
+
+                        result.Data[targetOffset] = this.Data[flatIndex];
+                    }
                 }
 
                 return result;
