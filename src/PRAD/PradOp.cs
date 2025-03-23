@@ -465,13 +465,13 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <exception cref="ArgumentException">Shapes not matching.</exception>
         public void SetUpstreamGradient(Tensor gradient)
         {
-            if (!gradient.Shape.SequenceEqual(this.currentTensor.Shape))
-            {
-                throw new ArgumentException("Upstream gradient shape must match the current tensor shape.");
-            }
-
             if (this.UpstreamGradient != null)
             {
+                if (!gradient.Shape.SequenceEqual(this.UpstreamGradient.Shape))
+                {
+                    throw new ArgumentException("Upstream gradient shape must match the current tensor shape.");
+                }
+
                 this.UpstreamGradient = this.UpstreamGradient.ElementwiseAdd(gradient);
                 return;
             }
@@ -955,6 +955,11 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(DivOp))]
         public PradResult Div(Tensor tensor)
         {
+            if (tensor is PradTensor pradTensor)
+            {
+                pradTensor.PradOp.LinkedBranches.Add(this);
+            }
+
             var result = this.currentTensor.ElementwiseDivide(tensor);
             var tensorReverse = new TensorReverse(new Tensor[] { new Tensor(this.currentTensor) });
 

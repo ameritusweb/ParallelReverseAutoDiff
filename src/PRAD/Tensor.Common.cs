@@ -10,6 +10,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,7 +22,13 @@ namespace ParallelReverseAutoDiff.PRAD
     /// </summary>
     public partial class Tensor
     {
-        private static readonly ThreadLocal<Random> RandomGen = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+        private static readonly ThreadLocal<Random> RandomGen = new ThreadLocal<Random>(() =>
+        {
+            DateTime today = DateTime.UtcNow.Date;
+            int baseSeed = (today.Year * 10000) + (today.Month * 100) + today.Day;
+            int threadOffset = Thread.CurrentThread.ManagedThreadId;
+            return new Random(baseSeed + threadOffset);
+        });
 
         private int[] strides;
 
@@ -332,11 +339,13 @@ namespace ParallelReverseAutoDiff.PRAD
             var result = new Tensor(shape);
             int totalSize = result.Data.Length;
 
+            var randomArray = GenerateRandomDoubleArray(totalSize);
+
             // Thread-safe random number generator
             Parallel.For(0, totalSize, i =>
             {
                 // Generate a uniform random value in [-1, 1]
-                var randomValue = PradTools.Cast((2.0 * RandomGen.Value.NextDouble()) - 1.0);
+                var randomValue = PradTools.Cast((2.0 * randomArray[i]) - 1.0);
 
                 // Scale to the range [-limit, limit]
                 result.Data[i] = randomValue * limit;
@@ -2996,6 +3005,19 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        private static double[] GenerateRandomDoubleArray(int length)
+        {
+            var random = RandomGen.Value;
+            double[] result = new double[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = random.NextDouble();
+            }
+
+            return result;
         }
 
         /// <summary>

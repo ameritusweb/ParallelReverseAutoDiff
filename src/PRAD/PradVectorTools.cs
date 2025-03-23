@@ -10,6 +10,7 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
+    using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -17,6 +18,11 @@ namespace ParallelReverseAutoDiff.PRAD
     /// </summary>
     public class PradVectorTools
     {
+        /// <summary>
+        /// Gets or sets the learning rate.
+        /// </summary>
+        public double LearningRate { get; set; } = 0.001d;
+
         /// <summary>
         /// Generates a vector matrix.
         /// </summary>
@@ -526,6 +532,11 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Performs a vector-based matrix multiplication.
         /// </summary>
+        /// <remarks>
+        /// input1: [N, M*2]  - each row has M magnitudes then M angles .
+        /// input2: [M, P*2]  - each row has P magnitudes then P angles.
+        /// weights: [M, P]   - weights for each M->P connection.
+        /// </remarks>
         /// <param name="opInput1">The first input.</param>
         /// <param name="opInput2">The second input.</param>
         /// <param name="opWeights">The weights.</param>
@@ -1200,6 +1211,336 @@ namespace ParallelReverseAutoDiff.PRAD
                 });
         }
 
+        /// <summary>
+        /// Computes an ordering loss based on direction similarity.
+        /// </summary>
+        /// <param name="tensorOp">The tensor with reference vectors at indices 0 and ^1.</param>
+        /// <param name="margin">The margin.</param>
+        /// <returns>A result.</returns>
+        public PradResult ComputeOrderingLoss(PradOp tensorOp, float margin = 0.1f)
+        {
+            // Split tensor into magnitudes and angles
+            var halfLength = tensorOp.CurrentShape[1] / 2;
+            var n = tensorOp.CurrentTensor.Shape[0];
+            var nMinusOne = n - 1;
+
+            // Get magnitudes and angles using indexer
+            var tensorOpBranch = tensorOp.Branch();
+            var magnitudes = tensorOpBranch.Indexer(":", $"0:{halfLength}");
+            var angles = tensorOp.Indexer(":", $"{halfLength}:");
+
+            // Convert polar to cartesian coordinates
+            var anglesBranch = angles.Branch();
+            var cosAngles = anglesBranch.Cos();
+            var sinAngles = angles.PradOp.Sin();
+
+            // Multiply by magnitudes
+            var xCoords = cosAngles.Then(result => result.PradOp.Mul(magnitudes.Result));
+            var yCoords = sinAngles.Then(result => result.PradOp.Mul(magnitudes.Result));
+
+            var xCoordsBranch = xCoords.BranchStack(2);
+            var yCoordsBranch = yCoords.BranchStack(2);
+
+            // Get reference tensors (first and last)
+            var refA_x = xCoords.PradOp.Indexer("0:1", ":");
+            var refA_y = yCoordsBranch.Pop().Indexer("0:1", ":");
+            var refZ_x = xCoordsBranch.Pop().Indexer($"{nMinusOne}:{n}", ":");
+            var refZ_y = yCoordsBranch.Pop().Indexer($"{nMinusOne}:{n}", ":");
+
+            // Calculate angles relative to x-axis for reference points
+            var refAAngle = refA_y.PradOp.Atan2(refA_x.Result);
+            var refZAngle = refZ_y.PradOp.Atan2(refZ_x.Result);
+
+            var refAAngleBranch = refAAngle.Branch();
+            var refZAngleBranch = refZAngle.Branch();
+
+            var refAAngleB = refAAngle.PradOp.BroadcastTo(yCoords.PradOp.CurrentShape);
+            var refZAngleB = refZAngle.PradOp.BroadcastTo(yCoords.PradOp.CurrentShape);
+
+            // Calculate angles for all points
+            var allAngles = yCoords.Then(result => result.PradOp.Atan2(xCoordsBranch.Pop().CurrentTensor));
+
+            // Branch for multiple uses
+            var allAnglesBranch = allAngles.Branch();
+
+            // Calculate angle differences from refA
+            var angleFromA = allAngles.PradOp
+                .Sub(refAAngleB.Result)
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+
+            var angleFromABranch = angleFromA.Branch();
+
+            // Calculate angle differences from refZ
+            var angleFromZ = allAnglesBranch
+                .Sub(refZAngleB.Result)
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+
+            // Calculate total angle span
+            var totalSpan = refZAngleBranch.Sub(refAAngleBranch.CurrentTensor)
+                .Then(PradOp.ModulusOp, new Tensor(refZAngleBranch.CurrentShape, 2 * Math.PI));
+
+            var totalSpanBranch = totalSpan.Branch();
+
+            // Expected spacing between consecutive tensors
+            var n1 = new Tensor(totalSpan.PradOp.CurrentShape, tensorOp.CurrentShape[0] - 1);
+            var expectedSpacing = totalSpan.Then(result => result.PradOp.Div(n1));
+
+            // Generate pairs for comparison
+            var indices = Enumerable.Range(0, tensorOp.CurrentShape[0]).ToArray();
+            var pairs = this.GeneratePairs(indices);
+
+            PradResult totalLossResult = null!;
+
+            var pairLength = pairs.Length;
+
+            var expectedSpacingBranches = expectedSpacing.BranchStack(pairLength - 1);
+
+            var branchCount = (pairLength * 2) - 1;
+            var allAnglesBranches = allAngles.BranchStack(branchCount);
+
+            int ii = 0;
+            foreach (var (i, j) in pairs)
+            {
+                ii++;
+
+                // Get angles for pair
+                var angleI = ii == 1 ? allAngles.PradOp.Indexer($"{i}:{i + 1}", ":") : allAnglesBranches.Pop().Indexer($"{i}:{i + 1}", ":");
+                var angleJ = allAnglesBranches.Pop().Indexer($"{j}:{j + 1}", ":");
+
+                var shape = angleJ.PradOp.CurrentShape;
+
+                // Calculate actual spacing
+                var actualSpacing = angleI.PradOp
+                    .SubFrom(angleJ.Result)
+                    .Then(PradOp.ModulusOp, new Tensor(shape, 2 * Math.PI));
+
+                // Expected spacing based on indices
+                var expectedTotal = ii == 1 ? expectedSpacing.Then(result =>
+                    result.PradOp.Mul(new Tensor(shape, j - i))) :
+                    expectedSpacingBranches.Pop().Mul(new Tensor(shape, j - i));
+
+                // Calculate loss component
+                var spacingDiff = actualSpacing.Then(result =>
+                    result.PradOp.Sub(expectedTotal.Result).Then(PradOp.AbsOp));
+
+                var marginTensor = new Tensor(shape, margin);
+                var lossTerm = spacingDiff.Then(result =>
+                    result.PradOp.Sub(marginTensor).Then(PradOp.MaxOp, new Tensor(shape, 0.0))).PradOp.Square();
+
+                totalLossResult = ii == 1 ? lossTerm : totalLossResult.PradOp.Add(lossTerm.Result);
+            }
+
+            var totalSpanBranchB = totalSpanBranch.BroadcastTo(angleFromABranch.CurrentShape);
+
+            // Normalize angles relative to both references
+            var normalizedFromA = angleFromABranch.Div(totalSpanBranchB.PradOp.CurrentTensor);
+
+            var normalizedFromZ = angleFromZ.Then(result =>
+                result.PradOp.Div(totalSpanBranchB.PradOp.CurrentTensor));
+
+            // Expected positions (0 = closest to A, 1 = closest to Z)
+            var indicesT = new Tensor(
+                angleFromABranch.CurrentShape,
+                Enumerable.Range(0, n).SelectMany(i =>
+                    Enumerable.Repeat((double)i / (n - 1), halfLength)).ToArray());
+
+            // Penalize deviations from expected positions relative to both references
+            var fromADiff = normalizedFromA.Then(result =>
+                result.PradOp.Sub(indicesT).Then(PradOp.AbsOp)).PradOp.Square();
+
+            var fromZDiff = normalizedFromZ.Then(result =>
+                result.PradOp.Add(indicesT).PradOp.Sub(new Tensor(indicesT.Shape, 1.0)).Then(PradOp.AbsOp)).PradOp.Square();
+
+            // Combine both penalties
+            var globalSpacingDiff = fromADiff.Then(result =>
+                result.PradOp.Add(fromZDiff.Result))
+                .PradOp.Mean(0)
+                .PradOp.BroadcastTo(new int[] { 1, halfLength });
+
+            // Add to total loss
+            totalLossResult = totalLossResult.PradOp.Add(globalSpacingDiff.Result);
+
+            var numPairs = new Tensor(totalLossResult.PradOp.CurrentShape, pairs.Length);
+            var mseLoss = totalLossResult.Then(result => result.PradOp.Div(numPairs));
+
+            return mseLoss;
+        }
+
+        /// <summary>
+        /// Computes an ordering loss based on direction similarity based on a sum per row.
+        /// </summary>
+        /// <param name="tensorOp">The tensor with reference vectors at indices 0 and ^1.</param>
+        /// <param name="margin">The margin.</param>
+        /// <returns>A result.</returns>
+        public PradResult ComputeOrderingLoss2(PradOp tensorOp, float margin = 0.1f)
+        {
+            // Split tensor into magnitudes and angles
+            var halfLength = tensorOp.CurrentShape[1] / 2;
+            var n = tensorOp.CurrentTensor.Shape[0];
+            var nMinusOne = n - 1;
+
+            // Get magnitudes and angles using indexer
+            var tensorOpBranch = tensorOp.Branch();
+            var magnitudes = tensorOpBranch.Indexer(":", $"0:{halfLength}");
+            var angles = tensorOp.Indexer(":", $"{halfLength}:");
+
+            // Convert polar to cartesian coordinates
+            var anglesBranch = angles.Branch();
+            var cosAngles = anglesBranch.Cos();
+            var sinAngles = angles.PradOp.Sin();
+
+            // Multiply by magnitudes
+            var xCoords = cosAngles.Then(result => result.PradOp.Mul(magnitudes.Result))
+                .PradOp.SumRows();
+            var yCoords = sinAngles.Then(result => result.PradOp.Mul(magnitudes.Result))
+                .PradOp.SumRows();
+
+            var xCoordsBranch = xCoords.BranchStack(2);
+            var yCoordsBranch = yCoords.BranchStack(2);
+
+            // Get reference tensors (first and last)
+            var refA_x = xCoords.PradOp.Indexer("0:1", ":");
+            var refA_y = yCoordsBranch.Pop().Indexer("0:1", ":");
+            var refZ_x = xCoordsBranch.Pop().Indexer($"{nMinusOne}:{n}", ":");
+            var refZ_y = yCoordsBranch.Pop().Indexer($"{nMinusOne}:{n}", ":");
+
+            // Calculate angles relative to x-axis for reference points
+            var refAAngle = refA_y.PradOp.Atan2(refA_x.Result);
+            var refZAngle = refZ_y.PradOp.Atan2(refZ_x.Result);
+
+            var refAAngleBranch = refAAngle.Branch();
+            var refZAngleBranch = refZAngle.Branch();
+
+            var refAAngleB = refAAngle.PradOp.BroadcastTo(yCoords.PradOp.CurrentShape);
+            var refZAngleB = refZAngle.PradOp.BroadcastTo(yCoords.PradOp.CurrentShape);
+
+            // Calculate angles for all points
+            var allAngles = yCoords.Then(result => result.PradOp.Atan2(xCoordsBranch.Pop().CurrentTensor));
+
+            // Branch for multiple uses
+            var allAnglesBranch = allAngles.Branch();
+
+            // Calculate angle differences from refA
+            var angleFromA = allAngles.PradOp
+                .Sub(refAAngleB.Result)
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+
+            var angleFromABranch = angleFromA.Branch();
+
+            // Calculate angle differences from refZ
+            var angleFromZ = allAnglesBranch
+                .Sub(refZAngleB.Result)
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+
+            // Calculate total angle span
+            var totalSpan = refZAngleBranch.Sub(refAAngleBranch.CurrentTensor)
+                .Then(PradOp.ModulusOp, new Tensor(refZAngleBranch.CurrentShape, 2 * Math.PI));
+
+            var totalSpanBranch = totalSpan.Branch();
+
+            // Expected spacing between consecutive tensors
+            var n1 = new Tensor(totalSpan.PradOp.CurrentShape, tensorOp.CurrentShape[0] - 1);
+            var expectedSpacing = totalSpan.Then(result => result.PradOp.Div(n1));
+
+            // Generate pairs for comparison
+            var indices = Enumerable.Range(0, tensorOp.CurrentShape[0]).ToArray();
+            var pairs = this.GeneratePairs(indices);
+
+            PradResult totalLossResult = null!;
+
+            var pairLength = pairs.Length;
+
+            var expectedSpacingBranches = expectedSpacing.BranchStack(pairLength - 1);
+
+            var branchCount = (pairLength * 2) - 1;
+            var allAnglesBranches = allAngles.BranchStack(branchCount);
+
+            int ii = 0;
+            foreach (var (i, j) in pairs)
+            {
+                ii++;
+
+                // Get angles for pair
+                var angleI = ii == 1 ? allAngles.PradOp.Indexer($"{i}:{i + 1}", ":") : allAnglesBranches.Pop().Indexer($"{i}:{i + 1}", ":");
+                var angleJ = allAnglesBranches.Pop().Indexer($"{j}:{j + 1}", ":");
+
+                var shape = angleJ.PradOp.CurrentShape;
+
+                // Calculate actual spacing
+                var actualSpacing = angleI.PradOp
+                    .SubFrom(angleJ.Result)
+                    .Then(PradOp.ModulusOp, new Tensor(shape, 2 * Math.PI));
+
+                // Expected spacing based on indices
+                var expectedTotal = ii == 1 ? expectedSpacing.Then(result =>
+                    result.PradOp.Mul(new Tensor(shape, j - i))) :
+                    expectedSpacingBranches.Pop().Mul(new Tensor(shape, j - i));
+
+                // Calculate loss component
+                var spacingDiff = actualSpacing.Then(result =>
+                    result.PradOp.Sub(expectedTotal.Result).Then(PradOp.AbsOp));
+
+                var marginTensor = new Tensor(shape, margin);
+                var lossTerm = spacingDiff.Then(result =>
+                    result.PradOp.Sub(marginTensor).Then(PradOp.MaxOp, new Tensor(shape, 0.0))).PradOp.Square();
+
+                totalLossResult = ii == 1 ? lossTerm : totalLossResult.PradOp.Add(lossTerm.Result);
+            }
+
+            var totalSpanBranchB = totalSpanBranch.BroadcastTo(angleFromABranch.CurrentShape);
+
+            // Normalize angles relative to both references
+            var normalizedFromA = angleFromABranch.Div(totalSpanBranchB.PradOp.CurrentTensor);
+
+            var normalizedFromZ = angleFromZ.Then(result =>
+                result.PradOp.Div(totalSpanBranchB.PradOp.CurrentTensor));
+
+            // Expected positions (0 = closest to A, 1 = closest to Z)
+            var indicesT = new Tensor(
+                angleFromABranch.CurrentShape,
+                Enumerable.Range(0, n).Select(i => (double)i / (n - 1)).ToArray());
+
+            // Penalize deviations from expected positions relative to both references
+            var fromADiff = normalizedFromA.Then(result =>
+                result.PradOp.Sub(indicesT).Then(PradOp.AbsOp)).PradOp.Square();
+
+            var fromZDiff = normalizedFromZ.Then(result =>
+                result.PradOp.Add(indicesT).PradOp.Sub(new Tensor(indicesT.Shape, 1.0)).Then(PradOp.AbsOp)).PradOp.Square();
+
+            // Combine both penalties
+            var globalSpacingDiff = fromADiff.Then(result =>
+                result.PradOp.Add(fromZDiff.Result))
+                .PradOp.Mean(0)
+                .PradOp.BroadcastTo(new int[] { 1, 1 });
+
+            // Add to total loss
+            totalLossResult = totalLossResult.PradOp.Add(globalSpacingDiff.Result);
+
+            var numPairs = new Tensor(totalLossResult.PradOp.CurrentShape, pairs.Length);
+            var mseLoss = totalLossResult.Then(result => result.PradOp.Div(numPairs));
+
+            return mseLoss;
+        }
+
+        /// <summary>
+        /// Use gradient descent to adjust tensors.
+        /// </summary>
+        /// <param name="tensorOps">The tensors to adjust.</param>
+        /// <returns>The list of prad op.</returns>
+        public List<PradOp> GradientDescent(params PradOp[] tensorOps)
+        {
+            List<PradOp> newOps = new List<PradOp>();
+            var clipper = PradClipper.CreateGradientClipper();
+            foreach (var tensor in tensorOps)
+            {
+                var clippedGradient = clipper.ClipGradients(tensor.SeedGradient);
+                PradOp newOp = new PradOp(tensor.BranchInitialTensor.ElementwiseSub(clippedGradient.ElementwiseMultiply(new Tensor(clippedGradient.Shape, this.LearningRate))));
+                newOps.Add(newOp);
+            }
+
+            return newOps;
+        }
+
         private PradResult ConcatMap(
             PradOp b,
             PradOp a,
@@ -1225,6 +1566,20 @@ namespace ParallelReverseAutoDiff.PRAD
             var resortedA = resortedFlatA.PradOp.Reshape(aShape);
 
             return b.Concat(new[] { resortedA.Result }, axis: 1);
+        }
+
+        private (int, int)[] GeneratePairs(int[] indices)
+        {
+            var pairs = new List<(int, int)>();
+            for (int i = 0; i < indices.Length; i++)
+            {
+                for (int j = i + 1; j < indices.Length; j++)
+                {
+                    pairs.Add((indices[i], indices[j]));
+                }
+            }
+
+            return pairs.ToArray();
         }
     }
 }
