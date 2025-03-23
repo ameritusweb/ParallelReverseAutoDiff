@@ -10,7 +10,6 @@ namespace ParallelReverseAutoDiff.PRAD
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
-    using ManagedCuda.BasicTypes;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -1266,18 +1265,18 @@ namespace ParallelReverseAutoDiff.PRAD
             // Calculate angle differences from refA
             var angleFromA = allAngles.PradOp
                 .Sub(refAAngleB.Result)
-                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, PradTools.Cast(2 * Math.PI)));
 
             var angleFromABranch = angleFromA.Branch();
 
             // Calculate angle differences from refZ
             var angleFromZ = allAnglesBranch
                 .Sub(refZAngleB.Result)
-                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, PradTools.Cast(2 * Math.PI)));
 
             // Calculate total angle span
             var totalSpan = refZAngleBranch.Sub(refAAngleBranch.CurrentTensor)
-                .Then(PradOp.ModulusOp, new Tensor(refZAngleBranch.CurrentShape, 2 * Math.PI));
+                .Then(PradOp.ModulusOp, new Tensor(refZAngleBranch.CurrentShape, PradTools.Cast(2 * Math.PI)));
 
             var totalSpanBranch = totalSpan.Branch();
 
@@ -1312,7 +1311,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 // Calculate actual spacing
                 var actualSpacing = angleI.PradOp
                     .SubFrom(angleJ.Result)
-                    .Then(PradOp.ModulusOp, new Tensor(shape, 2 * Math.PI));
+                    .Then(PradOp.ModulusOp, new Tensor(shape, PradTools.Cast(2 * Math.PI)));
 
                 // Expected spacing based on indices
                 var expectedTotal = ii == 1 ? expectedSpacing.Then(result =>
@@ -1325,7 +1324,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 var marginTensor = new Tensor(shape, margin);
                 var lossTerm = spacingDiff.Then(result =>
-                    result.PradOp.Sub(marginTensor).Then(PradOp.MaxOp, new Tensor(shape, 0.0))).PradOp.Square();
+                    result.PradOp.Sub(marginTensor).Then(PradOp.MaxOp, new Tensor(shape, PradTools.Zero))).PradOp.Square();
 
                 totalLossResult = ii == 1 ? lossTerm : totalLossResult.PradOp.Add(lossTerm.Result);
             }
@@ -1342,14 +1341,14 @@ namespace ParallelReverseAutoDiff.PRAD
             var indicesT = new Tensor(
                 angleFromABranch.CurrentShape,
                 Enumerable.Range(0, n).SelectMany(i =>
-                    Enumerable.Repeat((double)i / (n - 1), halfLength)).ToArray());
+                    Enumerable.Repeat(PradTools.Cast(i) / (n - 1), halfLength)).ToArray());
 
             // Penalize deviations from expected positions relative to both references
             var fromADiff = normalizedFromA.Then(result =>
                 result.PradOp.Sub(indicesT).Then(PradOp.AbsOp)).PradOp.Square();
 
             var fromZDiff = normalizedFromZ.Then(result =>
-                result.PradOp.Add(indicesT).PradOp.Sub(new Tensor(indicesT.Shape, 1.0)).Then(PradOp.AbsOp)).PradOp.Square();
+                result.PradOp.Add(indicesT).PradOp.Sub(new Tensor(indicesT.Shape, PradTools.One)).Then(PradOp.AbsOp)).PradOp.Square();
 
             // Combine both penalties
             var globalSpacingDiff = fromADiff.Then(result =>
@@ -1423,18 +1422,18 @@ namespace ParallelReverseAutoDiff.PRAD
             // Calculate angle differences from refA
             var angleFromA = allAngles.PradOp
                 .Sub(refAAngleB.Result)
-                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, PradTools.Cast(2 * Math.PI)));
 
             var angleFromABranch = angleFromA.Branch();
 
             // Calculate angle differences from refZ
             var angleFromZ = allAnglesBranch
                 .Sub(refZAngleB.Result)
-                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, 2 * Math.PI));
+                .Then(PradOp.ModulusOp, new Tensor(allAngles.PradOp.CurrentShape, PradTools.Cast(2 * Math.PI)));
 
             // Calculate total angle span
             var totalSpan = refZAngleBranch.Sub(refAAngleBranch.CurrentTensor)
-                .Then(PradOp.ModulusOp, new Tensor(refZAngleBranch.CurrentShape, 2 * Math.PI));
+                .Then(PradOp.ModulusOp, new Tensor(refZAngleBranch.CurrentShape, PradTools.Cast(2 * Math.PI)));
 
             var totalSpanBranch = totalSpan.Branch();
 
@@ -1469,7 +1468,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 // Calculate actual spacing
                 var actualSpacing = angleI.PradOp
                     .SubFrom(angleJ.Result)
-                    .Then(PradOp.ModulusOp, new Tensor(shape, 2 * Math.PI));
+                    .Then(PradOp.ModulusOp, new Tensor(shape, PradTools.Cast(2 * Math.PI)));
 
                 // Expected spacing based on indices
                 var expectedTotal = ii == 1 ? expectedSpacing.Then(result =>
@@ -1482,7 +1481,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
                 var marginTensor = new Tensor(shape, margin);
                 var lossTerm = spacingDiff.Then(result =>
-                    result.PradOp.Sub(marginTensor).Then(PradOp.MaxOp, new Tensor(shape, 0.0))).PradOp.Square();
+                    result.PradOp.Sub(marginTensor).Then(PradOp.MaxOp, new Tensor(shape, PradTools.Zero))).PradOp.Square();
 
                 totalLossResult = ii == 1 ? lossTerm : totalLossResult.PradOp.Add(lossTerm.Result);
             }
@@ -1498,14 +1497,14 @@ namespace ParallelReverseAutoDiff.PRAD
             // Expected positions (0 = closest to A, 1 = closest to Z)
             var indicesT = new Tensor(
                 angleFromABranch.CurrentShape,
-                Enumerable.Range(0, n).Select(i => (double)i / (n - 1)).ToArray());
+                Enumerable.Range(0, n).Select(i => PradTools.Cast(i) / (n - 1)).ToArray());
 
             // Penalize deviations from expected positions relative to both references
             var fromADiff = normalizedFromA.Then(result =>
                 result.PradOp.Sub(indicesT).Then(PradOp.AbsOp)).PradOp.Square();
 
             var fromZDiff = normalizedFromZ.Then(result =>
-                result.PradOp.Add(indicesT).PradOp.Sub(new Tensor(indicesT.Shape, 1.0)).Then(PradOp.AbsOp)).PradOp.Square();
+                result.PradOp.Add(indicesT).PradOp.Sub(new Tensor(indicesT.Shape, PradTools.One)).Then(PradOp.AbsOp)).PradOp.Square();
 
             // Combine both penalties
             var globalSpacingDiff = fromADiff.Then(result =>
@@ -1534,7 +1533,7 @@ namespace ParallelReverseAutoDiff.PRAD
             foreach (var tensor in tensorOps)
             {
                 var clippedGradient = clipper.ClipGradients(tensor.SeedGradient);
-                PradOp newOp = new PradOp(tensor.BranchInitialTensor.ElementwiseSub(clippedGradient.ElementwiseMultiply(new Tensor(clippedGradient.Shape, this.LearningRate))));
+                PradOp newOp = new PradOp(tensor.BranchInitialTensor.ElementwiseSub(clippedGradient.ElementwiseMultiply(new Tensor(clippedGradient.Shape, PradTools.Cast(this.LearningRate)))));
                 newOps.Add(newOp);
             }
 

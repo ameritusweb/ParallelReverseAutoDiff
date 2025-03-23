@@ -1119,6 +1119,20 @@ namespace ParallelReverseAutoDiff.PRAD
             // Fast path for tiling along a single dimension
             int maxMultiple = multiples.Max();
             int tilingDimension = Array.IndexOf(multiples, maxMultiple);
+
+            if (multiples.Count(m => m > 1) == 1 && multiples.First() > 1)
+            {
+                int copySize = this.Data.Length;
+                Array.Copy(this.Data, 0, result.Data, 0, copySize);
+
+                for (int i = 1; i < multiples[tilingDimension]; i++)
+                {
+                    Array.Copy(result.Data, 0, result.Data, i * copySize, copySize);
+                }
+
+                return result;
+            }
+
             if (multiples.Count(m => m > 1) == 1)
             {
                 // Calculate strides for outer dimensions only

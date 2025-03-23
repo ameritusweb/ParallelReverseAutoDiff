@@ -3004,14 +3004,13 @@ namespace ParallelReverseAutoDiff.PRAD
             Tensor grad = new Tensor(originalShape);
             int originalFirstDimSize = originalShape[0];
             int secondDimSize = originalShape[1];
-
             int vectorSize = Vector<double>.Count;
             int simdIterations = secondDimSize / vectorSize;
             int remainderStart = simdIterations * vectorSize;
 
             Parallel.For(0, originalFirstDimSize, i =>
             {
-                var sumArray = PradTools.AllocateArray(vectorSize);
+                var sumArray = PradTools.AllocateArray(Math.Max(vectorSize, secondDimSize));
                 int baseUpstreamIndex = i * multipleFirstDim * secondDimSize;
                 int baseGradIndex = i * secondDimSize;
 
@@ -3031,21 +3030,13 @@ namespace ParallelReverseAutoDiff.PRAD
                     // Handle remaining elements
                     for (int j = remainderStart; j < secondDimSize; j++)
                     {
-                        sumArray[j - remainderStart] += upstreamGradient.Data[upstreamIndex + j];
+                        sumArray[j] += upstreamGradient.Data[upstreamIndex + j];
                     }
                 }
 
-                // Store the results
-                PradTools.AllocateSpan(sumArray).CopyTo(PradTools.AllocateSpan(grad.Data, baseGradIndex, secondDimSize));
-
-                // Handle any remaining elements if secondDimSize > vectorSize
-                if (remainderStart < secondDimSize)
-                {
-                    for (int j = vectorSize; j < secondDimSize; j++)
-                    {
-                        grad.Data[baseGradIndex + j] = sumArray[j % vectorSize];
-                    }
-                }
+                // Copy only up to secondDimSize elements
+                PradTools.AllocateSpan(sumArray, 0, secondDimSize)
+                    .CopyTo(PradTools.AllocateSpan(grad.Data, baseGradIndex, secondDimSize));
             });
 
             return grad;
