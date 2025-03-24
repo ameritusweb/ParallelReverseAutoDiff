@@ -35,6 +35,7 @@ namespace ParallelReverseAutoDiff.PRAD
         private int gradientStackCounter; // Counter to track the number of gradients received
         private Tensor[] splitGradients; // Array to store gradients from each split
         private PradOpBranchTracker branchTracker;
+        private IList<Tensor> seedGradientHistory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
@@ -50,6 +51,7 @@ namespace ParallelReverseAutoDiff.PRAD
             this.backpropagationSteps = new List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)>();
             this.operations = new Dictionary<Delegate, Delegate>();
             this.branchTracker = new PradOpBranchTracker();
+            this.seedGradientHistory = new List<Tensor>();
             this.InitializeOperations();
         }
 
@@ -343,6 +345,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public bool IsFinished { get; private set; }
 
         /// <summary>
+        /// Gets or sets the backpropagation mode.
+        /// </summary>
+        public BackpropagationMode BackpropagationMode { get; set; }
+
+        /// <summary>
         /// Gets the seed gradient.
         /// </summary>
         public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.initialResult.Gradients[0].ReplaceData(value.Data); }
@@ -420,6 +427,31 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Gets the average gradient.
+        /// </summary>
+        public Tensor? AverageGradient
+        {
+            get
+            {
+                if (this.BackpropagationMode == BackpropagationMode.Replace
+                    ||
+                    !this.seedGradientHistory.Any())
+                {
+                    return default;
+                }
+
+                var firstSeed = this.seedGradientHistory.First();
+                foreach (var seed in this.seedGradientHistory.Skip(1))
+                {
+                    firstSeed = firstSeed.ElementwiseAdd(seed);
+                }
+
+                var avg = firstSeed.ElementwiseDivide(new Tensor(firstSeed.Shape, this.seedGradientHistory.Count));
+                return avg;
+            }
+        }
+
+        /// <summary>
         /// Gets an operation to get a func.
         /// </summary>
         internal static PradOp FuncOp => funcOp;
@@ -456,6 +488,7 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             this.seedGradient = new Tensor(this.seed.Shape);
             this.initialResult = new PradResult(this, this.seed, new Tensor[] { this.seedGradient });
+            this.seedGradientHistory.Clear();
         }
 
         /// <summary>
@@ -2740,7 +2773,16 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
             }
 
-            this.SeedGradient = currentUpstream;
+            if (this.BackpropagationMode == BackpropagationMode.Accumulate)
+            {
+                this.seedGradientHistory.Add(currentUpstream);
+                this.SeedGradient = this.SeedGradient.ElementwiseAdd(currentUpstream);
+            }
+            else
+            {
+                this.SeedGradient = currentUpstream;
+            }
+
             this.IsFinished = true;
 
             if (this.WaitingToAdd.Count > 0)
