@@ -1300,35 +1300,21 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             // General case: tile each dimension separately
-            int currentRepetitions = 1;
-            int currentBlockSize = this.Data.Length;
+            int[] inStrides = this.GetStrides(this.Shape);
+            int[] outStrides = this.GetStrides(newShape);
 
-            for (int dim = this.Shape.Length - 1; dim >= 0; dim--)
+            int totalElements = result.Data.Length;
+            for (int outFlatIndex = 0; outFlatIndex < totalElements; outFlatIndex++)
             {
-                if (multiples[dim] == 1)
+                int[] outCoords = this.GetCoordinates(outFlatIndex, outStrides);
+                int[] inCoords = new int[outCoords.Length];
+                for (int i = 0; i < inCoords.Length; i++)
                 {
-                    continue;
+                    inCoords[i] = outCoords[i] % this.Shape[i];
                 }
 
-                int nextBlockSize = currentBlockSize * multiples[dim];
-
-                for (int rep = 0; rep < currentRepetitions; rep++)
-                {
-                    int destOffset = rep * nextBlockSize;
-                    int srcOffset = rep * currentBlockSize;
-
-                    // Copy the first block
-                    Array.Copy(this.Data, srcOffset, result.Data, destOffset, currentBlockSize);
-
-                    // Tile this block
-                    for (int m = 1; m < multiples[dim]; m++)
-                    {
-                        Array.Copy(result.Data, destOffset, result.Data, destOffset + (m * currentBlockSize), currentBlockSize);
-                    }
-                }
-
-                currentRepetitions *= multiples[dim];
-                currentBlockSize = nextBlockSize;
+                int inFlatIndex = this.GetFlatIndex(inCoords, inStrides);
+                result.Data[outFlatIndex] = this.Data[inFlatIndex];
             }
 
             return result;
@@ -3275,6 +3261,42 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 index += indices[i] * stride;
                 stride *= shape[i];
+            }
+
+            return index;
+        }
+
+        private int[] GetStrides(int[] shape)
+        {
+            int[] strides = new int[shape.Length];
+            int stride = 1;
+            for (int i = shape.Length - 1; i >= 0; i--)
+            {
+                strides[i] = stride;
+                stride *= shape[i];
+            }
+
+            return strides;
+        }
+
+        private int[] GetCoordinates(int flatIndex, int[] strides)
+        {
+            int[] coords = new int[strides.Length];
+            for (int i = 0; i < strides.Length; i++)
+            {
+                coords[i] = flatIndex / strides[i];
+                flatIndex %= strides[i];
+            }
+
+            return coords;
+        }
+
+        private int GetFlatIndex(int[] coords, int[] strides)
+        {
+            int index = 0;
+            for (int i = 0; i < coords.Length; i++)
+            {
+                index += coords[i] * strides[i];
             }
 
             return index;

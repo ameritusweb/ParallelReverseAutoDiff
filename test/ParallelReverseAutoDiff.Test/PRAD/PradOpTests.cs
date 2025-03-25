@@ -13,6 +13,67 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class PradOpTests
     {
         [Fact]
+        public void TestSharing()
+        {
+            // Create a shared weight
+            Tensor tensor = Tensor.XavierUniform(new int[] { 1, 5 });
+            SharedWeight sharedWeight = new SharedWeight(tensor);
+
+            Tensor tensor2a = Tensor.XavierUniform(new int[] { 1, 5 });
+            SharedWeight sharedWeight2 = new SharedWeight(tensor2a);
+
+            SharedWeightCoordinator coordinator = new SharedWeightCoordinator();
+            coordinator.RegisterSharedWeight(sharedWeight);
+            coordinator.RegisterSharedWeight(sharedWeight2);
+            for (int j = 0; j < 5; ++j)
+            {
+
+                List<PradResult> results = new List<PradResult>();
+
+                for (int i = 0; i < 5; ++i)
+                {
+                    // Get a PradOp for this iteration
+                    PradOp tOp = sharedWeight.UseOpAtIndex(i);
+
+                    PradOp tOp2 = sharedWeight2.UseOpAtIndex(i);
+
+                    // Create another tensor for this iteration
+                    Tensor tensor2 = Tensor.XavierUniform(new int[] { 1, 5 });
+                    PradOp t2Op = new PradOp(tensor2);
+
+                    var cosResult = t2Op.Cos();
+                    var sinResult = tOp.Sin();
+                    var sqResult = tOp2.Square();
+                    var addResult = cosResult.PradOp.Add(sinResult.Result).PradOp.Add(sqResult.Result);
+                    coordinator.RegisterResult(addResult);
+                    results.Add(addResult);
+                }
+
+                // Create upstream gradients for each result
+                List<Tensor> upstreamGradients = results.Select(r =>
+                    new Tensor(r.PradOp.CurrentShape, 1.0)).ToList();
+
+                // Backpropagate through all results
+                coordinator.BackpropagateAll(upstreamGradients);
+
+                // Get the accumulated gradient
+                Tensor accumulatedGradient = sharedWeight.SharedOp.SeedGradient;
+
+                // Or get the average gradient
+                Tensor averageGradient = sharedWeight.SharedOp.AverageGradient;
+
+                Tensor accumulatedGradient2 = sharedWeight2.SharedOp.SeedGradient;
+
+                // Or get the average gradient
+                Tensor averageGradient2 = sharedWeight2.SharedOp.AverageGradient;
+
+                coordinator.Reset();
+
+            }
+
+        }
+
+        [Fact]
         public void TestInitialization()
         {
             var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
