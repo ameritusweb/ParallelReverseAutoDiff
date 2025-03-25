@@ -110,6 +110,20 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Resets both the gradients and the backpropagation steps for the next training iteration.
+        /// </summary>
+        /// <param name="tensor">The tensor to reset with.</param>
+        public void Reset(Tensor tensor)
+        {
+            // Reset the base op with a new tensor.
+            this.baseOp.Reset(tensor);
+
+            this.engineIds.Clear();
+            this.engineIds.Add(this.baseOp.EngineId);
+            this.endpoints.Clear();
+        }
+
+        /// <summary>
         /// Gets the current value of the shared weight tensor.
         /// </summary>
         /// <returns>The shared weight tensor.</returns>

@@ -20,8 +20,8 @@ namespace ParallelReverseAutoDiff.PRAD
     public partial class PradOp
     {
         private static PradOp funcOp = new PradOp();
-        private readonly Tensor seed;
         private readonly Dictionary<Delegate, Delegate> operations;
+        private Tensor seed;
         private (Func<Tensor[], Tensor> splitStep, PradSplitResult result)? splitStep;
         private Tensor currentTensor;
         private PradResultBase parentResult;
@@ -564,6 +564,31 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Reset current tensor to seed
             this.currentTensor = this.seed;
+        }
+
+        /// <summary>
+        /// Resets both the gradient and the backpropagation steps.
+        /// </summary>
+        /// <param name="tensor">The tensor to reset with.</param>
+        public void Reset(Tensor tensor)
+        {
+            // Reset the gradient
+            this.ResetGradient();
+
+            this.backpropagationStepsByEngine.Clear();
+
+            // Reset the backpropagation steps
+            this.EngineId = Guid.NewGuid();
+            this.backpropagationStepsByEngine[this.engineId] = new List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)>();
+
+            this.LinkedBranches.Clear();
+            this.branchTracker.VisitedBranches.Clear();
+
+            // Reset current tensor to seed
+            this.currentTensor = tensor;
+            this.seed = tensor;
+            this.seedGradient = new Tensor(this.seed.Shape);
+            this.initialResult = new PradResult(this, this.seed, new Tensor[] { this.seedGradient });
         }
 
         /// <summary>
