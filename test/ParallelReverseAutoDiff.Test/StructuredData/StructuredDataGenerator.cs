@@ -32,18 +32,18 @@
             this.projectionLayer = new PradOp(projectionWeights);
 
             // Initialize structure layer
-            var structureWeights = Tensor.RandomUniform(new[] { outputRows * outputCols / 4, outputRows * outputCols }, -0.1, 0.1);
+            var structureWeights = Tensor.RandomUniform(new[] { outputRows * outputCols / 8, outputRows * outputCols }, -0.1, 0.1);
             this.structureLayer = new PradOp(structureWeights);
 
             // Initialize normalization parameters
-            this.gamma = new PradOp(new Tensor(new[] { outputRows * outputCols / 4 }, 1.0));
-            this.beta = new PradOp(new Tensor(new[] { outputRows * outputCols / 4 }, 0.0));
+            this.gamma = new PradOp(new Tensor(new[] { 1, outputRows * outputCols }, 1.0));
+            this.beta = new PradOp(new Tensor(new[] { 1, outputRows * outputCols }, 0.0));
         }
 
-        public (PradResult Output, PradResult TotalLoss) Forward(int classIndex)
+        public (Tensor Output, PradResult TotalLoss) Forward(int classIndex)
         {
             // Get embedding for class
-            var embedding = this.embeddingTable.Indexer($"{classIndex}:", ":");
+            var embedding = this.embeddingTable.Indexer($"{classIndex}:{ classIndex + 1 }", ":");
 
             // Project to larger dimension with weight normalization and GLU
             var projected = embedding.PradOp.MatMul(this.projectionLayer.CurrentTensor);
@@ -58,13 +58,18 @@
 
             // Generate structured output with layer normalization
             var structureOutput = droppedOutput.Then(PradOp.MatMulOp, this.structureLayer.CurrentTensor);
-            var normalizedStructure = structureOutput.PradOp.BatchNorm(this.gamma, this.beta);
+            var scaled = structureOutput.Then(PradOp.MulOp, this.gamma.CurrentTensor);
+            var scaledAndShifted = scaled.Then(PradOp.AddOp, this.beta.CurrentTensor);
 
             // Apply SymmetricSoftmax activation
-            var activated = normalizedStructure.PradOp.SymmetricSoftmax(temperature: 1.0);
+            var activated = scaledAndShifted.PradOp.SymmetricSoftmax(temperature: 1.0);
 
             // Reshape to desired output dimensions
             var reshaped = activated.Then(PradOp.ReshapeOp, new[] { this.outputRows, this.outputCols });
+
+            var reshapedBranch = reshaped.Branch();
+
+            var outputTensor = reshapedBranch.CurrentTensor;
 
             // Calculate regularization losses
             var totalVariationLoss = reshaped.PradOp.TotalVariation();
@@ -80,13 +85,13 @@
                     freqWeights[i, j] = Math.Sqrt(freqI * freqI + freqJ * freqJ);
                 }
             }
-            var spectralLoss = reshaped.PradOp.SpectralRegularize(new PradOp(freqWeights));
+            var spectralLoss = reshapedBranch.SpectralRegularize(new PradOp(freqWeights));
 
             // Combine losses
             var totalLoss = totalVariationLoss.PradOp.Mul(new Tensor(totalVariationLoss.PradOp.CurrentShape, 0.5))
                 .Then(PradOp.AddOp, spectralLoss.PradOp.Mul(new Tensor(spectralLoss.PradOp.CurrentShape, 0.3)).Result);
 
-            return (reshaped, totalLoss);
+            return (outputTensor, totalLoss);
         }
 
         public void Update()
