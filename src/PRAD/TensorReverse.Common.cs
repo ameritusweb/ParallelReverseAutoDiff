@@ -556,6 +556,75 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the gradient for the tanh operation.
+        /// The derivative of tanh(x) is 1 - tanh^2(x).
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient.</param>
+        /// <returns>The gradient with respect to the input.</returns>
+        public Tensor ElementwiseTanhReverse(Tensor upstreamGradient)
+        {
+            var input = this.InitialTensors[0];
+            var tanhValue = input.ElementwiseTanh();
+            var squaredTanh = tanhValue.ElementwiseMultiply(tanhValue);
+            var derivative = new Tensor(input.Shape, PradTools.One).ElementwiseSub(squaredTanh);
+            return derivative.ElementwiseMultiply(upstreamGradient);
+        }
+
+        /// <summary>
+        /// Computes the gradient for the leaky ReLU operation.
+        /// The derivative is 1 for x > 0, alpha for x ≤ 0.
+        /// </summary>
+        /// <param name="upstreamGradient">The upstream gradient.</param>
+        /// <param name="alpha">The slope for negative values.</param>
+        /// <returns>The gradient with respect to the input.</returns>
+        public Tensor ElementwiseLeakyReLUReverse(Tensor upstreamGradient, double alpha)
+        {
+            var input = this.InitialTensors[0];
+            var gradient = new Tensor(input.Shape);
+
+            // Vector size for the current architecture
+            int vectorSize = PradTools.VectorCount();
+
+            // Prepare vectorized constants
+            var alphaVector = PradTools.AllocateVector(PradTools.Cast(alpha));
+            var zeroVector = PradTools.VectorZero();
+            var oneVector = PradTools.VectorOne();
+
+            // Determine chunk size for parallelization
+            int chunkSize = Math.Max(vectorSize * 1000, 1); // Process at least 1000 vectors per thread
+
+            Parallel.For(0, (input.Data.Length + chunkSize - 1) / chunkSize, chunkIndex =>
+            {
+                int start = chunkIndex * chunkSize;
+                int end = Math.Min(start + chunkSize, input.Data.Length);
+                int i = start;
+
+                // Process vectors within this chunk
+                for (; i <= end - vectorSize; i += vectorSize)
+                {
+                    var inputVec = PradTools.AllocateVector(input.Data, i);
+                    var upstreamVec = PradTools.AllocateVector(upstreamGradient.Data, i);
+
+                    var mask = Vector.GreaterThan(inputVec, zeroVector);
+                    var maskDouble = Vector.ConditionalSelect(mask, oneVector, alphaVector);
+
+                    var result = upstreamVec * maskDouble;
+                    result.CopyTo(gradient.Data, i);
+                }
+
+                // Handle remaining elements in this chunk
+                for (; i < end; i++)
+                {
+                    gradient.Data[i] = input.Data[i] > 0 ?
+                        upstreamGradient.Data[i] :
+                        PradTools.Cast(alpha) * upstreamGradient.Data[i];
+                }
+            });
+
+            return gradient;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the element-wise natural logarithm (ln).
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

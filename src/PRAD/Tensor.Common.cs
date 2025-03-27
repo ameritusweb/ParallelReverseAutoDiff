@@ -1321,6 +1321,69 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise hyperbolic tangent using MKL.NET.
+        /// </summary>
+        /// <returns>A new tensor with element-wise tanh values.</returns>
+        public Tensor ElementwiseTanh()
+        {
+            var result = new Tensor(this.Shape);
+            Vml.Tanh(this.Data.Length, this.Data, result.Data);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the element-wise leaky ReLU.
+        /// f(x) = x if x > 0, alpha * x otherwise.
+        /// </summary>
+        /// <param name="alpha">The slope for negative values.</param>
+        /// <returns>A new tensor with element-wise leaky ReLU values.</returns>
+        public Tensor ElementwiseLeakyReLU(double alpha)
+        {
+            var result = new Tensor(this.Shape);
+
+            // Vector size for the current architecture
+            int vectorSize = PradTools.VectorCount();
+
+            // Prepare vectorized constants
+            var alphaVector = PradTools.AllocateVector(PradTools.Cast(alpha));
+            var zeroVector = PradTools.VectorZero();
+
+            // Determine chunk size for parallelization
+            int chunkSize = Math.Max(vectorSize * 1000, 1); // Process at least 1000 vectors per thread
+
+            Parallel.For(0, (this.Data.Length + chunkSize - 1) / chunkSize, chunkIndex =>
+            {
+                int start = chunkIndex * chunkSize;
+                int end = Math.Min(start + chunkSize, this.Data.Length);
+                int i = start;
+
+                // Process vectors within this chunk
+                for (; i <= end - vectorSize; i += vectorSize)
+                {
+                    var inputVec = PradTools.AllocateVector(this.Data, i);
+
+                    // Create mask for positive values
+                    var mask = Vector.GreaterThan(inputVec, zeroVector);
+
+                    // Where input > 0, use input, else use input * alpha
+                    var negativeResult = inputVec * alphaVector;
+                    var result = Vector.ConditionalSelect(mask, inputVec, negativeResult);
+
+                    result.CopyTo(this.Data, i);
+                }
+
+                // Handle remaining elements in this chunk
+                for (; i < end; i++)
+                {
+                    var x = this.Data[i];
+                    result.Data[i] = x > 0 ? x : PradTools.Cast(alpha) * x;
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
         /// Computes the element-wise addition of two tensors using MKL.NET.
         /// </summary>
         /// <param name="other">The other tensor.</param>

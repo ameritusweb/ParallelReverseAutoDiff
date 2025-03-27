@@ -37,6 +37,7 @@
     <Compile Include="..\..\..\src\Interprocess\DataSet.cs" Link="Interprocess\DataSet.cs" />
     <Compile Include="..\..\..\src\Interprocess\DataSetItem.cs" Link="Interprocess\DataSetItem.cs" />
     <Compile Include="..\..\..\src\Interprocess\PseudoUniqueIDGenerator.cs" Link="Interprocess\PseudoUniqueIDGenerator.cs" />
+	<Compile Include="..\..\..\src\PRAD\Extensions\PradOpExtensions.cs" Link="PRAD\Extensions\PradOpExtensions.cs" />
 	<Compile Include="..\..\..\src\PRAD\AdamOptimizer.cs" Link="PRAD\AdamOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\BackpropagationMode.cs" Link="PRAD\BackpropagationMode.cs" />
 	<Compile Include="..\..\..\src\PRAD\BranchStack.cs" Link="PRAD\BranchStack.cs" />

@@ -188,6 +188,16 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> LogOp => FuncOp.Log;
 
         /// <summary>
+        /// Gets the tanh op.
+        /// </summary>
+        public static Func<PradResult> TanhOp => FuncOp.Tanh;
+
+        /// <summary>
+        /// Gets the leaky ReLU op.
+        /// </summary>
+        public static Func<PradResult> LeakyReLUOp => FuncOp.LeakyReLU;
+
+        /// <summary>
         /// Gets the Gather op.
         /// </summary>
         public static Func<Tensor, int, PradResult> GatherOp => FuncOp.Gather;
@@ -1148,6 +1158,54 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 return (new Tensor[] { gradients[1], gradients[0] }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.BackpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the hyperbolic tangent of each element in the tensor.
+        /// </summary>
+        /// <returns>The result of the tanh operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(TanhOp))]
+        public PradResult Tanh()
+        {
+            var result = this.currentTensor.ElementwiseTanh();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ElementwiseTanhReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.BackpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the leaky ReLU of each element in the tensor.
+        /// </summary>
+        /// <returns>The result of the leaky ReLU operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(LeakyReLUOp))]
+        public PradResult LeakyReLU()
+        {
+            var result = this.currentTensor.ElementwiseLeakyReLU(0.01d);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.ElementwiseLeakyReLUReverse(upstreamGrad, 0.01d);
+                PradOp?[] ops = new PradOp?[1];
+                return (new[] { gradient }, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);
