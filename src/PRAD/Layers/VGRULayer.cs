@@ -4,6 +4,8 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using ParallelReverseAutoDiff.PRAD.VectorTools;
+
 namespace ParallelReverseAutoDiff.PRAD.Layers
 {
     /// <summary>

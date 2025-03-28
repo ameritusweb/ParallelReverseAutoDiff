@@ -4,10 +4,11 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace ParallelReverseAutoDiff.PRAD
+namespace ParallelReverseAutoDiff.PRAD.VectorTools
 {
     using System;
     using System.Numerics;
+    using ParallelReverseAutoDiff.PRAD;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -36,6 +37,34 @@ namespace ParallelReverseAutoDiff.PRAD
             var c1 = v1.ToCartesian();
             var c2 = v2.ToCartesian();
             return new Vector2(c1.X - c2.X, c1.Y - c2.Y);
+        }
+
+        /// <summary>
+        /// Rotate a vector.
+        /// </summary>
+        /// <param name="vector">The vector to rotate.</param>
+        /// <param name="angle">The angle to rotate by.</param>
+        /// <param name="origin">Thw origin point.</param>
+        /// <returns>The rotated vector.</returns>
+        public static Vector2 Rotate(this Vector2 vector, float angle, Vector2? origin = null)
+        {
+            if (origin.HasValue)
+            {
+                vector -= origin.Value;
+            }
+
+            float cos = (float)Math.Cos(angle);
+            float sin = (float)Math.Sin(angle);
+            Vector2 rotated = new Vector2(
+                (vector.X * cos) - (vector.Y * sin),
+                (vector.X * sin) + (vector.Y * cos));
+
+            if (origin.HasValue)
+            {
+                rotated += origin.Value;
+            }
+
+            return rotated;
         }
 
         /// <summary>

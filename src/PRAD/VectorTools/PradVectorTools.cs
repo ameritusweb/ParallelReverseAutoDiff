@@ -4,12 +4,14 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace ParallelReverseAutoDiff.PRAD
+namespace ParallelReverseAutoDiff.PRAD.VectorTools
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
+    using ParallelReverseAutoDiff.PRAD;
+    using ParallelReverseAutoDiff.PRAD.VectorTools;
     using ParallelReverseAutoDiff.RMAD;
 
     /// <summary>
@@ -45,6 +47,24 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return matrix.ToInterleavedTensor();
+        }
+
+        /// <summary>
+        /// Decompose vectors that point to a certain target.
+        /// </summary>
+        /// <param name="targetX">The target X in Cartesian.</param>
+        /// <param name="targetY">The target Y in Cartesian.</param>
+        /// <param name="n">The total number of vectors to create.</param>
+        /// <returns>The tensor result.</returns>
+        public Tensor DecomposeVectors(double targetX, double targetY, int n)
+        {
+            var decomposer = new VectorDecomposer();
+
+            var vectors = decomposer.DecomposeVector(targetX, targetY, n);
+
+            var arr = decomposer.RandomizeAndFlatten(vectors);
+
+            return new Tensor(new int[] { 1, arr.Length }, arr);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using ParallelReverseAutoDiff.PRAD;
+using ParallelReverseAutoDiff.PRAD.VectorTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
