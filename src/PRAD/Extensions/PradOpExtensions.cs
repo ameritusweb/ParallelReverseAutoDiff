@@ -204,14 +204,14 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var mean = pradOp.Mean(-1);
 
             // Calculate variance
-            var meanBroadcast = mean.Then(PradOp.BroadcastToOp, pradOp.CurrentShape);
+            var meanBroadcast = mean.Then(PradOp.BroadcastToOp, branch.CurrentShape);
             var centered = meanBroadcast.PradOp.SubFrom(branch.CurrentTensor);
             var centeredBranch = centered.Branch();
             var squared = centered.Then(PradOp.SquareOp);
             var variance = squared.Then(PradOp.MeanOp, -1);
 
             // Normalize
-            var varianceBroadcast = variance.Then(PradOp.BroadcastToOp, pradOp.CurrentShape);
+            var varianceBroadcast = variance.Then(PradOp.BroadcastToOp, branch.CurrentShape);
             var stddev = varianceBroadcast.Then(x => x.PradOp.Add(new Tensor(x.PradOp.CurrentShape, PradTools.Cast(epsilon))))
                                         .Then(PradOp.SquareRootOp);
 
@@ -302,7 +302,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
 
             // Calculate mean and variance across batch dimension
             var mean = pradOp.Mean(0);
-            var meanBroadcast = mean.Then(PradOp.BroadcastToOp, pradOp.CurrentShape);
+            var meanBroadcast = mean.Then(PradOp.BroadcastToOp, branch.CurrentShape);
             var centered = meanBroadcast.PradOp.SubFrom(branch.CurrentTensor);
 
             var centeredBranch = centered.Branch();
@@ -311,7 +311,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var variance = squared.Then(PradOp.MeanOp, 0);
 
             // Normalize
-            var varianceBroadcast = variance.Then(PradOp.BroadcastToOp, pradOp.CurrentShape);
+            var varianceBroadcast = variance.Then(PradOp.BroadcastToOp, branch.CurrentShape);
             var stddev = varianceBroadcast.Then(x => x.PradOp.Add(new Tensor(x.PradOp.CurrentShape, PradTools.Cast(epsilon))))
                                         .Then(PradOp.SquareRootOp);
 
