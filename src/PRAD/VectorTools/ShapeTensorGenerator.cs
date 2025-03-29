@@ -70,14 +70,32 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
         /// </summary>
         /// <param name="config">The shape configuration to use.</param>
         /// <param name="rotation">Rotation angle in radians to apply to the shape.</param>
+        /// <param name="defaultValue">The default value of the tensor.</param>
         /// <returns>A 2D array of Vector2 objects representing normal vectors at each grid point.</returns>
-        public Vector2?[,] GenerateTensor(ShapeConfig config, float rotation)
+        public Tensor GenerateTensor(ShapeConfig config, float rotation, double defaultValue = 0.5d)
         {
             config.Validate();
 
-            var tensor = new Vector2?[this.gridSize, this.gridSize];
+            var tensor = new Tensor(new int[] { this.gridSize, this.gridSize * 2 }, defaultValue);
             float cellSize = this.scale;
             Vector2 center = new Vector2(this.centerOffset, this.centerOffset);
+
+            float maxRadius = 0;
+            foreach (var segment in config.Segments)
+            {
+                float segmentMaxOuterRadius = segment.OuterRadius.Base;
+                if (segment.OuterRadius.Variation != null)
+                {
+                    segmentMaxOuterRadius += segment.OuterRadius.Variation.Amplitude;
+                }
+
+                maxRadius = Math.Max(maxRadius, segmentMaxOuterRadius);
+            }
+
+            // Calculate the actual scale needed to fit the shape in the grid
+            float maxAllowedRadius = (this.gridSize * cellSize / 2) * 0.95f; // 95% of half the grid size
+            float scaleFactor = maxRadius > 0 ? maxAllowedRadius / (maxRadius * this.scale) : 1.0f;
+            float adjustedScale = this.scale * scaleFactor;
 
             foreach (var segment in config.Segments)
             {
@@ -91,8 +109,8 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
                     float angle = baseAngle + rotation;
 
                     // Calculate outer and inner points
-                    float outerR = this.GetRadius(segment.OuterRadius, baseAngle);
-                    float innerR = this.GetRadius(segment.InnerRadius, baseAngle);
+                    float outerR = this.GetRadius(segment.OuterRadius, baseAngle, adjustedScale);
+                    float innerR = this.GetRadius(segment.InnerRadius, baseAngle, adjustedScale);
 
                     // Calculate positions
                     Vector2 outerPoint = new Vector2(
@@ -124,15 +142,16 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
         /// </summary>
         /// <param name="config">The radius configuration to use.</param>
         /// <param name="angle">The angle in radians at which to calculate the radius.</param>
+        /// <param name="adjustedScale">The adjusted scale.</param>
         /// <returns>The calculated radius value.</returns>
-        private float GetRadius(RadiusConfig config, float angle)
+        private float GetRadius(RadiusConfig config, float angle, float adjustedScale)
         {
             if (config.Variation == null)
             {
-                return config.Base * this.scale;
+                return config.Base * adjustedScale;
             }
 
-            return (config.Base + ((float)Math.Sin(angle * config.Variation.Frequency) * config.Variation.Amplitude)) * this.scale;
+            return (config.Base + ((float)Math.Sin(angle * config.Variation.Frequency) * config.Variation.Amplitude)) * adjustedScale;
         }
 
         /// <summary>
@@ -142,14 +161,20 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
         /// <param name="vector">The vector to store at the mapped point.</param>
         /// <param name="tensor">The tensor to map into.</param>
         /// <param name="cellSize">The size of each cell in the tensor grid.</param>
-        private void MapPointToTensor(Vector2 point, Vector2 vector, Vector2?[,] tensor, float cellSize)
+        private void MapPointToTensor(Vector2 point, Vector2 vector, Tensor tensor, float cellSize)
         {
             int gridX = (int)(point.X / cellSize);
             int gridY = (int)(point.Y / cellSize);
 
             if (gridX >= 0 && gridX < this.gridSize && gridY >= 0 && gridY < this.gridSize)
             {
-                tensor[gridY, gridX] = vector;
+                var polar = vector.ToPolar();
+                tensor[gridY, gridX] = polar.Mag;
+                tensor[gridY, gridX + this.gridSize] = polar.Ang;
+            }
+            else
+            {
+                throw new Exception($"Point {gridX} {gridY} extends beyond the grid size.");
             }
         }
     }

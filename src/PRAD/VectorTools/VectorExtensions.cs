@@ -27,6 +27,18 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
         }
 
         /// <summary>
+        /// Convert to Polar.
+        /// </summary>
+        /// <param name="v">The vector to convert.</param>
+        /// <returns>The vector in Polar.</returns>
+        public static (double Mag, double Ang) ToPolar(this Vector2 v)
+        {
+            var mag = Math.Sqrt(Math.Pow(v.X, 2d) + Math.Pow(v.Y, 2d));
+            var ang = Math.Atan2(v.Y, v.X);
+            return (mag, ang);
+        }
+
+        /// <summary>
         /// Subtract two polar vectors.
         /// </summary>
         /// <param name="v1">The first polar vector.</param>

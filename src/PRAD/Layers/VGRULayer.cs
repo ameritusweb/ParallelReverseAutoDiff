@@ -4,10 +4,10 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using ParallelReverseAutoDiff.PRAD.VectorTools;
-
 namespace ParallelReverseAutoDiff.PRAD.Layers
 {
+    using ParallelReverseAutoDiff.PRAD.VectorTools;
+
     /// <summary>
     /// A Vectorized Gated Recurrent Unit (VGRU) layer.
     /// This layer performs operations similar to GRU but using vector-based neural network structures,

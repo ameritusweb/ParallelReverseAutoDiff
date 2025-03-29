@@ -1,7 +1,4 @@
-﻿using ILGPU.Runtime.Cuda;
-using ManagedCuda.VectorTypes;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
-using ParallelReverseAutoDiff.PRAD;
+﻿using ParallelReverseAutoDiff.PRAD;
 using ParallelReverseAutoDiff.PRAD.VectorTools;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;

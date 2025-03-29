@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ParallelReverseAutoDiff.Test.PRAD
+namespace ParallelReverseAutoDiff.Test.PRAD.VectorTools
 {
     public class PradVectorToolsTests
     {
