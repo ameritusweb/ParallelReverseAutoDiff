@@ -1397,6 +1397,34 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise sigmoid using MKL.NET.
+        /// </summary>
+        /// <returns>The sigmoid result.</returns>
+        public Tensor Sigmoid()
+        {
+            var result = new Tensor(this.Shape);
+
+            var nones = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(nones, PradTools.NegativeOne);
+
+            // Step 1: Negate input
+            Vml.Mul(this.Data.Length, this.Data, nones, result.Data);
+
+            // Step 2: Exponentiate in-place
+            Vml.Exp(this.Data.Length, result.Data, result.Data);
+
+            // Step 3: Add 1 to each element
+            var ones = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(ones, PradTools.One);
+            Vml.Add(this.Data.Length, result.Data, ones, result.Data);
+
+            // Step 4: Reciprocal in-place
+            Vml.Inv(this.Data.Length, result.Data, result.Data);
+
+            return result;
+        }
+
+        /// <summary>
         /// Broadcasts the tensor to a specified shape.
         /// </summary>
         /// <param name="newShape">The new shape to broadcast to.</param>

@@ -1578,6 +1578,37 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for the sigmoid activation.
+        /// The derivative is sigmoid(x) * (1 - sigmoid(x)).
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <returns>The gradient with respect to the input tensor.</returns>
+        public Tensor SigmoidReverse(Tensor upstreamGradient)
+        {
+            Tensor inputTensor = this.InitialTensors[0];
+            this.CheckShapeCompatibility(inputTensor, upstreamGradient);
+
+            // First compute sigmoid(x)
+            Tensor sigmoid = inputTensor.Sigmoid();
+
+            // Now compute 1 - sigmoid(x)
+            Tensor oneMinusSigmoid = new Tensor(sigmoid.Shape);
+            var ones = PradTools.AllocateArray(sigmoid.Data.Length);
+            Array.Fill(ones, PradTools.One);
+            Vml.Sub(sigmoid.Data.Length, ones, sigmoid.Data, oneMinusSigmoid.Data);
+
+            // Then sigmoid(x) * (1 - sigmoid(x))
+            Tensor sigmoidDerivative = new Tensor(sigmoid.Shape);
+            Vml.Mul(sigmoid.Data.Length, sigmoid.Data, oneMinusSigmoid.Data, sigmoidDerivative.Data);
+
+            // Finally, multiply elementwise by upstream gradient
+            Tensor gradInput = new Tensor(sigmoid.Shape);
+            Vml.Mul(sigmoidDerivative.Data.Length, sigmoidDerivative.Data, upstreamGradient.Data, gradInput.Data);
+
+            return gradInput;
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for element-wise sine.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>

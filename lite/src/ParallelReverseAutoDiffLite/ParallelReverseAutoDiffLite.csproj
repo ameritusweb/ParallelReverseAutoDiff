@@ -63,12 +63,12 @@
     <Compile Include="..\..\..\src\PRAD\PradResultExtensions.cs" Link="PRAD\PradResultExtensions.cs" />
     <Compile Include="..\..\..\src\PRAD\PradSplitResult.cs" Link="PRAD\PradSplitResult.cs" />
     <Compile Include="..\..\..\src\PRAD\PradTensor.cs" Link="PRAD\PradTensor.cs" />
-	<Compile Include="..\..\..\src\PRAD\PradVectorTools.cs" Link="PRAD\PradVectorTools.cs" />
+	<Compile Include="..\..\..\src\PRAD\VectorTools\PradVectorTools.cs" Link="PRAD\VectorTools\PradVectorTools.cs" />
 	<Compile Include="..\..\..\src\PRAD\RMSPropOptimizer.cs" Link="PRAD\RMSPropOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\TensorReverse.Common.cs" Link="PRAD\TensorReverse.Common.cs" />
 	<Compile Include="..\..\..\src\PRAD\Tensor.Common.cs" Link="PRAD\Tensor.Common.cs" />
 	<Compile Include="..\..\..\src\PRAD\TensorAngleExtensions.cs" Link="PRAD\TensorAngleExtensions.cs" />
-	<Compile Include="..\..\..\src\PRAD\VectorExtensions.cs" Link="PRAD\VectorExtensions.cs" />
+	<Compile Include="..\..\..\src\PRAD\VectorTools\VectorExtensions.cs" Link="PRAD\VectorTools\VectorExtensions.cs" />
     <Compile Include="..\..\..\src\RMAD\AmplifiedSigmoidOperation.cs" Link="RMAD\AmplifiedSigmoidOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\BackwardResult.cs" Link="RMAD\BackwardResult.cs" />
     <Compile Include="..\..\..\src\RMAD\BackwardResultBuilder.cs" Link="RMAD\BackwardResultBuilder.cs" />
@@ -197,6 +197,9 @@
     <Folder Include="docs\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Interprocess\" />
+	  <Folder Include="PRAD\" />
+	  <Folder Include="PRAD\Extensions\" />
+	  <Folder Include="PRAD\VectorTools" />
     <Folder Include="RMAD\Loss\" />
   </ItemGroup>
 

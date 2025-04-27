@@ -193,6 +193,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> TanhOp => FuncOp.Tanh;
 
         /// <summary>
+        /// Gets the sigmoid op.
+        /// </summary>
+        public static Func<PradResult> SigmoidOp => FuncOp.Sigmoid;
+
+        /// <summary>
         /// Gets the leaky ReLU op.
         /// </summary>
         public static Func<PradResult> LeakyReLUOp => FuncOp.LeakyReLU;
@@ -1158,6 +1163,30 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 return (new Tensor[] { gradients[1], gradients[0] }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.BackpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the sigmoid of each element in the tensor.
+        /// </summary>
+        /// <returns>The result of the tanh operation along with the gradient placeholders.</returns>
+        [PradOperation(nameof(SigmoidOp))]
+        public PradResult Sigmoid()
+        {
+            var result = this.currentTensor.Sigmoid();
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.SigmoidReverse(upstreamGrad);
+                PradOp?[] ops = new PradOp?[1];
+                return (new[] { gradient }, ops);
             };
 
             var pradResult = new PradResult(this, result, grad);
