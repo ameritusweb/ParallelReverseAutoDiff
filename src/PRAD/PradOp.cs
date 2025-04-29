@@ -193,6 +193,11 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<PradResult> TanhOp => FuncOp.Tanh;
 
         /// <summary>
+        /// Gets the diff op.
+        /// </summary>
+        public static Func<int, PradResult> DiffOp => FuncOp.Diff;
+
+        /// <summary>
         /// Gets the sigmoid op.
         /// </summary>
         public static Func<PradResult> SigmoidOp => FuncOp.Sigmoid;
@@ -1258,6 +1263,31 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 var gradient = tensorReverse.ExpandDimsReverse(upstreamGrad, axis);
+                PradOp?[] ops = new PradOp?[1];
+                return (new Tensor[] { gradient }, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.BackpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the first-order diff of the tensor and records the operation for backpropagation.
+        /// </summary>
+        /// <param name="axis">The axis along which to compute the diff.</param>
+        /// <returns>The result of the first-order diff operation.</returns>
+        [PradOperation(nameof(DiffOp))]
+        public PradResult Diff(int axis)
+        {
+            var result = this.currentTensor.Diff(axis);
+            var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
+
+            var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                var gradient = tensorReverse.DiffReverse(upstreamGrad, axis);
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };

@@ -1083,6 +1083,7 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `SigmoidOp`
 - `TanhOp`
 - `LeakyReLUOp`
+- `DiffOp`
 
 ### PradResult.Then Method
 

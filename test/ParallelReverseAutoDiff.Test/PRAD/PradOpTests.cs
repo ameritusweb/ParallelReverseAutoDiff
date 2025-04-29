@@ -11,6 +11,62 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class PradOpTests
     {
         [Fact]
+        public void TestDiff()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+            PradOp tOp = new PradOp(seed);
+            var branch = tOp.Branch();
+
+            var res = tOp.Diff(0);
+            var res2 = branch.Diff(1);
+            Assert.Equal(new double[] { 2, 2, 2, 2 }, res.Result.Data);
+
+            Assert.Equal(new double[] { 1, 1, 1, 1 }, res2.Result.Data);
+
+            var add = res.PradOp.Add(res2.Result);
+
+            var upstream = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            PradOp ug = new PradOp(upstream);
+
+            add.Back(ug.CurrentTensor);
+
+            var seedG = tOp.SeedGradient;
+
+            Assert.Equal(new double[] { -2, 0, 0, 2 }, seedG.Data);
+        }
+
+        [Fact]
+        public void Test9Diff()
+        {
+            var seed = new Tensor(new int[] { 3, 3 }, new double[] {
+                1, 3, 6,
+                2, 5,10,
+                4, 7,11
+            });
+
+            PradOp tOp = new PradOp(seed);
+            var branch = tOp.Branch();
+
+            var res = tOp.Diff(0);
+            var res2 = branch.Diff(1);
+
+            Assert.Equal(new double[] { 1, 2, 4, 2, 2, 1, 2, 2, 1 }, res.Result.Data);
+
+            Assert.Equal(new double[] { 2, 3, 3, 3, 5, 5, 3, 4, 4 }, res2.Result.Data);
+
+            var add = res.PradOp.Add(res2.Result);
+
+            var upstream = new Tensor(new int[] { 3, 3 }, Enumerable.Repeat(1.0, 9).ToArray());
+            PradOp ug = new PradOp(upstream);
+
+            add.Back(ug.CurrentTensor);
+
+            var seedG = tOp.SeedGradient;
+
+            Assert.Equal(new double[] { -2, -1, 0, -1, 0, 1, 0, 1, 2 }, seedG.Data);
+        }
+
+        [Fact]
         public void TestSharing()
         {
             // Create a shared weight

@@ -2388,6 +2388,47 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes and returns the reverse-mode gradient for differentiation along the specified axis using SIMD acceleration.
+        /// </summary>
+        /// <param name="gradOutputTensor">Upstream gradient from autodiff system.</param>
+        /// <param name="axis">Axis along which the forward diff was computed (0 for vertical, 1 for horizontal).</param>
+        /// <returns>The computed gradient tensor.</returns>
+        public Tensor DiffReverse(Tensor gradOutputTensor, int axis)
+        {
+            if (gradOutputTensor == null)
+            {
+                throw new ArgumentNullException(nameof(gradOutputTensor));
+            }
+
+            var shape = gradOutputTensor.Shape;
+            if (shape.Length != 2)
+            {
+                throw new ArgumentException("DiffReverse requires 2D tensors");
+            }
+
+            int height = shape[0];
+            int width = shape[1];
+
+            var gradOutput = gradOutputTensor.Data;
+            var gradInput = PradTools.AllocateArray(gradOutput.Length);
+
+            Tensor gradInputT = new Tensor(shape, gradInput);
+            switch (axis)
+            {
+                case 0:
+                    this.ReverseDiffVerticalSIMD(gradInputT, new Tensor(shape, gradOutput), height, width);
+                    break;
+                case 1:
+                    this.ReverseDiffHorizontalSIMD(gradInputT, new Tensor(shape, gradOutput), height, width);
+                    break;
+                default:
+                    throw new ArgumentException("Axis must be 0 or 1", nameof(axis));
+            }
+
+            return new Tensor(shape, gradInput);
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for the ExpandDims operation.
         /// </summary>
         /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
@@ -3273,6 +3314,85 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return indices;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ReverseDiffVerticalSIMD(Tensor gradInput, Tensor gradOutput, int height, int width)
+        {
+            if (height <= 1)
+            {
+                return;
+            }
+
+            int vectorWidth = PradTools.VectorCount();
+
+            for (int x = 0; x < width; x++)
+            {
+                int y = 0;
+                for (; y <= height - vectorWidth - 1; y += vectorWidth)
+                {
+                    int baseIdx = (y * width) + x;
+                    var gradVec = PradTools.AllocateVector(gradOutput.Data, baseIdx);
+
+                    for (int i = 0; i < vectorWidth; i++)
+                    {
+                        int pos = ((y + i) * width) + x;
+                        double grad = gradVec[i];
+
+                        gradInput.Data[pos] -= grad;
+                        gradInput.Data[pos + width] += grad;
+                    }
+                }
+
+                // Scalar remainder
+                for (; y < height - 1; y++)
+                {
+                    int idx = (y * width) + x;
+                    double grad = gradOutput.Data[idx];
+                    gradInput.Data[idx] -= grad;
+                    gradInput.Data[idx + width] += grad;
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ReverseDiffHorizontalSIMD(Tensor gradInput, Tensor gradOutput, int height, int width)
+        {
+            if (width <= 1)
+            {
+                return;
+            }
+
+            int vectorWidth = PradTools.VectorCount();
+
+            for (int y = 0; y < height; y++)
+            {
+                int rowStart = y * width;
+                int x = 0;
+                for (; x <= width - vectorWidth - 2; x += vectorWidth)
+                {
+                    int baseIdx = rowStart + x;
+                    var gradVec = PradTools.AllocateVector(gradOutput.Data, baseIdx);
+
+                    for (int i = 0; i < vectorWidth; i++)
+                    {
+                        int pos = baseIdx + i;
+                        double grad = gradVec[i];
+
+                        gradInput.Data[pos] -= grad;
+                        gradInput.Data[pos + 1] += grad;
+                    }
+                }
+
+                // Scalar remainder
+                for (; x < width - 1; x++)
+                {
+                    int idx = rowStart + x;
+                    double grad = gradOutput.Data[idx];
+                    gradInput.Data[idx] -= grad;
+                    gradInput.Data[idx + 1] += grad;
+                }
+            }
         }
 
         /// <summary>

@@ -1425,6 +1425,58 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the first-order difference of a tensor along the specified axis using SIMD acceleration.
+        /// </summary>
+        /// <param name="axis">The axis along which to compute differences (0 for vertical, 1 for horizontal).</param>
+        /// <returns>A new tensor containing the differences. The output tensor will have the same shape as the input.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when tensor is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when axis is invalid or tensor dimensions are insufficient.</exception>
+        public Tensor Diff(int axis)
+        {
+            var tensor = this;
+
+            if (tensor == null)
+            {
+                throw new ArgumentNullException(nameof(tensor));
+            }
+
+            var shape = tensor.Shape;
+            if (shape.Length != 2)
+            {
+                throw new ArgumentException("DiffSIMD requires a 2-dimensional tensor", nameof(tensor));
+            }
+
+            int height = shape[0];
+            int width = shape[1];
+
+            if (height < 1 || width < 1)
+            {
+                throw new ArgumentException("Tensor dimensions must be positive", nameof(tensor));
+            }
+
+            if (axis != 0 && axis != 1)
+            {
+                throw new ArgumentException("Axis must be 0 (vertical) or 1 (horizontal)", nameof(axis));
+            }
+
+            var data = tensor.Data;
+            var resultData = PradTools.AllocateArray(data.Length);
+            Array.Copy(data, resultData, data.Length); // Initialize with original values for proper handling of edges
+
+            Tensor resultDataT = new Tensor(shape, resultData);
+            if (axis == 0)
+            {
+                ComputeVerticalDifferences(new Tensor(shape, data), resultDataT, width, height);
+            }
+            else
+            {
+                ComputeHorizontalDifferences(new Tensor(shape, data), resultDataT, width, height);
+            }
+
+            return new Tensor(shape, resultDataT.Data);
+        }
+
+        /// <summary>
         /// Broadcasts the tensor to a specified shape.
         /// </summary>
         /// <param name="newShape">The new shape to broadcast to.</param>
@@ -3230,6 +3282,90 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             return strides;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ComputeVerticalDifferences(Tensor data, Tensor resultData, int width, int height)
+        {
+            if (height <= 1)
+            {
+                return;
+            }
+
+            int vectorWidth = PradTools.VectorCount();
+
+            // Process columns that can use SIMD
+            for (int x = 0; x < width - (width % vectorWidth); x += vectorWidth)
+            {
+                for (int y = 0; y < height - 1; y++)
+                {
+                    int currentIdx = (y * width) + x;
+                    int nextIdx = ((y + 1) * width) + x;
+
+                    var currentVec = PradTools.AllocateVector(data.Data, currentIdx);
+                    var nextVec = PradTools.AllocateVector(data.Data, nextIdx);
+                    var diffVec = nextVec - currentVec;
+                    diffVec.CopyTo(resultData.Data, currentIdx);
+                }
+
+                // Handle last row - use backward difference
+                for (int i = 0; i < vectorWidth; i++)
+                {
+                    int lastIdx = ((height - 1) * width) + x + i;
+                    resultData.Data[lastIdx] = data.Data[lastIdx] - data.Data[lastIdx - width];
+                }
+            }
+
+            // Handle remaining columns scalar
+            for (int x = width - (width % vectorWidth); x < width; x++)
+            {
+                for (int y = 0; y < height - 1; y++)
+                {
+                    int currentIdx = (y * width) + x;
+                    int nextIdx = ((y + 1) * width) + x;
+                    resultData.Data[currentIdx] = data.Data[nextIdx] - data.Data[currentIdx];
+                }
+
+                // Last row - backward difference
+                int lastIdx = ((height - 1) * width) + x;
+                resultData.Data[lastIdx] = data.Data[lastIdx] - data.Data[lastIdx - width];
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ComputeHorizontalDifferences(Tensor data, Tensor resultData, int width, int height)
+        {
+            if (width <= 1)
+            {
+                return;
+            }
+
+            int vectorWidth = PradTools.VectorCount();
+
+            for (int y = 0; y < height; y++)
+            {
+                int rowStart = y * width;
+                int x = 0;
+
+                // SIMD loop for bulk of the row
+                for (; x <= width - vectorWidth - 1; x += vectorWidth)
+                {
+                    var currentVec = PradTools.AllocateVector(data.Data, rowStart + x);
+                    var nextVec = PradTools.AllocateVector(data.Data, rowStart + x + 1);
+                    var diffVec = nextVec - currentVec;
+                    diffVec.CopyTo(resultData.Data, rowStart + x);
+                }
+
+                // Handle remaining elements and last element
+                for (; x < width - 1; x++)
+                {
+                    int idx = rowStart + x;
+                    resultData.Data[idx] = data.Data[idx + 1] - data.Data[idx];
+                }
+
+                // Last element - use backward difference
+                resultData.Data[rowStart + width - 1] = data.Data[rowStart + width - 1] - data.Data[rowStart + width - 2];
+            }
         }
 
         private static double[] GenerateRandomDoubleArray(int length)
