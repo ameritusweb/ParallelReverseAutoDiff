@@ -791,6 +791,61 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
         }
 
         /// <summary>
+        /// Perform a vector add operation.
+        /// </summary>
+        /// <param name="opInput1">The first input.</param>
+        /// <param name="opInput2">The second input.</param>
+        /// <returns>The addition result.</returns>
+        public PradResult VectorAdd(PradOp opInput1, PradOp opInput2)
+        {
+            var rows = opInput1.CurrentTensor.Shape[0];
+            var cols = opInput2.CurrentTensor.Shape[1];
+            var halfCols = cols / 2;
+
+            var (magnitude1R, angle1R) = this.SplitInterleavedTensor(opInput1);
+            var (magnitude2R, angle2R) = this.SplitInterleavedTensor(opInput2);
+
+            var magnitude1 = magnitude1R.PradOp;
+            var angle1 = angle1R.PradOp;
+            var magnitude2 = magnitude2R.PradOp;
+            var angle2 = angle2R.PradOp;
+
+            var magnitude1Branch = magnitude1.Branch();
+            var angle1Branch = angle1.Branch();
+
+            var cosResult = angle1.Cos().Result;
+            var sinResult = angle1Branch.Sin().Result;
+
+            var x1 = magnitude1.Mul(cosResult);
+            var y1 = magnitude1Branch.Mul(sinResult);
+
+            var magnitude2Branch = magnitude2.Branch();
+            var angle2Branch = angle2.Branch();
+
+            var cosResult1 = angle2.Cos().Result;
+            var sinResult1 = angle2Branch.Sin().Result;
+
+            var x2 = magnitude2.Mul(cosResult1);
+            var y2 = magnitude2Branch.Mul(sinResult1);
+
+            var sumX = x1.Then(PradOp.AddOp, x2.Result);
+            var sumY = y1.Then(PradOp.AddOp, y2.Result);
+
+            var sumXBranch = sumX.Branch();
+            var sumYBranch = sumY.Branch();
+
+            var sumXSquared = sumX.PradOp.Square();
+            var sumYSquared = sumY.PradOp.Square();
+            var magnitudeSquared = sumXSquared.Then(PradOp.AddOp, sumYSquared.Result);
+            var resultMagnitude = magnitudeSquared.Then(PradOp.SquareRootOp);
+            var resultAngle = sumYBranch.Atan2(sumXBranch.SeedResult.Result);
+
+            var res = resultMagnitude.PradOp.Concat(new[] { resultAngle.Result }, axis: 1);
+
+            return res;
+        }
+
+        /// <summary>
         /// Performs a matrix multiplication between two tensors.
         /// </summary>
         /// <param name="opInput1">The first input.</param>
