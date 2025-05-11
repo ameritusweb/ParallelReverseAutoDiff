@@ -39,6 +39,8 @@ namespace ParallelReverseAutoDiff.PRAD
         private Dictionary<Guid, List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)>> backpropagationStepsByEngine =
             new Dictionary<Guid, List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)>>();
 
+        private Tensor lastSeedGradient;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PradOp"/> class.
         /// </summary>
@@ -368,6 +370,21 @@ namespace ParallelReverseAutoDiff.PRAD
         public bool IsFinished { get; private set; }
 
         /// <summary>
+        /// Gets the start date.
+        /// </summary>
+        public DateTimeOffset StartDate { get; private set; }
+
+        /// <summary>
+        /// Gets the finish date.
+        /// </summary>
+        public DateTimeOffset FinishDate { get; private set; }
+
+        /// <summary>
+        /// Gets the reset date.
+        /// </summary>
+        public DateTimeOffset ResetDate { get; private set; }
+
+        /// <summary>
         /// Gets or sets the backpropagation mode.
         /// </summary>
         public BackpropagationMode BackpropagationMode { get; set; }
@@ -375,7 +392,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <summary>
         /// Gets the seed gradient.
         /// </summary>
-        public Tensor SeedGradient { get => this.initialResult.Gradients[0]; internal set => this.initialResult.Gradients[0].ReplaceData(value.Data); }
+        public Tensor SeedGradient => this.lastSeedGradient;
 
         /// <summary>
         /// Gets the seed result.
@@ -495,6 +512,11 @@ namespace ParallelReverseAutoDiff.PRAD
         internal static PradOp FuncOp => funcOp;
 
         /// <summary>
+        /// Gets or sets the last gradient.
+        /// </summary>
+        internal Tensor LastGradient { get => this.initialResult.Gradients[0]; set => this.initialResult.Gradients[0].ReplaceData(value.Data); }
+
+        /// <summary>
         /// Gets or sets the current backpropagation steps.
         /// </summary>
         internal List<(Func<Tensor, (Tensor[], PradOp?[])> backpropStep, PradResult result)> BackpropagationSteps
@@ -528,6 +550,67 @@ namespace ParallelReverseAutoDiff.PRAD
                 }
 
                 return default;
+            }
+        }
+
+        /// <summary>
+        /// Resets backpropagation so that you can call 'Back' with a different upstream gradient.
+        /// </summary>
+        public void ResetBackpropagation()
+        {
+            if (!this.IsFinished)
+            {
+                return;
+            }
+
+            // Store the last gradient before reset
+            this.lastSeedGradient = this.LastGradient?.DeepClone() !;
+
+            // Existing reset logic
+            this.IsStarted = false;
+            this.IsFinished = false;
+            this.ResetDate = DateTimeOffset.UtcNow;
+            this.UpstreamGradient = null !;
+
+            // Reset gradient states
+            this.seedGradient = new Tensor(this.seed.Shape);
+            this.initialResult = new PradResult(this, this.seed, new Tensor[] { this.seedGradient });
+
+            // Cascade through linked branches
+            foreach (var branch in this.LinkedBranches)
+            {
+                branch.ResetBackpropagation();
+            }
+
+            if (this.parentResult != null)
+            {
+                foreach (var branch in this.parentResult.Branches)
+                {
+                    branch.ResetBackpropagation();
+                }
+            }
+
+            // Cascade through computation graph
+            foreach (var step in this.BackpropagationSteps)
+            {
+                foreach (var branch in step.result.Branches)
+                {
+                    branch.ResetBackpropagation();  // Regular branches
+                }
+
+                foreach (var branch in step.result.SplitBranches)
+                {
+                    branch.ResetBackpropagation();  // Split branches
+                }
+            }
+
+            // Cascade through split ops
+            if (this.splitOps != null)
+            {
+                foreach (var splitOp in this.splitOps)
+                {
+                    splitOp.ResetBackpropagation();  // Split operations
+                }
             }
         }
 
@@ -2733,6 +2816,12 @@ namespace ParallelReverseAutoDiff.PRAD
                 throw new InvalidOperationException("Back should not be called on a dependent branch.");
             }
 
+            // Clear last gradient if starting fresh
+            if (!this.IsStarted && !this.IsFinished)
+            {
+                this.lastSeedGradient = null !;
+            }
+
             this.UpstreamGradient = tensor;
             return this.Back();
         }
@@ -2753,7 +2842,7 @@ namespace ParallelReverseAutoDiff.PRAD
             {
                 if (this.BackpropagationSteps.Count == 0)
                 {
-                    this.SeedGradient = this.UpstreamGradient;
+                    this.LastGradient = this.UpstreamGradient;
                     return this.UpstreamGradient;
                 }
 
@@ -2782,6 +2871,7 @@ namespace ParallelReverseAutoDiff.PRAD
             Tensor currentUpstream = this.UpstreamGradient;
 
             this.IsStarted = true;
+            this.StartDate = DateTimeOffset.UtcNow;
 
             // Reverse iterate over backpropagation steps to accumulate gradients
             foreach (var (step, result) in this.BackpropagationSteps.AsEnumerable().Reverse())
@@ -2794,6 +2884,11 @@ namespace ParallelReverseAutoDiff.PRAD
                 {
                     if (branch.UpstreamGradient == null)
                     {
+                        if (branch.ResetDate > branch.StartDate)
+                        {
+                            continue;
+                        }
+
                         var branchResult = branch.LinkedBranches.FirstOrDefault();
                         if (branchResult != null)
                         {
@@ -2889,18 +2984,20 @@ namespace ParallelReverseAutoDiff.PRAD
                             {
                                 branch.IsStarted = true;
                                 branch.IsFinished = true;
+                                branch.StartDate = DateTimeOffset.UtcNow;
+                                branch.FinishDate = DateTimeOffset.UtcNow;
                             }
                         }
                     }
 
-                    if (branch.IsFinished)
+                    if (branch.IsFinished || branch.ResetDate > branch.StartDate)
                     {
-                        currentUpstream = currentUpstream.ElementwiseAdd(branch.SeedGradient);
+                        currentUpstream = currentUpstream.ElementwiseAdd(branch.LastGradient);
                     }
                     else
                     {
                         var branchGradient = branch.Back();
-                        if (branch.IsFinished)
+                        if (branch.IsFinished || branch.ResetDate > branch.StartDate)
                         {
                             currentUpstream = currentUpstream.ElementwiseAdd(branchGradient);
                         }
@@ -2915,9 +3012,9 @@ namespace ParallelReverseAutoDiff.PRAD
                 List<Tensor> branchGradients = new List<Tensor>();
                 foreach (var branch in result.SplitBranches.Where(x => x.UpstreamGradient != null))
                 {
-                    if (branch.IsFinished)
+                    if (branch.IsFinished || branch.ResetDate > branch.StartDate)
                     {
-                        branchGradients.Add(branch.SeedGradient);
+                        branchGradients.Add(branch.LastGradient);
                     }
                     else
                     {
@@ -2993,14 +3090,15 @@ namespace ParallelReverseAutoDiff.PRAD
             if (this.BackpropagationMode == BackpropagationMode.Accumulate)
             {
                 this.seedGradientHistory.Add(currentUpstream);
-                this.SeedGradient = this.SeedGradient.ElementwiseAdd(currentUpstream);
+                this.LastGradient = this.LastGradient.ElementwiseAdd(currentUpstream);
             }
             else
             {
-                this.SeedGradient = currentUpstream;
+                this.LastGradient = currentUpstream;
             }
 
             this.IsFinished = true;
+            this.FinishDate = DateTimeOffset.UtcNow;
 
             if (this.WaitingToAdd.Count > 0)
             {
@@ -3010,6 +3108,8 @@ namespace ParallelReverseAutoDiff.PRAD
                     waiting.ElementwiseAdd(currentUpstream);
                 }
             }
+
+            this.ResetBackpropagation();
 
             return currentUpstream;
         }
@@ -3029,7 +3129,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="optimizer">The optimizer to use.</param>
         public void Optimize(IOptimizer optimizer)
         {
-            if (!this.IsFinished)
+            if (!this.IsFinished && this.ResetDate < this.StartDate)
             {
                 throw new InvalidOperationException("This branch has not finished calculating 'Back'.");
             }

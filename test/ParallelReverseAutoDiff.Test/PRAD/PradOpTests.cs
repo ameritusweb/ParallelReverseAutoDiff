@@ -11,6 +11,68 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class PradOpTests
     {
         [Fact]
+        public void TestMultiBack()
+        {
+            var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
+            PradOp tOp = new PradOp(seed);
+            var branch = tOp.Branch();
+
+            var res = tOp.Diff(0);
+            var res2 = branch.Diff(1);
+
+            var add = res.PradOp.Add(res2.Result);
+
+            var upstream = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            PradOp ug = new PradOp(upstream);
+
+            add.Back(ug.CurrentTensor);
+
+            var seedG = tOp.SeedGradient.DeepClone();
+
+            var upstream2 = new Tensor(new int[] { 2, 2 }, new double[] { 1, 1, 1, 1 });
+            PradOp ug2 = new PradOp(upstream2);
+
+            add.Back(ug2.CurrentTensor);
+
+            var seedH = tOp.SeedGradient;
+        }
+
+        [Fact]
+        public void TestMultiBack2()
+        {
+            var seed = Tensor.XavierUniform(new int[] { 2, 10 });
+            PradOp tOp = new PradOp(seed);
+
+            var seed2 = Tensor.XavierUniform(new int[] { 2, 10 });
+            PradOp tOp2 = new PradOp(seed2);
+
+            var seedw = Tensor.XavierUniform(new int[] { 2, 5 });
+            PradOp tOpw = new PradOp(seedw);
+
+            var tools = new PradVectorTools();
+            var res = tools.VectorWeightedAdd(tOp, tOp2, tOpw);
+
+            var seedu = Tensor.XavierUniform(new int[] { 2, 10 });
+            var seedClone = seedu.DeepClone();
+            PradOp tOpu = new PradOp(seedu);
+
+            res.PradOp.Back(tOpu.CurrentTensor);
+
+            var seed1 = tOp.SeedGradient.DeepClone();
+            var seed2a = tOp2.SeedGradient.DeepClone();
+            var seed3 = tOpw.SeedGradient.DeepClone();
+
+            var seedu2 = seedClone;
+            PradOp tOpu2 = new PradOp(seedu2);
+
+            res.PradOp.Back(tOpu2.CurrentTensor);
+
+            var s1 = tOp.SeedGradient;
+            var s2 = tOp2.SeedGradient;
+            var s3 = tOpw.SeedGradient;
+        }
+
+        [Fact]
         public void TestDiff()
         {
             var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
