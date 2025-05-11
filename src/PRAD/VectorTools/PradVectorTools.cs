@@ -608,6 +608,8 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
 
             var negativeWeights = weightsTiled.PradOp.LessThan(new Tensor(new[] { nN, mM, pP }, PradTools.Zero));
 
+            var negativeWeightsBranch = negativeWeights.Branch();
+
             var x1Branch = x1.Branch();
 
             var x2Branch = x2.Branch();
@@ -621,7 +623,7 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
             var suby2y1 = y1Branch.SubFrom(y2.Result);
 
             var deltaX = x1.PradOp.Sub(x2Branch.CurrentTensor).PradOp.Where(negativeWeights.Result, subx2x1.Result);
-            var deltaY = y1.PradOp.Sub(y2Branch.CurrentTensor).PradOp.Where(negativeWeights.Result, suby2y1.Result);
+            var deltaY = y1.PradOp.Sub(y2Branch.CurrentTensor).PradOp.Where(negativeWeightsBranch.CurrentTensor, suby2y1.Result);
 
             var deltaXBranch = deltaX.Branch();
             var deltaYBranch = deltaY.Branch();

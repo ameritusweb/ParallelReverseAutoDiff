@@ -11,6 +11,31 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class PradOpTests
     {
         [Fact]
+        public void TestVNNMatrixMultiply1()
+        {
+            var seed = Tensor.XavierUniform(new int[] { 50, 1000 });
+            PradOp tOp = new PradOp(seed);
+
+            var seed2 = Tensor.XavierUniform(new int[] { 500, 1000 });
+            PradOp tOp2 = new PradOp(seed2);
+
+            var seedw = Tensor.XavierUniform(new int[] { 500, 500 });
+            PradOp tOpw = new PradOp(seedw);
+
+            var tools = new PradVectorTools();
+            var res = tools.VectorBasedMatrixMultiplication(tOp, tOp2, tOpw);
+
+            var seedUp = Tensor.XavierUniform(new int[] { 50, 1000 });
+            PradOp tOpUp = new PradOp(seedUp);
+
+            res.Back(tOpUp.CurrentTensor);
+
+            var weightsTiled = tOpw.Reshape(new[] { 1, 500, 500 })
+                                    .PradOp.Tile(new[] { 50, 1, 1 });
+
+        }
+
+        [Fact]
         public void TestMultiBack()
         {
             var seed = new Tensor(new int[] { 2, 2 }, new double[] { 1, 2, 3, 4 });
