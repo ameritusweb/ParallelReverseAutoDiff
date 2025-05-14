@@ -280,9 +280,19 @@ namespace ParallelReverseAutoDiff.PRAD
         public static Func<Tensor, Tensor, Tensor, PradResult> OnOffEmbeddingOp => FuncOp.OnOffEmbedding;
 
         /// <summary>
+        /// Gets the equals op.
+        /// </summary>
+        public static Func<Tensor, PradResult> EqualsOp => FuncOp.Equals;
+
+        /// <summary>
         /// Gets the less than op.
         /// </summary>
         public static Func<Tensor, PradResult> LessThanOp => FuncOp.LessThan;
+
+        /// <summary>
+        /// Gets the greater than op.
+        /// </summary>
+        public static Func<Tensor, PradResult> GreaterThanOp => FuncOp.GreaterThan;
 
         /// <summary>
         /// Gets the pairwise tile op.
@@ -2304,6 +2314,49 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise "equals" comparison between the current tensor and another tensor.
+        /// </summary>
+        /// <param name="tensor">The tensor to compare against the current tensor.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> representing the result of the "equals" operation,
+        /// along with the associated gradient and backpropagation steps.
+        /// </returns>
+        /// <remarks>
+        /// This operation compares the elements of the current tensor with the corresponding elements
+        /// of the provided <paramref name="tensor"/>. The result tensor contains boolean-like values
+        /// indicating where the elements of the current tensor are equal to the elements of the
+        /// provided tensor. The gradient for this operation is always zero because the "equals"
+        /// operation is non-differentiable.
+        /// </remarks>
+        [PradOperation(nameof(EqualsOp))]
+        public PradResult Equals(Tensor tensor)
+        {
+            var result = this.currentTensor.Equals(tensor);
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                // The gradient for Equals is always zero, but we need to pass it back
+                var gradients = new Tensor[] { new Tensor(this.currentTensor.Shape), new Tensor(tensor.Shape) };
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    if (tensors[i] is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.BackpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
         /// Computes the element-wise "less than" comparison between the current tensor and another tensor.
         /// </summary>
         /// <param name="tensor">The tensor to compare against the current tensor.</param>
@@ -2326,6 +2379,49 @@ namespace ParallelReverseAutoDiff.PRAD
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
                 // The gradient for LessThan is always zero, but we need to pass it back
+                var gradients = new Tensor[] { new Tensor(this.currentTensor.Shape), new Tensor(tensor.Shape) };
+                PradOp?[] ops = new PradOp?[2];
+                var tensors = new Tensor[] { this.currentTensor, tensor };
+                for (int i = 0; i < grad.Length; i++)
+                {
+                    if (tensors[i] is PradTensor pradTensor)
+                    {
+                        ops[i] = pradTensor.PradOp;
+                    }
+                }
+
+                return (gradients, ops);
+            };
+
+            var pradResult = new PradResult(this, result, grad);
+            this.BackpropagationSteps.Add((backpropStep, pradResult));
+            this.currentTensor = result;
+            return pradResult;
+        }
+
+        /// <summary>
+        /// Computes the element-wise "greater than" comparison between the current tensor and another tensor.
+        /// </summary>
+        /// <param name="tensor">The tensor to compare against the current tensor.</param>
+        /// <returns>
+        /// A <see cref="PradResult"/> representing the result of the "greater than" operation,
+        /// along with the associated gradient and backpropagation steps.
+        /// </returns>
+        /// <remarks>
+        /// This operation compares the elements of the current tensor with the corresponding elements
+        /// of the provided <paramref name="tensor"/>. The result tensor contains boolean-like values
+        /// indicating where the elements of the current tensor are greater than the elements of the
+        /// provided tensor. The gradient for this operation is always zero because the "greater than"
+        /// operation is non-differentiable.
+        /// </remarks>
+        [PradOperation(nameof(GreaterThanOp))]
+        public PradResult GreaterThan(Tensor tensor)
+        {
+            var result = this.currentTensor.GreaterThan(tensor);
+            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
+            {
+                // The gradient for GreaterThan is always zero, but we need to pass it back
                 var gradients = new Tensor[] { new Tensor(this.currentTensor.Shape), new Tensor(tensor.Shape) };
                 PradOp?[] ops = new PradOp?[2];
                 var tensors = new Tensor[] { this.currentTensor, tensor };

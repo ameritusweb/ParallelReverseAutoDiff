@@ -170,6 +170,49 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
         }
 
         /// <summary>
+        /// Applies the GELU (Gaussian Error Linear Unit) activation function.
+        /// GELU(x) = x * Φ(x) where Φ(x) is the CDF of the standard normal distribution.
+        /// Uses the approximation: GELU(x) = 0.5x * (1 + tanh(√(2/π) * (x + 0.044715x³))).
+        /// </summary>
+        /// <param name="pradOp">The PradOp instance containing the input tensor.</param>
+        /// <returns>The result of the GELU operation.</returns>
+        public static PradResult GELU(this PradOp pradOp)
+        {
+            // Constants for GELU approximation
+            var sqrt2ByPi = PradMath.Sqrt(PradTools.Two / PradMath.PI);
+            var constant = new Tensor(pradOp.CurrentShape, PradTools.Cast(sqrt2ByPi));
+            var coef = new Tensor(pradOp.CurrentShape, 0.044715f);
+
+            // Create branches for reusing the input
+            var inputBranch1 = pradOp.Branch();
+            var inputBranch2 = pradOp.Branch();
+
+            // Calculate x³
+            var xCubed = inputBranch1.Mul(pradOp.CurrentTensor)
+                                    .Then(PradOp.MulOp, pradOp.CurrentTensor);
+
+            // Calculate (x + 0.044715x³)
+            var innerSum = xCubed.Then(PradOp.MulOp, coef)
+                                .Then(result => result.PradOp.Add(inputBranch2.CurrentTensor));
+
+            // Calculate √(2/π) * (x + 0.044715x³)
+            var scaled = innerSum.Then(PradOp.MulOp, constant);
+
+            // Calculate tanh(√(2/π) * (x + 0.044715x³))
+            var tanhResult = scaled.Then(PradOp.TanhOp);
+
+            // Calculate (1 + tanh(...))
+            var oneTensor = new Tensor(pradOp.CurrentShape, PradTools.One);
+            var tanhPlusOne = tanhResult.Then(PradOp.AddOp, oneTensor);
+
+            // Calculate 0.5x * (1 + tanh(...))
+            var halfTensor = new Tensor(pradOp.CurrentShape, PradTools.Half);
+            var halfX = pradOp.Mul(halfTensor);
+
+            return halfX.Then(PradOp.MulOp, tanhPlusOne.Result);
+        }
+
+        /// <summary>
         /// Computes the sigmoid function 1/(1 + e^(-x)) using primitive operations.
         /// </summary>
         /// <param name="pradOp">PradOp.</param>

@@ -1,4 +1,5 @@
 ﻿using ParallelReverseAutoDiff.PRAD;
+using ParallelReverseAutoDiff.PRAD.Extensions;
 using ParallelReverseAutoDiff.PRAD.VectorTools;
 using ParallelReverseAutoDiff.RMAD;
 using ParallelReverseAutoDiff.Test.Common;
@@ -10,6 +11,22 @@ namespace ParallelReverseAutoDiff.Test.PRAD
 {
     public class PradOpTests
     {
+        [Fact]
+        public void TestGELU()
+        {
+            var seed = Tensor.XavierUniform(new int[] { 50, 1000 });
+            PradOp tOp = new PradOp(seed);
+
+            var res = tOp.GELU();
+
+            var seedU = Tensor.XavierUniform(new int[] { 50, 1000 });
+            PradOp tOpU = new PradOp(seedU);
+
+            res.PradOp.Back(tOpU.CurrentTensor);
+
+            var grad = tOp.SeedGradient;
+        }
+
         [Fact]
         public void TestVNNMatrixMultiply1()
         {

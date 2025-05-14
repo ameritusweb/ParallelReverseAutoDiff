@@ -2315,6 +2315,39 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Performs element-wise equality comparison with another tensor.
+        /// </summary>
+        /// <param name="other">The tensor to compare with.</param>
+        /// <returns>A new tensor containing the boolean mask (1.0 for true, 0.0 for false).</returns>
+        public Tensor Equals(Tensor other)
+        {
+            if (!this.Shape.SequenceEqual(other.Shape))
+            {
+                throw new ArgumentException("Tensors must have the same shape for element-wise comparison.");
+            }
+
+            var result = new Tensor(this.Shape);
+            int vectorSize = PradTools.VectorCount();
+
+            for (int i = 0; i <= this.Data.Length - vectorSize; i += vectorSize)
+            {
+                var thisVector = PradTools.AllocateVector(this.Data, i);
+                var otherVector = PradTools.AllocateVector(other.Data, i);
+                var comparisonVector = Vector.Equals(thisVector, otherVector);
+                var mask = PradTools.Convert(Vector.Abs(comparisonVector));
+                mask.CopyTo(result.Data, i);
+            }
+
+            // Handle remaining elements
+            for (int i = this.Data.Length - (this.Data.Length % vectorSize); i < this.Data.Length; i++)
+            {
+                result.Data[i] = this.Data[i] == other.Data[i] ? PradTools.One : PradTools.Zero;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs element-wise modulus operation with another tensor.
         /// </summary>
         /// <param name="other">The tensor to perform modulus with.</param>

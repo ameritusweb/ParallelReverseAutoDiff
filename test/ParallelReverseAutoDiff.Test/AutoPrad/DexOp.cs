@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParallelReverseAutoDiff.Test.AutoPrad
 {
-    public static class AutoPradOp
+    public static class DexOp
     {
         public const string Add = "Add";
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParallelReverseAutoDiff.Test.AutoPrad
 {
-    public class AutoGrad
+    public class DexGrad
     {
         public Tensor this[Tensor t]
         {
