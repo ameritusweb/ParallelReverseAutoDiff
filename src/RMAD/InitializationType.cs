@@ -34,5 +34,10 @@ namespace ParallelReverseAutoDiff.RMAD
         /// He initialization for adjacency matrices.
         /// </summary>
         HeAdjacency,
+
+        /// <summary>
+        /// Initialize with ones
+        /// </summary>
+        Ones,
     }
 }

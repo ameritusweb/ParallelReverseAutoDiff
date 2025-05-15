@@ -810,6 +810,9 @@ namespace ParallelReverseAutoDiff.RMAD
                 case InitializationType.HeAdjacency:
                     this.InitializeHe(1.0d, 5.0d);
                     break;
+                case InitializationType.Ones:
+                    this.InitializeOnes();
+                    break;
                 case InitializationType.Zeroes:
                     break;
                 default:
@@ -831,6 +834,12 @@ namespace ParallelReverseAutoDiff.RMAD
                     break;
                 case InitializationType.Xavier:
                     this.InitializeXavier(scalingFactor);
+                    break;
+                case InitializationType.Ones:
+                    this.InitializeOnes(scalingFactor);
+                    break;
+                case InitializationType.HeAdjacency:
+                    this.InitializeHe(scalingFactor, 5.0d);
                     break;
                 case InitializationType.Zeroes:
                     break;
@@ -1032,6 +1041,17 @@ namespace ParallelReverseAutoDiff.RMAD
                 for (int j = 0; j < this.Cols; j++)
                 {
                     this[i, j] = ((MatrixUtils.Random.NextDouble() * 2) - 1) * Math.Sqrt(6.0 / (this.Rows + this.Cols)) * scalingFactor;
+                }
+            });
+        }
+
+        private void InitializeOnes(double scalingFactor = 1.0)
+        {
+            Parallel.For(0, this.Rows, i =>
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    this[i, j] = PradTools.One * scalingFactor;
                 }
             });
         }
