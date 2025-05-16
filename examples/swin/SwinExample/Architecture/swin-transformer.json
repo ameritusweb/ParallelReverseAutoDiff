@@ -1,0 +1,177 @@
+{
+  "timeSteps": [
+    {
+      "startOperations": [
+        {
+          "id": "patch_embedding_proj",
+          "type": "MatrixMultiplyOperation",
+          "inputs": [ "patch_embed_proj", "input_patches" ],
+          "gradientResultTo": [ "d_patch_embed_proj", null ]
+        },
+        {
+          "id": "patch_embedding_norm",
+          "type": "LayerNormalizationOperation",
+          "inputs": [ "patch_embedding_proj" ]
+        },
+        {
+          "id": "patch_embedding_scale",
+          "type": "MatrixMultiplyOperation",
+          "inputs": [ "patch_embedding_norm", "patch_embed_norm_weight" ],
+          "gradientResultTo": [ null, "d_patch_embed_norm_weight" ]
+        },
+        {
+          "id": "patch_embedding_bias",
+          "type": "MatrixAddOperation",
+          "inputs": [ "patch_embedding_scale", "patch_embed_norm_bias" ],
+          "gradientResultTo": [ null, "d_patch_embed_norm_bias" ],
+          "setResultTo": "stage_0_input"
+        }
+      ],
+      "firstLayers": [
+        {
+          "startOperations": [],
+          "firstLayers": [
+            {
+              "operations": [
+                {
+                  "id": "stage_0_block_0_window_partition",
+                  "type": "WindowPartitionOperation",
+                  "inputs": [ "stage_0_block_0_norm1" ]
+                },
+                {
+                  "id": "stage_0_block_0_qkv",
+                  "type": "MatrixMultiplyOperation",
+                  "inputs": [ "stage_0_block_0_window_partition", "stage_0_block_0_qkv_weight" ],
+                  "gradientResultTo": [ null, "d_stage_0_block_0_qkv_weight" ]
+                },
+                {
+                  "id": "stage_0_block_0_attention",
+                  "type": "WindowAttentionOperation",
+                  "inputs": [ "stage_0_block_0_qkv", "stage_0_block_0_relative_position_bias_table" ],
+                  "gradientResultTo": [ null, "d_stage_0_block_0_relative_position_bias_table" ]
+                },
+                {
+                  "id": "stage_0_block_0_window_reverse",
+                  "type": "WindowReverseOperation",
+                  "inputs": [ "stage_0_block_0_attention" ],
+                  "setResultTo": "stage_0_block_0_attention_output"
+                }
+              ]
+            }
+          ],
+          "middleOperations": [
+            {
+              "id": "stage_0_block_0_norm2",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_block_0_attention_output" ]
+            }
+          ],
+          "secondLayers": [
+            {
+              "operations": [
+                {
+                  "id": "stage_0_block_0_mlp_fc1",
+                  "type": "MatrixMultiplyOperation",
+                  "inputs": [ "stage_0_block_0_norm2", "stage_0_block_0_mlp_fc1_weight" ],
+                  "gradientResultTo": [ null, "d_stage_0_block_0_mlp_fc1_weight" ]
+                },
+                {
+                  "id": "stage_0_block_0_mlp_act",
+                  "type": "GELUOperation",
+                  "inputs": [ "stage_0_block_0_mlp_fc1" ]
+                },
+                {
+                  "id": "stage_0_block_0_mlp_fc2",
+                  "type": "MatrixMultiplyOperation",
+                  "inputs": [ "stage_0_block_0_mlp_act", "stage_0_block_0_mlp_fc2_weight" ],
+                  "gradientResultTo": [ null, "d_stage_0_block_0_mlp_fc2_weight" ],
+                  "setResultTo": "stage_0_block_0_output"
+                }
+              ]
+            }
+          ],
+          "endOperations": []
+        }
+      ],
+      "postFirstOperations": [
+        {
+          "id": "patch_merging_1_reshape",
+          "type": "MatrixReshapeOperation",
+          "inputs": [ "stage_0_output" ]
+        },
+        {
+          "id": "patch_merging_1_norm",
+          "type": "LayerNormalizationOperation",
+          "inputs": [ "patch_merging_1_reshape" ]
+        },
+        {
+          "id": "patch_merging_1_proj",
+          "type": "MatrixMultiplyOperation",
+          "inputs": [ "patch_merging_1_norm", "merge_1_proj_weight" ],
+          "gradientResultTo": [ null, "d_merge_1_proj_weight" ],
+          "setResultTo": "stage_1_input"
+        }
+      ],
+      "secondLayers": [
+        {
+          "startOperations": [],
+          "firstLayers": [
+            {
+              "operations": []
+            }
+          ],
+          "middleOperations": [],
+          "secondLayers": [
+            {
+              "operations": []
+            }
+          ],
+          "endOperations": []
+        }
+      ],
+      "postSecondOperations": [
+
+      ],
+      "thirdLayers": [
+        {
+          "startOperations": [],
+          "firstLayers": [
+            {
+              "operations": []
+            }
+          ],
+          "middleOperations": [],
+          "secondLayers": [
+            {
+              "operations": []
+            }
+          ],
+          "endOperations": []
+        }
+      ],
+      "postThirdOperations": [
+
+      ],
+      "fourthLayers": [
+        {
+          "startOperations": [],
+          "firstLayers": [
+            {
+              "operations": []
+            }
+          ],
+          "middleOperations": [],
+          "secondLayers": [
+            {
+              "operations": []
+            }
+          ],
+          "endOperations": []
+        }
+      ],
+      "endOperations": [
+
+      ]
+    }
+  ]
+}
