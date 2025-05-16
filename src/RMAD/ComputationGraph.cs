@@ -8,7 +8,6 @@ namespace ParallelReverseAutoDiff.RMAD
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Linq;
     using ParallelReverseAutoDiff.Interprocess;
 
     /// <summary>
@@ -652,6 +651,151 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Construct the computation graph from a four layers architecture with time steps and layers.
+        /// </summary>
+        /// <param name="architecture">The architecture.</param>
+        /// <param name="numTimeSteps">The number of time steps.</param>
+        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numNestedLayers">The number of nested layers.</param>
+        /// <returns>The computation graph.</returns>
+        public ComputationGraph ConstructFromArchitecture(FourLayersJsonArchitecture architecture, int numTimeSteps, int numLayers, int numNestedLayers)
+        {
+            var layerInfo = LayerInfo.Empty;
+            for (int t = 0; t < numTimeSteps; t++)
+            {
+                layerInfo.TimeStep = t;
+                foreach (var timeStep in architecture.TimeSteps)
+                {
+                    if (timeStep.StartOperations != null)
+                    {
+                        foreach (var operationInfo in timeStep.StartOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.FirstLayers)
+                        {
+                            if (layer is Layer flatLayer)
+                            {
+                                foreach (var operationInfo in flatLayer.Operations)
+                                {
+                                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                                }
+                            }
+                            else if (layer is TimeStep nestedLayer)
+                            {
+                                this.AddNestedLayer(nestedLayer, layerInfo, numNestedLayers);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    if (timeStep.PostFirstOperations != null)
+                    {
+                        foreach (var operationInfo in timeStep.PostFirstOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.SecondLayers)
+                        {
+                            if (layer is Layer flatLayer)
+                            {
+                                foreach (var operationInfo in flatLayer.Operations)
+                                {
+                                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                                }
+                            }
+                            else if (layer is TimeStep nestedLayer)
+                            {
+                                this.AddNestedLayer(nestedLayer, layerInfo, numNestedLayers);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    if (timeStep.PostSecondOperations != null)
+                    {
+                        foreach (var operationInfo in timeStep.PostSecondOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.ThirdLayers)
+                        {
+                            if (layer is Layer flatLayer)
+                            {
+                                foreach (var operationInfo in flatLayer.Operations)
+                                {
+                                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                                }
+                            }
+                            else if (layer is TimeStep nestedLayer)
+                            {
+                                this.AddNestedLayer(nestedLayer, layerInfo, numNestedLayers);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    if (timeStep.PostThirdOperations != null)
+                    {
+                        foreach (var operationInfo in timeStep.PostThirdOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+
+                    for (int l = 0; l < numLayers; l++)
+                    {
+                        layerInfo.Layer = l;
+                        foreach (var layer in timeStep.FourthLayers)
+                        {
+                            if (layer is Layer flatLayer)
+                            {
+                                foreach (var operationInfo in flatLayer.Operations)
+                                {
+                                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                                }
+                            }
+                            else if (layer is TimeStep nestedLayer)
+                            {
+                                this.AddNestedLayer(nestedLayer, layerInfo, numNestedLayers);
+                            }
+                        }
+                    }
+
+                    layerInfo.Layer = 0;
+
+                    if (timeStep.EndOperations != null)
+                    {
+                        foreach (var operationInfo in timeStep.EndOperations)
+                        {
+                            this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                        }
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Construct the computation graph from an architecture with time steps and layers.
         /// </summary>
         /// <param name="architecture">The architecture.</param>
@@ -1272,6 +1416,41 @@ namespace ParallelReverseAutoDiff.RMAD
             }
 
             operation.Parameters = parameters;
+        }
+
+        private void AddNestedLayer(TimeStep nestedLayer, LayerInfo layerInfo, int numNestedLayers)
+        {
+            if (nestedLayer.StartOperations != null)
+            {
+                foreach (var operationInfo in nestedLayer.StartOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+            }
+
+            layerInfo.Type = LayerInfoType.Nested;
+            for (int nl = 0; nl < numNestedLayers; nl++)
+            {
+                layerInfo.NestedLayer = nl;
+                foreach (var nestedInnerLayer in nestedLayer.Layers)
+                {
+                    foreach (var operationInfo in nestedInnerLayer.Operations)
+                    {
+                        this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                    }
+                }
+            }
+
+            layerInfo.NestedLayer = 0;
+            layerInfo.Type = LayerInfoType.Normal;
+
+            if (nestedLayer.EndOperations != null)
+            {
+                foreach (var operationInfo in nestedLayer.EndOperations)
+                {
+                    this.AddOperationByType(this.GetTypeFrom(operationInfo.Type), operationInfo, layerInfo);
+                }
+            }
         }
     }
 }

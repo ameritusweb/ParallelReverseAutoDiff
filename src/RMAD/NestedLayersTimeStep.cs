@@ -10,7 +10,7 @@ namespace ParallelReverseAutoDiff.RMAD
     /// <summary>
     /// Represents a time step with nested layers for an operation graph.
     /// </summary>
-    public class NestedLayersTimeStep
+    public class NestedLayersTimeStep : ILayer
     {
         /// <summary>
         /// Gets or sets the start operations for the time step.

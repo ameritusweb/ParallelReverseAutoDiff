@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="Layer.cs" author="ameritusweb" date="5/2/2023">
+// <copyright file="FourLayersJsonArchitecture.cs" author="ameritusweb" date="5/16/2023">
 // Copyright (c) 2023 ameritusweb All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -8,13 +8,13 @@ namespace ParallelReverseAutoDiff.RMAD
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents a layer of a neural network.
+    /// The four layers JSON architecture for a neural network.
     /// </summary>
-    public class Layer : ILayer
+    public class FourLayersJsonArchitecture
     {
         /// <summary>
-        /// Gets or sets the operations in the layer.
+        /// Gets or sets the time steps for a neural network.
         /// </summary>
-        public List<OperationInfo> Operations { get; set; }
+        public List<FourLayersTimeStep> TimeSteps { get; set; }
     }
 }

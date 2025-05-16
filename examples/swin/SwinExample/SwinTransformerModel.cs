@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SwinExample
+﻿namespace SwinExample
 {
-    using ParallelReverseAutoDiff.PRAD;
     using ParallelReverseAutoDiff.RMAD;
 
     public class SwinTransformerModel
@@ -74,7 +67,7 @@ namespace SwinExample
                 .AddModelElementGroup(
                     "patch_embed_norm_weight",
                     new[] { this.embedDims[0] },
-                    InitializationType.)
+                    InitializationType.Ones)
                 .AddModelElementGroup(
                     "patch_embed_norm_bias",
                     new[] { this.embedDims[0] },
