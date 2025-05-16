@@ -166,27 +166,11 @@ namespace SwinExample
             var training = options.CurrentTensor[1] > 0;
 
             // First fully connected layer
-            var fc1 = input.Then(PradOp.MatMulOp, fc1Weight.CurrentTensor)
+            var fc1 = input.MatMul(fc1Weight.CurrentTensor)
                 .Then(PradOp.AddOp, fc1Bias.CurrentTensor);
 
             // GELU activation
-            var gelu = fc1.Then(result =>
-            {
-                // GELU(x) = x * Φ(x)
-                // Using approximation: GELU(x) ≈ 0.5x(1 + tanh(√(2/π)(x + 0.044715x³)))
-                var x = result.PradOp;
-                var xCubed = x.Then(PradOp.PowOp, new Tensor(new[] { 1 }, new[] { 3.0 }));
-                var innerTerm = xCubed.Then(PradOp.MulOp, new Tensor(x.CurrentShape, 0.044715f));
-                var sumTerm = x.Then(PradOp.AddOp, innerTerm.Result);
-                var constTerm = new Tensor(x.CurrentShape, MathF.Sqrt(2.0f / MathF.PI));
-                var tanhTerm = sumTerm.Then(PradOp.MulOp, constTerm)
-                    .Then(PradOp.TanhOp);
-                
-                var onePlusTanh = tanhTerm.Then(PradOp.AddOp, new Tensor(tanhTerm.PradOp.CurrentShape, 1.0f));
-                var halfX = x.Then(PradOp.MulOp, new Tensor(x.CurrentShape, 0.5f));
-                
-                return halfX.Then(PradOp.MulOp, onePlusTanh.Result);
-            });
+            var gelu = fc1.PradOp.GELU();
 
             // Apply dropout if in training mode
             var geluDropout = training && dropoutRate > 0
@@ -271,7 +255,7 @@ namespace SwinExample
             var C = shape[2];
 
             // Reshape to [B, H/window_size, W/window_size, window_size, window_size, C]
-            var reshaped = input.Then(PradOp.ReshapeOp, new[]
+            var reshaped = input.Reshape(new[]
             {
                 B,
                 numH,
@@ -304,7 +288,7 @@ namespace SwinExample
             var windowSize = (int)options.CurrentTensor[0];
 
             // Reshape to [B, H/window_size, window_size, W/window_size, window_size, C]
-            var reshaped = input.Then(PradOp.ReshapeOp, new[] 
+            var reshaped = input.Reshape(new[] 
             { 
                 B, 
                 H / windowSize, 
@@ -361,7 +345,7 @@ namespace SwinExample
             var headDim = embedDim / numHeads;
 
             // QKV projection [B*nW, N, C] -> [B*nW, N, 3C]
-            var qkv = input.Then(PradOp.MatMulOp, qkvWeight.CurrentTensor)
+            var qkv = input.MatMul(qkvWeight.CurrentTensor)
                 .Then(PradOp.AddOp, qkvBias.CurrentTensor);
 
             // Reshape: [B*nW, N, 3C] -> [B*nW, N, 3, num_heads, head_dim]
@@ -373,31 +357,31 @@ namespace SwinExample
                 new[] { 2, 0, 3, 1, 4 });
 
             // Split Q, K, V
-            var qkvSplit = qkvPermuted.Then(op => op.PradOp.Split(1, axis: 0));
+            var qkvSplit = qkvPermuted.PradOp.Split(1, axis: 0);
             var query = qkvSplit[0];
             var key = qkvSplit[1];
             var value = qkvSplit[2];
 
             // Scale query
-            var scale = new Tensor(query.PradOp.CurrentShape, 1.0f / MathF.Sqrt(headDim));
-            var queryScaled = query.Then(PradOp.MulOp, scale);
+            var scale = new Tensor(query.CurrentShape, 1.0d / Math.Sqrt(headDim));
+            var queryScaled = query.Mul(scale);
 
             // Compute attention scores
-            var keyTransposed = key.Then(PradOp.TransposeOp, new[] { 0, 1, 3, 2 });
+            var keyTransposed = key.Transpose(new[] { 0, 1, 3, 2 });
             var attnScores = queryScaled.Then(PradOp.MatMulOp, keyTransposed.Result);
 
             // Add relative position bias
-            var relPosReshaped = relativePosTable.Then(op => op.PradOp.Reshape(new[]
+            var relPosReshaped = relativePosTable.Reshape(new[]
             {
                 1,
                 numHeads,
                 windowSize * windowSize,
                 windowSize * windowSize
-            }));
+            });
             attnScores = attnScores.Then(PradOp.AddOp, relPosReshaped.Result);
 
             // Apply attention dropout during training
-            var attnProbs = attnScores.Then(op => op.PradOp.Softmax(-1));
+            var attnProbs = attnScores.Then(op => op.PradOp.SymmetricSoftmax(1, true, -1));
             if (training && attentionDropout > 0)
             {
                 attnProbs = attnProbs.Then(op => op.PradOp.Dropout(attentionDropout));
@@ -459,7 +443,7 @@ namespace SwinExample
             var headDim = embedDim / numHeads;
 
             // QKV projection [B*nW, N, C] -> [B*nW, N, 3C]
-            var qkv = input.Then(PradOp.MatMulOp, qkvWeight.CurrentTensor)
+            var qkv = input.MatMul(qkvWeight.CurrentTensor)
                 .Then(PradOp.AddOp, qkvBias.CurrentTensor);
 
             // Reshape: [B*nW, N, 3C] -> [B*nW, N, 3, num_heads, head_dim]
@@ -471,31 +455,31 @@ namespace SwinExample
                 new[] { 2, 0, 3, 1, 4 });
 
             // Split Q, K, V
-            var qkvSplit = qkvPermuted.Then(op => op.PradOp.Split(1, axis: 0));
+            var qkvSplit = qkvPermuted.PradOp.Split(1, axis: 0);
             var query = qkvSplit[0];
             var key = qkvSplit[1];
             var value = qkvSplit[2];
 
             // Scale query
-            var scale = new Tensor(query.PradOp.CurrentShape, 1.0f / MathF.Sqrt(headDim));
-            var queryScaled = query.Then(PradOp.MulOp, scale);
+            var scale = new Tensor(query.CurrentShape, 1.0d / Math.Sqrt(headDim));
+            var queryScaled = query.Mul(scale);
 
             // Compute attention scores
-            var keyTransposed = key.Then(PradOp.TransposeOp, new[] { 0, 1, 3, 2 });
+            var keyTransposed = key.Transpose(new[] { 0, 1, 3, 2 });
             var attnScores = queryScaled.Then(PradOp.MatMulOp, keyTransposed.Result);
 
             // Add relative position bias
-            var relPosReshaped = relativePosTable.Then(op => op.PradOp.Reshape(new[]
+            var relPosReshaped = relativePosTable.Reshape(new[]
             {
                 1,
                 numHeads,
                 windowSize * windowSize,
                 windowSize * windowSize
-            }));
+            });
             attnScores = attnScores.Then(PradOp.AddOp, relPosReshaped.Result);
 
             // Apply attention dropout during training
-            var attnProbs = attnScores.Then(op => op.PradOp.Softmax(-1));
+            var attnProbs = attnScores.PradOp.SymmetricSoftmax(1, true, -1);
             if (training && attentionDropout > 0)
             {
                 attnProbs = attnProbs.Then(op => op.PradOp.Dropout(attentionDropout));
