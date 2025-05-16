@@ -4,9 +4,9 @@ using ParallelReverseAutoDiff.RMAD;
 namespace SwinExample.RMAD
 {
     /// <summary>
-    /// Operation that reverses window partitioning to restore original feature map dimensions.
+    /// Operation that performs adaptive average pooling, converting features to target size.
     /// </summary>
-    public class WindowReverseOperation : Operation
+    public class AdaptiveAveragePoolOperation : Operation
     {
         private PradOp input;
         private PradOp resultOp;
@@ -18,15 +18,15 @@ namespace SwinExample.RMAD
         /// <returns>The instantiated operation.</returns>
         public static IOperation Instantiate(NeuralNetwork net)
         {
-            return new WindowReverseOperation();
+            return new AdaptiveAveragePoolOperation();
         }
 
         /// <summary>
-        /// Performs the forward operation for reversing window partitioning.
+        /// Performs the forward operation for adaptive average pooling.
         /// </summary>
-        /// <param name="input">Input tensor of shape [B*num_windows, window_size*window_size, C]</param>
-        /// <param name="options">Options tensor containing [windowSize, height, width]</param>
-        /// <returns>Output tensor of shape [B, H, W, C]</returns>
+        /// <param name="input">Input tensor of shape [B, H, W, C]</param>
+        /// <param name="options">Options tensor containing [outputHeight, outputWidth]</param>
+        /// <returns>Output tensor of shape [B, outputHeight, outputWidth, C]</returns>
         public Matrix Forward(Matrix input, Matrix options)
         {
             SwinTransformerTools tools = new SwinTransformerTools();
@@ -35,8 +35,8 @@ namespace SwinExample.RMAD
             this.input = new PradOp(input.ToTensor());
             var optionsPradOp = new PradOp(options.ToTensor());
 
-            // Reverse window partitioning
-            var result = tools.WindowReverse(this.input, optionsPradOp);
+            // Perform adaptive average pooling
+            var result = tools.AdaptiveAveragePool(this.input, optionsPradOp);
             
             this.resultOp = result.PradOp;
             this.Output = result.Result.ToMatrix();
