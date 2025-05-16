@@ -29,80 +29,95 @@
       ],
       "firstLayers": [
         {
-          "startOperations": [],
-          "firstLayers": [
+          "operations": [
             {
-              "operations": [
-                {
-                  "id": "stage_0_block_0_window_partition",
-                  "type": "WindowPartitionOperation",
-                  "inputs": [ "stage_0_block_0_norm1" ]
-                },
-                {
-                  "id": "stage_0_block_0_qkv",
-                  "type": "MatrixMultiplyOperation",
-                  "inputs": [ "stage_0_block_0_window_partition", "stage_0_block_0_qkv_weight" ],
-                  "gradientResultTo": [ null, "d_stage_0_block_0_qkv_weight" ]
-                },
-                {
-                  "id": "stage_0_block_0_attention",
-                  "type": "WindowAttentionOperation",
-                  "inputs": [ "stage_0_block_0_qkv", "stage_0_block_0_relative_position_bias_table" ],
-                  "gradientResultTo": [ null, "d_stage_0_block_0_relative_position_bias_table" ]
-                },
-                {
-                  "id": "stage_0_block_0_window_reverse",
-                  "type": "WindowReverseOperation",
-                  "inputs": [ "stage_0_block_0_attention" ],
-                  "setResultTo": "stage_0_block_0_attention_output"
-                }
-              ]
-            }
-          ],
-          "middleOperations": [
+              "id": "stage_0_block_0_norm1",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_input" ]
+            },
+            {
+              "id": "stage_0_block_0_cyclic_shift",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_norm1" ],
+              "description": "Apply cyclic shift for SW-MSA"
+            },
+            {
+              "id": "stage_0_block_0_window_partition",
+              "type": "WindowPartitionOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift" ]
+            },
+            {
+              "id": "stage_0_block_0_qkv",
+              "type": "MatrixMultiplyOperation",
+              "inputs": [ "stage_0_block_0_window_partition", "stage_0_block_0_qkv_weight" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_qkv_weight" ]
+            },
+            {
+              "id": "stage_0_block_0_attention",
+              "type": "WindowAttentionOperation",
+              "inputs": [ "stage_0_block_0_qkv", "stage_0_block_0_relative_position_bias_table" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_relative_position_bias_table" ]
+            },
+            {
+              "id": "stage_0_block_0_window_reverse",
+              "type": "WindowReverseOperation",
+              "inputs": [ "stage_0_block_0_attention" ]
+            },
+            {
+              "id": "stage_0_block_0_cyclic_shift_reverse",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_window_reverse" ],
+              "description": "Reverse cyclic shift"
+            },
+            {
+              "id": "stage_0_block_0_drop_path1",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift_reverse" ],
+              "setResultTo": "stage_0_block_0_attention_output"
+            },
             {
               "id": "stage_0_block_0_norm2",
               "type": "LayerNormalizationOperation",
               "inputs": [ "stage_0_block_0_attention_output" ]
-            }
-          ],
-          "secondLayers": [
+            },
             {
-              "operations": [
-                {
-                  "id": "stage_0_block_0_mlp_fc1",
-                  "type": "MatrixMultiplyOperation",
-                  "inputs": [ "stage_0_block_0_norm2", "stage_0_block_0_mlp_fc1_weight" ],
-                  "gradientResultTo": [ null, "d_stage_0_block_0_mlp_fc1_weight" ]
-                },
-                {
-                  "id": "stage_0_block_0_mlp_act",
-                  "type": "GELUOperation",
-                  "inputs": [ "stage_0_block_0_mlp_fc1" ]
-                },
-                {
-                  "id": "stage_0_block_0_mlp_fc2",
-                  "type": "MatrixMultiplyOperation",
-                  "inputs": [ "stage_0_block_0_mlp_act", "stage_0_block_0_mlp_fc2_weight" ],
-                  "gradientResultTo": [ null, "d_stage_0_block_0_mlp_fc2_weight" ],
-                  "setResultTo": "stage_0_block_0_output"
-                }
+              "id": "stage_0_block_0_mlp",
+              "type": "MLPOperation",
+              "inputs": [
+                "stage_0_block_0_norm2",
+                "stage_0_block_0_mlp_fc1_weight",
+                "stage_0_block_0_mlp_fc1_bias",
+                "stage_0_block_0_mlp_fc2_weight",
+                "stage_0_block_0_mlp_fc2_bias"
+              ],
+              "gradientResultTo": [
+                null,
+                "d_stage_0_block_0_mlp_fc1_weight",
+                "d_stage_0_block_0_mlp_fc1_bias",
+                "d_stage_0_block_0_mlp_fc2_weight",
+                "d_stage_0_block_0_mlp_fc2_bias"
               ]
+            },
+            {
+              "id": "stage_0_block_0_drop_path2",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_mlp" ],
+              "setResultTo": "stage_0_block_0_output"
             }
-          ],
-          "endOperations": []
+          ]
         }
       ],
       "postFirstOperations": [
         {
-          "id": "patch_merging_1_reshape",
-          "type": "MatrixReshapeOperation",
-          "inputs": [ "stage_0_output" ]
+          "id": "patch_merging_1",
+          "type": "PatchMergingOperation",
+          "inputs": [ "stage_0_output" ],
+          "description": "Downsample for next stage"
         },
         {
           "id": "patch_merging_1_norm",
           "type": "LayerNormalizationOperation",
-          "inputs": [ "patch_merging_1_reshape" ]
+          "inputs": [ "patch_merging_1" ]
         },
         {
           "id": "patch_merging_1_proj",
@@ -114,63 +129,310 @@
       ],
       "secondLayers": [
         {
-          "startOperations": [],
-          "firstLayers": [
+          "operations": [
             {
-              "operations": []
-            }
-          ],
-          "middleOperations": [],
-          "secondLayers": [
+              "id": "stage_0_block_0_norm1",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_input" ]
+            },
             {
-              "operations": []
+              "id": "stage_0_block_0_cyclic_shift",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_norm1" ],
+              "description": "Apply cyclic shift for SW-MSA"
+            },
+            {
+              "id": "stage_0_block_0_window_partition",
+              "type": "WindowPartitionOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift" ]
+            },
+            {
+              "id": "stage_0_block_0_qkv",
+              "type": "MatrixMultiplyOperation",
+              "inputs": [ "stage_0_block_0_window_partition", "stage_0_block_0_qkv_weight" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_qkv_weight" ]
+            },
+            {
+              "id": "stage_0_block_0_attention",
+              "type": "WindowAttentionOperation",
+              "inputs": [ "stage_0_block_0_qkv", "stage_0_block_0_relative_position_bias_table" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_relative_position_bias_table" ]
+            },
+            {
+              "id": "stage_0_block_0_window_reverse",
+              "type": "WindowReverseOperation",
+              "inputs": [ "stage_0_block_0_attention" ]
+            },
+            {
+              "id": "stage_0_block_0_cyclic_shift_reverse",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_window_reverse" ],
+              "description": "Reverse cyclic shift"
+            },
+            {
+              "id": "stage_0_block_0_drop_path1",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift_reverse" ],
+              "setResultTo": "stage_0_block_0_attention_output"
+            },
+            {
+              "id": "stage_0_block_0_norm2",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_block_0_attention_output" ]
+            },
+            {
+              "id": "stage_0_block_0_mlp",
+              "type": "MLPOperation",
+              "inputs": [
+                "stage_0_block_0_norm2",
+                "stage_0_block_0_mlp_fc1_weight",
+                "stage_0_block_0_mlp_fc1_bias",
+                "stage_0_block_0_mlp_fc2_weight",
+                "stage_0_block_0_mlp_fc2_bias"
+              ],
+              "gradientResultTo": [
+                null,
+                "d_stage_0_block_0_mlp_fc1_weight",
+                "d_stage_0_block_0_mlp_fc1_bias",
+                "d_stage_0_block_0_mlp_fc2_weight",
+                "d_stage_0_block_0_mlp_fc2_bias"
+              ]
+            },
+            {
+              "id": "stage_0_block_0_drop_path2",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_mlp" ],
+              "setResultTo": "stage_0_block_0_output"
             }
-          ],
-          "endOperations": []
+          ]
         }
       ],
       "postSecondOperations": [
-
+        {
+          "id": "patch_merging_1",
+          "type": "PatchMergingOperation",
+          "inputs": [ "stage_0_output" ],
+          "description": "Downsample for next stage"
+        },
+        {
+          "id": "patch_merging_1_norm",
+          "type": "LayerNormalizationOperation",
+          "inputs": [ "patch_merging_1" ]
+        },
+        {
+          "id": "patch_merging_1_proj",
+          "type": "MatrixMultiplyOperation",
+          "inputs": [ "patch_merging_1_norm", "merge_1_proj_weight" ],
+          "gradientResultTo": [ null, "d_merge_1_proj_weight" ],
+          "setResultTo": "stage_1_input"
+        }
       ],
       "thirdLayers": [
         {
-          "startOperations": [],
-          "firstLayers": [
+          "operations": [
             {
-              "operations": []
-            }
-          ],
-          "middleOperations": [],
-          "secondLayers": [
+              "id": "stage_0_block_0_norm1",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_input" ]
+            },
             {
-              "operations": []
+              "id": "stage_0_block_0_cyclic_shift",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_norm1" ],
+              "description": "Apply cyclic shift for SW-MSA"
+            },
+            {
+              "id": "stage_0_block_0_window_partition",
+              "type": "WindowPartitionOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift" ]
+            },
+            {
+              "id": "stage_0_block_0_qkv",
+              "type": "MatrixMultiplyOperation",
+              "inputs": [ "stage_0_block_0_window_partition", "stage_0_block_0_qkv_weight" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_qkv_weight" ]
+            },
+            {
+              "id": "stage_0_block_0_attention",
+              "type": "WindowAttentionOperation",
+              "inputs": [ "stage_0_block_0_qkv", "stage_0_block_0_relative_position_bias_table" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_relative_position_bias_table" ]
+            },
+            {
+              "id": "stage_0_block_0_window_reverse",
+              "type": "WindowReverseOperation",
+              "inputs": [ "stage_0_block_0_attention" ]
+            },
+            {
+              "id": "stage_0_block_0_cyclic_shift_reverse",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_window_reverse" ],
+              "description": "Reverse cyclic shift"
+            },
+            {
+              "id": "stage_0_block_0_drop_path1",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift_reverse" ],
+              "setResultTo": "stage_0_block_0_attention_output"
+            },
+            {
+              "id": "stage_0_block_0_norm2",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_block_0_attention_output" ]
+            },
+            {
+              "id": "stage_0_block_0_mlp",
+              "type": "MLPOperation",
+              "inputs": [
+                "stage_0_block_0_norm2",
+                "stage_0_block_0_mlp_fc1_weight",
+                "stage_0_block_0_mlp_fc1_bias",
+                "stage_0_block_0_mlp_fc2_weight",
+                "stage_0_block_0_mlp_fc2_bias"
+              ],
+              "gradientResultTo": [
+                null,
+                "d_stage_0_block_0_mlp_fc1_weight",
+                "d_stage_0_block_0_mlp_fc1_bias",
+                "d_stage_0_block_0_mlp_fc2_weight",
+                "d_stage_0_block_0_mlp_fc2_bias"
+              ]
+            },
+            {
+              "id": "stage_0_block_0_drop_path2",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_mlp" ],
+              "setResultTo": "stage_0_block_0_output"
             }
-          ],
-          "endOperations": []
+          ]
         }
       ],
       "postThirdOperations": [
-
+        {
+          "id": "patch_merging_1",
+          "type": "PatchMergingOperation",
+          "inputs": [ "stage_0_output" ],
+          "description": "Downsample for next stage"
+        },
+        {
+          "id": "patch_merging_1_norm",
+          "type": "LayerNormalizationOperation",
+          "inputs": [ "patch_merging_1" ]
+        },
+        {
+          "id": "patch_merging_1_proj",
+          "type": "MatrixMultiplyOperation",
+          "inputs": [ "patch_merging_1_norm", "merge_1_proj_weight" ],
+          "gradientResultTo": [ null, "d_merge_1_proj_weight" ],
+          "setResultTo": "stage_1_input"
+        }
       ],
       "fourthLayers": [
         {
-          "startOperations": [],
-          "firstLayers": [
+          "operations": [
             {
-              "operations": []
-            }
-          ],
-          "middleOperations": [],
-          "secondLayers": [
+              "id": "stage_0_block_0_norm1",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_input" ]
+            },
             {
-              "operations": []
+              "id": "stage_0_block_0_cyclic_shift",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_norm1" ],
+              "description": "Apply cyclic shift for SW-MSA"
+            },
+            {
+              "id": "stage_0_block_0_window_partition",
+              "type": "WindowPartitionOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift" ]
+            },
+            {
+              "id": "stage_0_block_0_qkv",
+              "type": "MatrixMultiplyOperation",
+              "inputs": [ "stage_0_block_0_window_partition", "stage_0_block_0_qkv_weight" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_qkv_weight" ]
+            },
+            {
+              "id": "stage_0_block_0_attention",
+              "type": "WindowAttentionOperation",
+              "inputs": [ "stage_0_block_0_qkv", "stage_0_block_0_relative_position_bias_table" ],
+              "gradientResultTo": [ null, "d_stage_0_block_0_relative_position_bias_table" ]
+            },
+            {
+              "id": "stage_0_block_0_window_reverse",
+              "type": "WindowReverseOperation",
+              "inputs": [ "stage_0_block_0_attention" ]
+            },
+            {
+              "id": "stage_0_block_0_cyclic_shift_reverse",
+              "type": "CyclicShiftOperation",
+              "inputs": [ "stage_0_block_0_window_reverse" ],
+              "description": "Reverse cyclic shift"
+            },
+            {
+              "id": "stage_0_block_0_drop_path1",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_cyclic_shift_reverse" ],
+              "setResultTo": "stage_0_block_0_attention_output"
+            },
+            {
+              "id": "stage_0_block_0_norm2",
+              "type": "LayerNormalizationOperation",
+              "inputs": [ "stage_0_block_0_attention_output" ]
+            },
+            {
+              "id": "stage_0_block_0_mlp",
+              "type": "MLPOperation",
+              "inputs": [
+                "stage_0_block_0_norm2",
+                "stage_0_block_0_mlp_fc1_weight",
+                "stage_0_block_0_mlp_fc1_bias",
+                "stage_0_block_0_mlp_fc2_weight",
+                "stage_0_block_0_mlp_fc2_bias"
+              ],
+              "gradientResultTo": [
+                null,
+                "d_stage_0_block_0_mlp_fc1_weight",
+                "d_stage_0_block_0_mlp_fc1_bias",
+                "d_stage_0_block_0_mlp_fc2_weight",
+                "d_stage_0_block_0_mlp_fc2_bias"
+              ]
+            },
+            {
+              "id": "stage_0_block_0_drop_path2",
+              "type": "DropPathOperation",
+              "inputs": [ "stage_0_block_0_mlp" ],
+              "setResultTo": "stage_0_block_0_output"
             }
-          ],
-          "endOperations": []
+          ]
         }
       ],
       "endOperations": [
-
+        {
+          "id": "final_norm",
+          "type": "LayerNormalizationOperation",
+          "inputs": [ "stage_3_output" ]
+        },
+        {
+          "id": "global_pool",
+          "type": "AdaptiveAveragePoolOperation",
+          "inputs": [ "final_norm" ]
+        },
+        {
+          "id": "classification_head",
+          "type": "ClassificationHeadOperation",
+          "inputs": [
+            "global_pool",
+            "classifier_weight",
+            "classifier_bias"
+          ],
+          "gradientResultTo": [
+            null,
+            "d_classifier_weight",
+            "d_classifier_bias"
+          ],
+          "setResultTo": "logits"
+        }
       ]
     }
   ]
