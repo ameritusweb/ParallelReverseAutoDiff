@@ -56,6 +56,8 @@
             this.classificationLayer = BuildClassificationLayer();
         }
 
+        public int[] StageDepths => this.stageDepths;
+
         private IModelLayer BuildPatchEmbeddingLayer()
         {
             var builder = new ModelLayerBuilder(this.network)

@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Linq;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -34,31 +35,39 @@ namespace ParallelReverseAutoDiff.RMAD
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var jo = JObject.Load(reader);
-            string type = jo["Type"] == null ? string.Empty : jo["Type"]!.ToString();
+            var typeProp = jo.Properties()
+                 .FirstOrDefault(p => string.Equals(p.Name, "Type", StringComparison.OrdinalIgnoreCase));
+            string type = typeProp?.Value?.ToString() ?? string.Empty;
 
             object retVal = null!;
 
-            switch (type)
+            switch (type.ToLowerInvariant())
             {
-                case "Layer":
+                default:
+                case "layer":
                     {
-                        retVal = jo.ToObject<Layer>(serializer) !;
+                        var obj = new Layer();
+                        serializer.Populate(jo.CreateReader(), obj);
+                        retVal = obj;
+                        break;
                     }
 
-                    break;
-                case "NestedLayersTimeStep":
+                case "nested":
+                case "nestedlayerstimestep":
                     {
-                        retVal = jo.ToObject<NestedLayersTimeStep>(serializer) !;
+                        var obj = new NestedLayersTimeStep();
+                        serializer.Populate(jo.CreateReader(), obj);
+                        retVal = obj;
+                        break;
                     }
 
-                    break;
-                case "TimeStep":
+                case "timestep":
                     {
-                        retVal = jo.ToObject<TimeStep>(serializer) !;
+                        var obj = new TimeStep();
+                        serializer.Populate(jo.CreateReader(), obj);
+                        retVal = obj;
+                        break;
                     }
-
-                    break;
-                default: throw new JsonSerializationException("Unknown ILayer type: " + type);
             }
 
             if (retVal == null)

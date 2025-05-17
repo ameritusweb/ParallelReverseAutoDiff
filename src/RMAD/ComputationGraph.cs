@@ -655,10 +655,13 @@ namespace ParallelReverseAutoDiff.RMAD
         /// </summary>
         /// <param name="architecture">The architecture.</param>
         /// <param name="numTimeSteps">The number of time steps.</param>
-        /// <param name="numLayers">The number of layers.</param>
+        /// <param name="numLayers1">The number of layers for stage one.</param>
+        /// <param name="numLayers2">The number of layers for stage two.</param>
+        /// <param name="numLayers3">The number of layers for stage three.</param>
+        /// <param name="numLayers4">The number of layers for stage four.</param>
         /// <param name="numNestedLayers">The number of nested layers.</param>
         /// <returns>The computation graph.</returns>
-        public ComputationGraph ConstructFromArchitecture(FourLayersJsonArchitecture architecture, int numTimeSteps, int numLayers, int numNestedLayers)
+        public ComputationGraph ConstructFromArchitecture(FourLayersJsonArchitecture architecture, int numTimeSteps, int numLayers1, int numLayers2, int numLayers3, int numLayers4, int numNestedLayers)
         {
             var layerInfo = LayerInfo.Empty;
             for (int t = 0; t < numTimeSteps; t++)
@@ -674,7 +677,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                     }
 
-                    for (int l = 0; l < numLayers; l++)
+                    for (int l = 0; l < numLayers1; l++)
                     {
                         layerInfo.Layer = l;
                         foreach (var layer in timeStep.FirstLayers)
@@ -703,7 +706,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                     }
 
-                    for (int l = 0; l < numLayers; l++)
+                    for (int l = 0; l < numLayers2; l++)
                     {
                         layerInfo.Layer = l;
                         foreach (var layer in timeStep.SecondLayers)
@@ -732,7 +735,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                     }
 
-                    for (int l = 0; l < numLayers; l++)
+                    for (int l = 0; l < numLayers3; l++)
                     {
                         layerInfo.Layer = l;
                         foreach (var layer in timeStep.ThirdLayers)
@@ -761,7 +764,7 @@ namespace ParallelReverseAutoDiff.RMAD
                         }
                     }
 
-                    for (int l = 0; l < numLayers; l++)
+                    for (int l = 0; l < numLayers4; l++)
                     {
                         layerInfo.Layer = l;
                         foreach (var layer in timeStep.FourthLayers)

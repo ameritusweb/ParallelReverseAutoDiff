@@ -6,9 +6,12 @@
 
 namespace ParallelReverseAutoDiff.RMAD
 {
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Describes a regular or nested layer.
     /// </summary>
+    [JsonConverter(typeof(ILayerConverter))]
     public interface ILayer
     {
     }

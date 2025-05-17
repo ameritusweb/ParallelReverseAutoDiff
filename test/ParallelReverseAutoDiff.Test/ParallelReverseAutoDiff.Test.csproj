@@ -21,6 +21,7 @@
     <None Remove="GraphAttentionPaths\minibatch2.json" />
     <None Remove="GraphAttentionPaths\Readout\Architecture\Readout.json" />
     <None Remove="GraphAttentionPaths\Transformer\Architecture\Transformer.json" />
+    <None Remove="Swin\swin-transformer.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +53,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="GraphAttentionPaths\Transformer\Architecture\Transformer.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Swin\swin-transformer.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

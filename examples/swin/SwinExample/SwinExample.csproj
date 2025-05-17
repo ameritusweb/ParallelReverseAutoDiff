@@ -11,4 +11,8 @@
     <PackageReference Include="ParallelReverseAutoDiff" Version="1.2.22.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
 </Project>

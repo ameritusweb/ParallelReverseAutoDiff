@@ -6,7 +6,6 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents a time step with four layers for an operation graph.
@@ -21,7 +20,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the first layers for the time step.
         /// </summary>
-        [JsonConverter(typeof(ILayerConverter))]
         public List<ILayer> FirstLayers { get; set; }
 
         /// <summary>
@@ -32,7 +30,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the second layers for the time step.
         /// </summary>
-        [JsonConverter(typeof(ILayerConverter))]
         public List<ILayer> SecondLayers { get; set; }
 
         /// <summary>
@@ -43,7 +40,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the third layers for the time step.
         /// </summary>
-        [JsonConverter(typeof(ILayerConverter))]
         public List<ILayer> ThirdLayers { get; set; }
 
         /// <summary>
@@ -54,7 +50,6 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <summary>
         /// Gets or sets the fourth layers for the time step.
         /// </summary>
-        [JsonConverter(typeof(ILayerConverter))]
         public List<ILayer> FourthLayers { get; set; }
 
         /// <summary>
