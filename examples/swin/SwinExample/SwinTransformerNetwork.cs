@@ -1,4 +1,5 @@
-﻿using ParallelReverseAutoDiff.RMAD;
+﻿using ParallelReverseAutoDiff.GravNetExample.Common;
+using ParallelReverseAutoDiff.RMAD;
 
 namespace SwinExample
 {
@@ -74,7 +75,7 @@ namespace SwinExample
 
         private void InitializeState()
         {
-            var output = new Matrix(CommonMatrixUtils.InitializeZeroMatrix(this.model.NumClasses, 1));
+            var output = CommonMatrixUtils.InitializeZeroMatrix(this.model.NumClasses, 1);
 
             if (this.Output == null)
             {

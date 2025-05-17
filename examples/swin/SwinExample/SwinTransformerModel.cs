@@ -58,6 +58,16 @@
 
         public int[] StageDepths => this.stageDepths;
 
+        public int NumClasses => this.numClasses;
+
+        public IModelLayer PatchEmbeddingLayer => this.patchEmbeddingLayer;
+
+        public IModelLayer ClassificationLayer => this.classificationLayer;
+
+        public IModelLayer[] StageTransformerLayers => this.stageTransformerLayers;
+
+        public IModelLayer[] PatchMergingLayers => this.patchMergingLayers;
+
         private IModelLayer BuildPatchEmbeddingLayer()
         {
             var builder = new ModelLayerBuilder(this.network)
