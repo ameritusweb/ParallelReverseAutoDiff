@@ -131,10 +131,10 @@ namespace SwinExample
 
             // Read and construct from architecture JSON
             string json = File.ReadAllText("Architecture/swin-transformer.json");
-            var jsonArchitecture = JsonConvert.DeserializeObject<JsonArchitecture>(json)
+            var jsonArchitecture = JsonConvert.DeserializeObject<FourLayersJsonArchitecture>(json)
                 ?? throw new InvalidOperationException("Failed to deserialize architecture JSON");
 
-            this.ConstructFromArchitecture(jsonArchitecture);
+            this.ConstructFromArchitecture(jsonArchitecture, 1, 2, 2, 6, 2, 0);
 
             // Setup backward dependency counts
             IOperationBase? backwardStartOperation = this["logits_0_0"];
