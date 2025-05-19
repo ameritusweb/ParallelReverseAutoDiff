@@ -120,6 +120,343 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
         }
 
         /// <summary>
+        /// Applies noisy scaling and rotation to a vector field using the reparameterization trick.
+        /// </summary>
+        /// <param name="pradOp">The PradOp instance containing the vector field (magnitudes left, angles right).</param>
+        /// <param name="scaleFactors">Tensor of scale factors for magnitudes.</param>
+        /// <param name="rotationFactors">Tensor of rotation factors [0,1] where 1 means 180° clockwise rotation.</param>
+        /// <param name="scaleMean">Mean tensor for scale noise.</param>
+        /// <param name="scaleLogVar">Log variance tensor for scale noise.</param>
+        /// <param name="rotationMean">Mean tensor for rotation noise.</param>
+        /// <param name="rotationLogVar">Log variance tensor for rotation noise.</param>
+        /// <returns>A tensor with noisy scaled magnitudes and rotated angles.</returns>
+        public static PradResult NoisyScaleAndRotate(
+            this PradOp pradOp,
+            PradOp scaleFactors,
+            PradOp rotationFactors,
+            PradOp scaleMean,
+            PradOp scaleLogVar,
+            PradOp rotationMean,
+            PradOp rotationLogVar)
+        {
+            // Split input into magnitude and angle components
+            var shape = pradOp.CurrentShape;
+            var halfCols = shape[^1] / 2;
+
+            var pradOpBranch = pradOp.Branch();
+            var magnitudes = pradOp.Indexer(":", $":{halfCols}");
+            var angles = pradOpBranch.Indexer(":", $"{halfCols}:");
+
+            // Generate random noise using reparameterization trick for scaling
+            var scaleEpsilon = Tensor.RandomNormal(scaleMean.CurrentShape);
+            var scaleEpsilonOp = new PradOp(scaleEpsilon);
+
+            var scaleStdDev = scaleLogVar.Mul(new Tensor(scaleLogVar.CurrentShape, PradTools.Half))
+                                               .PradOp.Exp();
+
+            var scaleNoise = scaleStdDev.PradOp.Mul(scaleEpsilonOp.CurrentTensor)
+                                              .PradOp.Add(scaleMean.CurrentTensor);
+
+            // Generate random noise using reparameterization trick for rotation
+            var rotationEpsilon = Tensor.RandomNormal(rotationMean.CurrentShape);
+            var rotationEpsilonOp = new PradOp(rotationEpsilon);
+
+            var rotationStdDev = rotationLogVar.Mul(new Tensor(rotationLogVar.CurrentShape, PradTools.Half))
+                                                     .PradOp.Exp();
+
+            var rotationNoise = rotationStdDev.PradOp.Mul(rotationEpsilonOp.CurrentTensor)
+                                                    .PradOp.Add(rotationMean.CurrentTensor);
+
+            // Apply noisy scaling to magnitudes
+            var noisyScaleFactors = scaleFactors.Add(scaleNoise.Result);
+            var scaledMagnitudes = magnitudes.PradOp.Mul(noisyScaleFactors.Result);
+
+            // Apply noisy rotation to angles
+            // Convert rotation factor [0,1] to radians [0,π]
+            var pi = new Tensor(rotationFactors.CurrentShape, PradMath.PI);
+            var rotationRadians = rotationFactors.Mul(pi);
+
+            // Add noise to rotation
+            var noisyRotationFactors = rotationRadians.PradOp.Add(rotationNoise.Result);
+
+            // Apply rotation
+            var rotatedAngles = angles.PradOp.Add(noisyRotationFactors.Result);
+
+            // Ensure angles stay within [-π,π]
+            var twoPi = new Tensor(rotatedAngles.PradOp.CurrentShape, PradTools.Two * PradMath.PI);
+            var normalizedAngles = rotatedAngles.PradOp.Modulus(twoPi);
+
+            // Adjust angles to be in [-π,π] instead of [0,2π]
+            var piTensor = new Tensor(normalizedAngles.PradOp.CurrentShape, PradMath.PI);
+            var condition = normalizedAngles.PradOp.Sub(piTensor)
+                                                 .PradOp.LessThan(piTensor);
+
+            var adjusted = normalizedAngles.PradOp.Sub(twoPi);
+            var finalAngles = normalizedAngles.PradOp.Where(condition.Result, adjusted.Result);
+
+            // Concatenate scaled magnitudes and rotated angles
+            return scaledMagnitudes.PradOp.Concat(new[] { finalAngles.Result }, axis: -1);
+        }
+
+        /// <summary>
+        /// Computes the alignment field for a vector field represented in magnitude-angle format.
+        /// The alignment score measures how consistently vectors point in the same direction within local neighborhoods.
+        /// </summary>
+        /// <param name="pradOp">The PradOp instance containing the vector field (magnitudes left, angles right).</param>
+        /// <param name="windowSize">Size of the window for local averaging (default: 5).</param>
+        /// <param name="sigma">Standard deviation for Gaussian kernel (default: 1.0).</param>
+        /// <returns>A tensor containing the alignment field where values close to 1.0 indicate high alignment.
+        /// and values close to 0.0 indicate scattered directions.</returns>
+        public static PradResult ComputeAlignmentField(this PradOp pradOp, int windowSize = 5, double sigma = 1.0)
+        {
+            // Step 1: Extract angle field
+            var shape = pradOp.CurrentShape;
+            var halfCols = shape[^1] / 2;
+            var angles = pradOp.Indexer(":", $"{halfCols}:");
+
+            // Step 2: Convert to unit vectors
+            var anglesBranch = angles.Branch();
+            var ux = angles.PradOp.Cos();  // x-component of unit vector
+            var uy = anglesBranch.Sin();   // y-component of unit vector
+
+            // Create Gaussian kernel for local averaging
+            var gaussian = CreateGaussianKernel(windowSize, sigma);
+            var gaussianTensor = new Tensor(new[] { windowSize, windowSize }, gaussian);
+            var kernelOp = new PradOp(gaussianTensor);
+
+            // Step 3: Compute local averages of unit vectors
+            var uxBranch = ux.Branch();
+            var uyBranch = uy.Branch();
+
+            // Average x-components
+            var uxAvg = ux.PradOp.ExtractPatches(
+                    new[] { windowSize, windowSize },
+                    new[] { 1, 1 },
+                    "SAME")
+                .PradOp.Mul(kernelOp.CurrentTensor)
+                .PradOp.Sum(new[] { -1 });
+
+            // Average y-components
+            var uyAvg = uy.PradOp.ExtractPatches(
+                    new[] { windowSize, windowSize },
+                    new[] { 1, 1 },
+                    "SAME")
+                .PradOp.Mul(kernelOp.CurrentTensor)
+                .PradOp.Sum(new[] { -1 });
+
+            // Step 4: Compute alignment score
+            // A(x,y) = sqrt(ux_avg^2 + uy_avg^2)
+            var uxAvgSquared = uxAvg.PradOp.Square();
+            var uyAvgSquared = uyAvg.PradOp.Square();
+
+            var sumSquares = uxAvgSquared.PradOp.Add(uyAvgSquared.Result);
+            var alignment = sumSquares.PradOp.SquareRoot();
+
+            // Optional: Apply normalization to ensure output is in [0,1]
+            // This step might not be necessary as the norm of averaged unit vectors.
+            // should already be <= 1, but it helps handle numerical precision issues
+            var epsilon = new Tensor(alignment.PradOp.CurrentShape, 1e-10f);
+            var alignmentNormalized = alignment.PradOp.Clip(0.0, 1.0);
+
+            return alignmentNormalized;
+        }
+
+        /// <summary>
+        /// Computes the curvature field for a vector field represented in magnitude-angle format.
+        /// The curvature is calculated as the Frobenius norm of the Jacobian of the unit vector field.
+        /// </summary>
+        /// <param name="pradOp">The PradOp instance containing the vector field (magnitudes left, angles right).</param>
+        /// <returns>A tensor containing the curvature field where higher values indicate stronger directional changes.</returns>
+        public static PradResult ComputeCurvatureField(this PradOp pradOp)
+        {
+            // Step 1: Split into magnitude and angle components and convert to unit vectors
+            var shape = pradOp.CurrentShape;
+            var halfCols = shape[^1] / 2;
+
+            var angles = pradOp.Indexer(":", $"{halfCols}:");
+
+            // Convert to unit vectors (cos θ, sin θ)
+            var anglesBranch = angles.Branch();
+            var uField = angles.PradOp.Cos();  // u = cos(θ)
+            var vField = anglesBranch.Sin();   // v = sin(θ)
+
+            // Step 2: Create Sobel kernels for gradient computation
+            var sobelX = new Tensor(
+                new[] { 3, 3 },
+                new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 });
+            var sobelY = new Tensor(
+                new[] { 3, 3 },
+                new double[] { -1, -2, -1, 0,  0,  0, 1,  2,  1 });
+
+            // Normalize Sobel kernels
+            var normFactor = new Tensor(sobelX.Shape, 1.0f / 8.0f);
+            var sobelXOp = new PradOp(sobelX.ElementwiseMultiply(normFactor));
+            var sobelYOp = new PradOp(sobelY.ElementwiseMultiply(normFactor));
+
+            // Compute partial derivatives using convolution with Sobel kernels
+            var uFieldBranch = uField.BranchStack(2);
+            var vFieldBranch = vField.BranchStack(2);
+
+            // ∂u/∂x
+            var dudx = uField.PradOp.ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
+                             .PradOp.Mul(sobelXOp.CurrentTensor)
+                             .PradOp.Sum(new[] { -1 });
+
+            // ∂u/∂y
+            var dudy = uFieldBranch.Pop().ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
+                                  .PradOp.Mul(sobelYOp.CurrentTensor)
+                                  .PradOp.Sum(new[] { -1 });
+
+            // ∂v/∂x
+            var dvdx = vField.PradOp.ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
+                             .PradOp.Mul(sobelXOp.CurrentTensor)
+                             .PradOp.Sum(new[] { -1 });
+
+            // ∂v/∂y
+            var dvdy = vFieldBranch.Pop().ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
+                                  .PradOp.Mul(sobelYOp.CurrentTensor)
+                                  .PradOp.Sum(new[] { -1 });
+
+            // Step 3: Compute Frobenius norm of the Jacobian
+            // κ = sqrt((∂u/∂x)² + (∂u/∂y)² + (∂v/∂x)² + (∂v/∂y)²)
+
+            // Square all components
+            var dudxBranch = dudx.Branch();
+            var dudyBranch = dudy.Branch();
+            var dvdxBranch = dvdx.Branch();
+
+            var dudxSquared = dudx.PradOp.Square();
+            var dudySquared = dudy.PradOp.Square();
+            var dvdxSquared = dvdx.PradOp.Square();
+            var dvdySquared = dvdy.PradOp.Square();
+
+            // Sum squared components
+            var sumSquares = dudxSquared.PradOp.Add(dudySquared.Result)
+                                       .PradOp.Add(dvdxSquared.Result)
+                                       .PradOp.Add(dvdySquared.Result);
+
+            // Take square root to get curvature
+            var curvature = sumSquares.PradOp.SquareRoot();
+
+            // Optional: Apply smoothing to reduce noise
+            var gaussianKernel = CreateGaussianKernel(3, 1.0);
+            var gaussianTensor = new Tensor(new[] { 3, 3 }, gaussianKernel);
+            var kernelOp = new PradOp(gaussianTensor);
+
+            var smoothedCurvature = curvature.PradOp.ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
+                                            .PradOp.Mul(kernelOp.CurrentTensor)
+                                            .PradOp.Sum(new[] { -1 });
+
+            return smoothedCurvature;
+        }
+
+        /// <summary>
+        /// Computes the Structure Tensor Entropy field for a vector field represented in magnitude-angle format.
+        /// The input tensor should have magnitudes in the left half and angles in the right half.
+        /// </summary>
+        /// <param name="pradOp">The PradOp instance containing the vector field.</param>
+        /// <param name="windowSize">Size of the Gaussian window for local averaging (default: 5).</param>
+        /// <param name="sigma">Standard deviation for Gaussian kernel (default: 1.0).</param>
+        /// <returns>A tensor containing the entropy field where higher values indicate more isotropic flow.</returns>
+        public static PradResult ComputeStructureTensorEntropy(this PradOp pradOp, int windowSize = 5, double sigma = 1.0)
+        {
+            // Step 0: Split into magnitude and angle components
+            var shape = pradOp.CurrentShape;
+            var halfCols = shape[^1] / 2;
+
+            var pradOpBranch = pradOp.Branch();
+            var magnitudes = pradOp.Indexer(":", $":{halfCols}");
+            var angles = pradOpBranch.Indexer(":", $"{halfCols}:");
+
+            // Convert to Cartesian coordinates
+            var anglesBranch = angles.Branch();
+            var cosAngles = angles.PradOp.Cos();
+            var sinAngles = anglesBranch.Sin();
+
+            var magnitudesBranch = magnitudes.Branch();
+            var vx = magnitudes.PradOp.Mul(cosAngles.Result);
+            var vy = magnitudesBranch.Mul(sinAngles.Result);
+
+            // Step 1: Compute structure tensor components
+            var vxBranch = vx.Branch();
+            var vyBranch = vy.Branch();
+
+            // Compute vector products
+            var vxx = vx.PradOp.Mul(vxBranch.CurrentTensor);  // vx^2
+            var vyy = vy.PradOp.Mul(vyBranch.CurrentTensor);  // vy^2
+            var vxy = vx.PradOp.Mul(vy.Result);               // vx*vy
+
+            // Create Gaussian kernel for local averaging
+            var gaussian = CreateGaussianKernel(windowSize, sigma);
+            var gaussianTensor = new Tensor(new[] { windowSize, windowSize }, gaussian);
+            var kernelOp = new PradOp(gaussianTensor);
+
+            // Apply local averaging using convolution
+            var vxxSmoothed = vxx.PradOp.ExtractPatches(new[] { windowSize, windowSize }, new[] { 1, 1 }, "SAME")
+                                 .PradOp.Mul(kernelOp.CurrentTensor)
+                                 .PradOp.Sum(new[] { -1 });
+
+            var vyySmoothed = vyy.PradOp.ExtractPatches(new[] { windowSize, windowSize }, new[] { 1, 1 }, "SAME")
+                                 .PradOp.Mul(kernelOp.CurrentTensor)
+                                 .PradOp.Sum(new[] { -1 });
+
+            var vxySmoothed = vxy.PradOp.ExtractPatches(new[] { windowSize, windowSize }, new[] { 1, 1 }, "SAME")
+                                 .PradOp.Mul(kernelOp.CurrentTensor)
+                                 .PradOp.Sum(new[] { -1 });
+
+            // Step 2: Compute eigenvalues
+            // For a 2x2 matrix, eigenvalues can be computed directly
+            var vxxBranch = vxxSmoothed.Branch();
+            var vyyBranch = vyySmoothed.Branch();
+            var vxyBranch = vxySmoothed.Branch();
+
+            // Trace and determinant
+            var trace = vxxSmoothed.PradOp.Add(vyySmoothed.Result);
+            var det = vxxBranch.Mul(vyyBranch.CurrentTensor)
+                              .PradOp.Sub(vxyBranch.Mul(vxySmoothed.Result).Result);
+
+            var traceBranch = trace.Branch();
+            var detBranch = det.Branch();
+
+            // Compute discriminant
+            var discriminant = trace.PradOp.Square()
+                                   .PradOp.Sub(det.PradOp.Mul(new Tensor(det.PradOp.CurrentShape, 4.0f)).Result)
+                                   .PradOp.SquareRoot();
+
+            // Compute eigenvalues
+            var lambda1 = traceBranch.Add(discriminant.Result)
+                                    .PradOp.Mul(new Tensor(trace.PradOp.CurrentShape, 0.5f));
+
+            var lambda2 = trace.PradOp.Sub(discriminant.Result)
+                               .PradOp.Mul(new Tensor(trace.PradOp.CurrentShape, 0.5f));
+
+            // Step 3: Normalize eigenvalues
+            var lambda1Branch = lambda1.Branch();
+            var lambda2Branch = lambda2.Branch();
+
+            var sumEigenvalues = lambda1.PradOp.Add(lambda2.Result);
+            var epsilon = new Tensor(sumEigenvalues.PradOp.CurrentShape, 1e-10f);
+            var denominator = sumEigenvalues.PradOp.Add(epsilon);
+
+            var p1 = lambda1Branch.Div(denominator.Result);
+            var p2 = lambda2Branch.Div(denominator.Result);
+
+            // Step 4: Compute Shannon entropy
+            var p1Branch = p1.Branch();
+            var p2Branch = p2.Branch();
+
+            // Add small epsilon to avoid log(0)
+            var p1Safe = p1.PradOp.Add(epsilon);
+            var p2Safe = p2.PradOp.Add(epsilon);
+
+            var entropy = p1Branch.Mul(p1Safe.PradOp.Log().Result)
+                                 .PradOp.Add(p2Branch.Mul(p2Safe.PradOp.Log().Result).Result)
+                                 .PradOp.Mul(new Tensor(p1.PradOp.CurrentShape, -1.0f));
+
+            return entropy;
+        }
+
+        /// <summary>
         /// Applies Gaussian noise to tensor values.
         /// </summary>
         /// <param name="pradOp">PradOp.</param>
@@ -363,6 +700,36 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             // Scale and shift
             var scaled = normalized.Then(PradOp.MulOp, gamma.CurrentTensor);
             return scaled.Then(PradOp.AddOp, beta.CurrentTensor);
+        }
+
+        /// <summary>
+        /// Creates a 2D Gaussian kernel for local averaging.
+        /// </summary>
+        private static double[] CreateGaussianKernel(int size, double sigma)
+        {
+            var kernel = new double[size * size];
+            var center = size / 2;
+            var sum = 0.0d;
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    var dx = x - center;
+                    var dy = y - center;
+                    var g = PradMath.Exp(-((dx * dx) + (dy * dy)) / (2 * sigma * sigma));
+                    kernel[(y * size) + x] = g;
+                    sum += g;
+                }
+            }
+
+            // Normalize kernel
+            for (int i = 0; i < kernel.Length; i++)
+            {
+                kernel[i] /= sum;
+            }
+
+            return kernel;
         }
     }
 }
