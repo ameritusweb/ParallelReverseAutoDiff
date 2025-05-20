@@ -1602,6 +1602,90 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the element-wise multiplication of two twnsors with broadcasting.
+        /// </summary>
+        /// <param name="other">The other tensor.</param>
+        /// <returns>The resultant tensor.</returns>
+        public (Tensor result, BroadcastMapping mapping)? ElementwiseMultiplyBroadcasting(Tensor other)
+        {
+            // Fast path for identical shapes
+            if (this.Shape.SequenceEqual(other.Shape))
+            {
+                var resultT = new Tensor(this.Shape);
+                Vml.Mul(this.Data.Length, this.Data, other.Data, resultT.Data);
+
+                // For identical shapes, indices map directly
+                var directMapping = new BroadcastMapping(
+                    Enumerable.Range(0, this.Data.Length).ToArray(),
+                    Enumerable.Range(0, other.Data.Length).ToArray(),
+                    this.Shape,
+                    Enumerable.Range(0, this.Data.Length).ToArray(),
+                    Enumerable.Range(0, other.Data.Length).ToArray());
+
+                return (resultT, directMapping);
+            }
+
+            // Calculate broadcast shape and indices
+            int[] resultShape = this.GetBroadcastShape(this.Shape, other.Shape);
+            int totalElements = resultShape.Aggregate(1, (x, y) => x * y);
+
+            var sourceIndicesA = new int[totalElements];
+            var sourceIndicesB = new int[totalElements];
+            var reductionIndicesA = new int[this.Data.Length];
+            var reductionIndicesB = new int[other.Data.Length];
+
+            // Compute all index mappings once
+            this.ComputeBroadcastIndices(
+                this.Shape,
+                other.Shape,
+                resultShape,
+                sourceIndicesA,
+                sourceIndicesB,
+                reductionIndicesA,
+                reductionIndicesB);
+
+            // Create result tensor
+            var result = new Tensor(resultShape);
+
+            // Perform multiplication using pre-computed indices
+            int vectorSize = PradTools.VectorCount();
+            int i = 0;
+
+            // Temporary arrays for SIMD operations
+            var tempA = PradTools.AllocateArray(vectorSize);
+            var tempB = PradTools.AllocateArray(vectorSize);
+
+            for (; i <= totalElements - vectorSize; i += vectorSize)
+            {
+                // Gather elements into temporary arrays
+                for (int j = 0; j < vectorSize; j++)
+                {
+                    tempA[j] = this.Data[sourceIndicesA[i + j]];
+                    tempB[j] = other.Data[sourceIndicesB[i + j]];
+                }
+
+                var aVec = PradTools.AllocateVector(tempA);
+                var bVec = PradTools.AllocateVector(tempB);
+                (aVec * bVec).CopyTo(result.Data, i);
+            }
+
+            // Handle remaining elements
+            for (; i < totalElements; i++)
+            {
+                result.Data[i] = this.Data[sourceIndicesA[i]] * other.Data[sourceIndicesB[i]];
+            }
+
+            var mapping = new BroadcastMapping(
+                sourceIndicesA,
+                sourceIndicesB,
+                resultShape,
+                reductionIndicesA,
+                reductionIndicesB);
+
+            return (result, mapping);
+        }
+
+        /// <summary>
         /// Computes the element-wise division of two tensors using MKL.NET.
         /// </summary>
         /// <param name="other">The other tensor.</param>
@@ -3690,6 +3774,181 @@ namespace ParallelReverseAutoDiff.PRAD
                     throw new ArgumentException("Shapes are not compatible for the operation.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Computes broadcasting indices for both forward and backward passes.
+        /// </summary>
+        private void ComputeBroadcastIndices(
+            int[] shapeA,
+            int[] shapeB,
+            int[] resultShape,
+            int[] sourceIndicesA,
+            int[] sourceIndicesB,
+            int[] reductionIndicesA,
+            int[] reductionIndicesB)
+        {
+            // Calculate strides for each shape
+            int[] stridesA = CalculateStrides(shapeA);
+            int[] stridesB = CalculateStrides(shapeB);
+            int[] resultStrides = CalculateStrides(resultShape);
+
+            // Calculate padding for shape alignment
+            int paddingA = resultShape.Length - shapeA.Length;
+            int paddingB = resultShape.Length - shapeB.Length;
+
+            // Compute forward indices
+            for (int i = 0; i < sourceIndicesA.Length; i++)
+            {
+                // Convert flat index to coordinates in result shape
+                int[] coords = new int[resultShape.Length];
+                int remaining = i;
+                for (int dim = resultShape.Length - 1; dim >= 0; dim--)
+                {
+                    coords[dim] = remaining % resultShape[dim];
+                    remaining /= resultShape[dim];
+                }
+
+                // Compute source index for tensor A
+                int indexA = 0;
+                for (int dim = 0; dim < shapeA.Length; dim++)
+                {
+                    int resultDim = dim + paddingA;
+                    int coord = coords[resultDim] % shapeA[dim];
+                    indexA += coord * stridesA[dim];
+                }
+
+                // Compute source index for tensor B
+                int indexB = 0;
+                for (int dim = 0; dim < shapeB.Length; dim++)
+                {
+                    int resultDim = dim + paddingB;
+                    int coord = coords[resultDim] % shapeB[dim];
+                    indexB += coord * stridesB[dim];
+                }
+
+                sourceIndicesA[i] = indexA;
+                sourceIndicesB[i] = indexB;
+            }
+
+            // Compute reduction indices for backward pass
+            for (int i = 0; i < reductionIndicesA.Length; i++)
+            {
+                // Convert A's flat index to coordinates
+                int[] coordsA = new int[shapeA.Length];
+                int remainingA = i;
+                for (int dim = shapeA.Length - 1; dim >= 0; dim--)
+                {
+                    coordsA[dim] = remainingA % shapeA[dim];
+                    remainingA /= shapeA[dim];
+                }
+
+                // Map to result shape coordinates
+                int[] resultCoords = new int[resultShape.Length];
+                for (int dim = 0; dim < shapeA.Length; dim++)
+                {
+                    resultCoords[dim + paddingA] = coordsA[dim];
+                }
+
+                // Compute result index
+                int resultIndex = 0;
+                for (int dim = 0; dim < resultShape.Length; dim++)
+                {
+                    resultIndex += resultCoords[dim] * resultStrides[dim];
+                }
+
+                reductionIndicesA[i] = resultIndex;
+            }
+
+            // Same for tensor B
+            for (int i = 0; i < reductionIndicesB.Length; i++)
+            {
+                int[] coordsB = new int[shapeB.Length];
+                int remainingB = i;
+                for (int dim = shapeB.Length - 1; dim >= 0; dim--)
+                {
+                    coordsB[dim] = remainingB % shapeB[dim];
+                    remainingB /= shapeB[dim];
+                }
+
+                int[] resultCoords = new int[resultShape.Length];
+                for (int dim = 0; dim < shapeB.Length; dim++)
+                {
+                    resultCoords[dim + paddingB] = coordsB[dim];
+                }
+
+                int resultIndex = 0;
+                for (int dim = 0; dim < resultShape.Length; dim++)
+                {
+                    resultIndex += resultCoords[dim] * resultStrides[dim];
+                }
+
+                reductionIndicesB[i] = resultIndex;
+            }
+        }
+
+        /// <summary>
+        /// Pads a shape array with ones on the left to reach the target rank.
+        /// </summary>
+        /// <param name="shape">The original shape array.</param>
+        /// <param name="targetRank">The desired rank.</param>
+        /// <returns>A new array padded with ones to reach the target rank.</returns>
+        private int[] PadShape(int[] shape, int targetRank)
+        {
+            var result = new int[targetRank];
+
+            // Fill with ones
+            for (int i = 0; i < targetRank; i++)
+            {
+                result[i] = 1;
+            }
+
+            // Copy original shape to rightmost positions
+            int offset = targetRank - shape.Length;
+            Array.Copy(shape, 0, result, offset, shape.Length);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Determines the shape that results from broadcasting two shapes together.
+        /// </summary>
+        /// <param name="shapeA">The first shape.</param>
+        /// <param name="shapeB">The second shape.</param>
+        /// <returns>The resulting broadcast shape.</returns>
+        /// <exception cref="ArgumentException">Thrown when shapes cannot be broadcast together.</exception>
+        private int[] GetBroadcastShape(int[] shapeA, int[] shapeB)
+        {
+            int maxRank = Math.Max(shapeA.Length, shapeB.Length);
+            var result = new int[maxRank];
+
+            // Pad shapes with ones on the left to match maximum rank
+            var paddedA = this.PadShape(shapeA, maxRank);
+            var paddedB = this.PadShape(shapeB, maxRank);
+
+            // Determine the broadcast shape for each dimension
+            for (int i = 0; i < maxRank; i++)
+            {
+                if (paddedA[i] == paddedB[i])
+                {
+                    result[i] = paddedA[i];
+                }
+                else if (paddedA[i] == 1)
+                {
+                    result[i] = paddedB[i];
+                }
+                else if (paddedB[i] == 1)
+                {
+                    result[i] = paddedA[i];
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"Incompatible shapes for broadcasting: dimension {i} has sizes {paddedA[i]} and {paddedB[i]}");
+                }
+            }
+
+            return result;
         }
     }
 }

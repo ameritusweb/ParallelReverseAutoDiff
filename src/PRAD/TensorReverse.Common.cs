@@ -859,6 +859,159 @@ namespace ParallelReverseAutoDiff.PRAD
         }
 
         /// <summary>
+        /// Computes the reverse gradient for element-wise multiplication.
+        /// </summary>
+        /// <param name="upstreamGradient">The gradient flowing from the upstream layer.</param>
+        /// <param name="mapping">The broadcast mapping.</param>
+        /// <returns>The gradient with respect to the input tensors.</returns>
+        public Tensor[] ElementwiseMultiplyBroadcastingReverse(Tensor upstreamGradient, BroadcastMapping mapping)
+        {
+            if (this.InitialTensors.Length != 2)
+            {
+                throw new InvalidOperationException("ElementwiseMultiplyReverse expects exactly two initial tensors.");
+            }
+
+            var originalA = this.InitialTensors[0];
+            var originalB = this.InitialTensors[1];
+
+            var gradA = new Tensor(originalA.Shape);
+            var gradB = new Tensor(originalB.Shape);
+
+            int vectorSize = PradTools.VectorCount();
+            int totalElements = upstreamGradient.Data.Length;
+
+            // Fast path for identical shapes
+            if (originalA.Shape.SequenceEqual(originalB.Shape) &&
+                originalA.Shape.SequenceEqual(upstreamGradient.Shape))
+            {
+                for (int i = 0; i <= totalElements - vectorSize; i += vectorSize)
+                {
+                    var upstreamVec = PradTools.AllocateVector(upstreamGradient.Data, i);
+                    var aVec = PradTools.AllocateVector(originalA.Data, i);
+                    var bVec = PradTools.AllocateVector(originalB.Data, i);
+
+                    (upstreamVec * bVec).CopyTo(gradA.Data, i);
+                    (upstreamVec * aVec).CopyTo(gradB.Data, i);
+                }
+
+                // Handle remaining elements
+                for (int i = totalElements - (totalElements % vectorSize); i < totalElements; i++)
+                {
+                    gradA.Data[i] = upstreamGradient.Data[i] * originalB.Data[i];
+                    gradB.Data[i] = upstreamGradient.Data[i] * originalA.Data[i];
+                }
+
+                return new Tensor[] { gradA, gradB };
+            }
+
+            // Process each output position separately to avoid race conditions
+            Parallel.For(0, originalA.Data.Length, outputIdx =>
+            {
+                // Find indices that contribute to this output position
+                var indicesA = new List<int>();
+                var indicesB = new List<int>();
+
+                // Gather contributing indices
+                for (int k = 0; k < mapping.SourceIndicesA.Length; k++)
+                {
+                    if (mapping.SourceIndicesA[k] == outputIdx)
+                    {
+                        indicesA.Add(k);
+                    }
+
+                    if (mapping.SourceIndicesB[k] == outputIdx)
+                    {
+                        indicesB.Add(k);
+                    }
+                }
+
+                // Process gradA contributions using SIMD
+                if (indicesA.Count > 0)
+                {
+                    var sumA = PradTools.VectorZero();
+                    int vectorCount = indicesA.Count / vectorSize;
+
+                    // Process vectors
+                    for (int i = 0; i < vectorCount * vectorSize; i += vectorSize)
+                    {
+                        var upstreamValues = PradTools.AllocateArray(vectorSize);
+                        var bValues = PradTools.AllocateArray(vectorSize);
+
+                        for (int j = 0; j < vectorSize; j++)
+                        {
+                            int idx = indicesA[i + j];
+                            upstreamValues[j] = upstreamGradient.Data[idx];
+                            bValues[j] = originalB.Data[mapping.SourceIndicesB[idx]];
+                        }
+
+                        var upstreamVec = PradTools.AllocateVector(upstreamValues);
+                        var bVec = PradTools.AllocateVector(bValues);
+                        sumA += upstreamVec * bVec;
+                    }
+
+                    // Sum vector elements
+                    var scalarSumA = PradTools.Zero;
+                    for (int i = 0; i < vectorSize; i++)
+                    {
+                        scalarSumA += sumA[i];
+                    }
+
+                    // Handle remaining elements
+                    for (int i = vectorCount * vectorSize; i < indicesA.Count; i++)
+                    {
+                        int idx = indicesA[i];
+                        scalarSumA += upstreamGradient.Data[idx] * originalB.Data[mapping.SourceIndicesB[idx]];
+                    }
+
+                    gradA.Data[outputIdx] = scalarSumA;
+                }
+
+                // Process gradB contributions using SIMD
+                if (indicesB.Count > 0)
+                {
+                    var sumB = PradTools.VectorZero();
+                    int vectorCount = indicesB.Count / vectorSize;
+
+                    // Process vectors
+                    for (int i = 0; i < vectorCount * vectorSize; i += vectorSize)
+                    {
+                        var upstreamValues = PradTools.AllocateArray(vectorSize);
+                        var aValues = PradTools.AllocateArray(vectorSize);
+
+                        for (int j = 0; j < vectorSize; j++)
+                        {
+                            int idx = indicesB[i + j];
+                            upstreamValues[j] = upstreamGradient.Data[idx];
+                            aValues[j] = originalA.Data[mapping.SourceIndicesA[idx]];
+                        }
+
+                        var upstreamVec = PradTools.AllocateVector(upstreamValues);
+                        var aVec = PradTools.AllocateVector(aValues);
+                        sumB += upstreamVec * aVec;
+                    }
+
+                    // Sum vector elements
+                    var scalarSumB = PradTools.Zero;
+                    for (int i = 0; i < vectorSize; i++)
+                    {
+                        scalarSumB += sumB[i];
+                    }
+
+                    // Handle remaining elements
+                    for (int i = vectorCount * vectorSize; i < indicesB.Count; i++)
+                    {
+                        int idx = indicesB[i];
+                        scalarSumB += upstreamGradient.Data[idx] * originalA.Data[mapping.SourceIndicesA[idx]];
+                    }
+
+                    gradB.Data[outputIdx] = scalarSumB;
+                }
+            });
+
+            return new Tensor[] { gradA, gradB };
+        }
+
+        /// <summary>
         /// Computes the reverse gradient for concatenation along any axis, taking into account a custom ordering of tensors.
         /// If the ordering is null, the tensors will be processed in their original order.
         /// </summary>

@@ -182,20 +182,12 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             // Apply rotation
             var rotatedAngles = angles.PradOp.Add(noisyRotationFactors.Result);
 
-            // Ensure angles stay within [-π,π]
+            // Ensure angles stay within [-2π,2π]
             var twoPi = new Tensor(rotatedAngles.PradOp.CurrentShape, PradTools.Two * PradMath.PI);
             var normalizedAngles = rotatedAngles.PradOp.Modulus(twoPi);
 
-            // Adjust angles to be in [-π,π] instead of [0,2π]
-            var piTensor = new Tensor(normalizedAngles.PradOp.CurrentShape, PradMath.PI);
-            var condition = normalizedAngles.PradOp.Sub(piTensor)
-                                                 .PradOp.LessThan(piTensor);
-
-            var adjusted = normalizedAngles.PradOp.Sub(twoPi);
-            var finalAngles = normalizedAngles.PradOp.Where(condition.Result, adjusted.Result);
-
             // Concatenate scaled magnitudes and rotated angles
-            return scaledMagnitudes.PradOp.Concat(new[] { finalAngles.Result }, axis: -1);
+            return scaledMagnitudes.PradOp.Concat(new[] { normalizedAngles.Result }, axis: -1);
         }
 
         /// <summary>
@@ -382,13 +374,13 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var vyBranch = vy.Branch();
 
             // Compute vector products
-            var vxx = vx.PradOp.Mul(vxBranch.CurrentTensor);  // vx^2
+            var vxx = vx.PradOp.Square();  // vx^2
             var vyy = vy.PradOp.Mul(vyBranch.CurrentTensor);  // vy^2
-            var vxy = vx.PradOp.Mul(vy.Result);               // vx*vy
+            var vxy = vxBranch.Mul(vy.Result);               // vx*vy
 
             // Create Gaussian kernel for local averaging
             var gaussian = CreateGaussianKernel(windowSize, sigma);
-            var gaussianTensor = new Tensor(new[] { windowSize, windowSize }, gaussian);
+            var gaussianTensor = new Tensor(new[] { 1, 1, 1, windowSize * windowSize }, gaussian);
             var kernelOp = new PradOp(gaussianTensor);
 
             // Apply local averaging using convolution

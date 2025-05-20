@@ -1166,13 +1166,27 @@ namespace ParallelReverseAutoDiff.PRAD
                 pradTensor.PradOp.LinkedBranches.Add(this);
             }
 
-            var result = this.currentTensor.ElementwiseMultiply(tensor);
+            var broadcastingRequired = !this.currentTensor.Shape.SequenceEqual(tensor.Shape);
+
+            var result = broadcastingRequired ? default : this.currentTensor.ElementwiseMultiply(tensor);
+
+            var bResult = broadcastingRequired ? this.currentTensor.ElementwiseMultiplyBroadcasting(tensor) : default;
+
+            if (broadcastingRequired)
+            {
+                result = bResult!.Value.result;
+            }
+
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor, tensor });
 
-            var grad = Tensor.ToTensorArray(2, this.currentTensor.Shape);
+            var grad = new Tensor[] { new Tensor(this.currentTensor.Shape), new Tensor(tensor.Shape) };
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradients = tensorReverse.ElementwiseMultiplyReverse(upstreamGrad);
+                var gradients = !broadcastingRequired
+                    ?
+                    tensorReverse.ElementwiseMultiplyReverse(upstreamGrad)
+                    :
+                    tensorReverse.ElementwiseMultiplyBroadcastingReverse(upstreamGrad, bResult!.Value.mapping);
                 PradOp?[] ops = new PradOp?[2];
                 var tensors = new Tensor[] { this.currentTensor, tensor };
                 for (int i = 0; i < grad.Length; i++)
@@ -1187,9 +1201,9 @@ namespace ParallelReverseAutoDiff.PRAD
                 return (gradients, ops);
             };
 
-            var pradResult = new PradResult(this, result, grad);
+            var pradResult = new PradResult(this, result!, grad);
             this.BackpropagationSteps.Add((backpropStep, pradResult));
-            this.currentTensor = result;
+            this.currentTensor = result!;
             return pradResult;
         }
 

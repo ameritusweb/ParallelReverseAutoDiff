@@ -1,4 +1,5 @@
 ﻿using ParallelReverseAutoDiff.PRAD;
+using ParallelReverseAutoDiff.PRAD.Extensions;
 using ParallelReverseAutoDiff.PRAD.VectorTools;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,42 @@ namespace ParallelReverseAutoDiff.Test.PRAD.VectorTools
 {
     public class PradVectorToolsTests
     {
+        [Fact]
+        public void SeparationTest()
+        {
+            Tensor t = Tensor.XavierUniform(new int[] { 20, 40 });
+            PradOp op = new PradOp(t);
+
+            Tensor scale = Tensor.XavierUniform(new int[] { 20, 20 });
+            PradOp scaleOp = new PradOp(scale);
+
+            Tensor scaleMean = Tensor.XavierUniform(new int[] { 20, 20 });
+            PradOp scaleMeanOp = new PradOp(scaleMean);
+
+            Tensor scaleLogVar = Tensor.XavierUniform(new int[] { 20, 20 });
+            PradOp scaleLogVarOp = new PradOp(scaleLogVar);
+
+            Tensor rotate = Tensor.XavierUniform(new int[] { 20, 20 });
+            PradOp rotateOp = new PradOp(rotate);
+
+            Tensor rotateMean = Tensor.XavierUniform(new int[] { 20, 20 });
+            PradOp rotateMeanOp = new PradOp(rotateMean);
+
+            Tensor rotateLogVar = Tensor.XavierUniform(new int[] { 20, 20 });
+            PradOp rotateLogVarOp = new PradOp(rotateLogVar);
+
+            var scaleRotateRes = op.NoisyScaleAndRotate(scaleOp, rotateOp, scaleMeanOp, scaleLogVarOp, rotateMeanOp, rotateLogVarOp);
+
+            var scaleRotateStack = scaleRotateRes.BranchStack(2);
+
+            var entropyField = scaleRotateRes.PradOp.ComputeStructureTensorEntropy();
+
+            var curvatureField = scaleRotateStack.Pop().ComputeCurvatureField();
+
+            var alignmentField = scaleRotateStack.Pop().ComputeAlignmentField();
+
+        }
+
         [Fact]
         public void OrderingTest()
         {

@@ -12,6 +12,22 @@ namespace ParallelReverseAutoDiff.Test.PRAD
     public class PradOpTests
     {
         [Fact]
+        public void TestMulB()
+        {
+            var seed = new Tensor(new int[] { 1, 20, 20, 25 }, 10d);
+            PradOp tOp = new PradOp(seed);
+
+            var multiplier = Tensor.XavierUniform(new int[] { 1, 1, 1, 25 });
+            PradOp multOp = new PradOp(multiplier);
+
+            var bres = tOp.Mul(multOp.CurrentTensor);
+
+            var upstream = new Tensor(new int[] { 1, 20, 20, 25 }, 1d);
+            var res = bres.PradOp.Back(upstream);
+
+        }
+
+        [Fact]
         public void TestGELU()
         {
             var seed = Tensor.XavierUniform(new int[] { 50, 1000 });
