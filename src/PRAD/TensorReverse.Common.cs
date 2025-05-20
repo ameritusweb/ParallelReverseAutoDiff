@@ -424,6 +424,11 @@ namespace ParallelReverseAutoDiff.PRAD
         {
             var initial = this.InitialTensors[0];
 
+            if (axes.Length == 1 && axes[0] == -1)
+            {
+                axes[0] = initial.Shape.Length - 1;
+            }
+
             // Step 1: Create a new tensor with the same shape as the original input
             var gradientTensor = new Tensor(initial.Shape, PradTools.AllocateArray(initial.Data.Length));
 

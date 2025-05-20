@@ -526,6 +526,12 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Step 1: Determine the shape of the resulting tensor after summing
             var newShape = this.Shape.ToList();
+
+            if (axes.Length == 1 && axes[0] == -1)
+            {
+                axes[0] = newShape.Count - 1;
+            }
+
             foreach (var axis in axes.OrderByDescending(a => a))
             {
                 newShape.RemoveAt(axis);

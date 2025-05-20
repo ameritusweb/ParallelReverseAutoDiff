@@ -213,7 +213,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
 
             // Create Gaussian kernel for local averaging
             var gaussian = CreateGaussianKernel(windowSize, sigma);
-            var gaussianTensor = new Tensor(new[] { windowSize, windowSize }, gaussian);
+            var gaussianTensor = new Tensor(new[] { 1, 1, 1, windowSize * windowSize }, gaussian);
             var kernelOp = new PradOp(gaussianTensor);
 
             // Step 3: Compute local averages of unit vectors
@@ -274,10 +274,10 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
 
             // Step 2: Create Sobel kernels for gradient computation
             var sobelX = new Tensor(
-                new[] { 3, 3 },
+                new[] { 1, 1, 1, 3 * 3 },
                 new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 });
             var sobelY = new Tensor(
-                new[] { 3, 3 },
+                new[] { 1, 1, 1, 3 * 3 },
                 new double[] { -1, -2, -1, 0,  0,  0, 1,  2,  1 });
 
             // Normalize Sobel kernels
@@ -330,9 +330,11 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             // Take square root to get curvature
             var curvature = sumSquares.PradOp.SquareRoot();
 
+            var reshaped = curvature.PradOp.Reshape(new[] { 20, 20, 1 });
+
             // Optional: Apply smoothing to reduce noise
             var gaussianKernel = CreateGaussianKernel(3, 1.0);
-            var gaussianTensor = new Tensor(new[] { 3, 3 }, gaussianKernel);
+            var gaussianTensor = new Tensor(new[] { 1, 1, 1, 3 * 3 }, gaussianKernel);
             var kernelOp = new PradOp(gaussianTensor);
 
             var smoothedCurvature = curvature.PradOp.ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
@@ -407,7 +409,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var det = vxxBranch.Mul(vyyBranch.CurrentTensor)
                               .PradOp.Sub(vxyBranch.Mul(vxySmoothed.Result).Result);
 
-            var traceBranch = trace.Branch();
+            var traceBranch = trace.BranchStack(2);
             var detBranch = det.Branch();
 
             // Compute discriminant
@@ -416,10 +418,10 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
                                    .PradOp.SquareRoot();
 
             // Compute eigenvalues
-            var lambda1 = traceBranch.Add(discriminant.Result)
+            var lambda1 = traceBranch.Pop().Add(discriminant.Result)
                                     .PradOp.Mul(new Tensor(trace.PradOp.CurrentShape, 0.5f));
 
-            var lambda2 = trace.PradOp.Sub(discriminant.Result)
+            var lambda2 = traceBranch.Pop().Sub(discriminant.Result)
                                .PradOp.Mul(new Tensor(trace.PradOp.CurrentShape, 0.5f));
 
             // Step 3: Normalize eigenvalues
@@ -441,8 +443,9 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var p1Safe = p1.PradOp.Add(epsilon);
             var p2Safe = p2.PradOp.Add(epsilon);
 
-            var entropy = p1Branch.Mul(p1Safe.PradOp.Log().Result)
-                                 .PradOp.Add(p2Branch.Mul(p2Safe.PradOp.Log().Result).Result)
+            var ln2 = new Tensor(p1.PradOp.CurrentShape, (float)PradMath.Log(2));
+            var entropy = p1Branch.Mul(p1Safe.PradOp.Log().Result.ElementwiseDivide(ln2))
+                                 .PradOp.Add(p2Branch.Mul(p2Safe.PradOp.Log().Result.ElementwiseDivide(ln2)).Result)
                                  .PradOp.Mul(new Tensor(p1.PradOp.CurrentShape, -1.0f));
 
             return entropy;
