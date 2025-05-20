@@ -46,6 +46,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD.VectorTools
 
             var alignmentField = scaleRotateStack.Pop().ComputeAlignmentField();
 
+            var concat = entropyField.PradOp
+                .Concat(new Tensor[] { curvatureField.Result, alignmentField.Result }, 2)
+                .PradOp.Reshape(new int[] { 20, 60 });
+
+            Tensor multiplier = Tensor.XavierUniform(new int[] { 60, 60 });
+            PradOp multiplierOp = new PradOp(multiplier);
+
+            var res = concat.PradOp.MatMul(multiplierOp.CurrentTensor);
         }
 
         [Fact]
