@@ -3149,6 +3149,11 @@ namespace ParallelReverseAutoDiff.PRAD
                     result.Gradients[i] = result.Gradients[i].ElementwiseAdd(gradients[i]);
                     if (ops[i] != null)
                     {
+                        if (ops[i]!.IsStarted && !ops[i]!.IsFinished)
+                        {
+                            throw new ArgumentException("Did you forget to 'Branch'? PradOp ID:" + ops[i]!.Id.ToString());
+                        }
+
                         ops[i]?.SetUpstreamGradient(gradients[i]);
                         if (ops[i]!.IsHighPriorityForBackpropagation || (!ops[i]!.IsDependentBranch && !ops[i]!.IsLowPriorityForBackpropagation))
                         {

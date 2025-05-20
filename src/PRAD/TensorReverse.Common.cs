@@ -1633,7 +1633,22 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <returns>The gradient with respect to the input tensor.</returns>
         public Tensor ExtractPatchesSameReverse(Tensor upstreamGradient, int[] filterSize, int[] strides)
         {
-            Tensor inputTensor = this.InitialTensors[0];
+            Tensor inputTensor = this.InitialTensors[0].DeepClone();
+
+            var isReallyExpanded = false;
+            if (inputTensor.Shape.Length == 2)
+            {
+                inputTensor = inputTensor.ExpandDims(-1);
+                isReallyExpanded = true;
+            }
+
+            var isExpanded = false;
+            if (inputTensor.Shape.Length == 3)
+            {
+                inputTensor = inputTensor.ExpandDims(0);
+                isExpanded = true;
+            }
+
             int batchSize = inputTensor.Shape[0];
             int inputHeight = inputTensor.Shape[1];
             int inputWidth = inputTensor.Shape[2];
@@ -1682,6 +1697,16 @@ namespace ParallelReverseAutoDiff.PRAD
                     }
                 }
             });
+
+            if (isExpanded)
+            {
+                if (isReallyExpanded)
+                {
+                    return inputGradient.Reshape(inputGradient.Shape.Skip(1).Take(2).ToArray());
+                }
+
+                return inputGradient.Reshape(inputGradient.Shape.Skip(1).ToArray());
+            }
 
             return inputGradient;
         }

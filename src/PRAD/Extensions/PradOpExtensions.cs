@@ -12,7 +12,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
     /// <summary>
     /// Extension methods for PradOp.
     /// </summary>
-    public static class PradOpExtensions
+    public static partial class PradOpExtensions
     {
         /// <summary>
         /// Applies the SymmetricSoftmax transformation to the current tensor.
@@ -417,11 +417,13 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
                                    .PradOp.Sub(det.PradOp.Mul(new Tensor(det.PradOp.CurrentShape, 4.0f)).Result)
                                    .PradOp.SquareRoot();
 
+            var discriminantB = discriminant.Branch();
+
             // Compute eigenvalues
-            var lambda1 = traceBranch.Pop().Add(discriminant.Result)
+            var lambda1 = discriminant.PradOp.Add(traceBranch.Pop().BranchInitialTensor)
                                     .PradOp.Mul(new Tensor(trace.PradOp.CurrentShape, 0.5f));
 
-            var lambda2 = traceBranch.Pop().Sub(discriminant.Result)
+            var lambda2 = traceBranch.Pop().Sub(discriminantB.BranchInitialTensor)
                                .PradOp.Mul(new Tensor(trace.PradOp.CurrentShape, 0.5f));
 
             // Step 3: Normalize eigenvalues
@@ -432,8 +434,10 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var epsilon = new Tensor(sumEigenvalues.PradOp.CurrentShape, 1e-10f);
             var denominator = sumEigenvalues.PradOp.Add(epsilon);
 
-            var p1 = lambda1Branch.Div(denominator.Result);
-            var p2 = lambda2Branch.Div(denominator.Result);
+            var denominatorB = denominator.Branch();
+
+            var p1 = denominator.PradOp.DivInto(lambda1Branch.BranchInitialTensor);
+            var p2 = lambda2Branch.Div(denominatorB.BranchInitialTensor);
 
             // Step 4: Compute Shannon entropy
             var p1Branch = p1.Branch();
@@ -444,8 +448,9 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             var p2Safe = p2.PradOp.Add(epsilon);
 
             var ln2 = new Tensor(p1.PradOp.CurrentShape, (float)PradMath.Log(2));
-            var entropy = p1Branch.Mul(p1Safe.PradOp.Log().Result.ElementwiseDivide(ln2))
-                                 .PradOp.Add(p2Branch.Mul(p2Safe.PradOp.Log().Result.ElementwiseDivide(ln2)).Result)
+            var ee = p1Safe.PradOp.Log().PradOp.Div(ln2);
+            var entropy = ee.PradOp.Mul(p1Branch.BranchInitialTensor)
+                                 .PradOp.Add(p2Branch.Mul(p2Safe.PradOp.Log().PradOp.Div(ln2).Result).Result)
                                  .PradOp.Mul(new Tensor(p1.PradOp.CurrentShape, -1.0f));
 
             return entropy;

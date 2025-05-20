@@ -54,6 +54,14 @@ namespace ParallelReverseAutoDiff.Test.PRAD.VectorTools
             PradOp multiplierOp = new PradOp(multiplier);
 
             var res = concat.PradOp.MatMul(multiplierOp.CurrentTensor);
+
+            Tensor target = Tensor.XavierUniform(new int[] { 20, 60 });
+            PradOp targetOp = new PradOp(target);
+
+            var mse = res.PradOp.MeanSquaredError(targetOp, new int[] { 0, 1 });
+
+            Tensor ups = new Tensor(new int[] { 1 }, 1d);
+            mse.PradOp.Back(ups);
         }
 
         [Fact]
