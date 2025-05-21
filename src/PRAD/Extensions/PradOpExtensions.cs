@@ -213,7 +213,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
 
             // Create Gaussian kernel for local averaging
             var gaussian = CreateGaussianKernel(windowSize, sigma);
-            var gaussianTensor = new Tensor(new[] { 1, 1, 1, windowSize * windowSize }, gaussian);
+            var gaussianTensor = new Tensor(new[] { 1, 1, 1, windowSize * windowSize }, PradTools.Cast(gaussian));
             var kernelOp = new PradOp(gaussianTensor);
 
             // Step 3: Compute local averages of unit vectors
@@ -275,10 +275,10 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
             // Step 2: Create Sobel kernels for gradient computation
             var sobelX = new Tensor(
                 new[] { 1, 1, 1, 3 * 3 },
-                new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 });
+                PradTools.Cast(new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 }));
             var sobelY = new Tensor(
                 new[] { 1, 1, 1, 3 * 3 },
-                new double[] { -1, -2, -1, 0,  0,  0, 1,  2,  1 });
+                PradTools.Cast(new double[] { -1, -2, -1, 0,  0,  0, 1,  2,  1 }));
 
             // Normalize Sobel kernels
             var normFactor = new Tensor(sobelX.Shape, 1.0f / 8.0f);
@@ -334,7 +334,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
 
             // Optional: Apply smoothing to reduce noise
             var gaussianKernel = CreateGaussianKernel(3, 1.0);
-            var gaussianTensor = new Tensor(new[] { 1, 1, 1, 3 * 3 }, gaussianKernel);
+            var gaussianTensor = new Tensor(new[] { 1, 1, 1, 3 * 3 }, PradTools.Cast(gaussianKernel));
             var kernelOp = new PradOp(gaussianTensor);
 
             var smoothedCurvature = curvature.PradOp.ExtractPatches(new[] { 3, 3 }, new[] { 1, 1 }, "SAME")
@@ -382,7 +382,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
 
             // Create Gaussian kernel for local averaging
             var gaussian = CreateGaussianKernel(windowSize, sigma);
-            var gaussianTensor = new Tensor(new[] { 1, 1, 1, windowSize * windowSize }, gaussian);
+            var gaussianTensor = new Tensor(new[] { 1, 1, 1, windowSize * windowSize }, PradTools.Cast(gaussian));
             var kernelOp = new PradOp(gaussianTensor);
 
             // Apply local averaging using convolution

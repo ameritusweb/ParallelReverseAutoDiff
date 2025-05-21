@@ -1080,6 +1080,10 @@ Creates a new instance of the `PradOp` class with a seed tensor.
 - `MinOp`
 - `AbsOp`
 - `PowOp`
+- `SigmoidOp`
+- `TanhOp`
+- `LeakyReLUOp`
+- `DiffOp`
 
 ### PradResult.Then Method
 

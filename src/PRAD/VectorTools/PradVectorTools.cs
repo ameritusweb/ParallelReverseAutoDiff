@@ -64,7 +64,7 @@ namespace ParallelReverseAutoDiff.PRAD.VectorTools
 
             var arr = decomposer.RandomizeAndFlatten(vectors);
 
-            return new Tensor(new int[] { 1, arr.Length }, arr);
+            return new Tensor(new int[] { 1, arr.Length }, PradTools.Cast(arr));
         }
 
         /// <summary>

@@ -517,7 +517,7 @@ namespace ParallelReverseAutoDiff.PRAD.Extensions
                     var result = new Tensor(new[] { tensor.Shape[0], k });
                     for (int i = 0; i < tensor.Shape[0]; i++)
                     {
-                        var row = new double[tensor.Shape[1]];
+                        var row = PradTools.AllocateArray(tensor.Shape[1]);
                         for (int j = 0; j < tensor.Shape[1]; j++)
                         {
                             row[j] = tensor[i, j];

@@ -7,6 +7,7 @@
 namespace ParallelReverseAutoDiff.RMAD
 {
     using System;
+    using System.Linq;
     using System.Numerics;
 
     /// <summary>
@@ -82,6 +83,16 @@ namespace ParallelReverseAutoDiff.RMAD
         internal static float Cast(double value)
         {
             return (float)value;
+        }
+
+        /// <summary>
+        /// Cast a double array to a float array.
+        /// </summary>
+        /// <param name="dArray">The value.</param>
+        /// <returns>The float array.</returns>
+        internal static float[] Cast(double[] dArray)
+        {
+            return dArray.Cast<float>().ToArray();
         }
 
         /// <summary>

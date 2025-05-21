@@ -17,8 +17,8 @@
   <ItemGroup>
 	  <PackageReference Include="CuBlasNetStandard21.CUDA12" Version="1.0.0" />
 	  <PackageReference Include="HDF.PInvoke.NETStandard" Version="1.10.502" />
-	  <PackageReference Include="ILGPU" Version="1.5.0" />
-	  <PackageReference Include="ILGPU.Algorithms" Version="1.5.0" />
+	  <PackageReference Include="ILGPU" Version="1.5.2" />
+	  <PackageReference Include="ILGPU.Algorithms" Version="1.5.2" />
 	  <PackageReference Include="MKL.NET" Version="1.5.0" />
 	  <PackageReference Include="MKL.NET.linux-x64" Version="2022.0.1.117" />
 	  <PackageReference Include="MKL.NET.osx-x64" Version="2022.0.0.105" />
@@ -38,9 +38,11 @@
     <Compile Include="..\..\..\src\Interprocess\DataSetItem.cs" Link="Interprocess\DataSetItem.cs" />
     <Compile Include="..\..\..\src\Interprocess\PseudoUniqueIDGenerator.cs" Link="Interprocess\PseudoUniqueIDGenerator.cs" />
 	<Compile Include="..\..\..\src\PRAD\Extensions\PradOpExtensions.cs" Link="PRAD\Extensions\PradOpExtensions.cs" />
+	<Compile Include="..\..\..\src\PRAD\Extensions\PradOpExtensions.Loss.cs" Link="PRAD\Extensions\PradOpExtensions.Loss.cs" />
 	<Compile Include="..\..\..\src\PRAD\AdamOptimizer.cs" Link="PRAD\AdamOptimizer.cs" />
 	<Compile Include="..\..\..\src\PRAD\BackpropagationMode.cs" Link="PRAD\BackpropagationMode.cs" />
 	<Compile Include="..\..\..\src\PRAD\BranchStack.cs" Link="PRAD\BranchStack.cs" />
+	<Compile Include="..\..\..\src\PRAD\BroadcastMapping.cs" Link="PRAD\BroadcastMapping.cs" />
     <Compile Include="..\..\..\src\PRAD\ConditionallyInternalUseOnlyAttribute.cs" Link="PRAD\ConditionallyInternalUseOnlyAttribute.cs" />
 	<Compile Include="..\..\..\src\PRAD\GradientClipper.cs" Link="PRAD\GradientClipper.cs" />
 	<Compile Include="..\..\..\src\PRAD\GradientRecorder.cs" Link="PRAD\GradientRecorder.cs" />
@@ -69,7 +71,8 @@
 	<Compile Include="..\..\..\src\PRAD\Tensor.Common.cs" Link="PRAD\Tensor.Common.cs" />
 	<Compile Include="..\..\..\src\PRAD\TensorAngleExtensions.cs" Link="PRAD\TensorAngleExtensions.cs" />
 	<Compile Include="..\..\..\src\PRAD\VectorTools\VectorExtensions.cs" Link="PRAD\VectorTools\VectorExtensions.cs" />
-    <Compile Include="..\..\..\src\RMAD\AmplifiedSigmoidOperation.cs" Link="RMAD\AmplifiedSigmoidOperation.cs" />
+	<Compile Include="..\..\..\src\PRAD\VectorTools\VectorDecomposer.cs" Link="PRAD\VectorTools\VectorDecomposer.cs" />
+	<Compile Include="..\..\..\src\RMAD\AmplifiedSigmoidOperation.cs" Link="RMAD\AmplifiedSigmoidOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\BackwardResult.cs" Link="RMAD\BackwardResult.cs" />
     <Compile Include="..\..\..\src\RMAD\BackwardResultBuilder.cs" Link="RMAD\BackwardResultBuilder.cs" />
     <Compile Include="..\..\..\src\RMAD\BatchAmplifiedSigmoidOperation.cs" Link="RMAD\BatchAmplifiedSigmoidOperation.cs" />
@@ -126,7 +129,9 @@
     <Compile Include="..\..\..\src\RMAD\FeatureAggregationOperation.cs" Link="RMAD\FeatureAggregationOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\FlattenOperation.cs" Link="RMAD\FlattenOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\FourDimensionalMatrixJsonConverter.cs" Link="RMAD\FourDimensionalMatrixJsonConverter.cs" />
-    <Compile Include="..\..\..\src\RMAD\GradientStore.cs" Link="RMAD\GradientStore.cs" />
+    <Compile Include="..\..\..\src\RMAD\FourLayersJsonArchitecture.cs" Link="RMAD\FourLayersJsonArchitecture.cs" />
+	<Compile Include="..\..\..\src\RMAD\FourLayersTimeStep.cs" Link="RMAD\FourLayersTimeStep.cs" />
+	<Compile Include="..\..\..\src\RMAD\GradientStore.cs" Link="RMAD\GradientStore.cs" />
     <Compile Include="..\..\..\src\RMAD\GradientUtils.cs" Link="RMAD\GradientUtils.cs" />
     <Compile Include="..\..\..\src\RMAD\IAverageableModelLayer.cs" Link="RMAD\IAverageableModelLayer.cs" />
     <Compile Include="..\..\..\src\RMAD\IBatchOperation.cs" Link="RMAD\IBatchOperation.cs" />
@@ -137,6 +142,8 @@
     <Compile Include="..\..\..\src\RMAD\IOperation.cs" Link="RMAD\IOperation.cs" />
     <Compile Include="..\..\..\src\RMAD\IOperationBase.cs" Link="RMAD\IOperationBase.cs" />
     <Compile Include="..\..\..\src\RMAD\JsonArchitecture.cs" Link="RMAD\JsonArchitecture.cs" />
+	<Compile Include="..\..\..\src\RMAD\ILayer.cs" Link="RMAD\ILayer.cs" />
+	<Compile Include="..\..\..\src\RMAD\ILayerConverter.cs" Link="RMAD\ILayerConverter.cs" />
     <Compile Include="..\..\..\src\RMAD\Layer.cs" Link="RMAD\Layer.cs" />
     <Compile Include="..\..\..\src\RMAD\LayerInfo.cs" Link="RMAD\LayerInfo.cs" />
     <Compile Include="..\..\..\src\RMAD\LayerInfoType.cs" Link="RMAD\LayerInfoType.cs" />

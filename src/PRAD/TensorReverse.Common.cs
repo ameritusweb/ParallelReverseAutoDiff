@@ -3520,7 +3520,7 @@ namespace ParallelReverseAutoDiff.PRAD
                     for (int i = 0; i < vectorWidth; i++)
                     {
                         int pos = ((y + i) * width) + x;
-                        double grad = gradVec[i];
+                        var grad = gradVec[i];
 
                         gradInput.Data[pos] -= grad;
                         gradInput.Data[pos + width] += grad;
@@ -3531,7 +3531,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 for (; y < height - 1; y++)
                 {
                     int idx = (y * width) + x;
-                    double grad = gradOutput.Data[idx];
+                    var grad = gradOutput.Data[idx];
                     gradInput.Data[idx] -= grad;
                     gradInput.Data[idx + width] += grad;
                 }
@@ -3560,7 +3560,7 @@ namespace ParallelReverseAutoDiff.PRAD
                     for (int i = 0; i < vectorWidth; i++)
                     {
                         int pos = baseIdx + i;
-                        double grad = gradVec[i];
+                        var grad = gradVec[i];
 
                         gradInput.Data[pos] -= grad;
                         gradInput.Data[pos + 1] += grad;
@@ -3571,7 +3571,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 for (; x < width - 1; x++)
                 {
                     int idx = rowStart + x;
-                    double grad = gradOutput.Data[idx];
+                    var grad = gradOutput.Data[idx];
                     gradInput.Data[idx] -= grad;
                     gradInput.Data[idx + 1] += grad;
                 }

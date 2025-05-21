@@ -85,6 +85,16 @@ namespace ParallelReverseAutoDiff.RMAD
         }
 
         /// <summary>
+        /// Cast a double array to a double array.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The double.</returns>
+        internal static double[] Cast(double[] value)
+        {
+            return value;
+        }
+
+        /// <summary>
         /// Gets an array of doubles.
         /// </summary>
         /// <param name="length">The length of the array.</param>
