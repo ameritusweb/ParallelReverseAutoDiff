@@ -23,7 +23,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="min">The min value.</param>
         /// <param name="max">The max value.</param>
         /// <returns>The gradient of the exclusion operation.</returns>
-        public Tensor ExcludeReverse(Tensor upstreamGradient, double min, double max)
+        public Tensor ExcludeReverse(Tensor upstreamGradient, float min, float max)
         {
             Tensor tensor = this.InitialTensors[0];
 
@@ -51,7 +51,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="min">The minimum value.</param>
         /// <param name="max">The maximum value.</param>
         /// <returns>The clipped tensor gradient.</returns>
-        public Tensor ClipReverse(Tensor upstreamGradient, double min, double max)
+        public Tensor ClipReverse(Tensor upstreamGradient, float min, float max)
         {
             Tensor tensor = this.InitialTensors[0];
 
@@ -61,8 +61,8 @@ namespace ParallelReverseAutoDiff.PRAD
             var zeroArray = new float[tensor.Data.Length];
 
             // Fill minArray, maxArray and zeroArray with appropriate values
-            Array.Fill(minArray, (float)min);
-            Array.Fill(maxArray, (float)max);
+            Array.Fill(minArray, min);
+            Array.Fill(maxArray, max);
             Array.Fill(zeroArray, 0.0f);
 
             // Create intermediate arrays for comparison
@@ -379,47 +379,6 @@ namespace ParallelReverseAutoDiff.PRAD
             });
 
             return result;
-        }
-
-        /// <summary>
-        /// Recursively expands the upstream gradient back to the original shape.
-        /// </summary>
-        /// <param name="inputIndex">The current indices in the input tensor.</param>
-        /// <param name="axes">The axes along which the summation was performed.</param>
-        /// <param name="currentAxis">The current axis being processed.</param>
-        /// <param name="value">The value of the upstream gradient to be distributed.</param>
-        /// <param name="strides">The strides of the input tensor.</param>
-        /// <param name="result">The tensor to accumulate the gradient in.</param>
-        private void SumReverseRecursive(int[] inputIndex, int[] axes, int currentAxis, float value, int[] strides, Tensor result)
-        {
-            if (currentAxis == inputIndex.Length)
-            {
-                int flatIndex = 0;
-                for (int i = 0; i < inputIndex.Length; i++)
-                {
-                    flatIndex += inputIndex[i] * strides[i];
-                }
-
-                lock (result.Data)
-                {
-                    result.Data[flatIndex] += value;
-                }
-            }
-            else
-            {
-                if (axes.Contains(currentAxis))
-                {
-                    for (int i = 0; i < result.Shape[currentAxis]; i++)
-                    {
-                        inputIndex[currentAxis] = i;
-                        this.SumReverseRecursive(inputIndex, axes, currentAxis + 1, value, strides, result);
-                    }
-                }
-                else
-                {
-                    this.SumReverseRecursive(inputIndex, axes, currentAxis + 1, value, strides, result);
-                }
-            }
         }
     }
 }

@@ -2130,13 +2130,13 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(ExcludeOp))]
         public PradResult Exclude(double min, double max)
         {
-            var result = this.currentTensor.Exclude(min, max);
+            var result = this.currentTensor.Exclude(PradTools.Cast(min), PradTools.Cast(max));
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
 
             var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradient = tensorReverse.ExcludeReverse(upstreamGrad, min, max);
+                var gradient = tensorReverse.ExcludeReverse(upstreamGrad, PradTools.Cast(min), PradTools.Cast(max));
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };
@@ -2156,13 +2156,13 @@ namespace ParallelReverseAutoDiff.PRAD
         [PradOperation(nameof(ClipOp))]
         public PradResult Clip(double min, double max)
         {
-            var result = this.currentTensor.Clip(min, max);
+            var result = this.currentTensor.Clip(PradTools.Cast(min), PradTools.Cast(max));
             var tensorReverse = new TensorReverse(new Tensor[] { this.currentTensor });
 
             var grad = Tensor.ToTensorArray(1, this.currentTensor.Shape);
             Func<Tensor, (Tensor[], PradOp?[])> backpropStep = upstreamGrad =>
             {
-                var gradient = tensorReverse.ClipReverse(upstreamGrad, min, max);
+                var gradient = tensorReverse.ClipReverse(upstreamGrad, PradTools.Cast(min), PradTools.Cast(max));
                 PradOp?[] ops = new PradOp?[1];
                 return (new Tensor[] { gradient }, ops);
             };

@@ -320,7 +320,7 @@ namespace ParallelReverseAutoDiff.PRAD
             // Generate random values in parallel
             Parallel.For(0, totalSize, i =>
             {
-                float randomValue = PradTools.Cast(RandomGen.Value.NextDouble());
+                float randomValue = (float)RandomGen.Value.NextDouble();
                 result.Data[i] = (randomValue * (maxValue - minValue)) + minValue;
             });
 
@@ -414,7 +414,7 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="min">The min value.</param>
         /// <param name="max">The max value.</param>
         /// <returns>The excluded tensor.</returns>
-        public Tensor Exclude(double min, double max)
+        public Tensor Exclude(float min, float max)
         {
             var excludedData = new float[this.Data.Length];
 
@@ -427,11 +427,11 @@ namespace ParallelReverseAutoDiff.PRAD
                     var distance = this.Data[i] - min;
                     if (distance > halfDistance)
                     {
-                        excludedData[i] = (float)max;
+                        excludedData[i] = max;
                     }
                     else
                     {
-                        excludedData[i] = (float)min;
+                        excludedData[i] = min;
                     }
                 }
                 else
@@ -449,15 +449,15 @@ namespace ParallelReverseAutoDiff.PRAD
         /// <param name="min">The minimum value to clip to.</param>
         /// <param name="max">The maximum value to clip to.</param>
         /// <returns>A new tensor with values clipped to the specified range.</returns>
-        public Tensor Clip(double min, double max)
+        public Tensor Clip(float min, float max)
         {
             var clippedData = new float[this.Data.Length];
             var minArray = new float[this.Data.Length];
             var maxArray = new float[this.Data.Length];
 
             // Fill minArray and maxArray with appropriate values
-            Array.Fill(minArray, (float)min);
-            Array.Fill(maxArray, (float)max);
+            Array.Fill(minArray, min);
+            Array.Fill(maxArray, max);
 
             // Perform element-wise min and max operations
             var clippedMin = new float[this.Data.Length];
@@ -465,6 +465,48 @@ namespace ParallelReverseAutoDiff.PRAD
             Vml.MaxMag(this.Data.Length, clippedMin, minArray, clippedData);
 
             return new Tensor(this.Shape, clippedData);
+        }
+
+        /// <summary>
+        /// Element-wise maximum between this tensor and a scalar value.
+        /// </summary>
+        /// <param name="scalar">The scalar value to compare.</param>
+        /// <returns>A new tensor containing the element-wise maximum values.</returns>
+        public Tensor Max(float scalar)
+        {
+            // Allocate the result tensor
+            var resultData = PradTools.AllocateArray(this.Data.Length);
+            var resultTensor = new Tensor(this.Shape, resultData);
+
+            // Create a scalar array for broadcasting the scalar value
+            var scalarArray = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(scalarArray, scalar);
+
+            // Perform the element-wise maximum using MKLNET
+            Vml.MaxMag(this.Data.Length, this.Data, scalarArray, resultData);
+
+            return resultTensor;
+        }
+
+        /// <summary>
+        /// Element-wise minimum between this tensor and a scalar value.
+        /// </summary>
+        /// <param name="scalar">The scalar value to compare.</param>
+        /// <returns>A new tensor containing the element-wise minimum values.</returns>
+        public Tensor Min(float scalar)
+        {
+            // Allocate the result tensor
+            var resultData = PradTools.AllocateArray(this.Data.Length);
+            var resultTensor = new Tensor(this.Shape, resultData);
+
+            // Create a scalar array for broadcasting the scalar value
+            var scalarArray = PradTools.AllocateArray(this.Data.Length);
+            Array.Fill(scalarArray, scalar);
+
+            // Perform the element-wise minimum using MKLNET
+            Vml.MinMag(this.Data.Length, this.Data, scalarArray, resultData);
+
+            return resultTensor;
         }
 
         /// <summary>
@@ -484,6 +526,12 @@ namespace ParallelReverseAutoDiff.PRAD
 
             // Step 1: Determine the shape of the resulting tensor after summing
             var newShape = this.Shape.ToList();
+
+            if (axes.Length == 1 && axes[0] == -1)
+            {
+                axes[0] = newShape.Count - 1;
+            }
+
             foreach (var axis in axes.OrderByDescending(a => a))
             {
                 newShape.RemoveAt(axis);
@@ -542,9 +590,9 @@ namespace ParallelReverseAutoDiff.PRAD
             var result = new Tensor(resultShape, resultData);
 
             Blas.gemm(
-                Layout.RowMajor,
-                Trans.No,
-                Trans.No,
+                MKLNET.Layout.RowMajor,
+                MKLNET.Trans.No,
+                MKLNET.Trans.No,
                 m,
                 n,
                 k,
@@ -588,48 +636,6 @@ namespace ParallelReverseAutoDiff.PRAD
             }
 
             this.Data = newData;
-        }
-
-        /// <summary>
-        /// Element-wise maximum between this tensor and a scalar value.
-        /// </summary>
-        /// <param name="scalar">The scalar value to compare.</param>
-        /// <returns>A new tensor containing the element-wise maximum values.</returns>
-        public Tensor Max(float scalar)
-        {
-            // Allocate the result tensor
-            var resultData = PradTools.AllocateArray(this.Data.Length);
-            var resultTensor = new Tensor(this.Shape, resultData);
-
-            // Create a scalar array for broadcasting the scalar value
-            var scalarArray = PradTools.AllocateArray(this.Data.Length);
-            Array.Fill(scalarArray, scalar);
-
-            // Perform the element-wise maximum using MKLNET
-            Vml.MaxMag(this.Data.Length, this.Data, scalarArray, resultData);
-
-            return resultTensor;
-        }
-
-        /// <summary>
-        /// Element-wise minimum between this tensor and a scalar value.
-        /// </summary>
-        /// <param name="scalar">The scalar value to compare.</param>
-        /// <returns>A new tensor containing the element-wise minimum values.</returns>
-        public Tensor Min(float scalar)
-        {
-            // Allocate the result tensor
-            var resultData = PradTools.AllocateArray(this.Data.Length);
-            var resultTensor = new Tensor(this.Shape, resultData);
-
-            // Create a scalar array for broadcasting the scalar value
-            var scalarArray = PradTools.AllocateArray(this.Data.Length);
-            Array.Fill(scalarArray, scalar);
-
-            // Perform the element-wise minimum using MKLNET
-            Vml.MinMag(this.Data.Length, this.Data, scalarArray, resultData);
-
-            return resultTensor;
         }
 
         /// <summary>
@@ -736,7 +742,7 @@ namespace ParallelReverseAutoDiff.PRAD
             float[] resultData = new float[outerSize * innerSize];
 
             float[] axisData = new float[innerSize];
-            Array.Fill<float>(axisData, axis);
+            Array.Fill<float>(axisData, axisSize);
 
             Parallel.For(0, outerSize, outerIdx =>
             {
@@ -806,7 +812,7 @@ namespace ParallelReverseAutoDiff.PRAD
 
             Parallel.For(0, batchSize, batch =>
             {
-                var cumulativeProbabilities = new double[numClasses];
+                var cumulativeProbabilities = new float[numClasses];
                 cumulativeProbabilities[0] = probabilities[batch, 0];
 
                 // Compute cumulative distribution function (CDF)
@@ -818,7 +824,7 @@ namespace ParallelReverseAutoDiff.PRAD
                 // Sample from the multinomial distribution
                 for (int sample = 0; sample < numSamples; sample++)
                 {
-                    double u = RandomGen.Value.NextDouble();
+                    float u = (float)RandomGen.Value.NextDouble();
 
                     for (int i = 0; i < numClasses; i++)
                     {
