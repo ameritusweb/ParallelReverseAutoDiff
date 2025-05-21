@@ -92,7 +92,7 @@ namespace ParallelReverseAutoDiff.RMAD
         /// <returns>The float array.</returns>
         internal static float[] Cast(double[] dArray)
         {
-            return dArray.Cast<float>().ToArray();
+            return dArray.Select(x => (float)x).ToArray();
         }
 
         /// <summary>
